@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/', 'actividadesController@index');
+Route::get('/poc', function(){
+    return view('actividades.index');
 });
+Route::get('/ajax/actividades', 'ajax\actividadesController@index');
