@@ -60,12 +60,12 @@
     <p class="lead">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It's built with default Bootstrap components and utilities with little customization.</p>
 </div>
 
-<div class="container">
-    <div class="card-deck mb-3 text-center" id="app">
+<div class="container" id="app">
+    <div class="card-deck mb-3 text-center">
         <tarjeta v-for="act in actividades" v-bind:actividad="act"></tarjeta>
     </div>
 
-
+    <paginado v-bind:meta="meta"></paginado>
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
             <div class="col-12 col-md">
