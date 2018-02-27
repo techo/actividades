@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\ajax;
 
+use App\Http\Resources\ActividadCollection;
+use App\Http\Resources\ActividadResource;
+use App\PuntoEncuentro;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actividad;
@@ -11,11 +14,12 @@ class actividadesController extends Controller
     /**
      * Devuelve un JSON de actividades
      *
-     * @return \Illuminate\Http\Response
+     * @param int $items Cantidad de elementos en cada página
+     * @return ActividadCollection
      */
-    public function index()
+    public function index($items=6)
     {
-        return Actividad::paginate(6);
+        return new ActividadCollection(Actividad::paginate($items));
     }
 
     /**
@@ -47,7 +51,7 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        //
+        return new ActividadResource(Actividad::find($id));
     }
 
     /**
