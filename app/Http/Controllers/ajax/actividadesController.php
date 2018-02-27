@@ -15,7 +15,7 @@ class actividadesController extends Controller
      */
     public function index()
     {
-        return Actividad::paginate(3);
+        return Actividad::paginate(6);
     }
 
     /**
