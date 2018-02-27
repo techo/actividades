@@ -19,7 +19,7 @@ class actividadesController extends Controller
      */
     public function index($items=6)
     {
-        return new ActividadCollection(Actividad::paginate($items));
+        return ActividadResource::collection(Actividad::paginate($items));
     }
 
     /**
