@@ -55,3 +55,16 @@ new Vue({
     }
   },
 });
+
+new Vue({
+  el: "#app2",
+  data: function() {
+    return {
+      id: ''
+    }
+  },
+  created: function () {
+    this.id = $(location).attr('href').split('/').reverse()[0]
+    axios
+  }
+});

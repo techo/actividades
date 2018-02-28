@@ -16,6 +16,9 @@ Route::get('/', 'ActividadesController@index');
 Route::get('/poc', function(){
     return view('actividades.index');
 });
+Route::get('/actividades/{id}', function(){
+    return view('actividades.show');
+});
 
 Route::get('/ajax/actividades', 'ajax\ActividadesController@index');
 Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
