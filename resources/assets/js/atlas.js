@@ -3,9 +3,11 @@ import Vue from 'vue';
 import axios from 'axios';
 import Tarjeta from './components/tarjeta.vue';
 import Paginado from './components/paginado.vue';
+import ActividadDetalle from './components/actividad_detalle.vue';
 
 Vue.component('tarjeta', Tarjeta);
 Vue.component('paginado', Paginado);
+Vue.component('actividaddetalle', ActividadDetalle);
 
 new Vue({
   el: "#app",
@@ -56,15 +58,4 @@ new Vue({
   },
 });
 
-new Vue({
-  el: "#app2",
-  data: function() {
-    return {
-      id: ''
-    }
-  },
-  created: function () {
-    this.id = $(location).attr('href').split('/').reverse()[0]
-    axios
-  }
-});
+
