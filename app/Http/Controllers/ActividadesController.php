@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Tipo;
 use Illuminate\Http\Request;
 use App\Actividad;
 
@@ -14,7 +15,8 @@ class actividadesController extends Controller
      */
     public function index()
     {
-        return view('actividades.index');
+        $tipos = Tipo::all();
+        return view('actividades.index')->with(['tipos' => $tipos]);
     }
 
     /**

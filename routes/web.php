@@ -1,17 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-use App\Actividad;
-
 
 Route::get('/', function () {
     return view('home');
@@ -25,5 +13,8 @@ Route::get('/actividades/{id}', function($id){
     return view('actividades.show')->with('actividad', $actividad);
 });
 
+Route::get('/ajax/tipos/{id}', 'ajax\CategoriasController@show');
 Route::get('/ajax/actividades', 'ajax\ActividadesController@index');
+Route::get('/ajax/actividades/filtro', 'ajax\ActividadesController@filtrar');
 Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
+

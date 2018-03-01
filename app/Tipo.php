@@ -13,4 +13,9 @@ class Tipo extends Model
     {
         return $this->hasMany(Actividad::class, 'idActividad');
     }
+
+    public function categoria()
+    {
+        return $this->belongsTo(CategoriaActividad::class, 'idCategoria', 'id');
+    }
 }
