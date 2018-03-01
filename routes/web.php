@@ -12,7 +12,10 @@
 */
 
 
-Route::get('/', 'ActividadesController@index');
+Route::get('/', function () {
+    return view('home');
+});
+Route::get('/actividades', 'ActividadesController@index');
 Route::get('/poc', function(){
     return view('actividades.index');
 });

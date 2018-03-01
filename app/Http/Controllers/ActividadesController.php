@@ -14,14 +14,7 @@ class actividadesController extends Controller
      */
     public function index()
     {
-//        return Actividad::find(10);
-//        return Actividad::paginate(10);
-        $actividad = Actividad::find(100000000000000);
-//        $tipo = $actividad->tipo;
-        if ($actividad) {
-            return $actividad;
-        }
-        return response('no hay', 404);
+        return view('actividades.index');
     }
 
     /**
