@@ -3,11 +3,9 @@ import Vue from 'vue';
 import axios from 'axios';
 import Tarjeta from './components/tarjeta.vue';
 import Paginado from './components/paginado.vue';
-import ActividadDetalle from './components/actividad_detalle.vue';
 
 Vue.component('tarjeta', Tarjeta);
 Vue.component('paginado', Paginado);
-Vue.component('actividaddetalle', ActividadDetalle);
 
 new Vue({
   el: "#app",
