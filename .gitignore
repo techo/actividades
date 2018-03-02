@@ -1,6 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
+/public/js/atlas.js
+/public/js/app.js
 /storage/*.key
 /vendor
 /.idea
@@ -9,4 +11,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+storage/debugbar/
 .env
+public/mix-manifest.json
