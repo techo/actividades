@@ -271,6 +271,34 @@ a {
     z-index: 1;
 }
 
+footer.inscripcion-bar {
+    background-color: #ffffff;
+    height: 84px;
+    border: solid 1px #cecece;
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.inscripcion-btn {
+    width: 180px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #0092dd;
+}
+
+footer.incripcion-bar h5{
+    height: 40px;
+    border-radius: 4px;
+    background-color: #0092dd;
+}
+
+footer.inscripcion-bar .text-primary {
+    text-align: center;
+    vertical-align: center;
+    padding-top: 6px;
+}
+
 @media all and (max-width: 768px) {
     .hero {
         height: 50vw;

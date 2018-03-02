@@ -185,16 +185,16 @@
 			</div>
 
 		</div>
-		<hr>
-		<div class="row  align-middle">
-			<div class="col-md-8"><h5>{{ $actividad->nombreActividad }}</h5></div>
-			<div class="col-md-2 text-primary"><i class="fas fa-share-alt"></i> COMPARTIR</div>
-			@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-				<div class="col-md-2"><span class="btn btn-success">YA TE INSCRIBISTE!</span></div>
-			@else
-				<div class="col-md-2"><a class="btn btn-primary" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
-			@endif
-		</div>
+@endsection
 
-
+@section('footer')
+<footer class="row fixed-bottom align-middle inscripcion-bar">
+	<div class="col-md-8"><h5>{{ $actividad->nombreActividad }}</h5></div>
+	<div class="col-md-2 text-primary"><i class="fas fa-share-alt"></i> COMPARTIR</div>
+	@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
+		<div class="col-md-2"><span class="btn btn-success">YA TE INSCRIBISTE!</span></div>
+	@else
+		<div class="col-md-2"><a class="btn btn-primary inscripcion-btn" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
+	@endif
+</footer>
 @endsection
