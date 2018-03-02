@@ -19,7 +19,7 @@ class actividadesController extends Controller
      */
     public function index($items=6)
     {
-        return ActividadResource::collection(Actividad::paginate($items));
+        return ActividadResource::collection(Actividad::orderBy('fechaInicio','desc')->paginate($items));
     }
 
     /**

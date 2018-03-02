@@ -47,7 +47,6 @@ code {
 .card {
     border: none;
     width: 380px;
-    overflow-x: scroll;
 }
 
 .card:hover {

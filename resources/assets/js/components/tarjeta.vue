@@ -1,22 +1,36 @@
 <template>
-    <div class="card mb-4 box-shadow">
-        <div class="card-header">
-            <h4 class="my-0 font-weight-normal">{{ actividad.nombreActividad }}</h4>
+  <div class="col-md-4">
+    <div class="card" style="cursor: pointer;" v-on:click="ir_a_actividad">
+      <img class="card-img-top" src="/img/tarjeta-1.jpg" alt="Card image cap" >
+      <div class="card-body px-0">
+        <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
+        <h5 class="card-title">{{ actividad.nombreActividad | truncate(40) }}</h5>
+        <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+            <span class="col-sm-4"><i data-feather="calendar"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
+            <span class="col-sm-4"><i data-feather="clock"></i> {{ actividad.hora }}</span>
+            <span class="col-sm-4"><i data-feather="map-pin"></i> {{ actividad.lugar | truncate(10) }}</span>
         </div>
-        <div class="card-body">
-            <h1 class="card-title pricing-card-title">$0
-                <small class="text-muted">/ mo</small>
-            </h1>
-            <p class="list-unstyled mt-3 mb-4">{{ actividad.lugar }}</p>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Quiero Participar!</button>
-
-        </div>
+        <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
+      </div>
     </div>
+  </div>
+
 </template>
 
 <script>
-    export default {
-        name: 'tarjeta',
-        props: ['actividad']
+  export default {
+    name: 'tarjeta',
+    props: ['actividad'],
+    filters: {
+        truncate: function(string, value) {
+            if(!string) return ''
+            return string.substr(0,value) + '...'
+        }
+    },
+    methods: {
+      ir_a_actividad: function () {
+        window.location.href = '/actividades/' + this.actividad.idActividad
+      }
     }
+  }
 </script>

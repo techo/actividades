@@ -10,3 +10,5 @@
 <script>
     feather.replace()
 </script>
+<script src="/js/atlas.js"></script>
+

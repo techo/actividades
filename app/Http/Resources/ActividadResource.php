@@ -17,6 +17,8 @@ class ActividadResource extends Resource
         return [
             'idActividad' => $this->idActividad,
             'tipo' => new TipoResource($this->tipo),
+            'fecha' => $this->fechaInicio->format('d/m'),
+            'hora' => $this->fechaInicio->format('h:m'),
             'fechaInicio' => ActividadResource::convertirFecha($this->fechaInicio),
             'fechaFin' => ActividadResource::convertirFecha($this->fechaFin),
             'fechaInicioInscripciones' => ActividadResource::convertirFecha($this->fechaInicioInscripciones),
@@ -25,6 +27,7 @@ class ActividadResource extends Resource
             'descripcion' => $this->descripcion,
             'compromiso' => $this->compromiso,
             'costo' => $this->costo,
+            'lugar' => $this->lugar,
             'moneda' => $this->moneda,
             'puntosEncuentro' => PuntoEncuentroResource::collection($this->puntosEncuentro)
         ];

@@ -10,7 +10,7 @@
 
     <!-- Begin page content -->
     @yield('main_image')
-    <main role="main" class="container" style="margin-bottom: 5em">
+    <main role="main" class="container" style="margin-bottom: 5em" id="app">
         @yield('main_content')
     </main>
 
