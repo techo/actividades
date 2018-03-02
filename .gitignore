@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
-/public/js
+/public/js/app.js
+/public/js/atlas.js
 /public/fonts/
 /public/storage
 /public/js/atlas.js
@@ -17,3 +18,4 @@ storage/debugbar/
 .env
 package-lock.json
 /public/mix-manifest.json
+/storage/debugbar
