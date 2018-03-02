@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\ajax;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Actividad;
 
 class actividadesController extends Controller
 {
     /**
-     * Devuelve un JSON de actividades
+     * Devuelve la vista de actividades
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Actividad::paginate(3);
+        return view('actividades.index');
     }
 
     /**

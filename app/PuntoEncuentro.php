@@ -13,4 +13,9 @@ class PuntoEncuentro extends Model
     {
         return $this->belongsTo(Actividad::class, 'idActividad', 'idActividad');
     }
+
+    public function responsable()
+    {
+        return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
 }

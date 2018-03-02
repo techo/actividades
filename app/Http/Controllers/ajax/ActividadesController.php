@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ajax;
 
+use App\Http\Resources\ActividadCollection;
+use App\Http\Resources\ActividadResource;
+use App\PuntoEncuentro;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Actividad;
 
 class actividadesController extends Controller
 {
     /**
-     * Devuelve la vista de actividades
+     * Devuelve un JSON de actividades
      *
-     * @return \Illuminate\Http\Response
+     * @param int $items Cantidad de elementos en cada página
+     * @return ActividadCollection
      */
-    public function index()
+    public function index($items=6)
     {
-//        return Actividad::find(10);
-//        return Actividad::paginate(10);
-        $actividad = Actividad::find(100000000000000);
-//        $tipo = $actividad->tipo;
-        if ($actividad) {
-            return $actividad;
-        }
-        return response('no hay', 404);
+        return ActividadResource::collection(Actividad::orderBy('fechaInicio','desc')->paginate($items));
     }
 
     /**
@@ -53,7 +51,7 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        //
+        return new ActividadResource(Actividad::find($id));
     }
 
     /**
