@@ -8,7 +8,7 @@
         <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
-            <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.lugar | truncate(50) }}</span>
+            <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.lugar }}</span>
         </div>
         <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
       </div>
