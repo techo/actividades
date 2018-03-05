@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Detalle </title>
-	<script src="/js/fontawesome-all.min.js"></script>
+@extends('main')
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
-<div class="container"  id="app">
-	<div class="card">
+@section('page_title')
+    Detalle de Actividad
+@endsection
+
+
+@section('main_image')
+    <div class="techo-hero">
+        <img src="/img/hero-slim.jpg" alt="hero image" height="210">
+        <h2>Inscríbete y acompáñanos con tu voluntariado</h2>
+    </div>
+@endsection
+
+@section('main_content')
 		<div class="row">
 			<div class="col-md-12">
 				<h4 class="card-subtitle">{{ $actividad->tipo->nombre }}</h3>
@@ -182,31 +185,4 @@
 			<div class="col-md-2 text-primary"><i class="fas fa-share-alt"></i> COMPARTIR</div>
 			<div class="col-md-2"><a class="btn btn-primary" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
 		</div>
-
-
-	</div>
-</div>
-
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-
-{{--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>--}}
-<script
-        src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.4/holder.js"></script>
-<script>
-    Holder.addTheme('thumb', {
-        bg: '#55595c',
-        fg: '#eceeef',
-        text: 'Thumbnail'
-    });
-</script>
-
-</body>
-</html>
+@endsection
