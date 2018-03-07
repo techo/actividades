@@ -2,10 +2,8 @@ Vue.config.devtools = true;
 import Vue from 'vue';
 import axios from 'axios';
 import Tarjeta from './components/tarjeta.vue';
-import Paginado from './components/paginado.vue';
 
 Vue.component('tarjeta', Tarjeta);
-Vue.component('paginado', Paginado);
 
 new Vue({
   el: "#app",

@@ -25,5 +25,10 @@ Route::get('/actividades/{id}', function($id){
     return view('actividades.show')->with('actividad', $actividad);
 });
 
+Route::get('/inscripciones/actividad/{id}', function($id){
+	$actividad = Actividad::find($id);
+    return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
+});
+
 Route::get('/ajax/actividades', 'ajax\ActividadesController@index');
 Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
