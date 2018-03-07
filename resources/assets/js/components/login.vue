@@ -1,7 +1,31 @@
 
 <template>
     <span>
-        <form class="form-inline mt-2 mt-md-0">
+    <!-- Si esta autenticado -->
+        <span id="userDetail" v-if="authenticated">
+            <div class="btn-group techo-btn-blanco" role="group" >
+                <button
+                    id="btnUser"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle techo-btn-blanco"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    v-model="user.nombres"
+                >
+                        {{ user.nombres }}
+                </button>
+                <div
+                    class="dropdown-menu"
+                    aria-labelledby="btnUser"
+                >
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
+                </div>
+            </div>
+        </span>
+
+    <!-- Si no esta autenticado -->
+        <form class="form-inline mt-2 mt-md-0" v-else>
             <button
                     class="btn my-2 my-sm-0 techo-btn-blanco"
                     type="button"
@@ -30,11 +54,11 @@
                                 <form id="frmLogin">
                                     <div class="form-group">
                                         <label for="mail">Correo Electrónico</label>
-                                        <input type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
+                                        <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="password">Password</label>
-                                        <input type="password" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
+                                        <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
                                     </div>
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" id="remember">
@@ -60,32 +84,47 @@
 <script>
     import axios from 'axios';
 
-
     export default {
         name: "login",
         data () {
             return {
                 credentials: {
                     mail: '',
-                    password: ''
+                    password: '',
+                },
+                hasError: false,
+                authenticated: false,
+                user: {
+                    nombres: '',
+                    id: ''
                 }
             }
         },
+        created () {
+          this.authenticated = this.checkLogin();
+          this.user.nombres = this.getCookie('user.nombres');
+          console.log('nombres: ' + this.user.nombres);
+        },
         methods: {
             login: function () {
-                console.log('!');
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(
-                    'http://atlas.test/login',
+                    '/login',
                     {
                         mail: this.credentials.mail,
                         password: this.credentials.password
                     })
                     .then(response => {
                         console.log(response);
+                        $('#login-modal').modal('hide');
+                        this.authenticated = true;
+                        this.setCookie('user.nombres', response.data.user.nombres, 1);
+                        this.user.nombres = this.getCookie('user.nombres');
+                        this.user.id = this.getCookie('user.idPersona');
                     })
                     .catch((error) => {
                         // Error
+                        this.hasError = true;
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
@@ -103,11 +142,97 @@
                         }
                         console.log(error.config);
                     });
+            },
+
+            logout: function() {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                axios.post(
+                    '/logout')
+                    .then(response => {
+                        this.setCookie('user.nombres', '', 0);
+                        this.authenticated = false;
+                        window.location = '/';
+                    })
+                    .catch((error) => {
+                        // Error
+                        this.hasError = true;
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log('Error', error.message);
+                        }
+                        console.log(error.config);
+                    });
+
+            },
+
+            setCookie(cname, cvalue, exdays) {
+                let d = new Date();
+                d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                let expires = "expires="+ d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            },
+
+            getCookie(cname) {
+                let name = cname + "=";
+                let decodedCookie = decodeURIComponent(document.cookie);
+                let ca = decodedCookie.split(';');
+                for(let i = 0; i <ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            },
+
+            checkLogin() {
+                let username = this.getCookie("user.nombres");
+                if (username != "") {
+                    return true;
+                }
+                return false;
             }
         }
     }
 </script>
 
 <style scoped>
+ .techo-btn-blanco {
+     margin-right: 4em;
+     border: none;
+     background-color: #0092dd;
+     color: #ffffff;
+ }
+    .dropdown-item {
+        font-family: Montserrat, sans-serif;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 12px;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: left;
+        color: #0092dd;
+    }
 
+ .dropdown-menu {
+        width: 10em;
+        padding: 1em;
+        margin: 0;
+    }
 </style>

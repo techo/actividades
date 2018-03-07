@@ -30,3 +30,7 @@ Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('autenticado', function() {
+    return (\Illuminate\Support\Facades\Auth::check()) ? 'si' : 'no';
+});
