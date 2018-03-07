@@ -1,5 +1,5 @@
 <?php
-
+use App\Actividad;
 
 Route::get('/', function () {
     return view('home');
@@ -21,6 +21,3 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('autenticado', function() {
-    return (\Illuminate\Support\Facades\Auth::check()) ? 'si' : 'no';
-});
