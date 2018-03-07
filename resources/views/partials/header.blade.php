@@ -17,9 +17,8 @@
                     <a class="nav-link disabled" href="#">Disabled</a>
                 </li>
             </ul>
-            <form class="form-inline mt-2 mt-md-0">
-                <button class="btn btn-light my-2 my-sm-0 bg-white techo-blue techo-btn-blanco" type="submit">Ingresar</button>
-            </form>
         </div>
+        <login></login>
+        </form>
     </nav>
 </header>
