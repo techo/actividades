@@ -89,7 +89,7 @@ code {
 }
 
 .techo-h6 {
-    font-family: Montserrat, Sans-Serif;
+    font-family: Montserrat, sans-serif;
     text-transform: uppercase;
     font-size: 17px;
     font-weight: 500;
@@ -119,7 +119,7 @@ code {
 }
 
 .techo-footer-suscribe {
-    font-family: Montserrat, Sans-Serif;
+    font-family: Montserrat, sans-serif;
     font-size: 18px;
     font-weight: bold;
     font-style: normal;
@@ -139,7 +139,7 @@ code {
     background: #392f28;
     position: relative;
     color: #ffffff;
-    font-family: Montserrat, Sans-Serif;
+    font-family: Montserrat, sans-serif;
 }
 
 a {

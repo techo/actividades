@@ -1,7 +1,7 @@
 <header>
     <!-- Fixed navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-techo-blue">
-        <a class="navbar-brand" href="/"><img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo"></a>
+        <a class="navbar-brand" href="/"><img class="techo-logo" src="{{ asset('/img/techo-logo_269x83.png') }}" alt="Techo"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -19,6 +19,6 @@
             </ul>
         </div>
         <login></login>
-        </form>
+
     </nav>
 </header>

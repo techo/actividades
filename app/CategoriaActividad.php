@@ -11,6 +11,6 @@ class CategoriaActividad extends Model
 
     public function tipos()
     {
-        return $this->hasMany(Tipo::class, 'id', 'idCategoria');
+        return $this->hasMany(Tipo::class, 'idCategoria', 'id');
     }
 }

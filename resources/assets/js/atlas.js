@@ -3,10 +3,10 @@ import Vue from 'vue';
 import axios from 'axios';
 import Login from './components/login'
 import Tarjeta from './components/tarjeta.vue';
-import Paginado from './components/paginado.vue';
+import Filtro from './components/filtro.vue';
 
 Vue.component('tarjeta', Tarjeta);
-Vue.component('paginado', Paginado);
+Vue.component('filtro', Filtro);
 Vue.component('login', Login);
 
 new Vue({
@@ -28,7 +28,7 @@ new Vue({
   },
   methods: {
       bottomVisible() {
-          const scrollY = window.scrollY
+          const scrollY = window.scrollY;
           const visible = document.documentElement.clientHeight
           const pageHeight = document.documentElement.scrollHeight
           const bottomOfPage = visible + scrollY >= pageHeight

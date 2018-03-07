@@ -10,6 +10,6 @@ class CategoriasController extends Controller
 {
     public function show(Request $request)
     {
-        return CategoriaActividad::find($request->id)->tipos();
+        return CategoriaActividad::find($request->id)->tipos()->get();
     }
 }
