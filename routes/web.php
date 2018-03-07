@@ -27,3 +27,6 @@ Route::get('/actividades/{id}', function($id){
 
 Route::get('/ajax/actividades', 'ajax\ActividadesController@index');
 Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

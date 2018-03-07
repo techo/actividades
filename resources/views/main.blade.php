@@ -6,16 +6,17 @@
 </head>
 
 <body>
-    @include('partials.header')
+    <div id="app">
+        @include('partials.header')
 
-    <!-- Begin page content -->
-    @yield('main_image')
-    <main role="main" class="container" style="margin-bottom: 5em" id="app">
-        @yield('main_content')
-    </main>
+        <!-- Begin page content -->
+        @yield('main_image')
+        <main role="main" class="container" style="margin-bottom: 5em">
+            @yield('main_content')
+        </main>
 
-    @yield('footer')
-
+        @yield('footer')
+    </div>
     @include('partials.scripts')
     </body>
 </html>

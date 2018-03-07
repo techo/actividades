@@ -1,11 +1,13 @@
 Vue.config.devtools = true;
 import Vue from 'vue';
 import axios from 'axios';
+import Login from './components/login'
 import Tarjeta from './components/tarjeta.vue';
 import Paginado from './components/paginado.vue';
 
 Vue.component('tarjeta', Tarjeta);
 Vue.component('paginado', Paginado);
+Vue.component('login', Login);
 
 new Vue({
   el: "#app",
