@@ -18,5 +18,5 @@
         @yield('footer')
     </div>
     @include('partials.scripts')
-    </body>
+</body>
 </html>

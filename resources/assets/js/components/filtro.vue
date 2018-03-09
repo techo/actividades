@@ -81,6 +81,7 @@
         },
         methods: {
             filtrar: function (){
+
                 let paramCategoria = 'categoria=' + this.idCategoria;
                 let paramProvincia = '&provincia=' + this.idProvincia;
                 let paramLocalidad = '&localidades=' + this.idLocalidad;
@@ -91,38 +92,16 @@
                     paramTipoDeActividad;
                 let url = '/ajax/actividades?' + parametros;
                 console.log(url);
-                axios.get(url)
-                    .then(response => {
-                        console.log(response.data);
-                        //this.tiposDeActividad = response.data.tipos;
-                    })
-                    .catch((error) => {
-                        // Error
-                        this.hasError = true;
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.log(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.log('Error', error.message);
-                        }
-                        console.log(error.config);
-                    });
+
+                var event = new CustomEvent('cargarTarjetas', {detail: url});
+                window.dispatchEvent(event);
             },
             getTiposDeActividad: function () {
                 let url = '/ajax/categorias/' + this.idCategoria;
-                console.log(url);
+                // console.log(url);
                 axios.get(url)
                     .then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         this.tiposDeActividad = response.data.tipos;
                         this.filtrar();
                     })
@@ -151,10 +130,10 @@
             },
             getLocalidades: function() {
                 let url = '/ajax/provincias/' + this.idProvincia;
-                console.log(url);
+                // console.log(url);
                 axios.get(url)
                     .then(response => {
-                        console.log(response.data);
+                        // console.log(response.data);
                         this.mensajeLocalidades = "Todas las localidades";
                         this.dataLocalidades = response.data.localidades;
                         this.filtrar();
@@ -194,7 +173,7 @@
             this.dataCategorias     = JSON.parse(this.dataCategorias);
             this.getTiposDeActividad();
             this.filtrar();
-
+            console.log('filtrar created');
         }
     }
 </script>

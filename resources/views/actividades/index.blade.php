@@ -16,14 +16,11 @@
         categoria_seleccionada = "{{ $categoriaSeleccionada->id }}"
         categorias="{{ $categorias }}"
         provincias="{{ $provincias }}"
+
     >
     </filtro>
-    <div class="row">
-        <div class="card-deck mb-3 text-center">
-            <tarjeta v-for="act in actividades" v-bind:actividad="act"></tarjeta>
-        </div>
-    </div>
-    <div v-show="loading">Cargando...</div>
+
+    <contenedor-de-tarjetas ref="contenedor"></contenedor-de-tarjetas>
 @endsection
 
 @section('additional_scripts')

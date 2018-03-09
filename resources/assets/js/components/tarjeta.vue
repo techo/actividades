@@ -4,11 +4,11 @@
       <img class="card-img-top" src="/img/tarjeta-1.jpg" alt="Card image cap" >
       <div class="card-body px-0">
         <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
-        <h5 class="card-title">{{ actividad.nombreActividad | truncate(40) }}</h5>
+        <h5 class="card-title">{{ actividad.nombreActividad | truncate(30) }}</h5>
         <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
-            <span class="col-sm-4"><i data-feather="calendar"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
+            <span class="col-sm-4"><i class="fas fa-camera-retro"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i data-feather="clock"></i> {{ actividad.hora }}</span>
-            <span class="col-sm-4"><i data-feather="map-pin"></i> {{ actividad.lugar | truncate(10) }}</span>
+            <span class="col-sm-4"><i data-feather="map-pin"></i> {{ actividad.lugar | truncate(50) }}</span>
         </div>
         <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
       </div>
@@ -18,19 +18,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'tarjeta',
-    props: ['actividad'],
-    filters: {
-        truncate: function(string, value) {
-            if(!string) return ''
-            return string.substr(0,value) + '...'
+    export default {
+        name: 'tarjeta',
+        props: ['actividad'],
+        data () {
+            return {
+                key: ''
+            }
+        },
+
+        filters: {
+            truncate: function(string, value) {
+                if(!string) return '';
+                return string.substr(0,value) + '...';
+            }
+        },
+        methods: {
+          ir_a_actividad: function () {
+            window.location.href = '/actividades/' + this.actividad.idActividad
+          }
         }
-    },
-    methods: {
-      ir_a_actividad: function () {
-        window.location.href = '/actividades/' + this.actividad.idActividad
-      }
     }
-  }
 </script>
