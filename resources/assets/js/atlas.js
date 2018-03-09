@@ -12,6 +12,7 @@ window.events = new Vue();
 Vue.component('filtro', Filtro);
 Vue.component('login', Login);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
+Vue.component('inscripciones', Inscripciones);
 
 var app = new Vue({
     el: "#app",

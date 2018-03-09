@@ -16,7 +16,16 @@ class Persona extends Authenticatable
         return $this->hasMany(PuntoEncuentro::class, 'idPersona');
     }
 
+    public function inscripcion()
+    {
+        return $this->hasMany(Inscripcion::class, 'idPersona');
+    }
+
     public function getNombreCompletoAttribute() {
     	return $this->nombres . ' ' . $this->apellidoPaterno;
+    }
+
+    public function estaInscripto($idActividad) {
+        return $this->inscripcion->where('idActividad',$idActividad)->count();
     }
 }
