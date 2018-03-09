@@ -1,12 +1,10 @@
 <?php
 use App\Actividad;
-
-Route::get('/', 'HomeController@index')->name('home');
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('home');
-});
+
+Route::get('/', 'HomeController@index')->name('home');
+
 Route::get('/actividades', 'ActividadesController@index');
 
 Route::get('/poc', function(){

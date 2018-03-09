@@ -3,6 +3,7 @@ import Vue from 'vue';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
+import Inscripciones from './components/inscripciones';
 
 require('./bootstrap');
 
