@@ -1,9 +1,13 @@
 Vue.config.devtools = true;
 import Vue from 'vue';
 import axios from 'axios';
+import Login from './components/login'
 import Tarjeta from './components/tarjeta.vue';
+import Inscripciones from './components/inscripciones.vue';
 
 Vue.component('tarjeta', Tarjeta);
+Vue.component('login', Login);
+Vue.component('inscripciones', Inscripciones);
 
 new Vue({
   el: "#app",
