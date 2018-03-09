@@ -1,7 +1,7 @@
 Vue.config.devtools = true;
 import Vue from 'vue';
 import axios from 'axios';
-import Login from './components/login'
+import Login from './components/login.vue';
 import Tarjeta from './components/tarjeta.vue';
 import Filtro from './components/filtro.vue';
 
@@ -35,14 +35,14 @@ new Vue({
           return bottomOfPage || pageHeight < visible
       },
       agregarTarjetas() {
-          var self = this;
-          self.page++
+          let self = this;
+          self.page++;
           self.loading = true;
           axios.get('/ajax/actividades?page='+self.page)
               .then(response => {
                   self.meta = response
-                  for(var i in response.data.data) {
-                      var item = response.data.data[i]
+                  for(let i in response.data.data) {
+                      let item = response.data.data[i]
                       self.actividades.push(item)
                   }
                   self.loading = false;

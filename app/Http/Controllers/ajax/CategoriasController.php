@@ -10,6 +10,8 @@ class CategoriasController extends Controller
 {
     public function show(Request $request)
     {
-        return CategoriaActividad::find($request->id)->tipos()->get();
+        $categoria = CategoriaActividad::find($request->id);
+        $categoria->load('tipos');
+        return $categoria;
     }
 }

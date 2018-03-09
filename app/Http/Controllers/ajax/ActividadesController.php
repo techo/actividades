@@ -4,18 +4,12 @@ namespace App\Http\Controllers\ajax;
 
 use App\Http\Resources\ActividadCollection;
 use App\Http\Resources\ActividadResource;
-use App\Localidad;
-use App\Provincia;
-use App\PuntoEncuentro;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actividad;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
-use League\Flysystem\Adapter\Local;
 
 class actividadesController extends Controller
 {
@@ -25,9 +19,10 @@ class actividadesController extends Controller
      * @param int $items Cantidad de elementos en cada página
      * @return ActividadCollection
      */
-    public function index($items=6)
+    public function index(Request $request, $items=6)
     {
-        return ActividadResource::collection(Actividad::orderBy('fechaInicio','desc')->paginate($items));
+        //return ActividadResource::collection(Actividad::orderBy('fechaInicio','desc')->paginate($items));
+        return $this->filtrar($request, $items);
     }
 
     /**
@@ -96,26 +91,31 @@ class actividadesController extends Controller
         //
     }
 
-    public function filtrar(Request $request)
+    private function filtrar(Request $request, $items)
     {
         $query = DB::table('Actividad')
             ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
             ->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
             ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
             ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
             ->selectRaw('distinct Actividad.*')
             ->orderBy('fechaInicio', 'desc');
 
-        if ($request->has('provincia')) {
-            $query->where('provincia', $request->provincia);
+        if ($request->has('categoria') && !is_null($request->categoria)) {
+            $query->where('Tipo.idCategoria', $request->categoria);
         }
 
-        if ($request->has('localidades')) {
-            $query->whereIn('localidad', $request->localidades);
+        if ($request->has('provincia') && !is_null($request->provincia)) {
+            $query->where('atl_provincias.id', $request->provincia);
         }
 
-        if ($request->has('tipo')) {
-            $query->where('tipo', $request->tipo);
+        if ($request->has('localidades') && !is_null($request->localidades)) {
+            $query->whereIn('atl_localidades.id', array($request->localidades));
+        }
+
+        if ($request->has('tipo') && !is_null($request->tipo)) {
+            $query->where('Tipo.idTipo', $request->tipo);
         }
 
         $actividades = $query->get();
@@ -126,7 +126,7 @@ class actividadesController extends Controller
             $resourceCollection[] = new ActividadResource($actividad);
         }
 
-        return $this->paginate($resourceCollection, 6, $request->query());
+        return $this->paginate($resourceCollection, $items, $request->query());
     }
 
     function paginate($items, $perPage, $parameters = null)

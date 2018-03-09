@@ -50,7 +50,7 @@ code {
 }
 
 .card:hover {
-     /*background-color: #e8ebef; */
+    /*background-color: #e8ebef; */
 }
 
 .bg-white {
@@ -146,6 +146,61 @@ a {
     color: #0092dd
 }
 
+#login-modal h2 {
+    font-family: Montserrat, sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: uppercase;
+    color: #212121;
+    margin-top: 1em;
+}
+
+#login-modal label {
+    height: 16px;
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #363636;
+}
+
+#login-modal .cerrar {
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 1;
+    text-shadow: none;
+}
+
+#login-modal a {
+    height: 16px;
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #0092dd;
+    text-transform: uppercase;
+}
 .techo-btn-azul {
     background-color: #0092dd;
     color: #ffffff;

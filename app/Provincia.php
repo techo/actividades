@@ -11,7 +11,7 @@ class Provincia extends Model
 
     public function localidades()
     {
-        return $this->hasMany(Localidad::class, 'id_localidad', 'id');
+        return $this->hasMany(Localidad::class, 'id_provincia', 'id');
     }
 
     public function pais()

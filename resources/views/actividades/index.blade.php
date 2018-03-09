@@ -12,7 +12,12 @@
 @endsection
 
 @section('main_content')
-    <filtro categoria = "1"></filtro>
+    <filtro
+        categoria_seleccionada = "{{ $categoriaSeleccionada->id }}"
+        categorias="{{ $categorias }}"
+        provincias="{{ $provincias }}"
+    >
+    </filtro>
     <div class="row">
         <div class="card-deck mb-3 text-center">
             <tarjeta v-for="act in actividades" v-bind:actividad="act"></tarjeta>
