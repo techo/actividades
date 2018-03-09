@@ -34,4 +34,8 @@ class Actividad extends Model
     {
         return $this->hasMany(PuntoEncuentro::class, 'idActividad');
     }
+
+    public function scopePersonaInscripta($query, $idPersona) {
+        return $this->inscripciones()->where('idPersona', $idPersona)->get()->count();
+    }
 }

@@ -13,13 +13,13 @@
 			<div class="col-md-8">
 				<div class="row">
 					<div class="col-md-12">
-						<h2 class="card-title">Elegir un punto de encuentro</h1>
+						<h2 class="card-title">Confirmar tu inscripcion</h1>
 					</div>
 				</div> 
 				<hr>
 				<div class="row">
 					<div class="col-md-12">
-						<h5 class="card-title">Que es un punto de encuentro?</h1>
+						<h5 class="card-title">Donde nos encontramos</h1>
 					</div>
 				</div> 
 				<div class="row">
@@ -34,23 +34,21 @@
 						<h5 class="card-title">Puntos de encuentro</h1>
 					</div>
 				</div> 
-				<form action="/inscripciones/actividad/{{$actividad->idActividad}}/confirmar" method="POST">
-					@foreach($actividad->puntosEncuentro as $puntoEncuentro)
+				<form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
+					<input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
 					<div class="row">
-						<div class="col-md-1">
-						  <input type="radio" name="punto_encuentro" value="{{$puntoEncuentro->idPuntoEncuentro}}"{{$loop->first ? 'checked = "checked"': ''}}>
+						<div class="col-md-12">
+			  				{{ $punto_encuentro->punto }}
 						</div>
-						<div class="col-md-11">
-						  {{$puntoEncuentro->punto}}	
+						<div class="col-md-12">
+			  				{{ $punto_encuentro->horario }}
 						</div>
 					</div>
-					@endforeach
 					<div class="row  align-middle">
-					<input type="hidden" name="idActividad" id="idActividad" value="{{ $actividad->idActividad }}">
-					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-						
-						<div class="col-md-3 text-primary"><i class="fas fa-share-alt"></i><a href="/actividades/{{$actividad->idActividad}}"> volver</a></div>
-						<div class="col-md-3"><input type="submit" value="SIGUIENTE" class="btn btn-primary"> </div>
+						<div class="col-md-3 text-primary"><i class="fas fa-share-alt"></i><a href="/inscripciones/actividad/{{$actividad->idActividad}}"> volver</a></div>
+						<div class="col-md-3"><input type="submit" value="CONFIRMAR" class="btn btn-primary"> </div>
 					</div>
 				</form>
 			</div>

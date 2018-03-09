@@ -13,26 +13,22 @@
 @endsection
 
 @section('main_content')
-
 		<div class="row">
-		@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-		<div class="alert alert-success" id="alertYaInscripto">
-    		<strong>Atentiii!</strong> Ya estas inscripto a esta actividad
-  		</div>
-		@endif
-			<div class="col-md-12">
-				<h4 class="card-subtitle">{{ $actividad->tipo->nombre }}</h3>
+			<div class="col-md-8">
+				<h1 class="card-subtitle">¡Inscripción confirmada! Gracias por ayudar.</h3>
 			</div>
+		<hr>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<h1 class="card-title">{{ $actividad->nombreActividad }}</h1>
+			<div class="col-md-8">
+				<h3 class="card-title">Estas inscripto a <a href="/actividades/{{$actividad->idActividad}}">{{ $actividad->nombreActividad }}</a></h1>
 			</div>
 		</div>
 		<div class="row justify-content-start">
-			<div class="col-md-2"><i class="far fa-calendar"></i> <span>{{ $actividad->fechaInicio->format('d-m-Y')}}</span></div>
-			<div class="col-md-2"><i class="far fa-clock"></i> <span>{{ $actividad->fechaInicio->format('h:m')}}</span></div>
-			<div class="col-md-2"><i class="fas fa-map-marker-alt"></i> <span>{{ $actividad->lugar }}</span></div>
+			<div class="col-md-8">
+				<p>Te hemos enviado por mail toda la información pertinente para la actividad</p>
+				<p>Puedes ingresar al panel de usuario para visualizar o modificar tu presencia</p>
+			</div>
 		</div>
 		<hr>
 		<div class="row">
@@ -185,16 +181,4 @@
 			</div>
 
 		</div>
-		<hr>
-		<div class="row  align-middle">
-			<div class="col-md-8"><h5>{{ $actividad->nombreActividad }}</h5></div>
-			<div class="col-md-2 text-primary"><i class="fas fa-share-alt"></i> COMPARTIR</div>
-			@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-				<div class="col-md-2"><span class="btn btn-success">YA TE INSCRIBISTE!</span></div>
-			@else
-				<div class="col-md-2"><a class="btn btn-primary" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
-			@endif
-		</div>
-
-
 @endsection

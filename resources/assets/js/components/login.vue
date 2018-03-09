@@ -121,6 +121,8 @@
                         this.setCookie('user.nombres', response.data.user.nombres, 1);
                         this.user.nombres = this.getCookie('user.nombres');
                         this.user.id = this.getCookie('user.idPersona');
+                        var event = new CustomEvent('loggedIn');
+                        window.dispatchEvent(event);
                     })
                     .catch((error) => {
                         // Error
