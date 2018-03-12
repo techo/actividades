@@ -11,7 +11,12 @@
             </div>
         </div>
 
-        <div v-show="loading">Cargando...</div>
+        <div v-show="loading" class="loading" style="text-align: center">
+            <i class="fas fa-sync fa-spin fa-5x"></i>
+        </div>
+        <div v-show="vacio" class="loading" style="text-align: center">
+            La búsqueda no tiene resultados
+        </div>
     </span>
 </template>
 
@@ -30,7 +35,8 @@
                 bottom: false,
                 url: '',
                 ultimaTarjeta: 0,
-                totalTarjetas: 0
+                totalTarjetas: 0,
+                vacio: false
             }
         },
         components: {tarjeta: Tarjeta},
@@ -59,18 +65,24 @@
                 this.loading = true;
                 axios.get(url)
                     .then(response => {
-                        console.log(response.data.data);
-                        for (let element in response.data.data) {
-                            self.actividades.push(response.data.data[element]);
-                            console.log(element);
-                        }
-                        this.next_page = response.data.next_page_url;
-                        this.ultimaTarjeta = response.data.to;
-                        this.totalTarjetas = response.data.total;
+                        // console.log(response.data.data);
+                        if(typeof response.data.data != "undefined" && response.data.data.length > 0) {
+                            for (let element in response.data.data) {
+                                self.actividades.push(response.data.data[element]);
+                                console.log(element);
+                            }
+                            this.next_page = response.data.next_page_url;
+                            this.ultimaTarjeta = response.data.to;
+                            this.totalTarjetas = response.data.total;
 
-                        if (this.ultimaTarjeta === this.totalTarjetas){
+                            if (this.ultimaTarjeta === this.totalTarjetas){
+                                this.loading = false;
+                            }
+                        } else {
                             this.loading = false;
+                            this.vacio = true;
                         }
+
                     })
                     .catch((error) => {
                         // Error

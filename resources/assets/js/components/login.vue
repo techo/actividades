@@ -1,49 +1,13 @@
 
 <template>
     <span>
-    <!-- Si esta autenticado -->
-        <span id="userDetail" v-if="authenticated">
-            <div class="btn-group techo-btn-blanco" role="group" >
-                <button
-                    id="btnUser"
-                    type="button"
-                    class="btn btn-secondary dropdown-toggle techo-btn-blanco"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    v-model="user.nombres"
-                >
-                        {{ user.nombres }}
-                </button>
-                <div
-                    class="dropdown-menu"
-                    aria-labelledby="btnUser"
-                >
-                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
-                </div>
-            </div>
-        </span>
-
-    <!-- Si no esta autenticado -->
-        <form class="form-inline mt-2 mt-md-0" v-else>
-            <button
-                    class="btn my-2 my-sm-0 techo-btn-blanco"
-                    type="button"
-                    data-toggle="modal"
-                    data-target="#login-modal"
-                    id="btnShowModal"
-            >
-                Ingresar
-            </button>
-        </form>
-
         <!-- Modal begin-->
-        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body" style="padding: 0">
                         <div class="">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="opacity: 1; margin-top: -1em">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="opacity: 1; margin-top: -1em">
                                 <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
                             </button>
                         </div>
@@ -77,6 +41,44 @@
 
 
         <!-- Modal End-->
+    <!-- Si esta autenticado -->
+        <span id="userDetail" v-if="authenticated">
+            <div class="btn-group techo-btn-blanco" role="group" >
+                <button
+                    id="btnUser"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle techo-btn-blanco"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    v-model="user.nombres"
+                >
+                        {{ user.nombres }}
+                </button>
+                <div
+                    class="dropdown-menu"
+                    aria-labelledby="btnUser"
+                >
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
+                </div>
+            </div>
+        </span>
+
+    <!-- Si no esta autenticado -->
+
+        <form class="form-inline mt-2 mt-md-0" v-else>
+            <button
+                    class="btn my-2 my-sm-0 techo-btn-blanco"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#login-modal"
+                    id="btnShowModal"
+            >
+                Ingresar
+            </button>
+        </form>
+
+
 
     </span>
 </template>
@@ -103,7 +105,7 @@
         created () {
           this.authenticated = this.checkLogin();
           this.user.nombres = this.getCookie('user.nombres');
-          console.log('nombres: ' + this.user.nombres);
+          // console.log('nombres: ' + this.user.nombres);
         },
         methods: {
             login: function () {
@@ -115,8 +117,11 @@
                         password: this.credentials.password
                     })
                     .then(response => {
-                        console.log(response);
+                        // console.log(response);
                         $('#login-modal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+
                         this.authenticated = true;
                         this.setCookie('user.nombres', response.data.user.nombres, 1);
                         this.user.nombres = this.getCookie('user.nombres');
@@ -237,4 +242,6 @@
         padding: 1em;
         margin: 0;
     }
+
+
 </style>

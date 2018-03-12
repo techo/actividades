@@ -26,7 +26,7 @@
                             <p class="card-text">{{ $categoria->descripcion }}</p>
                             <p>
                                 <a class="techo-h6 techo-blue" data-toggle="collapse" href="#collapse_{{ $categoria->id }}" role="button">
-                                    Actividades a Realizar <i class="fas fa-chevron-down "></i>
+                                    Actividades a Realizar <i class="fas fa-chevron-down"></i>
 
                                 </a>
                             </p>
@@ -45,6 +45,7 @@
             @endwhile
         @endwhile
     </div>
+
 @endsection
 
 @section('footer')

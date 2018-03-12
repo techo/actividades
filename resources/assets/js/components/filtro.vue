@@ -91,7 +91,7 @@
                     paramLocalidad +
                     paramTipoDeActividad;
                 let url = '/ajax/actividades?' + parametros;
-                console.log(url);
+                // console.log(url);
 
                 var event = new CustomEvent('cargarTarjetas', {detail: url});
                 window.dispatchEvent(event);
@@ -173,7 +173,7 @@
             this.dataCategorias     = JSON.parse(this.dataCategorias);
             this.getTiposDeActividad();
             this.filtrar();
-            console.log('filtrar created');
+            // console.log('filtrar created');
         }
     }
 </script>
