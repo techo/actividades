@@ -11,7 +11,7 @@
 
         <!-- Begin page content -->
         @yield('main_image')
-        <main role="main" class="container" style="margin-bottom: 5em">
+        <main role="main" class="container-fluid" style="margin-bottom: 5em">
             @yield('main_content')
         </main>
 
