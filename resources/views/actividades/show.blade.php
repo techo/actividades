@@ -17,7 +17,7 @@
 		<div class="row">
 		@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
 		<div class="alert alert-success" id="alertYaInscripto">
-    		<strong>Atentiii!</strong> Ya estas inscripto a esta actividad
+    		<strong>Ya estas inscripto a esta actividad</strong>
   		</div>
 		@endif
 			<div class="col-md-12">
