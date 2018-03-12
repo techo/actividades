@@ -66,21 +66,20 @@
                 axios.get(url)
                     .then(response => {
                         // console.log(response.data.data);
-                        if(typeof response.data.data != "undefined" && response.data.data.length > 0) {
-                            for (let element in response.data.data) {
-                                self.actividades.push(response.data.data[element]);
-                                console.log(element);
-                            }
-                            this.next_page = response.data.next_page_url;
-                            this.ultimaTarjeta = response.data.to;
-                            this.totalTarjetas = response.data.total;
-
-                            if (this.ultimaTarjeta === this.totalTarjetas){
-                                this.loading = false;
-                            }
-                        } else {
+                        if(typeof response.data.data == "undefined" || response.data.data.length == 0) {
                             this.loading = false;
                             this.vacio = true;
+                        }
+                        for (let element in response.data.data) {
+                            self.actividades.push(response.data.data[element]);
+                            console.log(element);
+                        }
+                        this.next_page = response.data.next_page_url;
+                        this.ultimaTarjeta = response.data.to;
+                        this.totalTarjetas = response.data.total;
+
+                        if (this.ultimaTarjeta === this.totalTarjetas){
+                            this.loading = false;
                         }
 
                     })
