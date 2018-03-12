@@ -1,6 +1,6 @@
 <template>
-    <div class="row" id="filtro">
-        <div class="col-md-3" style="background-color: #2ab27b">
+    <div class="row mt-4 mb-4 "id="filtro">
+        <div class="col-md-3">
             <select class="dropdown"
                 title="Categorías"
                 name="categorias"
@@ -25,7 +25,7 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-2" style="background-color: #5e5d5d">
+        <div class="col-md-2">
             <select class="dropdown"
                 title="Provincias"
                 name="provincias"
@@ -51,8 +51,11 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-danger btn-sm pull-right" v-on:click="resetFiltros">Borra Filtros</button>
+        <div class="col-md-2 pull-right">
+            <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="resetFiltros">
+                <i class="fas fa-sync"></i>
+                Borra Filtros
+            </button>
         </div>
     </div>
 </template>
@@ -178,7 +181,7 @@
 <style scoped>
     .dropdown {
         font-family: Montserrat, sans-serif;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
@@ -187,5 +190,18 @@
         text-align: left;
         text-transform: uppercase;
         color: #0092dd;
+        height: 40px;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
+    }
+
+    .techo-btn-azul {
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
+        padding: 1em 1em;
+        height: 40px;
+    }
+
+    #filtro {
+        padding-bottom: 15px;
+        border-bottom: solid thin #cecece
     }
 </style>
