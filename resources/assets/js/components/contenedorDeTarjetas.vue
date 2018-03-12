@@ -63,6 +63,7 @@
             agregarTarjetas(url) {
                 let self = this;
                 this.loading = true;
+                this.vacio = false;
                 axios.get(url)
                     .then(response => {
                         // console.log(response.data.data);

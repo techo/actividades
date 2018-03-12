@@ -21,7 +21,7 @@
   		</div>
 		@endif
 			<div class="col-md-12">
-				<h4 class="card-subtitle">{{ $actividad->tipo->nombre }}</h3>
+				<h4 class="card-subtitle">{{ $actividad->tipo->nombre }}</h4>
 			</div>
 		</div>
 		<div class="row">
@@ -79,7 +79,7 @@
 		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
 			<div class="row">
 				<div class="col-md-12">
-				  {{$puntoEncuentro->punto}}	
+				{{$puntoEncuentro->punto}}
 				</div>
 			</div>
 		@endforeach

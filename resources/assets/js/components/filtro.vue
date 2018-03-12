@@ -17,7 +17,7 @@
                 title="Tipo de Actividad"
                 name="tipoActividad"
                 v-model="idTipoDeActividad"
-                v-on:change=""
+                v-on:change="filtrar"
             >
                 <option value="">Todas las actividades</option>
                  <option v-for="actividad in tiposDeActividad" v-bind:value="actividad.idTipo">
@@ -163,6 +163,7 @@
                 this.dataLocalidades = [];
                 this.idProvincia = "";
                 this.idTipoDeActividad = "";
+                this.idLocalidad = "";
                 this.mensajeLocalidades = "Seleccione una provincia...";
                 this.filtrar();
             },
