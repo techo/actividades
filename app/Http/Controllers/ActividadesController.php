@@ -18,7 +18,8 @@ class actividadesController extends Controller
      */
     public function index(Request $request)
     {
-        $idCategoria = $request->categoria;
+        $default = 1; //Actividades en Asentamientos
+        $idCategoria = $request->categoria ?? $default;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
         $provincias = Provincia::all();

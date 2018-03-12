@@ -1,61 +1,58 @@
 <template>
     <div class="row" id="filtro">
-        <div class="col-md-10">
-            <div class="row">
-                <div class="col-md-3">
-                    <select
-                        title="Categorías"
-                        name="categorias"
-                        v-on:change="getTiposDeActividad"
-                        v-model="idCategoria"
-                    >
-                        <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
-                            {{ categoria.nombre }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select
-                        title="Tipo de Actividad"
-                        name="tipoActividad"
-                        v-model="idTipoDeActividad"
-                        v-on:change=""
-                    >
-                        <option value="">Todas las actividades</option>
-                         <option v-for="actividad in tiposDeActividad" v-bind:value="actividad.idTipo">
-                            {{ actividad.nombre }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select
-                        title="Provincias"
-                        name="provincias"
-                        v-model="idProvincia"
-                        v-on:change="getLocalidades"
-                    >
-                        <option value="">Todas las provincias</option>
-                        <option v-for="provincia in dataProvincias" v-bind:value="provincia.id">
-                            {{ provincia['provincia'] }}
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select title="Localidades" name="localidades" v-model="idLocalidad" v-on:change="filtrar">
-                        <option value="">{{ mensajeLocalidades }}</option>
-                        <option v-for="localidad in dataLocalidades" v-bind:value="localidad.id">
-                            {{ localidad.localidad }}
-                        </option>
-                    </select>
-                </div>
-            </div>
+        <div class="col-md-3" style="background-color: #2ab27b">
+            <select class="dropdown"
+                title="Categorías"
+                name="categorias"
+                v-on:change="getTiposDeActividad"
+                v-model="idCategoria"
+            >
+                <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
+                    {{ categoria.nombre }}
+                </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="dropdown"
+                title="Tipo de Actividad"
+                name="tipoActividad"
+                v-model="idTipoDeActividad"
+                v-on:change=""
+            >
+                <option value="">Todas las actividades</option>
+                 <option v-for="actividad in tiposDeActividad" v-bind:value="actividad.idTipo">
+                    {{ actividad.nombre }}
+                </option>
+            </select>
+        </div>
+        <div class="col-md-2" style="background-color: #5e5d5d">
+            <select class="dropdown"
+                title="Provincias"
+                name="provincias"
+                v-model="idProvincia"
+                v-on:change="getLocalidades"
+            >
+                <option value="">Todas las provincias</option>
+                <option v-for="provincia in dataProvincias" v-bind:value="provincia.id">
+                    {{ provincia['provincia'] }}
+                </option>
+            </select>
         </div>
         <div class="col-md-2">
-            <div class="row">
-                <div class="col-md-6">
-                    <button class="btn btn-danger btn-sm" v-on:click="resetFiltros">Borra Filtros</button>
-                </div>
-            </div>
+            <select class="dropdown"
+                title="Localidades"
+                name="localidades"
+                v-model="idLocalidad"
+                v-on:change="filtrar"
+            >
+                <option value="">{{ mensajeLocalidades }}</option>
+                <option v-for="localidad in dataLocalidades" v-bind:value="localidad.id">
+                    {{ localidad.localidad }}
+                </option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-danger btn-sm pull-right" v-on:click="resetFiltros">Borra Filtros</button>
         </div>
     </div>
 </template>
@@ -177,3 +174,18 @@
         }
     }
 </script>
+
+<style scoped>
+    .dropdown {
+        font-family: Montserrat, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: left;
+        text-transform: uppercase;
+        color: #0092dd;
+    }
+</style>

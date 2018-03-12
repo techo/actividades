@@ -122,11 +122,14 @@ class actividadesController extends Controller
 
         $actividades = Actividad::hydrate($actividades->toArray());
 
-        foreach ($actividades as $actividad) {
-            $resourceCollection[] = new ActividadResource($actividad);
+        if ($actividades->count() > 0) {
+            foreach ($actividades as $actividad) {
+                $resourceCollection[] = new ActividadResource($actividad);
+            }
+            return $this->paginate($resourceCollection, $items, $request->query());
         }
+        return $actividades;
 
-        return $this->paginate($resourceCollection, $items, $request->query());
     }
 
     function paginate($items, $perPage, $parameters = null)
