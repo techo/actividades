@@ -15,8 +15,6 @@
     <filtro
         categoria_seleccionada = "{{ $categoriaSeleccionada->id }}"
         categorias="{{ $categorias }}"
-        provincias="{{ $provincias }}"
-
     >
     </filtro>
 

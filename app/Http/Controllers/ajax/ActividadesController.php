@@ -146,4 +146,44 @@ class actividadesController extends Controller
             ['path' => Paginator::resolveCurrentPath(), 'query' => $parameters]
         );
     }
+
+    /**
+     * @param Request $request
+     * @param $idCategoria
+     * @return mixed
+     */
+    public function filtrarProvinciasYLocalidades(Request $request)
+    {
+
+        $default = 1; //Actividades en Asentamientos
+        $categoria = $request->categoria ?? $default;
+
+        $provincias = DB::table('Actividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
+            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
+            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
+            ->where('Tipo.idCategoria', $categoria)
+            ->orderBy('atl_provincias.id', 'desc')
+            ->orderBy('atl_localidades.id', 'desc')
+            ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
+                                         atl_localidades.id id_localidad, atl_localidades.Localidad');
+
+        if ($request->has('tipo') && !is_null($request->tipo)) {
+            $provincias->where('Tipo.idTipo', $request->tipo);
+        }
+
+        $provincias = $provincias->get();
+        $listProvincias = [];
+
+        for ($i = 0; $i < count($provincias); $i++) {
+            $idProvincia = $provincias[$i]->id_provincia;
+            $listProvincias[$idProvincia]['id_provincia'] = $idProvincia;
+            $listProvincias[$idProvincia]['provincia'] = $provincias[$idProvincia]->Provincia;
+            $listProvincias[$idProvincia]['localidades'][] =
+                array('id_localidad' => $provincias[$i]->id_localidad,
+                    'localidad' => $provincias[$i]->Localidad);
+        }
+        return $listProvincias;
+    }
 }

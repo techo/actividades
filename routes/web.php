@@ -17,6 +17,8 @@ Route::get('/actividades/{id}', function($id){
 
 Route::get('/ajax/categorias/{id}', 'ajax\CategoriasController@show');
 Route::get('/ajax/provincias/{id}', 'ajax\ProvinciasController@show');
+Route::post('/ajax/actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
+
 Route::get('/inscripciones/actividad/{id}', function($id){
 	$actividad = Actividad::find($id);
     return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
