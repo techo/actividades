@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\CategoriaActividad;
+use App\Localidad;
+use App\Provincia;
+use App\Tipo;
 use Illuminate\Http\Request;
 use App\Actividad;
 
@@ -12,16 +16,22 @@ class actividadesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-//        return Actividad::find(10);
-//        return Actividad::paginate(10);
-        $actividad = Actividad::find(100000000000000);
-//        $tipo = $actividad->tipo;
-        if ($actividad) {
-            return $actividad;
-        }
-        return response('no hay', 404);
+        $default = 1; //Actividades en Asentamientos
+        $idCategoria = $request->categoria ?? $default;
+        $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
+        $categorias = CategoriaActividad::all();
+        $provincias = Provincia::all();
+
+        return view('actividades.index')
+            ->with(
+                [
+                    'categoriaSeleccionada' => $categoriaSeleccionada,
+                    'categorias' => $categorias,
+                    'provincias' => $provincias,
+                ]
+            );
     }
 
     /**

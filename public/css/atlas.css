@@ -1,0 +1,322 @@
+@charset "UTF-8";@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700,800');
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+    padding: 60px 10px;
+    max-width: 1200px;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+
+.bg-techo-blue {
+    background-color: #0092dd;
+}
+
+.card {
+    border: none;
+    width: 380px;
+}
+
+.card:hover {
+    /*background-color: #e8ebef; */
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.techo-logo {
+    width: 122px;
+    height: 37.6px;
+}
+
+.techo-blue {
+    color: #0092dd;
+}
+
+.techo-titulo-card {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: uppercase;
+    color: #231837;
+}
+.techo-h1 {
+    font-size: 36px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #231837;
+}
+
+.techo-h6 {
+    font-family: Montserrat, sans-serif;
+    text-transform: uppercase;
+    font-size: 17px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+
+.techo-h6:hover {
+    text-decoration: none;
+}
+
+.card-body h5 {
+    font-weight: bolder;
+}
+
+.fixed-bottom .row {
+    background-color: #231837;
+    padding: 0.5em;
+}
+
+.footer .container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.techo-footer-suscribe {
+    font-family: Montserrat, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-transform: uppercase;
+    color: #ffffff;
+    padding-top: 1em;
+}
+
+.techo-hero {
+    width: 100%;
+    max-width: 1600px;
+    text-align: center;
+    margin: 0 auto;
+    background: #392f28;
+    position: relative;
+    color: #ffffff;
+    font-family: Montserrat, sans-serif;
+}
+
+a {
+    color: #0092dd
+}
+
+#login-modal h2 {
+    font-family: Montserrat, sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: uppercase;
+    color: #212121;
+    margin-top: 1em;
+}
+
+#login-modal label {
+    height: 16px;
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #363636;
+}
+
+#login-modal .cerrar {
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 1;
+    text-shadow: none;
+}
+
+#login-modal a {
+    height: 16px;
+    font-family: Montserrat, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: left;
+    color: #0092dd;
+    text-transform: uppercase;
+}
+.techo-btn-azul {
+    background-color: #0092dd;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    vertical-align: center;
+    padding: 1em 3em;
+}
+
+.techo-btn-blanco {
+    background-color: #fff;
+    color: #0092dd;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+}
+
+.techo-hero img {
+    width: 100%;
+}
+
+.techo-hero h1 {
+    font-size: 4.1em;
+    margin: auto;
+    position: absolute;
+    top: 120px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    font-weight: bold;
+
+}
+
+.techo-hero h2 {
+    font-size: 36px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    font-weight: bold;
+    vertical-align: middle;
+    line-height: normal;
+    padding-bottom: 3em;
+}
+
+.techo-hero p {
+    font-size: 1.5em;
+    margin: auto;
+    position: absolute;
+    top: 220px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+footer.inscripcion-bar {
+    background-color: #ffffff;
+    height: 84px;
+    border: solid 1px #cecece;
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.inscripcion-btn {
+    width: 180px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #0092dd;
+}
+
+footer.incripcion-bar h5{
+    height: 40px;
+    border-radius: 4px;
+    background-color: #0092dd;
+}
+
+footer.inscripcion-bar .text-primary {
+    text-align: center;
+    vertical-align: center;
+    padding-top: 6px;
+}
+
+@media all and (max-width: 768px) {
+    .hero {
+        height: 50vw;
+    }
+
+    .bar {
+        height: 26vw;
+        top: 10vw;
+    }
+
+    .hero h1 {
+        font-size: 8vw;
+        top: 13vw;
+    }
+
+    .hero p {
+        font-size: 3vw;
+        top: 27vw;
+    }
+
+}

@@ -8,15 +8,17 @@ class Actividad extends Model
 {
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
+    protected $guarded = ['idActividad'];
     protected $dates =
         [
             'feachaCreacion', 'fechaModificacion',
             'fechaInicio', 'fechaFin',
-            'fechaInicioInscripciones', 'fechaFin',
+            'fechaInicioInscripciones', 'fechaFinInscripciones',
 
         ];
 
-    protected $guarded = ['idActividad'];
+    const CREATED_AT = 'fecha_creacion';
+    const UPDATED_AT = 'fecha_modificacion';
 
     public function tipo()
     {
@@ -30,6 +32,10 @@ class Actividad extends Model
 
     public function puntosEncuentro()
     {
-        return $this->hasMany(PuntoEncuentro::class, 'idPuntoEncuentro');
+        return $this->hasMany(PuntoEncuentro::class, 'idActividad');
+    }
+
+    public function scopePersonaInscripta($query, $idPersona) {
+        return $this->inscripciones()->where('idPersona', $idPersona)->get()->count();
     }
 }
