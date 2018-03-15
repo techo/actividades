@@ -164,8 +164,8 @@ class actividadesController extends Controller
             ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
             ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
             ->where('Tipo.idCategoria', $categoria)
-            ->orderBy('atl_provincias.id', 'desc')
-            ->orderBy('atl_localidades.id', 'desc')
+            ->orderBy('atl_provincias.Provincia', 'asc')
+            ->orderBy('atl_localidades.Localidad', 'asc')
             ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
                                          atl_localidades.id id_localidad, atl_localidades.Localidad');
 
@@ -174,12 +174,13 @@ class actividadesController extends Controller
         }
 
         $provincias = $provincias->get();
+
         $listProvincias = [];
 
         for ($i = 0; $i < count($provincias); $i++) {
             $idProvincia = $provincias[$i]->id_provincia;
             $listProvincias[$idProvincia]['id_provincia'] = $idProvincia;
-            $listProvincias[$idProvincia]['provincia'] = $provincias[$idProvincia]->Provincia;
+            $listProvincias[$idProvincia]['provincia'] = $provincias[$i]->Provincia;
             $listProvincias[$idProvincia]['localidades'][] =
                 array('id_localidad' => $provincias[$i]->id_localidad,
                     'localidad' => $provincias[$i]->Localidad);
