@@ -147,7 +147,11 @@
             // },
             getProvinciasYLocalidades: function () {
                 let url = '/ajax/actividades/provincias/';
-                axios.get(url)
+                let formData = {
+                    categoria: this.idCategoria,
+                    tipo: this.idTipoDeActividad
+                };
+                axios.post(url, formData)
                     .then(response => {
                         // console.log(response.data);
                         this.mensajeProvincias = "Todas las provincias";
@@ -187,7 +191,7 @@
         },
         created: function() {
             this.idCategoria        = JSON.parse(this.idCategoria);
-            this.dataCategorias     = JSON.parse(this.dataCategorias);
+            this.dataCategorias     = JSON.parse(this.categorias);
             this.getTiposDeActividad();
             this.getProvinciasYLocalidades();
             this.filtrar();

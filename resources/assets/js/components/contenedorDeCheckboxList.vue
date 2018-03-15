@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a href="#" class="btn btn-primary" data-toggle="collapse">Provincias</a>
+        <a class="btn btn-primary" data-toggle="collapse">Provincias</a>
         <div id="provincias" class="collapse">
             <checkbox-list
                 v-for="provincia in listaProvincias"
@@ -42,6 +42,9 @@
                 for (let i =0; i < this.$children.length; i++) {
                     this.$children[i].selected = [];
                 }
+            },
+            created() {
+                this.listaProvincias = this.provincias;
             }
         }
     }
