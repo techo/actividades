@@ -12,6 +12,7 @@
 @endsection
 
 @section('main_content')
+
     <filtro
         categoria_seleccionada = "{{ $categoriaSeleccionada->id }}"
         categorias="{{ $categorias }}"

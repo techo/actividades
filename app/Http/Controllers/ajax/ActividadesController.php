@@ -149,7 +149,6 @@ class actividadesController extends Controller
 
     /**
      * @param Request $request
-     * @param $idCategoria
      * @return mixed
      */
     public function filtrarProvinciasYLocalidades(Request $request)

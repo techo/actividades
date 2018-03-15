@@ -41,7 +41,6 @@
         },
         components: {tarjeta: Tarjeta},
         created () {
-            console.info('contenedor created');
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
@@ -73,7 +72,6 @@
                         }
                         for (let element in response.data.data) {
                             self.actividades.push(response.data.data[element]);
-                            console.log(element);
                         }
                         this.next_page = response.data.next_page_url;
                         this.ultimaTarjeta = response.data.to;
