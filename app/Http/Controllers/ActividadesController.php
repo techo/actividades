@@ -8,6 +8,7 @@ use App\Provincia;
 use App\Tipo;
 use Illuminate\Http\Request;
 use App\Actividad;
+use Illuminate\Support\Facades\DB;
 
 class actividadesController extends Controller
 {
@@ -22,14 +23,12 @@ class actividadesController extends Controller
         $idCategoria = $request->categoria ?? $default;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
-        $provincias = Provincia::all();
 
         return view('actividades.index')
             ->with(
                 [
                     'categoriaSeleccionada' => $categoriaSeleccionada,
                     'categorias' => $categorias,
-                    'provincias' => $provincias,
                 ]
             );
     }

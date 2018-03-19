@@ -106,12 +106,12 @@ class actividadesController extends Controller
             $query->where('Tipo.idCategoria', $request->categoria);
         }
 
-        if ($request->has('provincia') && !is_null($request->provincia)) {
-            $query->where('atl_provincias.id', $request->provincia);
-        }
+//        if ($request->has('provincia') && !is_null($request->provincia)) {
+//            $query->where('atl_provincias.id', $request->provincia);
+//        }
 
-        if ($request->has('localidades') && !is_null($request->localidades)) {
-            $query->whereIn('atl_localidades.id', array($request->localidades));
+        if ($request->has('localidades') && !is_null($request->localidades) && !empty($request->localidades)) {
+            $query->whereIn('atl_localidades.id', $request->localidades);
         }
 
         if ($request->has('tipo') && !is_null($request->tipo)) {
@@ -145,5 +145,74 @@ class actividadesController extends Controller
             Paginator::resolveCurrentPage(),
             ['path' => Paginator::resolveCurrentPath(), 'query' => $parameters]
         );
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function filtrarProvinciasYLocalidades(Request $request)
+    {
+
+        $default = 1; //Actividades en Asentamientos
+        $categoria = $request->categoria ?? $default;
+
+        $provincias = DB::table('Actividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
+            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
+            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
+            ->where('Tipo.idCategoria', $categoria)
+            ->orderBy('atl_provincias.Provincia', 'asc')
+            ->orderBy('atl_localidades.Localidad', 'asc')
+            ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
+                                         atl_localidades.id id_localidad, atl_localidades.Localidad');
+
+        if ($request->has('tipo') && !is_null($request->tipo)) {
+            $provincias->where('Tipo.idTipo', $request->tipo);
+        }
+
+        $provincias = $provincias->get();
+
+        $listProvincias = [];
+
+        for ($i = 0; $i < count($provincias); $i++) {
+            $idProvincia = $provincias[$i]->id_provincia;
+            $listProvincias[$idProvincia]['id_provincia'] = $idProvincia;
+            $listProvincias[$idProvincia]['provincia'] = $provincias[$i]->Provincia;
+            $listProvincias[$idProvincia]['localidades'][] =
+                array('id_localidad' => $provincias[$i]->id_localidad,
+                    'localidad' => $provincias[$i]->Localidad);
+        }
+        return $listProvincias;
+    }
+    public function filtrarTiposDeActividades(Request $request)
+    {
+
+        $default = 1; //Actividades en Asentamientos
+        $categoria = $request->categoria ?? $default;
+
+        $query = DB::table('Actividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
+            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
+            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
+            ->where('Tipo.idCategoria', $categoria)
+            ->orderBy('Tipo.nombre', 'asc')
+            ->selectRaw('distinct Tipo.idTipo, Tipo.nombre');
+
+        if ($request->has('localidades') && !is_null($request->localidades) && !empty($request->localidades)) {
+            $query->whereIn('atl_localidades.id', array($request->localidades));
+        }
+        $tipos = $query->get();
+
+        $listTipos = [];
+
+        for ($i = 0; $i < count($tipos); $i++) {
+            $idTipo = $tipos[$i]->idTipo;
+            $listTipos[$idTipo]['idTipo'] = $idTipo;
+            $listTipos[$idTipo]['nombre'] = $tipos[$i]->nombre;
+        }
+        return $listTipos;
     }
 }
