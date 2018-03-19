@@ -5,7 +5,7 @@
                 <tarjeta
                     v-for="act in actividades"
                     v-bind:actividad="act"
-                    v-bind:key="act.idActividad"
+                    v-bind:key="Math.random() + '_' + act.idActividad"
                 >
                 </tarjeta>
             </div>
@@ -33,10 +33,11 @@
                 loading: false,
                 next_page: '',
                 bottom: false,
-                url: '',
+                url: '/ajax/actividades',
                 ultimaTarjeta: 0,
                 totalTarjetas: 0,
-                vacio: false
+                vacio: false,
+                filtros: {}
             }
         },
         components: {tarjeta: Tarjeta},
@@ -45,9 +46,9 @@
                 this.bottom = this.bottomVisible()
             });
             window.addEventListener('cargarTarjetas', (event) => {
-                this.url = event.detail;
+                this.filtros = event.detail;
                 this.actividades = [];
-                this.agregarTarjetas(this.url);
+                this.agregarTarjetas(this.url, this.filtros);
             });
         },
         methods: {
@@ -59,11 +60,11 @@
                 const bottomOfPage = visible + scrollY >= pageHeight;
                 return bottomOfPage || pageHeight < visible;
             },
-            agregarTarjetas(url) {
+            agregarTarjetas(url, filtros) {
                 let self = this;
                 this.loading = true;
                 this.vacio = false;
-                axios.get(url)
+                axios.post(url, filtros)
                     .then(response => {
                         // console.log(response.data.data);
                         if(typeof response.data.data == "undefined" || response.data.data.length == 0) {
@@ -110,7 +111,7 @@
             bottom(bottom) {
                 if (bottom) {
                     if (this.ultimaTarjeta < this.totalTarjetas ) {
-                        this.agregarTarjetas(this.next_page);
+                        this.agregarTarjetas(this.next_page, this.filtros);
                     }
                 }
             }

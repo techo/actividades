@@ -18,6 +18,7 @@ Route::get('/actividades/{id}', function($id){
 Route::get('/ajax/categorias/{id}', 'ajax\CategoriasController@show');
 Route::get('/ajax/provincias/{id}', 'ajax\ProvinciasController@show');
 Route::post('/ajax/actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
+Route::post('/ajax/actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
 
 Route::get('/inscripciones/actividad/{id}', function($id){
 	$actividad = Actividad::find($id);
@@ -35,7 +36,7 @@ Route::get('/inscripciones/actividad/{id}/inscripto', function($id){
 	return Array('idActividad' => false);
 });
 
-Route::get('/ajax/actividades', 'ajax\ActividadesController@index');
+Route::post('/ajax/actividades', 'ajax\ActividadesController@index');
 Route::get('/ajax/actividades/{id}', 'ajax\ActividadesController@show');
 Auth::routes();
 

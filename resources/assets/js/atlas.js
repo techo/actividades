@@ -4,7 +4,7 @@ import Login from './components/login';
 import Filtro from './components/filtro';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
 import Inscripciones from './components/inscripciones';
-import ContenedorDeCheckboxList from './components/contenedorDeCheckboxList';
+import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 
 require('./bootstrap');
 
@@ -15,7 +15,7 @@ Vue.component('filtro', Filtro);
 Vue.component('login', Login);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
 Vue.component('inscripciones', Inscripciones);
-Vue.component('contenedor-de-checkbox-list', ContenedorDeCheckboxList);
+Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 
 var app = new Vue({
     el: "#app",

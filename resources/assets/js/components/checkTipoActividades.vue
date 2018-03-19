@@ -1,12 +1,11 @@
 <template>
     <div>
         <input type="checkbox" v-model="selectAll">
-        <strong>{{ this.datos.provincia }}</strong>
+        <strong>Marcar Todos</strong>
 
-        <div v-for="l in this.datos.localidades">
-
-            <input type="checkbox" :value="l.id_localidad" v-model="selected">
-            {{ l.localidad }}
+        <div v-for="t in this.datos">
+            <input type="checkbox" :value="t.idTipo" v-model="selected">
+            {{ t.nombre }}
         </div>
         <hr>
     </div>
@@ -14,32 +13,35 @@
 
 <script>
     export default {
-        name: "checkbox-list",
+        name: "check-tipo-actividades",
         props: ['propdatos'],
         data() {
             return {
                 selected: [],
-                datos: this.propdatos
+                datos: this.propdatos,
             }
+        },
+        mounted() {
+            this.datos = this.propdatos;
+
         },
         computed: {
             selectAll: {
                 get: function () {
-                    return this.datos.localidades ? this.selected.length == this.datos.localidades.length : false;
+                    return this.datos ? this.selected.length == this.datos.length : false;
                 },
                 set: function (value) {
-                    var selected = [];
+                    let selected = [];
 
                     if (value) {
-                        this.datos.localidades.forEach(function (localidad) {
-                            selected.push(localidad.id_localidad);
+                        this.datos.forEach(function (tipo) {
+                            selected.push(tipo.idTipo);
                         });
                     }
-
                     this.selected = selected;
                 }
-            }
-        }
+            },
+        },
     }
 </script>
 

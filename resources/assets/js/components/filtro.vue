@@ -4,7 +4,7 @@
             <select class="dropdown"
                 title="Categorías"
                 name="categorias"
-                v-on:change="getTiposDeActividad"
+                v-on:change="actualizarFiltros"
                 v-model="idCategoria"
             >
                 <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
@@ -13,26 +13,19 @@
             </select>
         </div>
         <div class="col-md-3">
-            <select class="dropdown"
-                title="Tipo de Actividad"
-                name="tipoActividad"
-                v-model="idTipoDeActividad"
-                v-on:change="filtrar"
+            <contenedor-check-tipos
+                v-bind:propdatos="this.tiposDeActividad"
             >
-                <option value="">Todas las actividades</option>
-                 <option v-for="actividad in tiposDeActividad" v-bind:value="actividad.idTipo">
-                    {{ actividad.nombre }}
-                </option>
-            </select>
 
+            </contenedor-check-tipos>
 
         </div>
         <div class="col-md-2">
 
-            <contenedor-de-checkbox-list
+            <contenedor-check-provincias
                 v-bind:provincias="this.dataProvincias"
             >
-            </contenedor-de-checkbox-list>
+            </contenedor-check-provincias>
         </div>
 
         <div class="col-md-2 pull-right">
@@ -46,12 +39,16 @@
 
 <script>
     import axios from 'axios';
-    import ContenedorDeCheckboxList from './contenedorDeCheckboxList';
+    import ContenedorCheckProvincias from './contenedorCheckProvincias';
+    import ContenedorCheckTipoActividades from './contenedorCheckTipoActividades'
 
     export default {
         name: "filtro",
         props: ['categoria_seleccionada', 'categorias'],
-        components: {'contenedor-de-checkbox-list': ContenedorDeCheckboxList},
+        components: {
+            'contenedor-check-provincias': ContenedorCheckProvincias,
+            'contenedor-check-tipos': ContenedorCheckTipoActividades
+        },
         data () {
              return {
                  tiposDeActividad:  [],
@@ -62,34 +59,41 @@
                  idLocalidad:       '',
                  dataLocalidades:   [],
                  idTipoDeActividad: '',
-                 mensajeProvincias: "Seleccione una provincia...",
+                 mensajeProvincias: "Seleccione una provincia..."
              }
         },
         methods: {
+            actualizarFiltros() {
+                this.getTiposDeActividad();
+                this.getProvinciasYLocalidades();
+            },
             filtrar: function (){
+                let filtros = {
+                    categoria: this.idCategoria,
+                    localidades: this.dataLocalidades,
+                    tipo: this.idTipoDeActividad
+                };
+                console.log('filtr.vue filtró');
 
-                let paramCategoria = 'categoria=' + this.idCategoria;
-                let paramProvincia = '&provincia=' + this.idProvincia;
-                let paramLocalidad = '&localidades=' + this.idLocalidad;
-                let paramTipoDeActividad = '&tipo=' + this.idTipoDeActividad;
-                let parametros = paramCategoria +
-                    paramProvincia +
-                    paramLocalidad +
-                    paramTipoDeActividad;
-                let url = '/ajax/actividades?' + parametros;
-                // console.log(url);
-
-                var event = new CustomEvent('cargarTarjetas', {detail: url});
+                var event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
             },
             getTiposDeActividad: function () {
-                let url = '/ajax/categorias/' + this.idCategoria;
-                // console.log(url);
-                axios.get(url)
+                let url = '/ajax/actividades/tipos';
+                let filtros = {
+                    localidades: this.dataLocalidades,
+                    categoria: this.idCategoria
+                };
+                console.log('mensaje antes');
+                console.log(filtros);
+                axios.post(url, filtros)
                     .then(response => {
-                        // console.log(response.data);
-                        this.tiposDeActividad = response.data.tipos;
-                        this.filtrar();
+                        // console.log('getTiposDeActividad filtró');
+                        this.tiposDeActividad = response.data;
+                        for (let i=0; i< this.$children.length; i++) {
+                            this.$children[i].listaTipos = this.tiposDeActividad;
+                        }
+
                     })
                     .catch((error) => {
                         // Error
@@ -153,10 +157,13 @@
                 };
                 axios.post(url, formData)
                     .then(response => {
-                        // console.log(response.data);
+                        console.log(response.data);
                         this.mensajeProvincias = "Todas las provincias";
-                        this.dataProvincias = response.data;
-                        this.filtrar();
+                        this.dataProvincias = Object.keys(response.data).map(i => response.data[i]);
+                        //this.filtrar();
+                        for (let i=0; i< this.$children.length; i++) {
+                            this.$children[i].listaProvincias = this.dataProvincias;
+                        }
                     })
                     .catch((error) => {
                         // Error
@@ -189,13 +196,24 @@
                 this.filtrar();
             },
         },
+        watch: {
+            dataLocalidades: function(nuevoValor, viejoValor) {
+                this.filtrar();
+            },
+            // tiposDeActividad () {
+            //     let self = this;
+            //     this.$children.forEach(function(checkTipo) {
+            //         checkTipo.listaTipos = self.tiposDeActividad;
+            //     });
+            // }
+        },
         created: function() {
             this.idCategoria        = JSON.parse(this.idCategoria);
             this.dataCategorias     = JSON.parse(this.categorias);
-            this.getTiposDeActividad();
-            this.getProvinciasYLocalidades();
+            this.actualizarFiltros();
+        },
+        mounted() {
             this.filtrar();
-            // console.log('filtrar created');
         }
     }
 </script>
