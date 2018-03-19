@@ -3,7 +3,7 @@
         <a class="btn btn-primary" data-toggle="collapse" href="#tipoActividades" role="button" aria-expanded="false">Tipos de Actividad</a>
         <div id="tipoActividades" class="collapse">
                 <check-tipo-actividades
-                    v-bind:propdatos="listaTipos"
+                    v-bind:proptipos="listaTipos"
                 >
                 </check-tipo-actividades>
 
@@ -18,11 +18,11 @@
 
     export default {
         name: "contenedor-check-tipo-actividades",
-        props: ['propdatos'],
+        props: ['proptipos'],
         components: {'check-tipo-actividades': CheckTipoActividades},
         data () {
             return {
-                listaTipos: this.propdatos,
+                listaTipos: this.proptipos,
                 selected: []
             }
         },
@@ -33,8 +33,8 @@
                for (let i =0; i < this.$children.length; i++) {
                    seleccionados.push(this.$children[i].selected);
                }
-               this.$parent.dataLocalidades = [].concat.apply([], seleccionados);
-               $('#tipoActividades').hide();
+               this.$parent.dataTiposActividad = [].concat.apply([], seleccionados);
+               // $('#tipoActividades').hide();
             },
 
             borrar(e) {

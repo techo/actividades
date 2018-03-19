@@ -14,26 +14,27 @@
 <script>
     export default {
         name: "check-tipo-actividades",
-        props: ['propdatos'],
+        props: ['proptipos'],
         data() {
             return {
                 selected: [],
-                datos: this.propdatos,
+                datos: this.proptipos,
             }
         },
         mounted() {
-            this.datos = this.propdatos;
+            this.datos = this.proptipos;
 
         },
         computed: {
             selectAll: {
                 get: function () {
-                    return this.datos ? this.selected.length == this.datos.length : false;
+                    return this.datos ? this.selected.length === this.datos.length : false;
                 },
                 set: function (value) {
                     let selected = [];
 
                     if (value) {
+
                         this.datos.forEach(function (tipo) {
                             selected.push(tipo.idTipo);
                         });

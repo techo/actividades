@@ -57,7 +57,9 @@
                  idProvincia:       '',
                  dataProvincias:    [],
                  idLocalidad:       '',
+                 localidades:       [],
                  dataLocalidades:   [],
+                 dataTiposActividad:   [],
                  idTipoDeActividad: '',
                  mensajeProvincias: "Seleccione una provincia..."
              }
@@ -71,9 +73,8 @@
                 let filtros = {
                     categoria: this.idCategoria,
                     localidades: this.dataLocalidades,
-                    tipo: this.idTipoDeActividad
+                    tipos: this.dataTiposActividad
                 };
-                console.log('filtr.vue filtró');
 
                 var event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
@@ -84,7 +85,6 @@
                     localidades: this.dataLocalidades,
                     categoria: this.idCategoria
                 };
-                console.log('mensaje antes');
                 console.log(filtros);
                 axios.post(url, filtros)
                     .then(response => {
@@ -118,51 +118,20 @@
 
 
             },
-            // getLocalidades: function() {
-            //     let url = '/ajax/provincias/' + this.idProvincia;
-            //     // console.log(url);
-            //     axios.get(url)
-            //         .then(response => {
-            //             // console.log(response.data);
-            //             this.mensajeProvincias = "Todas las localidades";
-            //             this.dataLocalidades = response.data.localidades;
-            //             this.filtrar();
-            //         })
-            //         .catch((error) => {
-            //             // Error
-            //             this.hasError = true;
-            //             if (error.response) {
-            //                 // The request was made and the server responded with a status code
-            //                 // that falls out of the range of 2xx
-            //                 console.log(error.response.data);
-            //                 console.log(error.response.status);
-            //                 console.log(error.response.headers);
-            //             } else if (error.request) {
-            //                 // The request was made but no response was received
-            //                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-            //                 // http.ClientRequest in node.js
-            //                 console.log(error.request);
-            //             } else {
-            //                 // Something happened in setting up the request that triggered an Error
-            //                 console.log('Error', error.message);
-            //             }
-            //             console.log(error.config);
-            //         });
-            // },
             getProvinciasYLocalidades: function () {
                 let url = '/ajax/actividades/provincias/';
                 let formData = {
                     categoria: this.idCategoria,
-                    tipo: this.idTipoDeActividad
+                    tipos: this.dataTiposActividad
                 };
                 axios.post(url, formData)
                     .then(response => {
                         console.log(response.data);
                         this.mensajeProvincias = "Todas las provincias";
-                        this.dataProvincias = Object.keys(response.data).map(i => response.data[i]);
+                        this.localidades = Object.keys(response.data).map(i => response.data[i]);
                         //this.filtrar();
                         for (let i=0; i< this.$children.length; i++) {
-                            this.$children[i].listaProvincias = this.dataProvincias;
+                            this.$children[i].listaProvincias = this.localidades;
                         }
                     })
                     .catch((error) => {
@@ -198,14 +167,13 @@
         },
         watch: {
             dataLocalidades: function(nuevoValor, viejoValor) {
+                this.getTiposDeActividad();
                 this.filtrar();
             },
-            // tiposDeActividad () {
-            //     let self = this;
-            //     this.$children.forEach(function(checkTipo) {
-            //         checkTipo.listaTipos = self.tiposDeActividad;
-            //     });
-            // }
+            dataTiposActividad: function(nuevoValor, viejoValor) {
+                this.getProvinciasYLocalidades();
+                this.filtrar();
+            },
         },
         created: function() {
             this.idCategoria        = JSON.parse(this.idCategoria);

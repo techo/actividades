@@ -5,7 +5,7 @@
             <div v-for="provincia in listaProvincias">
                 <check-provincias
                     :key="provincia.id_provincia"
-                    v-bind:propdatos="provincia"
+                    v-bind:propprovincia="provincia"
                 >
                 </check-provincias>
 
@@ -52,30 +52,7 @@
                 }
             }
 
-        },
-        // computed: {
-        //     selectAll: {
-        //         get: function () {
-        //             let i=0;
-        //             this.$children.forEach(function (checkboxList) {
-        //                 checkboxList.selectAll ? i++ : false;
-        //             });
-        //             console.warn('get');
-        //             return this.listaProvincias ? this.listaProvincias.length === i : false;
-        //         },
-        //         set: function (value) {
-        //             var selected = [];
-        //
-        //             if (value) {
-        //                 this.$children.forEach(function (checkboxList) {
-        //                     checkboxList.selectAll = !checkboxList.selectAll;
-        //                 });
-        //             }
-        //
-        //             this.selected = selected;
-        //         }
-        //     }
-        // }
+        }
     }
 </script>
 

@@ -23,8 +23,10 @@ Route::prefix('ajax')->group(function(){
 		Route::post('', 'ajax\UsuarioController@create');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
 	});
-	Route::get('actividades', 'ajax\ActividadesController@index');
-	Route::get('actividades/{id}', 'ajax\ActividadesController@show');
+	Route::post('/actividades', 'ajax\ActividadesController@index');
+	Route::post('/actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
+	Route::post('/actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
+	Route::get('/actividades/{id}', 'ajax\ActividadesController@show');
 });
 
 

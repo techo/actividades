@@ -114,8 +114,8 @@ class actividadesController extends Controller
             $query->whereIn('atl_localidades.id', $request->localidades);
         }
 
-        if ($request->has('tipo') && !is_null($request->tipo)) {
-            $query->where('Tipo.idTipo', $request->tipo);
+        if ($request->has('tipos') && !is_null($request->tipos)  && !empty($request->tipos)) {
+            $query->whereIn('Tipo.idTipo', $request->tipos);
         }
 
         $actividades = $query->get();
@@ -168,8 +168,8 @@ class actividadesController extends Controller
             ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
                                          atl_localidades.id id_localidad, atl_localidades.Localidad');
 
-        if ($request->has('tipo') && !is_null($request->tipo)) {
-            $provincias->where('Tipo.idTipo', $request->tipo);
+        if ($request->has('tipos') && !is_null($request->tipos)  && !empty($request->tipos)) {
+            $provincias->whereIn('Tipo.idTipo', $request->tipos);
         }
 
         $provincias = $provincias->get();
@@ -206,13 +206,15 @@ class actividadesController extends Controller
         }
         $tipos = $query->get();
 
-        $listTipos = [];
+        $tempArray = []; $listTipos =[];
 
         for ($i = 0; $i < count($tipos); $i++) {
             $idTipo = $tipos[$i]->idTipo;
-            $listTipos[$idTipo]['idTipo'] = $idTipo;
-            $listTipos[$idTipo]['nombre'] = $tipos[$i]->nombre;
+            $tempArray['idTipo'] = $idTipo;
+            $tempArray['nombre'] = $tipos[$i]->nombre;
+            $listTipos[] = $tempArray;
         }
+
         return $listTipos;
     }
 }
