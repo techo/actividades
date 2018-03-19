@@ -258,25 +258,26 @@
         this.popular_pais()
       },
       watch: {
-        user: {
-          handler: function(nuevo, viejo) {
-            if(this.validacion.email.last_value != this.user.email) this.validar_email()
-            this.validar_pass()
-            this.validar_nombre()
-            this.validar_apellido()
-            this.validar_nacimiento()
-            this.validar_sexo()
-            this.validar_dni()
-            this.validar_pasaporte()
-            this.validar_pais()
-            this.validar_provincia()
-            this.validar_localidad()
-            this.validar_telefono()
-            this.traer_provincias()
-            this.traer_localidades()
-          },
-          deep: true
-        }
+        'user.email': function() { if(this.validacion.email.last_value != this.user.email) this.validar_email() },
+        'user.pass': function() { this.validar_pass() },
+        'user.nombre': function() { this.validar_nombre() },
+        'user.apellido': function() { this.validar_apellido() },
+        'user.nacimiento': function() { this.validar_nacimiento() },
+        'user.sexo': function() { this.validar_sexo() },
+        'user.dni': function() { this.validar_dni() },
+        'user.pasaporte': function() { this.validar_pasaporte() },
+        'user.pais': function() {
+          this.validar_pais()
+          this.traer_provincias()
+        },
+        'user.provincia': function() {
+          this.validar_provincia()
+          this.traer_localidades()
+        },
+        'user.localidad': function() {
+          this.validar_localidad()
+        },
+        'user.telefono': function() { this.validar_telefono() }
       },
       methods: {
         cambiar_paso: function (mod) {
