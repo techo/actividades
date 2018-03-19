@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "vue-axios": "^2.0.2",
-        "vue-router": "^3.0.1"
+        "vue-router": "^3.0.1",
+        "vuejs-datepicker": "^0.9.29"
     }
 }
