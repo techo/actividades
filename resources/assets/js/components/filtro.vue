@@ -4,7 +4,7 @@
             <select class="dropdown"
                 title="Categorías"
                 name="categorias"
-                v-on:change="actualizarFiltros"
+                v-on:change="cambiarCategoria"
                 v-model="idCategoria"
             >
                 <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
@@ -58,16 +58,17 @@
                  tiposDeActividad:  [],
                  idCategoria:       this.categoria_seleccionada,
                  dataCategorias:    this.categorias,
-                 // idProvincia:       '',
                  dataProvincias:    [],
-                 // idLocalidad:       '',
                  dataLocalidades:   [],
                  dataTiposActividad: [],
                  dataBusqueda: 'lugar'
-                 // mensajeProvincias: "Seleccione una provincia..."
              }
         },
         methods: {
+            cambiarCategoria() {
+                this.dataTiposActividad = [];
+                this.dataLocalidades = [];
+            },
             actualizarFiltros() {
                 this.getTiposDeActividad();
                 this.getProvinciasYLocalidades();
@@ -79,7 +80,6 @@
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
-                console.log('filtro.vue filtró');
 
                 let event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
@@ -91,11 +91,8 @@
                     categoria: this.idCategoria,
                     busqueda: this.dataBusqueda
                 };
-                console.log('filtros:');
-                console.log(filtros);
                 axios.post(url, filtros)
                     .then(response => {
-                        // console.log('getTiposDeActividad filtró');
                         this.tiposDeActividad = response.data;
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaTipos = this.tiposDeActividad;
@@ -134,18 +131,14 @@
                 };
                 axios.post(url, formData)
                     .then(response => {
-                        console.log(response.data);
-                        this.mensajeProvincias = "Todas las provincias";
                         this.dataProvincias = Object.keys(response.data).map(i => response.data[i]);
-                        //this.filtrar();
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaProvincias = this.dataProvincias;
                         }
                     })
                     .catch((error) => {
                         // Error
-                        this.hasError = true;
-                        console.log('error en getTiposDeActividad. url:' + url);
+                        console.log('error en getTiposDeActividad. url: ' + url);
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
@@ -166,7 +159,6 @@
             },
             borrarFiltros: function () {
                 this.dataLocalidades = [];
-                // this.idProvincia = "";
                 this.dataTiposActividad = [];
                 for (let i=0; i< this.$children.length; i++) {
                     this.$children[i].borrar();
@@ -175,7 +167,6 @@
         },
         watch: {
             dataLocalidades: function(viejo, nuevo) {
-                console.log('viejo: ' + viejo + ', nuevo: ' + nuevo);
                 this.getTiposDeActividad();
                 this.filtrar();
             },
@@ -185,9 +176,6 @@
 
             },
             dataBusqueda: function() {
-                // this.dataLocalidades = [];
-                // this.dataTiposActividad = [];
-                // this.actualizarFiltros();
                 this.borrarFiltros();
             }
         },

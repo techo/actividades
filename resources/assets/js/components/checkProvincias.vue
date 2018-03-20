@@ -18,7 +18,6 @@
         data() {
             return {
                 selected: [],
-                // datos: this.propdatos,
             }
         },
         computed: {
@@ -27,7 +26,7 @@
             },
             selectAll: {
                 get: function () {
-                    return this.datos.localidades ? this.selected.length == this.datos.localidades.length : false;
+                    return this.datos.localidades ? this.selected.length === this.datos.localidades.length : false;
                 },
                 set: function (value) {
                     var selected = [];

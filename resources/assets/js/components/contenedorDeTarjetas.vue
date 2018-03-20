@@ -85,7 +85,6 @@
                     })
                     .catch((error) => {
                         // Error
-                        this.hasError = true;
                         console.error('error en contenedor de tarjetas');
                         if (error.response) {
                             // The request was made and the server responded with a status code

@@ -28,7 +28,7 @@
         computed: {
             selectAll: {
                 get: function () {
-                    return this.datos ? this.selected.length == this.datos.length : false;
+                    return this.datos ? this.selected.length === this.datos.length : false;
                 },
                 set: function (value) {
                     let selected = [];

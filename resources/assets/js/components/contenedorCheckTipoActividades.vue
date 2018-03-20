@@ -28,17 +28,14 @@
         },
         methods: {
             aplicar() {
-
                let seleccionados = [];
                for (let i =0; i < this.$children.length; i++) {
                    seleccionados.push(this.$children[i].selected);
                }
                this.$parent.dataTiposActividad = [].concat.apply([], seleccionados);
-               // $('#tipoActividades').hide();
             },
 
             borrar() {
-
                 for (let i =0; i < this.$children.length; i++) {
                     this.$children[i].selected = [];
                 }
