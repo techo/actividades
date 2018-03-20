@@ -21,7 +21,6 @@ class actividadesController extends Controller
      */
     public function index(Request $request, $items=6)
     {
-        //return ActividadResource::collection(Actividad::orderBy('fechaInicio','desc')->paginate($items));
         return $this->filtrar($request, $items);
     }
 
@@ -114,8 +113,8 @@ class actividadesController extends Controller
             $query->whereIn('atl_localidades.id', $request->localidades);
         }
 
-        if ($request->has('tipo') && !is_null($request->tipo)) {
-            $query->where('Tipo.idTipo', $request->tipo);
+        if ($request->has('tipos') && !is_null($request->tipos) && !empty($request->tipos)) {
+            $query->whereIn('Tipo.idTipo', $request->tipos);
         }
 
         $actividades = $query->get();
@@ -168,8 +167,8 @@ class actividadesController extends Controller
             ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
                                          atl_localidades.id id_localidad, atl_localidades.Localidad');
 
-        if ($request->has('tipo') && !is_null($request->tipo)) {
-            $provincias->where('Tipo.idTipo', $request->tipo);
+        if ($request->has('tipos') && !is_null($request->tipos) && !empty($request->tipos)) {
+            $provincias->whereIn('Tipo.idTipo', $request->tipos);
         }
 
         $provincias = $provincias->get();

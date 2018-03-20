@@ -29,7 +29,7 @@
         </div>
 
         <div class="col-md-2 pull-right">
-            <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="resetFiltros">
+            <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>
@@ -54,12 +54,12 @@
                  tiposDeActividad:  [],
                  idCategoria:       this.categoria_seleccionada,
                  dataCategorias:    this.categorias,
-                 idProvincia:       '',
+                 // idProvincia:       '',
                  dataProvincias:    [],
-                 idLocalidad:       '',
+                 // idLocalidad:       '',
                  dataLocalidades:   [],
-                 idTipoDeActividad: '',
-                 mensajeProvincias: "Seleccione una provincia..."
+                 dataTiposActividad: [],
+                 // mensajeProvincias: "Seleccione una provincia..."
              }
         },
         methods: {
@@ -71,9 +71,9 @@
                 let filtros = {
                     categoria: this.idCategoria,
                     localidades: this.dataLocalidades,
-                    tipo: this.idTipoDeActividad
+                    tipos: this.dataTiposActividad
                 };
-                console.log('filtr.vue filtró');
+                console.log('filtro.vue filtró');
 
                 var event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
@@ -84,7 +84,7 @@
                     localidades: this.dataLocalidades,
                     categoria: this.idCategoria
                 };
-                console.log('mensaje antes');
+                console.log('filtros:');
                 console.log(filtros);
                 axios.post(url, filtros)
                     .then(response => {
@@ -116,44 +116,13 @@
                         console.log(error.config);
                     });
 
-
             },
-            // getLocalidades: function() {
-            //     let url = '/ajax/provincias/' + this.idProvincia;
-            //     // console.log(url);
-            //     axios.get(url)
-            //         .then(response => {
-            //             // console.log(response.data);
-            //             this.mensajeProvincias = "Todas las localidades";
-            //             this.dataLocalidades = response.data.localidades;
-            //             this.filtrar();
-            //         })
-            //         .catch((error) => {
-            //             // Error
-            //             this.hasError = true;
-            //             if (error.response) {
-            //                 // The request was made and the server responded with a status code
-            //                 // that falls out of the range of 2xx
-            //                 console.log(error.response.data);
-            //                 console.log(error.response.status);
-            //                 console.log(error.response.headers);
-            //             } else if (error.request) {
-            //                 // The request was made but no response was received
-            //                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-            //                 // http.ClientRequest in node.js
-            //                 console.log(error.request);
-            //             } else {
-            //                 // Something happened in setting up the request that triggered an Error
-            //                 console.log('Error', error.message);
-            //             }
-            //             console.log(error.config);
-            //         });
-            // },
+
             getProvinciasYLocalidades: function () {
                 let url = '/ajax/actividades/provincias/';
                 let formData = {
                     categoria: this.idCategoria,
-                    tipo: this.idTipoDeActividad
+                    tipos: this.dataTiposActividad
                 };
                 axios.post(url, formData)
                     .then(response => {
@@ -187,25 +156,28 @@
                         console.log(error.config);
                     });
             },
-            resetFiltros: function () {
+            borrarFiltros: function () {
                 this.dataLocalidades = [];
-                this.idProvincia = "";
-                this.idTipoDeActividad = "";
-                this.idLocalidad = "";
-                this.mensajeProvincias = "Seleccione una provincia...";
-                this.filtrar();
+                // this.idProvincia = "";
+                this.dataTiposActividad = [];
+                for (let i=0; i< this.$children.length; i++) {
+                    this.$children[i].borrar();
+                }
+                // this.idLocalidad = "";
+                // this.mensajeProvincias = "Seleccione una provincia...";
+                // this.filtrar();
             },
         },
         watch: {
             dataLocalidades: function(nuevoValor, viejoValor) {
+                this.getTiposDeActividad();
                 this.filtrar();
             },
-            // tiposDeActividad () {
-            //     let self = this;
-            //     this.$children.forEach(function(checkTipo) {
-            //         checkTipo.listaTipos = self.tiposDeActividad;
-            //     });
-            // }
+            dataTiposActividad () {
+                this.getProvinciasYLocalidades();
+                this.filtrar();
+
+            }
         },
         created: function() {
             this.idCategoria        = JSON.parse(this.idCategoria);

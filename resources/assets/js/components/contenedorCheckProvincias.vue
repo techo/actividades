@@ -10,8 +10,8 @@
                 </check-provincias>
 
             </div>
-            <a href="#" v-on:click="borrar">Borrar</a>
-            <a href="#" v-on:click="aplicar">Aplicar</a>
+            <button class="btn btn-sm" type="button" v-on:click="borrar">Borrar</button>
+            <button class="btn btn-sm" type="button" v-on:click="aplicar">Aplicar</button>
         </div>
     </div>
 </template>
@@ -25,13 +25,13 @@
         components: {'check-provincias': CheckProvincias},
         data () {
             return {
-                listaProvincias: this.provincias,
+                // listaProvincias: this.provincias,
                 selected: []
             }
         },
         methods: {
-            aplicar(e) {
-               e.preventDefault();
+            aplicar() {
+               // e.preventDefault();
                let seleccionados = [];
                for (let i =0; i < this.$children.length; i++) {
                    seleccionados.push(this.$children[i].selected);
@@ -39,8 +39,8 @@
                this.$parent.dataLocalidades = [].concat.apply([], seleccionados);
             },
 
-            borrar(e) {
-                e.preventDefault();
+            borrar() {
+                // e.preventDefault();
                 for (let i =0; i < this.$children.length; i++) {
                     this.$children[i].selected = [];
                 }
@@ -53,29 +53,14 @@
             }
 
         },
-        // computed: {
-        //     selectAll: {
-        //         get: function () {
-        //             let i=0;
-        //             this.$children.forEach(function (checkboxList) {
-        //                 checkboxList.selectAll ? i++ : false;
-        //             });
-        //             console.warn('get');
-        //             return this.listaProvincias ? this.listaProvincias.length === i : false;
-        //         },
-        //         set: function (value) {
-        //             var selected = [];
-        //
-        //             if (value) {
-        //                 this.$children.forEach(function (checkboxList) {
-        //                     checkboxList.selectAll = !checkboxList.selectAll;
-        //                 });
-        //             }
-        //
-        //             this.selected = selected;
-        //         }
-        //     }
-        // }
+        computed: {
+            listaProvincias: {
+                get: function() {
+                    return this.provincias;
+                },
+                set: function(nuevoValor) {}
+            }
+        }
     }
 </script>
 

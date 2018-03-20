@@ -18,10 +18,13 @@
         data() {
             return {
                 selected: [],
-                datos: this.propdatos,
+                // datos: this.propdatos,
             }
         },
         computed: {
+            datos: function() {
+                return this.propdatos;
+            },
             selectAll: {
                 get: function () {
                     return this.datos.localidades ? this.selected.length == this.datos.localidades.length : false;

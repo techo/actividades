@@ -34,6 +34,7 @@
                     let selected = [];
 
                     if (value) {
+
                         this.datos.forEach(function (tipo) {
                             selected.push(tipo.idTipo);
                         });
