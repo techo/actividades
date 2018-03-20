@@ -93,21 +93,25 @@ class actividadesController extends Controller
     private function filtrar(Request $request, $items)
     {
         $query = DB::table('Actividad')
-            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
             ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
-            ->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
-            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
-            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
-            ->selectRaw('distinct Actividad.*')
+            ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad');
+
+        if($request->has('busqueda') && $request->busqueda == 'punto'){
+            $query->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id');
+        } else { //por lugar de actividad
+            $query->join('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'Actividad.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'Actividad.idLocalidad', '=', 'atl_localidades.id');
+        }
+
+        $query->selectRaw('distinct Actividad.*')
             ->orderBy('fechaInicio', 'desc');
 
         if ($request->has('categoria') && !is_null($request->categoria)) {
             $query->where('Tipo.idCategoria', $request->categoria);
         }
-
-//        if ($request->has('provincia') && !is_null($request->provincia)) {
-//            $query->where('atl_provincias.id', $request->provincia);
-//        }
 
         if ($request->has('localidades') && !is_null($request->localidades) && !empty($request->localidades)) {
             $query->whereIn('atl_localidades.id', $request->localidades);
@@ -116,9 +120,7 @@ class actividadesController extends Controller
         if ($request->has('tipos') && !is_null($request->tipos) && !empty($request->tipos)) {
             $query->whereIn('Tipo.idTipo', $request->tipos);
         }
-
         $actividades = $query->get();
-
         $actividades = Actividad::hydrate($actividades->toArray());
 
         if ($actividades->count() > 0) {
@@ -158,10 +160,19 @@ class actividadesController extends Controller
 
         $provincias = DB::table('Actividad')
             ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
-            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
-            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
-            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
-            ->where('Tipo.idCategoria', $categoria)
+            ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad');
+
+        if($request->has('busqueda') && $request->busqueda == 'punto'){
+            $provincias->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id');
+        } else { //por lugar de actividad
+            $provincias->join('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'Actividad.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'Actividad.idLocalidad', '=', 'atl_localidades.id');
+        }
+
+        $provincias->where('Tipo.idCategoria', $categoria)
             ->orderBy('atl_provincias.Provincia', 'asc')
             ->orderBy('atl_localidades.Localidad', 'asc')
             ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
@@ -193,16 +204,26 @@ class actividadesController extends Controller
 
         $query = DB::table('Actividad')
             ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
-            ->join('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
-            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
-            ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
-            ->where('Tipo.idCategoria', $categoria)
+            ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad');
+
+        if($request->has('busqueda') && $request->busqueda == 'punto') {
+            $query->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id');
+        } else { //por lugar de actividad
+            $query->join('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
+                ->join('atl_provincias', 'Actividad.idProvincia', '=', 'atl_provincias.id')
+                ->join('atl_localidades', 'Actividad.idLocalidad', '=', 'atl_localidades.id');
+        }
+
+            $query->where('Tipo.idCategoria', $categoria)
             ->orderBy('Tipo.nombre', 'asc')
             ->selectRaw('distinct Tipo.idTipo, Tipo.nombre');
 
         if ($request->has('localidades') && !is_null($request->localidades) && !empty($request->localidades)) {
             $query->whereIn('atl_localidades.id', array($request->localidades));
         }
+
         $tipos = $query->get();
 
         $listTipos = [];
