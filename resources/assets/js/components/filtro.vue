@@ -12,6 +12,10 @@
                 </option>
             </select>
         </div>
+        <div class="col-md-1">
+            <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda"> Lugar de actividad
+            <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda"> Punto de encuentro
+        </div>
         <div class="col-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
@@ -28,7 +32,7 @@
             </contenedor-check-provincias>
         </div>
 
-        <div class="col-md-2 pull-right">
+        <div class="col-md-1 pull-right">
             <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
@@ -59,6 +63,7 @@
                  // idLocalidad:       '',
                  dataLocalidades:   [],
                  dataTiposActividad: [],
+                 dataBusqueda: 'lugar'
                  // mensajeProvincias: "Seleccione una provincia..."
              }
         },
@@ -71,18 +76,20 @@
                 let filtros = {
                     categoria: this.idCategoria,
                     localidades: this.dataLocalidades,
-                    tipos: this.dataTiposActividad
+                    tipos: this.dataTiposActividad,
+                    busqueda: this.dataBusqueda
                 };
                 console.log('filtro.vue filtró');
 
-                var event = new CustomEvent('cargarTarjetas', {detail: filtros});
+                let event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
             },
             getTiposDeActividad: function () {
                 let url = '/ajax/actividades/tipos';
                 let filtros = {
                     localidades: this.dataLocalidades,
-                    categoria: this.idCategoria
+                    categoria: this.idCategoria,
+                    busqueda: this.dataBusqueda
                 };
                 console.log('filtros:');
                 console.log(filtros);
@@ -122,7 +129,8 @@
                 let url = '/ajax/actividades/provincias/';
                 let formData = {
                     categoria: this.idCategoria,
-                    tipos: this.dataTiposActividad
+                    tipos: this.dataTiposActividad,
+                    busqueda: this.dataBusqueda
                 };
                 axios.post(url, formData)
                     .then(response => {
@@ -163,13 +171,11 @@
                 for (let i=0; i< this.$children.length; i++) {
                     this.$children[i].borrar();
                 }
-                // this.idLocalidad = "";
-                // this.mensajeProvincias = "Seleccione una provincia...";
-                // this.filtrar();
             },
         },
         watch: {
-            dataLocalidades: function(nuevoValor, viejoValor) {
+            dataLocalidades: function(viejo, nuevo) {
+                console.log('viejo: ' + viejo + ', nuevo: ' + nuevo);
                 this.getTiposDeActividad();
                 this.filtrar();
             },
@@ -177,6 +183,12 @@
                 this.getProvinciasYLocalidades();
                 this.filtrar();
 
+            },
+            dataBusqueda: function() {
+                // this.dataLocalidades = [];
+                // this.dataTiposActividad = [];
+                // this.actualizarFiltros();
+                this.borrarFiltros();
             }
         },
         created: function() {
