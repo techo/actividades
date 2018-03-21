@@ -1,10 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\ajax;
 
+use App\Actividad;
 use Tests\TestCase;
 
-class filtrosDeActividadesTest extends TestCase
+class ajaxActividadesTest extends TestCase
 {
     /**
      * A basic test example.
@@ -21,8 +22,8 @@ class filtrosDeActividadesTest extends TestCase
             ->assertJsonStructure(
                 [
                     [
-                    "idTipo",
-                    "nombre"
+                        "idTipo",
+                        "nombre"
                     ]
                 ]
             );
@@ -36,11 +37,11 @@ class filtrosDeActividadesTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
-                [ '*'=>
+                ['*' =>
                     [
                         "id_provincia",
                         "provincia",
-                        "localidades" =>  []
+                        "localidades" => []
                     ]
                 ]
             );
@@ -55,7 +56,7 @@ class filtrosDeActividadesTest extends TestCase
             ->assertJsonStructure(
                 [
                     "current_page",
-                    "data"=> [],
+                    "data" => [],
                     "first_page_url",
                     "from",
                     "last_page",
@@ -69,4 +70,38 @@ class filtrosDeActividadesTest extends TestCase
                 ]
             );
     }
+
+    public function test_ver_detalle_de_actividad()
+    {
+        $actividad = Actividad::first();
+        $url = '/ajax/actividades/' . $actividad->idActividad;
+        $response = $this->get($url);
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(
+                [
+                    "data" => [
+                        "idActividad",
+                        "tipo" => [
+                            "idTipo",
+                            "nombre"
+                        ],
+                        "fecha",
+                        "hora",
+                        "fechaInicio",
+                        "fechaFin",
+                        "fechaInicioInscripciones",
+                        "fechaFinInscripciones",
+                        "nombreActividad",
+                        "descripcion",
+                        "compromiso",
+                        "costo",
+                        "lugar",
+                        "moneda",
+                        "puntosEncuentro" => []
+                    ]
+                ]
+            );
+    }
 }
+

@@ -8,7 +8,6 @@ use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
 
-
 class InscripcionesController extends Controller
 {
     /**
@@ -25,6 +24,11 @@ class InscripcionesController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function create(Request $request, $id)
     {
         if (Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->get()->count() == 0) {
@@ -44,11 +48,26 @@ class InscripcionesController extends Controller
 
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function inscripto($id)
     {
         if (Auth::check() && Auth::user()->estaInscripto($id)) {
             return Array('idActividad' => $id);
         }
         return Array('idActividad' => false);
+    }
+
+    /**
+     * Retorna la vista para elegir el punto de encuentro de una actividad dada
+     * @param $id Actividad
+     * @return $this
+     */
+    public function puntoDeEncuentro($id)
+    {
+        $actividad = Actividad::find($id);
+        return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
     }
 }
