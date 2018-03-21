@@ -34,5 +34,9 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
-
+    'facebook' => [
+        'client_id'     => '1926230754063306',
+        'client_secret' => '49c41b0aff793aa92a2471d9869b10d5',
+        'redirect'      => 'http://9caa1130.ngrok.io/auth/facebook/callback',
+    ],
 ];

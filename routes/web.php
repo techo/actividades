@@ -29,6 +29,7 @@ Route::prefix('ajax')->group(function(){
 
 
 
+
 Route::get('/registro', function(){
     return view('registro');
 });
@@ -52,6 +53,7 @@ Route::get('/inscripciones/actividad/{id}/inscripto', function($id){
 });
 
 Auth::routes();
+Route::get('/auth/{provider}','Auth\LoginController@redirectToProvider');
 
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';
