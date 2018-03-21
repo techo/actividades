@@ -187,7 +187,7 @@ class actividadesController extends Controller
         $listProvincias = [];
 
         for ($i = 0; $i < count($provincias); $i++) {
-            $idProvincia = $provincias[$i]->id_provincia;
+            $idProvincia = (int)$provincias[$i]->id_provincia;
             $listProvincias[$idProvincia]['id_provincia'] = $idProvincia;
             $listProvincias[$idProvincia]['provincia'] = $provincias[$i]->Provincia;
             $listProvincias[$idProvincia]['localidades'][] =
@@ -230,8 +230,8 @@ class actividadesController extends Controller
 
         for ($i = 0; $i < count($tipos); $i++) {
             $idTipo = $tipos[$i]->idTipo;
-            $listTipos[$idTipo]['idTipo'] = $idTipo;
-            $listTipos[$idTipo]['nombre'] = $tipos[$i]->nombre;
+            $listTipos[$i]['idTipo'] = $idTipo;
+            $listTipos[$i]['nombre'] = $tipos[$i]->nombre;
         }
         return $listTipos;
     }

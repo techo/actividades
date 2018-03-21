@@ -3,12 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
-use App\Localidad;
-use App\Provincia;
-use App\Tipo;
 use Illuminate\Http\Request;
 use App\Actividad;
-use Illuminate\Support\Facades\DB;
 
 class actividadesController extends Controller
 {
@@ -62,7 +58,8 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        //
+        $actividad = Actividad::find($id);
+        return view('actividades.show')->with('actividad', $actividad);
     }
 
     /**
