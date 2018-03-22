@@ -17,6 +17,7 @@
 
         @yield('footer')
     </div>
+    @yield('aditional_html')
     @include('partials.scripts')
 </body>
 </html>
