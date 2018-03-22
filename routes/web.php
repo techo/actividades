@@ -31,7 +31,7 @@ Route::prefix('ajax')->group(function(){
 
 Route::get('/registro', function(){
     return view('registro');
-});
+})->middleware('guest');
 
 Route::get('/actividades/{id}', function($id){
 	$actividad = Actividad::find($id);
@@ -40,9 +40,9 @@ Route::get('/actividades/{id}', function($id){
 
 Route::get('/inscripciones/actividad/{id}', function($id){
 	$actividad = Actividad::find($id);
-    return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
-});
-Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');;
+    return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
+})->middleware('requiere.auth');
+Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create');
 Route::get('/inscripciones/actividad/{id}/inscripto', function($id){
 	if(Auth::check() && Auth::user()->estaInscripto($id)) {

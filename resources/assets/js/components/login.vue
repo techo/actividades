@@ -105,6 +105,7 @@
         created () {
           this.authenticated = this.checkLogin();
           this.user.nombres = this.getCookie('user.nombres');
+
           // console.log('nombres: ' + this.user.nombres);
         },
         methods: {
