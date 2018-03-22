@@ -20,8 +20,8 @@ Route::prefix('ajax')->group(function(){
 	});
     Route::post('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
     Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
-    Route::get('actividades/{id}', 'ajax\ActividadesController@show');
     Route::post('actividades', 'ajax\ActividadesController@index');
+    Route::get('actividades/{id}', 'ajax\ActividadesController@show');
 });
 
 Route::get('/registro', function(){

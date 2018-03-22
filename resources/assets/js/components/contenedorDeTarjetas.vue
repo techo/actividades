@@ -66,11 +66,11 @@
                 this.vacio = false;
                 axios.post(url, filtros)
                     .then(response => {
-                        // console.log(response.data.data);
                         if(typeof response.data.data == "undefined" || response.data.data.length == 0) {
                             this.loading = false;
                             this.vacio = true;
                         }
+                        self.actividades = [];
                         for (let element in response.data.data) {
                             self.actividades.push(response.data.data[element]);
                         }
