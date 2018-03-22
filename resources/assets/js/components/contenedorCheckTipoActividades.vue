@@ -3,12 +3,12 @@
         <a class="btn btn-primary" data-toggle="collapse" href="#tipoActividades" role="button" aria-expanded="false">Tipos de Actividad</a>
         <div id="tipoActividades" class="collapse">
                 <check-tipo-actividades
-                    v-bind:proptipos="listaTipos"
+                    v-bind:propdatos="listaTipos"
                 >
                 </check-tipo-actividades>
 
-            <a href="#" v-on:click="borrar">Borrar</a>
-            <a href="#" v-on:click="aplicar">Aplicar</a>
+            <button class="btn btn-sm" type="button" v-on:click="borrar">Borrar</button>
+            <button class="btn btn-sm" type="button" v-on:click="aplicar">Aplicar</button>
         </div>
     </div>
 </template>
@@ -18,31 +18,28 @@
 
     export default {
         name: "contenedor-check-tipo-actividades",
-        props: ['proptipos'],
+        props: ['propdatos'],
         components: {'check-tipo-actividades': CheckTipoActividades},
         data () {
             return {
-                listaTipos: this.proptipos,
+                listaTipos: this.propdatos,
                 selected: []
             }
         },
         methods: {
-            aplicar(e) {
-               e.preventDefault();
+            aplicar() {
                let seleccionados = [];
                for (let i =0; i < this.$children.length; i++) {
                    seleccionados.push(this.$children[i].selected);
                }
                this.$parent.dataTiposActividad = [].concat.apply([], seleccionados);
-               // $('#tipoActividades').hide();
             },
 
-            borrar(e) {
-                e.preventDefault();
+            borrar() {
                 for (let i =0; i < this.$children.length; i++) {
                     this.$children[i].selected = [];
                 }
-                this.$parent.dataLocalidades = [];
+                this.$parent.dataTiposActividad = [];
             },
             seleccionarTodos() {
                 for (let i =0; i < this.$children.length; i++) {

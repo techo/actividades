@@ -14,14 +14,16 @@
 <script>
     export default {
         name: "check-provincias",
-        props: ['propprovincia'],
+        props: ['propdatos'],
         data() {
             return {
                 selected: [],
-                datos: this.propprovincia,
             }
         },
         computed: {
+            datos: function() {
+                return this.propdatos;
+            },
             selectAll: {
                 get: function () {
                     return this.datos.localidades ? this.selected.length === this.datos.localidades.length : false;
