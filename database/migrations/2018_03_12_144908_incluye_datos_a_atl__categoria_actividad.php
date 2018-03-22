@@ -17,7 +17,7 @@ class IncluyeDatosAAtlCategoriaActividad extends Migration
             DB::statement("INSERT INTO `atl_CategoriaActividad` (`id`, `nombre`, `descripcion`)
                 VALUES
                     (1,'Actividades en Asentamientos','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
-                    (2,'Actividades en Oficina','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                    (2,'Actividades de Oficina y Formación','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
                     (3,'Eventos Especiales','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.');
             ");
         }
