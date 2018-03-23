@@ -41,3 +41,8 @@ Auth::routes();
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';
 });
+
+Route::prefix('/admin')->group(function(){
+    Route::get('/actividades', 'backoffice\ActividadesController@index');
+    Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
+});

@@ -35,6 +35,10 @@ class Actividad extends Model
         return $this->hasMany(PuntoEncuentro::class, 'idActividad');
     }
 
+    public function unidadOrganizacional()
+    {
+        return $this->belongsTo(\App\UnidadOrganizacional::class, 'idUnidadOrganizacional', 'idUnidadOrganizacional');
+    }
     public function scopePersonaInscripta($query, $idPersona) {
         return $this->inscripciones()->where('idPersona', $idPersona)->get()->count();
     }

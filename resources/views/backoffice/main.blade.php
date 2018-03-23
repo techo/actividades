@@ -26,7 +26,7 @@ desired effect
 |---------------------------------------------------------|
 -->
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
+<div class="wrapper" id="app">
 
     @include('backoffice.partials.header')
     @include('backoffice.partials.sidebar')

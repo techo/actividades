@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\ajax;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Resources\ActividadCollection;
 use App\Http\Resources\ActividadResource;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Actividad;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
+
 use Illuminate\Support\Facades\DB;
 
-class actividadesController extends Controller
+class actividadesController extends BaseController
 {
     /**
      * Devuelve un JSON de actividades
@@ -133,21 +132,6 @@ class actividadesController extends Controller
 
     }
 
-    function paginate($items, $perPage, $parameters = null)
-    {
-        if(is_array($items)){
-            $items = collect($items);
-        }
-
-        return new LengthAwarePaginator(
-            $items->forPage(Paginator::resolveCurrentPage() , $perPage),
-            $items->count(),
-            $perPage,
-            Paginator::resolveCurrentPage(),
-            ['path' => Paginator::resolveCurrentPath(), 'query' => $parameters]
-        );
-    }
-
     /**
      * @param Request $request
      * @return mixed
@@ -235,4 +219,6 @@ class actividadesController extends Controller
         }
         return $listTipos;
     }
+
+
 }
