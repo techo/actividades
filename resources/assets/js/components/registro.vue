@@ -17,6 +17,21 @@
           <strong>PASO 1/3</strong>   
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Crea tu cuenta de voluntario de Techo</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3"><a class="btn btn-primary" @click="registro_facebook()">REGISTRO CON FACEBOOK</a></div>
+      </div>
       <hr>
       <div class="row">
         <div class="col-md-12"><label>EMAIL</label></div>
@@ -201,7 +216,7 @@
 
       <hr>
       <div class="row">
-        <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></div>
+        <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></span></div>
         <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso(+1)">CREAR CUENTA</a></div>
       </div>
 
@@ -233,6 +248,7 @@
           user: {},
           validacion: {},
           paso_actual: 1,
+          volver: true,
           paises: [],
           provincias: [],
           localidades: [],
@@ -241,19 +257,26 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id'];
         for(var i in campos) {
           var campo = campos[i]
-          data.user[campo] = ''
+          data.user[campo] = '';
+          if(this[campo]) data.user[campo] = this[campo];
           data.validacion[campo] = {
             texto: '',
             valido: ''
           }
         }
+        if(data.user.facebook_id) {
+          data.paso_actual = 2
+          data.volver = false
+        }
+
         data.validacion.email.checking_email = false,
         data.validacion.email.last_value = ''
         return data
       },
+      props: ['nombre','apellido','email','facebook_id','sexo'],
       mounted: function(){
         this.popular_pais()
       },
@@ -280,6 +303,9 @@
         'user.telefono': function() { this.validar_telefono() }
       },
       methods: {
+        registro_facebook: function() {
+          window.location.href = 'https://actividades.techo.org/auth/facebook';
+        },
         cambiar_paso: function (mod) {
           if(mod < 0) {
             this.paso_actual = this.paso_actual + mod
@@ -442,6 +468,10 @@
         },
         validar_telefono: function() {
           this.validacion.telefono.valido = false
+          if(this.user.localidad != '') {
+            this.validacion.telefono.valido = true
+            return this.validacion.telefono.valido
+          }
           var re = /^[\d- .,]+$/;
           var res = re.test(this.user.telefono);
           if(!res) {

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Socialite;
-
+use App\Persona;
 
 
 class LoginController extends Controller
@@ -87,15 +87,21 @@ class LoginController extends Controller
 
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->fields([
-            'first_name', 'last_name', 'email', 'gender', 'birthday'
-        ])->scopes([
-            'email', 'user_birthday'
-        ])->redirect();
+        return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])
+	->redirect();
     }
 
     public function callbackFromProvider($provider) {
-	$user = Socialite::driver($provider)->user();
-	dd($user);
+        $response = Socialite::driver($provider)->stateless()->fields([
+                'first_name', 'last_name', 'email', 'gender'
+            ]);
+        $user = $response->user();
+        $persona = new \stdClass();
+        $persona->nombre = $user->user['first_name'];
+        $persona->apellido = $user->user['last_name'];
+        $persona->email = $user->user['email'];
+        $persona->facebook_id = $user->user['id'];
+        $persona->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
+        return view('registro')->with('persona', $persona);
     } 
 }

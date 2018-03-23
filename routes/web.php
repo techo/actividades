@@ -28,8 +28,6 @@ Route::prefix('ajax')->group(function(){
 });
 
 
-
-
 Route::get('/registro', function(){
     return view('registro');
 });

@@ -40,4 +40,9 @@ return [
         'redirect'      => 'https://techo.test/auth/facebook/callback',
     #    'redirect'      => 'https://actividades.techo.org/auth/facebook/callback',
     ],
+    'google' => [
+        'client_id'     => '634896039951-v4nbcbvmmtdcak8b3476t4afbviqetup.apps.googleusercontent.com',
+        'client_secret' => 'UsGBC1uHV2S0eul2m8yt2xQV',
+        'redirect'      => 'https://actividades.techo.org/auth/google/callback',
+    ],
 ];
