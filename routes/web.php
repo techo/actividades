@@ -54,6 +54,7 @@ Route::get('/inscripciones/actividad/{id}/inscripto', function($id){
 
 Auth::routes();
 Route::get('/auth/{provider}','Auth\LoginController@redirectToProvider');
+Route::get('/auth/{provider}/callback','Auth\LoginController@callbackFromProvider');
 
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';

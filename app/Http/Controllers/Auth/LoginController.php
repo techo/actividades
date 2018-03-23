@@ -87,6 +87,15 @@ class LoginController extends Controller
 
     public function redirectToProvider($provider)
     {
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->fields([
+            'first_name', 'last_name', 'email', 'gender', 'birthday'
+        ])->scopes([
+            'email', 'user_birthday'
+        ])->redirect();
     }
+
+    public function callbackFromProvider($provider) {
+	$user = Socialite::driver($provider)->user();
+	dd($user);
+    } 
 }
