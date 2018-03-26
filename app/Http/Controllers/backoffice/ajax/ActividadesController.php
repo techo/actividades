@@ -26,7 +26,7 @@ class ActividadesController extends BaseController
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->select(
                 [
-                    'idActividad',
+                    'idActividad as id',
                     'nombreActividad',
                     'fechaInicio',
                     'fechaFin',
@@ -36,7 +36,18 @@ class ActividadesController extends BaseController
                     'Tipo.nombre AS tipoActividad'
                 ]
             )
-        ->orderBy($sortField, $sortOrder)->take(21)->get();
+        ->orderBy($sortField, $sortOrder);
+
+        if ($request->has('filter')){
+            $result->orWhere(function($result) use ($request) {
+                $result->orWhere('nombreActividad', 'like', '%'. $request->filter . '%');
+                $result->orWhere('estadoConstruccion', 'like', '%'. $request->filter . '%');
+                $result->orWhere('Tipo.nombre', 'like', '%'. $request->filter . '%');
+                $result->orWhere('UnidadOrganizacional.nombre', 'like', '%'. $request->filter . '%');
+            });
+        }
+
+        $result = $result->take(21)->get();
 
         $result = $this->paginate($result,10);
         return $result;

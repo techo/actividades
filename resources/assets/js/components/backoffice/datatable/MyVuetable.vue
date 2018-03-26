@@ -1,14 +1,13 @@
 <template>
   <div>
-    <filter-bar></filter-bar>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
     <vuetable ref="vuetable"
-      api-url="/admin/ajax/actividades"
-      :fields="fields"
+      v-bind:api-url="apiUrl"
+      :fields="dataFields"
       pagination-path=""
       :css="css.table"
-      :sort-order="sortOrder"
+      :sort-order="dataSortOrder"
       :multi-sort="true"
-
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
@@ -26,6 +25,7 @@
 </template>
 
 <script>
+  //https://github.com/ratiw/vuetable-2-tutorial/wiki
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -48,9 +48,14 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-  data () {
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text'],
+    data () {
     return {
-      fields: [
+        dataPlaceholderText: this.placeholderText,
+        dataSortOrder: [],
+        dataFields: [],
+        // apiUrl: this.apiUrl,
+        // fields: [
         // {
         //   name: '__sequence',
         //   title: '#',
@@ -62,46 +67,46 @@ export default {
         //   titleClass: 'text-center',
         //   dataClass: 'text-center',
         // },
-        {
-          name: 'nombreActividad',
-          title: 'Nombre',
-          sortField: 'nombreActividad',
-        },
-        {
-          name: 'nombreUnidad',
-          sortField: 'nombreUnidad',
-          title: 'Oficina'
-        },
-        {
-          name: 'fechaInicio',
-          sortField: 'fechaInicio',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          title: 'Fecha Inicio',
-          callback: 'formatDate|DD-MM-YYYY'
-        },
-          {
-          name: 'fechaFin',
-          sortField: 'fechaFin',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          title: 'Fecha Fin',
-          callback: 'formatDate|DD-MM-YYYY'
-        },
-          {
-          name: 'tipoActividad',
-          sortField: 'tipoActividad',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          title: 'Tipo',
-        },
-          {
-          name: 'estadoConstruccion',
-          sortField: 'estadoConstruccion',
-          titleClass: 'text-center',
-          dataClass: 'text-center',
-          title: 'Estado',
-        },
+        // {
+        //   name: 'nombreActividad',
+        //   title: 'Nombre',
+        //   sortField: 'nombreActividad',
+        // },
+        // {
+        //   name: 'nombreUnidad',
+        //   sortField: 'nombreUnidad',
+        //   title: 'Oficina'
+        // },
+        // {
+        //   name: 'fechaInicio',
+        //   sortField: 'fechaInicio',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   title: 'Fecha Inicio',
+        //   callback: 'formatDate|DD-MM-YYYY'
+        // },
+        //   {
+        //   name: 'fechaFin',
+        //   sortField: 'fechaFin',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   title: 'Fecha Fin',
+        //   callback: 'formatDate|DD-MM-YYYY'
+        // },
+        //   {
+        //   name: 'tipoActividad',
+        //   sortField: 'tipoActividad',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   title: 'Tipo',
+        // },
+        //   {
+        //   name: 'estadoConstruccion',
+        //   sortField: 'estadoConstruccion',
+        //   titleClass: 'text-center',
+        //   dataClass: 'text-center',
+        //   title: 'Estado',
+        // },
         // {
         //   name: 'nickname',
         //   sortField: 'nickname',
@@ -127,8 +132,8 @@ export default {
         //   titleClass: 'text-center',
         //   dataClass: 'text-center'
         // }
-      ],
-      css: {
+        // ],
+        css: {
         table: {
           tableClass: 'table table-bordered table-striped table-hover',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
@@ -153,22 +158,22 @@ export default {
           next: 'glyphicon glyphicon-chevron-right',
           last: 'glyphicon glyphicon-step-forward',
         },
-      },
-      sortOrder: [
-        { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
-      ],
-      moreParams: {}
+        },
+        // sortOrder: [
+        // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
+        // ],
+        moreParams: {}
     }
   },
   methods: {
     allcap (value) {
       return value.toUpperCase()
     },
-    // genderLabel (value) {
-    //   return value === 'M'
-    //     ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-    //     : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-    // },
+    estadoBadge (value) {
+      return value === 'M'
+        ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
+        : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    },
     formatNumber (value) {
       return accounting.formatNumber(value, 2)
     },
@@ -189,15 +194,19 @@ export default {
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
   },
+  created()  {
+      this.dataSortOrder = JSON.parse(this.sortOrder);
+      this.dataFields = JSON.parse(this.fields);
+  },
   events: {
     'filter-set' (filterText) {
       this.moreParams = {
         filter: filterText
-      }
+      };
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     },
     'filter-reset' () {
-      this.moreParams = {}
+      this.moreParams = {};
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
   }

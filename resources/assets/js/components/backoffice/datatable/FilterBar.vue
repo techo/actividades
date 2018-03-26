@@ -2,8 +2,14 @@
     <div class="filter-bar">
       <form class="form-inline">
         <div class="form-group">
-          <label>Search for:</label>
-          <input type="text" v-model="filterText" class="form-control" @keyup.enter="doFilter" placeholder="name, nickname, or email">
+          <label>Filtrar por:</label>
+          <input
+            type="text"
+            v-model="filterText"
+            class="form-control"
+            @keyup.enter="doFilter"
+            :placeholder="dataPlaceholderText"
+          >
           <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
           <button class="btn" @click.prevent="resetFilter">Reset</button>
         </div>
@@ -13,9 +19,11 @@
 
 <script>
   export default {
+    props: ['placeholderText'],
     data () {
       return {
-        filterText: ''
+        filterText: '',
+          dataPlaceholderText: this.placeholderText
       }
     },
     methods: {
@@ -23,8 +31,8 @@
         this.$events.fire('filter-set', this.filterText)
       },
       resetFilter () {
-        this.filterText = ''
-        this.$events.fire('filter-reset')
+        this.filterText = '';
+        this.$events.fire('filter-reset');
       }
     }
   }

@@ -17,7 +17,12 @@
         <!-- /.box-header -->
         <div class="box-body">
             {{--<datatable encabezados="{{ $encabezados }}" url="/admin/ajax/actividades"></datatable>--}}
-            <datatable></datatable>
+            <datatable
+                    api-url="/admin/ajax/actividades"
+                    fields="{{ $fields }}"
+                    sort-order="{{ $sortOrder }}"
+                    placeholder-text="Buscar por nombre, oficina, tipo o estado"
+            ></datatable>
         </div>
         <!-- /.box-body -->
         <div class="box-footer">

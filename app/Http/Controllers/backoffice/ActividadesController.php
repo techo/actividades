@@ -16,7 +16,13 @@ class ActividadesController extends Controller
      */
     public function index()
     {
-        return view('backoffice.actividades.index');
+        $datatableConfig = config('datatables.actividades');
+        $fields = json_encode($datatableConfig['fields']);
+        $sortOrder = json_encode($datatableConfig['sortOrder']);
+
+
+
+        return view('backoffice.actividades.index', compact('fields', 'sortOrder'));
     }
 
     /**
