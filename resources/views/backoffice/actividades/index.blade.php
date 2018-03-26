@@ -16,7 +16,6 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            {{--<datatable encabezados="{{ $encabezados }}" url="/admin/ajax/actividades"></datatable>--}}
             <datatable
                     api-url="/admin/ajax/actividades"
                     fields="{{ $fields }}"
@@ -36,25 +35,6 @@
 @push('additional_scripts')
     <script src="{{ asset('/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script>
-        $(document).ready(function () {
-            $(document).ready(function() {
-                // var oTable = $('#tabla').DataTable({
-                //     "processing": true,
-                //     "serverSide": true,
-                //     "ajax": '/admin/ajax/actividades',
-                //     "columns": [
-                //         {data: 'idActividad', name: 'idActividad'},
-                //         {data: 'nombreActividad', name: 'nombreActividad'},
-                //         {data: 'fechaInicio', name: 'fechaInicio'},
-                //         {data: 'fechaFin', name: 'fechaFin'},
-                //         {data: 'idUnidadOrganizacional', name: 'idUnidadOrganizacional'},
-                //         {data: 'nombreUnidadOrganizacional', name: 'nombreUnidadOrganizacional'}
-                //     ]
-                // });
-            });
-        });
-    </script>
 @endpush
 
 @push('additional_css')

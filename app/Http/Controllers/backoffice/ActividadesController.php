@@ -54,7 +54,8 @@ class ActividadesController extends Controller
      */
     public function show($id)
     {
-        //
+        $actividad = Actividad::find($id);
+        return view('backoffice.actividades.show', compact('actividad'));
     }
 
     /**

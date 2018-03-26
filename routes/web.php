@@ -44,5 +44,6 @@ Route::get('autenticado', function() {
 
 Route::prefix('/admin')->group(function(){
     Route::get('/actividades', 'backoffice\ActividadesController@index');
+    Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
 });
