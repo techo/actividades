@@ -151,7 +151,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', 'techo.test'),
+    'domain' => env('SESSION_DOMAIN', 'actividades.techo.org'),
 
     /*
     |--------------------------------------------------------------------------

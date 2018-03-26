@@ -257,7 +257,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id','google_id'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -267,7 +267,7 @@
             valido: ''
           }
         }
-        if(data.user.facebook_id) {
+        if(data.user.facebook_id || data.user.google_id) {
           data.paso_actual = 2
           data.volver = false
         }
@@ -276,7 +276,7 @@
         data.validacion.email.last_value = ''
         return data
       },
-      props: ['nombre','apellido','email','facebook_id','sexo'],
+      props: ['nombre','apellido','email','facebook_id','google_id','sexo'],
       mounted: function(){
         this.popular_pais()
       },

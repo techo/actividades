@@ -37,8 +37,7 @@ return [
     'facebook' => [
         'client_id'     => '1926230754063306',
         'client_secret' => '49c41b0aff793aa92a2471d9869b10d5',
-        'redirect'      => 'https://techo.test/auth/facebook/callback',
-    #    'redirect'      => 'https://actividades.techo.org/auth/facebook/callback',
+        'redirect'      => 'https://actividades.techo.org/auth/facebook/callback',
     ],
     'google' => [
         'client_id'     => '634896039951-v4nbcbvmmtdcak8b3476t4afbviqetup.apps.googleusercontent.com',
