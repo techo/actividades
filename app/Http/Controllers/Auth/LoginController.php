@@ -85,34 +85,45 @@ class LoginController extends Controller
         );
     }
 
-    public function redirectToProvider($provider)
+    public function redirectToProvider(Request $request, $provider)
     {
-	if($provider == 'google') return Socialite::driver($provider)->redirect();
-        return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])
-	->redirect();
+        $request->session()->put('login_callback', $request->headers->get('referer'));
+        if($provider == 'google') return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
     }
 
     public function callbackFromProvider($provider) {
-        $persona = new \stdClass();
+        $personaData = new \stdClass();
     	if($provider == 'google') {
             	$user = Socialite::driver($provider)->stateless()->user();
-            	$persona->nombre = $user->user['name']['givenName'];
-            	$persona->apellido = $user->user['name']['familyName'];
-            	$persona->email = $user->email;
-            	$persona->google_id = $user->user['id'];
-            	$persona->facebook_id = '';
-                $persona->sexo = '';
+            	$personaData->nombre = $user->user['name']['givenName'];
+            	$personaData->apellido = $user->user['name']['familyName'];
+            	$personaData->email = $user->email;
+            	$personaData->google_id = $user->user['id'];
+            	$personaData->facebook_id = '';
+                $personaData->sexo = '';
     	} else {
     	        $user = Socialite::driver($provider)->stateless()->fields([
             	        'first_name', 'last_name', 'email', 'gender'
     	        ])->user();
-             	$persona->nombre = $user->user['first_name'];
-            	$persona->apellido = $user->user['last_name'];
-            	$persona->email = $user->user['email'];
-            	$persona->facebook_id = $user->user['id'];
-            	$persona->google_id = '';
-                $persona->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
+             	$personaData->nombre = $user->user['first_name'];
+            	$personaData->apellido = $user->user['last_name'];
+            	$personaData->email = $user->user['email'];
+            	$personaData->facebook_id = $user->user['id'];
+            	$personaData->google_id = '';
+                $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
     	}
-        return view('registro')->with('persona', $persona);
+        $persona = Persona::where('mail',$personaData->email)->first();
+        if(!$persona) {
+            return view('registro')->with('persona', $personaData);
+        } else {
+            if($provider == 'google') {
+                if($persona->google_id == $personaData->google_id) {
+                    Auth::login($persona, true);
+                    #$request->session()->regenerate();
+                }
+            }
+            return $persona;
+        }
     } 
 }
