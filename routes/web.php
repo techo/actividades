@@ -20,6 +20,12 @@ Route::prefix('ajax')->group(function(){
 		Route::get('{id_pais}/provincia/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
 	Route::prefix('usuario')->group(function(){
+		Route::get('', function(){
+			if(Auth::check()) {
+				return Auth::user();
+			}
+			return '';
+		});
 		Route::post('', 'ajax\UsuarioController@create');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
 	});

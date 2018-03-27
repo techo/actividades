@@ -92,8 +92,9 @@ class LoginController extends Controller
         return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
     }
 
-    public function callbackFromProvider($provider) {
-        $personaData = new \stdClass();
+    public function callbackFromProvider(Request $request, $provider) {
+	$url = $request->session()->get('login_callback','');
+	$personaData = new \stdClass();
     	if($provider == 'google') {
             	$user = Socialite::driver($provider)->stateless()->user();
             	$personaData->nombre = $user->user['name']['givenName'];
@@ -114,16 +115,20 @@ class LoginController extends Controller
                 $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
     	}
         $persona = Persona::where('mail',$personaData->email)->first();
+	#return dd($persona);
         if(!$persona) {
             return view('registro')->with('persona', $personaData);
         } else {
             if($provider == 'google') {
-                if($persona->google_id == $personaData->google_id) {
+           #     if($persona->google_id == $personaData->google_id) {
                     Auth::login($persona, true);
-                    #$request->session()->regenerate();
-                }
+                    $request->session()->regenerate();
+            #    }
             }
-            return $persona;
+            #if(Auth::check()) {
+           # 	return dd($request->session()->get('login_callback',''));
+		if($url) return redirect($url);
+	    #}
         }
     } 
 }
