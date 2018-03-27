@@ -101,7 +101,7 @@ class LoginController extends Controller
             	$persona->email = $user->email;
             	$persona->google_id = $user->user['id'];
             	$persona->facebook_id = '';
-                $persona->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
+                $persona->sexo = '';
     	} else {
     	        $user = Socialite::driver($provider)->stateless()->fields([
             	        'first_name', 'last_name', 'email', 'gender'
