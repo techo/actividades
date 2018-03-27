@@ -30,7 +30,13 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3"><a class="btn btn-primary" @click="registro_facebook()">REGISTRO CON FACEBOOK</a></div>
+        <div class="col-md-3"><a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;REGISTRO CON FACEBOOK</a></div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">&nbsp;</div>
+      </div>
+      <div class="row">
+        <div class="col-md-3"><a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;REGISTRO CON GOOGLE</a></div>
       </div>
       <hr>
       <div class="row">
@@ -305,6 +311,9 @@
       methods: {
         registro_facebook: function() {
           window.location.href = 'https://actividades.techo.org/auth/facebook';
+        },
+        registro_google: function() {
+          window.location.href = 'https://actividades.techo.org/auth/google';
         },
         cambiar_paso: function (mod) {
           if(mod < 0) {
