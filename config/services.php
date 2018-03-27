@@ -35,13 +35,13 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
     'facebook' => [
-        'client_id'     => '1926230754063306',
-        'client_secret' => '49c41b0aff793aa92a2471d9869b10d5',
+        'client_id'     => '146696142692543',
+        'client_secret' => '206e76d3afcff91448abd36cd7bd71fe',
         'redirect'      => 'https://actividades.techo.org/auth/facebook/callback',
     ],
     'google' => [
-        'client_id'     => '634896039951-v4nbcbvmmtdcak8b3476t4afbviqetup.apps.googleusercontent.com',
-        'client_secret' => 'UsGBC1uHV2S0eul2m8yt2xQV',
+        'client_id'     => '421717671652-on5e9puc5lg0qibghh2dhicnqjbobfrb.apps.googleusercontent.com',
+        'client_secret' => 'i4ditSJe5gBdUiWuwQibjaZ4',
         'redirect'      => 'https://actividades.techo.org/auth/google/callback',
     ],
 ];
