@@ -453,14 +453,14 @@
         },
         traer_provincias: function() {
           if(this.user.pais) {
-            axios.get('/ajax/pais/'+this.user.pais+'/provincias').then(response => {
+            axios.get('/ajax/paises/'+this.user.pais+'/provincias').then(response => {
               this.provincias = response.data
             })
           }
         },
         traer_localidades: function() {
           if(this.user.pais && this.user.provincia) {
-            axios.get('/ajax/pais/'+this.user.pais+'/provincia/'+this.user.provincia+'/localidades').then(response => {
+            axios.get('/ajax/paises/'+this.user.pais+'/provincia/'+this.user.provincia+'/localidades').then(response => {
               this.localidades = response.data
             })
           }

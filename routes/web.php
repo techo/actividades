@@ -7,14 +7,17 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/actividades', 'ActividadesController@index');
 
 Route::prefix('ajax')->group(function(){
-	Route::get('paises', 'ajax\PaisesController@index');
-	Route::get('provincias/{id}', 'ajax\ProvinciasController@show');
-	Route::get('categorias/{id}', 'ajax\CategoriasController@show');
-	Route::prefix('pais')->group(function(){
+    Route::get('provincias/{id}', 'ajax\ProvinciasController@show');
+    Route::get('categorias', 'ajax\CategoriasController@index');
+    Route::get('categorias/{id}', 'ajax\CategoriasController@show');
+    Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
+
+    Route::prefix('paises')->group(function(){
+        Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincia/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
-	Route::prefix('usuario')->group(function(){
+    Route::prefix('usuario')->group(function(){
 		Route::post('', 'ajax\UsuarioController@create');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
 	});
@@ -46,4 +49,5 @@ Route::prefix('/admin')->group(function(){
     Route::get('/actividades', 'backoffice\ActividadesController@index');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
+    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
 });

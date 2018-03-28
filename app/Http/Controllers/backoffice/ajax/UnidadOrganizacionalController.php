@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\backoffice;
+namespace App\Http\Controllers\backoffice\ajax;
 
-use App\Actividad;
-use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
-use Yajra\DataTables\Facades\DataTables;
+use App\UnidadOrganizacional;
+use Illuminate\Http\Request;
 
-class ActividadesController extends Controller
+class UnidadOrganizacionalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,13 +16,7 @@ class ActividadesController extends Controller
      */
     public function index()
     {
-        $datatableConfig = config('datatables.actividades');
-        $fields = json_encode($datatableConfig['fields']);
-        $sortOrder = json_encode($datatableConfig['sortOrder']);
-
-
-
-        return view('backoffice.actividades.index', compact('fields', 'sortOrder'));
+        return UnidadOrganizacional::all();
     }
 
     /**
@@ -54,10 +48,7 @@ class ActividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('tipo.categoria', 'unidadOrganizacional')
-            ->where('idActividad', $id)
-            ->first();
-        return view('backoffice.actividades.show', compact('actividad'));
+        //
     }
 
     /**
@@ -93,7 +84,4 @@ class ActividadesController extends Controller
     {
         //
     }
-
-
-
 }

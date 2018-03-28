@@ -1,4 +1,5 @@
 <template>
+    <span>
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
@@ -6,111 +7,178 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="categoria">Categoría</label>
                         <select id="categoria" name="categoria"
-                               class="form-control"
-                               v-bind:disabled="readonly"
-                               v-model="categoriaSeleccionada"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.tipo.categoria.id"
                         >
                             <option v-for="cat in categorias" v-bind:value="cat.id">{{ cat.nombre }}</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="tipo">Tipo de Actividad</label>
-                        <input id="tipo" name="tipo"
-                               type="text"
-                               class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
+                        <select id="tipo" name="tipo"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.tipo.idTipo"
                         >
+                            <option
+                                    v-for="tipo in tiposDeActividad"
+                                    v-bind:value="tipo.idTipo"
+                            >
+                                {{ tipo.nombre }}
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="oficina">Oficina</label>
+                        <select id="oficina" name="oficina"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.unidad_organizacional.idUnidadOrganizacional"
+                        >
+                            <option
+                                    v-for="unidad in unidadesOrganizacionales"
+                                    v-bind:value="unidad.idUnidadOrganizacional"
+                            >
+                                {{ unidad.nombre }}
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="nombreActividad">Nombre de Actividad</label>
                         <input id="nombreActividad"
                                type="text"
                                class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
+                               v-model="dataActividad.nombreActividad"
+                               :disabled="readonly"
                         >
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="pais">País</label>
-                        <select id="pais" name="pais"
-                               type="text"
-                               class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
-                        >
-                            <option v-for="pais in paises" v-bind:value="pais.id">{{ pais.nombre }}</option>
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="provincia">Provincia</label>
-                        <input id="provincia"
-                               type="text"
-                               class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
-                        >
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="localidad">Localidad</label>
-                        <input id="localidad"
-                               type="text"
-                               class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
-                        >
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="tipoActividad">Fecha / Duración</label>
-                        <p>15/01/2018 10:00AM - 17/01/2018 05:00PM</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="cupo">Cupo</label>
-                        <input id="cupo"
-                               type="number"
-                               class="form-control"
-                               value="algo saraza"
-                               v-bind:disabled="readonly"
+                        <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="fechaInicio"
+                            name="fechaInicio"
+                            :value="dataActividad.fechaInicio"
+                            :disabled="readonly"
                         >
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha de Fin De La Actividad</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="fechaFin"
+                            name="fechaFin"
+                            :value="dataActividad.fechaFin"
+                            :disabled="readonly"
+                        >
+                    </div>
+                </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="tipoActividad">Descripción</label>
-                        <p>I'm here to ensure the League of Shadow fulfills its duty to restore balance to civilization. You yourself fought the decadence of Gotham for years with all your strength, all your resources, all your moral authority. And the only victory you achieved was a lie. Now, you understand? Gotham is beyond saving and must be allowed to die.</p>
+                        <label for="descripcion">Descripción</label>
+                        <textarea
+                                name="descripcion"
+                                id="descripcion"
+                                cols="30"
+                                rows="3"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.descripcion"
+                        >
+                            {{ dataActividad.descripcion }}
+                        </textarea>
                     </div>
                 </div>
-
             </div>
-            <hr>
+        </div>
+        <!-- /.box-body -->
+    </div>
+        <!-- /.box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Ubicación De La Actividad</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="pais">País</label>
+                        <select id="pais" name="pais"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.idPais"
+                        >
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="pais in paises" v-bind:value="pais.id">{{ pais.nombre }}</option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="provincia">Provincia</label>
+                        <select id="provincia" name="provincia"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.idProvincia"
+                        >
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="prov in provincias" v-bind:value="prov.id">{{ prov.provincia }}</option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="localidad">Localidad</label>
+                        <select id="localidad" name="localidad"
+                                class="form-control"
+                                v-bind:disabled="readonly"
+                                v-model="dataActividad.idLocalidad"
+                        >
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="loc in localidades" v-bind:value="loc.id">{{ loc.localidad }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.box-body -->
+    </div>
+        <!-- /.box -->
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Puntos De Encuentro</h3>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -136,23 +204,194 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- /.box-body -->
-        <div class="box-footer">
-            <button type="button" class="btn">Volver al listado</button>
-            <button type="button" class="btn btn-danger pull-right">Cancelar</button>
-
-            <button type="button" class="btn btn-primary pull-right">Editar</button>
-        </div>
-        <!-- box-footer -->
     </div>
-    <!-- /.box -->
+        <!-- /.box -->
+    <div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Inscripciones</h3>
+    </div>
+        <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="estadoInscripcion">Estado De La Inscripción</label>
+                <select id="estadoInscripcion" name="estadoInscripcion"
+                        class="form-control"
+                        :disabled="readonly"
+                        v-model="dataActividad.idProvincia"
+                >
+                    <option disabled value="">Seleccione</option>
+                    <option v-for="prov in provincias" v-bind:value="prov.id">{{ prov.provincia }}</option>
+                </select>
+            </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
+                        <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="fechaInicioInscripciones"
+                            name="fechaInicioInscripciones"
+                            :disabled="readonly"
+                            v-model="dataActividad.fechaInicioInscripciones"
+                        >
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaFinInscripcion">Fecha de Fin De La Inscripción</label>
+                        <input
+                                type="datetime-local"
+                                class="form-control"
+                                id="fechaFinInscripcion"
+                                name="fechaFinInscripcion"
+                                :disabled="readonly"
+                                v-model="dataActividad.fechaFinInscripciones"
+                        >
+                    </div>
+                </div>
+        </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="mensajeInscripcion">Mensaje De Inscripción</label>
+                        <textarea
+                                name="mensajeInscripcion"
+                                id="mensajeInscripcion"
+                                cols="30"
+                                rows="4"
+                                class="form-control"
+                                :disabled="readonly"
+                                v-model="dataActividad.descripcion"
+                        >
+                            {{ dataActividad.descripcion }}
+                        </textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="descripcion">Visibilidad</label>
+                                <br>
+                                <input type="radio" name="visibilidad"> Pública
+                                <input type="radio" name="visibilidad"> Privada
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="limiteInscripciones">Límite</label>
+                                <input id="limiteInscripciones"
+                                       type="number"
+                                       class="form-control"
+                                       v-bind:disabled="readonly"
+                                       v-model="dataActividad.limiteInscripciones"
+                                >
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <p style="margin-top: 3em">voluntarios permitidos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+
+    </div><!-- /.box-body -->
+</div>
+
+    <div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Construcción</h3>
+    </div>
+        <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="costo">Costo ({{ dataActividad.moneda }})</label>
+                    <input id="costo" name="costo"
+                           type="number"
+                           class="form-control"
+                           v-bind:disabled="readonly"
+                           v-model="dataActividad.costo"
+                    >
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="linkPago">Link de Pago</label>
+                    <input
+                            type="url"
+                            class="form-control"
+                            id="linkPago"
+                            name="linkPago"
+                            :disabled="readonly"
+                            v-model="dataActividad.LinkPago"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="idFormulario">Evaluaciones (Id FOBU)</label>
+                    <input
+                            type="url"
+                            class="form-control"
+                            id="idFormulario"
+                            name="idFormulario"
+                            :disabled="readonly"
+                            v-model="dataActividad.idFormulario"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaInicioEvaluaciones">Desde</label>
+                    <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="fechaInicioEvaluaciones"
+                            name="fechaInicioEvaluaciones"
+                            :disabled="readonly"
+                            v-model="dataActividad.fechaInicioEvaluaciones"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaFinEvaluaciones">Hasta</label>
+                    <input
+                            type="datetime-local"
+                            class="form-control"
+                            id="fechaFinEvaluaciones"
+                            name="fechaFinEvaluaciones"
+                            :disabled="readonly"
+                            v-model="dataActividad.fechaFinEvaluaciones"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- /.box-body -->
+</div>
+    </span>
 
 </template>
 
 <script>
     import axios from 'axios';
+
     export default {
         name: "actividades-show",
         props: ['actividad'],
@@ -161,21 +400,75 @@
                 dataActividad: {},
                 readonly: true,
                 paises: [],
-                paisSeleccionado: '',
+                // paisSeleccionado: '',
+                provincias: [],
+                // provinciaSeleccionada: '',
+                localidades: [],
+                // localidadSeleccionada: '',
                 categorias: [],
-                categoriaSeleccionada: ''
+                // categoriaSeleccionada: ''
+                tiposDeActividad: [],
+                unidadesOrganizacionales: []
             }
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
             this.getPaises();
+            this.getProvincias();
+            this.getLocalidades();
+            this.getCategorias();
+            this.getTiposDeActividad();
+            this.getUnidadesOrganizacionales();
+        },
+        beforeMount() {
+
+        },
+        computed: {
+            esConstruccion() {
+
+            }
         },
         methods: {
             getPaises() {
                 this.axiosGet('/ajax/paises', function (data, self) {
                     self.paises = data;
-                    self.paisSeleccionado = self.dataActividad.idPais
-                })
+                    // self.paisSeleccionado = self.dataActividad.idPais
+                });
+            },
+            getProvincias() {
+                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincias',
+                    function (data, self) {
+                        console.log(data);
+                        self.provincias = data;
+                        // self.provinciaSeleccionada = self.dataProvincias.idProvincia;
+                    });
+            },
+            getLocalidades() {
+                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincia/' + this.dataActividad.idProvincia + '/localidades',
+                    function (data, self) {
+                        self.localidades = data;
+                        // self.localidadSeleccionada = self.dataActividad.idLocalidad;
+                    });
+            },
+
+            getCategorias() {
+                this.axiosGet('/ajax/categorias', function (data, self) {
+                    self.categorias = data;
+                });
+            },
+
+            getTiposDeActividad() {
+                this.axiosGet('/ajax/categorias/' + this.dataActividad.tipo.categoria.id + '/tipos',
+                    function (data, self) {
+                        self.tiposDeActividad = data;
+                    });
+            },
+
+            getUnidadesOrganizacionales() {
+                this.axiosGet('/admin/ajax/unidadesOrganizacionales/',
+                    function (data, self) {
+                        self.unidadesOrganizacionales = data;
+                    });
             },
 
             axiosGet(url, fCallback, params = []) {

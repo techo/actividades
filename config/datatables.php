@@ -76,7 +76,7 @@ return [
             // ],
             [
                 'name' => '__component:custom-actions',
-                'title' => 'Actions',
+                'title' => 'Acciones',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center'
             ]

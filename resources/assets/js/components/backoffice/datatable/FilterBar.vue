@@ -10,8 +10,8 @@
             @keyup.enter="doFilter"
             :placeholder="dataPlaceholderText"
           >
-          <button class="btn btn-primary" @click.prevent="doFilter">Go</button>
-          <button class="btn" @click.prevent="resetFilter">Reset</button>
+          <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
+          <button class="btn" @click.prevent="resetFilter">Borrar</button>
         </div>
       </form>
     </div>

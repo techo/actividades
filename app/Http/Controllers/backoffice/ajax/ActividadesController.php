@@ -24,6 +24,7 @@ class ActividadesController extends BaseController
         $result = DB::table('Actividad')
             ->join('UnidadOrganizacional', 'Actividad.idUnidadOrganizacional', '=', 'UnidadOrganizacional.idUnidadOrganizacional')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+            ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
                 [
                     'idActividad as id',
@@ -33,7 +34,9 @@ class ActividadesController extends BaseController
                     'estadoConstruccion',
                     'UnidadOrganizacional.idUnidadOrganizacional',
                     'UnidadOrganizacional.nombre AS nombreUnidad',
-                    'Tipo.nombre AS tipoActividad'
+                    'Tipo.nombre AS tipoActividad',
+                    'atl_CategoriaActividad.nombre as nombreCategoria',
+                    'atl_CategoriaActividad.id as idCategoria',
                 ]
             )
         ->orderBy($sortField, $sortOrder);
