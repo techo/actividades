@@ -298,7 +298,9 @@
           data.paso_actual = 'personales'
           data.volver = false
         }
-
+	if(this.linkear) {
+	  data.paso_actual = 'linkear'
+	}
         data.validacion.email.checking_email = false,
         data.validacion.email.last_value = ''
         return data
