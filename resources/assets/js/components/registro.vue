@@ -260,6 +260,10 @@
             quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></span></div>
+          <div class="col-md-3"><a class="btn btn-primary" @click="linkear()">CONFIRMAR</a></div>
+        </div>
 
       </div>
       <hr>    
@@ -378,6 +382,14 @@
               break
           }
         },
+        linkear: function() {
+          debugger;
+          axios.put('/usuario/linkear', {
+
+          }).then(response => {
+
+          })
+        }
         paso: function (paso) {
           return paso == this.paso_actual 
         },

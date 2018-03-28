@@ -137,5 +137,6 @@ class LoginController extends Controller
     		    if($url) return redirect($url);
 	        }
         }
-    } 
+    }
+
 }

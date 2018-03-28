@@ -28,6 +28,7 @@ Route::prefix('ajax')->group(function(){
 		});
 		Route::post('', 'ajax\UsuarioController@create');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
+		Route::put('linkear', 'ajax\UsuarioController@linkear');
 	});
 	Route::get('actividades', 'ajax\ActividadesController@index');
 	Route::get('actividades/{id}', 'ajax\ActividadesController@show');

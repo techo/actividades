@@ -19,7 +19,7 @@ class loginSocialTest extends TestCase
      *
      * @return void
      */
-/*
+
     public function testFacebookTraerData()
     {
     	$socialite = \Mockery::mock('Laravel\Socialite\Two\User');
@@ -108,7 +108,7 @@ class loginSocialTest extends TestCase
         $response->assertStatus(302);
     	$this->assertTrue(Auth::check());
     }
-*/
+
     public function testLoginSocialUsuarioExistentePeroNoRelacionadoALaRedSocial() {
         $this->withSession(['login_callback' => 'url_callback']);
         $persona = Persona::where('mail','aaaa@aaab.com')->first();
@@ -152,7 +152,40 @@ class loginSocialTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->google_id,'id');
         $this->assertEquals($response->getOriginalContent()->getData()['linkear'],true);
+    }
 
+    public function testConfimarLinkearRedSocial() {
+        $persona = Persona::where('mail','aaaa@aaac.com')->first();
+        if(!$persona) {
+            $persona = new Persona();
+            $persona->apellidoPaterno = 'apellido';
+            $persona->dni = 'dni';
+            $persona->mail = 'aaaa@aaac.com';
+            $persona->idLocalidad = 1;
+            $persona->fechaNacimiento = new Carbon();
+            $persona->nombres = 'nombre';
+            $persona->idPais = 1;
+            $persona->idPaisResidencia = 1;
+            $persona->pasaporte = 'pasaporte';
+            $persona->password = Hash::make('pass');
+            $persona->idProvincia = 1;
+            $persona->sexo = 'F';
+            $persona->telefonoMovil = 'telefono';
+            $persona->carrera = '';
+            $persona->anoEstudio = '';
+            $persona->idContactoCTCT = '';
+            $persona->statusCTCT = '';
+            $persona->lenguaje = '';
+            $persona->idRegionLT = 0;
+            $persona->idUnidadOrganizacional = 0;
+            $persona->idCiudad = 0;
+            $persona->google_id = '';
+            $persona->save();
+        }
+        $response = $this->put('/ajax/usuario/linkear', ['email' => 'aaaa@aaac.com', 'media' => 'google', 'id' => '1234567890']);
+        $response->assertStatus(200);
+        $this->assertTrue(Auth::check());
+        $this->assertEquals(Auth::user()->google_id, '1234567890');        
     }
 
 }

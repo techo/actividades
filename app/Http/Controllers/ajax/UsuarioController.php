@@ -54,4 +54,25 @@ class UsuarioController extends Controller
     public function validar_nuevo_mail(Request $request) {
     	return Persona::where('mail', $request->email)->get()->count();
     }
+
+    public function linkear(Request $request) {
+        $success = false;
+        $persona = Persona::where('mail', $request->email)->first();
+        if($persona) {
+            $success = true;
+            if($request->media == 'google') {
+                $persona->google_id = $request->id;
+            }
+            if($request->media == 'facebook') {
+                $persona->facebook_id = $request->id;
+            }
+        }
+        if($success) {
+            $persona->save();
+            Auth::login($persona, true);
+            $request->session()->regenerate();
+        }
+        return ['success' => $success];
+    } 
+
 }
