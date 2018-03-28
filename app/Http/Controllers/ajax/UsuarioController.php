@@ -14,6 +14,7 @@ use App\VerificacionMailPersona;
 class UsuarioController extends Controller
 {
     public function create(Request $request) {
+
         $validatedData = $request->validate([
             'email' => 'required|unique:Persona,mail|email',
             'nombre' => 'required',
@@ -46,7 +47,7 @@ class UsuarioController extends Controller
         $persona->idUnidadOrganizacional = 0;
         $persona->idCiudad = 0;
         $persona->verificado = false;
-    	$persona->save();
+    	  $persona->save();
 
         $verificacion = new VerificacionMailPersona();
         $verificacion->idPersona = $persona->idPersona;
