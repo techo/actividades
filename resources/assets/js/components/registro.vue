@@ -261,8 +261,8 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></span></div>
-          <div class="col-md-3"><a class="btn btn-primary" @click="linkear()">CONFIRMAR</a></div>
+          <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/"> Volver</a></div>
+          <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">CONFIRMAR</a></div>
         </div>
 
       </div>
@@ -357,7 +357,7 @@
                 axios.post('/ajax/usuario',this.user).then(response => {
                   console.log(response)
                   this.paso_actual = 'gracias'
-		              if(response.data.login_callback) window.location.href = response.data.login_callback;
+	          if(response.data.login_callback) window.location.href = response.data.login_callback;
                 }).catch((error) => {
                   this.hasError = true;
                   if (error.response) {
@@ -382,14 +382,25 @@
               break
           }
         },
-        linkear: function() {
-          debugger;
-          axios.put('/usuario/linkear', {
-
+        confirma_linkear: function() {
+          var media = '';
+	  var id = '';
+	  if(this.google_id) {
+	    media = 'google';
+	    id = this.google_id;
+	  }
+	  if(this.facebook_id) {
+	    media = 'facebook';
+	    id = this.facebook_id;
+	  }
+          axios.put('/ajax/usuario/linkear', {
+		media: media,
+		id: id,
+		email: this.email
           }).then(response => {
-
-          })
-        }
+	        if(response.data.login_callback) window.location.href = response.data.login_callback;
+	  })
+        },
         paso: function (paso) {
           return paso == this.paso_actual 
         },

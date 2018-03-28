@@ -56,6 +56,7 @@ class UsuarioController extends Controller
     }
 
     public function linkear(Request $request) {
+        $url = $request->session()->get('login_callback','');
         $success = false;
         $persona = Persona::where('mail', $request->email)->first();
         if($persona) {
@@ -72,7 +73,7 @@ class UsuarioController extends Controller
             Auth::login($persona, true);
             $request->session()->regenerate();
         }
-        return ['success' => $success];
+        return ['success' => $success, 'login_callback' => $url];
     } 
 
 }
