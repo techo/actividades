@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Auth;
-
+use App\Actividad;
 
 Route::get('/', 'HomeController@index')->name('home');
 
