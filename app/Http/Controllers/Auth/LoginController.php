@@ -122,6 +122,8 @@ class LoginController extends Controller
                 if($persona->google_id == $personaData->google_id) {
                     Auth::login($persona, true);
                     $request->session()->regenerate();
+                } else {
+                    return view('registro')->with('persona', $personaData)->with('linkear',true);    
                 }
             }
             if($provider == 'facebook') {

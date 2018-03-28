@@ -19,7 +19,7 @@ class loginSocialTest extends TestCase
      *
      * @return void
      */
-
+/*
     public function testFacebookTraerData()
     {
     	$socialite = \Mockery::mock('Laravel\Socialite\Two\User');
@@ -108,4 +108,51 @@ class loginSocialTest extends TestCase
         $response->assertStatus(302);
     	$this->assertTrue(Auth::check());
     }
+*/
+    public function testLoginSocialUsuarioExistentePeroNoRelacionadoALaRedSocial() {
+        $this->withSession(['login_callback' => 'url_callback']);
+        $persona = Persona::where('mail','aaaa@aaab.com')->first();
+        if(!$persona) {
+            $persona = new Persona();
+            $persona->apellidoPaterno = 'apellido';
+            $persona->dni = 'dni';
+            $persona->mail = 'aaaa@aaab.com';
+            $persona->idLocalidad = 1;
+            $persona->fechaNacimiento = new Carbon();
+            $persona->nombres = 'nombre';
+            $persona->idPais = 1;
+            $persona->idPaisResidencia = 1;
+            $persona->pasaporte = 'pasaporte';
+            $persona->password = Hash::make('pass');
+            $persona->idProvincia = 1;
+            $persona->sexo = 'F';
+            $persona->telefonoMovil = 'telefono';
+            $persona->carrera = '';
+            $persona->anoEstudio = '';
+            $persona->idContactoCTCT = '';
+            $persona->statusCTCT = '';
+            $persona->lenguaje = '';
+            $persona->idRegionLT = 0;
+            $persona->idUnidadOrganizacional = 0;
+            $persona->idCiudad = 0;
+            $persona->google_id = '';
+            $persona->save();
+        }
+        $socialite = \Mockery::mock('Laravel\Socialite\Two\User');
+        $socialite->shouldReceive('stateless')->andReturn($socialite);
+        $socialite->shouldReceive('fields')->andReturn($socialite);
+        $socialite->shouldReceive('user')->andReturn($socialite);
+        $socialite->email = 'aaaa@aaab.com';
+        $socialite->user = array(
+            'name' => ['givenName' => 'nombre', 'familyName' => 'apellido'],
+            'id' => 'id',
+        );
+        \Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);
+        $response = $this->get('/auth/google/callback');
+        $response->assertStatus(200);
+        $this->assertEquals($response->getOriginalContent()->getData()['persona']->google_id,'id');
+        $this->assertEquals($response->getOriginalContent()->getData()['linkear'],true);
+
+    }
+
 }
