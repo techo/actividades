@@ -87,7 +87,7 @@ class LoginController extends Controller
 
     public function redirectToProvider(Request $request, $provider)
     {
-        $request->session()->put('login_callback', $request->headers->get('referer'));
+	if(url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
         if($provider == 'google') return Socialite::driver($provider)->redirect();
         return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
     }

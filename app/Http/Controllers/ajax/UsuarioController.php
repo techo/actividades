@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Auth;
 use App\Persona;
 class UsuarioController extends Controller
 {
     public function create(Request $request) {
- 		$validatedData = $request->validate([
- 			'email' => 'required|unique:Persona,mail|email',
+        $url = $request->session()->get('login_callback','');
+	$validatedData = $request->validate([
+		'email' => 'required|unique:Persona,mail|email',
         	'nombre' => 'required',
         	'apellido' => 'required',
         	'nacimiento' => 'required',
@@ -34,6 +35,8 @@ class UsuarioController extends Controller
     	$persona->idProvincia = $request->provincia;
     	$persona->sexo = $request->sexo;
     	$persona->telefonoMovil = $request->telefono;
+    	$persona->google_id = $request->google_id;
+    	$persona->facebook_id = $request->facebook_id;
     	$persona->carrera = '';
     	$persona->anoEstudio = '';
     	$persona->idContactoCTCT = '';
@@ -43,7 +46,9 @@ class UsuarioController extends Controller
     	$persona->idUnidadOrganizacional = 0;
     	$persona->idCiudad = 0;
     	$persona->save();
-    	return $request;
+        Auth::login($persona, true);
+        $request->session()->regenerate();
+    	return ['login_callback' =>  $url];
     }
 
     public function validar_nuevo_mail(Request $request) {

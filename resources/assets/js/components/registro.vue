@@ -330,6 +330,7 @@
                 axios.post('/ajax/usuario',this.user).then(response => {
                   console.log(response)
                   this.paso_actual = this.paso_actual + mod
+		  if(response.data.login_callback) window.location.href = response.data.login_callback;
                 }).catch((error) => {
                   this.hasError = true;
                   if (error.response) {

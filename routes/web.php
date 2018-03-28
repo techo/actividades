@@ -34,7 +34,9 @@ Route::prefix('ajax')->group(function(){
 });
 
 
-Route::get('/registro', function(){
+Route::get('/registro', function(Request $request){
+    $request = request();
+    if(url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
     return view('registro');
 });
 
