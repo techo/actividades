@@ -30,8 +30,12 @@ Route::get('/registro', function(){
 
 Route::get('/actividades/{id}', 'ActividadesController@show');
 
-Route::get('/inscripciones/actividad/{id}', 'Inscripciones@puntoDeEncuentro');
-Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');;
+Route::get('/inscripciones/actividad/{id}', function($id){
+	$actividad = Actividad::find($id);
+    return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
+});
+Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');
+
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto');
 
@@ -41,3 +45,5 @@ Auth::routes();
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';
 });
+
+Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
