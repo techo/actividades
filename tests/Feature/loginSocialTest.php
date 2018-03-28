@@ -43,7 +43,6 @@ class loginSocialTest extends TestCase
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->google_id,'');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->sexo,'M');
     }
-
     public function testGoogleTraerData()
     {
     	$socialite = \Mockery::mock('Laravel\Socialite\Two\User');
@@ -57,7 +56,6 @@ class loginSocialTest extends TestCase
     	);
     	\Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);
         $response = $this->get('/auth/google/callback');
-        dd($response);
         $response->assertStatus(200);
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->nombre,'nombre');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->apellido,'apellido');
@@ -68,12 +66,13 @@ class loginSocialTest extends TestCase
     }
 
     public function testRegistroSocialUsuarioExistente() {
-    	$persona = Persona::where('mail','aaaa@aaaa.com');
+    	$this->withSession(['login_callback' => 'url_callback']);
+    	$persona = Persona::where('mail','aaaa@aaaa.com')->first();
     	if(!$persona) {
     		$persona = new Persona();
 	    	$persona->apellidoPaterno = 'apellido';
 	    	$persona->dni = 'dni';
-	    	$persona->mail = 'email';
+	    	$persona->mail = 'aaaa@aaaa.com';
 	    	$persona->idLocalidad = 1;
 	    	$persona->fechaNacimiento = new Carbon();
 	    	$persona->nombres = 'nombre';
@@ -92,20 +91,21 @@ class loginSocialTest extends TestCase
 	    	$persona->idRegionLT = 0;
 	    	$persona->idUnidadOrganizacional = 0;
 	    	$persona->idCiudad = 0;
+	    	$persona->google_id = 'id';
 	    	$persona->save();
     	}
     	$socialite = \Mockery::mock('Laravel\Socialite\Two\User');
     	$socialite->shouldReceive('stateless')->andReturn($socialite);
     	$socialite->shouldReceive('fields')->andReturn($socialite);
     	$socialite->shouldReceive('user')->andReturn($socialite);
-    	$socialite->email = 'email';
+    	$socialite->email = 'aaaa@aaaa.com';
     	$socialite->user = array(
     		'name' => ['givenName' => 'nombre', 'familyName' => 'apellido'],
     		'id' => 'id',
     	);
     	\Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);
         $response = $this->get('/auth/google/callback');
-        $response->assertStatus(200);
+        $response->assertStatus(302);
     	$this->assertTrue(Auth::check());
     }
 }

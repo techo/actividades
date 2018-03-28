@@ -228,21 +228,21 @@
             },
 
             checkLogin() {
-		var self = this;
-                let username = this.getCookie("user.nombres");
-                if (username != "") {
-                    return true;
-                }
-		axios.get('/ajax/usuario').then(response => {
-			if(!response.data) return false;
-                        self.authenticated = true;
-                        self.setCookie('user.nombres', response.data.nombres, 1);
-                        self.user.nombres = self.getCookie('user.nombres');
-                        self.user.id = self.getCookie('user.idpersona');
-                        var event = new CustomEvent('loggedin');
-                        window.dispatchEvent(event);
-			console.log(response);
-		});
+        		var self = this;
+                        let username = this.getCookie("user.nombres");
+                        if (username != "") {
+                            return true;
+                        }
+        		axios.get('/ajax/usuario').then(response => {
+        			if(!response.data) return false;
+                                self.authenticated = true;
+                                self.setCookie('user.nombres', response.data.nombres, 1);
+                                self.user.nombres = self.getCookie('user.nombres');
+                                self.user.id = self.getCookie('user.idpersona');
+                                var event = new CustomEvent('loggedin');
+                                window.dispatchEvent(event);
+        			console.log(response);
+        		});
                 return false;
             }
         }
