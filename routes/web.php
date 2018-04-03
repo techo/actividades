@@ -66,3 +66,5 @@ Route::get('/auth/{provider}/callback','Auth\LoginController@callbackFromProvide
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';
 });
+
+Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');

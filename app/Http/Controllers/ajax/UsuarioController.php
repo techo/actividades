@@ -7,13 +7,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Mail;
+use App\Mail\VerificarMail;
 use App\Persona;
+use App\VerificacionMailPersona;
 class UsuarioController extends Controller
 {
     public function create(Request $request) {
         $url = $request->session()->get('login_callback','');
-	$validatedData = $request->validate([
-		'email' => 'required|unique:Persona,mail|email',
+        $validatedData = $request->validate([
+            'email' => 'required|unique:Persona,mail|email',
         	'nombre' => 'required',
         	'apellido' => 'required',
         	'nacimiento' => 'required',
@@ -45,7 +48,13 @@ class UsuarioController extends Controller
     	$persona->idRegionLT = 0;
     	$persona->idUnidadOrganizacional = 0;
     	$persona->idCiudad = 0;
-    	$persona->save();
+        $persona->verificado = false;
+        $persona->save();
+        $verificacion = new VerificacionMailPersona();
+        $verificacion->idPersona = $persona->idPersona;
+        $verificacion->token = str_random(40);
+        $verificacion->save();
+        Mail::to($persona->mail)->send(new VerificarMail($persona));
         Auth::login($persona, true);
         $request->session()->regenerate();
     	return ['login_callback' =>  $url];
