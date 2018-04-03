@@ -1,16 +1,19 @@
 <?php
 use Illuminate\Support\Facades\Auth;
-use App\Actividad;
+
 
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/actividades', 'ActividadesController@index');
 
 Route::prefix('ajax')->group(function(){
-	Route::get('paises', 'ajax\PaisesController@index');
-	Route::get('provincias/{id}', 'ajax\ProvinciasController@show');
-	Route::get('categorias/{id}', 'ajax\CategoriasController@show');
-	Route::prefix('pais')->group(function(){
+    Route::get('provincias/{id}', 'ajax\ProvinciasController@show');
+    Route::get('categorias', 'ajax\CategoriasController@index');
+    Route::get('categorias/{id}', 'ajax\CategoriasController@show');
+    Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
+
+    Route::prefix('paises')->group(function(){
+        Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincia/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
@@ -40,12 +43,8 @@ Route::get('/registro', function(Request $request){
 
 Route::get('/actividades/{id}', 'ActividadesController@show');
 
-Route::get('/inscripciones/actividad/{id}', function($id){
-	$actividad = Actividad::find($id);
-    return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
-})->middleware('requiere.auth');
-Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');
-
+Route::get('/inscripciones/actividad/{id}', 'Inscripciones@puntoDeEncuentro');
+Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');;
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto');
 
@@ -59,3 +58,10 @@ Route::get('autenticado', function() {
 });
 
 Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
+
+Route::prefix('/admin')->group(function(){
+    Route::get('/actividades', 'backoffice\ActividadesController@index');
+    Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
+    Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
+    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
+});

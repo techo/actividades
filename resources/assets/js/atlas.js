@@ -10,6 +10,7 @@ import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
 import Datepicker from 'vuejs-datepicker';
 
+
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -23,6 +24,8 @@ Vue.component('inscripcion', Inscripcion);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('datepicker', Datepicker);
+
+
 
 var app = new Vue({
     el: "#app",
