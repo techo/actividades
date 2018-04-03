@@ -4,7 +4,8 @@ import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
-import Inscripciones from './components/inscripciones';
+import Inscripcion from './components/inscripcion';
+import Autenticar from './components/autenticar';
 import Registro from './components/registro';
 import Datepicker from 'vuejs-datepicker';
 
@@ -15,8 +16,9 @@ window.events = new Vue();
 
 Vue.component('filtro', Filtro);
 Vue.component('login', Login);
+Vue.component('autenticar', Autenticar);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
-Vue.component('inscripciones', Inscripciones);
+Vue.component('inscripcion', Inscripcion);
 Vue.component('registro', Registro);
 Vue.component('datepicker', Datepicker);
 
