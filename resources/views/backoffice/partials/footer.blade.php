@@ -1,4 +1,4 @@
-<footer class="main-footer">
+<footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
     <!-- To the right -->
     <div class="pull-right hidden-xs">
         Acerca?

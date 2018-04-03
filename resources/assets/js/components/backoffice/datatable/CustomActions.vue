@@ -21,10 +21,10 @@
         console.log('custom-actions: ' + action, data.id, index)
           switch(action){
               case "view-item":
-                  window.location = window.location + "/" + data.id
+                  window.location = window.location + data.id
                   break;
               case "edit-item":
-                  window.location = window.location + "/" + data.id + "/editar"
+                  window.location = window.location + data.id + "/editar"
                   break;
           }
 

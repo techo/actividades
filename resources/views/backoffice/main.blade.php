@@ -47,7 +47,8 @@ desired effect
     <!-- /.content-wrapper -->
 
     <!-- Main Footer -->
-    @include('backoffice.partials.footer')
+    @yield('footer')
+
 
     <!-- Control Sidebar -->
 {{--    @include('backoffice.partials.control-sidebar')--}}

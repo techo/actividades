@@ -3,6 +3,9 @@
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
+            <span v-html="$options.filters.estado(this.dataActividad.estadoConstruccion)"></span>
+            &nbsp;
+            <span v-html="$options.filters.visibilidad(this.dataActividad.visibilidad)"></span>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -275,10 +278,10 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="descripcion">Visibilidad</label>
+                                <label for="descripcion">Estado</label>
                                 <br>
-                                <input type="radio" name="visibilidad"> Pública
-                                <input type="radio" name="visibilidad"> Privada
+                                <input type="radio" name="estadoInscripciones" > Abiertas
+                                <input type="radio" name="estadoInscripciones"> Cerradas
                             </div>
                         </div>
                     </div>
@@ -309,7 +312,7 @@
     </div><!-- /.box-body -->
 </div>
 
-    <div class="box">
+    <div class="box" v-if="esConstruccion">
     <div class="box-header with-border">
         <h3 class="box-title">Construcción</h3>
     </div>
@@ -408,7 +411,8 @@
                 categorias: [],
                 // categoriaSeleccionada: ''
                 tiposDeActividad: [],
-                unidadesOrganizacionales: []
+                unidadesOrganizacionales: [],
+                // esConstruccion: false
             }
         },
         created() {
@@ -420,12 +424,37 @@
             this.getTiposDeActividad();
             this.getUnidadesOrganizacionales();
         },
-        beforeMount() {
-
-        },
         computed: {
-            esConstruccion() {
+            esConstruccion: function() {
+                return this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+            }
+        },
+        filters: {
+            estado: function (value) {
+                let etiqueta;
+                switch (value) {
+                    case 'Cerrada':
+                        etiqueta = '<span class="label label-danger pull-right">Cerrada</span>';
+                        break;
+                    case 'Abierta':
+                        etiqueta = '<span class="label label-success pull-right">Abierta</span>';
+                        break;
+                    case 'Cancelada':
+                        etiqueta = '<span class="label label-warning pull-right">Cancelada</span>';
+                        break;
+                    case 'En planificación':
+                        etiqueta = '<span class="label label-primary pull-right">En Planificación</span>';
+                        break;
+                    // default
+                }
+                return etiqueta;
+            },
 
+            visibilidad: function (value) {
+                if (value===1) {
+                    return '<span class="label label-info pull-right">Publico</span>'
+                }
+                return '<span class="label label-dark pull-right">Privado</span>'
             }
         },
         methods: {
