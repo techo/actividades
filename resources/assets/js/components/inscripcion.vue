@@ -112,13 +112,6 @@
             }
             return true;
           },
-          es_autenticado: function () {
-            axios.get('/autenticado').then(response => {
-              if(response.data == 'no') {
-                this.mostrarLogin()
-              }
-            })
-          },
           mostrarLogin: function () {
             $('#btnShowModal').trigger('click')
           },

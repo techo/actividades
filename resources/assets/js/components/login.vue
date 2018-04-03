@@ -99,12 +99,11 @@
 </template>
 
 <script>
-    import axios from 'axios';
-
     export default {
         name: "login",
+        props:['usuario'],
         data () {
-            return {
+            var data = {
                 credentials: {
                     mail: '',
                     password: '',
@@ -116,12 +115,15 @@
                     id: ''
                 }
             }
+            if(this.usuario) {
+                var user = JSON.parse(this.usuario)
+                data.user.nombres = user.nombres
+                data.user.id = user.idPersona
+            }
+            return data
         },
         created () {
           this.authenticated = this.checkLogin();
-          this.user.nombres = this.getCookie('user.nombres');
-
-          // console.log('nombres: ' + this.user.nombres);
         },
         methods: {
             registro_facebook: function() {
@@ -144,30 +146,21 @@
                         $('#login-modal').modal('hide');
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
-
                         this.authenticated = true;
-                        this.setCookie('user.nombres', response.data.user.nombres, 1);
-                        this.user.nombres = this.getCookie('user.nombres');
-                        this.user.id = this.getCookie('user.idPersona');
+                        this.user.nombres = response.data.user.nombres;
+                        this.user.id = response.data.user.idPersona;
                         var event = new CustomEvent('loggedIn');
                         window.dispatchEvent(event);
                     })
                     .catch((error) => {
-                        // Error
                         this.hasError = true;
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.log(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.log('Error', error.message);
                         }
                         console.log(error.config);
@@ -179,72 +172,27 @@
                 axios.post(
                     '/logout')
                     .then(response => {
-                        this.setCookie('user.nombres', '', 0);
                         this.authenticated = false;
                         window.location = '/';
                     })
                     .catch((error) => {
-                        // Error
                         this.hasError = true;
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.log(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.log('Error', error.message);
                         }
                         console.log(error.config);
                     });
 
             },
-
-            setCookie(cname, cvalue, exdays) {
-                let d = new Date();
-                d.setTime(d.getTime() + (exdays*24*60*60*1000));
-                let expires = "expires="+ d.toUTCString();
-                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-            },
-
-            getCookie(cname) {
-                let name = cname + "=";
-                let decodedCookie = decodeURIComponent(document.cookie);
-                let ca = decodedCookie.split(';');
-                for(let i = 0; i <ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            },
-
             checkLogin() {
         		var self = this;
-                        let username = this.getCookie("user.nombres");
-                        if (username != "") {
-                            return true;
-                        }
-        		axios.get('/ajax/usuario').then(response => {
-        			if(!response.data) return false;
-                                self.authenticated = true;
-                                self.setCookie('user.nombres', response.data.nombres, 1);
-                                self.user.nombres = self.getCookie('user.nombres');
-                                self.user.id = self.getCookie('user.idpersona');
-                                var event = new CustomEvent('loggedin');
-                                window.dispatchEvent(event);
-        			console.log(response);
-        		});
+                if (this.user.nombres) return true;
                 return false;
             }
         }
