@@ -54,10 +54,10 @@ class UsuarioController extends Controller
         $verificacion->idPersona = $persona->idPersona;
         $verificacion->token = str_random(40);
         $verificacion->save();
-        Mail::to($persona->mail)->send(new VerificarMail($persona));
         Auth::login($persona, true);
         $request->session()->regenerate();
-    	return ['login_callback' =>  $url];
+        Mail::to($persona->mail)->send(new VerificarMail($persona));
+        return ['login_callback' =>  $url];
     }
 
     public function validar_nuevo_mail(Request $request) {

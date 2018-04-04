@@ -29,7 +29,7 @@ class ajaxPaisesTest extends TestCase
     public function test_ver_listado_de_provincias_por_pais()
     {
         $pais = Pais::first();
-        $url = '/ajax/pais/' . $pais->id . '/provincias';
+        $url = '/ajax/paises/' . $pais->id . '/provincias';
         $response = $this->get($url);
         $response
             ->assertStatus(200)
@@ -47,7 +47,7 @@ class ajaxPaisesTest extends TestCase
     {
         $pais = Pais::first();
         $provincia = $pais->provincias->first();
-        $url = '/ajax/pais/' . $pais->id . '/provincia/'. $provincia->id .'/localidades';
+        $url = '/ajax/paises/' . $pais->id . '/provincia/'. $provincia->id .'/localidades';
         $response = $this->get($url);
         $response
             ->assertStatus(200)
