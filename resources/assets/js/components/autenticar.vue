@@ -10,7 +10,7 @@
         },
         methods: {
           mostrarLogin: function () {
-            $('#btnShowModal').trigger('click')
+            if(!this.$parent.$refs.login.authenticated) $('#btnShowModal').trigger('click')
           }
         }
     }

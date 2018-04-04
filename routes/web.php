@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Auth;
-
+use App\Actividad;
 
 Route::get('/', 'HomeController@index')->name('home');
 
@@ -15,8 +15,15 @@ Route::prefix('ajax')->group(function(){
 		Route::get('{id_pais}/provincia/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
 	Route::prefix('usuario')->group(function(){
+		Route::get('', function(){
+			if(Auth::check()) {
+				return Auth::user();
+			}
+			return '';
+		});
 		Route::post('', 'ajax\UsuarioController@create');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
+		Route::put('linkear', 'ajax\UsuarioController@linkear');
 	});
     Route::post('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
     Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
@@ -24,7 +31,10 @@ Route::prefix('ajax')->group(function(){
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
 });
 
-Route::get('/registro', function(){
+
+Route::get('/registro', function(Request $request){
+    $request = request();
+    if(url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
     return view('registro');
 })->middleware('guest');
 
@@ -41,6 +51,8 @@ Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@i
 
 
 Auth::routes();
+Route::get('/auth/{provider}','Auth\LoginController@redirectToProvider');
+Route::get('/auth/{provider}/callback','Auth\LoginController@callbackFromProvider');
 
 Route::get('autenticado', function() {
     return (Auth::check()) ? 'si' : 'no';

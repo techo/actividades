@@ -16,8 +16,8 @@ class IncluyeIdProvinciaYIdLocalidadEnPersona extends Migration
         if (!Schema::hasColumn('Persona', 'idProvincia')) {
             //
             Schema::table('Persona', function (Blueprint $table) {
-                $table->integer('idLocalidad')->unsigned()->after('idPais');
-                $table->integer('idProvincia')->unsigned()->after('idPais');
+                $table->integer('idLocalidad')->unsigned()->nullable()->after('idPais');
+                $table->integer('idProvincia')->unsigned()->nullable()->after('idPais');
             });
         }
     }

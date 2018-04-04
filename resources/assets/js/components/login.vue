@@ -13,8 +13,22 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6"  style="padding: 1em 2em">
-                                <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
                                 <h2>Ingresar a tu perfil</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="btn btn-primary google form-control" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6"  style="padding: 1em 2em">
+                                <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
                                 <form id="frmLogin">
                                     <div class="form-group">
                                         <label for="mail">Correo Electrónico</label>
@@ -31,6 +45,7 @@
                                     <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
                                     <br>
                                     <a href="#">Olvidé mi contraseña</a>
+                                    <a href="/registro">Me quiero registrar</a>
                                 </form>
                             </div>
                         </div>
@@ -84,12 +99,11 @@
 </template>
 
 <script>
-    import axios from 'axios';
-
     export default {
         name: "login",
+        props:['usuario'],
         data () {
-            return {
+            var data = {
                 credentials: {
                     mail: '',
                     password: '',
@@ -101,14 +115,24 @@
                     id: ''
                 }
             }
+            if(this.usuario) {
+                var user = JSON.parse(this.usuario)
+                data.user.nombres = user.nombres
+                data.user.id = user.idPersona
+            }
+            return data
         },
         created () {
           this.authenticated = this.checkLogin();
-          this.user.nombres = this.getCookie('user.nombres');
-
-          // console.log('nombres: ' + this.user.nombres);
         },
         methods: {
+            registro_facebook: function() {
+              window.location.href = '/auth/facebook';
+            },
+            registro_google: function() {
+              window.location.href = '/auth/google';
+            },
+
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(
@@ -122,30 +146,21 @@
                         $('#login-modal').modal('hide');
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
-
                         this.authenticated = true;
-                        this.setCookie('user.nombres', response.data.user.nombres, 1);
-                        this.user.nombres = this.getCookie('user.nombres');
-                        this.user.id = this.getCookie('user.idPersona');
+                        this.user.nombres = response.data.user.nombres;
+                        this.user.id = response.data.user.idPersona;
                         var event = new CustomEvent('loggedIn');
                         window.dispatchEvent(event);
                     })
                     .catch((error) => {
-                        // Error
                         this.hasError = true;
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.log(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.log('Error', error.message);
                         }
                         console.log(error.config);
@@ -157,61 +172,27 @@
                 axios.post(
                     '/logout')
                     .then(response => {
-                        this.setCookie('user.nombres', '', 0);
                         this.authenticated = false;
                         window.location = '/';
                     })
                     .catch((error) => {
-                        // Error
                         this.hasError = true;
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.log(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.log('Error', error.message);
                         }
                         console.log(error.config);
                     });
 
             },
-
-            setCookie(cname, cvalue, exdays) {
-                let d = new Date();
-                d.setTime(d.getTime() + (exdays*24*60*60*1000));
-                let expires = "expires="+ d.toUTCString();
-                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-            },
-
-            getCookie(cname) {
-                let name = cname + "=";
-                let decodedCookie = decodeURIComponent(document.cookie);
-                let ca = decodedCookie.split(';');
-                for(let i = 0; i <ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            },
-
             checkLogin() {
-                let username = this.getCookie("user.nombres");
-                if (username != "") {
-                    return true;
-                }
+        		var self = this;
+                if (this.user.nombres) return true;
                 return false;
             }
         }

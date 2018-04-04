@@ -81,17 +81,18 @@
         props: ['id','csrf_token'],
         data: function(){
           return {
-            actividad: {},
-            autenticado: false
+            actividad: {}
           }
         },
         mounted: function() {
           var self = this;
+          window.addEventListener('loggedIn', (event) => {
+            this.es_inscripto($('#idActividad').val())
+          });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
             self.es_inscripto(self.actividad.idActividad);
           })
-          //this.es_autenticado();
         },
         filters: {
           format_time: function(hora) {
@@ -104,22 +105,12 @@
         },
         methods: {
           validateForm: function(event) {
-            if(!this.autenticado) {
+            debugger
+            if(!this.$parent.$refs.login.authenticated) {
               event.preventDefault();
               this.mostrarLogin();
             }
             return true;
-          },
-          es_autenticado: function () {
-            axios.get('/autenticado').then(response => {
-              window.addEventListener('loggedIn', (event) => {
-                this.autenticado = true
-                this.es_inscripto($('#idActividad').val())
-              });
-              if(response.data == 'no') {
-                this.mostrarLogin()
-              }
-            })
           },
           mostrarLogin: function () {
             $('#btnShowModal').trigger('click')
