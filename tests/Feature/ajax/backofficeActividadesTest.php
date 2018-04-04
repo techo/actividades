@@ -15,7 +15,7 @@ class backofficeActividadesTest extends TestCase
      */
     public function test_listar_todas_las_actividades()
     {
-        $response = $this->get('/admin/ajax/actividades?sort=nombre|ac');
+        $response = $this->get('/admin/ajax/actividades?sort=nombreActividad|asc');
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
