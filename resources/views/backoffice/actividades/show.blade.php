@@ -4,7 +4,7 @@
 
 @section('subtitulo')
     Ultima modificación por
-    {{ $actividad->modificadoPor->nombre }} {{ $actividad->modificadoPor->apellidoPaterno }}
+    {{ $actividad->modificadoPor->nombres }} {{ $actividad->modificadoPor->apellidoPaterno }}
 @endsection
 
 @section('content')

@@ -68,6 +68,6 @@ class InscripcionesController extends Controller
     public function puntoDeEncuentro($id)
     {
         $actividad = Actividad::find($id);
-        return view('inscripciones.puntos_encuentro')->with('actividad', $actividad);
+        return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
     }
 }

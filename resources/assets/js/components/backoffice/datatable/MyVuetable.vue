@@ -183,8 +183,8 @@ export default {
         : moment(value, 'YYYY-MM-DD').format(fmt)
     },
     onPaginationData (paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData)
-      this.$refs.paginationInfo.setPaginationData(paginationData)
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
     },
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)

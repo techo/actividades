@@ -11,7 +11,7 @@
                         <label for="inputPassword2" class="sr-only">Email</label>
                         <input type="email" class="form-control mt-2" id="inputPassword2" placeholder="Tu dirección de Email">
                     </div>
-                    <button class="btn btn-light my-sm-0 bg-white techo-btn-blanco" type="submit">Ingresar</button>
+                    <button class="btn btn-light my-sm-0 bg-white techo-btn-blanco" type="submit">Suscribete</button>
 
                 </form>
             </div>
