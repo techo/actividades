@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="paso(1)">
+    <div v-show="paso('email')">
       <div class="row">
         <div class="col-md-12">
           <strong>Registrate</strong> > Datos personales > Finalizar    
@@ -16,6 +16,27 @@
         <div class="col-md-8">
           <strong>PASO 1/3</strong>   
         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Crea tu cuenta de voluntario de Techo</h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3"><a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;REGISTRO CON FACEBOOK</a></div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">&nbsp;</div>
+      </div>
+      <div class="row">
+        <div class="col-md-3"><a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;REGISTRO CON GOOGLE</a></div>
       </div>
       <hr>
       <div class="row">
@@ -48,7 +69,7 @@
       </div>
 
     </div>
-    <div v-show="paso(2)">
+    <div v-show="paso('personales')">
         <div class="row">
             <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > Finalizar   
@@ -201,12 +222,12 @@
 
       <hr>
       <div class="row">
-        <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></div>
+        <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></span></div>
         <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso(+1)">CREAR CUENTA</a></div>
       </div>
 
     </div>
-    <div v-show="paso(3)">
+    <div v-show="paso('gracias')">
         <div class="row">
             <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > <strong>Finalizar</strong>
@@ -222,6 +243,31 @@
       </div>
       <hr>    
     </div>
+    <div v-show="paso('linkear')">
+        <div class="row">
+            <div class="col-md-12">
+          <strong>Registrate</strong> > <strong>Confimar Link Red Social</strong>
+        </div>
+      </div>
+        <div class="row">
+            <div class="col-md-6">
+          <h2>Relacionar la cuenta de techo con tu cuenta de red social</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/"> Volver</a></div>
+          <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">CONFIRMAR</a></div>
+        </div>
+
+      </div>
+      <hr>    
+    </div>
   </div>
 </template>
 
@@ -232,7 +278,8 @@
         var data = {
           user: {},
           validacion: {},
-          paso_actual: 1,
+          paso_actual: 'email',
+          volver: true,
           paises: [],
           provincias: [],
           localidades: [],
@@ -241,19 +288,28 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id','google_id'];
         for(var i in campos) {
           var campo = campos[i]
-          data.user[campo] = ''
+          data.user[campo] = '';
+          if(this[campo]) data.user[campo] = this[campo];
           data.validacion[campo] = {
             texto: '',
             valido: ''
           }
         }
+        if(data.user.facebook_id || data.user.google_id) {
+          data.paso_actual = 'personales'
+          data.volver = false
+        }
+	if(this.linkear) {
+	  data.paso_actual = 'linkear'
+	}
         data.validacion.email.checking_email = false,
         data.validacion.email.last_value = ''
         return data
       },
+      props: ['nombre','apellido','email','facebook_id','google_id','sexo','linkear'],
       mounted: function(){
         this.popular_pais()
       },
@@ -280,21 +336,28 @@
         'user.telefono': function() { this.validar_telefono() }
       },
       methods: {
+        registro_facebook: function() {
+          window.location.href = 'https://actividades.techo.org/auth/facebook';
+        },
+        registro_google: function() {
+          window.location.href = 'https://actividades.techo.org/auth/google';
+        },
         cambiar_paso: function (mod) {
           if(mod < 0) {
             this.paso_actual = this.paso_actual + mod
             return false
           }
           switch(this.paso_actual) {
-            case 1:
+            case 'email':
               if(!(this.validacion.email.valido && this.validar_pass())) return false
-              this.paso_actual = this.paso_actual + mod
+              this.paso_actual = 'personales'
               break
-            case 2:
+            case 'personales':
               if(this.validar_nombre() && this.validar_apellido() && this.validar_nacimiento() && this.validar_sexo() && this.validar_dni() && this.validar_telefono()) {
                 axios.post('/ajax/usuario',this.user).then(response => {
                   console.log(response)
-                  this.paso_actual = this.paso_actual + mod
+                  this.paso_actual = 'gracias'
+	          if(response.data.login_callback) window.location.href = response.data.login_callback;
                 }).catch((error) => {
                   this.hasError = true;
                   if (error.response) {
@@ -318,6 +381,25 @@
               }
               break
           }
+        },
+        confirma_linkear: function() {
+          var media = '';
+	  var id = '';
+	  if(this.google_id) {
+	    media = 'google';
+	    id = this.google_id;
+	  }
+	  if(this.facebook_id) {
+	    media = 'facebook';
+	    id = this.facebook_id;
+	  }
+          axios.put('/ajax/usuario/linkear', {
+		media: media,
+		id: id,
+		email: this.email
+          }).then(response => {
+	        if(response.data.login_callback) window.location.href = response.data.login_callback;
+	  })
         },
         paso: function (paso) {
           return paso == this.paso_actual 
@@ -442,6 +524,10 @@
         },
         validar_telefono: function() {
           this.validacion.telefono.valido = false
+          if(this.user.localidad != '') {
+            this.validacion.telefono.valido = true
+            return this.validacion.telefono.valido
+          }
           var re = /^[\d- .,]+$/;
           var res = re.test(this.user.telefono);
           if(!res) {

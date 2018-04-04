@@ -57,6 +57,23 @@ code {
     background-color: #ffffff;
 }
 
+.facebook {
+    background-color: #004d92  !important;
+    color: #ffffff  !important;
+    font-weight: bold;
+    width: 269px;
+    text-align: left;
+}
+
+.google {
+    background-color: #e53935 !important;
+    color: #ffffff  !important;
+    font-weight: bold;
+    width: 269px;
+    text-align: left;
+}
+
+
 .techo-logo {
     width: 122px;
     height: 37.6px;
