@@ -63,6 +63,8 @@ code {
     font-weight: bold;
     width: 269px;
     text-align: left;
+    padding: 5px;
+    margin: 5px;
 }
 
 .google {
@@ -71,6 +73,9 @@ code {
     font-weight: bold;
     width: 269px;
     text-align: left;
+    padding: 5px;
+    margin: 5px;
+
 }
 
 
@@ -206,7 +211,7 @@ a {
 }
 
 #login-modal a {
-    height: 16px;
+    /*height: 16px;*/
     font-family: Montserrat, sans-serif;
     font-size: 12px;
     font-weight: 600;

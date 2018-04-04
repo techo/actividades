@@ -29,7 +29,8 @@ class ActividadResource extends Resource
             'costo' => $this->costo,
             'lugar' => $this->lugar,
             'moneda' => $this->moneda,
-            'puntosEncuentro' => PuntoEncuentroResource::collection($this->puntosEncuentro)
+            'puntosEncuentro' => PuntoEncuentroResource::collection($this->puntosEncuentro),
+            'localidad' => $this->localidad
         ];
     }
 

@@ -50,4 +50,8 @@ class Actividad extends Model
         return $this->inscripciones()->where('idPersona', $idPersona)->get()->count();
     }
 
+    public function localidad()
+    {
+        return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
+    }
 }

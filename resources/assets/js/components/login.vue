@@ -13,6 +13,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6"  style="padding: 1em 2em">
+                                <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
                                 <h2>Ingresar a tu perfil</h2>
                             </div>
                         </div>
@@ -28,7 +29,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6"  style="padding: 1em 2em">
-                                <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
+
                                 <form id="frmLogin">
                                     <div class="form-group">
                                         <label for="mail">Correo Electrónico</label>

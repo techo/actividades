@@ -6,5 +6,11 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/popper.js"></script> -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+	new ClipboardJS('#copiar_url');
+    feather.replace()
+</script>
 <script src="/js/atlas.js"></script>
 
