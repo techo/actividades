@@ -177,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Chencha\Share\ShareServiceProvider::class 
-
+        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -227,6 +227,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Share' => Chencha\Share\ShareFacade::class,
+        'Socialite' => Laravel\Socialite\SocialiteServiceProvider::class,
+
     ],
 
 ];

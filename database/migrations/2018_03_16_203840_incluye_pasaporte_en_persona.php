@@ -16,7 +16,7 @@ class IncluyePasaporteEnPersona extends Migration
         if (!Schema::hasColumn('Persona', 'pasaporte')) {
             //
             Schema::table('Persona', function (Blueprint $table) {
-                $table->string('pasaporte',20)->after('dni');
+                $table->string('pasaporte',20)->nullable()->after('dni');
             });
         }
 

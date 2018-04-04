@@ -16,7 +16,7 @@ class IncluyeCampoRememberTokenEnTablePersona extends Migration
         if (!Schema::hasColumn('Persona', 'remember_token')) {
             //
             Schema::table('Persona', function (Blueprint $table) {
-                $table->string('remember_token', 100);
+                $table->string('remember_token', 100)->nullable();
             });
         }
     }

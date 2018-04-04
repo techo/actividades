@@ -28,4 +28,9 @@ class Persona extends Authenticatable
     public function estaInscripto($idActividad) {
         return $this->inscripcion->where('idActividad',$idActividad)->count();
     }
+
+    public function verificacion()
+    {
+        return $this->hasOne('App\VerificacionMailPersona', 'idPersona');
+    }
 }
