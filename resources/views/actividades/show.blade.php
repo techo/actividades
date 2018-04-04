@@ -190,11 +190,19 @@
 @section('footer')
 <footer class="row fixed-bottom align-middle inscripcion-bar">
 	<div class="col-md-8"><h5>{{ $actividad->nombreActividad }}</h5></div>
-	<div class="col-md-2 text-primary"><i class="fas fa-share-alt"></i> COMPARTIR</div>
+	<div class="col-md-2">
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compartirModal">
+			<i class="fas fa-share-alt">&nbsp;&nbsp;</i>COMPARTIR</div>
+		</button>
 	@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
 		<div class="col-md-2"><span class="btn btn-success">YA TE INSCRIBISTE!</span></div>
 	@else
 		<div class="col-md-2"><a class="btn btn-primary inscripcion-btn" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
 	@endif
 </footer>
+
+@endsection
+
+@section('aditional_html')
+	@include('partials.compartir-modal', ['url' => Request::url(), 'title' => $actividad->nombreActividad])
 @endsection
