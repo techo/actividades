@@ -6,9 +6,10 @@
           <input
             type="text"
             v-model="filterText"
-            class="form-control"
+            class="form-control input"
             @keyup.enter="doFilter"
             :placeholder="dataPlaceholderText"
+            style="width: 20em"
           >
           <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
           <button class="btn" @click.prevent="resetFilter">Borrar</button>
@@ -41,4 +42,5 @@
 .filter-bar {
   padding: 10px;
 }
+
 </style>

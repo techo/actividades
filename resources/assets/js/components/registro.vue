@@ -546,7 +546,7 @@
         },
         traer_localidades: function() {
           if(this.user.pais && this.user.provincia) {
-            axios.get('/ajax/paises/'+this.user.pais+'/provincia/'+this.user.provincia+'/localidades').then(response => {
+            axios.get('/ajax/paises/'+this.user.pais+'/provincias/'+this.user.provincia+'/localidades').then(response => {
               this.localidades = response.data
             })
           }

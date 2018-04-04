@@ -107,7 +107,7 @@
                                 name="descripcion"
                                 id="descripcion"
                                 cols="30"
-                                rows="3"
+                                rows="5"
                                 class="form-control"
                                 v-bind:disabled="readonly"
                                 v-model="dataActividad.descripcion"
