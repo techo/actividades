@@ -222,7 +222,7 @@
 
       <hr>
       <div class="row">
-        <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="cambiar_paso(-1)"> Volver</a></span></div>
+        <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="paso_actual = 'email'"> Volver</a></span></div>
         <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso(+1)">CREAR CUENTA</a></div>
       </div>
 
@@ -494,7 +494,9 @@
           return this.validacion.dni.valido
         },
         validar_pasaporte: function() {
+          this.validacion.pasaporte.texto = ''
           this.validacion.pasaporte.valido = false
+          if(!this.user.pasaporte) return false
           var re = /^[\d- .,]+$/;
           var res = re.test(this.user.pasaporte);
           if(!res) {
