@@ -1,5 +1,6 @@
 <template>
     <span>
+
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
@@ -182,23 +183,20 @@
         <!-- /.box-header -->
         <div class="box-body">
 
-            <div class="row">
+            <div class="row" v-for="punto in dataActividad.puntos_encuentro">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="tipoActividad">Punto de Encuentro</label>
-                        <p>Constitución, frente a la boletería</p>
+                        <p>{{ punto.punto }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="tipoActividad">Horario</label>
-                        <p>07:00AM</p>
+                        <p>{{ punto.horario }}</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="tipoActividad">Coordinador</label>
-                        <p>Alejandro Rao</p>
+                        <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno }}</p>
                     </div>
                 </div>
                 <div class="col-md-1">

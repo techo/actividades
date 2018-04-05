@@ -33,7 +33,7 @@ class Actividad extends Model
 
     public function puntosEncuentro()
     {
-        return $this->hasMany(PuntoEncuentro::class, 'idActividad');
+        return $this->hasMany(PuntoEncuentro::class, 'idActividad')->with('responsable');
     }
 
     public function unidadOrganizacional()
