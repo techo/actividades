@@ -54,7 +54,7 @@ class ActividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('tipo.categoria', 'unidadOrganizacional', 'modificadoPor')
+        $actividad = Actividad::with('tipo.categoria', 'unidadOrganizacional', 'modificadoPor', 'puntosEncuentro')
             ->where('idActividad', $id)
             ->first();
         return view('backoffice.actividades.show', compact('actividad'));
