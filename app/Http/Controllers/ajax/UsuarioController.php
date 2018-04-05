@@ -33,7 +33,6 @@ class UsuarioController extends Controller
     	$persona->nombres = $request->nombre;
     	$persona->idPais = $request->pais;
     	$persona->idPaisResidencia = $request->pais;
-    	$persona->pasaporte = $request->pasaporte;
     	$persona->password = Hash::make($request->pass);
     	$persona->idProvincia = $request->provincia;
     	$persona->sexo = $request->sexo;
