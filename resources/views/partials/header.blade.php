@@ -9,9 +9,15 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Actividades <span class="sr-only">(current)</span></a>
+            
                 </li>
             </ul>
         </div>
+        @auth
+        <login ref="login" usuario="{{Auth::user()}}"></login>
+        @endauth
+        @guest
         <login ref="login"></login>
+        @endguest
     </nav>
 </header>

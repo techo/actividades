@@ -2,8 +2,6 @@
 /public/hot
 /public/js/app.js
 /public/js/atlas.js
-/public/js/atlas.js
-/public/js/app.js
 /storage/*.key
 /public/storage
 /vendor
@@ -18,3 +16,8 @@ storage/debugbar/
 package-lock.json
 /public/mix-manifest.json
 /storage/debugbar
+app.dockerfile
+docker-compose.yml
+pilote.sql.tar
+web.dockerfile
+composer.lock

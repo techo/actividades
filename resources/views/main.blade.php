@@ -12,11 +12,15 @@
         <!-- Begin page content -->
         @yield('main_image')
         <main role="main" class="container-fluid" style="margin-bottom: 5em">
+            @if (isset($requiere_auth))
+                <autenticar></autenticar>
+            @endif
             @yield('main_content')
         </main>
 
         @yield('footer')
     </div>
+    @yield('aditional_html')
     @include('partials.scripts')
 </body>
 </html>

@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
-use App\Localidad;
-use App\Provincia;
-use App\Tipo;
 use Illuminate\Http\Request;
 use App\Actividad;
 
@@ -22,14 +19,12 @@ class actividadesController extends Controller
         $idCategoria = $request->categoria ?? $default;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
-        $provincias = Provincia::all();
 
         return view('actividades.index')
             ->with(
                 [
                     'categoriaSeleccionada' => $categoriaSeleccionada,
                     'categorias' => $categorias,
-                    'provincias' => $provincias,
                 ]
             );
     }
@@ -63,7 +58,9 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        //
+        $actividad = Actividad::with('localidad')->find($id);
+
+        return view('actividades.show')->with('actividad', $actividad);
     }
 
     /**

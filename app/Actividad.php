@@ -14,11 +14,12 @@ class Actividad extends Model
             'feachaCreacion', 'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
+            'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'
 
         ];
 
-    const CREATED_AT = 'fecha_creacion';
-    const UPDATED_AT = 'fecha_modificacion';
+    const CREATED_AT = 'fechaCreacion';
+    const UPDATED_AT = 'fechaModificacion';
 
     public function tipo()
     {
@@ -35,7 +36,22 @@ class Actividad extends Model
         return $this->hasMany(PuntoEncuentro::class, 'idActividad');
     }
 
+    public function unidadOrganizacional()
+    {
+        return $this->belongsTo(\App\UnidadOrganizacional::class, 'idUnidadOrganizacional', 'idUnidadOrganizacional');
+    }
+
+    public function modificadoPor()
+    {
+        return $this->belongsTo(Persona::class, 'idPersonaModificacion', 'idPersona');
+    }
+
     public function scopePersonaInscripta($query, $idPersona) {
         return $this->inscripciones()->where('idPersona', $idPersona)->get()->count();
+    }
+
+    public function localidad()
+    {
+        return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
 }

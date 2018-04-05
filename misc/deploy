@@ -1,0 +1,7 @@
+sudo docker run --rm -v $(pwd):/app composer install
+sudo npm install --unsafe-perm
+Bajar el branch /origin dbfix
+Correr el comando "php artisan techo:dbfix"  << (REVISAR COMO CORRER EN DOCKER)
+sudo chmod 777 -R storage/
+sudo chmod 777 -R bootstrap/cache
+php artisan migrate 

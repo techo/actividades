@@ -57,6 +57,28 @@ code {
     background-color: #ffffff;
 }
 
+.facebook {
+    background-color: #004d92  !important;
+    color: #ffffff  !important;
+    font-weight: bold;
+    width: 269px;
+    text-align: left;
+    padding: 5px;
+    margin: 5px;
+}
+
+.google {
+    background-color: #e53935 !important;
+    color: #ffffff  !important;
+    font-weight: bold;
+    width: 269px;
+    text-align: left;
+    padding: 5px;
+    margin: 5px;
+
+}
+
+
 .techo-logo {
     width: 122px;
     height: 37.6px;
@@ -189,7 +211,7 @@ a {
 }
 
 #login-modal a {
-    height: 16px;
+    /*height: 16px;*/
     font-family: Montserrat, sans-serif;
     font-size: 12px;
     font-weight: 600;
