@@ -13,6 +13,16 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
+                        <v-select
+                                :options="categorias"
+                                label="nombre"
+                                placeholder="Seleccione"
+                                name="selectCategorias"
+                                id="selectCategorias"
+                                v-model="dataActividad.tipo.categoria"
+                                v-bind:disabled="this.readonly"
+                                :onChange=this.blah()
+                        ></v-select>
                         <label for="categoria">Categoría</label>
                         <select id="categoria" name="categoria"
                                 class="form-control"
@@ -25,6 +35,14 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
+                        <v-select
+
+                                :options="provincias"
+                                label="provincia"
+                                v-model="provinciaSeleccionada"
+                                v-bind:disabled="this.readonly"
+                        ></v-select>
+
                         <label for="tipo">Tipo de Actividad</label>
                         <select id="tipo" name="tipo"
                                 class="form-control"
@@ -48,6 +66,7 @@
                                 class="form-control"
                                 v-bind:disabled="readonly"
                                 v-model="dataActividad.unidad_organizacional.idUnidadOrganizacional"
+
                         >
                             <option
                                     v-for="unidad in unidadesOrganizacionales"
@@ -399,15 +418,15 @@
         data() {
             return {
                 dataActividad: {},
-                readonly: true,
+                readonly: false,
                 paises: [],
                 // paisSeleccionado: '',
                 provincias: [],
-                // provinciaSeleccionada: '',
+                provinciaSeleccionada: '',
                 localidades: [],
                 // localidadSeleccionada: '',
                 categorias: [],
-                // categoriaSeleccionada: ''
+                categoriaSeleccionada: {},
                 tiposDeActividad: [],
                 unidadesOrganizacionales: [],
                 // esConstruccion: false
@@ -415,6 +434,7 @@
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
+            this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
             this.getPaises();
             this.getProvincias();
             this.getLocalidades();
@@ -425,7 +445,7 @@
         computed: {
             esConstruccion: function() {
                 return this.dataActividad.tipo.flujo === 'CONSTRUCCION';
-            }
+            },
         },
         filters: {
             estado: function (value) {
@@ -456,6 +476,12 @@
             }
         },
         methods: {
+            blah() {
+                if (this.categoriaSeleccionada !== this.dataActividad.tipo.categoria) {
+                    this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
+                    console.log('cambio');
+                }
+            },
             getPaises() {
                 this.axiosGet('/ajax/paises', function (data, self) {
                     self.paises = data;
@@ -465,16 +491,13 @@
             getProvincias() {
                 this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincias',
                     function (data, self) {
-                        console.log(data);
                         self.provincias = data;
-                        // self.provinciaSeleccionada = self.dataProvincias.idProvincia;
                     });
             },
             getLocalidades() {
-                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincia/' + this.dataActividad.idProvincia + '/localidades',
+                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincias/' + this.dataActividad.idProvincia + '/localidades',
                     function (data, self) {
                         self.localidades = data;
-                        // self.localidadSeleccionada = self.dataActividad.idLocalidad;
                     });
             },
 
@@ -482,6 +505,7 @@
                 this.axiosGet('/ajax/categorias', function (data, self) {
                     self.categorias = data;
                 });
+
             },
 
             getTiposDeActividad() {
