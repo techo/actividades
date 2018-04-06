@@ -69,7 +69,7 @@
       </div>
 
     </div>
-    <div v-show="paso('personales')">
+    <div v-show="paso('personales')"> 
         <div class="row">
             <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > Finalizar   
@@ -151,18 +151,6 @@
         </div>
         <div class="col-md-7">
           <span v-bind:class="{'d-none':!validacion.dni.valido}"><i class="fas fa-check"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>PASAPORTE</label></div>
-      </div>
-      <div class="row">
-        <div class="col-md-5">
-          <input type="text" class="form-control" name="pasaporte" id="pasaporte" v-model="user.pasaporte">
-          <small class="form-text text-muted">{{validacion.pasaporte.texto}}&nbsp;<br></small>
-        </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.pasaporte.valido}"><i class="fas fa-check"></i></span>
         </div>
       </div>
       <div class="row">
@@ -288,7 +276,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id','google_id'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -321,7 +309,6 @@
         'user.nacimiento': function() { this.validar_nacimiento() },
         'user.sexo': function() { this.validar_sexo() },
         'user.dni': function() { this.validar_dni() },
-        'user.pasaporte': function() { this.validar_pasaporte() },
         'user.pais': function() {
           this.validar_pais()
           this.traer_provincias()
@@ -484,7 +471,7 @@
           this.validacion.dni.valido = false
           this.validacion.dni.texto = 'Este dato es requerido'
           if(!this.user.dni) return false
-          var re = /^[\d- .,]+$/;
+          var re = /^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/;
           var res = re.test(this.user.dni);
           if(!res) {
             this.validacion.dni.texto = 'Ingrese un documento valido'
@@ -492,19 +479,6 @@
           if(res) this.validacion.dni.texto = ''
           if(res) this.validacion.dni.valido = true
           return this.validacion.dni.valido
-        },
-        validar_pasaporte: function() {
-          this.validacion.pasaporte.texto = ''
-          this.validacion.pasaporte.valido = false
-          if(!this.user.pasaporte) return false
-          var re = /^[\d- .,]+$/;
-          var res = re.test(this.user.pasaporte);
-          if(!res) {
-            this.validacion.pasaporte.texto = 'Ingrese un documento valido'
-          }
-          if(res) this.validacion.pasaporte.texto = ''
-          if(res) this.validacion.pasaporte.valido = true
-          return this.validacion.pasaporte.valido
         },
         validar_pais: function(){
           this.validacion.pais.valido = false
