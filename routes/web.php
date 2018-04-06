@@ -54,6 +54,7 @@ Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto');
 
+Route::get('/perfil', 'PerfilController@show')->middleware('auth');
 
 Auth::routes();
 Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
