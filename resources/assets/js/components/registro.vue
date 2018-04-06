@@ -40,7 +40,7 @@
       </div>
       <hr>
       <div class="row">
-        <div class="col-md-12"><label>EMAIL</label></div>
+        <div class="col-md-12"><label>EMAIL*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>CREAR UNA CONTRASEÑA</label></div>
+        <div class="col-md-12"><label>CREAR UNA CONTRASEÑA*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>NOMBRE</label></div>
+        <div class="col-md-12"><label>NOMBRE*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -101,7 +101,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>APELLIDO</label></div>
+        <div class="col-md-12"><label>APELLIDO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -114,7 +114,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>NACIMIENTO</label></div>
+        <div class="col-md-12"><label>NACIMIENTO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -127,7 +127,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>SEXO</label></div>
+        <div class="col-md-12"><label>SEXO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-3">
@@ -147,7 +147,7 @@
         <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
       </div>    
       <div class="row">
-        <div class="col-md-12"><label>NRO. DE DNI / PASAPORTE</label></div>
+        <div class="col-md-12"><label>NRO. DE DNI / PASAPORTE*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -160,7 +160,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>PAIS</label></div>
+        <div class="col-md-12"><label>PAIS*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -205,7 +205,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>TELEFONO</label></div>
+        <div class="col-md-12"><label>TELEFONO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
@@ -220,7 +220,7 @@
 
       <hr>
       <div class="row">
-        <div class="col-md-3 text-primary"><span v-show='volver'><i class="fas fa-long-arrow-alt-left "></i><a @click="paso_actual = 'email'"> Volver</a></span></div>
+        <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i class="fas fa-long-arrow-alt-left "></i> Volver</a></span></div>
         <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso()">CREAR CUENTA</a></div>
       </div>
 
@@ -333,7 +333,7 @@
         cambiar_paso: function (mod) {
           switch(this.paso_actual) {
             case 'email':
-              if(!(this.validacion.email.valido)) return false
+              if(!(this.validacion.email.valido && this.validacion.pass.valido)) return false
               this.paso_actual = 'personales'
               break
             case 'personales':
@@ -373,6 +373,8 @@
           var data = {}
           if(prop) {
             data[prop] = this.user[prop]
+            this.validacion[prop].valido = false
+            this.validacion[prop].invalido = false
           } else {
             data = this.user
           }
