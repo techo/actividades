@@ -147,11 +147,7 @@
                         $('#login-modal').modal('hide');
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
-                        this.authenticated = true;
-                        this.user.nombres = response.data.user.nombres;
-                        this.user.id = response.data.user.idPersona;
-                        var event = new CustomEvent('loggedIn');
-                        window.dispatchEvent(event);
+                        this.showValidUser(response.data.user);
                     })
                     .catch((error) => {
                         this.hasError = true;
@@ -167,7 +163,6 @@
                         console.log(error.config);
                     });
             },
-
             logout: function() {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(
@@ -190,6 +185,13 @@
                         console.log(error.config);
                     });
 
+            },
+            showValidUser: function(user) {
+                this.authenticated = true;
+                this.user.nombres = user.nombres;
+                this.user.id = user.idPersona;
+                var event = new CustomEvent('loggedIn');
+                window.dispatchEvent(event);
             },
             checkLogin() {
         		var self = this;

@@ -13,32 +13,25 @@ use App\Persona;
 use App\VerificacionMailPersona;
 class UsuarioController extends Controller
 {
+
+    public function validar(Request $request) {
+        $rules = [];
+        if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail|email';
+        if($request->has('pass')) $rules['pass'] = 'required|min:8';
+        if($request->has('nombre')) $rules['nombre'] = 'required';
+        if($request->has('apellido')) $rules['apellido'] = 'required';
+        if($request->has('nacimiento')) $rules['nacimiento'] = 'required|before:' . date('Y-m-d');
+        if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
+        if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
+        $validatedData = $request->validate($rules);
+        return ['success' => true, 'params' => array_keys($rules)];
+    }
+
     public function create(Request $request) {
         $url = $request->session()->get('login_callback','');
-        $validatedData = $request->validate([
-            'email' => 'required|unique:Persona,mail|email',
-        	'nombre' => 'required',
-        	'apellido' => 'required',
-        	'nacimiento' => 'required',
-        	'sexo' => 'required',
-        	'telefono' => 'required'
-    	]);
-    	$fechaNacimiento = new Carbon($request->nacimiento);
+        $this->validar($request);
     	$persona = new Persona();
-    	$persona->apellidoPaterno = $request->apellido;
-    	$persona->dni = $request->dni;
-    	$persona->mail = $request->email;
-    	$persona->idLocalidad = $request->localidad;
-    	$persona->fechaNacimiento = $fechaNacimiento;
-    	$persona->nombres = $request->nombre;
-    	$persona->idPais = $request->pais;
-    	$persona->idPaisResidencia = $request->pais;
-    	$persona->password = Hash::make($request->pass);
-    	$persona->idProvincia = $request->provincia;
-    	$persona->sexo = $request->sexo;
-    	$persona->telefonoMovil = $request->telefono;
-    	$persona->google_id = $request->google_id;
-    	$persona->facebook_id = $request->facebook_id;
+        $this->cargar_cambios($request, $persona);
     	$persona->carrera = '';
     	$persona->anoEstudio = '';
     	$persona->idContactoCTCT = '';
@@ -56,7 +49,26 @@ class UsuarioController extends Controller
         Auth::login($persona, true);
         $request->session()->regenerate();
         Mail::to($persona->mail)->send(new VerificarMail($persona));
-        return ['login_callback' =>  $url];
+        return ['login_callback' =>  $url, 'user' => $persona];
+    }
+
+    public function cargar_cambios($request,$persona) {
+        $fechaNacimiento = new Carbon($request->nacimiento);
+        $persona->apellidoPaterno = $request->apellido;
+        $persona->dni = $request->dni;
+        $persona->mail = $request->email;
+        $persona->idLocalidad = $request->localidad;
+        $persona->fechaNacimiento = $fechaNacimiento;
+        $persona->nombres = $request->nombre;
+        $persona->idPais = $request->pais;
+        $persona->idPaisResidencia = $request->pais;
+        $persona->password = Hash::make($request->pass);
+        $persona->idProvincia = $request->provincia;
+        $persona->sexo = $request->sexo;
+        $persona->telefonoMovil = $request->telefono;
+        $persona->google_id = $request->google_id;
+        $persona->facebook_id = $request->facebook_id;
+        return $persona;
     }
 
     public function validar_nuevo_mail(Request $request) {
