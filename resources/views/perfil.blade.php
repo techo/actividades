@@ -1,14 +1,14 @@
 @extends('main')
 
 @section('page_title')
-    Registro
+    Perfil
 @endsection
 
 @section('main_image')
 @endsection
 
 @section('main_content')
-	<perfil usuario="{{Auth::user()}}"></perfil>
+	<perfil usuario="{{json_encode($usuario)}}"></perfil>
 @endsection
 
 @section('additional_scripts')

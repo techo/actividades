@@ -16,7 +16,7 @@ class UsuarioController extends Controller
 
     public function validar(Request $request) {
         $rules = [];
-        if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail|email';
+        if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
         if($request->has('pass')) $rules['pass'] = 'required|min:8';
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
@@ -32,6 +32,7 @@ class UsuarioController extends Controller
         $this->validar($request);
     	$persona = new Persona();
         $this->cargar_cambios($request, $persona);
+        $persona->password = Hash::make($request->pass);
     	$persona->carrera = '';
     	$persona->anoEstudio = '';
     	$persona->idContactoCTCT = '';
@@ -52,6 +53,14 @@ class UsuarioController extends Controller
         return ['login_callback' =>  $url, 'user' => $persona];
     }
 
+    public function update(Request $request) {
+        $this->validar($request);
+        $persona = Auth::user();        
+        $this->cargar_cambios($request, $persona);
+        $persona->save();
+        return ['user' => $persona];
+    }
+
     public function cargar_cambios($request,$persona) {
         $fechaNacimiento = new Carbon($request->nacimiento);
         $persona->apellidoPaterno = $request->apellido;
@@ -62,7 +71,6 @@ class UsuarioController extends Controller
         $persona->nombres = $request->nombre;
         $persona->idPais = $request->pais;
         $persona->idPaisResidencia = $request->pais;
-        $persona->password = Hash::make($request->pass);
         $persona->idProvincia = $request->provincia;
         $persona->sexo = $request->sexo;
         $persona->telefonoMovil = $request->telefono;
