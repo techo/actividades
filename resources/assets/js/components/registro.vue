@@ -287,7 +287,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pasaporte','pais','provincia','localidad','telefono','facebook_id','google_id'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -319,7 +319,6 @@
         'user.nacimiento': function() { this.validar_data('nacimiento') },
         'user.sexo': function() { this.validar_data('sexo') },
         'user.dni': function() { this.validar_data('dni') },
-        'user.pasaporte': function() { this.validar_data('pasaporte') },
         'user.telefono': function() { this.validar_data('telefono') },
         'user.pais': function() { this.traer_provincias() },
         'user.provincia': function() { this.traer_localidades() }
