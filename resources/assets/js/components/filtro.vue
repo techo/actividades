@@ -12,11 +12,13 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-1">
+        <div class="col-lg-2">
             <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda"> Lugar de actividad
+        </div>
+        <div class="col-lg-2">
             <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda"> Punto de encuentro
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >

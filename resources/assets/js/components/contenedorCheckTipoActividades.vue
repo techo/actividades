@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="acordion">
         <a class="btn btn-primary" data-toggle="collapse" href="#tipoActividades" role="button" aria-expanded="false">Tipos de Actividad</a>
         <div id="tipoActividades" class="collapse">
                 <check-tipo-actividades
@@ -58,5 +58,15 @@
 </script>
 
 <style scoped>
-
+    .acordion .collapsing, .acordion .collapse.in {
+        position: absolute !important;
+        z-index: 20;
+        width: auto;
+        overflow:visible;
+        background-color:#eee;
+        border:1px solid #ddd;
+        border-bottom-left-radius:5px;
+        border-bottom-right-radius:5px;
+        padding: 5px 5px;
+    }
 </style>
