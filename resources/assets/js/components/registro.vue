@@ -69,7 +69,7 @@
       </div>
 
     </div>
-    <div v-show="paso('personales')" >--> 
+    <div v-show="paso('personales')"> 
         <div class="row">
             <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > Finalizar   
