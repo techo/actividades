@@ -1,6 +1,6 @@
 <template>
     <div class="acordion">
-        <a class="btn btn-primary" data-toggle="collapse" href="#provincias" role="button" aria-expanded="false">Provincias</a>
+        <a class="btn btn-primary dropdown-button" data-toggle="collapse" href="#provincias" role="button" aria-expanded="false">Provincias <i class="fas fa-caret-down"></i></a>
         <div id="provincias" class="collapse" style="border:black 1px">
 
             <div v-for="provincia in listaProvincias">
@@ -73,6 +73,10 @@
      border:1px solid #ddd;
      border-bottom-left-radius:5px;
      border-bottom-right-radius:5px;
-     padding: 5px 5px;
+     padding: 5% 5%;
+ }
+
+ .dropdown-button {
+     width: 100%;
  }
 </style>

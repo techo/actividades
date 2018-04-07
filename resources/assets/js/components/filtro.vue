@@ -1,5 +1,5 @@
 <template>
-    <div class="row mt-4 mb-4 "id="filtro">
+    <div class="row justify-content-center mt-4 mb-4 "id="filtro">
         <div class="col-md-3">
             <select class="dropdown"
                 title="Categorías"
@@ -13,12 +13,14 @@
             </select>
         </div>
         <div class="col-lg-2">
-            <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda"> Lugar de actividad
+            <div class="row">
+                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+            </div>
+            <div class="row">
+                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
+            </div>
         </div>
-        <div class="col-lg-2">
-            <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda"> Punto de encuentro
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-2 dropdown-container">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
@@ -26,7 +28,7 @@
             </contenedor-check-tipos>
 
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 dropdown-container">
 
             <contenedor-check-provincias
                 v-bind:provincias="this.dataProvincias"
@@ -34,8 +36,8 @@
             </contenedor-check-provincias>
         </div>
 
-        <div class="col-md-1 pull-right">
-            <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="borrarFiltros">
+        <div class="col-md-1">
+            <button class="btn techo-btn-azul btn-sm" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>
@@ -63,7 +65,7 @@
                  dataProvincias:    [],
                  dataLocalidades:   [],
                  dataTiposActividad: [],
-                 dataBusqueda: 'lugar'
+                 dataBusqueda: 'punto'
              }
         },
         methods: {
@@ -217,5 +219,13 @@
     #filtro {
         padding-bottom: 15px;
         border-bottom: solid thin #cecece
+    }
+
+    input[type="radio"] {
+        margin: 0 10px;
+    }
+
+    .dropdown-container {
+        padding-right: 0;
     }
 </style>
