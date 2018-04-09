@@ -32,7 +32,7 @@
         "vue-loader": "^14.2.2",
         "vue-router": "^3.0.1",
         "vue-select": "^2.4.0",
-      "vue-switches": "^2.0.1",
+        "vue-switches": "^2.0.1",
         "vue-template-compiler": "^2.5.16",
         "vuejs-datepicker": "^0.9.29"
     }

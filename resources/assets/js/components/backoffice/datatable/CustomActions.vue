@@ -18,13 +18,15 @@
     },
     methods: {
       itemAction (action, data, index) {
-        console.log('custom-actions: ' + action, data.id, index)
+        console.log('custom-actions: ' + action, data.id, index);
+        let url = window.location.href;
+        url = url.slice(-1) !== "/" ? url + "/" : url;
           switch(action){
               case "view-item":
-                  window.location = window.location + data.id
+                  window.location = url + data.id;
                   break;
               case "edit-item":
-                  window.location = window.location + data.id + "/editar"
+                  window.location = url + data.id + "/editar";
                   break;
           }
 

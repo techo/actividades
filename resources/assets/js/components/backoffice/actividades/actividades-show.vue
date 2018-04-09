@@ -458,11 +458,11 @@
 
     export default {
         name: "actividades-show",
-        props: ['actividad', 'paises'],
+        props: ['actividad', 'paises', 'edicion'],
         data() {
             return {
                 dataActividad: {},
-                readonly: false,
+                readonly: !this.edicion,
                 dataPaises: [],
                 paisSeleccionado: {},
                 provincias: [],
@@ -494,6 +494,10 @@
             this.getCategorias();
             this.getTiposDeActividad();
             this.getUnidadesOrganizacionales();
+
+            //Eventos
+            Event.$on('editar', this.editar);
+            Event.$on('cancelar', this.cancelar);
         },
         computed: {
             esConstruccion: function() {
@@ -596,6 +600,12 @@
                         console.error(error.config);
                     });
 
+            },
+            editar() {
+                this.readonly = false;
+            },
+            cancelar(){
+                this.readonly = true;
             },
             findByKey(arreglo, clave, valor) {
                 for (let i = 0; i < arreglo.length; i++) {
