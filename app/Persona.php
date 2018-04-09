@@ -16,7 +16,7 @@ class Persona extends Authenticatable
         return $this->hasMany(PuntoEncuentro::class, 'idPersona');
     }
 
-    public function inscripcion()
+    public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idPersona');
     }
@@ -26,7 +26,7 @@ class Persona extends Authenticatable
     }
 
     public function estaInscripto($idActividad) {
-        return $this->inscripcion->where('idActividad',$idActividad)->count();
+        return $this->inscripciones->where('idActividad',$idActividad)->count();
     }
 
     public function verificacion()

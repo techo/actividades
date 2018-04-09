@@ -30,8 +30,10 @@ Route::prefix('ajax')->group(function () {
         Route::post('', 'ajax\UsuarioController@create');
         Route::put('', 'ajax\UsuarioController@update');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
-		Route::put('linkear', 'ajax\UsuarioController@linkear');
-	});
+        Route::put('linkear', 'ajax\UsuarioController@linkear');
+        Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
+        Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+    });
     Route::post('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
     Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
     Route::post('actividades', 'ajax\ActividadesController@index');

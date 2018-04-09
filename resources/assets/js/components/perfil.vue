@@ -244,6 +244,7 @@
         <div class="col-md-5"><a class="btn btn-primary" @click="guardar()">GUARDAR</a></div>
       </div>
       <hr>    
+      <perfilinscripciones></perfilinscripciones>
     </div>
   </div>
 </template>
