@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
+use App\Pais;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
@@ -54,10 +55,19 @@ class ActividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('tipo.categoria', 'unidadOrganizacional', 'modificadoPor', 'puntosEncuentro')
+        $paises = Pais::all();
+        $actividad = Actividad::with(
+            'tipo.categoria',
+            'unidadOrganizacional',
+            'modificadoPor',
+            'puntosEncuentro',
+            'pais',
+            'provincia',
+            'localidad'
+        )
             ->where('idActividad', $id)
             ->first();
-        return view('backoffice.actividades.show', compact('actividad'));
+        return view('backoffice.actividades.show', compact('actividad', 'paises'));
     }
 
     /**

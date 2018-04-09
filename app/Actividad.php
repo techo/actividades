@@ -54,4 +54,14 @@ class Actividad extends Model
     {
         return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
+
+    public function provincia()
+    {
+        return $this->hasOne(Provincia::class, 'id', 'idProvincia');
+    }
+
+    public function pais()
+    {
+        return $this->hasOne(Pais::class, 'id', 'idPais');
+    }
 }

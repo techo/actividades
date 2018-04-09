@@ -4,77 +4,77 @@
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
-            <span v-html="$options.filters.estado(this.dataActividad.estadoConstruccion)"></span>
-            &nbsp;
-            <span v-html="$options.filters.visibilidad(this.dataActividad.visibilidad)"></span>
+            <span v-html="$options.filters.visibilidad(this.inscripcionInterna)"></span>
+            <span v-html="$options.filters.estado(this.estadoConstruccion)"></span>&nbsp;
         </div>
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="estadoActividad">Estado de la Actividad</label>
+                        <p>
+                            <v-switch
+                                    v-model="dataActividad.estadoConstruccion"
+                                    type-bold="true"
+                                    text-enabled="Abierto"
+                                    text-disabled="Cerrada"
+                                    theme="bootstrap"
+                                    color="primary"
+                                    id="estadoActividad"
+                                    name="estadoActividad"
+                            >
+                        </v-switch>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label for="categoria">Categoría</label>
                         <v-select
                                 :options="categorias"
                                 label="nombre"
                                 placeholder="Seleccione"
-                                name="selectCategorias"
-                                id="selectCategorias"
-                                v-model="dataActividad.tipo.categoria"
+                                name="categoria"
+                                id="categoria"
+                                v-model="categoriaSeleccionada"
                                 v-bind:disabled="this.readonly"
-                                :onChange=this.blah()
-                        ></v-select>
-                        <label for="categoria">Categoría</label>
-                        <select id="categoria" name="categoria"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.tipo.categoria.id"
+                                :onChange=this.getTiposDeActividad()
                         >
-                            <option v-for="cat in categorias" v-bind:value="cat.id">{{ cat.nombre }}</option>
-                        </select>
+                        </v-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label for="tiposDeActividad">Tipo de Actividad</label>
                         <v-select
-
-                                :options="provincias"
-                                label="provincia"
-                                v-model="provinciaSeleccionada"
+                                :options="tiposDeActividad"
+                                label="nombre"
+                                placeholder="Seleccione"
+                                name="tiposDeActividad"
+                                id="tiposDeActividad"
+                                v-model="tipoSeleccionado"
                                 v-bind:disabled="this.readonly"
-                        ></v-select>
-
-                        <label for="tipo">Tipo de Actividad</label>
-                        <select id="tipo" name="tipo"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.tipo.idTipo"
                         >
-                            <option
-                                    v-for="tipo in tiposDeActividad"
-                                    v-bind:value="tipo.idTipo"
-                            >
-                                {{ tipo.nombre }}
-                            </option>
-                        </select>
-
+                        </v-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="oficina">Oficina</label>
-                        <select id="oficina" name="oficina"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.unidad_organizacional.idUnidadOrganizacional"
-
+                        <label for="unidad_organizacional">Oficina</label>
+                        <v-select
+                                :options="unidadesOrganizacionales"
+                                label="nombre"
+                                placeholder="Seleccione"
+                                name="unidad_organizacional"
+                                id="unidad_organizacional"
+                                v-model="unidadSeleccionada"
+                                v-bind:disabled="this.readonly"
                         >
-                            <option
-                                    v-for="unidad in unidadesOrganizacionales"
-                                    v-bind:value="unidad.idUnidadOrganizacional"
-                            >
-                                {{ unidad.nombre }}
-                            </option>
-                        </select>
+                        </v-select>
                     </div>
                 </div>
             </div>
@@ -93,28 +93,42 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="fechaInicio"
-                            name="fechaInicio"
-                            :value="dataActividad.fechaInicio"
-                            :disabled="readonly"
+                        <input v-if="readonly"
+                               type="text"
+                               class="form-control"
+                               id="fechaInicio"
+                               name="fechaInicio"
+                               disabled="disabled"
+                               :value="dataActividad.fechaInicio"
                         >
+
+                        <datepicker v-else
+                                    placeholder="Seleccione una fecha"
+                                    v-model="dataActividad.fechaInicio"
+                                    id="fechaInicio"
+                                    name="fechaInicio"
+                                    language="es"
+                        ></datepicker>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaFin">Fecha de Fin De La Actividad</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="fechaFin"
-                            name="fechaFin"
-                            :value="dataActividad.fechaFin"
-                            :disabled="readonly"
+                        <input v-if="readonly"
+                               type="text"
+                               class="form-control"
+                               id="fechaFin"
+                               name="fechaFin"
+                               :value="dataActividad.fechaFin"
                         >
+                        <datepicker v-else
+                                    placeholder="Seleccione una fecha"
+                                    v-model="dataActividad.fechaFin"
+                                    id="fechaFin"
+                                    name="fechaFin"
+                                    language="es"
+                        ></datepicker>
                     </div>
                 </div>
             </div>
@@ -151,42 +165,48 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="pais">País</label>
-                        <select id="pais" name="pais"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.idPais"
+                        <v-select
+                                :options="dataPaises"
+                                label="nombre"
+                                placeholder="Seleccione"
+                                name="pais"
+                                id="pais"
+                                v-model="paisSeleccionado"
+                                v-bind:disabled="this.readonly"
+                                :onChange=this.getProvincias()
                         >
-                            <option disabled value="">Seleccione</option>
-                            <option v-for="pais in paises" v-bind:value="pais.id">{{ pais.nombre }}</option>
-                        </select>
-
+                        </v-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="provincia">Provincia</label>
-                        <select id="provincia" name="provincia"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.idProvincia"
+                        <v-select
+                                :options="provincias"
+                                label="provincia"
+                                placeholder="Seleccione"
+                                name="provincia"
+                                id="provincia"
+                                v-model="provinciaSeleccionada"
+                                v-bind:disabled="this.readonly"
+                                :onChange=this.getLocalidades()
                         >
-                            <option disabled value="">Seleccione</option>
-                            <option v-for="prov in provincias" v-bind:value="prov.id">{{ prov.provincia }}</option>
-                        </select>
-
+                        </v-select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="localidad">Localidad</label>
-                        <select id="localidad" name="localidad"
-                                class="form-control"
-                                v-bind:disabled="readonly"
-                                v-model="dataActividad.idLocalidad"
+                        <v-select
+                                :options="localidades"
+                                label="localidad"
+                                placeholder="Seleccione"
+                                name="localidad"
+                                id="localidad"
+                                v-model="localidadSeleccionada"
+                                v-bind:disabled="this.readonly"
                         >
-                            <option disabled value="">Seleccione</option>
-                            <option v-for="loc in localidades" v-bind:value="loc.id">{{ loc.localidad }}</option>
-                        </select>
+                        </v-select>
                     </div>
                 </div>
             </div>
@@ -237,7 +257,8 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="estadoInscripcion">Estado De La Inscripción</label>
-                <select id="estadoInscripcion" name="estadoInscripcion"
+                <select id="estadoInscripcion"
+                        name="estadoInscripcion"
                         class="form-control"
                         :disabled="readonly"
                         v-model="dataActividad.idProvincia"
@@ -249,28 +270,42 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                        <input
-                            type="datetime-local"
-                            class="form-control"
-                            id="fechaInicioInscripciones"
-                            name="fechaInicioInscripciones"
-                            :disabled="readonly"
-                            v-model="dataActividad.fechaInicioInscripciones"
+                        <input v-if="readonly"
+                               type="datetime-local"
+                               class="form-control"
+                               id="fechaInicioInscripciones"
+                               name="fechaInicioInscripciones"
+                               disabled="disabled"
+                               v-model="dataActividad.fechaInicioInscripciones"
                         >
+                        <datepicker v-else
+                                    placeholder="Seleccione una fecha"
+                                    v-model="dataActividad.fechaInicioInscripciones"
+                                    id="fechaInicioInscripciones"
+                                    name="fechaInicioInscripciones"
+                                    language="es"
+                        ></datepicker>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaFinInscripcion">Fecha de Fin De La Inscripción</label>
-                        <input
-                                type="datetime-local"
-                                class="form-control"
-                                id="fechaFinInscripcion"
-                                name="fechaFinInscripcion"
-                                :disabled="readonly"
-                                v-model="dataActividad.fechaFinInscripciones"
+                        <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
+                        <input v-if="readonly"
+                               type="datetime-local"
+                               class="form-control"
+                               id="fechaFinInscripciones"
+                               name="fechaFinInscripciones"
+                               :disabled="readonly"
+                               v-model="dataActividad.fechaFinInscripciones"
                         >
+                        <datepicker v-else
+                                    placeholder="Seleccione una fecha"
+                                    v-model="dataActividad.fechaFinInscripciones"
+                                    id="fechaFinInscripciones"
+                                    name="fechaFinInscripciones"
+                                    language="es"
+                        ></datepicker>
                     </div>
                 </div>
         </div>
@@ -295,10 +330,19 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="descripcion">Estado</label>
+                                <label for="inscripcionInterna">Visibilidad de las Inscripciones</label>
                                 <br>
-                                <input type="radio" name="estadoInscripciones" > Abiertas
-                                <input type="radio" name="estadoInscripciones"> Cerradas
+                                <v-switch
+                                        v-model="dataActividad.inscripcionInterna"
+                                        theme="bootstrap"
+                                        color="primary"
+                                        id="inscripcionInterna"
+                                        name="inscripcionInterna"
+                                        type-bold="true"
+                                        text-enabled="Privadas"
+                                        text-disabled="Públicas"
+                                >
+                                </v-switch>
                             </div>
                         </div>
                     </div>
@@ -414,30 +458,39 @@
 
     export default {
         name: "actividades-show",
-        props: ['actividad'],
+        props: ['actividad', 'paises'],
         data() {
             return {
                 dataActividad: {},
                 readonly: false,
-                paises: [],
-                // paisSeleccionado: '',
+                dataPaises: [],
+                paisSeleccionado: {},
                 provincias: [],
-                provinciaSeleccionada: '',
+                provinciaSeleccionada: {},
                 localidades: [],
-                // localidadSeleccionada: '',
+                localidadSeleccionada: {},
                 categorias: [],
                 categoriaSeleccionada: {},
                 tiposDeActividad: [],
+                tipoSeleccionado: {},
                 unidadesOrganizacionales: [],
-                // esConstruccion: false
+                unidadSeleccionada: {},
+                estadoConstruccion: false,
+                inscripcionInterna: false
             }
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
+            this.dataPaises = JSON.parse(this.paises);
             this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
-            this.getPaises();
-            this.getProvincias();
-            this.getLocalidades();
+            this.tipoSeleccionado = this.dataActividad.tipo;
+            this.unidadSeleccionada = this.dataActividad.unidad_organizacional;
+            this.localidadSeleccionada = this.dataActividad.localidad;
+            this.provinciaSeleccionada = this.dataActividad.provincia;
+            this.paisSeleccionado = this.dataActividad.pais;
+            this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");
+            this.estadoConstruccion = this.dataActividad.estadoConstruccion;
+            this.inscripcionInterna = this.dataActividad.inscripcionInterna;
             this.getCategorias();
             this.getTiposDeActividad();
             this.getUnidadesOrganizacionales();
@@ -449,72 +502,67 @@
         },
         filters: {
             estado: function (value) {
-                let etiqueta;
-                switch (value) {
-                    case 'Cerrada':
-                        etiqueta = '<span class="label label-danger pull-right">Cerrada</span>';
-                        break;
-                    case 'Abierta':
-                        etiqueta = '<span class="label label-success pull-right">Abierta</span>';
-                        break;
-                    case 'Cancelada':
-                        etiqueta = '<span class="label label-warning pull-right">Cancelada</span>';
-                        break;
-                    case 'En planificación':
-                        etiqueta = '<span class="label label-primary pull-right">En Planificación</span>';
-                        break;
-                    // default
+                if (value) {
+                    return '<span class="label label-success pull-right">Abierta</span>';
                 }
-                return etiqueta;
+
+                return '<span class="label label-danger pull-right">Cerrada</span>';
             },
 
             visibilidad: function (value) {
-                if (value===1) {
-                    return '<span class="label label-info pull-right">Publico</span>'
+                if (value) {
+                    return '<span class="label label-dark pull-right">Privado</span>';
                 }
-                return '<span class="label label-dark pull-right">Privado</span>'
+
+                return '<span class="label label-info pull-right">Público</span>';
             }
         },
         methods: {
-            blah() {
-                if (this.categoriaSeleccionada !== this.dataActividad.tipo.categoria) {
-                    this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
-                    console.log('cambio');
+            // getPaises() {
+            //     this.axiosGet('/ajax/paises', function (data, self) {
+            //         self.paises = data;
+            //         // self.paisSeleccionado = self.dataActividad.idPais
+            //     });
+            // },
+            getProvincias() {
+                if (this.dataActividad.pais !== this.paisSeleccionado) {
+                    this.dataActividad.pais = this.paisSeleccionado;
+                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
+                        function (data, self) {
+                            self.provincias = data;
+                            self.provinciaSeleccionada = '';
+                            self.localidadSeleccionada = ''
+                        });
                 }
             },
-            getPaises() {
-                this.axiosGet('/ajax/paises', function (data, self) {
-                    self.paises = data;
-                    // self.paisSeleccionado = self.dataActividad.idPais
-                });
-            },
-            getProvincias() {
-                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincias',
-                    function (data, self) {
-                        self.provincias = data;
-                    });
-            },
             getLocalidades() {
-                this.axiosGet('/ajax/paises/' + this.dataActividad.idPais + '/provincias/' + this.dataActividad.idProvincia + '/localidades',
-                    function (data, self) {
-                        self.localidades = data;
-                    });
+                if (this.provinciaSeleccionada !== '' && this.dataActividad.provincia !== this.provinciaSeleccionada) {
+                    this.dataActividad.provincia = this.provinciaSeleccionada;
+                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + this.provinciaSeleccionada.id + '/localidades',
+                        function (data, self) {
+                            self.localidades = data;
+                            self.localidadSeleccionada = '';
+                        });
+                }
             },
-
             getCategorias() {
-                this.axiosGet('/ajax/categorias', function (data, self) {
+                this.axiosGet('/ajax/categorias/',
+                    function (data, self) {
                     self.categorias = data;
                 });
 
             },
-
             getTiposDeActividad() {
-                this.axiosGet('/ajax/categorias/' + this.dataActividad.tipo.categoria.id + '/tipos',
-                    function (data, self) {
-                        self.tiposDeActividad = data;
-                    });
+                if (this.dataActividad.tipo.categoria !== this.categoriaSeleccionada) {
+                    this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
+                    this.axiosGet('/ajax/categorias/' + this.dataActividad.tipo.categoria.id + '/tipos',
+                        function (data, self) {
+                            self.tiposDeActividad = data;
+                            self.tipoSeleccionado = null;
+                        }
+                    );
+                }
             },
-
             getUnidadesOrganizacionales() {
                 this.axiosGet('/admin/ajax/unidadesOrganizacionales/',
                     function (data, self) {
@@ -529,24 +577,33 @@
                     })
                     .catch((error) => {
                         // Error
+                        console.error('Error en: ' + url);
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
+                            console.error(error.response.data);
+                            console.error(error.response.status);
+                            console.error(error.response.headers);
                         } else if (error.request) {
                             // The request was made but no response was received
                             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                             // http.ClientRequest in node.js
-                            console.log(error.request);
+                            console.error(error.request);
                         } else {
                             // Something happened in setting up the request that triggered an Error
-                            console.log('Error', error.message);
+                            console.error('Error', error.message);
                         }
-                        console.log(error.config);
+                        console.error(error.config);
                     });
 
+            },
+            findByKey(arreglo, clave, valor) {
+                for (let i = 0; i < arreglo.length; i++) {
+                    if (arreglo[i].hasOwnProperty(clave) && arreglo[i].clave === valor) {
+                        return i;
+                    }
+                }
+                return false;
             }
         }
     }

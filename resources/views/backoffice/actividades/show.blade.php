@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-    <actividades-show actividad="{{ $actividad }}"></actividades-show>
+    <actividades-show actividad="{{ $actividad }}" paises="{{ $paises }}"></actividades-show>
 @endsection
 
 @push('additional_scripts')
@@ -20,10 +20,13 @@
 @endpush
 
 @section('footer')
-    <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
-        <!-- To the right -->
-        <div style="margin-left: 75%">
-            <button class="btn btn-primary">Editar</button>
-        </div>
-    </footer>
+    {{--
+        <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
+            <!-- To the right -->
+            <div style="margin-left: 75%">
+                <button class="btn btn-primary">Editar</button>
+            </div>
+        </footer>
+    --}}
+    <crud-footer></crud-footer>
 @endsection
