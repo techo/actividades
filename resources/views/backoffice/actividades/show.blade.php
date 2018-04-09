@@ -8,7 +8,11 @@
 @endsection
 
 @section('content')
-    <actividades-show actividad="{{ $actividad }}" paises="{{ $paises }}"></actividades-show>
+    <actividades-show
+            actividad="{{ $actividad }}"
+            paises="{{ $paises }}"
+            edicion="{{ $edicion }}"
+    ></actividades-show>
 @endsection
 
 @push('additional_scripts')

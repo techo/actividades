@@ -14,6 +14,8 @@ Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('v-switch', vSwitch);
 
+window.Event = new Vue();
+
 const app = new Vue({
     el: '#app'
 });

@@ -55,6 +55,7 @@ class ActividadesController extends Controller
      */
     public function show($id)
     {
+        $edicion = false;
         $paises = Pais::all();
         $actividad = Actividad::with(
             'tipo.categoria',
@@ -67,7 +68,7 @@ class ActividadesController extends Controller
         )
             ->where('idActividad', $id)
             ->first();
-        return view('backoffice.actividades.show', compact('actividad', 'paises'));
+        return view('backoffice.actividades.show', compact('actividad', 'paises', 'edicion'));
     }
 
     /**
