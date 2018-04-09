@@ -64,7 +64,7 @@
       </div>
       <div class="row">
         <div class="col-md-5">
-          <datepicker placeholder="Select Date" v-model="user.nacimiento" id="nacimiento"></datepicker>
+          <datepicker placeholder="Select Date" v-model="user.nacimiento" id="nacimiento"  language="es"></datepicker>
           <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
         </div>
         <div class="col-md-7">
