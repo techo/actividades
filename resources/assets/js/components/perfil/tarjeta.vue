@@ -1,7 +1,6 @@
 <template>
-  <div class="col-md-4">
-    <simplert ref="confirmar"></simplert>
     <div class="card" style="cursor: pointer;">
+        <simplert ref="confirmar"></simplert>
       <img class="card-img-top" src="/img/tarjeta-1.jpg" alt="Card image cap" >
       <div class="card-body px-0"  v-on:click="ir_a_actividad">
         <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
@@ -17,7 +16,6 @@
         <a class="btn btn-success" @click="desincribir(actividad.idActividad)">Desinscribirme</a>
       </div>
     </div>
-  </div>
 
 </template>
 

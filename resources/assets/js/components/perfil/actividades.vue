@@ -10,7 +10,7 @@
       </div>
 
         <div class="row">
-            <div class="card-deck mb-3 text-center">
+            <div class="card-deck text-center">
                 <tarjeta
                     v-for="act in actividades"
                     v-bind:actividad="act"
