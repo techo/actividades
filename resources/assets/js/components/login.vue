@@ -75,6 +75,7 @@
                     class="dropdown-menu"
                     aria-labelledby="btnUser"
                 >
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="misactividades">Mis Actividades</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
                 </div>
@@ -136,6 +137,9 @@
             },
             perfil: function() {
               window.location.href = '/perfil';
+            },
+            misactividades: function() {
+              window.location.href = '/perfil/actividades';
             },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

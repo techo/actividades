@@ -9,7 +9,9 @@ import Autenticar from './components/autenticar';
 import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
 import Datepicker from 'vuejs-datepicker';
-import Perfil from './components/perfil';
+import Perfil from './components/perfil/perfil';
+import MisActividades from './components/perfil/actividades';
+import Simplert from 'vue2-simplert';
 
 require('./bootstrap');
 
@@ -24,7 +26,9 @@ Vue.component('inscripcion', Inscripcion);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('perfil', Perfil);
+Vue.component('mis-actividades', MisActividades);
 Vue.component('datepicker', Datepicker);
+Vue.component('simplert', Simplert);
 
 
 
