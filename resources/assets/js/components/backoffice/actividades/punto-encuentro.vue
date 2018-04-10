@@ -15,8 +15,19 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="responsable">Responsable</label>
-                    <input type="text" id="responsable" class="form-control">
+                    <label for="coordinador">Coordinador</label>
+                    <v-select
+                            :options="dataCoordinadores"
+                            label="nombre"
+                            placeholder="Seleccione"
+                            name="coordinador"
+                            id="coordinador"
+                            v-model="coordinador"
+                            v-bind:disabled="this.readonly"
+                            filterable=false
+                            :onSearch=this.buscarCoordinadores()
+                    >
+                    </v-select>
                 </div>
             </div>
             <div class="col-md-3">
@@ -35,19 +46,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group">
-                        <label for="responsable">Responsable</label>
-                        <v-select
-                                :options="dataCoordinadores"
-                                label="localidad"
-                                placeholder="Seleccione"
-                                name="localidad"
-                                id="localidad"
-                                v-model="localidadSeleccionada"
-                                v-bind:disabled="this.readonly"
-                        >
-                        </v-select>
-                </div>
+                <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidosPaterno}}</p>
             </div>
             <div class="col-md-1">
                 <div class="form-group"><br>
@@ -61,13 +60,52 @@
 <script>
     export default {
         name: "punto-encuentro",
-        props: ['readonly', 'puntos-encuentro', 'coordinadores'],
+        props: ['readonly', 'puntos-encuentro'],
         data: function() {
             return {
                 dataReadonly: this.readonly,
                 dataPuntosEncuentro: this.puntosEncuentro,
-                dataCoordinadores: JSON.parse(this.coordinadores)
+                coordinador: [],
+                dataCoordinadores: []
             }
+        },
+        methods: {
+            buscarCoordinadores: function(text, fLoading) {
+                let url = '/ajax/coordinadores';
+                fLoading(true);
+                this.axiosGet(url, getResultados, {'coordinador': text})
+            },
+            getResultados: function (data, self) {
+                self.dataCoordinadores = data;
+            },
+            axiosGet(url, fCallback, params = []) {
+                axios.get(url, params)
+                    .then(response => {
+                        fCallback(response.data, this)
+                    })
+                    .catch((error) => {
+                        // Error
+                        console.error('Error en: ' + url);
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.error(error.response.data);
+                            console.error(error.response.status);
+                            console.error(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.error(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.error('Error', error.message);
+                        }
+                        console.error(error.config);
+                    });
+
+            },
+
         }
     }
 </script>

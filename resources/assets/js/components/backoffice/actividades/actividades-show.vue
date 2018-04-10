@@ -224,7 +224,6 @@
         <!-- /.box-header -->
         <div class="box-body">
             <punto-encuentro
-                    :coordinadores="this.dataCoordinadores"
                     :readonly="readonly"
                     :puntos-encuentro="dataActividad.puntos_encuentro"
             ></punto-encuentro>

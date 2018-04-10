@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ajax;
 
+use App\Search\CoordinadoresSearch;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -154,7 +155,8 @@ class UsuarioController extends Controller
     }
     public function getCoordinadores(Request $request)
     {
-        $coordinadores = CoordinadorResource::collection(Persona::take(10)->get());
+        $result = CoordinadoresSearch::apply($request);
+        $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;
     }
 }
