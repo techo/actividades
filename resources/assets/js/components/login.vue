@@ -75,6 +75,7 @@
                     class="dropdown-menu"
                     aria-labelledby="btnUser"
                 >
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
                 </div>
             </div>
@@ -133,7 +134,9 @@
             registro_google: function() {
               window.location.href = '/auth/google';
             },
-
+            perfil: function() {
+              window.location.href = '/perfil';
+            },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(
