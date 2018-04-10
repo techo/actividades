@@ -23,6 +23,7 @@
                                     color="primary"
                                     id="estadoActividad"
                                     name="estadoActividad"
+                                    :disabled="readonly"
                             >
                         </v-switch>
                         </p>
@@ -121,6 +122,7 @@
                                id="fechaFin"
                                name="fechaFin"
                                :value="dataActividad.fechaFin"
+                               disabled="disabled"
                         >
                         <datepicker v-else
                                     placeholder="Seleccione una fecha"
@@ -182,7 +184,7 @@
                     <div class="form-group">
                         <label for="provincia">Provincia</label>
                         <v-select
-                                :options="provincias"
+                                :options="dataProvincias"
                                 label="provincia"
                                 placeholder="Seleccione"
                                 name="provincia"
@@ -198,7 +200,7 @@
                     <div class="form-group">
                         <label for="localidad">Localidad</label>
                         <v-select
-                                :options="localidades"
+                                :options="dataLocalidades"
                                 label="localidad"
                                 placeholder="Seleccione"
                                 name="localidad"
@@ -221,29 +223,11 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-
-            <div class="row" v-for="punto in dataActividad.puntos_encuentro">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <p>{{ punto.punto }}</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <p>{{ punto.horario }}</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno }}</p>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="form-group"><br>
-                        <p style="color: red">Borrar</p>
-                    </div>
-                </div>
-            </div>
+            <punto-encuentro
+                    :coordinadores="this.dataCoordinadores"
+                    :readonly="readonly"
+                    :puntos-encuentro="dataActividad.puntos_encuentro"
+            ></punto-encuentro>
         </div>
         <!-- /.box-body -->
     </div>
@@ -256,16 +240,16 @@
     <div class="box-body">
         <div class="row">
             <div class="col-md-4">
-                <label for="estadoInscripcion">Estado De La Inscripción</label>
-                <select id="estadoInscripcion"
-                        name="estadoInscripcion"
-                        class="form-control"
-                        :disabled="readonly"
-                        v-model="dataActividad.idProvincia"
-                >
-                    <option disabled value="">Seleccione</option>
-                    <option v-for="prov in provincias" v-bind:value="prov.id">{{ prov.provincia }}</option>
-                </select>
+                <!--<label for="estadoInscripcion">Estado De La Inscripción</label>-->
+                <!--<select id="estadoInscripcion"-->
+                        <!--name="estadoInscripcion"-->
+                        <!--class="form-control"-->
+                        <!--:disabled="readonly"-->
+                        <!--v-model="dataActividad.idProvincia"-->
+                <!--&gt;-->
+                    <!--<option disabled value="">Seleccione</option>-->
+                    <!--<option v-for="prov in dataProvincias" v-bind:value="prov.id">{{ prov.provincia }}</option>-->
+                <!--</select>-->
             </div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -341,6 +325,7 @@
                                         type-bold="true"
                                         text-enabled="Privadas"
                                         text-disabled="Públicas"
+                                        :disabled="readonly"
                                 >
                                 </v-switch>
                             </div>
@@ -455,19 +440,21 @@
 
 <script>
     import axios from 'axios';
+    import PuntoEncuentro from './punto-encuentro'
 
     export default {
         name: "actividades-show",
-        props: ['actividad', 'paises', 'edicion'],
+        props: ['actividad', 'coordinadores', 'paises', 'provincias', 'localidades', 'edicion'],
+        components: { 'punto-encuentro': PuntoEncuentro},
         data() {
             return {
                 dataActividad: {},
                 readonly: !this.edicion,
                 dataPaises: [],
                 paisSeleccionado: {},
-                provincias: [],
+                dataProvincias: [],
                 provinciaSeleccionada: {},
-                localidades: [],
+                dataLocalidades: [],
                 localidadSeleccionada: {},
                 categorias: [],
                 categoriaSeleccionada: {},
@@ -476,12 +463,15 @@
                 unidadesOrganizacionales: [],
                 unidadSeleccionada: {},
                 estadoConstruccion: false,
-                inscripcionInterna: false
+                inscripcionInterna: false,
+                dataCoordinadores: this.coordinadores
             }
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
             this.dataPaises = JSON.parse(this.paises);
+            this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
+            this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
             this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
             this.tipoSeleccionado = this.dataActividad.tipo;
             this.unidadSeleccionada = this.dataActividad.unidad_organizacional;
@@ -522,18 +512,12 @@
             }
         },
         methods: {
-            // getPaises() {
-            //     this.axiosGet('/ajax/paises', function (data, self) {
-            //         self.paises = data;
-            //         // self.paisSeleccionado = self.dataActividad.idPais
-            //     });
-            // },
             getProvincias() {
                 if (this.dataActividad.pais !== this.paisSeleccionado) {
                     this.dataActividad.pais = this.paisSeleccionado;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
-                            self.provincias = data;
+                            self.dataProvincias = data;
                             self.provinciaSeleccionada = '';
                             self.localidadSeleccionada = ''
                         });
@@ -544,7 +528,7 @@
                     this.dataActividad.provincia = this.provinciaSeleccionada;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + this.provinciaSeleccionada.id + '/localidades',
                         function (data, self) {
-                            self.localidades = data;
+                            self.dataLocalidades = data;
                             self.localidadSeleccionada = '';
                         });
                 }
@@ -607,14 +591,6 @@
             cancelar(){
                 this.readonly = true;
             },
-            findByKey(arreglo, clave, valor) {
-                for (let i = 0; i < arreglo.length; i++) {
-                    if (arreglo[i].hasOwnProperty(clave) && arreglo[i].clave === valor) {
-                        return i;
-                    }
-                }
-                return false;
-            }
         }
     }
 </script>

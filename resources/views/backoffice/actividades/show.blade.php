@@ -10,7 +10,10 @@
 @section('content')
     <actividades-show
             actividad="{{ $actividad }}"
+            coordinadores="{{ $coordinadores }}"
             paises="{{ $paises }}"
+            provincias="{{  $provincias }}"
+            localidades="{{ $localidades }}"
             edicion="{{ $edicion }}"
     ></actividades-show>
 @endsection

@@ -12,6 +12,8 @@ use App\Mail\VerificarMail;
 use App\Persona;
 use App\Actividad;
 use App\VerificacionMailPersona;
+use App\Http\Resources\CoordinadorResource;
+
 use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Http\Resources\ActividadResource;
@@ -70,7 +72,7 @@ class UsuarioController extends Controller
 
   public function update(Request $request) {
       $this->validar($request,'update');
-      $persona = Auth::user();        
+      $persona = Auth::user();
       $this->cargar_cambios($request, $persona);
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
@@ -120,19 +122,19 @@ class UsuarioController extends Controller
           $request->session()->regenerate();
       }
       return ['success' => $success, 'login_callback' => $url];
-  } 
+  }
 
   public function perfil(Request $request)
   {
     $persona = Auth::user();
     $usuario = $persona->perfil();
     return $usuario;
-  }    
+  }
 
 
     public function inscripciones(Request $request) {
         $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->get();
-        $resourceCollection = []; 
+        $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
                 $actividad = new ActividadResource($inscripcion);
@@ -150,6 +152,10 @@ class UsuarioController extends Controller
         }
         return ['success' => true];
     }
+    public function getCoordinadores(Request $request)
+    {
+        $coordinadores = CoordinadorResource::collection(Persona::take(10)->get());
+        return $coordinadores;
+    }
 }
-
 

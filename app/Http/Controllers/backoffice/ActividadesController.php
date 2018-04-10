@@ -4,9 +4,9 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Pais;
+use App\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Yajra\DataTables\Facades\DataTables;
 
 class ActividadesController extends Controller
 {
@@ -57,6 +57,7 @@ class ActividadesController extends Controller
     {
         $edicion = false;
         $paises = Pais::all();
+        $coordinadores = Persona::take(10)->get();
         $actividad = Actividad::with(
             'tipo.categoria',
             'unidadOrganizacional',
@@ -68,7 +69,25 @@ class ActividadesController extends Controller
         )
             ->where('idActividad', $id)
             ->first();
-        return view('backoffice.actividades.show', compact('actividad', 'paises', 'edicion'));
+        try {
+            $provincias = $actividad->pais->provincias;
+            $localidades = $actividad->provincia->localidades;
+
+        } catch (\Exception $e) {
+            $provincias = null;
+            $localidades = null;
+        }
+        return view(
+            'backoffice.actividades.show',
+            compact(
+                'actividad',
+                'paises',
+                'coordinadores',
+                'provincias',
+                'localidades',
+                'edicion'
+            )
+        );
     }
 
     /**
