@@ -3,171 +3,245 @@
     <div>
       <div class="row">
         <div class="col-md-4">
-          <h2>Datos de perfil.</h2>
+          <h2>Bienvenido, {{usernombre}}</h2>
         </div>
+      </div>
+      <div class="alert alert-success" v-show='guardo'>
+        <strong>Los cambios fueron guardados con éxito.</strong>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <h4>Estos son tus datos de usuario de Techo</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+          Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña, datos personales, etc.
         </div>
       </div>
       <hr>
       <div class="row">
-        <div class="col-md-12"><label>EMAIL*</label></div>
+        <div class="col-md-5">
+          <h3>Datos personales</h3>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <input type="text" class="form-control" name="email" id="email" v-model="user.email">
-          <small class="form-text text-danger">{{validacion.email.texto}}&nbsp;<br></small>
+          <div class="row">
+            <div class="col-md-12">
+              <label>NOMBRE*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="nombre" id="nombre" v-model="user.nombre">
+              <small class="form-text text-danger">{{validacion.nombre.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.nombre.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
+
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.email.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.email.invalido}"><i class="fas fa-times text-danger"></i></span>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-12">
+              <label>APELLIDO*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="apellido" id="apellido" v-model="user.apellido">
+              <small class="form-text text-danger">{{validacion.apellido.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.apellido.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-12"><label>NOMBRE*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <input type="text" class="form-control" name="nombre" id="nombre" v-model="user.nombre">
-          <small class="form-text text-danger">{{validacion.nombre.texto}}&nbsp;<br></small>
+          <div class="row">
+            <div class="col-md-12">
+              <label>NACIMIENTO*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <datepicker placeholder="Select Date" v-model="user.nacimiento" id="nacimiento"  language="es"></datepicker>
+              <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.nacimiento.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.nombre.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.nombre.invalido}"><i class="fas fa-times text-danger"></i></span>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-12">
+              <label>SEXO*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <input type="radio" class="form-control" id="fem" value="F" v-model="user.sexo">
+            </div>
+            <div class="col-md-3">
+              <label for="fem">Femenino</label>
+            </div>
+            <div class="col-md-2">
+              <input type="radio" class="form-control" id="mas" value="M" v-model="user.sexo">
+            </div>
+            <div class="col-md-3">
+              <label for="mas">Masculino</label>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.sexo.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+            <div class="row">
+              <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
+            </div>    
+
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>APELLIDO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <input type="text" class="form-control" name="apellido" id="apellido" v-model="user.apellido">
-          <small class="form-text text-danger">{{validacion.apellido.texto}}&nbsp;<br></small>
+          <div class="row">
+            <div class="col-md-12">
+              <label>NRO. DE DNI / PASAPORTE*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+              <small class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.apellido.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.apellido.invalido}"><i class="fas fa-times text-danger"></i></span>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-12">
+              <label>PAIS*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <select id="pais" v-model="user.pais" class="form-control">
+                <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
+              </select>
+              <small class="form-text text-danger">{{validacion.pais.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.pais.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>NACIMIENTO*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <datepicker placeholder="Select Date" v-model="user.nacimiento" id="nacimiento"  language="es"></datepicker>
-          <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
+          <div class="row">
+            <div class="col-md-12">
+              <label>PROVINCIA*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <select id="provincia" v-model="user.provincia" class="form-control">
+                <option v-for="provincia in provincias" v-bind:value="provincia.id">{{provincia.provincia}}</option>
+              </select>
+              <small class="form-text text-danger">{{validacion.provincia.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.provincia.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.nacimiento.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.nacimiento.invalido}"><i class="fas fa-times text-danger"></i></span>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-12">
+              <label>LOCALIDAD*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <select id="localidad" v-model="user.localidad" class="form-control">
+                <option v-for="localidad in localidades" v-bind:value="localidad.id">{{localidad.localidad}}</option>
+              </select>
+              <small class="form-text text-danger">{{validacion.localidad.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.localidad.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>SEXO*</label></div>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="fem" value="F" v-model="user.sexo">
-          <label for="fem">Femenino</label>
-        </div>
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="mas" value="M" v-model="user.sexo">
-          <label for="mas">Masculino</label>
-        </div>
-        <div class="col-md-3">
-          <span v-bind:class="{'d-none':!validacion.sexo.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.sexo.invalido}"><i class="fas fa-times text-danger"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
-      </div>    
-      <div class="row">
-        <div class="col-md-12"><label>NRO. DE DNI / PASAPORTE*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
-          <small class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
+          <div class="row">
+            <div class="col-md-12">
+              <label>TELEFONO*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono">
+              <small class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.dni.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i class="fas fa-times text-danger"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>PAIS*</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <select id="pais" v-model="user.pais" class="form-control">
-            <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
-          </select>
-          <small class="form-text text-danger">{{validacion.pais.texto}}&nbsp;<br></small>
+          <h3>Contraseña</h3>
         </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.pais.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.pais.invalido}"><i class="fas fa-times text-danger"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>PROVINCIA</label></div>
       </div>
       <div class="row">
         <div class="col-md-5">
-          <select id="pais" v-model="user.provincia" class="form-control">
-            <option v-for="provincia in provincias" v-bind:value="provincia.id">{{provincia.provincia}}</option>
-          </select>
-          <small class="form-text text-danger">{{validacion.provincia.texto}}&nbsp;<br></small>
-        </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.provincia.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.provincia.invalido}"><i class="fas fa-times text-danger"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>LOCALIDAD</label></div>
-      </div>
-      <div class="row">
-        <div class="col-md-5">
-          <select id="pais" v-model="user.localidad" class="form-control">
-            <option v-for="localidad in localidades" v-bind:value="localidad.id">{{localidad.localidad}}</option>
-          </select>
-          <small class="form-text text-danger">{{validacion.localidad.texto}}&nbsp;<br></small>
-        </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.localidad.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.localidad.invalido}"><i class="fas fa-times text-danger"></i></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12"><label>TELEFONO*</label></div>
-      </div>
-      <div class="row">
-        <div class="col-md-5">
-          <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono">
-          <small class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
-        </div>
-        <div class="col-md-7">
-          <span v-bind:class="{'d-none':!validacion.telefono.valido}"><i class="fas fa-check text-success"></i></span>
-          <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i class="fas fa-times text-danger"></i></span>
+          <div class="row">
+            <div class="col-md-12">
+              <label>CONTRASEÑA ACTUAL*</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="password" class="form-control" name="pass_actual" id="pass_actual" v-model="user.pass_actual">
+              <small class="form-text text-danger">{{validacion.pass_actual.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.pass_actual.valido}"><i class="fas fa-check text-success"></i></span>
+              <span v-bind:class="{'d-none':!validacion.pass_actual.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
+              <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.pass.valido}"><i class="fas fa-check text-success"></i></span>
+              <span v-bind:class="{'d-none':!validacion.pass.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <input type="password" class="form-control" name="pass_confirmacion" id="pass_confirmacion" v-model="user.pass_confirmacion">
+              <small class="form-text text-danger">{{validacion.pass_confirmacion.texto}}&nbsp;<br></small>
+            </div>
+            <div class="col-md-2">
+              <span v-bind:class="{'d-none':!validacion.pass_confirmacion.valido}"><i class="fas fa-check text-success"></i></span>
+              <span v-bind:class="{'d-none':!validacion.pass_confirmacion.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <hr>
+
       <div class="row">
-        <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i class="fas fa-long-arrow-alt-left "></i> Volver</a></span></div>
-        <div class="col-md-3"><a class="btn btn-primary" @click="guardar()">GUARDAR</a></div>
+        <div class="col-md-5 text-primary"><span v-show='volver'><a href='#' @click="cancelar()"></i> Cancelar</a></span></div>
+        <div class="col-md-5"><a class="btn btn-primary" @click="guardar()">GUARDAR</a></div>
       </div>
       <hr>    
     </div>
@@ -181,6 +255,7 @@
       name: 'perfil',
       data: function(){
         var data = {
+          guardo: false,
           user: JSON.parse(this.usuario),
           validacion: {},
           paso_actual: 'email',
@@ -193,7 +268,8 @@
             text: ''
           }
         }
-        var campos = ['id','email','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id'];
+        data.usernombre = data.user.nombre
+        var campos = ['id','email','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id','pass_actual','pass','pass_confirmacion'];
         for(var i in campos) {
           var campo = campos[i]
           if(!data.user[campo]) data.user[campo] = ''
@@ -210,11 +286,13 @@
       	if(this.linkear) {
       	  data.paso_actual = 'linkear'
       	}
+        data.pass = '';
         return data
       },
       props: ['usuario'],
       mounted: function(){
         this.traer_paises()
+        this.traer_provincias()
       },
       watch: {
         'user.email': function() { this.validar_data('email') },
@@ -224,10 +302,18 @@
         'user.sexo': function() { this.validar_data('sexo') },
         'user.dni': function() { this.validar_data('dni') },
         'user.telefono': function() { this.validar_data('telefono') },
+        'user.pass': function() { this.validar_data('pass') },
+        'user.pass_confirmacion': function() { this.validar_data('pass_confirmacion') },
         'user.pais': function() { this.traer_provincias() },
         'user.provincia': function() { this.traer_localidades() }
       },
       methods: {
+        cancelar: function () {
+          axios.get('/ajax/usuario/perfil').then(response => {
+            this.user = response.data
+            this.limpia_validacion_pass(this.user)
+          })
+        },
         registro_facebook: function() {
           window.location.href = 'https://actividades.techo.org/auth/facebook';
         },
@@ -235,10 +321,15 @@
           window.location.href = 'https://actividades.techo.org/auth/google';
         },
         guardar: function () {
-            	axios.put('/ajax/usuario',this.user).then(response => {
-            }).catch((error) => {
-				this.validar_data()
-            });
+          this.guardo = false;
+          var data = this.user
+          this.limpia_validacion_pass(data)
+         	axios.put('/ajax/usuario',this.user).then(response => {
+            this.guardo = true;
+            this.$parent.$refs.login.user.nombres = this.user.nombre
+          }).catch((error) => {
+    				this.validar_data()
+          });
         },
         confirma_linkear: function() {
           var media = '';
@@ -262,17 +353,38 @@
         paso: function (paso) {
           return paso == this.paso_actual 
         },
+        limpia_validacion_pass: function(data) {
+          if(!this.user.pass && !this.user.pass_actual && !this.user.pass_confirmacion) {
+            delete data.pass;
+            delete data.pass_confirmacion;
+            delete data.pass_actual;
+            this.validacion.pass.texto = ''
+            this.validacion.pass.valido = false
+            this.validacion.pass.invalido = false
+            this.validacion.pass_actual.texto = ''
+            this.validacion.pass_actual.valido = false
+            this.validacion.pass_actual.invalido = false
+            this.validacion.pass_confirmacion.texto = ''
+            this.validacion.pass_confirmacion.valido = false
+            this.validacion.pass_confirmacion.invalido = false
+          }
+        },
         validar_data: _.debounce(function(prop) {
+          this.guardo = false;
           var data = {}
           if(prop) {
             data[prop] = this.user[prop]
             data.id = this.user.id
             this.validacion[prop].valido = false
             this.validacion[prop].invalido = false
+            if(prop == 'pass_confirmacion') {
+              data['pass'] = this.user.pass
+            }
           } else {
             data = this.user
+            this.limpia_validacion_pass(data)
           }
-          axios.get('/ajax/usuario/validar', {params: data})
+          axios.get('/ajax/usuario/validar/update', {params: data})
           .then(response => {
             var params = response.data.params
             for(var i in params) {

@@ -25,7 +25,8 @@ Route::prefix('ajax')->group(function () {
 			}
 			return '';
 		});
-        Route::get('validar', 'ajax\UsuarioController@validar');
+        Route::get('validar/{verbo}', 'ajax\UsuarioController@validar');
+        Route::get('perfil', 'ajax\UsuarioController@perfil');
         Route::post('', 'ajax\UsuarioController@create');
         Route::put('', 'ajax\UsuarioController@update');
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');

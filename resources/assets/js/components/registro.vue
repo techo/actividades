@@ -378,7 +378,7 @@
           } else {
             data = this.user
           }
-          axios.get('/ajax/usuario/validar', {params: data})
+          axios.get('/ajax/usuario/validar/create', {params: data})
           .then(response => {
             var params = response.data.params
             for(var i in params) {
