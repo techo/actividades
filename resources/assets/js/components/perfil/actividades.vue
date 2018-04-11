@@ -8,7 +8,6 @@
       <div class="alert alert-warning" v-show='borro'>
         <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
       </div>
-
         <div class="row">
             <div class="card-deck text-center">
                 <tarjeta
@@ -33,15 +32,6 @@
         data () {
             return {
                 actividades: [],
-                borro: false,
-                loading: false,
-                next_page: '',
-                bottom: false,
-                url: '/ajax/actividades',
-                ultimaTarjeta: 0,
-                totalTarjetas: 0,
-                vacio: false,
-                filtros: {}
             }
         },
         components: {tarjeta: Tarjeta},

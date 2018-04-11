@@ -17,7 +17,7 @@
       <hr>
       <div class="row">
         <div class="col-md-5">
-          <h3>Datos personales</h3>
+          <h5>Datos personales</h5>
         </div>
       </div>
       <div class="row">
@@ -195,7 +195,7 @@
       </div>
       <div class="row">
         <div class="col-md-5">
-          <h3>Contraseña</h3>
+          <h5>Contraseña</h5>
         </div>
       </div>
       <div class="row">
@@ -216,6 +216,11 @@
             </div>
           </div>
           <div class="row">
+            <div class="col-md-12">
+              <label>NUEVA CONTRASEÑA*</label>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-10">
               <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
               <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
@@ -223,6 +228,11 @@
             <div class="col-md-2">
               <span v-bind:class="{'d-none':!validacion.pass.valido}"><i class="fas fa-check text-success"></i></span>
               <span v-bind:class="{'d-none':!validacion.pass.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label>CONFIRMAR CONTRASEÑA*</label>
             </div>
           </div>
           <div class="row">
