@@ -474,7 +474,7 @@
         },
         methods: {
             getProvincias() {
-                if (this.paisSeleccionado.id !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
+                if (this.paisSeleccionado !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
                     this.dataActividad.pais = this.paisSeleccionado;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
