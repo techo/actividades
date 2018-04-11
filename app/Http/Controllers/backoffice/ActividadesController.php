@@ -4,7 +4,10 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Pais;
+<<<<<<< HEAD
 use App\Persona;
+=======
+>>>>>>> a0cbcaac34a41ed3786b7f4797fdb93c3b024807
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -57,7 +60,10 @@ class ActividadesController extends Controller
     {
         $edicion = false;
         $paises = Pais::all();
+<<<<<<< HEAD
         $coordinadores = Persona::take(10)->get();
+=======
+>>>>>>> a0cbcaac34a41ed3786b7f4797fdb93c3b024807
         $actividad = Actividad::with(
             'tipo.categoria',
             'unidadOrganizacional',
@@ -69,6 +75,7 @@ class ActividadesController extends Controller
         )
             ->where('idActividad', $id)
             ->first();
+<<<<<<< HEAD
         try {
             $provincias = $actividad->pais->provincias;
             $localidades = $actividad->provincia->localidades;
@@ -88,6 +95,9 @@ class ActividadesController extends Controller
                 'edicion'
             )
         );
+=======
+        return view('backoffice.actividades.show', compact('actividad', 'paises', 'edicion'));
+>>>>>>> a0cbcaac34a41ed3786b7f4797fdb93c3b024807
     }
 
     /**
