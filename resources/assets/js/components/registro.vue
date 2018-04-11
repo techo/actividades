@@ -10,20 +10,20 @@
         <strong>{{message.text}}</strong>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <h2>Registrate como voluntario.</h2>
         </div>
+        <div class="col-md-6">
+          <label>PASO 1/3</label>   
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h5>Crea tu cuenta de voluntario de Techo</h5>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-8">
-          <strong>PASO 1/3</strong>   
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Crea tu cuenta de voluntario de Techo</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
           quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
@@ -80,11 +80,11 @@
         <strong>{{message.text}}</strong>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <h2>¡Ya casi terminamos!</h2>
         </div>
-        <div class="col-md-8">
-          <strong>PASO 2/3</strong>   
+        <div class="col-md-6">
+          <label>PASO 2/3</label>   
         </div>
       </div>
       <div class="row">
@@ -226,17 +226,24 @@
 
     </div>
     <div v-show="paso('gracias')">
-        <div class="row">
-            <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > <strong>Finalizar</strong>
         </div>
       </div>
-        <div class="row">
-            <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-6">
           <h2>Bienvenid@ a Techo</h2>
         </div>
-            <div class="col-md-8">
-          <strong>PASO 3/3</strong>   
+        <div class="col-md-6">
+          <label>PASO 3/3</label>   
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
         </div>
       </div>
       <hr>    
