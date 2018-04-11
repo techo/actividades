@@ -142,7 +142,7 @@
         data: function () {
             return {
                 dataReadonly: this.readonly,
-                dataPuntosEncuentro: this.puntosEncuentro,
+                dataPuntosEncuentro: this.$parent.dataActividad.puntos_encuentro,
                 coordinador: '',
                 punto: '',
                 horario: '',
@@ -188,9 +188,9 @@
                 });
             }, 350),
             incluirPunto: function (e) {
-                e.preventDefault();
+                // e.preventDefault();
                 this.validate();
-                if (this.validationErrors.length === 0) {
+                if (this.validationErrors.length === 0) { 
                     this.dataPuntosEncuentro.push({
                         'responsable': {
                             'dni': this.coordinador.dni,
@@ -198,8 +198,12 @@
                             'nombres': this.coordinador.nombre
                         },
                         'horario': this.horario,
-                        'punto': this.punto
+                        'punto': this.punto,
+                        'idPais': this.paisSeleccionado.id,
+                        'idProvincia': this.provinciaSeleccionada.id,
+                        'idLocalidad': this.localidadSeleccionada.id
                     });
+
 
                 }
             },
