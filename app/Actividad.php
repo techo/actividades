@@ -52,6 +52,7 @@ class Actividad extends Model
 
     public function localidad()
     {
-        return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
+        return $this->belongsTo(Localidad::class, 'idLocalidad', 'id')
+                    ->withDefault(['localidad' => 'No definida']);
     }
 }
