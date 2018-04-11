@@ -108,7 +108,37 @@ class ActividadesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Hacer validación de datos
+
+        $actividad = Actividad::find($id);
+
+        foreach ($request->except('idActividad',
+                                        'casasPlanificadas',
+                                        'casasConstruidas',
+                                        'comentarios',
+                                        'tipoConstruccion',
+                                        'idListaCTCT')
+         as $field => $value){
+            if (!is_array($value) && isset($actividad->{$field})){
+                $actividad->{$field} = $value;
+            }
+        }
+
+        $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
+        $actividad->idPais = $request['pais']['id'];
+        $actividad->idProvincia = $request['provincia']['id'];
+        $actividad->idLocalidad = $request['localidad']['id'];
+        $actividad->idTipo = $request['tipo']['idTipo'];
+        $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
+        $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
+
+        $actividad->save();
+
+        //Grabar/Sincronizar puntos de encuentro
+
+        return response('Actividad guardada correctamente.', 200);
+
+
     }
 
     /**
