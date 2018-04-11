@@ -94,21 +94,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
-                        <input v-if="readonly"
-                               type="text"
-                               class="form-control"
-                               id="fechaInicio"
-                               name="fechaInicio"
-                               disabled="disabled"
-                               :value="dataActividad.fechaInicio"
-                        >
-
-                        <datepicker v-else
-                                    placeholder="Seleccione una fecha"
-                                    v-model="dataActividad.fechaInicio"
-                                    id="fechaInicio"
-                                    name="fechaInicio"
-                                    language="es"
+                        <datepicker
+                                placeholder="Seleccione una fecha"
+                                v-model="dataActividad.fechaInicio"
+                                id="fechaInicio"
+                                name="fechaInicio"
+                                language="es"
+                                :disabled-picker="readonly"
                         ></datepicker>
                     </div>
                 </div>
@@ -116,20 +108,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaFin">Fecha de Fin De La Actividad</label>
-                        <input v-if="readonly"
-                               type="text"
-                               class="form-control"
-                               id="fechaFin"
-                               name="fechaFin"
-                               :value="dataActividad.fechaFin"
-                               disabled="disabled"
-                        >
-                        <datepicker v-else
-                                    placeholder="Seleccione una fecha"
-                                    v-model="dataActividad.fechaFin"
-                                    id="fechaFin"
-                                    name="fechaFin"
-                                    language="es"
+                        <datepicker
+                                placeholder="Seleccione una fecha"
+                                v-model="dataActividad.fechaFin"
+                                id="fechaFin"
+                                name="fechaFin"
+                                language="es"
+                                :disabled-picker="readonly"
                         ></datepicker>
                     </div>
                 </div>
@@ -226,6 +211,7 @@
             <punto-encuentro
                     :readonly="readonly"
                     :puntos-encuentro="dataActividad.puntos_encuentro"
+                    :paises="dataPaises"
             ></punto-encuentro>
         </div>
         <!-- /.box-body -->
@@ -239,34 +225,17 @@
     <div class="box-body">
         <div class="row">
             <div class="col-md-4">
-                <!--<label for="estadoInscripcion">Estado De La Inscripción</label>-->
-                <!--<select id="estadoInscripcion"-->
-                        <!--name="estadoInscripcion"-->
-                        <!--class="form-control"-->
-                        <!--:disabled="readonly"-->
-                        <!--v-model="dataActividad.idProvincia"-->
-                <!--&gt;-->
-                    <!--<option disabled value="">Seleccione</option>-->
-                    <!--<option v-for="prov in dataProvincias" v-bind:value="prov.id">{{ prov.provincia }}</option>-->
-                <!--</select>-->
             </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                        <input v-if="readonly"
-                               type="datetime-local"
-                               class="form-control"
-                               id="fechaInicioInscripciones"
-                               name="fechaInicioInscripciones"
-                               disabled="disabled"
-                               v-model="dataActividad.fechaInicioInscripciones"
-                        >
-                        <datepicker v-else
-                                    placeholder="Seleccione una fecha"
-                                    v-model="dataActividad.fechaInicioInscripciones"
-                                    id="fechaInicioInscripciones"
-                                    name="fechaInicioInscripciones"
-                                    language="es"
+                        <datepicker
+                                placeholder="Seleccione una fecha"
+                                v-model="dataActividad.fechaInicioInscripciones"
+                                id="fechaInicioInscripciones"
+                                name="fechaInicioInscripciones"
+                                language="es"
+                                :disabled-picker="readonly"
                         ></datepicker>
                     </div>
                 </div>
@@ -274,20 +243,13 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
-                        <input v-if="readonly"
-                               type="datetime-local"
-                               class="form-control"
-                               id="fechaFinInscripciones"
-                               name="fechaFinInscripciones"
-                               :disabled="readonly"
-                               v-model="dataActividad.fechaFinInscripciones"
-                        >
-                        <datepicker v-else
-                                    placeholder="Seleccione una fecha"
-                                    v-model="dataActividad.fechaFinInscripciones"
-                                    id="fechaFinInscripciones"
-                                    name="fechaFinInscripciones"
-                                    language="es"
+                        <datepicker
+                                placeholder="Seleccione una fecha"
+                                v-model="dataActividad.fechaFinInscripciones"
+                                id="fechaFinInscripciones"
+                                name="fechaFinInscripciones"
+                                language="es"
+                                :disabled-picker="readonly"
                         ></datepicker>
                     </div>
                 </div>
@@ -512,7 +474,7 @@
         },
         methods: {
             getProvincias() {
-                if (this.dataActividad.pais !== this.paisSeleccionado) {
+                if (this.paisSeleccionado.id !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
                     this.dataActividad.pais = this.paisSeleccionado;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
@@ -556,7 +518,6 @@
                         self.unidadesOrganizacionales = data;
                     });
             },
-
             axiosGet(url, fCallback, params = []) {
                 axios.get(url, params)
                     .then(response => {
@@ -590,6 +551,7 @@
             cancelar(){
                 this.readonly = true;
             },
+
         }
     }
 </script>

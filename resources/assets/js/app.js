@@ -3,9 +3,9 @@ import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import ActividadesShow from './components/backoffice/actividades/actividades-show'
 import CrudFooter from './components/backoffice/crudFooter'
-import Datepicker from 'vuejs-datepicker';
-import vSelect2 from 'vue-select';
-import vSwitch from 'vue-switches';
+import Datepicker from 'vuejs-datepicker'; //https://github.com/charliekassel/vuejs-datepicker
+import vSelect2 from 'vue-select';  // https://sagalbot.github.io/vue-select/docs/
+import vSwitch from 'vue-switches'; // https://github.com/drewjbartlett/vue-switches
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('crud-footer', CrudFooter);

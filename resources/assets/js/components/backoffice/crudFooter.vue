@@ -30,6 +30,11 @@
             cancelar: function () {
                 Event.$emit('cancelar');
                 this.readonly = true;
+            },
+
+            guardar: function () {
+                Event.$emit('guardar');
+                this.readonly = true;
             }
         }
     }
