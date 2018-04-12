@@ -38,6 +38,7 @@ class UsuarioController extends Controller
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
+        if($request->has('sexo')) $rules['sexo'] = 'required';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
@@ -149,7 +150,7 @@ class UsuarioController extends Controller
     public function desinscribir(Request $request, $idActividad) {
         $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
         foreach ($inscripciones as $inscripcion) {
-          $inscripcion->delete();
+          //$inscripcion->delete();
         }
         return ['success' => true];
     }

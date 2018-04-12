@@ -127,16 +127,18 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>SEXO*</label></div>
+        <div class="col-md-12"><label>GENERO*</label></div>
       </div>
       <div class="row">
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="fem" value="F" v-model="user.sexo">
-          <label for="fem">Femenino</label>
-        </div>
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="mas" value="M" v-model="user.sexo">
-          <label for="mas">Masculino</label>
+        <div class="col-md-6">
+              <b-form-group>
+                <b-form-radio-group id="radios2" v-model="user.sexo">
+                  <b-form-radio value="F">Femenino</b-form-radio>
+                  <b-form-radio value="M">Masculino</b-form-radio>
+                  <b-form-radio value="O">Otro</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+          <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
         </div>
         <div class="col-md-3">
           <span v-bind:class="{'d-none':!validacion.sexo.valido}"><i class="fas fa-check text-success"></i></span>
@@ -144,7 +146,6 @@
         </div>
       </div>
       <div class="row">
-        <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
       </div>    
       <div class="row">
         <div class="col-md-12"><label>NRO. DE DNI / PASAPORTE*</label></div>
