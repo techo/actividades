@@ -109,6 +109,17 @@ class ActividadesController extends Controller
     public function update(Request $request, $id)
     {
         // Hacer validación de datos
+        $request->validate([
+            'pais.id' => 'required',
+            'provincia.id' => 'required',
+            'localidad.id' => 'required',
+            'unidad_organizacional.idUnidadOrganizacional' => 'required',
+            'modificado_por.idPersona' => 'required',
+            'tipo.idTipo' => 'required',
+            'nombreActividad' => 'required',
+            'descripcion' => 'required',
+            'descripcion' => 'required',
+        ]);
 
         $actividad = Actividad::find($id);
 

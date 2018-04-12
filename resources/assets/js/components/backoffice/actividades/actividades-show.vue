@@ -552,6 +552,7 @@
 
             },
             axiosPost(url, fCallback, params = []) {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(url, params)
                     .then(response => {
                         fCallback(response.data, this)
