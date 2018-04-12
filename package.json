@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "ajv": "^6.4.0",
+        "bootstrap-vue": "^2.0.0-rc.6",
         "minimist": "^1.2.0",
         "vue-axios": "^2.1.1",
         "vue-loader": "^14.2.2",

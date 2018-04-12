@@ -9,14 +9,14 @@
         <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
       </div>
         <div class="row">
-            <div class="card-deck text-center">
+           <!-- <div class="card-deck text-center"> -->
                 <tarjeta
                     v-for="act in actividades"
                     v-bind:actividad="act"
                     v-bind:key="Math.random() + '_' + act.idActividad"
                 >
                 </tarjeta>
-            </div>
+<!--            </div>-->
         </div>
 
     </div>
@@ -32,6 +32,7 @@
         data () {
             return {
                 actividades: [],
+                borro: false
             }
         },
         components: {tarjeta: Tarjeta},
