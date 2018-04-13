@@ -8,15 +8,16 @@
       <div class="alert alert-warning" v-show='borro'>
         <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
       </div>
+      <div class="alert alert-warning" v-show='!actividades.length'>
+        <strong>Todavia no estas inscripto a ninguna actividad.</strong>
+      </div>
         <div class="row">
-           <!-- <div class="card-deck text-center"> -->
-                <tarjeta
-                    v-for="act in actividades"
-                    v-bind:actividad="act"
-                    v-bind:key="Math.random() + '_' + act.idActividad"
-                >
-                </tarjeta>
-<!--            </div>-->
+            <tarjeta
+                v-for="act in actividades"
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+            >
+            </tarjeta>
         </div>
 
     </div>

@@ -1,14 +1,12 @@
 <template>
     <span>
         <div class="row">
-            <div class="card-deck mb-3 text-center">
-                <tarjeta
-                    v-for="act in actividades"
-                    v-bind:actividad="act"
-                    v-bind:key="Math.random() + '_' + act.idActividad"
-                >
-                </tarjeta>
-            </div>
+            <tarjeta
+                v-for="act in actividades"
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+            >
+            </tarjeta>
         </div>
 
         <div v-show="loading" class="loading" style="text-align: center">

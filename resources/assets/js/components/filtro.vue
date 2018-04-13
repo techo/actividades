@@ -13,12 +13,12 @@
             </select>
         </div>
         <div class="col-lg-2">
-            <b-form-group>
-                <b-form-radio-group id="radios2" v-model="dataBusqueda" name="busqueda">
-                    <b-form-radio value="punto">Punto de encuentro</b-form-radio>
-                    <b-form-radio value="lugar">Lugar de actividad</b-form-radio>
-                </b-form-radio-group>
-            </b-form-group>
+            <div class="row">
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+            </div>
+            <div class="row">
+               <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
+            </div>
         </div>
         <div class="col-md-2 dropdown-container">
             <contenedor-check-tipos
