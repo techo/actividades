@@ -18,9 +18,9 @@
             @php($i = 0)
             @while ( ($i <= 3) AND ($categoriaActividad->count() > 0))
                 @php($categoria = $categoriaActividad->shift())
-                    <div class="card">
+                    <div class="card border-light">
                         <img class="card-img-top" src="{{ asset('/img/tarjeta-1.jpg') }}" alt="Card image cap" >
-                        <div class="card-body px-0" style="overflow-x: scroll; ">
+                        <div class="card-body px-0">
                             <h5 class="card-title">{{ $categoria->nombre }}</h5>
                             <p class="card-text">{{ $categoria->descripcion }}</p>
                             <p>

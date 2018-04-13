@@ -12,15 +12,15 @@
 
             <!-- Begin page content -->
             @yield('main_image')
-            <div class="container pt-4 mb-5">
+            <div class="container pt-4 pb-5 mb-5">
                 @if (isset($requiere_auth))
                     <autenticar></autenticar>
                 @endif
                 @yield('main_content')
             </div>        
 
-            </main>
             @yield('footer')
+            </main>
         </div>
         @yield('aditional_html')
         @include('partials.scripts')
