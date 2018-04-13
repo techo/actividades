@@ -383,6 +383,10 @@
             data[prop] = this.user[prop]
             this.validacion[prop].valido = false
             this.validacion[prop].invalido = false
+	    if(prop == "pass") {
+              data.google_id = this.user.google_id
+              data.facebook_id = this.user.facebook_id
+	    }
           } else {
             data = this.user
           }

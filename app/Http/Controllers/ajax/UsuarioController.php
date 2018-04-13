@@ -33,7 +33,7 @@ class UsuarioController extends Controller
         break;
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
-          if($request->has('pass')) $rules['pass'] = 'required|min:8';
+          if($request->has('pass') && !$request->has('google_id') & !$request->has('facebook_id')) $rules['pass'] = 'required|min:8';
         break;
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
@@ -150,7 +150,7 @@ class UsuarioController extends Controller
     public function desinscribir(Request $request, $idActividad) {
         $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
         foreach ($inscripciones as $inscripcion) {
-          //$inscripcion->delete();
+          $inscripcion->delete();
         }
         return ['success' => true];
     }
