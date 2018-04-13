@@ -3,6 +3,12 @@
     <div v-show="guardado" class="callout callout-success">
         <h4>{{ mensajeGuardado }}</h4>
     </div>
+        <div v-show="tieneErrores" class="callout callout-danger">
+            <h4>Errores:</h4>
+            <ul>
+               <li v-for="error in validationErrors">{{ error }}</li>
+            </ul>
+        </div>
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
@@ -102,6 +108,7 @@
                                 id="fechaInicio"
                                 name="fechaInicio"
                                 language="es"
+                                format="yyyy-MM-dd"
                                 :disabled-picker="readonly"
                         ></datepicker>
                     </div>
@@ -268,9 +275,9 @@
                                 rows="4"
                                 class="form-control"
                                 :disabled="readonly"
-                                v-model="dataActividad.descripcion"
+                                v-model="dataActividad.mensajeInscripcion"
                         >
-                            {{ dataActividad.descripcion }}
+                            {{ dataActividad.mensajeInscripcion }}
                         </textarea>
                     </div>
                 </div>
@@ -370,28 +377,28 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="fechaInicioEvaluaciones">Desde</label>
-                    <input
-                            type="datetime-local"
-                            class="form-control"
+                    <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaInicioEvaluaciones"
                             id="fechaInicioEvaluaciones"
                             name="fechaInicioEvaluaciones"
-                            :disabled="readonly"
-                            v-model="dataActividad.fechaInicioEvaluaciones"
-                    >
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="fechaFinEvaluaciones">Hasta</label>
-                    <input
-                            type="datetime-local"
-                            class="form-control"
+                    <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaFinEvaluaciones"
                             id="fechaFinEvaluaciones"
                             name="fechaFinEvaluaciones"
-                            :disabled="readonly"
-                            v-model="dataActividad.fechaFinEvaluaciones"
-                    >
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
                 </div>
             </div>
         </div>
@@ -404,49 +411,45 @@
 
 <script>
     import axios from 'axios';
-    import PuntoEncuentro from './punto-encuentro'
+    import PuntoEncuentro from './punto-encuentro';
+    import _ from 'lodash';
+
 
     export default {
         name: "actividades-show",
         props: ['actividad', 'coordinadores', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: { 'punto-encuentro': PuntoEncuentro},
+        components: {'punto-encuentro': PuntoEncuentro},
         data() {
             return {
-                dataActividad: {},
-                readonly: !this.edicion,
-                dataPaises: [],
-                paisSeleccionado: {},
-                dataProvincias: [],
-                provinciaSeleccionada: {},
-                dataLocalidades: [],
-                localidadSeleccionada: {},
                 categorias: [],
                 categoriaSeleccionada: {},
+                dataActividad: {},
+                dataCoordinadores: this.coordinadores,
+                dataLocalidades: [],
+                dataPaises: [],
+                dataProvincias: [],
+                estadoConstruccion: false,
+                guardado: false,
+                inscripcionInterna: false,
+                localidadSeleccionada: {},
+                mensajeGuardado: "",
+                paisSeleccionado: {},
+                provinciaSeleccionada: {},
+                readonly: !this.edicion,
                 tiposDeActividad: [],
                 tipoSeleccionado: {},
                 unidadesOrganizacionales: [],
                 unidadSeleccionada: {},
-                estadoConstruccion: false,
-                inscripcionInterna: false,
-                dataCoordinadores: this.coordinadores,
-                guardado: false,
-                mensajeGuardado: ""
+                validationErrors: {},
             }
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
+            this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
             this.dataPaises = JSON.parse(this.paises);
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
-            this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
-            this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
-            this.tipoSeleccionado = this.dataActividad.tipo;
-            this.unidadSeleccionada = this.dataActividad.unidad_organizacional;
-            this.localidadSeleccionada = this.dataActividad.localidad;
-            this.provinciaSeleccionada = this.dataActividad.provincia;
-            this.paisSeleccionado = this.dataActividad.pais;
-            this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");
-            this.estadoConstruccion = this.dataActividad.estadoConstruccion;
-            this.inscripcionInterna = this.dataActividad.inscripcionInterna;
+
+            this.inicializar();
             this.getCategorias();
             this.getTiposDeActividad();
             this.getUnidadesOrganizacionales();
@@ -455,11 +458,16 @@
             Event.$on('editar', this.editar);
             Event.$on('cancelar', this.cancelar);
             Event.$on('guardar', this.guardar);
+            Event.$on('borrar-punto', this.borrarPunto);
+            Event.$on('eliminar', this.eliminar);
         },
         computed: {
             esConstruccion: function() {
                 return this.dataActividad.tipo.flujo === 'CONSTRUCCION';
             },
+            tieneErrores: function () {
+                return (this.validationErrors.length > 0);
+            }
         },
         filters: {
             estado: function (value) {
@@ -469,7 +477,6 @@
 
                 return '<span class="label label-danger pull-right">Cerrada</span>';
             },
-
             visibilidad: function (value) {
                 if (value) {
                     return '<span class="label label-dark pull-right">Privado</span>';
@@ -486,7 +493,10 @@
                         function (data, self) {
                             self.dataProvincias = data;
                             self.provinciaSeleccionada = '';
-                            self.localidadSeleccionada = ''
+                            self.localidadSeleccionada = '';
+                            self.dataActividad.provincia = {};
+                            self.dataActividad.localidad = {};
+
                         });
                 }
             },
@@ -514,6 +524,7 @@
                         function (data, self) {
                             self.tiposDeActividad = data;
                             self.tipoSeleccionado = null;
+                            self.dataActividad.idTipo = null;
                         }
                     );
                 }
@@ -560,12 +571,46 @@
                     .catch((error) => {
                         // Error
                         console.error('Error en: ' + url);
+                        console.error(error.response.status);
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
+                            // console.error(error.response.data);
+                            // console.error(error.response.status);
+                            // console.error(error.response.headers);
+                            if (error.response.status === 422) {
+                                this.validationErrors = Object.values(error.response.data.errors);
+                            }
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.error(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.error('Error', error.message);
+                        }
+                        console.error(error.config);
+                    });
+
+            },
+            axiosDelete(url, fCallback, params = []) {
+                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                axios.delete(url, params)
+                    .then(response => {
+                        fCallback(response.data, this)
+                    })
+                    .catch((error) => {
+                        // Error
+                        console.error('Error en: ' + url);
+                        console.error(error.response.status);
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            // console.error(error.response.data);
+                            // console.error(error.response.status);
+                            // console.error(error.response.headers);
+                            this.validationErrors = ['No se pudo eliminar la actividad'];
                         } else if (error.request) {
                             // The request was made but no response was received
                             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -585,8 +630,8 @@
             editar() {
                 this.readonly = false;
             },
-            cancelar(){
-                this.readonly = true;
+            cancelar: function () {
+
             },
             guardar(){
                 this.readonly = true;
@@ -597,8 +642,28 @@
                     self.guardado = true;
 
                 }, this.dataActividad);
+            },
+            borrarPunto: function (obj) {
+                this.dataActividad.puntosEncuentroBorrados.push(obj);
+            },
+            eliminar: function () {
+                let url = '/admin/actividades/' + this.dataActividad.idActividad;
+                this.axiosDelete(url, function () {
+                    window.location.href('/admin/actividades?msg=OK');
+                });
+            },
+            inicializar: function () {
+                this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");
+                this.dataActividad.puntosEncuentroBorrados = [];
+                this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
+                this.estadoConstruccion = this.dataActividad.estadoConstruccion;
+                this.inscripcionInterna = this.dataActividad.inscripcionInterna;
+                this.localidadSeleccionada = this.dataActividad.localidad;
+                this.paisSeleccionado = this.dataActividad.pais;
+                this.provinciaSeleccionada = this.dataActividad.provincia;
+                this.tipoSeleccionado = this.dataActividad.tipo;
+                this.unidadSeleccionada = this.dataActividad.unidad_organizacional;
             }
-
         }
     }
 </script>

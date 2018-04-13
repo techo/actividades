@@ -7,10 +7,11 @@
                     <input
                             type="text"
                             id="punto"
-                            class="form-control is-invalid"
+                            class="form-control"
                             required
                             v-model="punto"
                     >
+                    <p class="text-danger" v-show="errorPunto"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -22,6 +23,7 @@
                             class="form-control"
                             v-model="horario"
                     >
+                    <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -39,6 +41,7 @@
                             @search="onSearch"
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -69,6 +72,7 @@
 
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorPais"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -84,6 +88,7 @@
                             v-bind:disabled="this.readonly"
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -99,6 +104,7 @@
                             v-bind:disabled="this.readonly"
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>
             </div>
         </div>
@@ -154,17 +160,18 @@
                 provinciaSeleccionada: '',
                 dataLocalidades: [],
                 localidadSeleccionada: '',
-                validationErrors: [
-                    {punto: false},
-                    {horario: false},
-                    {coordinador: false},
-                    {pais: false},
-                    {provincia: false},
-                    {localidad: false},
-                ]
+                validationErrors: {
+                    punto: false,
+                    horario: false,
+                    coordinador: false,
+                    pais: false,
+                    provincia: false,
+                    localidad: false,
+                }
             }
         },
         created: function () {
+            Event.$on('cancelar', this.cancelar);
         },
         watch: {
             paisSeleccionado: function () {
@@ -173,6 +180,32 @@
             provinciaSeleccionada: function () {
                 this.getLocalidades();
             }
+        },
+        computed: {
+            errorPunto: function () {
+                return (this.validationErrors.punto && this.punto === '')
+            },
+
+            errorHorario: function () {
+                return (this.validationErrors.horario && this.horario === '')
+            },
+
+            errorCoordinador: function () {
+                return (this.validationErrors.coordinador && this.coordinador === '')
+            },
+
+            errorPais: function () {
+                return (this.validationErrors.pais && this.paisSeleccionado === '')
+            },
+
+            errorProvincia: function () {
+                return (this.validationErrors.provincia && this.provinciaSeleccionada === '')
+            },
+
+            errorLocalidad: function () {
+                return (this.validationErrors.localidad && this.localidadSeleccionada === '')
+            },
+
         },
         methods: {
             onSearch: function (text, loading) {
@@ -188,9 +221,8 @@
                 });
             }, 350),
             incluirPunto: function (e) {
-                // e.preventDefault();
-                this.validate();
-                if (this.validationErrors.length === 0) { 
+                let valid = this.validate();
+                if (valid) {
                     this.dataPuntosEncuentro.push({
                         'responsable': {
                             'dni': this.coordinador.dni,
@@ -204,15 +236,28 @@
                         'idLocalidad': this.localidadSeleccionada.id
                     });
 
+                    this.punto = '';
+                    this.coordinador = '';
+                    this.horario = '';
+                    this.paisSeleccionado = '';
+                    this.provinciaSeleccionada = '';
+                    this.localidadSeleccionada = '';
 
+                    this.validationErrors = {
+                        punto: false,
+                        horario: false,
+                        coordinador: false,
+                        pais: false,
+                        provincia: false,
+                        localidad: false,
+                    }
                 }
             },
             borrar: function (id) {
-                for (let i = 0; i <= this.dataPuntosEncuentro.length; i++) {
-                    if (this.dataPuntosEncuentro[i].idPuntoEncuentro === id) {
-                        this.dataPuntosEncuentro.splice(i, 1);
-                    }
-                }
+                let data = this.findObjectByKey(this.dataPuntosEncuentro, 'idPuntoEncuentro', id);
+
+                this.dataPuntosEncuentro.splice(data.index, 1);
+                Event.$emit('borrar-punto', data.obj);
             },
             getProvincias() {
                 if (this.paisSeleccionado.id !== undefined) {
@@ -236,25 +281,33 @@
                 }
             },
             validate() {
-                this.validationErrors = [];
+                let result = true;
                 if (this.punto === '') {
-                    this.validationErrors.push({punto: true})
+                    this.validationErrors.punto = true;
+                    result = false;
                 }
+
                 if (this.horario === '') {
-                    this.validationErrors.push({horario: true})
+                    this.validationErrors.horario = true;
+                    result = false;
                 }
                 if (this.coordinador === '') {
-                    this.validationErrors.push({coordinador: true})
+                    this.validationErrors.coordinador = true;
+                    result = false;
                 }
                 if (this.paisSeleccionado === '') {
-                    this.validationErrors.push({pais: true})
+                    this.validationErrors.pais = true;
+                    result = false;
                 }
                 if (this.provinciaSeleccionada === '') {
-                    this.validationErrors.push({provincia: true})
+                    this.validationErrors.provincia = true;
+                    result = false;
                 }
                 if (this.localidadSeleccionada === '') {
-                    this.validationErrors.push({localidad: true})
+                    this.validationErrors.localidad = true;
+                    result = false;
                 }
+                return result;
             },
             axiosGet(url, fCallback, params = []) {
                 axios.get(url, params)
@@ -310,7 +363,38 @@
                     });
 
             },
-
+            findObjectByKey(array, key, value) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i][key] === value) {
+                        return {
+                            'obj': array[i],
+                            'index': i
+                        };
+                    }
+                }
+                return null;
+            },
+            cancelar: function () {
+                this.coordinador = '';
+                this.punto = '';
+                this.horario = '';
+                this.dataCoordinadores = [];
+                this.puntoSeleccionado = {};
+                this.dataPaises = this.paises;
+                this.paisSeleccionado = '';
+                this.dataProvincias = [];
+                this.provinciaSeleccionada = '';
+                this.dataLocalidades = [];
+                this.localidadSeleccionada = '';
+                this.validationErrors = {
+                    punto: false,
+                    horario: false,
+                    coordinador: false,
+                    pais: false,
+                    provincia: false,
+                    localidad: false,
+                }
+            }
         }
     }
 </script>

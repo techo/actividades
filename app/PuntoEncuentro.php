@@ -8,6 +8,7 @@ class PuntoEncuentro extends Model
 {
     protected $table = 'PuntoEncuentro';
     protected $primaryKey = 'idPuntoEncuentro';
+    public $timestamps = false;
 
     public function actividad()
     {

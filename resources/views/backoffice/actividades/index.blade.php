@@ -3,7 +3,11 @@
 @section('page_title', 'Actividades')
 
 @section('content')
-
+    @if ($mensaje != '')
+        <div class="alert alert-success">
+            <strong>{{ $msg }}</strong>
+        </div>
+    @endif
     <div class="box">
         <div class="box-body  with-border">
             <datatable

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Pais;
+use App\PuntoEncuentro;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,15 +15,13 @@ class ActividadesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $datatableConfig = config('datatables.actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-
-
-
-        return view('backoffice.actividades.index', compact('fields', 'sortOrder'));
+        isset($request->msg) ? $mensaje = 'La actividad se eliminó correctamente' : '';
+        return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'msg'));
     }
 
     /**
@@ -56,7 +55,8 @@ class ActividadesController extends Controller
     {
         $edicion = false;
         $paises = Pais::all();
-        $actividad = Actividad::with(
+        $actividad = Actividad::findOrFail($id);
+        $actividad->load(
             'tipo.categoria',
             'unidadOrganizacional',
             'modificadoPor',
@@ -64,9 +64,8 @@ class ActividadesController extends Controller
             'pais',
             'provincia',
             'localidad'
-        )
-            ->where('idActividad', $id)
-            ->first();
+        );
+
         try {
             $provincias = $actividad->pais->provincias;
             $localidades = $actividad->provincia->localidades;
@@ -108,17 +107,31 @@ class ActividadesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $res = strtotime($request['fechaInicio']);
         // Hacer validación de datos
+
         $request->validate([
+            'costo' => 'numeric | min:0',
+            'descripcion' => 'required',
+            'fechaInicio' => 'required | date',
+            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+            'fechaInicioInscripciones' => 'required | date',
+            'fechaFin' => 'required | date',
+            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+            'fechaFinInscripciones' => 'required | date',
+            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
+            'idTipo' => 'required',
+            'inscripcionInterna' => 'required',
+            'localidad.id' => 'required',
+            'LinkPago' => 'url',
+            'limiteInscripciones' => 'numeric',
+            'mensajeInscripcion' => 'required',
+            'modificado_por.idPersona' => 'required',
+            'nombreActividad' => 'required',
             'pais.id' => 'required',
             'provincia.id' => 'required',
-            'localidad.id' => 'required',
+            'tipo.categoria.id' => 'required',
             'unidad_organizacional.idUnidadOrganizacional' => 'required',
-            'modificado_por.idPersona' => 'required',
-            'tipo.idTipo' => 'required',
-            'nombreActividad' => 'required',
-            'descripcion' => 'required',
-            'descripcion' => 'required',
         ]);
 
         $actividad = Actividad::find($id);
@@ -128,8 +141,9 @@ class ActividadesController extends Controller
                                         'casasConstruidas',
                                         'comentarios',
                                         'tipoConstruccion',
-                                        'idListaCTCT')
-         as $field => $value){
+            'idListaCTCT'
+        )
+                 as $field => $value) {
             if (!is_array($value) && isset($actividad->{$field})){
                 $actividad->{$field} = $value;
             }
@@ -139,11 +153,30 @@ class ActividadesController extends Controller
         $actividad->idPais = $request['pais']['id'];
         $actividad->idProvincia = $request['provincia']['id'];
         $actividad->idLocalidad = $request['localidad']['id'];
-        $actividad->idTipo = $request['tipo']['idTipo'];
+//        $actividad->idTipo = $request['tipo']['idTipo'];
         $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
         $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
 
-        $actividad->save();
+        if ($actividad->save()) {
+            foreach ($request->puntos_encuentro as $punto) {
+                if (!isset($punto['idPuntoEncuentro'])) {
+                    $p = new PuntoEncuentro();
+                    $p->punto = $punto['punto'];
+                    $p->horario = $punto['horario'];
+                    $p->idActividad = $actividad->idActividad;
+                    $p->idLocalidad = $punto['idLocalidad'];
+                    $p->idPais = $punto['idPais'];
+                    $p->idProvincia = $punto['idProvincia'];
+                    $p->idPersona = $punto['responsable']['id'];
+                    $p->save();
+                }
+            }
+
+            foreach ($request->puntosEncuentroBorrados as $borrado) {
+                $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
+                $punto->delete();
+            }
+        }
 
         //Grabar/Sincronizar puntos de encuentro
 
@@ -160,6 +193,13 @@ class ActividadesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $actividad = Actividad::find($id);
+            $actividad->delete();
+        } catch (\Exception $exception) {
+            return response($exception->getMessage(), 500);
+        }
+        return redirect()->action('backoffice\ActividadesController@index')
+            ->with('status', 'La actividad se eliminó correctamente');
     }
 }
