@@ -13,30 +13,47 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="pl-4 m-3">
-                                    <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
-                                    <h2>Ingresar a tu perfil</h2>
-                                    <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
-                                    <a class="btn btn-primary google form-control" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
-
-                                    <form id="frmLogin">
-                                        <div class="form-group">
-                                            <label for="mail">Correo Electrónico</label>
-                                            <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password">Password</label>
-                                            <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
-                                        </div>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="remember">
-                                            <label class="form-check-label" for="remember">Recordarme en este equipo</label>
-                                        </div>
-                                        <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
-                                        <br>
-                                        <a href="#">Olvidé mi contraseña</a>
-                                    </form>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <h2>Ingresar a tu perfil</h2>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <form id="frmLogin">
+                                            <div class="form-group">
+                                                <label for="mail">Correo Electrónico</label>
+                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="remember">
+                                                <label class="form-check-label" for="remember">Recordarme en este equipo</label>
+                                            </div>
+                                            <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
+                                            <br>
+                                            <a href="#">Olvidé mi contraseña</a>
+                                        </form>
                                     
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6 registro">
