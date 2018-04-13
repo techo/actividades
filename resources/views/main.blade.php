@@ -12,7 +12,7 @@
 
             <!-- Begin page content -->
             @yield('main_image')
-            <div class="container pt-4">
+            <div class="container pt-4 mb-5">
                 @if (isset($requiere_auth))
                     <autenticar></autenticar>
                 @endif
