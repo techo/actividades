@@ -105,7 +105,6 @@
         },
         methods: {
           validateForm: function(event) {
-            debugger
             if(!this.$parent.$refs.login.authenticated) {
               event.preventDefault();
               this.mostrarLogin();
