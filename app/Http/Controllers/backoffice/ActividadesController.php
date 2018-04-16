@@ -109,28 +109,20 @@ class ActividadesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $res = strtotime($request['fechaInicio']);
-        // Hacer validación de datos
-
         $v = Validator::make(
             $request->all(),
             [
             'costo' => 'numeric | min:0',
             'descripcion' => 'required',
             'fechaInicio' => 'required | date',
-//            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
             'fechaInicioInscripciones' => 'required | date',
             'fechaFin' => 'required | date',
-//            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
             'fechaFinInscripciones' => 'required | date',
-//            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
             'idTipo' => 'required',
             'inscripcionInterna' => 'required',
             'localidad.id' => 'required',
-//            'LinkPago' => 'url',
             'limiteInscripciones' => 'numeric',
             'mensajeInscripcion' => 'required',
-//            'modificado_por.idPersona' => 'required',
             'nombreActividad' => 'required',
             'pais.id' => 'required',
             'provincia.id' => 'required',
@@ -155,30 +147,6 @@ class ActividadesController extends Controller
 
             return $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
-
-//        $request->validate([
-//            'costo' => 'numeric | min:0',
-//            'descripcion' => 'required',
-//            'fechaInicio' => 'required | date',
-//            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
-//            'fechaInicioInscripciones' => 'required | date',
-//            'fechaFin' => 'required | date',
-//            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
-//            'fechaFinInscripciones' => 'required | date',
-//            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
-//            'idTipo' => 'required',
-//            'inscripcionInterna' => 'required',
-//            'localidad.id' => 'required',
-//            'LinkPago' => 'url',
-//            'limiteInscripciones' => 'numeric',
-//            'mensajeInscripcion' => 'required',
-//            'modificado_por.idPersona' => 'required',
-//            'nombreActividad' => 'required',
-//            'pais.id' => 'required',
-//            'provincia.id' => 'required',
-//            'tipo.categoria.id' => 'required',
-//            'unidad_organizacional.idUnidadOrganizacional' => 'required',
-//        ]);
 
         if ($v->passes()) {
             $actividad = Actividad::find($id);
@@ -210,7 +178,6 @@ class ActividadesController extends Controller
             $actividad->idPais = $request['pais']['id'];
             $actividad->idProvincia = $request['provincia']['id'];
             $actividad->idLocalidad = $request['localidad']['id'];
-//        $actividad->idTipo = $request['tipo']['idTipo'];
             $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
             $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
 
@@ -234,8 +201,6 @@ class ActividadesController extends Controller
                     $punto->delete();
                 }
             }
-
-            //Grabar/Sincronizar puntos de encuentro
 
             return response('Actividad guardada correctamente.', 200);
 
