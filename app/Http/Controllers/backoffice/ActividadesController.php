@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
+use App\CategoriaActividad;
 use App\Pais;
 use App\PuntoEncuentro;
 use Carbon\Carbon;
@@ -33,31 +34,9 @@ class ActividadesController extends Controller
      */
     public function create()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $edicion = false;
+        $edicion = true;
         $paises = Pais::all();
-        $actividad = Actividad::findOrFail($id);
+        $actividad = new Actividad();
         $actividad->load(
             'tipo.categoria',
             'unidadOrganizacional',
@@ -85,6 +64,63 @@ class ActividadesController extends Controller
                 'provincias',
                 'localidades',
                 'edicion'
+            )
+        );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $edicion = false;
+        $paises = Pais::all();
+        $actividad = Actividad::findOrFail($id);
+        $categorias = CategoriaActividad::all();
+        $tipos = $actividad->tipo->categoria->tipos;
+        $actividad->load(
+            'tipo.categoria',
+            'unidadOrganizacional',
+            'modificadoPor',
+            'puntosEncuentro',
+            'pais',
+            'provincia',
+            'localidad'
+        );
+
+        try {
+            $provincias = $actividad->pais->provincias;
+            $localidades = $actividad->provincia->localidades;
+
+        } catch (\Exception $e) {
+            $provincias = null;
+            $localidades = null;
+        }
+        return view(
+            'backoffice.actividades.show',
+            compact(
+                'actividad',
+                'paises',
+                'coordinadores',
+                'provincias',
+                'localidades',
+                'edicion',
+                'tipos',
+                'categorias'
             )
         );
     }

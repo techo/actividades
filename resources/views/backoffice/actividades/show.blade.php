@@ -18,6 +18,8 @@
     <actividades-show
             actividad="{{ $actividad }}"
             paises="{{ $paises }}"
+            tipos=" {{ $tipos }}"
+            categorias="{{ $categorias }}"
             provincias="{{  $provincias }}"
             localidades="{{ $localidades }}"
             edicion="{{ $edicion }}"

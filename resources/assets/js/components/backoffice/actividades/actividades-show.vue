@@ -44,13 +44,14 @@
                     <div class="form-group">
                         <label for="categoria">Categoría</label>
                         <v-select
-                                :options="categorias"
+                                :options="dataCategorias"
                                 label="nombre"
                                 placeholder="Seleccione"
                                 name="categoria"
                                 id="categoria"
                                 v-model="categoriaSeleccionada"
                                 v-bind:disabled="this.readonly"
+                                :filterable=false
                                 :onChange=this.getTiposDeActividad()
                         >
                         </v-select>
@@ -67,6 +68,7 @@
                                 id="tiposDeActividad"
                                 v-model="tipoSeleccionado"
                                 v-bind:disabled="this.readonly"
+                                :onChange=this.actualizarTipoDeActividad()
                         >
                         </v-select>
                     </div>
@@ -418,11 +420,11 @@
 
     export default {
         name: "actividades-show",
-        props: ['actividad', 'coordinadores', 'paises', 'provincias', 'localidades', 'edicion'],
+        props: ['actividad', 'coordinadores', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
         components: {'punto-encuentro': PuntoEncuentro},
         data() {
             return {
-                categorias: [],
+                dataCategorias: [],
                 categoriaSeleccionada: {},
                 dataActividad: {},
                 dataCoordinadores: this.coordinadores,
@@ -442,8 +444,6 @@
                 unidadesOrganizacionales: [],
                 unidadSeleccionada: {},
                 validationErrors: {},
-                url: window.location.href,
-                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
         created() {
@@ -451,9 +451,11 @@
             this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
             this.dataPaises = JSON.parse(this.paises);
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
+            this.dataCategorias = JSON.parse(this.categorias);
+            this.tiposDeActividad = JSON.parse(this.tipos);
 
             this.inicializar();
-            this.getCategorias();
+            // this.getCategorias();
             this.getTiposDeActividad();
             this.getUnidadesOrganizacionales();
 
@@ -488,6 +490,11 @@
                 return '<span class="label label-info pull-right">Público</span>';
             }
         },
+        watch: {
+            tipoSeleccionado: function (nuevo, viejo) {
+                // this.dataActividad.tipo = nuevo;
+            }
+        },
         methods: {
             getProvincias() {
                 if (this.paisSeleccionado !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
@@ -514,10 +521,10 @@
                 }
             },
             getCategorias() {
-                this.axiosGet('/ajax/categorias/',
-                    function (data, self) {
-                    self.categorias = data;
-                });
+                // this.axiosGet('/ajax/categorias/',
+                //     function (data, self) {
+                //     self.categorias = data;
+                // });
 
             },
             getTiposDeActividad() {
@@ -531,6 +538,9 @@
                         }
                     );
                 }
+            },
+            actualizarTipoDeActividad() {
+                this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
             },
             getUnidadesOrganizacionales() {
                 this.axiosGet('/admin/ajax/unidadesOrganizacionales/',
