@@ -1,10 +1,9 @@
-<footer class="fixed-bottom techo-footer" style="background-color: #2ab27b">
+<footer class="fixed-bottom techo-footer">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2">
                 <p class="techo-footer-suscribe">Participa ahora</p>
             </div>
-
             <div class="col-md-8">
                 <form class="form-inline">
                     <div class="form-group mx-sm-3 mb-2 pr-1">

@@ -1,22 +1,25 @@
 <template>
-    <div class="card" style="cursor: pointer;">
-        <simplert ref="confirmar"></simplert>
-      <img class="card-img-top" src="/img/tarjeta-1.jpg" alt="Card image cap" >
-      <div class="card-body px-0"  v-on:click="ir_a_actividad">
-        <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
-        <h5 class="card-title">{{ actividad.nombreActividad | truncate(30) }}</h5>
-        <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
-            <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
-            <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
-            <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.localidad | ubicacion }}</span>
+     <div class="col-sm-4">
+        <div class="card tarjeta p-3">
+            <simplert ref="confirmar"></simplert>
+            <img class="card-img-top" v-on:click="ir_a_actividad" src="/img/tarjeta-1.jpg" alt="Card image cap" >
+            <div class="card-body px-0">
+                <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
+                <h5 class="card-title" v-on:click="ir_a_actividad">{{ actividad.nombreActividad | truncate(30) }}</h5>
+                <div>
+                    <hr>
+                    <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
+                    <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
+                    <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.localidad | ubicacion }}</span>
+                    <hr>
+                </div>
+                <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
+                <div class="">
+                    <a class="btn btn-success text-light font-weight-bold" @click="desincribir(actividad.idActividad)">Desinscribirme</a>
+                </div>
+            </div>
         </div>
-        <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
-      </div>
-      <div class="col-md-3">
-        <a class="btn btn-success" @click="desincribir(actividad.idActividad)">Desinscribirme</a>
-      </div>
     </div>
-
 </template>
 
 <script>
@@ -61,7 +64,6 @@
                             self.$parent.traer_actividades()
                             self.$parent.borro = true;
                             setTimeout(function(){
-                                console.log('!!!!!!!!!!!!!')
                                 self.$parent.borro = false;
                             }, 3000)
                         })
@@ -74,6 +76,13 @@
     }
 </script>
 <style>
+
+div.tarjeta {
+    cursor: pointer;
+    border: 0px;
+    text-align: center;
+}
+
 .confirmar > div {
     min-width: 60%;
 }

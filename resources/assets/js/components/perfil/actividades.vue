@@ -8,16 +8,16 @@
       <div class="alert alert-warning" v-show='borro'>
         <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
       </div>
-
+      <div class="alert alert-warning" v-show='!actividades.length'>
+        <strong>Todavia no estas inscripto a ninguna actividad.</strong>
+      </div>
         <div class="row">
-            <div class="card-deck text-center">
-                <tarjeta
-                    v-for="act in actividades"
-                    v-bind:actividad="act"
-                    v-bind:key="Math.random() + '_' + act.idActividad"
-                >
-                </tarjeta>
-            </div>
+            <tarjeta
+                v-for="act in actividades"
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+            >
+            </tarjeta>
         </div>
 
     </div>
@@ -33,15 +33,7 @@
         data () {
             return {
                 actividades: [],
-                borro: false,
-                loading: false,
-                next_page: '',
-                bottom: false,
-                url: '/ajax/actividades',
-                ultimaTarjeta: 0,
-                totalTarjetas: 0,
-                vacio: false,
-                filtros: {}
+                borro: false
             }
         },
         components: {tarjeta: Tarjeta},

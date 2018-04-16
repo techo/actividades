@@ -10,20 +10,20 @@
         <strong>{{message.text}}</strong>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <h2>Registrate como voluntario.</h2>
         </div>
+        <div class="col-md-6">
+          <label>PASO 1/3</label>   
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h5>Crea tu cuenta de voluntario de Techo</h5>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-8">
-          <strong>PASO 1/3</strong>   
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Crea tu cuenta de voluntario de Techo</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
           quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
@@ -80,11 +80,11 @@
         <strong>{{message.text}}</strong>
       </div>
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <h2>¡Ya casi terminamos!</h2>
         </div>
-        <div class="col-md-8">
-          <strong>PASO 2/3</strong>   
+        <div class="col-md-6">
+          <label>PASO 2/3</label>   
         </div>
       </div>
       <div class="row">
@@ -127,16 +127,18 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12"><label>SEXO*</label></div>
+        <div class="col-md-12"><label>GENERO*</label></div>
       </div>
       <div class="row">
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="fem" value="F" v-model="user.sexo">
-          <label for="fem">Femenino</label>
-        </div>
-        <div class="col-md-3">
-          <input type="radio" class="form-control" id="mas" value="M" v-model="user.sexo">
-          <label for="mas">Masculino</label>
+        <div class="col-md-6">
+              <b-form-group>
+                <b-form-radio-group id="radios2" v-model="user.sexo">
+                  <b-form-radio value="F">Femenino</b-form-radio>
+                  <b-form-radio value="M">Masculino</b-form-radio>
+                  <b-form-radio value="O">Otro</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
+          <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
         </div>
         <div class="col-md-3">
           <span v-bind:class="{'d-none':!validacion.sexo.valido}"><i class="fas fa-check text-success"></i></span>
@@ -144,7 +146,6 @@
         </div>
       </div>
       <div class="row">
-        <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
       </div>    
       <div class="row">
         <div class="col-md-12"><label>NRO. DE DNI / PASAPORTE*</label></div>
@@ -226,17 +227,24 @@
 
     </div>
     <div v-show="paso('gracias')">
-        <div class="row">
-            <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
           <strong>Registrate</strong> > <strong>Datos personales</strong> > <strong>Finalizar</strong>
         </div>
       </div>
-        <div class="row">
-            <div class="col-md-4">
+      <div class="row">
+        <div class="col-md-6">
           <h2>Bienvenid@ a Techo</h2>
         </div>
-            <div class="col-md-8">
-          <strong>PASO 3/3</strong>   
+        <div class="col-md-6">
+          <label>PASO 3/3</label>   
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
         </div>
       </div>
       <hr>    
@@ -375,6 +383,10 @@
             data[prop] = this.user[prop]
             this.validacion[prop].valido = false
             this.validacion[prop].invalido = false
+	    if(prop == "pass") {
+              data.google_id = this.user.google_id
+              data.facebook_id = this.user.facebook_id
+	    }
           } else {
             data = this.user
           }

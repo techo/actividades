@@ -12,11 +12,17 @@ import Datepicker from 'vuejs-datepicker';
 import Perfil from './components/perfil/perfil';
 import MisActividades from './components/perfil/actividades';
 import Simplert from 'vue2-simplert';
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 require('./bootstrap');
 
 window.Vue = require('vue');
 window.events = new Vue();
+
+Vue.use(BootstrapVue);
 
 Vue.component('filtro', Filtro);
 Vue.component('login', Login);
