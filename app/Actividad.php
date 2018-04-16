@@ -79,7 +79,6 @@ class Actividad extends Model
             DB::beginTransaction();
             try {
                 $actividad->escuelas()->delete();
-                $actividad->puntosEncuentro()->delete();
                 // ToDo: Enviar mail a los inscriptos
                 $inscripciones = $actividad->inscripciones();
 
@@ -106,6 +105,7 @@ class Actividad extends Model
                 DB::statement('DELETE FROM Sesion where idActividad = ' . $actividad->idActividad);
                 DB::statement('DELETE FROM _EncuestaRespuestaActividad where idActividad = ' . $actividad->idActividad);
                 $inscripciones->delete();
+                $actividad->puntosEncuentro()->delete();
                 DB::commit();
             } catch (\Exception $exception) {
                 DB::rollBack();

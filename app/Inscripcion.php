@@ -24,7 +24,6 @@ class Inscripcion extends Model
     {
         parent::boot();
         static::deleted(function ($inscripcion) { // before delete() method call this
-            dd($inscripcion);
             DB::beginTransaction();
             try {
                 DB::statement('DELETE FROM AsistenciaVoluntario WHERE idInscripcion = ' . $inscripcion->idInscripcion);
