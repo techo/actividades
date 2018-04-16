@@ -540,7 +540,9 @@
                 }
             },
             actualizarTipoDeActividad() {
-                this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
+                if (this.tipoSeleccionado !== null) {
+                    this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
+                }
             },
             getUnidadesOrganizacionales() {
                 this.axiosGet('/admin/ajax/unidadesOrganizacionales/',
