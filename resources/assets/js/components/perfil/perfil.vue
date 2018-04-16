@@ -300,6 +300,7 @@
       mounted: function(){
         this.traer_paises()
         this.traer_provincias()
+        this.traer_localidades()
       },
       watch: {
         'user.email': function() { this.validar_data('email') },

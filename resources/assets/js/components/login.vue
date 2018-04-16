@@ -90,6 +90,7 @@
                 >
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="misactividades">Mis Actividades</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="admin">Admin</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
                 </div>
             </div>
@@ -150,6 +151,9 @@
             },
             perfil: function() {
               window.location.href = '/perfil';
+            },
+            admin: function() {
+              window.location.href = '/admin/actividades';
             },
             misactividades: function() {
               window.location.href = '/perfil/actividades';
