@@ -542,6 +542,9 @@
             actualizarTipoDeActividad() {
                 if (this.tipoSeleccionado !== null) {
                     this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
+                    this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
+                    this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
+                    this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
                 }
             },
             getUnidadesOrganizacionales() {
