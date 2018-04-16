@@ -114,6 +114,11 @@ return [
 
 	'attributes' => [
 		'username' => 'usuario',
-		'password' => 'contraseña'
+        'password' => 'contraseña',
+        'inscripcionesInternas' => 'visibilidad de las inscripciones',
+        'idTipo' => 'tipo de actividad',
+        'localidad.id' => 'localidad',
+        'provincia.id' => 'provincia',
+        'pais.id' => 'pais',
 	],
 ];
