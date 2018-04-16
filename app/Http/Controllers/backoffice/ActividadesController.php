@@ -5,8 +5,10 @@ namespace App\Http\Controllers\backoffice;
 use App\Actividad;
 use App\Pais;
 use App\PuntoEncuentro;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class ActividadesController extends Controller
 {
@@ -20,8 +22,8 @@ class ActividadesController extends Controller
         $datatableConfig = config('datatables.actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        isset($request->msg) ? $mensaje = 'La actividad se eliminó correctamente' : '';
-        return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'msg'));
+        isset($request->msg) ? $mensaje = 'La actividad se eliminó correctamente' : $mensaje = '';
+        return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'mensaje'));
     }
 
     /**
@@ -110,78 +112,136 @@ class ActividadesController extends Controller
         $res = strtotime($request['fechaInicio']);
         // Hacer validación de datos
 
-        $request->validate([
+        $v = Validator::make(
+            $request->all(),
+            [
             'costo' => 'numeric | min:0',
             'descripcion' => 'required',
             'fechaInicio' => 'required | date',
-            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+//            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
             'fechaInicioInscripciones' => 'required | date',
             'fechaFin' => 'required | date',
-            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+//            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
             'fechaFinInscripciones' => 'required | date',
-            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
+//            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
             'idTipo' => 'required',
             'inscripcionInterna' => 'required',
             'localidad.id' => 'required',
-            'LinkPago' => 'url',
+//            'LinkPago' => 'url',
             'limiteInscripciones' => 'numeric',
             'mensajeInscripcion' => 'required',
-            'modificado_por.idPersona' => 'required',
+//            'modificado_por.idPersona' => 'required',
             'nombreActividad' => 'required',
             'pais.id' => 'required',
             'provincia.id' => 'required',
             'tipo.categoria.id' => 'required',
             'unidad_organizacional.idUnidadOrganizacional' => 'required',
-        ]);
+            ]
+        );
 
-        $actividad = Actividad::find($id);
+        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
 
-        foreach ($request->except('idActividad',
-                                        'casasPlanificadas',
-                                        'casasConstruidas',
-                                        'comentarios',
-                                        'tipoConstruccion',
-            'idListaCTCT'
-        )
-                 as $field => $value) {
-            if (!is_array($value) && isset($actividad->{$field})){
-                $actividad->{$field} = $value;
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('fechaInicioEvaluaciones', 'required|date', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('fechaFinEvaluaciones', 'required|date', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('LinkPago', 'url', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+
+//        $request->validate([
+//            'costo' => 'numeric | min:0',
+//            'descripcion' => 'required',
+//            'fechaInicio' => 'required | date',
+//            'fechaInicioEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+//            'fechaInicioInscripciones' => 'required | date',
+//            'fechaFin' => 'required | date',
+//            'fechaFinEvaluaciones' => 'required_if:tipo.flujo, CONSTRUCCION | date',
+//            'fechaFinInscripciones' => 'required | date',
+//            'idFormulario' => 'required_if:tipo.flujo, CONSTRUCCION | numeric',
+//            'idTipo' => 'required',
+//            'inscripcionInterna' => 'required',
+//            'localidad.id' => 'required',
+//            'LinkPago' => 'url',
+//            'limiteInscripciones' => 'numeric',
+//            'mensajeInscripcion' => 'required',
+//            'modificado_por.idPersona' => 'required',
+//            'nombreActividad' => 'required',
+//            'pais.id' => 'required',
+//            'provincia.id' => 'required',
+//            'tipo.categoria.id' => 'required',
+//            'unidad_organizacional.idUnidadOrganizacional' => 'required',
+//        ]);
+
+        if ($v->passes()) {
+            $actividad = Actividad::find($id);
+
+            foreach ($request->except('idActividad',
+                'casasPlanificadas',
+                'casasConstruidas',
+                'comentarios',
+                'tipoConstruccion',
+                'idListaCTCT',
+                'modificado_por.idPersona'
+            )
+                     as $field => $value) {
+
+                $esFecha = in_array($field, $actividad->getDates());
+
+                if (!is_array($value) && isset($actividad->{$field}) && $esFecha) {
+                    $value = Carbon::parse($value)->format('Y-m-d');
+                    $actividad->{$field} = $value;
+                }
+
+                if (!is_array($value) && isset($actividad->{$field}) && !$esFecha) {
+                    $actividad->{$field} = $value;
+                }
+
             }
-        }
 
-        $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
-        $actividad->idPais = $request['pais']['id'];
-        $actividad->idProvincia = $request['provincia']['id'];
-        $actividad->idLocalidad = $request['localidad']['id'];
+            $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
+            $actividad->idPais = $request['pais']['id'];
+            $actividad->idProvincia = $request['provincia']['id'];
+            $actividad->idLocalidad = $request['localidad']['id'];
 //        $actividad->idTipo = $request['tipo']['idTipo'];
-        $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
-        $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
+            $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
+            $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
 
-        if ($actividad->save()) {
-            foreach ($request->puntos_encuentro as $punto) {
-                if (!isset($punto['idPuntoEncuentro'])) {
-                    $p = new PuntoEncuentro();
-                    $p->punto = $punto['punto'];
-                    $p->horario = $punto['horario'];
-                    $p->idActividad = $actividad->idActividad;
-                    $p->idLocalidad = $punto['idLocalidad'];
-                    $p->idPais = $punto['idPais'];
-                    $p->idProvincia = $punto['idProvincia'];
-                    $p->idPersona = $punto['responsable']['id'];
-                    $p->save();
+            if ($actividad->save()) {
+                foreach ($request->puntos_encuentro as $punto) {
+                    if (!isset($punto['idPuntoEncuentro'])) {
+                        $p = new PuntoEncuentro();
+                        $p->punto = $punto['punto'];
+                        $p->horario = $punto['horario'];
+                        $p->idActividad = $actividad->idActividad;
+                        $p->idLocalidad = $punto['idLocalidad'];
+                        $p->idPais = $punto['idPais'];
+                        $p->idProvincia = $punto['idProvincia'];
+                        $p->idPersona = $punto['responsable']['id'];
+                        $p->save();
+                    }
+                }
+
+                foreach ($request->puntosEncuentroBorrados as $borrado) {
+                    $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
+                    $punto->delete();
                 }
             }
 
-            foreach ($request->puntosEncuentroBorrados as $borrado) {
-                $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
-                $punto->delete();
-            }
+            //Grabar/Sincronizar puntos de encuentro
+
+            return response('Actividad guardada correctamente.', 200);
+
         }
 
-        //Grabar/Sincronizar puntos de encuentro
-
-        return response('Actividad guardada correctamente.', 200);
-
+        return response($v->errors()->all(), 422);
 
     }
 

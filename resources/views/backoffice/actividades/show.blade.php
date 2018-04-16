@@ -9,6 +9,12 @@
 @endsection
 
 @section('content')
+    <form method="POST" id="formDelete"
+          action="{{ action('backoffice\ActividadesController@destroy', ['id' => $actividad->idActividad]) }}">
+        <input type="hidden" value="DELETE" name="_method">
+        {{ csrf_field() }}
+    </form>
+
     <actividades-show
             actividad="{{ $actividad }}"
             paises="{{ $paises }}"

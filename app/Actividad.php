@@ -12,7 +12,7 @@ class Actividad extends Model
     protected $guarded = ['idActividad'];
     protected $dates =
         [
-            'feachaCreacion', 'fechaModificacion',
+            'fechaCreacion', 'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
             'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'

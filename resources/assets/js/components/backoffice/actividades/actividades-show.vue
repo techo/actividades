@@ -108,7 +108,6 @@
                                 id="fechaInicio"
                                 name="fechaInicio"
                                 language="es"
-                                format="yyyy-MM-dd"
                                 :disabled-picker="readonly"
                         ></datepicker>
                     </div>
@@ -405,6 +404,8 @@
     </div>
         <!-- /.box-body -->
 </div>
+
+
     </span>
 
 </template>
@@ -441,6 +442,8 @@
                 unidadesOrganizacionales: [],
                 unidadSeleccionada: {},
                 validationErrors: {},
+                url: window.location.href,
+                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
         created() {
@@ -579,7 +582,8 @@
                             // console.error(error.response.status);
                             // console.error(error.response.headers);
                             if (error.response.status === 422) {
-                                this.validationErrors = Object.values(error.response.data.errors);
+                                // debugger;
+                                this.validationErrors = Object.values(error.response.data);
                             }
                         } else if (error.request) {
                             // The request was made but no response was received
@@ -640,6 +644,7 @@
                     console.log("datos guardados correctamente.");
                     self.mensajeGuardado = data;
                     self.guardado = true;
+                    self.validationErrors = [];
 
                 }, this.dataActividad);
             },
@@ -647,10 +652,9 @@
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
             },
             eliminar: function () {
-                let url = '/admin/actividades/' + this.dataActividad.idActividad;
-                this.axiosDelete(url, function () {
-                    window.location.href('/admin/actividades?msg=OK');
-                });
+                var form = document.getElementById('formDelete');
+                console.log(form);
+                form.submit();
             },
             inicializar: function () {
                 this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");

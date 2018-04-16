@@ -119,5 +119,6 @@ return [
         'idTipo' => 'tipo de actividad',
         'localidad.id' => 'localidad',
         'provincia.id' => 'provincia',
+        'pais.id' => 'pais',
 	],
 ];
