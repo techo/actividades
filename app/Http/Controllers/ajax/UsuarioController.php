@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Mail;
+use Event;
 use App\Mail\VerificarMail;
 use App\Persona;
 use App\Actividad;
@@ -20,6 +21,8 @@ use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Http\Resources\ActividadResource;
 use App\Http\Resources\TipoResource;
+
+use App\Events\RegistroUsuario;
 
 class UsuarioController extends Controller
 {
@@ -50,18 +53,19 @@ class UsuarioController extends Controller
   public function create(Request $request) {
       $url = $request->session()->get('login_callback','');
       $this->validar($request,'create');
-  	$persona = new Persona();
+      $persona = new Persona();
       $this->cargar_cambios($request, $persona);
       $persona->password = Hash::make($request->pass);
-    	$persona->carrera = '';
-    	$persona->anoEstudio = '';
-    	$persona->idContactoCTCT = '';
-    	$persona->statusCTCT = '';
-    	$persona->lenguaje = '';
-    	$persona->idRegionLT = 0;
-    	$persona->idUnidadOrganizacional = 0;
-    	$persona->idCiudad = 0;
+      $persona->carrera = '';
+      $persona->anoEstudio = '';
+      $persona->idContactoCTCT = '';
+      $persona->statusCTCT = '';
+      $persona->lenguaje = '';
+      $persona->idRegionLT = 0;
+      $persona->idUnidadOrganizacional = 0;
+      $persona->idCiudad = 0;
       $persona->verificado = false;
+      $response = Event::fire(new RegistroUsuario($persona));
       $persona->save();
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
