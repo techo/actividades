@@ -2,52 +2,35 @@
     <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
-        <div class="col-md-8">
-            <button class="btn btn-default" v-show="!readonly" @click="this.cancelar">
-                <i class="fa fa-arrow-circle-left"></i> Volver al listado
-            </button>
-        </div>
-        <div class="col-md-4">
+        <div>
             <button class="btn btn-primary" v-show="readonly" @click="this.editar"><i class="fa fa-edit"></i> Editar
             </button>
             <button class="btn btn-danger" v-show="readonly" @click="this.eliminar"><i class="fa fa-trash"></i> Borrar
             </button>
 
             <button class="btn btn-success" v-show="!readonly" @click="this.guardar"><i class="fa fa-save"></i> Guardar</button>
-            <button class="btn btn-secondary" v-show="!readonly" @click="this.cancelar"><i class="fa fa-ban"></i> Cancelar
+            <button class="btn btn-secondary" v-show="!readonly" @click="this.cancelar"><i class="fa fa-arrow-circle-left"></i> Cancelar
             </button>
         </div>
-
     </footer>
 </template>
 
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'cancelarUrl'],
         data: function () {
             return {
-                readonly: (this.edicion != "1")
+                readonly: true
             }
         },
-        created: function() {
-            Event.$on('error', this.error);
-            Event.$on('success', this.success);
-        },
         methods: {
-            error: function () {
-                this.readonly = false;
-            },
-            success: function() {
-                this.readonly = true;
-            },
             editar: function () {
                 Event.$emit('editar');
                 this.readonly = false;
             },
 
             cancelar: function () {
-                location.href= this.cancelarUrl;
+                location.reload();
             },
             eliminar: function () {
                 var self = this;

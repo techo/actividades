@@ -38,24 +38,6 @@
 
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="coordinador">Coordinador</label>
-                        <v-select
-                                :options="dataCoordinadores"
-                                label="nombre"
-                                placeholder="Seleccione"
-                                name="coordinador"
-                                id="coordinador"
-                                v-model="coordinadorSeleccionado"
-                                v-bind:disabled="this.readonly"
-                                :filterable=false
-                                @search="onSearch"
-                                :onChange=this.actualizarCoordinador()
-                        >
-                        </v-select>
-                    </div>
-                </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
@@ -93,16 +75,15 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="oficina">Oficina</label>
+                        <label for="unidad_organizacional">Oficina</label>
                         <v-select
-                                :options="dataOficinas"
+                                :options="unidadesOrganizacionales"
                                 label="nombre"
                                 placeholder="Seleccione"
-                                name="oficina"
-                                id="oficina"
-                                v-model="oficinaSeleccionada"
+                                name="unidad_organizacional"
+                                id="unidad_organizacional"
+                                v-model="unidadSeleccionada"
                                 v-bind:disabled="this.readonly"
-                                :onChange=this.actualizarOficina()
                         >
                         </v-select>
                     </div>
@@ -240,7 +221,7 @@
         <div class="box-body">
             <punto-encuentro
                     :readonly="readonly"
-                    :puntos-encuentro="dataActividad.puntosEncuentro"
+                    :puntos-encuentro="dataActividad.puntos_encuentro"
                     :paises="dataPaises"
             ></punto-encuentro>
         </div>
@@ -346,84 +327,86 @@
 
             </div>
 
-        </div><!-- /.box-body -->
-    </div>
+    </div><!-- /.box-body -->
+</div>
 
     <div class="box" v-if="esConstruccion">
-        <div class="box-header with-border">
-            <h3 class="box-title">Construcción</h3>
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="costo">Costo ({{ dataActividad.moneda }})</label>
-                        <input id="costo" name="costo"
-                               type="number"
-                               class="form-control"
-                               v-bind:disabled="readonly"
-                               v-model="dataActividad.costo"
-                        >
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label for="linkPago">Link de Pago</label>
-                        <input
-                                type="url"
-                                class="form-control"
-                                id="linkPago"
-                                name="linkPago"
-                                :disabled="readonly"
-                                v-model="dataActividad.LinkPago"
-                        >
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="idFormulario">Evaluaciones (Id FOBU)</label>
-                        <input
-                                class="form-control"
-                                id="idFormulario"
-                                name="idFormulario"
-                                :disabled="readonly"
-                                v-model="dataActividad.idFormulario"
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicioEvaluaciones"
-                                id="fechaInicioEvaluaciones"
-                                name="fechaInicioEvaluaciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFinEvaluaciones"
-                                id="fechaFinEvaluaciones"
-                                name="fechaFinEvaluaciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-            </div>
-        </div>
-            <!-- /.box-body -->
+    <div class="box-header with-border">
+        <h3 class="box-title">Construcción</h3>
     </div>
+        <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="costo">Costo ({{ dataActividad.moneda }})</label>
+                    <input id="costo" name="costo"
+                           type="number"
+                           class="form-control"
+                           v-bind:disabled="readonly"
+                           v-model="dataActividad.costo"
+                    >
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="linkPago">Link de Pago</label>
+                    <input
+                            type="url"
+                            class="form-control"
+                            id="linkPago"
+                            name="linkPago"
+                            :disabled="readonly"
+                            v-model="dataActividad.LinkPago"
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="idFormulario">Evaluaciones (Id FOBU)</label>
+                    <input
+                            class="form-control"
+                            id="idFormulario"
+                            name="idFormulario"
+                            :disabled="readonly"
+                            v-model="dataActividad.idFormulario"
+                    >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaInicioEvaluaciones"
+                            id="fechaInicioEvaluaciones"
+                            name="fechaInicioEvaluaciones"
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaFinEvaluaciones"
+                            id="fechaFinEvaluaciones"
+                            name="fechaFinEvaluaciones"
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- /.box-body -->
+</div>
+
+
     </span>
 
 </template>
@@ -436,15 +419,14 @@
 
     export default {
         name: "actividades-show",
-        props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
+        props: ['actividad', 'coordinadores', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
         components: {'punto-encuentro': PuntoEncuentro},
         data() {
             return {
                 dataCategorias: [],
                 categoriaSeleccionada: {},
-                coordinadorSeleccionado: {},
                 dataActividad: {},
-                dataCoordinadores: [],
+                dataCoordinadores: this.coordinadores,
                 dataLocalidades: [],
                 dataPaises: [],
                 dataProvincias: [],
@@ -458,11 +440,9 @@
                 readonly: !this.edicion,
                 tiposDeActividad: [],
                 tipoSeleccionado: {},
-                dataOficinas: [],
-                oficinaSeleccionada: {},
+                unidadesOrganizacionales: [],
+                unidadSeleccionada: {},
                 validationErrors: {},
-                esConstruccion: false,
-
             }
         },
         created() {
@@ -471,11 +451,12 @@
             this.dataPaises = JSON.parse(this.paises);
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
             this.dataCategorias = JSON.parse(this.categorias);
-            this.tiposDeActividad = (this.tipos !== '') ? JSON.parse(this.tipos) :  [];
+            this.tiposDeActividad = JSON.parse(this.tipos);
 
             this.inicializar();
+            // this.getCategorias();
             this.getTiposDeActividad();
-            this.getOficinas();
+            this.getUnidadesOrganizacionales();
 
             //Eventos
             Event.$on('editar', this.editar);
@@ -485,6 +466,9 @@
             Event.$on('eliminar', this.eliminar);
         },
         computed: {
+            esConstruccion: function() {
+                return this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+            },
             tieneErrores: function () {
                 return (this.validationErrors.length > 0);
             }
@@ -499,54 +483,18 @@
             },
             visibilidad: function (value) {
                 if (value) {
-                    return '<span class="label label-warning pull-right">Privado</span>';
+                    return '<span class="label label-dark pull-right">Privado</span>';
                 }
 
                 return '<span class="label label-info pull-right">Público</span>';
             }
         },
         watch: {
+            tipoSeleccionado: function (nuevo, viejo) {
+                // this.dataActividad.tipo = nuevo;
+            }
         },
         methods: {
-            inicializar: function () {
-                this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");
-                this.dataActividad.inscripcionInterna = (this.dataActividad.inscripcionInterna == 1);
-                this.dataActividad.puntos_encuentro = this.dataActividad.puntos_encuentro || [] ;
-                this.dataActividad.puntosEncuentroBorrados = [];
-                this.categoriaSeleccionada = this.dataActividad.tipo !== undefined ? this.dataActividad.tipo.categoria : null;
-                this.estadoConstruccion = this.dataActividad.estadoConstruccion;
-                this.inscripcionInterna = this.dataActividad.inscripcionInterna;
-                this.localidadSeleccionada = this.dataActividad.localidad;
-                this.paisSeleccionado = this.dataActividad.pais;
-                this.provinciaSeleccionada = this.dataActividad.provincia;
-                this.tipoSeleccionado = this.dataActividad.tipo !== undefined  ? this.dataActividad.tipo : null;
-                this.oficinaSeleccionada = this.dataActividad.oficina !== undefined  ? this.dataActividad.oficina : null;
-                this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
-                if (this.dataActividad.coordinador !== undefined) {
-                    this.coordinadorSeleccionado =  this.dataActividad.coordinador;
-                } else {
-                    this.dataActividad.coordinador = null;
-                    this.coordinadorSeleccionado = null;
-                }
-            },
-            actualizarOficina() {
-                this.dataActividad.oficina = this.oficinaSeleccionada;
-            },
-            onSearch: function (text, loading) {
-                loading(true);
-                this.search(loading, text, this);
-            },
-            search: _.debounce((loading, search, vm) => {
-                fetch(
-                    `/ajax/coordinadores?coordinador=${escape(search)}`
-                ).then(res => {
-                    res.json().then(json => (vm.dataCoordinadores = json.data));
-                    loading(false);
-                });
-            }, 1000),
-            actualizarCoordinador() {
-                this.dataActividad.coordinador = this.coordinadorSeleccionado;
-            },
             getProvincias() {
                 if (this.paisSeleccionado !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
                     this.dataActividad.pais = this.paisSeleccionado;
@@ -572,45 +520,29 @@
                 }
             },
             getTiposDeActividad() {
-                if (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.categoria !== undefined) {
-                    if (this.dataActividad.tipo.categoria !== this.categoriaSeleccionada) {
-                        this.axiosGet('/ajax/categorias/' + this.categoriaSeleccionada.id + '/tipos',
-                            function (data, self) {
-                                self.tiposDeActividad = data;
-                                self.tipoSeleccionado = null;
-                                self.dataActividad.idTipo = null;
-
-                            }
-                        );
-                        this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
-                    }
-                } else {
-                    this.dataActividad.tipo = {
-                        'categoria': this.categoriaSeleccionada
-                    };
+                if (this.dataActividad.tipo.categoria !== this.categoriaSeleccionada) {
+                    this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
+                    this.axiosGet('/ajax/categorias/' + this.dataActividad.tipo.categoria.id + '/tipos',
+                        function (data, self) {
+                            self.tiposDeActividad = data;
+                            self.tipoSeleccionado = null;
+                            self.dataActividad.idTipo = null;
+                        }
+                    );
                 }
             },
             actualizarTipoDeActividad() {
                 if (this.tipoSeleccionado !== null) {
                     this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
-                    if (this.dataActividad.tipo === undefined) {
-                        this.dataActividad.tipo = {};
-                    }
-
-                    if (!this.dataActividad.descripcion) {
-                        this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
-                    }
-
                     this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
                     this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
                     this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
-                    this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
                 }
             },
-            getOficinas() {
-                this.axiosGet('/admin/ajax/oficinas/',
+            getUnidadesOrganizacionales() {
+                this.axiosGet('/admin/ajax/unidadesOrganizacionales/',
                     function (data, self) {
-                        self.dataOficinas = data;
+                        self.unidadesOrganizacionales = data;
                     });
             },
             axiosGet(url, fCallback, params = []) {
@@ -644,14 +576,11 @@
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 axios.post(url, params)
                     .then(response => {
-                        fCallback(response.data, this);
-                        Event.$emit('success');
-                        this.readonly = true;
+                        fCallback(response.data, this)
                     })
                     .catch((error) => {
-                        Event.$emit('error');
                         // Error
-                        console.info('Error en: ' + url);
+                        console.error('Error en: ' + url);
                         console.error(error.response.status);
                         if (error.response) {
                             // The request was made and the server responded with a status code
@@ -716,21 +645,15 @@
 
             },
             guardar(){
-                let url;
-
-                if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
-                    url = `/admin/actividades/crear`;
-                } else {
-                    url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
-                }
+                this.readonly = true;
+                let url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 window.scrollTo(0, 0);
                 this.axiosPost(url, function (data, self) {
-                    if (self.dataActividad.idActividad === null) {
-                        window.location.replace('/admin/actividades');
-                    }
                     self.mensajeGuardado = data;
                     self.guardado = true;
                     self.validationErrors = [];
+
+
                 }, this.dataActividad);
             },
             borrarPunto: function (obj) {
@@ -741,6 +664,18 @@
                 var form = document.getElementById('formDelete');
                 form.submit();
             },
+            inicializar: function () {
+                this.dataActividad.estadoConstruccion = (this.dataActividad.estadoConstruccion === "Abierta");
+                this.dataActividad.puntosEncuentroBorrados = [];
+                this.categoriaSeleccionada = this.dataActividad.tipo.categoria;
+                this.estadoConstruccion = this.dataActividad.estadoConstruccion;
+                this.inscripcionInterna = this.dataActividad.inscripcionInterna;
+                this.localidadSeleccionada = this.dataActividad.localidad;
+                this.paisSeleccionado = this.dataActividad.pais;
+                this.provinciaSeleccionada = this.dataActividad.provincia;
+                this.tipoSeleccionado = this.dataActividad.tipo;
+                this.unidadSeleccionada = this.dataActividad.unidad_organizacional;
+            }
         }
     }
 </script>
