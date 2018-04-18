@@ -1,3 +1,5 @@
+import Simplert from "vue2-simplert";
+
 Vue.config.devtools = true;
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
@@ -13,6 +15,7 @@ Vue.component('datatable', VueTable);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('v-switch', vSwitch);
+Vue.component('simplert', Simplert);
 
 window.Event = new Vue();
 

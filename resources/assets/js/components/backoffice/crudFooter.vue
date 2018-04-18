@@ -1,6 +1,7 @@
 <template>
     <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
         <!-- To the right -->
+        <simplert ref="confirmar"></simplert>
         <div>
             <button class="btn btn-primary" v-show="readonly" @click="this.editar"><i class="fa fa-edit"></i> Editar
             </button>
@@ -32,7 +33,22 @@
                 location.reload();
             },
             eliminar: function () {
-                Event.$emit('eliminar');
+                var self = this;
+                self.$refs.confirmar.openSimplert({
+                    title: 'BORRAR ACTIVIDAD',
+                    message: "Estás por eliminar este registro, se borrará permanentemente y no podrá recuperarse. ¿Deseas continuar?",
+                    useConfirmBtn: true,
+                    isShown: true,
+                    disableOverlayClick: true,
+                    customClass: 'confirmar',
+                    customCloseBtnText: 'CANCELAR',
+                    customCloseBtnClass: 'btn btn-default',
+                    customConfirmBtnText: 'SI, BORRAR',
+                    customConfirmBtnClass: 'btn btn-danger',
+                    onConfirm: function () {
+                        Event.$emit('eliminar');
+                    }
+                })
             },
 
             guardar: function () {

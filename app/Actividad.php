@@ -78,7 +78,10 @@ class Actividad extends Model
         static::deleting(function ($actividad) { // before delete() method call this
             DB::beginTransaction();
             try {
-                $actividad->escuelas()->delete();
+                foreach ($actividad->escuelas as $escuela) {
+                    DB::statement('DELETE FROM Cuadrilla where idEscuela = ' . $escuela->idEscuela);
+                    $escuela->delete();
+                }
                 // ToDo: Enviar mail a los inscriptos
                 $inscripciones = $actividad->inscripciones();
 

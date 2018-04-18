@@ -367,7 +367,6 @@
                 <div class="form-group">
                     <label for="idFormulario">Evaluaciones (Id FOBU)</label>
                     <input
-                            type="url"
                             class="form-control"
                             id="idFormulario"
                             name="idFormulario"
@@ -520,13 +519,6 @@
                         });
                 }
             },
-            getCategorias() {
-                // this.axiosGet('/ajax/categorias/',
-                //     function (data, self) {
-                //     self.categorias = data;
-                // });
-
-            },
             getTiposDeActividad() {
                 if (this.dataActividad.tipo.categoria !== this.categoriaSeleccionada) {
                     this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -655,11 +647,12 @@
             guardar(){
                 this.readonly = true;
                 let url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
+                window.scrollTo(0, 0);
                 this.axiosPost(url, function (data, self) {
-                    console.log("datos guardados correctamente.");
                     self.mensajeGuardado = data;
                     self.guardado = true;
                     self.validationErrors = [];
+
 
                 }, this.dataActividad);
             },
@@ -667,8 +660,8 @@
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
             },
             eliminar: function () {
+
                 var form = document.getElementById('formDelete');
-                console.log(form);
                 form.submit();
             },
             inicializar: function () {

@@ -145,44 +145,7 @@ class ActividadesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $v = Validator::make(
-            $request->all(),
-            [
-            'costo' => 'numeric | min:0',
-            'descripcion' => 'required',
-            'fechaInicio' => 'required | date',
-            'fechaInicioInscripciones' => 'required | date',
-            'fechaFin' => 'required | date',
-            'fechaFinInscripciones' => 'required | date',
-            'idTipo' => 'required',
-            'inscripcionInterna' => 'required',
-            'localidad.id' => 'required',
-            'limiteInscripciones' => 'numeric',
-            'mensajeInscripcion' => 'required',
-            'nombreActividad' => 'required',
-            'pais.id' => 'required',
-            'provincia.id' => 'required',
-            'tipo.categoria.id' => 'required',
-            'unidad_organizacional.idUnidadOrganizacional' => 'required',
-            ]
-        );
-
-        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
-
-            return $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-        $v->sometimes('fechaInicioEvaluaciones', 'required|date', function ($request) {
-
-            return $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-        $v->sometimes('fechaFinEvaluaciones', 'required|date', function ($request) {
-
-            return $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-        $v->sometimes('LinkPago', 'url', function ($request) {
-
-            return $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
+        $v = $this->createValidator($request);
 
         if ($v->passes()) {
             $actividad = Actividad::find($id);
@@ -216,20 +179,13 @@ class ActividadesController extends Controller
             $actividad->idLocalidad = $request['localidad']['id'];
             $actividad->idUnidadOrganizacional = $request['unidad_organizacional']['idUnidadOrganizacional'];
             $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
+            $actividad->lugar = ''; // Lugar está definido en la DB como NOT NULL y no está presente en el $request
+            $actividad->LinkPago = $request['LinkPago'];
+            $actividad->idFormulario = (int)$request['idFormulario'];
 
             if ($actividad->save()) {
                 foreach ($request->puntos_encuentro as $punto) {
-                    if (!isset($punto['idPuntoEncuentro'])) {
-                        $p = new PuntoEncuentro();
-                        $p->punto = $punto['punto'];
-                        $p->horario = $punto['horario'];
-                        $p->idActividad = $actividad->idActividad;
-                        $p->idLocalidad = $punto['idLocalidad'];
-                        $p->idPais = $punto['idPais'];
-                        $p->idProvincia = $punto['idProvincia'];
-                        $p->idPersona = $punto['responsable']['id'];
-                        $p->save();
-                    }
+                    $punto = $this->guardarPunto($punto, $actividad);
                 }
 
                 foreach ($request->puntosEncuentroBorrados as $borrado) {
@@ -261,6 +217,74 @@ class ActividadesController extends Controller
             return response($exception->getMessage(), 500);
         }
         return redirect()->action('backoffice\ActividadesController@index')
-            ->with('status', 'La actividad se eliminó correctamente');
+            ->with(['mensaje' => 'La actividad se eliminó correctamente']);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    private function createValidator(Request $request)
+    {
+        $v = Validator::make(
+            $request->all(),
+            [
+                'costo' => 'numeric | min:0',
+                'descripcion' => 'required',
+                'fechaInicio' => 'required | date',
+                'fechaInicioInscripciones' => 'required | date',
+                'fechaFin' => 'required | date',
+                'fechaFinInscripciones' => 'required | date',
+                'idTipo' => 'required',
+                'inscripcionInterna' => 'required',
+                'localidad.id' => 'required',
+                'limiteInscripciones' => 'numeric',
+                'mensajeInscripcion' => 'required',
+                'nombreActividad' => 'required',
+                'pais.id' => 'required',
+                'provincia.id' => 'required',
+                'tipo.categoria.id' => 'required',
+                'unidad_organizacional.idUnidadOrganizacional' => 'required',
+            ]
+        );
+
+        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('fechaInicioEvaluaciones', 'required|date', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('fechaFinEvaluaciones', 'required|date', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        $v->sometimes('LinkPago', 'url', function ($request) {
+
+            return $request['tipo']['flujo'] == 'CONSTRUCCION';
+        });
+        return $v;
+    }
+
+    /**
+     * @param $punto PuntoEncuentro
+     * @param $actividad Actividad
+     * @return mixed
+     */
+    private function guardarPunto($punto, $actividad)
+    {
+        if (!isset($punto['idPuntoEncuentro'])) {
+            $p = new PuntoEncuentro();
+            $p->punto = $punto['punto'];
+            $p->horario = $punto['horario'];
+            $p->idActividad = $actividad->idActividad;
+            $p->idLocalidad = $punto['idLocalidad'];
+            $p->idPais = $punto['idPais'];
+            $p->idProvincia = $punto['idProvincia'];
+            $p->idPersona = $punto['responsable']['id'];
+            $p->save();
+        }
+        return $punto;
     }
 }
