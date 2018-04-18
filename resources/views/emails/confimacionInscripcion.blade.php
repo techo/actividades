@@ -4,7 +4,7 @@
 </head>
  
 <body>
-<h2>Te inscribiste a {{$inscripcion}}</h2>
+<h2>Te inscribiste a {{$inscripcion->actividad->nombreActividad}}</h2>
 <br/>
 </body>
  

@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\RegistroUsuario' => [
             'App\Listeners\NotificacionRegistroUsuario',
         ],
+        'App\Events\NuevaInscripcion' => [
+            'App\Listeners\NotificacionNuevaInscripcion',
+        ],
     ];
 
     /**

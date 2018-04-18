@@ -8,6 +8,8 @@ use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Mail;
+use App\Mail\MailConfimacionInscripcion;
 
 class InscripcionesController extends Controller
 {
@@ -46,6 +48,8 @@ class InscripcionesController extends Controller
             $inscripcion->estado = 'Sin Contactar';
             $inscripcion->fechaInscripcion = new Carbon();
             $inscripcion->save();
+            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }
         return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
     }
