@@ -32,7 +32,7 @@ Vue.component('inscripcion', Inscripcion);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('perfil', Perfil);
-Vue.component('mis-actividades', MisActividades);
+Vue.component('mis-inscripciones', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
 

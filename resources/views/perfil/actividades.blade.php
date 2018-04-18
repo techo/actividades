@@ -8,7 +8,7 @@
 @endsection
 
 @section('main_content')
-	<mis-actividades></mis-actividades>
+	<mis-inscripciones></mis-inscripciones>
 @endsection
 
 @section('additional_scripts')
