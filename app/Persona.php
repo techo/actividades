@@ -26,7 +26,7 @@ class Persona extends Authenticatable
     }
 
     public function estaInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->count();
+        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count();
     }
 
     public function verificacion()

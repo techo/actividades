@@ -14,6 +14,7 @@ use App\Persona;
 use App\Actividad;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
+use App\Http\Resources\InscripcionResource;
 
 use App\Rules\PassExiste;
 use App\Inscripcion;
@@ -135,13 +136,11 @@ class UsuarioController extends Controller
 
 
     public function inscripciones(Request $request) {
-        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->get();
+        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->whereNotIn('estado',['Desinscripto'])->get();
         $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
-                $actividad = new ActividadResource($inscripcion);
-                $actividad->tipo = new TipoResource($inscripcion->tipo);
-                $resourceCollection[] = new ActividadResource($inscripcion);
+                $resourceCollection[] = new InscripcionResource($inscripcion);
             }
         }
         return $resourceCollection;
@@ -150,7 +149,8 @@ class UsuarioController extends Controller
     public function desinscribir(Request $request, $idActividad) {
         $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
         foreach ($inscripciones as $inscripcion) {
-          $inscripcion->delete();
+          $inscripcion->estado = 'Desinscripto';
+          $inscripcion->save();
         }
         return ['success' => true];
     }

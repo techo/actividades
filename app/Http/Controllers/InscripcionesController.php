@@ -31,21 +31,21 @@ class InscripcionesController extends Controller
      */
     public function create(Request $request, $id)
     {
-        if (Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->get()->count() == 0) {
+        $actividad = Actividad::find($id);
+        $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
+        $persona = Auth::user();
+        $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
+        if (!$inscripcion) {
             $inscripcion = new Inscripcion();
-            $actividad = Actividad::find($id);
-            $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
             $inscripcion->idActividad = $id;
             $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
             $inscripcion->idPersona = Auth::user()->idPersona;
-            $inscripcion->estado = 'Sin Contactar';
             $inscripcion->evaluacion = 0;
             $inscripcion->acompanante = '';
+            $inscripcion->estado = 'Sin Contactar';
             $inscripcion->save();
-            return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }
-        return redirect('actividades/' . $id);
-
+        return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
     }
 
     /**
