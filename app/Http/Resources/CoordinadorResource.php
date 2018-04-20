@@ -15,7 +15,7 @@ class CoordinadorResource extends Resource
     public function toArray($request)
     {
         return [
-            'id'        => $this->idPersona,
+            'idPersona' => $this->idPersona,
             'dni'       => $this->dni,
             'nombre'    => $this->nombreCompleto,
         ];

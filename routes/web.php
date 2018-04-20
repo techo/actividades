@@ -74,12 +74,15 @@ Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar
 
 Route::prefix('/admin')->group(function () {
     Route::get('/actividades', 'backoffice\ActividadesController@index');
+    Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
+    Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
-    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
+//    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
+    Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
 });
 
 Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');

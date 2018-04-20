@@ -9,7 +9,7 @@ class Actividad extends Model
 {
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
-    protected $guarded = ['idActividad'];
+    protected $guarded = ['idActividad', 'pDNI'];
     protected $dates =
         [
             'fechaCreacion', 'fechaModificacion',
@@ -42,9 +42,19 @@ class Actividad extends Model
         return $this->belongsTo(\App\UnidadOrganizacional::class, 'idUnidadOrganizacional', 'idUnidadOrganizacional');
     }
 
+    public function oficina()
+    {
+        return $this->belongsTo(\App\Oficina::class, 'idOficina', 'id');
+    }
+
     public function modificadoPor()
     {
         return $this->belongsTo(Persona::class, 'idPersonaModificacion', 'idPersona');
+    }
+
+    public function coordinador()
+    {
+        return $this->belongsTo(Persona::class, 'idCoordinador', 'idPersona');
     }
 
     public function scopePersonaInscripta($query, $idPersona) {

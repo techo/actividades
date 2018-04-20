@@ -1,27 +1,19 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad)
+@section('page_title', 'Nueva Actividad')
 
 @section('subtitulo')
-    Ultima modificación por
-    {{ $actividad->modificadoPor->nombres OR 'N/A' }}
-    {{ $actividad->modificadoPor->apellidoPaterno OR '' }}
+
 @endsection
 
 @section('content')
-    <form method="POST" id="formDelete"
-          action="{{ action('backoffice\ActividadesController@destroy', ['id' => $actividad->idActividad]) }}">
-        <input type="hidden" value="DELETE" name="_method">
-        {{ csrf_field() }}
-    </form>
-
     <actividades-show
             actividad="{{ $actividad }}"
             paises="{{ $paises }}"
-            tipos=" {{ $tipos }}"
+            localidades=""
+            provincias=""
+            tipos=""
             categorias="{{ $categorias }}"
-            provincias="{{  $provincias }}"
-            localidades="{{ $localidades }}"
             edicion="{{ $edicion }}"
     ></actividades-show>
 @endsection
@@ -35,5 +27,9 @@
 @endpush
 
 @section('footer')
-    <crud-footer></crud-footer>
+    <crud-footer
+            cancelar-url="/admin/actividades"
+            edicion="{{ $edicion }}"
+    >
+    </crud-footer>
 @endsection

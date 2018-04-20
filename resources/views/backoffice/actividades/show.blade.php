@@ -22,7 +22,7 @@
             categorias="{{ $categorias }}"
             provincias="{{  $provincias }}"
             localidades="{{ $localidades }}"
-            edicion="{{ $edicion }}"
+            edicion={{ $edicion }}
     ></actividades-show>
 @endsection
 
@@ -35,5 +35,7 @@
 @endpush
 
 @section('footer')
-    <crud-footer></crud-footer>
+    <crud-footer
+            cancelar-url="/admin/actividades"
+            edicion={{ $edicion }}></crud-footer>
 @endsection

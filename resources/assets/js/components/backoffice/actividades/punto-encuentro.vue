@@ -148,7 +148,7 @@
         data: function () {
             return {
                 dataReadonly: this.readonly,
-                dataPuntosEncuentro: this.$parent.dataActividad.puntos_encuentro,
+                dataPuntosEncuentro: (this.$parent.dataActividad.puntos_encuentro === undefined) ? [] : this.$parent.dataActividad.puntos_encuentro,
                 coordinador: '',
                 punto: '',
                 horario: '',
@@ -219,14 +219,14 @@
                     res.json().then(json => (vm.dataCoordinadores = json.data));
                     loading(false);
                 });
-            }, 350),
+            }, 1000),
             incluirPunto: function (e) {
                 let valid = this.validate();
                 if (valid) {
                     this.dataPuntosEncuentro.push({
                         'responsable': {
                             'dni': this.coordinador.dni,
-                            'id': this.coordinador.id,
+                            'idPersona': this.coordinador.idPersona,
                             'nombres': this.coordinador.nombre
                         },
                         'horario': this.horario,
