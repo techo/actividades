@@ -25,11 +25,12 @@ class ActividadesController extends Controller
      */
     public function index(Request $request)
     {
+
         $datatableConfig = config('datatables.actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
         isset($request->msg) ? Session::flash('mensaje', 'La actividad se eliminó correctamente') : false;
-        isset($request->ok) ? Session::flash('mensaje', 'La actividad se creó correctamente') : false;
+//        isset($request->ok) ? Session::flash('mensaje', 'La actividad se creó correctamente') : false;
         return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'mensaje'));
     }
 
@@ -84,8 +85,18 @@ class ActividadesController extends Controller
     public function store(Request $request)
     {
         $actividad = new Actividad();
+        $validator = $this->createValidator($request);
+        if ($validator->passes()) {
+            if ($this->guardarActividad($request, $actividad)) {
+                $request->session()->put('mensaje', 'La actividad se creó correctamente');
+                return response('Actividad guardada correctamente.', 200);
+            } else {
+                return response('No se pudo guardar la actividad', 500);
+            }
+        }
 
-        return $this->guardarActividad($request, $actividad);
+        return response($validator->errors()->all(), 422);
+
     }
 
     /**
@@ -111,7 +122,10 @@ class ActividadesController extends Controller
             ]
         )->where('idActividad', $id)->first();
 
-        $actividad->coordinador->nombre = $actividad->coordinador->nombreCompleto;
+        if ($actividad->coordinador) {
+            $actividad->coordinador->nombre = $actividad->coordinador->nombreCompleto;
+        }
+
         $categorias = CategoriaActividad::all();
         $tipos = $actividad->tipo->categoria->tipos;
         try {
@@ -253,20 +267,18 @@ class ActividadesController extends Controller
     /**
      * @param Request $request
      * @param $actividad
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return Boolean
      */
     private function guardarActividad(Request $request, $actividad)
     {
-        $v = $this->createValidator($request);
-        if ($v->passes()) {
-
             foreach ($request->except('idActividad',
                 'casasPlanificadas',
                 'casasConstruidas',
                 'comentarios',
                 'tipoConstruccion',
                 'idListaCTCT',
-                'modificado_por.idPersona'
+                'modificado_por.idPersona',
+                'idOficina'
             )
                      as $field => $value) {
 
@@ -288,6 +300,7 @@ class ActividadesController extends Controller
             $actividad->idProvincia = $request['provincia']['id'];
             $actividad->idLocalidad = $request['localidad']['id'];
             $actividad->idCoordinador = $request['coordinador']['idPersona'];
+        $actividad->idOficina = $request['oficina']['id'];
 
             if (empty($request['idUnidadOrganizacional'])) {
                 $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
@@ -321,13 +334,10 @@ class ActividadesController extends Controller
                     $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
                     $punto->delete();
                 }
+                return true;
             }
 
-            return response('Actividad guardada correctamente.', 200);
-
-        }
-
-        return response($v->errors()->all(), 422);
+        return false;
     }
 
 }

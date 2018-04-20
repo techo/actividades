@@ -721,7 +721,7 @@
                 window.scrollTo(0, 0);
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
-                        window.location.replace('/admin/actividades?ok=1');
+                        window.location.replace('/admin/actividades');
                     }
                     self.mensajeGuardado = data;
                     self.guardado = true;
