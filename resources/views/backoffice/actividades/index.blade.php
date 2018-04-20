@@ -11,6 +11,9 @@
     @if (Session::has('mensaje'))
         <div class="callout callout-success">
             <h4>{{ Session::get('mensaje') }}</h4>
+            @php
+                \Illuminate\Support\Facades\Session::remove('mensaje');
+            @endphp
         </div>
     @endif
 
