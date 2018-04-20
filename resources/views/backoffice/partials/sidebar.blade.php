@@ -11,7 +11,7 @@
             <div class="pull-left info">
                 <p>{{ Auth::user()->nombreCompleto }}</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Administrador</a>
+                <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->getRoleNames()->first() }}</a>
             </div>
         </div>
 
