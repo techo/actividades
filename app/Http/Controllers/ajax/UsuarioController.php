@@ -65,15 +65,15 @@ class UsuarioController extends Controller
       $persona->idUnidadOrganizacional = 0;
       $persona->idCiudad = 0;
       $persona->verificado = false;
-      $response = Event::fire(new RegistroUsuario($persona));
       $persona->save();
+      #$response = Event::fire(new RegistroUsuario($persona));
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
       $verificacion->token = str_random(40);
       $verificacion->save();
       Auth::login($persona, true);
       $request->session()->regenerate();
-      Mail::to($persona->mail)->send(new VerificarMail($persona));
+//      Mail::to($persona->mail)->send(new VerificarMail($persona));
       return ['login_callback' =>  $url, 'user' => $persona];
   }
 

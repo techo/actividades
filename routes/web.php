@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
-
-//Frontoffice
+use App\Actividad;
+use App\Persona;
+use App\Jobs\EnviarMailsCancelacionActividad;
+use Carbon\Carbon;
 
 Route::get('/', 'HomeController@index')->name('home');
 
@@ -55,6 +57,19 @@ Route::get('/registro', function (Request $request) {
 Auth::routes();
 Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
+
+Route::get('/queue', function() {
+
+    $actividad = Actividad::find(10575);
+    foreach ($actividad->inscripciones as $inscripcion) {
+        $persona = $inscripcion->persona;
+        $job = (new EnviarMailsCancelacionActividad($actividad, $persona));
+        Log::info("Request Cycle with Queues Begins");
+        dispatch($job);
+        Log::info("Request Cycle with Queues Ends");
+    };
+    return 'email sent';
+});
 
 Route::get('autenticado', function () {
     return (Auth::check()) ? 'si' : 'no';
