@@ -596,6 +596,11 @@
                     if (this.dataActividad.tipo === undefined) {
                         this.dataActividad.tipo = {};
                     }
+
+                    if (!this.dataActividad.descripcion) {
+                        this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
+                    }
+
                     this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
                     this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
                     this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
