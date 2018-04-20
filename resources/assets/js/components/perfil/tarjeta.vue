@@ -2,7 +2,8 @@
      <div class="col-sm-4">
         <div class="card tarjeta p-3">
             <simplert ref="confirmar"></simplert>
-            <img class="card-img-top" v-on:click="ir_a_actividad" src="/img/tarjeta-1.jpg" alt="Card image cap" >
+            <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.actividad.tipo.imagen"
+                 alt="Card image cap">
             <div class="card-body px-0">
                 <p class="techo-titulo-card">{{ inscripcion.actividad.tipo.nombre }}</p>
                 <h5 class="card-title" v-on:click="ir_a_actividad">{{ inscripcion.actividad.nombreActividad | truncate(30) }}</h5>
