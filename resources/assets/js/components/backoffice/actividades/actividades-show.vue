@@ -381,46 +381,48 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="idFormulario">Evaluaciones (Id FOBU)</label>
-                        <input
-                                class="form-control"
-                                id="idFormulario"
-                                name="idFormulario"
-                                :disabled="readonly"
-                                v-model="dataActividad.idFormulario"
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicioEvaluaciones"
-                                id="fechaInicioEvaluaciones"
-                                name="fechaInicioEvaluaciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFinEvaluaciones"
-                                id="fechaFinEvaluaciones"
-                                name="fechaFinEvaluaciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-            </div>
+            <!--
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="idFormulario">Evaluaciones (Id FOBU)</label>
+                                    <input
+                                            class="form-control"
+                                            id="idFormulario"
+                                            name="idFormulario"
+                                            :disabled="readonly"
+                                            v-model="dataActividad.idFormulario"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
+                                    <datepicker
+                                            placeholder="Seleccione una fecha"
+                                            v-model="dataActividad.fechaInicioEvaluaciones"
+                                            id="fechaInicioEvaluaciones"
+                                            name="fechaInicioEvaluaciones"
+                                            language="es"
+                                            :disabled-picker="readonly"
+                                    ></datepicker>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
+                                    <datepicker
+                                            placeholder="Seleccione una fecha"
+                                            v-model="dataActividad.fechaFinEvaluaciones"
+                                            id="fechaFinEvaluaciones"
+                                            name="fechaFinEvaluaciones"
+                                            language="es"
+                                            :disabled-picker="readonly"
+                                    ></datepicker>
+                                </div>
+                            </div>
+                        </div>
+            -->
         </div>
             <!-- /.box-body -->
     </div>

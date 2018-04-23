@@ -22,7 +22,7 @@ class ActividadesController extends BaseController
         list($sortField, $sortOrder) = $sort;
 
         $result = DB::table('Actividad')
-            ->join('UnidadOrganizacional', 'Actividad.idUnidadOrganizacional', '=', 'UnidadOrganizacional.idUnidadOrganizacional')
+            ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
@@ -32,8 +32,8 @@ class ActividadesController extends BaseController
                     'fechaInicio',
                     'fechaFin',
                     'estadoConstruccion',
-                    'UnidadOrganizacional.idUnidadOrganizacional',
-                    'UnidadOrganizacional.nombre AS nombreUnidad',
+                    'atl_oficinas.id',
+                    'atl_oficinas.nombre AS oficina',
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                     'atl_CategoriaActividad.id as idCategoria',
@@ -46,12 +46,11 @@ class ActividadesController extends BaseController
                 $result->orWhere('nombreActividad', 'like', '%'. $request->filter . '%');
                 $result->orWhere('estadoConstruccion', 'like', '%'. $request->filter . '%');
                 $result->orWhere('Tipo.nombre', 'like', '%'. $request->filter . '%');
-                $result->orWhere('UnidadOrganizacional.nombre', 'like', '%'. $request->filter . '%');
+                $result->orWhere('atl_oficinas.nombre', 'like', '%' . $request->filter . '%');
             });
         }
 
-        $result = $result->take(21)->get();
-
+        $result = $result->get();
         $result = $this->paginate($result,10);
         return $result;
     }

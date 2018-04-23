@@ -122,32 +122,36 @@ class ActividadesController extends Controller
             ]
         )->where('idActividad', $id)->first();
 
-        if ($actividad->coordinador) {
-            $actividad->coordinador->nombre = $actividad->coordinador->nombreCompleto;
+        if ($actividad) {
+            if ($actividad->coordinador) {
+                $actividad->coordinador->nombre = $actividad->coordinador->nombreCompleto;
+            }
+
+            $categorias = CategoriaActividad::all();
+            $tipos = $actividad->tipo->categoria->tipos;
+            try {
+                $provincias = $actividad->pais->provincias;
+                $localidades = $actividad->provincia->localidades;
+
+            } catch (\Exception $e) {
+                $provincias = null;
+                $localidades = null;
+            }
+            return view(
+                'backoffice.actividades.show',
+                compact(
+                    'actividad',
+                    'paises',
+                    'provincias',
+                    'localidades',
+                    'edicion',
+                    'tipos',
+                    'categorias'
+                )
+            );
         }
 
-        $categorias = CategoriaActividad::all();
-        $tipos = $actividad->tipo->categoria->tipos;
-        try {
-            $provincias = $actividad->pais->provincias;
-            $localidades = $actividad->provincia->localidades;
-
-        } catch (\Exception $e) {
-            $provincias = null;
-            $localidades = null;
-        }
-        return view(
-            'backoffice.actividades.show',
-            compact(
-                'actividad',
-                'paises',
-                'provincias',
-                'localidades',
-                'edicion',
-                'tipos',
-                'categorias'
-            )
-        );
+        abort(404);
     }
 
     /**
@@ -170,8 +174,17 @@ class ActividadesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $actividad = Actividad::find($id);
-        return $this->guardarActividad($request, $actividad);
+        $actividad = Actividad::findOrFail($id);
+        $validator = $this->createValidator($request);
+        if ($validator->passes()) {
+            if ($this->guardarActividad($request, $actividad)) {
+                $request->session()->put('mensaje', 'La actividad se creó correctamente');
+                return response('Actividad guardada correctamente.', 200);
+            } else {
+                return response('No se pudo guardar la actividad', 500);
+            }
+        }
+        return response($validator->errors()->all(), 422);
     }
 
     /**
@@ -182,14 +195,22 @@ class ActividadesController extends Controller
      */
     public function destroy($id)
     {
+        $actividad = Actividad::findOrFail($id);
+
+        if ($actividad->fechaInicio < Carbon::today()) {
+            Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
+            return redirect()->back();
+        }
+
+
         try {
-            $actividad = Actividad::find($id);
             $actividad->delete();
+
         } catch (\Exception $exception) {
             return response($exception->getMessage(), 500);
         }
-        return redirect()->action('backoffice\ActividadesController@index')
-            ->with(['mensaje' => 'La actividad se eliminó correctamente']);
+        Session::flash('mensaje', 'La actividad se eliminó correctamente');
+        return redirect()->to('/admin/actividades');
     }
 
     /**
@@ -204,9 +225,9 @@ class ActividadesController extends Controller
                 'coordinador.idPersona' => 'required | numeric',
                 'descripcion' => 'required',
                 'fechaInicio' => 'required | date',
-                'fechaInicioInscripciones' => 'required | date',
-                'fechaFin' => 'required | date',
-                'fechaFinInscripciones' => 'required | date',
+                'fechaInicioInscripciones' => 'required | date | before:fechaInicio',
+                'fechaFin' => 'required | date | after:fechaInicio',
+                'fechaFinInscripciones' => 'required | date | before:fechaFin | after:fechaInicioInscripciones',
                 'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
                 'localidad.id' => 'required',
@@ -220,26 +241,26 @@ class ActividadesController extends Controller
             ]
         );
 
-        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
 
         $v->sometimes('costo', 'required|numeric|min:1', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-
-        $v->sometimes('fechaInicioEvaluaciones', 'required|date', function ($request) {
-
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-        $v->sometimes('fechaFinEvaluaciones', 'required|date', function ($request) {
-
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
         $v->sometimes('LinkPago', 'url', function ($request) {
 
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
+//        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
+//            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+//        });
+
+//        $v->sometimes('fechaInicioEvaluaciones', 'required|date|after:fechaInicio', function ($request) {
+//
+//            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+//        });
+//        $v->sometimes('fechaFinEvaluaciones', 'required|date|after:fechaInicioEvaluaciones', function ($request) {
+//
+//            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+//        });
         return $v;
     }
 

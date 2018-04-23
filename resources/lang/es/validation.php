@@ -122,6 +122,8 @@ return [
         'provincia.id'          => 'provincia',
         'pais.id'               => 'pais',
         'tipo.categoria.id'     => 'categoría de la actividad',
-        'username'              => 'usuario'
+        'username' => 'usuario',
+        'fechaInicio' => 'fecha de inicio de la actividad',
+        'fechaFin' => 'fecha de fin de la actividad'
     ],
 ];
