@@ -76,6 +76,7 @@ Route::prefix('/admin')->group(function () {
     Route::get('/actividades', 'backoffice\ActividadesController@index');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
+    Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit');
@@ -83,6 +84,8 @@ Route::prefix('/admin')->group(function () {
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
 //    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
+    Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
+    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
 });
 
 Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');

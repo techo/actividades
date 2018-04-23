@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
-
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
-class ActividadesController extends BaseController
+class CoordinadorActividadesController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         $sortDefault = 'nombreActividad|asc';
         $request->sort = $request->sort ?? $sortDefault;
         $sort = explode('|',$request->sort);
@@ -39,7 +33,8 @@ class ActividadesController extends BaseController
                     'atl_CategoriaActividad.id as idCategoria',
                 ]
             )
-        ->orderBy($sortField, $sortOrder);
+            ->orderBy($sortField, $sortOrder)
+            ->where('idCoordinador', Auth::user()->idPersona); //Falta mergear branch de Johan para hacer esto
 
         if ($request->has('filter')){
             $result->orWhere(function($result) use ($request) {
@@ -54,71 +49,5 @@ class ActividadesController extends BaseController
 
         $result = $this->paginate($result,10);
         return $result;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
