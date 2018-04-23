@@ -16,13 +16,16 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="horario">Horario</label>
-                    <input
-                            type="text"
-                            id="horario"
-                            class="form-control"
-                            v-model="horario"
-                    >
+                    <label for="horario">Horario</label> <br>
+                    <!--
+                                        <input
+                                                type="text"
+                                                id="horario"
+                                                class="form-control"
+                                                v-model="horario"
+                                        >
+                    -->
+                    <vue-timepicker v-model="objHora"></vue-timepicker>
                     <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
             </div>
@@ -44,21 +47,9 @@
                     <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <button
-                            type="button"
-                            class="btn btn-light btn-lg"
-                            @click="incluirPunto"
-                            style="margin-top: 1em"
-                    >
-                        <i class="fa fa-plus text-primary"></i>
-                    </button>
-                </div>
-            </div>
         </div>
         <div class="row" v-show="!readonly">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="pais">País</label>
                     <v-select
@@ -75,7 +66,7 @@
                     <p class="text-danger" v-show="errorPais"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="provincia">Provincia</label>
                     <v-select
@@ -91,7 +82,7 @@
                     <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="localidad">Localidad</label>
                     <v-select
@@ -107,44 +98,65 @@
                     <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-        </div>
-
-        <div class="row" v-for="punto in dataPuntosEncuentro">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <p>{{ punto.punto }}</p>
-                </div>
-            </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <p>{{ punto.horario }}</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidosPaterno}}</p>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group" v-if="!readonly">
                     <button
                             type="button"
-                            class="btn btn-light"
-                            @click="borrar(punto.idPuntoEncuentro)"
+                            class="btn btn-light btn-lg"
+                            @click="incluirPunto"
+                            style="margin-top: 1em"
                     >
-                            <i class="fa fa-trash text-danger"></i>
+                        <i class="fa fa-plus text-primary"></i>  Incluir
                     </button>
                 </div>
             </div>
         </div>
+
+        <!--<div class="row">-->
+            <table class="table table-striped table-hover table-condensed">
+                <thead class="thead-light">
+                    <th scope="col">Lugar</th>
+                    <th scope="col">Horario</th>
+                    <th scope="col">Coordinador</th>
+                    <th scope="col">Borrar</th>
+                </thead>
+                <tbody>
+                    <tr v-for="punto in dataPuntosEncuentro">
+                        <td>
+                            <p>{{ punto.punto }}</p>
+                        </td>
+                        <td>
+                            <p>{{ punto.horario.substr(0,5) }}</p>
+                        </td>
+                        <td>
+                            <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno}}</p>
+                        </td>
+                        <td>
+                            <div class="form-group" v-if="!readonly">
+                                <button
+                                        type="button"
+                                        class="btn btn-light"
+                                        @click="borrar(punto.idPuntoEncuentro)"
+                                >
+                                        <i class="fa fa-trash text-danger"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--</div>-->
     </span>
 </template>
-
 <script>
+    import VueTimepicker from 'vue2-timepicker'
     import axios from 'axios';
     import _ from 'lodash';
 
     export default {
         name: "punto-encuentro",
         props: ['readonly', 'puntos-encuentro', 'paises'],
+        components: {VueTimepicker},
         data: function () {
             return {
                 dataReadonly: this.readonly,
@@ -152,6 +164,11 @@
                 coordinador: '',
                 punto: '',
                 horario: '',
+                objHora: {
+                    HH: "",
+                    mm: "",
+                    ss: ""
+                },
                 dataCoordinadores: [],
                 puntoSeleccionado: {},
                 dataPaises: this.paises,
@@ -179,6 +196,9 @@
             },
             provinciaSeleccionada: function () {
                 this.getLocalidades();
+            },
+            objHora: function () {
+                this.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
             }
         },
         computed: {
@@ -398,6 +418,7 @@
         }
     }
 </script>
+
 
 <style scoped>
 

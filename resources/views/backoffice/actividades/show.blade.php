@@ -27,12 +27,13 @@
     <actividades-show
             actividad="{{ $actividad }}"
             paises="{{ $paises }}"
-            tipos=" {{ $tipos }}"
+            tipos="{{ $tipos }}"
             categorias="{{ $categorias }}"
             provincias="{{  $provincias }}"
             localidades="{{ $localidades }}"
             edicion={{ $edicion }}
     ></actividades-show>
+    <p style="margin-bottom: 4em"></p>
 @endsection
 
 @push('additional_scripts')

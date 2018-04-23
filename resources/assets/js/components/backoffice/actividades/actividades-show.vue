@@ -18,7 +18,36 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nombreActividad">Nombre de Actividad</label>
+                        <input id="nombreActividad"
+                               type="text"
+                               class="form-control"
+                               v-model="dataActividad.nombreActividad"
+                               :disabled="readonly"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="coordinador">Coordinador</label>
+                        <v-select
+                                :options="dataCoordinadores"
+                                label="nombre"
+                                placeholder="Seleccione"
+                                name="coordinador"
+                                id="coordinador"
+                                v-model="coordinadorSeleccionado"
+                                v-bind:disabled="this.readonly"
+                                :filterable=false
+                                @search="onSearch"
+                                :onChange=this.actualizarCoordinador()
+                        >
+                        </v-select>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="estadoActividad">Estado de la Actividad</label>
                         <p>
@@ -35,25 +64,6 @@
                             >
                         </v-switch>
                         </p>
-
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="coordinador">Coordinador</label>
-                        <v-select
-                                :options="dataCoordinadores"
-                                label="nombre"
-                                placeholder="Seleccione"
-                                name="coordinador"
-                                id="coordinador"
-                                v-model="coordinadorSeleccionado"
-                                v-bind:disabled="this.readonly"
-                                :filterable=false
-                                @search="onSearch"
-                                :onChange=this.actualizarCoordinador()
-                        >
-                        </v-select>
                     </div>
                 </div>
             </div>
@@ -109,17 +119,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="nombreActividad">Nombre de Actividad</label>
-                        <input id="nombreActividad"
-                               type="text"
-                               class="form-control"
-                               v-model="dataActividad.nombreActividad"
-                               :disabled="readonly"
-                        >
-                    </div>
-                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
@@ -254,97 +253,82 @@
         <!-- /.box-header -->
     <div class="box-body">
         <div class="row">
-            <div class="col-md-4">
-            </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicioInscripciones"
-                                id="fechaInicioInscripciones"
-                                name="fechaInicioInscripciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label for="limiteInscripciones">Límite</label>
+                    <input id="limiteInscripciones"
+                           type="number"
+                           class="form-control"
+                           v-bind:disabled="readonly"
+                           v-model="dataActividad.limiteInscripciones"
+                    >
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFinInscripciones"
-                                id="fechaFinInscripciones"
-                                name="fechaFinInscripciones"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
                 </div>
+            </div>
+            <div class="col-md-2"><p style="margin-top: 3em"> voluntarios permitidos</p></div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="inscripcionInterna">Visibilidad de las Inscripciones</label>
+                    <br>
+                    <v-switch
+                            v-model="dataActividad.inscripcionInterna"
+                            theme="bootstrap"
+                            color="primary"
+                            id="inscripcionInterna"
+                            name="inscripcionInterna"
+                            type-bold="true"
+                            text-enabled="Privadas"
+                            text-disabled="Públicas"
+                            :disabled="readonly"
+                    >
+                    </v-switch>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaInicioInscripciones"
+                            id="fechaInicioInscripciones"
+                            name="fechaInicioInscripciones"
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
+                    <datepicker
+                            placeholder="Seleccione una fecha"
+                            v-model="dataActividad.fechaFinInscripciones"
+                            id="fechaFinInscripciones"
+                            name="fechaFinInscripciones"
+                            language="es"
+                            :disabled-picker="readonly"
+                    ></datepicker>
+                </div>
+            </div>
         </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="form-group">
-                        <label for="mensajeInscripcion">Mensaje De Inscripción</label>
-                        <textarea
-                                name="mensajeInscripcion"
-                                id="mensajeInscripcion"
-                                cols="30"
-                                rows="4"
-                                class="form-control"
-                                :disabled="readonly"
-                                v-model="dataActividad.mensajeInscripcion"
-                        >
-                            {{ dataActividad.mensajeInscripcion }}
-                        </textarea>
-                    </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="mensajeInscripcion">Mensaje De Inscripción</label>
+                    <textarea
+                            name="mensajeInscripcion"
+                            id="mensajeInscripcion"
+                            cols="30"
+                            rows="3"
+                            class="form-control"
+                            :disabled="readonly"
+                            v-model="dataActividad.mensajeInscripcion"
+                    >
+                        {{ dataActividad.mensajeInscripcion }}
+                    </textarea>
                 </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="inscripcionInterna">Visibilidad de las Inscripciones</label>
-                                <br>
-                                <v-switch
-                                        v-model="dataActividad.inscripcionInterna"
-                                        theme="bootstrap"
-                                        color="primary"
-                                        id="inscripcionInterna"
-                                        name="inscripcionInterna"
-                                        type-bold="true"
-                                        text-enabled="Privadas"
-                                        text-disabled="Públicas"
-                                        :disabled="readonly"
-                                >
-                                </v-switch>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="limiteInscripciones">Límite</label>
-                                <input id="limiteInscripciones"
-                                       type="number"
-                                       class="form-control"
-                                       v-bind:disabled="readonly"
-                                       v-model="dataActividad.limiteInscripciones"
-                                >
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <p style="margin-top: 3em">voluntarios permitidos</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-2">
-                </div>
-                <div class="col-md-2"></div>
-
             </div>
+        </div>
 
         </div><!-- /.box-body -->
     </div>
@@ -358,7 +342,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="costo">Costo ({{ dataActividad.moneda }})</label>
+                        <label for="costo">Costo (ARS)</label>
                         <input id="costo" name="costo"
                                type="number"
                                class="form-control"
@@ -381,48 +365,6 @@
                     </div>
                 </div>
             </div>
-            <!--
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="idFormulario">Evaluaciones (Id FOBU)</label>
-                                    <input
-                                            class="form-control"
-                                            id="idFormulario"
-                                            name="idFormulario"
-                                            :disabled="readonly"
-                                            v-model="dataActividad.idFormulario"
-                                    >
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="fechaInicioEvaluaciones">Fecha Inicio Evaluaciones</label>
-                                    <datepicker
-                                            placeholder="Seleccione una fecha"
-                                            v-model="dataActividad.fechaInicioEvaluaciones"
-                                            id="fechaInicioEvaluaciones"
-                                            name="fechaInicioEvaluaciones"
-                                            language="es"
-                                            :disabled-picker="readonly"
-                                    ></datepicker>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="fechaFinEvaluaciones">Fecha Fin Evaluaciones</label>
-                                    <datepicker
-                                            placeholder="Seleccione una fecha"
-                                            v-model="dataActividad.fechaFinEvaluaciones"
-                                            id="fechaFinEvaluaciones"
-                                            name="fechaFinEvaluaciones"
-                                            language="es"
-                                            :disabled-picker="readonly"
-                                    ></datepicker>
-                                </div>
-                            </div>
-                        </div>
-            -->
         </div>
             <!-- /.box-body -->
     </div>

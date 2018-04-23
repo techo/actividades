@@ -3,7 +3,7 @@
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
         <div class="col-md-8">
-            <button class="btn btn-default" v-show="!readonly" @click="this.cancelar">
+            <button class="btn btn-default" @click="this.cancelar">
                 <i class="fa fa-arrow-circle-left"></i> Volver al listado
             </button>
         </div>

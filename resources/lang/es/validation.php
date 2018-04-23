@@ -113,17 +113,8 @@ return [
 	*/
 
 	'attributes' => [
-        'coordinador.id'        => 'coordinador de la actividad',
-        'inscripcionesInternas' => 'visibilidad de las inscripciones',
-        'idTipo'                => 'tipo de actividad',
-        'localidad.id'          => 'localidad',
-        'oficina.id'            => 'oficina',
-        'password'              => 'contraseña',
-        'provincia.id'          => 'provincia',
-        'pais.id'               => 'pais',
-        'tipo.categoria.id'     => 'categoría de la actividad',
         'username' => 'usuario',
-        'fechaInicio' => 'fecha de inicio de la actividad',
-        'fechaFin' => 'fecha de fin de la actividad'
+        'password' => 'contraseña',
+        'LinkPago' => 'link de pago'
     ],
 ];

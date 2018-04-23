@@ -219,6 +219,21 @@ class ActividadesController extends Controller
      */
     private function createValidator(Request $request)
     {
+        $messages = [
+            'coordinador.*' => 'El campo coordinador de la actividad es requerido',
+            'fechaInicioInscripciones.before' => 'La fecha de inicio de las inscripciones debe ser anterior al inicio de la actividad',
+            'fechaFin.after' => 'La fecha fin debe ser posterior a la fecha de inicio de la actividad',
+            'fechaFinInscripciones' => 'La fecha de fin de las inscripciones debe ser posterior a la fecha de inicio de las inscripciones',
+            'inscripcionesInternas' => 'visibilidad de las inscripciones',
+            'idTipo.*' => 'Debe seleccionar una categoría y un tipo de actividad',
+            'localidad.*' => 'El campo localidad debe tener un valor válido',
+            'oficina.*' => 'El campo Oficina es requerido',
+            'provincia.*' => 'Debe seleccionar la provincia de la actividad',
+            'limiteInscripciones.*' => 'El límite máximo de voluntarios debe tener un valor numérico válido',
+            'nombreActividad.*' => 'La actividad debe tener un nombre',
+            'pais.*' => 'Debe seleccionar el país de la actividad',
+            'costo.*' => 'Debe especificar el costo de participar en la construcción',
+        ];
         $v = Validator::make(
             $request->all(),
             [
@@ -227,7 +242,7 @@ class ActividadesController extends Controller
                 'fechaInicio' => 'required | date',
                 'fechaInicioInscripciones' => 'required | date | before:fechaInicio',
                 'fechaFin' => 'required | date | after:fechaInicio',
-                'fechaFinInscripciones' => 'required | date | before:fechaFin | after:fechaInicioInscripciones',
+                'fechaFinInscripciones' => 'required | date | after:fechaInicioInscripciones',
                 'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
                 'localidad.id' => 'required',
@@ -238,17 +253,18 @@ class ActividadesController extends Controller
                 'provincia.id' => 'required',
                 'tipo.categoria.id' => 'required',
                 'oficina.id' => 'required',
-            ]
+                'LinkPago.*' => 'el campo link de pago debe tener una URL válida'
+            ], $messages
         );
 
 
         $v->sometimes('costo', 'required|numeric|min:1', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
-        $v->sometimes('LinkPago', 'url', function ($request) {
 
+        $v->sometimes('LinkPago', 'url', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
+        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);
 //        $v->sometimes('idFormulario', 'required|numeric', function ($request) {
 //            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
 //        });
@@ -263,6 +279,7 @@ class ActividadesController extends Controller
 //        });
         return $v;
     }
+
 
     /**
      * @param $punto PuntoEncuentro
@@ -343,6 +360,7 @@ class ActividadesController extends Controller
             $actividad->lugar = '';
             $actividad->mostrarFB = 0;
             $actividad->tipoConstruccion = '';
+        $actividad->moneda = 'ARS';
 
             if ($actividad->save()) {
                 if (!empty($request->puntos_encuentro)) {

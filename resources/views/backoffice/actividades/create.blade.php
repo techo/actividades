@@ -16,6 +16,7 @@
             categorias="{{ $categorias }}"
             edicion="{{ $edicion }}"
     ></actividades-show>
+    <p style="margin-bottom: 4em"></p>
 @endsection
 
 @push('additional_scripts')

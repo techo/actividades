@@ -27,12 +27,11 @@ class ActividadesController extends BaseController
             ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
                 [
-                    'idActividad as id',
+                    'Actividad.idActividad AS id',
                     'nombreActividad',
                     'fechaInicio',
                     'fechaFin',
                     'estadoConstruccion',
-                    'atl_oficinas.id',
                     'atl_oficinas.nombre AS oficina',
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
