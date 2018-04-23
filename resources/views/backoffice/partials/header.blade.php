@@ -48,7 +48,7 @@
                         <!-- The user image in the navbar-->
                         <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs"> Usuario </span>
+                        <span class="hidden-xs"> {{ Auth::user()->nombreCompleto }} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
@@ -56,7 +56,7 @@
                             <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="img-circle" alt="User Image">
 
                             <p>
-                                Usuario - Rol
+                                {{ Auth::user()->nombreCompleto }}
                                 {{--<small>Member since Nov. 2012</small>--}}
                             </p>
                         </li>
@@ -78,10 +78,13 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                                <a href="/perfil" class="btn btn-default btn-flat">Perfil</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Salir</a>
+                                <form action="/logout" method="post">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-default btn-flat">Salir</button>
+                                </form>
                             </div>
                         </li>
                     </ul>
