@@ -58,7 +58,7 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('localidad')->find($id);
+        $actividad = Actividad::with('localidad', 'puntosEncuentro')->find($id);
 
         return view('actividades.show')->with('actividad', $actividad);
     }

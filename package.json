@@ -39,7 +39,8 @@
         "vue-template-compiler": "^2.5.16",
         "vue2-simplert": "^0.8.0",
         "vue2-simplert-plugin": "^0.4.1",
-        "vuejs-datepicker": "^0.9.29",
+        "vue2-timepicker": "^0.1.4",
+        "vuejs-datepicker": "^0.9.29"
         "webpack": "^3.11.0"
     }
 }

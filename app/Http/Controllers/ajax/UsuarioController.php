@@ -154,8 +154,10 @@ class UsuarioController extends Controller
         }
         return ['success' => true];
     }
+
     public function getCoordinadores(Request $request)
     {
+        // Esto debería filtrar por rol
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;

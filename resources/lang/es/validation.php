@@ -113,12 +113,8 @@ return [
 	*/
 
 	'attributes' => [
-		'username' => 'usuario',
+        'username' => 'usuario',
         'password' => 'contraseña',
-        'inscripcionesInternas' => 'visibilidad de las inscripciones',
-        'idTipo' => 'tipo de actividad',
-        'localidad.id' => 'localidad',
-        'provincia.id' => 'provincia',
-        'pais.id' => 'pais',
-	],
+        'LinkPago' => 'link de pago'
+    ],
 ];
