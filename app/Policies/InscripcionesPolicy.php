@@ -32,6 +32,8 @@ class InscripcionesPolicy
 
         $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(date('Y-m-d')) && $actividad->fechaFinInscripciones->gte(date('Y-m-d'));
 
-        return $hayCupos && $inscripcionAbierta;
+        $ActividadAbierta = $actividad->estadoConstruccion === "Abierta";
+
+        return $hayCupos && $inscripcionAbierta && $ActividadAbierta;
     }
 }
