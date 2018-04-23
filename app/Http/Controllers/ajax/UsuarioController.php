@@ -14,6 +14,7 @@ use App\Persona;
 use App\Actividad;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
+use App\Http\Resources\InscripcionResource;
 
 use App\Rules\PassExiste;
 use App\Inscripcion;
@@ -33,12 +34,13 @@ class UsuarioController extends Controller
         break;
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
-          if($request->has('pass')) $rules['pass'] = 'required|min:8';
+          if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
         break;
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
-        if($request->has('nacimiento')) $rules['nacimiento'] = 'required|before:' . date('Y-m-d');
+        if($request->has('sexo')) $rules['sexo'] = 'required';
+        if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
         $validatedData = $request->validate($rules);
@@ -51,14 +53,14 @@ class UsuarioController extends Controller
   	$persona = new Persona();
       $this->cargar_cambios($request, $persona);
       $persona->password = Hash::make($request->pass);
-  	$persona->carrera = '';
-  	$persona->anoEstudio = '';
-  	$persona->idContactoCTCT = '';
-  	$persona->statusCTCT = '';
-  	$persona->lenguaje = '';
-  	$persona->idRegionLT = 0;
-  	$persona->idUnidadOrganizacional = 0;
-  	$persona->idCiudad = 0;
+    	$persona->carrera = '';
+    	$persona->anoEstudio = '';
+    	$persona->idContactoCTCT = '';
+    	$persona->statusCTCT = '';
+    	$persona->lenguaje = '';
+    	$persona->idRegionLT = 0;
+    	$persona->idUnidadOrganizacional = 0;
+    	$persona->idCiudad = 0;
       $persona->verificado = false;
       $persona->save();
       $verificacion = new VerificacionMailPersona();
@@ -134,13 +136,11 @@ class UsuarioController extends Controller
 
 
     public function inscripciones(Request $request) {
-        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->get();
+        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->whereNotIn('estado',['Desinscripto'])->get();
         $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
-                $actividad = new ActividadResource($inscripcion);
-                $actividad->tipo = new TipoResource($inscripcion->tipo);
-                $resourceCollection[] = new ActividadResource($inscripcion);
+                $resourceCollection[] = new InscripcionResource($inscripcion);
             }
         }
         return $resourceCollection;
@@ -149,7 +149,8 @@ class UsuarioController extends Controller
     public function desinscribir(Request $request, $idActividad) {
         $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
         foreach ($inscripciones as $inscripcion) {
-          $inscripcion->delete();
+          $inscripcion->estado = 'Desinscripto';
+          $inscripcion->save();
         }
         return ['success' => true];
     }

@@ -9,9 +9,9 @@
                 <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>Nombre y Apellido</p>
+                <p>{{ Auth::user()->nombreCompleto }}</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Administrador</a>
+                <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->getRoleNames()->first() }}</a>
             </div>
         </div>
 

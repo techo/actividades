@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-4">
-    <div class="card" style="cursor: pointer;" v-on:click="ir_a_actividad">
-      <img class="card-img-top" src="/img/tarjeta-1.jpg" alt="Card image cap" >
+    <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
+        <img class="card-img-top" :src="actividad.tipo.imagen" alt="Card image cap">
       <div class="card-body px-0">
         <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
         <h5 class="card-title">{{ actividad.nombreActividad | truncate(30) }}</h5>
@@ -44,3 +44,13 @@
         }
     }
 </script>
+
+<style>
+
+div.tarjeta {
+    cursor: pointer;
+    border: 0px;
+    text-align: center;
+}
+
+</style>

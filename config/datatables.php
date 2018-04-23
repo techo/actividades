@@ -21,8 +21,8 @@ return [
                 'sortField' => 'nombreActividad',
             ],
             [
-                'name' => 'nombreUnidad',
-                'sortField' => 'nombreUnidad',
+                'name' => 'oficina',
+                'sortField' => 'oficina',
                 'title' => 'Oficina'
             ],
             [
@@ -61,19 +61,6 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-            //   name' => 'gender',
-            //   sortField' => 'gender',
-            //   titleClass' => 'text-center',
-            //   dataClass' => 'text-center',
-            //   callback' => 'genderLabel'
-            // ],
-            // [
-            //   name' => 'salary',
-            //   sortField' => 'salary',
-            //   titleClass' => 'text-center',
-            //   dataClass' => 'text-right',
-            //   callback' => 'formatNumber'
-            // ],
             [
                 'name' => '__component:custom-actions',
                 'title' => 'Acciones',

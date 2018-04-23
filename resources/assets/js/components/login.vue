@@ -5,49 +5,62 @@
         <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-body" style="padding: 0">
+                    <div class="modal-body p-0">
                         <div class="">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="opacity: 1; margin-top: -1em">
                                 <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
                             </button>
                         </div>
                         <div class="row">
-                            <div class="col-md-6"  style="padding: 1em 2em">
-                                <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
-                                <h2>Ingresar a tu perfil</h2>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6">
-                                <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <h2>Ingresar a tu perfil</h2>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <form id="frmLogin">
+                                            <div class="form-group">
+                                                <label for="mail">Correo Electrónico</label>
+                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">Password</label>
+                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="remember">
+                                                <label class="form-check-label" for="remember">Recordarme en este equipo</label>
+                                            </div>
+                                            <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
+                                            <br>
+                                            <a href="#">Olvidé mi contraseña</a>
+                                        </form>
+                                    
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <a class="btn btn-primary google form-control" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6"  style="padding: 1em 2em">
-
-                                <form id="frmLogin">
-                                    <div class="form-group">
-                                        <label for="mail">Correo Electrónico</label>
-                                        <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="remember">
-                                        <label class="form-check-label" for="remember">Recordarme en este equipo</label>
-                                    </div>
-                                    <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
-                                    <br>
-                                    <a href="#">Olvidé mi contraseña</a>
-                                    <a href="/registro">Me quiero registrar</a>
-                                </form>
+                            <div class="col-md-6 registro">
+                                <div class="pl-4 m-3">
+                                    <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                    <a href="/registro" class="btn btn-light my-sm-0 bg-white techo-btn-blanco">Me quiero registrar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -77,6 +90,7 @@
                 >
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="misactividades">Mis Actividades</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
+                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="admin">Admin</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
                 </div>
             </div>
@@ -137,6 +151,9 @@
             },
             perfil: function() {
               window.location.href = '/perfil';
+            },
+            admin: function() {
+              window.location.href = '/admin/actividades';
             },
             misactividades: function() {
               window.location.href = '/perfil/actividades';
@@ -215,6 +232,19 @@
      border: none;
      background-color: #0092dd;
      color: #ffffff;
+ }
+
+ .registro {
+     background-color: #0092dd;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+ }
+
+ .registro h1{
+    vertical-align: middle;
+
  }
     .dropdown-item {
         font-family: Montserrat, sans-serif;
