@@ -14,12 +14,20 @@
 @section('main_content')
 		<div class="row">
 		@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-		<div class="alert alert-success" id="alertYaInscripto">
-    		<strong>Ya estas inscripto a esta actividad</strong>
-  		</div>
+			<div class="alert alert-success" id="alertYaInscripto">
+				<strong>Ya estas inscripto a esta actividad</strong>
+			</div>
+		@elseif(!$hayCupos)
+			<div class="alert alert-danger" id="alertYaInscripto">
+				<strong>La actividad no tiene más cupos</strong>
+			</div>
+		@elseif(!$inscripcionAbierta)
+			<div class="alert alert-danger" id="alertYaInscripto">
+				<strong>El período de inscripción terminó</strong>
+			</div>
 		@endif
 			<div class="col-md-12">
-				<h7 class="card-subtitle text-uppercase font-weight-bold">{{ $actividad->tipo->nombre }}</h7>
+				<h6 class="card-subtitle text-uppercase font-weight-bold">{{ $actividad->tipo->nombre }}</h6>
 			</div>
 		</div>
 		<div class="row">
@@ -180,15 +188,18 @@
 
 @section('footer')
 <footer class="row fixed-bottom align-middle inscripcion-bar">
-	<div class="col-md-8"><h5>{{ $actividad->nombreActividad }}</h5></div>
+	<div class="col-md-7"><h5>{{ $actividad->nombreActividad }}</h5></div>
 	<div class="col-md-2">
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compartirModal">
-			<i class="fas fa-share-alt">&nbsp;&nbsp;</i>COMPARTIR</div>
+			<i class="fas fa-share-alt"></i>  COMPARTIR
 		</button>
+	</div>
 	@if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-		<div class="col-md-2"><span class="btn btn-success">YA TE INSCRIBISTE!</span></div>
+		<div class="col-md-3"><span class="btn btn-success w-100">YA TE INSCRIBISTE!</span></div>
+	@elseif($hayCupos && $inscripcionAbierta)
+		<div class="col-md-3"><a class="btn btn-primary inscripcion-btn w-100" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
 	@else
-		<div class="col-md-2"><a class="btn btn-primary inscripcion-btn" href="/inscripciones/actividad/{{$actividad->idActividad}}">INSCRIBIRME</a></div>
+		<div class="col-md-3"><span class="btn btn-danger inscripcion-btn w-100">INSCRIPCIÓN CERRADA</span></div>
 	@endif
 </footer>
 

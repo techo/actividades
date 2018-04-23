@@ -58,9 +58,17 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('localidad')->find($id);
+        $actividad = Actividad::with('localidad')->where('estadoConstruccion', 'Abierta')->findOrFail($id);
 
-        return view('actividades.show')->with('actividad', $actividad);
+        $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
+
+        $limiteInscriptos = $actividad->limiteInscripciones;
+
+        $hayCupos = ($limiteInscriptos - $cantInscriptos) > 0;
+
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(date('Y-m-d')) &&  $actividad->fechaFinInscripciones->gte(date('Y-m-d'));
+
+        return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
     }
 
     /**

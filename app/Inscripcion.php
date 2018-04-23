@@ -39,4 +39,9 @@ class Inscripcion extends Model
 
     }
 
+    public function scopeInscripto($query)
+    {
+        return $query->where('estado', '<>', 'Desinscripto' );
+    }
+
 }
