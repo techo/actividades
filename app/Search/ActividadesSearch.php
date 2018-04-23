@@ -26,7 +26,7 @@ class ActividadesSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\Filters\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\' . studly_case($name);
     }
     private static function isValidDecorator($decorator)
     {

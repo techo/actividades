@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Persona extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
 
@@ -30,7 +31,7 @@ class Persona extends Authenticatable
     }
 
     public function estaInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->count();
+        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count();
     }
 
     public function verificacion()

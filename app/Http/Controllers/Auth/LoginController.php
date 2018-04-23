@@ -76,13 +76,19 @@ class LoginController extends Controller
     {
         $this->guard()->logout();
         $request->session()->invalidate();
-        return response(
-            [
-                'success' => true,
-                'redirect_to' => '/'
-            ],
-            200
-        );
+
+        if($request->wantsJson()){
+            return response(
+                [
+                    'success' => true,
+                    'redirect_to' => '/'
+                ],
+                200
+            );
+        }
+
+        return redirect('/');
+
     }
 
     public function redirectToProvider(Request $request, $provider)

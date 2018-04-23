@@ -2,22 +2,22 @@
     <div>
       <div class="row">
         <div class="col-md-4">
-          <h2>Tus actividades</h2>
+          <h2>Tus inscripciones</h2>
         </div>
       </div>
       <div class="alert alert-warning" v-show='borro'>
         <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
       </div>
-
+      <div class="alert alert-warning" v-show='!inscripciones.length'>
+        <strong>Todavia no estas inscripto a ninguna actividad.</strong>
+      </div>
         <div class="row">
-            <div class="card-deck text-center">
-                <tarjeta
-                    v-for="act in actividades"
-                    v-bind:actividad="act"
-                    v-bind:key="Math.random() + '_' + act.idActividad"
-                >
-                </tarjeta>
-            </div>
+            <tarjeta
+                v-for="inscripcion in inscripciones"
+                v-bind:inscripcion="inscripcion"
+                v-bind:key="inscripcion.idInscripcion"
+            >
+            </tarjeta>
         </div>
 
     </div>
@@ -28,30 +28,23 @@
     import Tarjeta from './tarjeta';
 
     export default {
-        name: "mis-actividades",
+        name: "mis-inscripciones",
 
         data () {
             return {
-                actividades: [],
-                borro: false,
-                loading: false,
-                next_page: '',
-                bottom: false,
-                url: '/ajax/actividades',
-                ultimaTarjeta: 0,
-                totalTarjetas: 0,
-                vacio: false,
-                filtros: {}
+                act: '',
+                inscripciones: [],
+                borro: false
             }
         },
         components: {tarjeta: Tarjeta},
         mounted: function() {
-            this.traer_actividades()
+            this.traer_inscripciones()
         },
         methods: {
-            traer_actividades: function() {
+            traer_inscripciones: function() {
                 axios.get('/ajax/usuario/inscripciones').then(response => {
-                    this.actividades = response.data
+                    this.inscripciones = response.data
                 })
             }
         }

@@ -17,7 +17,7 @@
       <hr>
       <div class="row">
         <div class="col-md-5">
-          <h3>Datos personales</h3>
+          <h5>Datos personales</h5>
         </div>
       </div>
       <div class="row">
@@ -75,21 +75,18 @@
         <div class="col-md-5">
           <div class="row">
             <div class="col-md-12">
-              <label>SEXO*</label>
+              <label>GENERO*</label>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-2">
-              <input type="radio" class="form-control" id="fem" value="F" v-model="user.sexo">
-            </div>
-            <div class="col-md-3">
-              <label for="fem">Femenino</label>
-            </div>
-            <div class="col-md-2">
-              <input type="radio" class="form-control" id="mas" value="M" v-model="user.sexo">
-            </div>
-            <div class="col-md-3">
-              <label for="mas">Masculino</label>
+            <div class="col-md-10">
+              <b-form-group>
+                <b-form-radio-group id="radios2" v-model="user.sexo">
+                  <b-form-radio value="F">Femenino</b-form-radio>
+                  <b-form-radio value="M">Masculino</b-form-radio>
+                  <b-form-radio value="O">Otro</b-form-radio>
+                </b-form-radio-group>
+              </b-form-group>
             </div>
             <div class="col-md-2">
               <span v-bind:class="{'d-none':!validacion.sexo.invalido}"><i class="fas fa-times text-danger"></i></span>
@@ -195,7 +192,7 @@
       </div>
       <div class="row">
         <div class="col-md-5">
-          <h3>Contraseña</h3>
+          <h5>Contraseña</h5>
         </div>
       </div>
       <div class="row">
@@ -216,6 +213,11 @@
             </div>
           </div>
           <div class="row">
+            <div class="col-md-12">
+              <label>NUEVA CONTRASEÑA*</label>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md-10">
               <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
               <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
@@ -223,6 +225,11 @@
             <div class="col-md-2">
               <span v-bind:class="{'d-none':!validacion.pass.valido}"><i class="fas fa-check text-success"></i></span>
               <span v-bind:class="{'d-none':!validacion.pass.invalido}"><i class="fas fa-times text-danger"></i></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label>CONFIRMAR CONTRASEÑA*</label>
             </div>
           </div>
           <div class="row">
@@ -241,7 +248,7 @@
 
       <div class="row">
         <div class="col-md-5 text-primary"><span v-show='volver'><a href='#' @click="cancelar()"></i> Cancelar</a></span></div>
-        <div class="col-md-5"><a class="btn btn-primary" @click="guardar()">GUARDAR</a></div>
+        <div class="col-md-5"><a class="btn btn-primary" href="#" @click="guardar()">GUARDAR</a></div>
       </div>
       <hr>    
     </div>
@@ -293,6 +300,7 @@
       mounted: function(){
         this.traer_paises()
         this.traer_provincias()
+        this.traer_localidades()
       },
       watch: {
         'user.email': function() { this.validar_data('email') },

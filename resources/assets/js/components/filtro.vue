@@ -14,10 +14,10 @@
         </div>
         <div class="col-lg-2">
             <div class="row">
-                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
             </div>
             <div class="row">
-                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
+               <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </div>
         </div>
         <div class="col-md-2 dropdown-container">
