@@ -42,6 +42,9 @@
                 <ul class="treeview-menu">
                     <li><a href="/admin/actividades">Ver Todas</a></li>
                     <li><a href="/admin/actividades/crear">Crear Nueva Actividad</a></li>
+                    @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
+                        <li><a href="/admin/actividades/usuario">Mis Actividades</a></li>
+                    @endif
                 </ul>
             </li>
         </ul>

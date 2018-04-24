@@ -1,26 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Actividades')
-
-@section('add-new')
-    <span class="pull-right"><a href="/admin/actividades/crear" class="btn btn-primary btn-lg"><i
-                    class="fa fa-plus"></i> Nueva Actividad</a></span>
-@endsection
+@section('page_title', 'Mis Actividades')
 
 @section('content')
-    @if (Session::has('mensaje'))
-        <div class="callout callout-success">
-            <h4>{{ Session::get('mensaje') }}</h4>
-            @php
-                \Illuminate\Support\Facades\Session::remove('mensaje');
-            @endphp
-        </div>
-    @endif
-
     <div class="box">
         <div class="box-body  with-border">
             <datatable
-                    api-url="/admin/ajax/actividades"
+                    api-url="/admin/ajax/actividades/usuario"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
                     placeholder-text="Buscar por nombre, oficina, tipo o estado"

@@ -222,6 +222,7 @@ export default {
   border-radius: 3px;
   padding: 5px 10px;
   margin-right: 2px;
+    cursor: pointer;
 }
 .pagination a.page.active {
   color: white;
@@ -236,6 +237,7 @@ export default {
   border-radius: 3px;
   padding: 5px 7px;
   margin-right: 2px;
+    cursor: pointer;
 }
 .pagination a.btn-nav.disabled {
   color: lightgray;

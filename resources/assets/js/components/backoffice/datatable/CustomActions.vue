@@ -18,7 +18,7 @@
     },
     methods: {
       itemAction (action, data, index) {
-        console.log('custom-actions: ' + action, data.id, index);
+          // console.log('custom-actions: ' + action, data.id, index);
         let url = window.location.href;
         url = url.slice(-1) !== "/" ? url + "/" : url;
           switch(action){

@@ -9,7 +9,7 @@ class Actividad extends Model
 {
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
-    protected $guarded = ['idActividad'];
+    protected $guarded = ['idActividad', 'pDNI'];
     protected $dates =
         [
             'fechaCreacion', 'fechaModificacion',
@@ -42,9 +42,19 @@ class Actividad extends Model
         return $this->belongsTo(\App\UnidadOrganizacional::class, 'idUnidadOrganizacional', 'idUnidadOrganizacional');
     }
 
+    public function oficina()
+    {
+        return $this->belongsTo(\App\Oficina::class, 'idOficina', 'id');
+    }
+
     public function modificadoPor()
     {
         return $this->belongsTo(Persona::class, 'idPersonaModificacion', 'idPersona');
+    }
+
+    public function coordinador()
+    {
+        return $this->belongsTo(Persona::class, 'idCoordinador', 'idPersona');
     }
 
     public function scopePersonaInscripta($query, $idPersona) {
@@ -79,7 +89,10 @@ class Actividad extends Model
         static::deleting(function ($actividad) { // before delete() method call this
             DB::beginTransaction();
             try {
-                $actividad->escuelas()->delete();
+                foreach ($actividad->escuelas as $escuela) {
+                    DB::statement('DELETE FROM Cuadrilla where idEscuela = ' . $escuela->idEscuela);
+                    $escuela->delete();
+                }
                 // ToDo: Enviar mail a los inscriptos
                 $inscripciones = $actividad->inscripciones();
 

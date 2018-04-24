@@ -32,6 +32,6 @@ class PuntoEncuentro extends Model
 
     public function localidad()
     {
-        return $this->belongsTo( Localidad::class, 'idlocalidad', 'id');
+        return $this->belongsTo(Localidad::class, 'idLocalidad', 'id');
     }
 }

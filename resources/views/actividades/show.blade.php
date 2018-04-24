@@ -84,9 +84,17 @@
 		</div>
 		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
 			<div class="row">
-				<div class="col-md-12">
+                <div class="col-md-4">
 				{{$puntoEncuentro->punto}}
-				</div>
+                </div>
+                <div class="col-md-8">
+                    @php
+                        echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
+                        echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . ', ': '';
+                        echo isset($puntoEncuentro->pais->nombre) ? $puntoEncuentro->pais->nombre : '';
+                    @endphp
+
+                </div>
 			</div>
 		@endforeach
 		<hr>
