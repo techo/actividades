@@ -43,8 +43,12 @@ class ActividadesSearch
         $query->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
             ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
             ->selectRaw('distinct Actividad.*')
-            ->orderBy('fechaInicio', 'desc');
-
+            ->orderBy('fechaInicio', 'desc')
+            ->where('estadoConstruccion', 'Abierta')
+            ->where('inscripcionInterna', 0) //Visibilidad pública
+            ->whereDate('fechaInicioInscripciones', '<=', date('Y-m-d'))
+            ->whereDate('fechaFinInscripciones', '>=', date('Y-m-d'))
+            ->whereDate('fechaInicio', '>=', date('Y-m-d'));
         return $query;
     }
 }

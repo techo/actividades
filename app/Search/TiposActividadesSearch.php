@@ -41,7 +41,12 @@ class TiposActividadesSearch
         $query->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
             ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
             ->orderBy('Tipo.nombre', 'asc')
-            ->selectRaw('distinct Tipo.idTipo, Tipo.nombre');
+            ->selectRaw('distinct Tipo.idTipo, Tipo.nombre')
+            ->where('estadoConstruccion', 'Abierta')
+            ->where('inscripcionInterna', 0) //Visibilidad pública
+            ->whereDate('fechaInicioInscripciones', '<=', date('Y-m-d'))
+            ->whereDate('fechaFinInscripciones', '>=', date('Y-m-d'))
+            ->whereDate('fechaInicio', '>=', date('Y-m-d'));
         return $query;
     }
 }

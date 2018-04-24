@@ -44,7 +44,12 @@ class LocalidadesSearch
             ->orderBy('atl_provincias.Provincia', 'asc')
             ->orderBy('atl_localidades.Localidad', 'asc')
             ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
-                                         atl_localidades.id id_localidad, atl_localidades.Localidad');
+                                         atl_localidades.id id_localidad, atl_localidades.Localidad')
+            ->where('estadoConstruccion', 'Abierta')
+            ->where('inscripcionInterna', 0) //Visibilidad pública
+            ->whereDate('fechaInicioInscripciones', '<=', date('Y-m-d'))
+            ->whereDate('fechaFinInscripciones', '>=', date('Y-m-d'))
+            ->whereDate('fechaInicio', '>=', date('Y-m-d'));
         return $query;
     }
 }
