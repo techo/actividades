@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use App\Actividad;
-use App\Policies\InscripcionesPolicy;
-use App\Policies\CoordinadorActividadesPolicy;
+use App\Policies\ActividadesPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -17,8 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
-        Actividad::class => InscripcionesPolicy::class,
-        Actividad::class => CoordinadorActividadesPolicy::class,
+        Actividad::class => ActividadesPolicy::class,
     ];
 
     /**
