@@ -90,7 +90,7 @@
                 >
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="misactividades">Mis Actividades</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
-                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="admin">Admin</button>
+                    <button v-show="this.verAdmin" class="dropdown-item" id="btnLogout" type="button" v-on:click="admin">Admin</button>
                     <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
                 </div>
             </div>
@@ -118,7 +118,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario'],
+        props:['usuario', 'veradmin'],
         data () {
             var data = {
                 credentials: {
@@ -130,7 +130,8 @@
                 user: {
                     nombres: '',
                     id: ''
-                }
+                },
+                verAdmin: this.veradmin
             }
             if(this.usuario) {
                 var user = JSON.parse(this.usuario)

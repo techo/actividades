@@ -45,4 +45,30 @@ class ActividadesPolicy
     {
         return $user->hasPermissionTo('ver_mis_actividades');
     }
+
+    public function borrar(Persona $user, $id)
+    {
+        $actividad = Actividad::findOrFail($id);
+
+        return $user->hasPermissionTo('borrar_actividad') &&
+            (
+                ($actividad->idPersonaModificacion == $user->idPersona ||
+                    $actividad->idCoordinador == $user->idPersona
+                ) ||
+                $user->hasRole('admin')
+            );
+    }
+
+    public function editar(Persona $user, $id)
+    {
+        $actividad = Actividad::findOrFail($id);
+
+        return $user->hasPermissionTo('editar_actividad') &&
+            (
+                ($actividad->idPersonaModificacion == $user->idPersona ||
+                    $actividad->idCoordinador == $user->idPersona
+                ) ||
+                $user->hasRole('admin')
+            );
+    }
 }

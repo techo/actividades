@@ -18,5 +18,6 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'tomar_asistencia']);
         Permission::create(['name' => 'control_pagos']);
         Permission::create(['name' => 'ver_mis_actividades']);
+        Permission::create(['name' => 'ver_backoffice']);
     }
 }
