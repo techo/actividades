@@ -7,6 +7,7 @@ use App\Actividad;
 use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class InscripcionesController extends Controller
 {
@@ -43,6 +44,7 @@ class InscripcionesController extends Controller
             $inscripcion->evaluacion = 0;
             $inscripcion->acompanante = '';
             $inscripcion->estado = 'Sin Contactar';
+            $inscripcion->fechaInscripcion = new Carbon();
             $inscripcion->save();
         }
         return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
