@@ -53,10 +53,11 @@ Route::get('/actividades/{id}', 'ActividadesController@show');
 Route::get('/inscripciones/actividad/{id}', function ($id) {
     $actividad = Actividad::find($id);
     return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
-})->middleware('requiere.auth');
-Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar');
+})->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 
-Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create');
+Route::post('/inscripciones/actividad/{id}/confirmar', 'InscripcionesController@confirmar')->middleware('can:inscribir,App\Actividad,id');
+
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('can:inscribir,App\Actividad,id');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto');
 
 Route::get('/perfil', 'PerfilController@show')->middleware('auth');
