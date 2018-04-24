@@ -23,7 +23,7 @@
 			</div>
 		@elseif(!$inscripcionAbierta)
 			<div class="alert alert-danger" id="alertYaInscripto">
-				<strong>El período de inscripción terminó</strong>
+				<strong>El período de inscripción está cerrado</strong>
 			</div>
 		@endif
 			<div class="col-md-12">
