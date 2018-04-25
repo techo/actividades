@@ -81,6 +81,9 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update');
+    Route::get('/actividades/{id}/inscripciones', 'backoffice\InscripcionesController@index');
+    Route::get('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@index');
+    Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
 //    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');

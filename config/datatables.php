@@ -75,5 +75,62 @@ return [
                 'direction' => 'asc'
             ]
         ],
+    ],
+    'inscripciones' => [
+        'fields' => [
+            [
+                'name' => 'dni',
+                'sortField' => 'dni',
+                'title' => 'DNI/Pasaporte',
+            ],
+            [
+                'name' => 'nombres',
+                'sortField' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellidoPaterno',
+                'sortField' => 'apellidoPaterno',
+                'title' => 'Apellido'
+            ],
+            [
+                'name' => 'mail',
+                'sortField' => 'mail',
+                'title' => 'Email'
+            ],
+            [
+                'name' => 'telefonoMovil',
+                'sortField' => 'telefonoMovil',
+                'title' => 'Teléfono Móvil'
+            ],
+            [
+                'name' => '__component:asistencia',
+                'title' => 'Asistencia',
+                'titleClass' => 'text-center',
+                'sortField' => 'presente',
+                'dataClass' => 'text-center'
+            ],
+            [
+                'name' => '__component:estado-inscripcion',
+                'title' => 'Estado',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center'
+            ],
+            [
+                'name' => '__component:actualizar-inscripcion',
+                'title' => 'Actualizar',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center'
+            ],
+
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombres',
+                'sortField' => 'nombres',
+                'direction' => 'asc'
+            ]
+        ],
+
     ]
 ];
