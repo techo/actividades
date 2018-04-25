@@ -8,9 +8,9 @@
             </button>
         </div>
         <div class="col-md-4">
-            <button class="btn btn-primary" v-show="readonly" @click="this.editar"><i class="fa fa-edit"></i> Editar
+            <button class="btn btn-primary" v-show="readonly && canEditar" @click="this.editar"><i class="fa fa-edit"></i> Editar
             </button>
-            <button class="btn btn-danger" v-show="readonly" @click="this.eliminar"><i class="fa fa-trash"></i> Borrar
+            <button class="btn btn-danger" v-show="readonly && canBorrar" @click="this.eliminar"><i class="fa fa-trash"></i> Borrar
             </button>
 
             <button class="btn btn-success" v-show="!readonly" @click="this.guardar"><i class="fa fa-save"></i> Guardar</button>
@@ -24,7 +24,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'cancelarUrl'],
+        props: ['edicion', 'cancelarUrl', 'canEditar', 'canBorrar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")
