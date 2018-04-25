@@ -6,7 +6,8 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\Actividad;
 use Mail;
-use App\Mail\RecordatorioActividad;
+#use App\Mail\RecordatorioActividad;
+use App\Jobs\EnviarMailsRecordatorioActividad;
 
 
 class EnviarRecordatorioActividad extends Command
@@ -47,10 +48,10 @@ class EnviarRecordatorioActividad extends Command
         $manana = $hoy->copy()->addDays(1);  
         $actividades = Actividad::whereBetween('fechaInicio',[$hoy, $manana])->get();
         foreach ($actividades as $actividad) {
-            foreach ($actividad->inscripciones_validas() as $inscripcion) {
-                Mail::to($inscripcion->persona->mail)->send(new RecordatorioActividad($inscripcion));
-
-                echo($inscripcion->persona->mail);
+            $inscripciones = $actividad->inscripciones_validas();
+            foreach ($inscripciones as $inscripcion) {
+                $job = (new EnviarMailsRecordatorioActividad($inscripcion))->delay(5);
+                dispatch($job);
             }
         }
     }

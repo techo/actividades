@@ -7,15 +7,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Mail\CancelacionActividad;
+use App\Mail\RecordatorioActividad;
 use Mail;
 
-class EnviarMailsCancelacionActividad implements ShouldQueue
+
+class EnviarMailsRecordatorioActividad implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $inscripcion;
-
     /**
      * Create a new job instance.
      *
@@ -33,7 +33,8 @@ class EnviarMailsCancelacionActividad implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->inscripcion->persona->mail)->send(new CancelacionActividad($this->inscripcion));
-        //sleep(3);
+        if($this->inscripcion) {
+            Mail::to($this->inscripcion->persona->mail)->send(new RecordatorioActividad($this->inscripcion));
+        }
     }
 }
