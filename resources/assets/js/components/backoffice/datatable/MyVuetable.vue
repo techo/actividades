@@ -36,11 +36,20 @@ import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import DetailRow from './DetailRow'
 import FilterBar from './FilterBar'
+  import Pago from './Pago';
+  import Asistencia from './Asistencia';
+  import ActualizarInscripcion from './actualizarInscripcion';
+  import EstadoInscripcion from './estadoInscripcion';
+
 
 Vue.use(VueEvents);
-Vue.component('custom-actions', CustomActions)
-Vue.component('my-detail-row', DetailRow)
-Vue.component('filter-bar', FilterBar)
+  Vue.component('custom-actions', CustomActions);
+  Vue.component('my-detail-row', DetailRow);
+  Vue.component('filter-bar', FilterBar);
+  Vue.component('asistencia', Asistencia);
+  Vue.component('pago', Pago);
+  Vue.component('actualizar-inscripcion', ActualizarInscripcion);
+  Vue.component('estado-inscripcion', EstadoInscripcion);
 
 export default {
   components: {
@@ -135,7 +144,7 @@ export default {
         // ],
         css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
+            tableClass: 'table table-hover table-condensed',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down'
         },
