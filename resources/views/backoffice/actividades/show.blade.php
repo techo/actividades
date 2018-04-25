@@ -47,5 +47,20 @@
 @section('footer')
     <crud-footer
             cancelar-url="/admin/actividades"
-            edicion={{ $edicion }}></crud-footer>
+            edicion="{{ $edicion }}"
+            can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
+            (
+                ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                    $actividad->idCoordinador == Auth::user()->idPersona
+                ) ||
+                Auth::user()->hasRole('admin')
+            ) }}"
+            can-borrar="{{Auth::user()->hasPermissionTo('borrar_actividad') &&
+            (
+                ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                    $actividad->idCoordinador == Auth::user()->idPersona
+                ) ||
+                Auth::user()->hasRole('admin')
+            )}}"
+    ></crud-footer>
 @endsection
