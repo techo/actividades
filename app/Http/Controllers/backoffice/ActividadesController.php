@@ -243,7 +243,7 @@ class ActividadesController extends Controller
                 'fechaInicio' => 'required | date',
                 'fechaInicioInscripciones' => 'required | date | before:fechaInicio',
                 'fechaFin' => 'required | date | after:fechaInicio',
-                'fechaFinInscripciones' => 'required | date | after:fechaInicioInscripciones | before:fechaInicio',
+                'fechaFinInscripciones' => 'required | date | after_or_equal:fechaInicioInscripciones | before_or_equal:fechaInicio',
                 'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
                 'localidad.id' => 'required',
