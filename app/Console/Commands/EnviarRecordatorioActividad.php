@@ -48,7 +48,7 @@ class EnviarRecordatorioActividad extends Command
         $actividades = Actividad::whereBetween('fechaInicio',[$hoy, $manana])->get();
         foreach ($actividades as $actividad) {
             foreach ($actividad->inscripciones_validas() as $inscripcion) {
-                Mail::to($inscripcion->persona->mail)->send(new RecordatorioActividad($inscripcion->persona, $actividad));
+                Mail::to($inscripcion->persona->mail)->send(new RecordatorioActividad($inscripcion));
 
                 echo($inscripcion->persona->mail);
             }
