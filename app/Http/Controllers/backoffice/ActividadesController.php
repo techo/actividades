@@ -240,10 +240,10 @@ class ActividadesController extends Controller
             [
                 'coordinador.idPersona' => 'required | numeric',
                 'descripcion' => 'required',
-                'fechaInicio' => 'required | date | before:today',
+                'fechaInicio' => 'required | date',
                 'fechaInicioInscripciones' => 'required | date | before:fechaInicio',
                 'fechaFin' => 'required | date | after:fechaInicio',
-                'fechaFinInscripciones' => 'required | date | after:fechaInicioInscripciones | before:fechaInicio',
+                'fechaFinInscripciones' => 'required | date | after_or_equal:fechaInicioInscripciones | before_or_equal:fechaInicio',
                 'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
                 'localidad.id' => 'required',
@@ -348,7 +348,7 @@ class ActividadesController extends Controller
             }
 
             // deberia tomar valor de auth()->user
-            $actividad->idPersonaModificacion = $request['modificado_por']['idPersona'];
+        $actividad->idPersonaModificacion = auth()->user()->idPersona;
 
 
             // Campos definidos en la DB como NOT NULL, sin valor default y que no estan presentes en el $request //
