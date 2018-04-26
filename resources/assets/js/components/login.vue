@@ -118,7 +118,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin'],
+        props:['usuario', 'veradmin', 'showlogin'],
         data () {
             var data = {
                 credentials: {
@@ -142,6 +142,11 @@
         },
         created () {
           this.authenticated = this.checkLogin();
+        },
+        mounted(){
+            if(this.showlogin){
+                $('#btnShowModal').trigger('click');
+            }
         },
         methods: {
             registro_facebook: function() {

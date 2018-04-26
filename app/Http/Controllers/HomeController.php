@@ -22,9 +22,15 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $showLogin = false;
+
+        if($request->path() == 'login'){
+            $showLogin = true;
+        }
+
         $categoriaActividad = CategoriaActividad::with('tipos')->get();
-        return view('home')->with('categoriaActividad', $categoriaActividad);
+        return view('home', compact('categoriaActividad', 'showLogin'));
     }
 }
