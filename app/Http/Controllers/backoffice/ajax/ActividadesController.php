@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
-
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;

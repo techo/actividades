@@ -9,32 +9,35 @@ use Illuminate\Support\Facades\DB;
 
 class CoordinadorActividadesController extends BaseController
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $sortDefault = 'nombreActividad|asc';
         $request->sort = $request->sort ?? $sortDefault;
         $sort = explode('|',$request->sort);
         list($sortField, $sortOrder) = $sort;
 
         $result = DB::table('Actividad')
-            ->join('UnidadOrganizacional', 'Actividad.idUnidadOrganizacional', '=', 'UnidadOrganizacional.idUnidadOrganizacional')
+            ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
                 [
-                    'idActividad as id',
+                    'Actividad.idActividad AS id',
                     'nombreActividad',
                     'fechaInicio',
                     'fechaFin',
                     'estadoConstruccion',
-                    'UnidadOrganizacional.idUnidadOrganizacional',
-                    'UnidadOrganizacional.nombre AS nombreUnidad',
+                    'atl_oficinas.nombre AS oficina',
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                     'atl_CategoriaActividad.id as idCategoria',
                 ]
             )
-            ->orderBy($sortField, $sortOrder)
-            ->where('idCoordinador', Auth::user()->idPersona); //Falta mergear branch de Johan para hacer esto
+            ->orderBy($sortField, $sortOrder);
+
+        if (!Auth::user()->hasRole('admin')) {
+            $result->where('idCoordinador', Auth::user()->idPersona);
+        }
 
         if ($request->has('filter')){
             $result->orWhere(function($result) use ($request) {
