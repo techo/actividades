@@ -55,16 +55,14 @@
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-				<h5>Coordinadores</h5>
+                <h5>Coordinador de la Actividad</h5>
 			</div>
 		</div>
-		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
 			<div class="row">
 				<div class="col-md-12">
-				  	{{$puntoEncuentro->responsable->nombre_completo}}	
+                    {{ $actividad->coordinador->nombreCompleto }}
 				</div>
 			</div>
-		@endforeach
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
@@ -87,13 +85,16 @@
                 <div class="col-md-4">
 				{{$puntoEncuentro->punto}}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-4">
                     @php
                         echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
                         echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . ', ': '';
                         echo isset($puntoEncuentro->pais->nombre) ? $puntoEncuentro->pais->nombre : '';
                     @endphp
 
+                </div>
+                <div class="col-md-4">
+                    <strong>Coordinador:</strong> {{$puntoEncuentro->responsable->nombreCompleto}}
                 </div>
 			</div>
 		@endforeach
