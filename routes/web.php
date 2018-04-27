@@ -97,8 +97,12 @@ Route::prefix('/perfil')->middleware('auth')->group(function (){
 //Fin Frontoffice
 
 //Backoffice
+//TODO: Agrupar rutas
+Route::get('admin/ajax/usuarios', 'backoffice\ajax\UsuariosController@index'); //TODO: hack, mejorar
 
 Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(function () {
+    Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
+    Route::post('/roles/usuario/{id}', 'backoffice\UsuariosRolesController@update')->middleware('permission:asignar_roles');
     Route::get('/actividades', 'backoffice\ActividadesController@index');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
@@ -112,7 +116,9 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
+    Route::get('/ajax/roles', 'backoffice\ajax\RolesController@index')->middleware('permission:asignar_roles'); //TODO: Revisar si se la ruta se está usando
+    Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
-    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
+    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index'); //TODO: Quitarla
 });
 
