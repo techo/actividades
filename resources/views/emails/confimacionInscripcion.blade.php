@@ -23,9 +23,9 @@
             </b>
             <br>
             <br>
-            <b>TENÉS TIEMPO HASTA EL VIERNES 17 DE NOVIEMBRE</b> para confirmar tu inscripción!<br>
+            Tenes tiempo hasta el <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b> para confirmar tu inscripción!<br>
             <br>
-            Te dejamos el siguiente <a href="{{$inscripcion->actividad->LinkPago}}">BOTÓN DE PAGO</a> e <a href="https://sites.google.com/a/techo.org/veni-a-construir/pago" target="_blank" >INSTRUCTIVO</a> que te permiten gestionar cómo querés abonar la construcción.<br>
+            Te dejamos el siguiente <a href="{{$inscripcion->actividad->generarLinkPago()}}">BOTÓN DE PAGO</a> e <a href="https://sites.google.com/a/techo.org/veni-a-construir/pago" target="_blank" >INSTRUCTIVO</a> que te permiten gestionar cómo querés abonar la construcción.<br>
             Te recordamos que el monto para abonar es de <b>${{$inscripcion->actividad->costo}}</b>, los cuales cubren los gastos de traslado, seguro y comida durante la construcción. En el caso que no puedas abonarlo, no queremos que dejes de participar, escribinos a <a href="mailto:problemasdepago.argentina@techo.org" target="_blank">problemasdepago.argentina@<wbr>techo.org</a> para poder gestionar una PRÓRROGA o BECA.<br>
             <br>
           </p>

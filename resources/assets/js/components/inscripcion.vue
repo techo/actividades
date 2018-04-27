@@ -34,6 +34,13 @@
                     {{item.punto}} - {{item.horario | format_time}}
                   </div>
               </div>
+                <hr>
+                <div v-show="esConstruccion" class="row">
+                    <div class="col-md-12">
+                        <h5 class="card-title">Costo de la construcción: ${{actividad.costo}} Pesos</h5>
+                    </div>
+                    <hr>
+                </div>
               <div class="row  align-middle">
                   <input type="hidden" name="_token" v-bind:value="csrf_token">
                   <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
@@ -102,6 +109,11 @@
             }
             return hora
           }
+        },
+        computed: {
+            esConstruccion() {
+                return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
+            }
         },
         methods: {
           validateForm: function(event) {
