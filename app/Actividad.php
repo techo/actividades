@@ -86,6 +86,11 @@ class Actividad extends Model
         return $this->hasMany(Escuela::class, 'idActividad');
     }
 
+    public function generarLinkPago()
+    {
+        return $this->LinkPago . "&numero=" .$this->idActividad;
+    }
+
     protected static function boot()
     {
         parent::boot();

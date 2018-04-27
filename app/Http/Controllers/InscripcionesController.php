@@ -23,7 +23,11 @@ class InscripcionesController extends Controller
         $actividad = Actividad::find($id);
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
-        return view('inscripciones.confirmar')->with('actividad', $actividad)->with('punto_encuentro', $puntoEncuentro);
+        $tipo = $actividad->tipo;
+        return view('inscripciones.confirmar')
+            ->with('actividad', $actividad)
+            ->with('punto_encuentro', $puntoEncuentro)
+            ->with('tipo', $tipo);
 
     }
 
