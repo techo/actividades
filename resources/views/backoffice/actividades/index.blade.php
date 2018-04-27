@@ -3,8 +3,12 @@
 @section('page_title', 'Actividades')
 
 @section('add-new')
-    <span class="pull-right"><a href="/admin/actividades/crear" class="btn btn-primary btn-lg"><i
-                    class="fa fa-plus"></i> Nueva Actividad</a></span>
+
+    <span class="pull-right">
+        <a href="/admin/actividades/crear" class="btn btn-primary btn-lg">
+            <i class="fa fa-plus"></i> Nueva Actividad
+        </a>
+    </span>
 @endsection
 
 @section('content')

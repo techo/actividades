@@ -258,6 +258,7 @@
                     <label for="limiteInscripciones">Límite</label>
                     <input id="limiteInscripciones"
                            type="number"
+                           min="1"
                            class="form-control"
                            v-bind:disabled="readonly"
                            v-model="dataActividad.limiteInscripciones"
