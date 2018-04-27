@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 
 //Frontoffice
-
 Route::get('/', 'HomeController@index')->name('home');
-
+Route::get('/login', 'HomeController@index')->name('home');
 Route::get('/actividades', 'ActividadesController@index');
 
 
@@ -52,7 +51,21 @@ Route::get('/registro', function (Request $request) {
     return view('registro');
 })->middleware('guest');
 
-Auth::routes();
+//Auth::routes();
+
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+// Registration Routes...
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'Auth\RegisterController@register');
+
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
 Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
 
@@ -80,11 +93,16 @@ Route::prefix('/perfil')->middleware('auth')->group(function (){
     Route::get('/', 'PerfilController@show');
     Route::get('/actividades', 'PerfilController@actividades');
 });
+
 //Fin Frontoffice
 
 //Backoffice
+//TODO: Agrupar rutas
+Route::get('admin/ajax/usuarios', 'backoffice\ajax\UsuariosController@index'); //TODO: hack, mejorar
 
 Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(function () {
+    Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
+    Route::post('/roles/usuario/{id}', 'backoffice\UsuariosRolesController@update')->middleware('permission:asignar_roles');
     Route::get('/actividades', 'backoffice\ActividadesController@index');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
@@ -101,8 +119,8 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
+    Route::get('/ajax/roles', 'backoffice\ajax\RolesController@index')->middleware('permission:asignar_roles'); //TODO: Revisar si se la ruta se está usando
+    Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
-    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index');
-
 });
 

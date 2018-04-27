@@ -22,6 +22,12 @@ class Inscripcion extends Model
         return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
     }
 
+    public function punto_encuento()
+    {
+        return $this->belongsTo(PuntoEncuentro::class, 'idPuntoEncuentro', 'idPuntoEncuentro');
+    }
+
+
     protected static function boot()
     {
         parent::boot();

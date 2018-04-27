@@ -32,6 +32,10 @@ class Actividad extends Model
         return $this->hasMany(Inscripcion::class, 'idActividad');
     }
 
+    public function inscripciones_validas() {
+        return $this->inscripciones;
+    }
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idActividad')->with('responsable');

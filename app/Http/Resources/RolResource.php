@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class CoordinadorResource extends Resource
+class RolResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,8 @@ class CoordinadorResource extends Resource
     public function toArray($request)
     {
         return [
-            'idPersona' => $this->idPersona,
-            'dni'       => $this->dni,
-            'nombre'    => $this->nombreCompleto . " (" . $this->dni . ")",
+            'id' => $this->id,
+            'rol' => $this->name,
         ];
     }
 }
