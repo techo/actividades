@@ -107,11 +107,14 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
+    Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
+    Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');
     Route::get('/actividades/{id}/inscripciones', 'backoffice\InscripcionesController@index')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/actividades/{id}/inscripciones/exportar', 'backoffice\ReportController@exportarInscripciones')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@index')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
@@ -119,6 +122,5 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/ajax/roles', 'backoffice\ajax\RolesController@index')->middleware('permission:asignar_roles'); //TODO: Revisar si se la ruta se está usando
     Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
-    Route::get('/ajax/unidadesOrganizacionales', 'backoffice\ajax\UnidadOrganizacionalController@index'); //TODO: Quitarla
 });
 

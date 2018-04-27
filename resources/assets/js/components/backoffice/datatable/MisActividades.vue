@@ -26,6 +26,11 @@
                 idActividad: this.rowData.id
             }
         },
+        watch: {
+            rowData: function () {
+                this.idActividad = this.rowData.id;
+            }
+        },
         methods: {
             verDetalle: function () {
                 let lastSlash = location.href.lastIndexOf('/');
