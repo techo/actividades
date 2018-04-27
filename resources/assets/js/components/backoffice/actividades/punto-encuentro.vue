@@ -17,14 +17,6 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="horario">Horario</label> <br>
-                    <!--
-                                        <input
-                                                type="text"
-                                                id="horario"
-                                                class="form-control"
-                                                v-model="horario"
-                                        >
-                    -->
                     <vue-timepicker v-model="objHora"></vue-timepicker>
                     <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
@@ -118,7 +110,7 @@
                     <th scope="col">Lugar</th>
                     <th scope="col">Horario</th>
                     <th scope="col">Coordinador</th>
-                    <th scope="col">Borrar</th>
+                    <th scope="col"><span v-show="!readonly">Borrar</span></th>
                 </thead>
                 <tbody>
                     <tr v-for="punto in dataPuntosEncuentro">
@@ -126,7 +118,7 @@
                             <p>{{ punto.punto }}</p>
                         </td>
                         <td>
-                            <p>{{ punto.horario.substr(0,5) }}</p>
+                            <p v-html="$options.filters.hora(punto.horario)"></p>
                         </td>
                         <td>
                             <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno}}</p>
@@ -226,6 +218,11 @@
                 return (this.validationErrors.localidad && this.localidadSeleccionada === '')
             },
 
+        },
+        filters: {
+            hora: function (value) {
+                return value.substr(0, 5);
+            }
         },
         methods: {
             onSearch: function (text, loading) {

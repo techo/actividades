@@ -44,9 +44,14 @@ class IncluyeCampoIdOficinaEnActividad extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('idOficina');
+            if (Schema::hasColumn('Actividad', 'idOficina')) {
+                $table->dropColumn('idOficina');
+            }
         });
+
         DB::table('UnidadOrganizacional')->where('nombre', 'No Aplica')->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
