@@ -488,9 +488,10 @@
                     this.dataActividad.coordinador = null;
                     this.coordinadorSeleccionado = null;
                 }
-
-                this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
-                this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
+                if (this.dataActividad.fechaInicio !== null) {
+                    this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
+                    this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
+                }
             },
             actualizarOficina() {
                 this.dataActividad.oficina = this.oficinaSeleccionada;
