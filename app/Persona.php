@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\MailResetPasswordToken;
 
 class Persona extends Authenticatable
 {
@@ -55,5 +56,15 @@ class Persona extends Authenticatable
             'pass' => ''
         ];
         return $usuario;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MailResetPasswordToken($token));
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->mail;
     }
 }
