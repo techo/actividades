@@ -58,7 +58,8 @@ class LoginController extends Controller
             return response(
                 [
                     'success' => true,
-                    'user' => Auth::user()
+                    'user' => Auth::user(),
+                    'permisos' => Auth::user()->getAllPermissions()
                 ],
                 200
             );
