@@ -21,23 +21,21 @@
             </div>
         </div>
         <div class="col-md-2 dropdown-container">
-            <contenedor-check-tipos
-                v-bind:propdatos="this.tiposDeActividad"
-            >
-
-            </contenedor-check-tipos>
-
-        </div>
-        <div class="col-md-2 dropdown-container">
 
             <contenedor-check-provincias
-                v-bind:provincias="this.dataProvincias"
+                    v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
+        <div class="col-md-2 dropdown-container">
+            <contenedor-check-tipos
+                v-bind:propdatos="this.tiposDeActividad"
+            >
+            </contenedor-check-tipos>
 
+        </div>
         <div class="col-md-1">
-            <button class="btn techo-btn-azul btn-sm" v-on:click="borrarFiltros">
+            <button class="btn btn-primary" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>
