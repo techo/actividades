@@ -37,7 +37,8 @@
 		</div>
 		<div class="row justify-content-start">
 			<div class="col-md-2"><i class="far fa-calendar"></i> <span>{{ $actividad->fechaInicio->format('d-m-Y')}}</span></div>
-			<div class="col-md-2"><i class="far fa-clock"></i> <span>{{ $actividad->fechaInicio->format('h:m')}}</span></div>
+			<div class="col-md-2"><i class="far fa-clock"></i> <span>{{ $actividad->fechaInicio->format('H:i')}}</span>
+			</div>
             <div class="col-md-8">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>
