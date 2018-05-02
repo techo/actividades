@@ -66,7 +66,7 @@
 		</div>
 			<div class="row">
 				<div class="col-md-12">
-                    {{ $actividad->coordinador->nombreCompleto }}
+                    {{ isset($actividad->coordinador) ? $actividad->coordinador->nombreCompleto : "No definido" }}
 				</div>
 			</div>
 		<hr>
@@ -89,7 +89,7 @@
 
                 </div>
                 <div class="col-md-4">
-                    <strong>Coordinador:</strong> {{$puntoEncuentro->responsable->nombreCompleto}}
+                    <strong>Coordinador:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
                 </div>
 			</div>
 		@endforeach
