@@ -267,6 +267,11 @@
                         pais: false,
                         provincia: false,
                         localidad: false,
+                    };
+                    this.objHora = {
+                        HH: "",
+                        mm: "",
+                        ss: ""
                     }
                 }
             },
