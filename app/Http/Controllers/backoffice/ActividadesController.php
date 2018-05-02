@@ -310,72 +310,72 @@ class ActividadesController extends Controller
      */
     private function guardarActividad(Request $request, $actividad)
     {
-            foreach ($request->except('idActividad',
-                'casasPlanificadas',
-                'casasConstruidas',
-                'comentarios',
-                'tipoConstruccion',
-                'idListaCTCT',
-                'modificado_por.idPersona',
-                'idOficina'
-            )
-                     as $field => $value) {
+        foreach ($request->except('idActividad',
+            'casasPlanificadas',
+            'casasConstruidas',
+            'comentarios',
+            'tipoConstruccion',
+            'idListaCTCT',
+            'modificado_por.idPersona',
+            'idOficina'
+        )
+                 as $field => $value) {
 
-                $esFecha = in_array($field, $actividad->getDates());
+            $esFecha = in_array($field, $actividad->getDates());
 
-                if (!is_array($value) && Schema::hasColumn('Actividad', $field) && $esFecha) {
-                    $value = Carbon::parse($value)->format('Y-m-d');
-                    $actividad->{$field} = $value;
-                }
-
-                if (!is_array($value) && Schema::hasColumn('Actividad', $field) && !$esFecha) {
-                    $actividad->{$field} = $value;
-                }
-
+            if (!is_array($value) && Schema::hasColumn('Actividad', $field) && $esFecha) {
+                $value = Carbon::parse($value)->format('Y-m-d');
+                $actividad->{$field} = $value;
             }
 
-            $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
-            $actividad->idPais = $request['pais']['id'];
-            $actividad->idProvincia = $request['provincia']['id'];
-            $actividad->idLocalidad = $request['localidad']['id'];
-            $actividad->idCoordinador = $request['coordinador']['idPersona'];
+            if (!is_array($value) && Schema::hasColumn('Actividad', $field) && !$esFecha) {
+                $actividad->{$field} = $value;
+            }
+
+        }
+
+        $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
+        $actividad->idPais = $request['pais']['id'];
+        $actividad->idProvincia = $request['provincia']['id'];
+        $actividad->idLocalidad = $request['localidad']['id'];
+        $actividad->idCoordinador = $request['coordinador']['idPersona'];
         $actividad->idOficina = $request['oficina']['id'];
 
-            if (empty($request['idUnidadOrganizacional'])) {
-                $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
-                    ->first()
-                    ->idUnidadOrganizacional;
-            }
+        if (empty($request['idUnidadOrganizacional'])) {
+            $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
+                ->first()
+                ->idUnidadOrganizacional;
+        }
 
             // deberia tomar valor de auth()->user
         $actividad->idPersonaModificacion = auth()->user()->idPersona;
 
 
             // Campos definidos en la DB como NOT NULL, sin valor default y que no estan presentes en el $request //
-            $actividad->actividadSecundaria = 1;
-            $actividad->casasConstruidas = 0;
-            $actividad->casasPlanificadas = 0;
-            $actividad->comentarios = '';
-            $actividad->idEncuestaDinamica = 0;
-            $actividad->idListaCTCT = '';
-            $actividad->lugar = '';
-            $actividad->mostrarFB = 0;
-            $actividad->tipoConstruccion = '';
+        $actividad->actividadSecundaria = 1;
+        $actividad->casasConstruidas = 0;
+        $actividad->casasPlanificadas = 0;
+        $actividad->comentarios = '';
+        $actividad->idEncuestaDinamica = 0;
+        $actividad->idListaCTCT = '';
+        $actividad->lugar = '';
+        $actividad->mostrarFB = 0;
+        $actividad->tipoConstruccion = '';
         $actividad->moneda = 'ARS';
 
-            if ($actividad->save()) {
-                if (!empty($request->puntos_encuentro)) {
-                    foreach ($request->puntos_encuentro as $punto) {
-                        $punto = $this->guardarPunto($punto, $actividad);
-                    }
+        if ($actividad->save()) {
+            if (!empty($request->puntos_encuentro)) {
+                foreach ($request->puntos_encuentro as $punto) {
+                    $punto = $this->guardarPunto($punto, $actividad);
                 }
-
-                foreach ($request->puntosEncuentroBorrados as $borrado) {
-                    $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
-                    $punto->delete();
-                }
-                return true;
             }
+
+            foreach ($request->puntosEncuentroBorrados as $borrado) {
+                $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
+                $punto->delete();
+            }
+            return true;
+        }
 
         return false;
     }
