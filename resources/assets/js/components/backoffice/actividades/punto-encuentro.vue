@@ -113,7 +113,7 @@
                     <th scope="col"><span v-show="!readonly">Borrar</span></th>
                 </thead>
                 <tbody>
-                    <tr v-for="punto in dataPuntosEncuentro">
+                    <tr v-for="punto in dataPuntosEncuentro" :key="punto.idPuntoEncuentro">
                         <td>
                             <p>{{ punto.punto }}</p>
                         </td>
@@ -239,6 +239,8 @@
             }, 1000),
             incluirPunto: function (e) {
                 let valid = this.validate();
+                // genero un id provisional para identificar el punto
+                let id = this.getRandomInt(10000, 100000);
                 if (valid) {
                     this.dataPuntosEncuentro.push({
                         'responsable': {
@@ -250,7 +252,8 @@
                         'punto': this.punto,
                         'idPais': this.paisSeleccionado.id,
                         'idProvincia': this.provinciaSeleccionada.id,
-                        'idLocalidad': this.localidadSeleccionada.id
+                        'idLocalidad': this.localidadSeleccionada.id,
+                        'idPuntoEncuentro': id
                     });
 
                     this.punto = '';
@@ -272,7 +275,6 @@
             },
             borrar: function (id) {
                 let data = this.findObjectByKey(this.dataPuntosEncuentro, 'idPuntoEncuentro', id);
-
                 this.dataPuntosEncuentro.splice(data.index, 1);
                 Event.$emit('borrar-punto', data.obj);
             },
@@ -411,6 +413,9 @@
                     provincia: false,
                     localidad: false,
                 }
+            },
+            getRandomInt: function (min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
             }
         }
     }
