@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Actividad;
 
@@ -66,7 +67,7 @@ class actividadesController extends Controller
 
         $hayCupos = ($limiteInscriptos - $cantInscriptos) > 0;
 
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(date('Y-m-d')) &&  $actividad->fechaFinInscripciones->gte(date('Y-m-d'));
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d 00:00:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d 00:00:00'));
 
         return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
     }
