@@ -4,8 +4,6 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\CategoriaActividad;
-use App\Http\Resources\CoordinadorResource;
-use App\Persona;
 use Carbon\Carbon;
 use App\Pais;
 use App\PuntoEncuentro;
@@ -15,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
 
 class ActividadesController extends Controller
 {
@@ -220,20 +219,36 @@ class ActividadesController extends Controller
     private function createValidator(Request $request)
     {
         $messages = [
-            'coordinador.*' => 'El campo coordinador de la actividad es requerido',
-            'fechaInicioInscripciones.before' => 'La fecha de inicio de las inscripciones debe ser anterior al inicio de la actividad',
-            'fechaFin.after' => 'La fecha fin debe ser posterior a la fecha de inicio de la actividad',
-            'fechaFinInscripciones.after' => 'La fecha de fin de las inscripciones debe ser posterior a la fecha de inicio de las inscripciones',
-            'fechaFinInscripciones.before' => 'Las inscripciones deben finalizar antes del inicio de la actividad',
-            'inscripcionesInternas' => 'visibilidad de las inscripciones',
-            'idTipo.*' => 'Debe seleccionar una categoría y un tipo de actividad',
-            'localidad.*' => 'El campo localidad debe tener un valor válido',
-            'oficina.*' => 'El campo Oficina es requerido',
-            'provincia.*' => 'Debe seleccionar la provincia de la actividad',
-            'limiteInscripciones.*' => 'El límite máximo de voluntarios debe tener un valor numérico válido',
-            'nombreActividad.*' => 'La actividad debe tener un nombre',
-            'pais.*' => 'Debe seleccionar el país de la actividad',
-            'costo.*' => 'Debe especificar el costo de participar en la construcción',
+            'fechaFinInscripciones.after' =>
+                'La fecha de fin de las inscripciones debe ser posterior a la fecha de inicio de las inscripciones',
+            'fechaFinInscripciones.before' =>
+                'Las inscripciones deben finalizar antes del inicio de la actividad',
+            'inscripcionesInternas' =>
+                'visibilidad de las inscripciones',
+            'fechaInicioInscripciones.before' =>
+                'La fecha de inicio de las inscripciones debe ser anterior al inicio de la actividad',
+            'limiteInscripciones.*' =>
+                'El límite máximo de voluntarios debe tener un valor numérico válido',
+            'coordinador.*' =>
+                'Debe seleccionar un Coordinador para la actividad',
+            'fechaFin.after' =>
+                'La fecha fin debe ser posterior a la fecha de inicio de la actividad',
+            'idTipo.*' =>
+                'Debe seleccionar una categoría y un tipo de actividad',
+            'tipo.*' =>
+                'Debe seleccionar una categoría y un tipo de actividad',
+            'localidad.*' =>
+                'El campo localidad debe tener un valor válido',
+            'oficina.*' =>
+                'El campo Oficina es requerido',
+            'provincia.*' =>
+                'Debe seleccionar la provincia de la actividad',
+            'nombreActividad.*' =>
+                'La actividad debe tener un nombre',
+            'pais.*' =>
+                'Debe seleccionar el país de la actividad',
+            'costo.*' =>
+                'Debe especificar el costo de participar en la construcción',
         ];
         $v = Validator::make(
             $request->all(),
@@ -242,22 +257,21 @@ class ActividadesController extends Controller
                 'descripcion' => 'required',
                 'fechaInicio' => 'required | date',
                 'fechaInicioInscripciones' => 'required | date | before_or_equal:fechaInicio',
-                'fechaFin' => 'required | date | after_or_equal:fechaInicio',
                 'fechaFinInscripciones' => 'required | date | after_or_equal:fechaInicioInscripciones | before_or_equal:fechaInicio',
-                'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
-                'localidad.id' => 'required',
                 'limiteInscripciones' => 'numeric',
                 'mensajeInscripcion' => 'required',
                 'nombreActividad' => 'required',
+                'fechaFin' => 'required | date | after_or_equal:fechaInicio',
+                'idTipo' => 'required',
+                'localidad.id' => 'required',
                 'pais.id' => 'required',
                 'provincia.id' => 'required',
                 'tipo.categoria.id' => 'required',
                 'oficina.id' => 'required',
-                'LinkPago.*' => 'el campo link de pago debe tener una URL válida'
+                'puntos_encuentro' => [new PuntoEncuentroRule]
             ], $messages
         );
-
 
         $v->sometimes('costo', 'required|numeric|min:1', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
@@ -330,7 +344,8 @@ class ActividadesController extends Controller
         $actividad->idCoordinador = $request['coordinador']['idPersona'];
         $actividad->idOficina = $request['oficina']['id'];
 
-        $fechaInicio =\Illuminate\Support\Carbon::parse($request->fechaInicio)
+
+        $fechaInicio = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaInicio))
             ->addHours((int)$request->objHora['HH'])
             ->addMinutes((int)$request->objHora['mm']);
         $actividad->fechaInicio = $fechaInicio;
@@ -375,4 +390,12 @@ class ActividadesController extends Controller
         return false;
     }
 
+    private function trimDate($fecha)
+    {
+        $i = strpos($fecha, 'T');
+        if ($i > 0) {
+            return substr($fecha, 0, $i);
+        }
+        return $fecha;
+    }
 }

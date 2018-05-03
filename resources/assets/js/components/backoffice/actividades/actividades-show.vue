@@ -383,7 +383,7 @@
     import axios from 'axios';
     import PuntoEncuentro from './punto-encuentro';
     import _ from 'lodash';
-    import VueTimepicker from 'vue2-timepicker';
+    import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
 
     export default {
@@ -688,6 +688,7 @@
                 }
                 window.scrollTo(0, 0);
                 this.dataActividad.objHora = this.objHora;
+                // this.dataActividad.fechaInicio = moment(this.dataActividad.fechaInicio, ['YYYY-MM-DD', moment.HTML5_FMT.DATE]);
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
                         window.location.replace('/admin/actividades');
