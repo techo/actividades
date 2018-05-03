@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\CategoriaActividad;
+use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
 use App\PuntoEncuentro;
@@ -219,20 +220,18 @@ class ActividadesController extends Controller
     private function createValidator(Request $request)
     {
         $messages = [
-            'fechaFinInscripciones.after' =>
+            'fechaFinInscripciones.after_or_equal' =>
                 'La fecha de fin de las inscripciones debe ser posterior a la fecha de inicio de las inscripciones',
-            'fechaFinInscripciones.before' =>
+            'fechaFinInscripciones.before_or_equal' =>
                 'Las inscripciones deben finalizar antes del inicio de la actividad',
             'inscripcionesInternas' =>
                 'visibilidad de las inscripciones',
-            'fechaInicioInscripciones.before' =>
+            'fechaInicioInscripciones.before_or_equal' =>
                 'La fecha de inicio de las inscripciones debe ser anterior al inicio de la actividad',
             'limiteInscripciones.*' =>
                 'El límite máximo de voluntarios debe tener un valor numérico válido',
             'coordinador.*' =>
                 'Debe seleccionar un Coordinador para la actividad',
-            'fechaFin.after' =>
-                'La fecha fin debe ser posterior a la fecha de inicio de la actividad',
             'idTipo.*' =>
                 'Debe seleccionar una categoría y un tipo de actividad',
             'tipo.*' =>
@@ -255,21 +254,21 @@ class ActividadesController extends Controller
             [
                 'coordinador.idPersona' => 'required | numeric',
                 'descripcion' => 'required',
+                'fechaFin' => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
                 'fechaInicio' => 'required | date',
                 'fechaInicioInscripciones' => 'required | date | before_or_equal:fechaInicio',
-                'fechaFinInscripciones' => 'required | date | after_or_equal:fechaInicioInscripciones | before_or_equal:fechaInicio',
+                'fechaFinInscripciones' => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
+                'idTipo' => 'required',
                 'inscripcionInterna' => 'required',
                 'limiteInscripciones' => 'numeric',
+                'localidad.id' => 'required',
                 'mensajeInscripcion' => 'required',
                 'nombreActividad' => 'required',
-                'fechaFin' => 'required | date | after_or_equal:fechaInicio',
-                'idTipo' => 'required',
-                'localidad.id' => 'required',
+                'oficina.id' => 'required',
                 'pais.id' => 'required',
                 'provincia.id' => 'required',
+                'puntos_encuentro' => [new PuntoEncuentroRule],
                 'tipo.categoria.id' => 'required',
-                'oficina.id' => 'required',
-                'puntos_encuentro' => [new PuntoEncuentroRule]
             ], $messages
         );
 
@@ -292,17 +291,15 @@ class ActividadesController extends Controller
      */
     private function guardarPunto($punto, $actividad)
     {
-        if (!isset($punto['idPuntoEncuentro'])) {
-            $p = new PuntoEncuentro();
-            $p->punto = $punto['punto'];
-            $p->horario = $punto['horario'];
-            $p->idActividad = $actividad->idActividad;
-            $p->idLocalidad = $punto['idLocalidad'];
-            $p->idPais = $punto['idPais'];
-            $p->idProvincia = $punto['idProvincia'];
-            $p->idPersona = $punto['responsable']['idPersona'];
-            $p->save();
-        }
+        $p = new PuntoEncuentro();
+        $p->punto = $punto['punto'];
+        $p->horario = $punto['horario'];
+        $p->idActividad = $actividad->idActividad;
+        $p->idLocalidad = $punto['idLocalidad'];
+        $p->idPais = $punto['idPais'];
+        $p->idProvincia = $punto['idProvincia'];
+        $p->idPersona = $punto['responsable']['idPersona'];
+        $p->save();
         return $punto;
     }
 
@@ -321,7 +318,8 @@ class ActividadesController extends Controller
             'idListaCTCT',
             'modificado_por.idPersona',
             'idOficina',
-            'fechaInicio'
+            'fechaInicio',
+            'fechaFin'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -350,6 +348,10 @@ class ActividadesController extends Controller
             ->addMinutes((int)$request->objHora['mm']);
         $actividad->fechaInicio = $fechaInicio;
 
+        $actividad->fechaFin = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaFin))
+            ->addHours(23)
+            ->addMinutes(59);
+
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
@@ -357,9 +359,7 @@ class ActividadesController extends Controller
                 ->idUnidadOrganizacional;
         }
 
-        // deberia tomar valor de auth()->user
         $actividad->idPersonaModificacion = auth()->user()->idPersona;
-
 
         // Campos definidos en la DB como NOT NULL, sin valor default y que no estan presentes en el $request //
         $actividad->actividadSecundaria = 1;
@@ -375,8 +375,11 @@ class ActividadesController extends Controller
 
         if ($actividad->save()) {
             if (!empty($request->puntos_encuentro)) {
+                $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {
-                    $punto = $this->guardarPunto($punto, $actividad);
+                    if (!in_array($punto['idPuntoEncuentro'], $puntosGuardados)) {
+                        $punto = $this->guardarPunto($punto, $actividad);
+                    }
                 }
             }
 
