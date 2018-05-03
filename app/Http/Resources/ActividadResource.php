@@ -18,7 +18,7 @@ class ActividadResource extends Resource
             'idActividad' => $this->idActividad,
             'tipo' => new TipoResource($this->tipo),
             'fecha' => $this->fechaInicio->format('d/m'),
-            'hora' => $this->fechaInicio->format('h:m'),
+            'hora' => $this->fechaInicio->format('H:i'),
             'fechaInicio' => ActividadResource::convertirFecha($this->fechaInicio),
             'fechaFin' => ActividadResource::convertirFecha($this->fechaFin),
             'fechaInicioInscripciones' => ActividadResource::convertirFecha($this->fechaInicioInscripciones),
