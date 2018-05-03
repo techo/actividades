@@ -177,6 +177,15 @@
                         $('#login-modal').modal('hide');
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
+                        let permisos = response.data.permisos.map(function (permiso) {
+                            return permiso.name;
+                        });
+
+                        if(permisos.find(function(permiso){
+                            return permiso == "ver_backoffice";
+                        }) !== undefined){
+                            this.verAdmin = true;
+                        }
                         this.showValidUser(response.data.user);
                     })
                     .catch((error) => {
