@@ -146,6 +146,12 @@
                         ></datepicker>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="horario">Horario</label> <br>
+                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -377,12 +383,13 @@
     import axios from 'axios';
     import PuntoEncuentro from './punto-encuentro';
     import _ from 'lodash';
-
+    import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
+    import moment from 'moment';
 
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro},
+        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker},
         data() {
             return {
                 dataCategorias: [],
@@ -407,7 +414,12 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
-
+                objHora: {
+                    HH: "",
+                    mm: "",
+                    ss: ""
+                },
+                horario: ''
             }
         },
         created() {
@@ -451,6 +463,9 @@
             }
         },
         watch: {
+            objHora: function () {
+                this.dataActividad.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
+            }
         },
         methods: {
             inicializar: function () {
@@ -472,6 +487,10 @@
                 } else {
                     this.dataActividad.coordinador = null;
                     this.coordinadorSeleccionado = null;
+                }
+                if (this.dataActividad.fechaInicio !== null) {
+                    this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
+                    this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
                 }
             },
             actualizarOficina() {
@@ -662,13 +681,14 @@
             },
             guardar(){
                 let url;
-
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
                 } else {
                     url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 }
                 window.scrollTo(0, 0);
+                this.dataActividad.objHora = this.objHora;
+                // this.dataActividad.fechaInicio = moment(this.dataActividad.fechaInicio, ['YYYY-MM-DD', moment.HTML5_FMT.DATE]);
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
                         window.location.replace('/admin/actividades');
@@ -682,7 +702,6 @@
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
             },
             eliminar: function () {
-
                 var form = document.getElementById('formDelete');
                 form.submit();
             },
