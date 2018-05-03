@@ -1,3 +1,4 @@
+{{--
 <footer class="fixed-bottom techo-footer">
     <div class="container-fluid">
         <div class="row">
@@ -19,4 +20,4 @@
             </div>
         </div>
     </div>
-</footer>
+</footer>--}}

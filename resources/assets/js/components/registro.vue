@@ -135,7 +135,7 @@
                 <b-form-radio-group id="radios2" v-model="user.sexo">
                   <b-form-radio value="F">Femenino</b-form-radio>
                   <b-form-radio value="M">Masculino</b-form-radio>
-                  <b-form-radio value="O">Otro</b-form-radio>
+                  <b-form-radio value="O">Prefiero no decirlo</b-form-radio>
                 </b-form-radio-group>
               </b-form-group>
           <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
