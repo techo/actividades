@@ -32,11 +32,15 @@ class IncluyeCamposGoogleIdYFacebookIdEnPersona extends Migration
      */
     public function down()
     {
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['google_id']);
-        });
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['facebook_id']);
-        });
+        if (Schema::hasColumn('Persona', 'google_id')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['google_id']);
+            });
+        }
+        if (Schema::hasColumn('Persona', 'facebook_id')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['facebook_id']);
+            });
+        }
     }
 }
