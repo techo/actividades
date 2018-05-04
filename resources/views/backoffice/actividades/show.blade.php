@@ -41,7 +41,7 @@
 @endpush
 
 @push('additional_css')
-
+    <link rel="stylesheet" href="{{ asset('/css/custom.css') }}">
 @endpush
 
 @section('footer')
