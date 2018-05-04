@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Actividad;
 use App\Persona;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ActividadesPolicy
@@ -29,7 +30,7 @@ class ActividadesPolicy
 
         $hayCupos = ($actividad->limiteInscripciones - $cantInscriptos) > 0;
 
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(date('Y-m-d')) && $actividad->fechaFinInscripciones->gte(date('Y-m-d'));
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d 00:00:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d 00:00:00'));
 
         $ActividadAbierta = $actividad->estadoConstruccion === "Abierta";
 
