@@ -30,6 +30,9 @@ class ForgotPassword extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.forgot-password');
+        return $this
+            ->subject('Restablece tu contraseña de TECHO')
+            ->from('no-reply@techo.org')
+            ->view('emails.forgot-password');
     }
 }
