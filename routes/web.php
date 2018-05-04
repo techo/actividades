@@ -51,8 +51,6 @@ Route::get('/registro', function (Request $request) {
     return view('registro');
 })->middleware('guest');
 
-Auth::routes();
-
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
