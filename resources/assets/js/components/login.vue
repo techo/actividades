@@ -50,7 +50,7 @@
                                             </div>
                                             <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
                                             <br>
-                                            <a href="#">Olvidé mi contraseña</a>
+                                            <a href="/password/reset">Olvidé mi contraseña</a>
                                         </form>
                                     
                                     </div>

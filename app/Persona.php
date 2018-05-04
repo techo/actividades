@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Mail\ForgotPassword;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Traits\HasRoles;
 
 class Persona extends Authenticatable
@@ -21,13 +23,14 @@ class Persona extends Authenticatable
     {
         return $this->hasMany(Inscripcion::class, 'idPersona');
     }
+
     public function actividades()
     {
         return $this->hasMany(Actividad::class, 'idCoordinador');
     }
 
     public function getNombreCompletoAttribute() {
-    	return $this->nombres . ' ' . $this->apellidoPaterno;
+        return $this->nombres . ' ' . $this->apellidoPaterno;
     }
 
     public function estaInscripto($idActividad) {
@@ -55,5 +58,15 @@ class Persona extends Authenticatable
             'pass' => ''
         ];
         return $usuario;
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        Mail::to($this->mail)->send(new ForgotPassword($token));
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->mail;
     }
 }
