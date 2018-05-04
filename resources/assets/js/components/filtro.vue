@@ -1,6 +1,6 @@
 <template>
     <div class="row justify-content-center mt-4 mb-4 "id="filtro">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <select class="dropdown"
                 title="Categorías"
                 name="categorias"
@@ -12,7 +12,7 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="row">
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
             </div>
@@ -35,7 +35,7 @@
 
         </div>
         <div class="col-md-2">
-            <button class="btn btn-primary" v-on:click="borrarFiltros">
+            <button class="btn btn-default" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>

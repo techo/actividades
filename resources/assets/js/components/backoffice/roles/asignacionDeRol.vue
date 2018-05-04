@@ -38,6 +38,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
+                            <br>
                             <button class="btn btn-primary btn-lg" @click="this.actualizar">Actualizar</button>
                         </div>
                     </div>
@@ -106,7 +107,6 @@
                     let dataForm = {
                         rolID: this.rolSeleccionado.id
                     };
-                    debugger
                     this.axiosPost(this.urlUpdate, function (data, self) {
                             self.actualizado = true;
                             self.mensaje = data;

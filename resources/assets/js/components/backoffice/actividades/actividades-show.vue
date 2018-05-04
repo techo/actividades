@@ -1,14 +1,16 @@
 <template>
-    <span>
+<span>
     <div v-show="guardado" class="callout callout-success">
         <h4>{{ mensajeGuardado }}</h4>
     </div>
-        <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
-            <ul>
-               <li v-for="error in validationErrors">{{ error }}</li>
-            </ul>
-        </div>
+    <simplert ref="loading"></simplert>
+
+    <div v-show="tieneErrores" class="callout callout-danger">
+        <h4>Errores:</h4>
+        <ul>
+           <li v-for="error in validationErrors">{{ error }}</li>
+        </ul>
+    </div>
     <div class="box">
         <div class="box-header with-border">
             <h3 class="box-title">Información General</h3>
@@ -442,9 +444,10 @@
             Event.$on('eliminar', this.eliminar);
         },
         computed: {
-            tieneErrores: function () {
+            tieneErrores:  function () {
                 return (this.validationErrors.length > 0);
             }
+
         },
         filters: {
             estado: function (value) {
@@ -614,6 +617,7 @@
                     })
                     .catch((error) => {
                         Event.$emit('error');
+                        this.ocultarLoadingAlert();
                         // Error
                         console.info('Error en: ' + url);
                         console.error(error.response.status);
@@ -640,36 +644,6 @@
                     });
 
             },
-            axiosDelete(url, fCallback, params = []) {
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                axios.delete(url, params)
-                    .then(response => {
-                        fCallback(response.data, this)
-                    })
-                    .catch((error) => {
-                        // Error
-                        console.error('Error en: ' + url);
-                        console.error(error.response.status);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            // console.error(error.response.data);
-                            // console.error(error.response.status);
-                            // console.error(error.response.headers);
-                            this.validationErrors = ['No se pudo eliminar la actividad'];
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-
-            },
             setLocalidad(){
                 this.dataActividad.localidad = this.localidadSeleccionada;
             },
@@ -680,6 +654,9 @@
 
             },
             guardar(){
+                this.mostrarLoadingAlert();
+                this.validationErrors = [];
+
                 let url;
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
@@ -688,7 +665,7 @@
                 }
                 window.scrollTo(0, 0);
                 this.dataActividad.objHora = this.objHora;
-                // this.dataActividad.fechaInicio = moment(this.dataActividad.fechaInicio, ['YYYY-MM-DD', moment.HTML5_FMT.DATE]);
+
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
                         window.location.replace('/admin/actividades');
@@ -696,7 +673,10 @@
                     self.mensajeGuardado = data;
                     self.guardado = true;
                     self.validationErrors = [];
+                    self.$refs.loading.justCloseSimplert();
+                    // this.ocultarLoadingAlert();
                 }, this.dataActividad);
+
             },
             borrarPunto: function (obj) {
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
@@ -705,6 +685,20 @@
                 var form = document.getElementById('formDelete');
                 form.submit();
             },
+            mostrarLoadingAlert() {
+                this.$refs.loading.openSimplert({
+                    title: 'Espera...',
+                    message: "<i class=\"fa fa-spinner fa-spin fa-4x\"></i>",
+                    hideAllButton: true,
+                    isShown: true,
+                    disableOverlayClick: true,
+                    type: ''
+                })
+            },
+            ocultarLoadingAlert: function () {
+                this.$refs.loading.justCloseSimplert();
+            }
+
         }
     }
 </script>
