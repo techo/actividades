@@ -37,11 +37,11 @@
               <b>{{$inscripcion->punto_encuento->punto}}</b> - {{$inscripcion->punto_encuento->localidad->localidad}} - {{$inscripcion->punto_encuento->provincia->provincia}} - {{$inscripcion->punto_encuento->pais->nombre}} <b>horario:</b> {{$inscripcion->punto_encuento->horario}} <b>coordinador:</b> {{$inscripcion->punto_encuento->responsable->nombres}} {{$inscripcion->punto_encuento->responsable->apellidoPaterno}}
             </li>
           </ul>
-          
-          <p> Para TECHO - Argentina es importante que te mantengas enterado de las nuevas actividades. Para ello, entra siempre en nuestro Sitio Web.  </p>
+
+            <p> Para TECHO - Argentina es importante que te mantengas enterado de las nuevas actividades.
+                Para ello, entra siempre en nuestro Sitio Web. </p>
             <p> Muchas gracias!!  </p>
-          </p>
-        </td> 
+        </td>
       </tr>
       <tr>
         <td> 
