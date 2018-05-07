@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <p>
+    <p style="font-size: larger">
         Hola {{$inscripcion->persona->nombres}},
     </p>
 
@@ -48,7 +48,9 @@
                 Horario:
             </strong>
         </p>
-        {{$inscripcion->punto_encuentro->horario}}
+        <p>
+            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}
+        </p>
 
         @if($inscripcion->punto_encuentro->responsable)
             <p>

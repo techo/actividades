@@ -1,7 +1,7 @@
 @extends('emails.template')
 
 @section('content')
-    <p>
+    <p style="font-size: larger">
         Hola {{$inscripcion->persona->nombres}},
     </p>
     <p>
@@ -10,9 +10,7 @@
         {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}}, ha sido <strong>CANCELADA</strong>
     </p>
     <p>
-        <strong>
-            ¡Lamentamos cualquier inconveniente causado y te invitamos a entrar en el sitio de
-            Techo para buscar otras actividades!
-        </strong>
+        Lamentamos cualquier inconveniente causado y te invitamos a entrar en el sitio de
+        Techo para buscar otras actividades.
     </p>
 @endsection
