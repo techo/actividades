@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <p>
+    <p style="font-size: larger">
         Hola {{$inscripcion->persona->nombres}},
     </p>
     <p>Te has inscrito para participar en <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
@@ -64,7 +64,7 @@
             </strong>
         </p>
         <p>
-            {{$inscripcion->punto_encuentro->punto}}
+            {{$inscripcion->punto_encuentro->punto}},
             {{$inscripcion->punto_encuentro->localidad->localidad}},
             {{$inscripcion->punto_encuentro->provincia->provincia}},
             {{$inscripcion->punto_encuentro->pais->nombre}}
@@ -74,7 +74,9 @@
                 Horario:
             </strong>
         </p>
-        {{$inscripcion->punto_encuentro->horario}}
+        <p>
+            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}
+        </p>
 
         @if($inscripcion->punto_encuentro->responsable)
             <p>

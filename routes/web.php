@@ -2,6 +2,13 @@
 
 use Illuminate\Support\Facades\Auth;
 
+Route::get('test/mail', function () {
+    $inscripcion = \App\Inscripcion::find(150811);
+//    return new \App\Mail\MailConfimacionInscripcion($inscripcion);
+//    return new \App\Mail\RecordatorioActividad($inscripcion);
+    return new \App\Mail\CancelacionActividad($inscripcion);
+
+});
 //Frontoffice
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
