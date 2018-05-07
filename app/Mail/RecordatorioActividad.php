@@ -29,6 +29,9 @@ class RecordatorioActividad extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.recordatorioActividad');
+        return $this
+            ->subject('TECHO: ' . $this->inscripcion->actividad->nombreActividad . ' está por comenzar')
+            ->from('no-reply@techo.org')
+            ->view('emails.recordatorioActividad');
     }
 }

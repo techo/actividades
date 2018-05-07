@@ -22,7 +22,7 @@ class Inscripcion extends Model
         return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
     }
 
-    public function punto_encuento()
+    public function punto_encuentro()
     {
         return $this->belongsTo(PuntoEncuentro::class, 'idPuntoEncuentro', 'idPuntoEncuentro');
     }

@@ -47,6 +47,7 @@
                             <tr>
                                 <td class="content-cell">
                                     @yield('content')
+                                    <p> ¡Muchas gracias!</p>
                                 </td>
                             </tr>
                             <tr>
@@ -54,9 +55,9 @@
                                     <p style="font-size: smaller; color: #4c4d4f">Para TECHO - Argentina es importante
                                         que te
                                         mantengas enterado de las nuevas actividades.
-                                        Para ello, entra siempre en <a href="{{ url('/') }}">nuestro Sitio Web.</a>
+                                        Para ello, entra siempre en nuestro Sitio Web
+                                        <a href="{{ url('/') }}">{{ url('/') }}</a>
                                     </p>
-                                    <p> ¡Muchas gracias!</p>
 
                                 </td>
                             </tr>

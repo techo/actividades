@@ -1,47 +1,70 @@
-<html>
-<head>
-    <title>Recordatorio Actividad</title>
-</head>
- 
-<body>
-  <table border="0" style="border:1px solid #999999;font-family:Helvetica,sans-serif;font-size:12px" align="center">
-    <tbody>
-      <tr>
-        <td>
-          <p>Hola {{$inscripcion->persona->nombres}} {{$inscripcion->persona->apellidoPaterno}}: </p>
-          <p> Te recordamos que te has inscrito para participar en <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO - 
-          @if($inscripcion->actividad->pais) 
-            {{$inscripcion->actividad->pais->nombre}}
-          @endif
-            que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}}.  </p>
-          <b>En:</b> {{$inscripcion->actividad->localidad->localidad}} 
-          @if($inscripcion->actividad->provincia)
-            {{$inscripcion->actividad->provincia->provincia}}
-          @endif
-          @if($inscripcion->actividad->coordinador)
-            <b>Coordinador:</b> {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
-          @endif
-          <p>{{$inscripcion->actividad->mensajeInscripcion}} <br></p>
-          <p><b>Te esperamos!!!</b></p>
-          @if($inscripcion->punto_encuento)
-          <p>Punto de encuento</p>
-          <ul>
-            <li>
-              <b>{{$inscripcion->punto_encuento->punto}}</b> - {{$inscripcion->punto_encuento->localidad->localidad}} - {{$inscripcion->punto_encuento->provincia->provincia}} - {{$inscripcion->punto_encuento->pais->nombre}} <b>horario:</b> {{$inscripcion->punto_encuento->horario}} <b>coordinador:</b> {{$inscripcion->punto_encuento->responsable->nombres}} {{$inscripcion->punto_encuento->responsable->apellidoPaterno}}
-            </li>
-          </ul>
-          @endif
-          <p> Para TECHO - Argentina es importante que te mantengas enterado de las nuevas actividades. Para ello, entra siempre en nuestro Sitio Web.  </p>
-            <p> Muchas gracias!!  </p>
-          </p>
-        </td> 
-      </tr>
-      <tr>
-        <td> 
-          @include('emails.footer') 
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</body>
-</html>
+@extends('emails.template')
+
+@section('content')
+
+    <p>
+        Hola {{$inscripcion->persona->nombres}},
+    </p>
+
+    <p>
+        Te recordamos que te has inscrito para participar en
+        <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO
+        - {{$inscripcion->actividad->pais->nombre}}
+        que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} en
+        {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.
+    </p>
+
+    @if($inscripcion->actividad->coordinador)
+        <p>
+            <strong>Coordinador de la actividad:</strong>
+            {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
+            <a href="mailto:{{ $inscripcion->actividad->coordinador->mail }}" target="_blank">
+                {{ $inscripcion->actividad->coordinador->mail }}
+            </a>
+        </p>
+    @endif
+
+    <p>
+        {{$inscripcion->actividad->mensajeInscripcion}}
+    </p>
+
+    <p>
+        <strong>¡Te esperamos!</strong>
+    </p>
+    @if($inscripcion->punto_encuentro)
+        <p>
+            <strong>
+                Punto de encuentro:
+            </strong>
+        </p>
+        <p>
+            {{$inscripcion->punto_encuentro->punto}}
+            {{$inscripcion->punto_encuentro->localidad->localidad}},
+            {{$inscripcion->punto_encuentro->provincia->provincia}},
+            {{$inscripcion->punto_encuentro->pais->nombre}}
+        </p>
+        <p>
+            <strong>
+                Horario:
+            </strong>
+        </p>
+        {{$inscripcion->punto_encuentro->horario}}
+
+        @if($inscripcion->punto_encuentro->responsable)
+            <p>
+                <strong>
+                    Coordinador del punto de encuentro:
+                </strong>
+            </p>
+            <p>
+                {{$inscripcion->punto_encuentro->responsable->nombres}}
+                {{$inscripcion->punto_encuentro->responsable->apellidoPaterno}}
+                <a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
+                    {{ $inscripcion->actividad->coordinador->mail }}
+                </a>
+
+            </p>
+        @endif
+    @endif
+
+@endsection
