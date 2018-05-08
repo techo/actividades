@@ -68,7 +68,7 @@ class LoginController extends Controller
         return response(
             [
                 'success' => false,
-                'message' => 'Las credenciales no coinciden'
+                'message' => 'El correo electrónico y/o la contraseña es incorrecta'
             ], 403
         );
     }
