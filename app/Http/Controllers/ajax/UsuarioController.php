@@ -55,7 +55,7 @@ class UsuarioController extends Controller
       $this->validar($request,'create');
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
-      $persona->password = Hash::make($request->pass);
+      $persona->password = ($request->has('google_id') || $request->has('facebook_id')) ? Hash::make(str_random(30)) : Hash::make($request->pass);
       $persona->carrera = '';
       $persona->anoEstudio = '';
       $persona->idContactoCTCT = '';
