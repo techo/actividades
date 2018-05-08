@@ -30,6 +30,9 @@ class MailRegistroUsuario extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.notificacionRegistroUsuario');
+        return $this
+            ->subject('Te registraste como voluntario en TECHO')
+            ->from('no-reply@techo.org')
+            ->view('emails.notificacionRegistroUsuario');
     }
 }

@@ -30,6 +30,9 @@ class MailConfimacionInscripcion extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.confimacionInscripcion');
+        return $this
+            ->subject('TECHO: Te inscribiste a ' . $this->inscripcion->actividad->nombreActividad)
+            ->from('no-reply@techo.org')
+            ->view('emails.confimacionInscripcion');
     }
 }

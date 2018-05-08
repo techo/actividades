@@ -29,6 +29,9 @@ class CancelacionActividad extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.cancelacionActividad');
+        return $this
+            ->subject('TECHO: ' . $this->inscripcion->actividad->nombreActividad . ' fue cancelada')
+            ->from('no-reply@techo.org')
+            ->view('emails.cancelacionActividad');
     }
 }
