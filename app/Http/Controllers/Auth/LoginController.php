@@ -109,7 +109,6 @@ class LoginController extends Controller
             $personaData->email = $user->email;
             $personaData->google_id = $user->user['id'];
             $personaData->facebook_id = '';
-            $personaData->password = bcrypt(str_random(30));
             $personaData->sexo = '';
         } else {
            $user = Socialite::driver($provider)->stateless()->fields([
@@ -120,7 +119,6 @@ class LoginController extends Controller
             $personaData->email = $user->user['email'];
             $personaData->facebook_id = $user->user['id'];
             $personaData->google_id = '';
-            $personaData->password = bcrypt(str_random(30));
             $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
         }
         $persona = Persona::where('mail',$personaData->email)->first();
