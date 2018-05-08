@@ -38,28 +38,36 @@
                                         <form id="frmLogin">
                                             <div class="form-group">
                                                 <label for="mail">Correo Electrónico</label>
-                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Tu dirección de email" required>
+                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Ingresa tu correo electrónico" required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="password">Password</label>
-                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Password" required>
+                                                <label for="password">Contraseña</label>
+                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
                                             </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="remember">
-                                                <label class="form-check-label" for="remember">Recordarme en este equipo</label>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="text-danger">{{ mensajeError }}</p>
+                                                </div>
                                             </div>
-                                            <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul" style="margin-top: 2em">Ingresar</button>
-                                            <br>
-                                            <a href="/password/reset">Olvidé mi contraseña</a>
+                                            <div class="row h-100 align-items-center">
+                                                <div class="col-4">
+                                                    <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul">Ingresar</button>
+                                                </div>
+                                               <div class="col-8 text-right">
+                                                    <a href="/password/reset">Olvidé mi contraseña</a>
+                                               </div>
+                                            </div>
                                         </form>
-                                    
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 registro">
-                                <div class="pl-4 m-3">
-                                    <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
-                                    <a href="/registro" class="btn btn-light my-sm-0 bg-white techo-btn-blanco">Me quiero registrar</a>
+                                <div class="row h-100 justify-content-center align-items-center">
+                                    <div class="col">
+                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                        <br>
+                                        <a href="/registro" class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco">¡Quiero ser voluntario!</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -77,6 +85,7 @@
                     id="btnUser"
                     type="button"
                     class="btn btn-secondary dropdown-toggle techo-btn-blanco"
+                    style="margin-right: 4em"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
@@ -101,6 +110,7 @@
         <form class="form-inline mt-2 mt-md-0" v-else>
             <button
                     class="btn my-2 my-sm-0 techo-btn-blanco"
+                    style="margin-right: 4em"
                     type="button"
                     data-toggle="modal"
                     data-target="#login-modal"
@@ -126,6 +136,7 @@
                     password: '',
                 },
                 hasError: false,
+                mensajeError: "",
                 authenticated: false,
                 user: {
                     nombres: '',
@@ -166,10 +177,11 @@
             },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                // if(this.credentials.mail == "" || this.credentials.password == ""){
-                //     this.hasError = true;
-                //     return
-                // }
+                if(this.credentials.mail == "" || this.credentials.password == ""){
+                    this.hasError = true;
+                    this.mensajeError = "El Correo electrónico y la contraseña son requeridos";
+                    return
+                }
                 axios.post(
                     '/login',
                     {
@@ -195,6 +207,7 @@
                     .catch((error) => {
                         this.hasError = true;
                         if (error.response) {
+                            this.mensajeError = error.response.data.message;
                             console.log(error.response.data);
                             console.log(error.response.status);
                             console.log(error.response.headers);
@@ -202,6 +215,7 @@
                             console.log(error.request);
                         } else {
                             console.log('Error', error.message);
+                            this.mensajeError = error.message;
                         }
                         console.log(error.config);
                     });
@@ -247,7 +261,6 @@
 
 <style scoped>
  .techo-btn-blanco {
-     margin-right: 4em;
      border: none;
      background-color: #0092dd;
      color: #ffffff;
