@@ -37,7 +37,7 @@
                         <v-select
                                 :options="dataCoordinadores"
                                 label="nombre"
-                                placeholder="Seleccione"
+                                placeholder="Escribe el nombre o apellido del coordinador"
                                 name="coordinador"
                                 id="coordinador"
                                 v-model="coordinadorSeleccionado"
@@ -59,7 +59,7 @@
                                     text-enabled="Abierto"
                                     text-disabled="Cerrada"
                                     theme="bootstrap"
-                                    color="primary"
+                                    color="success"
                                     id="estadoActividad"
                                     name="estadoActividad"
                                     :disabled="readonly"
@@ -121,7 +121,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
                         <datepicker
@@ -134,6 +134,13 @@
                         ></datepicker>
                     </div>
                 </div>
+                <div class="col-md-2 text-right">
+                    <div class="form-group">
+                        <label for="horario">Horario de inicio</label> <br>
+                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
+                    </div>
+                </div>
+
 
                 <div class="col-md-4">
                     <div class="form-group">
@@ -149,10 +156,10 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="horario">Horario</label> <br>
-                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label for="horario">Horario</label> <br>-->
+                        <!--<vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>-->
+                    <!--</div>-->
                 </div>
             </div>
 
@@ -249,6 +256,7 @@
                     :readonly="readonly"
                     :puntos-encuentro="dataActividad.puntosEncuentro"
                     :paises="dataPaises"
+                    :pais="paisSeleccionado"
             ></punto-encuentro>
         </div>
         <!-- /.box-body -->

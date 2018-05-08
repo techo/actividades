@@ -17,17 +17,17 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="horario">Horario</label> <br>
-                    <vue-timepicker v-model="objHora"></vue-timepicker>
+                    <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
                     <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="coordinador">Coordinador</label>
+                    <label for="coordinador">Responsable del punto de encuentro</label>
                     <v-select
                             :options="dataCoordinadores"
                             label="nombre"
-                            placeholder="Seleccione"
+                            placeholder="Escribe el nombre o apellido del responsable"
                             name="coordinador"
                             id="coordinador"
                             v-model="coordinador"
@@ -44,17 +44,18 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="pais">País</label>
-                    <v-select
-                            :options="dataPaises"
-                            label="nombre"
-                            placeholder="Seleccione"
-                            name="pais"
-                            id="pais"
-                            v-model="paisSeleccionado"
-                            v-bind:disabled="this.readonly"
+                    <!--<v-select-->
+                            <!--:options="dataPaises"-->
+                            <!--label="nombre"-->
+                            <!--placeholder="Seleccione"-->
+                            <!--name="pais"-->
+                            <!--id="pais"-->
+                            <!--v-model="paisSeleccionado"-->
+                            <!--v-bind:disabled="this.readonly"-->
 
-                    >
-                    </v-select>
+                    <!--&gt;-->
+                    <!--</v-select>-->
+                    <p>{{ paisSeleccionado.nombre }}</p>
                     <p class="text-danger" v-show="errorPais"><small>Este campo es requerido</small></p>
                 </div>
             </div>
@@ -105,7 +106,7 @@
         </div>
 
         <!--<div class="row">-->
-            <table class="table table-striped table-hover table-condensed">
+            <table class="table table-striped table-hover table-condensed" v-if="dataPuntosEncuentro.length > 0">
                 <thead class="thead-light">
                     <th scope="col">Lugar</th>
                     <th scope="col">Horario</th>
@@ -147,11 +148,11 @@
 
     export default {
         name: "punto-encuentro",
-        props: ['readonly', 'puntos-encuentro', 'paises'],
+        props: ['readonly', 'puntos-encuentro', 'paises', 'pais'],
         components: {VueTimepicker},
         data: function () {
             return {
-                dataReadonly: this.readonly,
+                // dataReadonly: this.readonly,
                 dataPuntosEncuentro: (this.$parent.dataActividad.puntos_encuentro === undefined) ? [] : this.$parent.dataActividad.puntos_encuentro,
                 coordinador: '',
                 punto: '',
@@ -164,7 +165,7 @@
                 dataCoordinadores: [],
                 puntoSeleccionado: {},
                 dataPaises: this.paises,
-                paisSeleccionado: '',
+                paisSeleccionado: this.pais,
                 dataProvincias: [],
                 provinciaSeleccionada: '',
                 dataLocalidades: [],
@@ -191,6 +192,9 @@
             },
             objHora: function () {
                 this.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
+            },
+            pais: function() {
+                this.paisSeleccionado = this.pais
             }
         },
         computed: {
