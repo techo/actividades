@@ -166,6 +166,10 @@
             },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                // if(this.credentials.mail == "" || this.credentials.password == ""){
+                //     this.hasError = true;
+                //     return
+                // }
                 axios.post(
                     '/login',
                     {
