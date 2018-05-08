@@ -1,5 +1,8 @@
-<table border="0" cellpadding="0" cellspacing="0" style="text-align:center" bgcolor="#d9d9d9">
+<table border="0" cellpadding="0" cellspacing="0" style="text-align:center" bgcolor="#D9D9D9">
     <tr>
+        <td>
+            <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo Argentina" style="padding-top: 5px;">
+        </td>
         <td style="display:inline-block;padding-right:5px;padding-top:5px;line-height:0px" valign="middle">
             <a href="http://lt.dplrtrack.info/a1ccecf1d4a82082506189b30dbb3789-1c48a2db5ffee7dd9b1dd7531c928471"
                target="_blank"

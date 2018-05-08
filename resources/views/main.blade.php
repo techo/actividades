@@ -20,6 +20,7 @@
             </div>        
 
             @yield('footer')
+            @include('partials.footer')
             </main>
         </div>
         @yield('aditional_html')
