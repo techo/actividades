@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Home
+    TECHO: Bienvenido
 @endsection
 
 @section('main_image')

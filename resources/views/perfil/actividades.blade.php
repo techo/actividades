@@ -11,5 +11,9 @@
 	<mis-inscripciones></mis-inscripciones>
 @endsection
 
+@section('footer')
+    @include('partials.footer')
+@endsection
+
 @section('additional_scripts')
 @endsection
