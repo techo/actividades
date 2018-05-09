@@ -11,5 +11,9 @@
 	<perfil usuario="{{json_encode($usuario)}}"></perfil>
 @endsection
 
+@section('footer')
+    @include('partials.footer')
+@endsection
+
 @section('additional_scripts')
 @endsection
