@@ -144,6 +144,7 @@ code {
     background-color: #D9D9D9;
     left: 0;
     bottom: 0;
+    position: absolute;
 }
 
 .footer a {
