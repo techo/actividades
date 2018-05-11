@@ -42,7 +42,7 @@
             </div>
         </div>
         <hr>
-        <div class="row">
+        <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-5">
                 <div class="form-group">
                     <label>Correo electrónico*</label>
@@ -51,8 +51,10 @@
                 </div>
             </div>
             <div class="col-md-1">
-              <span v-bind:class="{'d-none':!validacion.email.valido}"><i class="fas fa-check text-success"></i></span>
-              <span v-bind:class="{'d-none':!validacion.email.invalido}"><i class="fas fa-times text-danger"></i></span>
+                <span v-bind:class="{'d-none':!validacion.email.valido}"><i
+                        class="fas fa-check text-success"></i></span>
+                <span v-bind:class="{'d-none':!validacion.email.invalido}"><i
+                        class="fas fa-times text-danger"></i></span>
             </div>
 
             <div class="col-md-5">
@@ -92,7 +94,7 @@
           <label>PASO 2/3</label>
         </div>
       </div>
-      <div class="row">
+        <div class="row h-100 justify-content-center align-items-center">
           <div class="col-md-5">
               <div class="form-group">
                   <label>Nombre *</label>
@@ -119,9 +121,7 @@
 
       </div>
 
-
-
-      <div class="row">
+        <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-5">
             <div class="form-group">
                 <label>Fecha de nacimiento *</label>
@@ -153,7 +153,7 @@
         </div>
       </div>
 
-      <div class="row">
+        <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-5">
             <div class="form-group">
                 <label>DNI / Pasaporte *</label>
@@ -179,10 +179,10 @@
       </div>
 
 
-        <div class="row">
+        <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-5">
                 <div class="form-group">
-                    <label>País de residencia *</label>
+                    <label>País de residencia</label>
                     <select id="pais" v-model="user.pais" class="form-control">
                         <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
                     </select>
@@ -195,7 +195,7 @@
             </div>
             <div class="col-md-5">
                 <div class="form-group">
-                    <label>Provincia *</label>
+                    <label>Provincia</label>
                     <select id="provincia" v-model="user.provincia" class="form-control">
                         <option v-for="provincia in provincias" v-bind:value="provincia.id">{{provincia.provincia}}</option>
                     </select>
@@ -207,10 +207,11 @@
                 <span v-bind:class="{'d-none':!validacion.provincia.invalido}"><i class="fas fa-times text-danger"></i></span>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row h-100 justify-content-center align-items-center">
             <div class="col-md-5">
                 <div class="form-group">
-                    <label>Localidad *</label>
+                    <label>Localidad</label>
                     <select id="localidad" v-model="user.localidad" class="form-control">
                         <option v-for="localidad in localidades" v-bind:value="localidad.id">{{localidad.localidad}}</option>
                     </select>
