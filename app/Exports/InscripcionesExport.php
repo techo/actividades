@@ -10,10 +10,11 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFormatting, WithMapping, WithStrictNullComparison
+class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFormatting, WithMapping, WithStrictNullComparison, ShouldAutoSize
 
 {
     protected $idActividad;
@@ -35,6 +36,13 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
         $query = DB::table('Persona')
             ->join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
+            ->join('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
+            ->leftJoin('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
+            ->leftJoin('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
+            ->leftJoin('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
+            ->leftJoin('atl_pais as personaPais', 'Persona.idPais', '=', 'personaPais.id')
+            ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
+            ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
             ->select(
                 [
                     'Inscripcion.idPersona',
@@ -43,11 +51,20 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
                     'Persona.apellidoPaterno',
                     'Persona.telefonoMovil',
                     'Persona.mail',
+                    'Persona.fechaNacimiento',
+                    'Persona.sexo',
+                    'personaPais.nombre as pPais',
+                    'personaProvincia.provincia as pProvincia',
+                    'personaLocalidad.localidad as pLocalidad',
                     'Inscripcion.fechaInscripcion',
                     'Inscripcion.idInscripcion AS id',
-                    'Inscripcion.pago',
                     'Inscripcion.presente',
+                    'Inscripcion.pago',
                     'Inscripcion.estado',
+                    'PuntoEncuentro.punto',
+                    'atl_pais.nombre as puntoPais',
+                    'atl_provincias.provincia as puntoProvincia',
+                    'atl_localidades.localidad as puntoLocalidad',
                     'Actividad.costo',
                     'Actividad.idActividad'
                 ]
@@ -94,26 +111,56 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'Apellido',
             'Teléfono Móvil',
             'Email',
+            'Fecha de nacimiento',
+            'Genero',
+            'País',
+            'Provincia',
+            'Localidad',
             'Fecha De Inscripción',
             'Asistencia A La Actividad',
             'Pago',
             'Costo De La Actividad',
+            'Punto de Encuentro',
+            'País del punto de encuentro',
+            'Localidad del punto de encuentro',
+            'Provincia del Punto de encuentro'
         ];
     }
 
-    public function map($persona): array
+    public function map($query): array
     {
+        switch ($query->sexo) {
+            case 'M':
+                $genero = 'Masculino';
+                break;
+            case 'F':
+                $genero = 'Femenino';
+                break;
+            default:
+                $genero = 'Sin Especificar';
+                break;
+        }
+
         return [
-            $persona->idPersona,
-            $persona->dni,
-            $persona->nombres,
-            $persona->apellidoPaterno,
-            $persona->telefonoMovil,
-            $persona->mail,
-            Date::dateTimeToExcel(Carbon::parse($persona->fechaInscripcion)),
-            $persona->presente,
-            $persona->pago,
-            $persona->costo,
+            $query->idPersona,
+            $query->dni,
+            $query->nombres,
+            $query->apellidoPaterno,
+            $query->telefonoMovil,
+            $query->mail,
+            Date::dateTimeToExcel(Carbon::parse($query->fechaNacimiento)),
+            $genero,
+            $query->pPais,
+            $query->pProvincia,
+            $query->pLocalidad,
+            Date::dateTimeToExcel(Carbon::parse($query->fechaInscripcion)),
+            is_null($query->presente) ? 'No' : 'Si',
+            is_null($query->pago) ? 'No' : 'Si',
+            $query->costo,
+            $query->punto,
+            $query->puntoPais,
+            $query->puntoLocalidad,
+            $query->puntoProvincia
         ];
     }
 
@@ -123,6 +170,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'B' => NumberFormat::FORMAT_TEXT,
             'E' => NumberFormat::FORMAT_TEXT,
             'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'L' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 

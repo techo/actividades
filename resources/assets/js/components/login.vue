@@ -25,12 +25,12 @@
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;LOGIN CON FACEBOOK</a>
+                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;LOGIN CON GOOGLE</a>
+                                        <a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
@@ -260,24 +260,24 @@
 </script>
 
 <style scoped>
- .techo-btn-blanco {
+    .techo-btn-blanco {
      border: none;
      background-color: #0092dd;
      color: #ffffff;
- }
+    }
 
- .registro {
+    .registro {
      background-color: #0092dd;
     font-weight: bold;
     text-align: center;
     color: #ffffff;
     font-weight: bold;
- }
+    }
 
- .registro h1{
+    .registro h1{
     vertical-align: middle;
-
- }
+     font-family: Montserrat, sans-serif;
+    }
     .dropdown-item {
         font-family: Montserrat, sans-serif;
         text-transform: uppercase;
@@ -291,11 +291,18 @@
         color: #0092dd;
     }
 
- .dropdown-menu {
+    .dropdown-menu {
         width: 10em;
         padding: 1em;
         margin: 0;
     }
 
+    a.google {
+        border: none;
+    }
+
+    a.facebook {
+        border:none;
+    }
 
 </style>
