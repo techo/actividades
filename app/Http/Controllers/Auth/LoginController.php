@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -121,6 +121,7 @@ class LoginController extends Controller
             $personaData->google_id = '';
             $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
         }
+//        $personaData->password = bcrypt(str_random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
         if(!$persona) {
             return view('registro')->with('persona', $personaData);
