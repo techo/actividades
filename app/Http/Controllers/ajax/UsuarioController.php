@@ -46,7 +46,10 @@ class UsuarioController extends Controller
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
-        $validatedData = $request->validate($rules);
+        $messages = [
+          'sexo.required' => 'El campo género es requerido',
+      ];
+        $validatedData = $request->validate($rules, $messages);
         return ['success' => true, 'params' => array_keys($rules)];
     }
 
@@ -55,7 +58,7 @@ class UsuarioController extends Controller
       $this->validar($request,'create');
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
-      $persona->password = ($request->has('google_id') || $request->has('facebook_id')) ? Hash::make(str_random(30)) : Hash::make($request->pass);
+      $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
       $persona->carrera = '';
       $persona->anoEstudio = '';
       $persona->idContactoCTCT = '';
