@@ -46,10 +46,7 @@ class UsuarioController extends Controller
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
-        $messages = [
-          'sexo.required' => 'El campo género es requerido',
-      ];
-        $validatedData = $request->validate($rules, $messages);
+        $validatedData = $request->validate($rules);
         return ['success' => true, 'params' => array_keys($rules)];
     }
 
