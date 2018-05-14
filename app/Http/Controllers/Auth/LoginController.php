@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Socialite;
 use App\Persona;
 
@@ -52,14 +53,21 @@ class LoginController extends Controller
     {
         $credentials = $request->only($this->username(), 'password');
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
-
+        $afterLoginUrl = '';
         if($authSuccess) {
             $request->session()->regenerate();
+
+            if($request->hasCookie('after_login_url')){
+                $afterLoginUrl = $request->cookie('after_login_url');
+                Cookie::queue(Cookie::make('after_login_url', ''));
+            }
+
             return response(
                 [
                     'success' => true,
                     'user' => Auth::user(),
-                    'permisos' => Auth::user()->getAllPermissions()
+                    'permisos' => Auth::user()->getAllPermissions(),
+                    'after_login' => $afterLoginUrl,
                 ],
                 200
             );

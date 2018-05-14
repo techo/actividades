@@ -49,6 +49,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof AuthenticationException){
+            return $this->unauthenticated($request, $exception);
+        }
         return parent::render($request, $exception);
     }
 
@@ -58,6 +61,12 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect('/login');
+        if ($request->hasHeader('referer')){
+           $afterLoginUrl = $request->header('referer');
+        } else {
+            $afterLoginUrl = $request->getUri();
+        }
+
+        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 10);
     }
 }
