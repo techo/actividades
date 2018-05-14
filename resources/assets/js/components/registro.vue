@@ -49,18 +49,23 @@
                     <input type="text" class="form-control" name="email" id="email" v-model="user.email">
                     <small class="form-text text-danger">{{validacion.email.texto}}&nbsp;<br></small>
                 </div>
+
             </div>
             <div class="col-md-1">
-                <span v-bind:class="{'d-none':!validacion.email.valido}"><i
-                        class="fas fa-check text-success"></i></span>
-                <span v-bind:class="{'d-none':!validacion.email.invalido}"><i
-                        class="fas fa-times text-danger"></i></span>
+                <span v-bind:class="{'d-none':!validacion.email.valido}">
+                    <i class="fas fa-check text-success"></i>
+                </span>
+                <span v-bind:class="{'d-none':!validacion.email.invalido}">
+                    <i class="fas fa-times text-danger"></i>
+                </span>
             </div>
 
             <div class="col-md-5">
-                <label>Crear una contraseña *</label>
-                <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
-                <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
+                <div class="form-group">
+                    <label>Crear una contraseña *</label>
+                    <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
+                    <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
+                </div>
             </div>
             <div class="col-md-1">
                 <span v-bind:class="{'d-none':!validacion.pass.valido}"><i class="fas fa-check text-success"></i></span>
