@@ -1,7 +1,7 @@
 <template>
     <span>
         <div class="row" v-show="!readonly">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="punto">Punto de Encuentro</label>
                     <input
@@ -14,20 +14,20 @@
                     <p class="text-danger" v-show="errorPunto"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="horario">Horario</label> <br>
                     <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
                     <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="coordinador">Responsable del punto de encuentro</label>
                     <v-select
                             :options="dataCoordinadores"
                             label="nombre"
-                            placeholder="Escribe el nombre o apellido del responsable"
+                            placeholder="Escribe el nombre o apellido"
                             name="coordinador"
                             id="coordinador"
                             v-model="coordinador"
@@ -41,25 +41,13 @@
             </div>
         </div>
         <div class="row" v-show="!readonly">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="pais">País</label>
-                    <!--<v-select-->
-                            <!--:options="dataPaises"-->
-                            <!--label="nombre"-->
-                            <!--placeholder="Seleccione"-->
-                            <!--name="pais"-->
-                            <!--id="pais"-->
-                            <!--v-model="paisSeleccionado"-->
-                            <!--v-bind:disabled="this.readonly"-->
-
-                    <!--&gt;-->
-                    <!--</v-select>-->
-                    <p>{{ paisSeleccionado.nombre }}</p>
-                    <p class="text-danger" v-show="errorPais"><small>Este campo es requerido</small></p>
+                    <p style="font-size: larger">{{ paisSeleccionado.nombre }}</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="provincia">Provincia</label>
                     <v-select
@@ -75,7 +63,7 @@
                     <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="localidad">Localidad</label>
                     <v-select
@@ -91,56 +79,57 @@
                     <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-3">
+        </div>
+        <div class="row" v-show="!readonly">
+            <div class="col-md-2">
                 <div class="form-group">
-                    <button
-                            type="button"
-                            class="btn btn-light btn-lg"
-                            @click="incluirPunto"
-                            style="margin-top: 1em"
-                    >
-                        <i class="fa fa-plus text-primary"></i>  Incluir
+                    <button type="button" class="btn btn-default" @click="incluirPunto">
+                        <i class="fa fa-plus text-primary"></i>  Agregar Punto
                     </button>
                 </div>
             </div>
         </div>
 
-        <!--<div class="row">-->
-            <table class="table table-striped table-hover table-condensed" v-if="dataPuntosEncuentro.length > 0">
-                <thead class="thead-light">
-                    <th scope="col">Lugar</th>
-                    <th scope="col">Horario</th>
-                    <th scope="col">Coordinador</th>
-                    <th scope="col"><span v-show="!readonly">Borrar</span></th>
-                </thead>
-                <tbody>
-                    <tr v-for="punto in dataPuntosEncuentro" :key="punto.idPuntoEncuentro">
-                        <td>
-                            <p>{{ punto.punto }}</p>
-                        </td>
-                        <td>
-                            <p v-html="$options.filters.hora(punto.horario)"></p>
-                        </td>
-                        <td>
-                            <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno}}</p>
-                        </td>
-                        <td>
-                            <div class="form-group" v-if="!readonly">
-                                <button
-                                        type="button"
-                                        class="btn btn-light"
-                                        @click="borrar(punto.idPuntoEncuentro)"
-                                >
-                                        <i class="fa fa-trash text-danger"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        <!--</div>-->
+        <table class="table table-striped table-hover table-condensed" v-if="dataPuntosEncuentro.length > 0">
+            <thead class="thead-light">
+                <th scope="col">Lugar</th>
+                <th scope="col">Horario</th>
+                <th scope="col">Coordinador</th>
+                <th scope="col"><span v-show="!readonly">Borrar</span></th>
+            </thead>
+            <tbody>
+                <tr v-for="punto in dataPuntosEncuentro" :key="punto.idPuntoEncuentro">
+                    <td>
+                        <p>{{ punto.punto }}</p>
+                    </td>
+                    <td>
+                        <p v-html="$options.filters.hora(punto.horario)"></p>
+                    </td>
+                    <td>
+                        <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno}}</p>
+                    </td>
+                    <td>
+                        <div class="form-group" v-if="!readonly">
+                            <button
+                                    type="button"
+                                    class="btn btn-light"
+                                    @click="borrar(punto.idPuntoEncuentro)"
+                            >
+                                    <i class="fa fa-trash text-danger"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <p class="text-center text-muted" v-if="dataPuntosEncuentro.length === 0">
+                Esta actividad no tiene puntos de encuentro cargados
+            </p>
+        </div>
     </span>
 </template>
+
 <script>
     import VueTimepicker from 'vue2-timepicker'
     import axios from 'axios';

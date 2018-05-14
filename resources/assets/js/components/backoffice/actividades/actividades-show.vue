@@ -37,7 +37,7 @@
                         <v-select
                                 :options="dataCoordinadores"
                                 label="nombre"
-                                placeholder="Escribe el nombre o apellido del coordinador"
+                                placeholder="Escribe el nombre o apellido"
                                 name="coordinador"
                                 id="coordinador"
                                 v-model="coordinadorSeleccionado"
@@ -121,45 +121,29 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicio"
+                        <label for="fechaInicio">Fecha/Hora de Inicio</label>
+                        <datetime
+                                format="YYYY-MM-DD H:i:s"
                                 id="fechaInicio"
-                                name="fechaInicio"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
+                                v-model="dataActividad.fechaInicio"
+                        ></datetime>
                     </div>
                 </div>
-                <div class="col-md-2 text-right">
-                    <div class="form-group">
-                        <label for="horario">Horario de inicio</label> <br>
-                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
-                    </div>
-                </div>
-
-
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaFin">Fecha de Fin De La Actividad</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFin"
+                        <label for="fechaFin">Fecha/Hora de Fin</label>
+                        <datetime
+                                format="YYYY-MM-DD H:i:s"
                                 id="fechaFin"
-                                name="fechaFin"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
+                                v-model="dataActividad.fechaFin"
+                        ></datetime>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <!--<div class="form-group">-->
-                        <!--<label for="horario">Horario</label> <br>-->
-                        <!--<vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>-->
-                    <!--</div>-->
+                    <div class="form-group">
+                    </div>
                 </div>
             </div>
 
@@ -269,7 +253,7 @@
         <!-- /.box-header -->
     <div class="box-body">
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="limiteInscripciones">Límite</label>
                     <input id="limiteInscripciones"
@@ -283,7 +267,45 @@
                 </div>
             </div>
             <div class="col-md-2"><p style="margin-top: 3em"> voluntarios permitidos</p></div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaInicioInscripciones">Fecha/Hora de Inicio</label>
+                        <datetime
+                                format="YYYY-MM-DD H:i:s"
+                                id="fechaInicioInscripciones"
+                                v-model="dataActividad.fechaInicioInscripciones"
+                        ></datetime>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="fechaFinInscripciones">Fecha/Hora de Fin</label>
+                        <datetime
+                                format="YYYY-MM-DD H:i:s"
+                                id="fechaFinInscripciones"
+                                v-model="dataActividad.fechaFinInscripciones"
+                        ></datetime>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="mensajeInscripcion">Mensaje De Inscripción</label>
+                    <textarea
+                            name="mensajeInscripcion"
+                            id="mensajeInscripcion"
+                            cols="30"
+                            rows="3"
+                            class="form-control"
+                            :disabled="readonly"
+                            v-model="dataActividad.mensajeInscripcion"
+                    >
+                        {{ dataActividad.mensajeInscripcion }}
+                    </textarea>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="form-group">
                     <label for="inscripcionInterna">Visibilidad de las Inscripciones</label>
                     <br>
@@ -301,50 +323,7 @@
                     </v-switch>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaInicioInscripciones"
-                            id="fechaInicioInscripciones"
-                            name="fechaInicioInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaFinInscripciones"
-                            id="fechaFinInscripciones"
-                            name="fechaFinInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="mensajeInscripcion">Mensaje De Inscripción</label>
-                    <textarea
-                            name="mensajeInscripcion"
-                            id="mensajeInscripcion"
-                            cols="30"
-                            rows="3"
-                            class="form-control"
-                            :disabled="readonly"
-                            v-model="dataActividad.mensajeInscripcion"
-                    >
-                        {{ dataActividad.mensajeInscripcion }}
-                    </textarea>
-                </div>
-            </div>
+
         </div>
 
         </div><!-- /.box-body -->
@@ -394,12 +373,16 @@
     import PuntoEncuentro from './punto-encuentro';
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
-    import moment from 'moment';
+    import DateTime from '../datetime_picker'; //https://github.com/tjohnn/vuejs-datetimepicker
 
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker},
+        components: {
+            'punto-encuentro': PuntoEncuentro,
+            VueTimepicker,
+            'datetime': DateTime
+        },
         data() {
             return {
                 dataCategorias: [],
@@ -424,12 +407,6 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
-                objHora: {
-                    HH: "",
-                    mm: "",
-                    ss: ""
-                },
-                horario: ''
             }
         },
         created() {
@@ -474,9 +451,6 @@
             }
         },
         watch: {
-            objHora: function () {
-                this.dataActividad.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
-            }
         },
         methods: {
             inicializar: function () {
@@ -500,8 +474,8 @@
                     this.coordinadorSeleccionado = null;
                 }
                 if (this.dataActividad.fechaInicio !== null) {
-                    this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
-                    this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
+                    // this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
+                    // this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
                 }
             },
             actualizarOficina() {
@@ -672,7 +646,7 @@
                     url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 }
                 window.scrollTo(0, 0);
-                this.dataActividad.objHora = this.objHora;
+                // this.dataActividad.objHora = this.objHora;
 
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {

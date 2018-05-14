@@ -317,9 +317,7 @@ class ActividadesController extends Controller
             'tipoConstruccion',
             'idListaCTCT',
             'modificado_por.idPersona',
-            'idOficina',
-            'fechaInicio',
-            'fechaFin'
+            'idOficina'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -341,17 +339,6 @@ class ActividadesController extends Controller
         $actividad->idLocalidad = $request['localidad']['id'];
         $actividad->idCoordinador = $request['coordinador']['idPersona'];
         $actividad->idOficina = $request['oficina']['id'];
-
-
-        $fechaInicio = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaInicio))
-            ->addHours((int)$request->objHora['HH'])
-            ->addMinutes((int)$request->objHora['mm']);
-        $actividad->fechaInicio = $fechaInicio;
-
-        $actividad->fechaFin = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaFin))
-            ->addHours(23)
-            ->addMinutes(59);
-
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
@@ -391,14 +378,5 @@ class ActividadesController extends Controller
         }
 
         return false;
-    }
-
-    private function trimDate($fecha)
-    {
-        $i = strpos($fecha, 'T');
-        if ($i > 0) {
-            return substr($fecha, 0, $i);
-        }
-        return $fecha;
     }
 }
