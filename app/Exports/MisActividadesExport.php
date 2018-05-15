@@ -46,9 +46,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             )
             ->orderBy($sortField, $sortOrder);
 
-        if (!Auth::user()->hasRole('admin')) {
-            $result->where('idCoordinador', Auth::user()->idPersona);
-        }
+        $result->where('idCoordinador', Auth::user()->idPersona);
 
         if ($this->filter) {
             $filter = $this->filter;
