@@ -203,6 +203,9 @@
                             this.verAdmin = true;
                         }
                         this.showValidUser(response.data.user);
+                        if(response.data.after_login !== ''){
+                            window.location = response.data.after_login; //redirect
+                        }
                     })
                     .catch((error) => {
                         this.hasError = true;
