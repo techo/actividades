@@ -102,9 +102,17 @@ class LoginController extends Controller
 
     public function redirectToProvider(Request $request, $provider)
     {
-	if(url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
-        if($provider == 'google') return Socialite::driver($provider)->redirect();
-        return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
+	if(url('/registro') != $request->headers->get('referer')) {
+        if($request->hasCookie('after_login_url') && !empty($request->cookie('after_login_url'))){
+            $afterLoginUrl = $request->cookie('after_login_url');
+            Cookie::queue(Cookie::make('after_login_url', ''));
+        } else {
+            $afterLoginUrl = $request->headers->get('referer');
+        }
+        $request->session()->put('login_callback', $afterLoginUrl);
+    }
+    if($provider == 'google') return Socialite::driver($provider)->redirect();
+    return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
     }
 
     public function callbackFromProvider(Request $request, $provider) {
