@@ -170,7 +170,7 @@
               window.location.href = '/perfil';
             },
             admin: function() {
-              window.location.href = '/admin/actividades';
+              window.location.href = '/admin/actividades/usuario';
             },
             misactividades: function() {
               window.location.href = '/perfil/actividades';
