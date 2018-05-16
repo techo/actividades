@@ -40,7 +40,9 @@
               </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">Ver Todas</a></li>
+                    @if (Auth::user()->hasRole('admin'))
+                        <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">Ver Todas</a></li>
+                    @endif
                     <li class="{{request()->is('admin/actividades/crear') ? 'active' : ''}}"><a href="/admin/actividades/crear">Crear Nueva Actividad</a></li>
                     @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
                         <li class="{{request()->is('admin/actividades/usuario') ? 'active' : ''}}"><a href="/admin/actividades/usuario">Mis Actividades</a></li>
