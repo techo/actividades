@@ -4,13 +4,13 @@
         <img class="card-img-top" :src="actividad.tipo.imagen" alt="Card image cap">
       <div class="card-body px-0">
         <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
-        <h5 class="card-title">{{ actividad.nombreActividad | truncate(30) }}</h5>
+        <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
         <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
             <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.localidad | ubicacion }}</span>
         </div>
-        <p class="card-text">{{ actividad.descripcion | truncate(100) }}</p>
+        <p class="card-text text-left">{{ actividad.descripcion | truncate(100) }}</p>
       </div>
     </div>
   </div>
