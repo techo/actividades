@@ -6,7 +6,7 @@
                  alt="Card image cap">
             <div class="card-body px-0">
                 <p class="techo-titulo-card">{{ inscripcion.actividad.tipo.nombre }}</p>
-                <h5 class="card-title" v-on:click="ir_a_actividad">{{ inscripcion.actividad.nombreActividad | truncate(30) }}</h5>
+                <h5 class="card-title text-left" v-on:click="ir_a_actividad">{{ inscripcion.actividad.nombreActividad }}</h5>
                 <div>
                     <hr>
                     <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.actividad.fecha }}</span></span>
@@ -14,7 +14,7 @@
                     <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.actividad.localidad | ubicacion }}</span>
                     <hr>
                 </div>
-                <p class="card-text">{{ inscripcion.actividad.descripcion | truncate(100) }}</p>
+                <p class="card-text text-left">{{ inscripcion.actividad.descripcion | truncate(100) }}</p>
                 <div class="">
                     <a class="btn btn-success text-light font-weight-bold" @click="desincribir(inscripcion.actividad.idActividad)">Desinscribirme</a>
                 </div>
