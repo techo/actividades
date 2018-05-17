@@ -1,6 +1,16 @@
 <template>
     <span>
-        <div class="row" v-show="!readonly">
+        <div class="form-group">
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="verFormulario=true"
+                    v-show="!readonly && !verFormulario"
+            >
+                <i class="fa fa-map-marker"></i>  Agregar Punto de Encuentro
+            </button>
+        </div>
+        <div class="row" v-show="!readonly && verFormulario">
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="punto">Punto de Encuentro</label>
@@ -40,11 +50,11 @@
                 </div>
             </div>
         </div>
-        <div class="row" v-show="!readonly">
+        <div class="row" v-show="!readonly && verFormulario">
             <div class="col-md-4">
                 <div class="form-group">
                     <label>País</label>
-                    <p>{{ paisSeleccionado.nombre }}</p>
+                    <p style="font-size: larger">{{ paisSeleccionado.nombre }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -80,16 +90,22 @@
                 </div>
             </div>
         </div>
-        <div class="row" v-show="!readonly">
-            <div class="col-md-2">
+        <div class="row" v-show="!readonly && verFormulario">
+            <div class="col-md-12">
                 <div class="form-group">
                     <button
                             type="button"
-                            class="btn btn-light"
-                            @click="incluirPunto"
-                            style="margin-top: 1em"
+                            class="btn btn-default pull-right"
+                            @click="verFormulario=false"
                     >
-                        <i class="fa fa-plus text-primary"></i>  Incluir
+                        <i class="fa fa-ban"></i>  Cancelar
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-primary pull-right"
+                            @click="incluirPunto"
+                    >
+                        <i class="fa fa-plus"></i>  Incluir
                     </button>
                 </div>
             </div>
@@ -141,7 +157,7 @@
         components: {VueTimepicker},
         data: function () {
             return {
-                // dataReadonly: this.readonly,
+                verFormulario: false,
                 dataPuntosEncuentro: (this.$parent.dataActividad.puntos_encuentro === undefined) ? [] : this.$parent.dataActividad.puntos_encuentro,
                 coordinador: '',
                 punto: '',
@@ -272,6 +288,7 @@
                         mm: "",
                         ss: ""
                     }
+                    this.verFormulario = false;
                 }
             },
             borrar: function (id) {
@@ -424,5 +441,11 @@
 
 
 <style scoped>
+    table {
+        margin-top: 2em;
+    }
 
+    button.pull-right {
+        margin-left: 5px;
+    }
 </style>

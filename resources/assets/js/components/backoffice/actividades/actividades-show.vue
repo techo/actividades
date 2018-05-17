@@ -51,21 +51,23 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="estadoActividad">Estado de la Actividad</label>
-                        <p>
-                            <v-switch
-                                    v-model="dataActividad.estadoConstruccion"
-                                    type-bold="true"
-                                    text-enabled="Abierto"
-                                    text-disabled="Cerrada"
-                                    theme="bootstrap"
-                                    color="success"
-                                    id="estadoActividad"
-                                    name="estadoActividad"
-                                    :disabled="readonly"
-                            >
-                        </v-switch>
-                        </p>
+                        <label>Estado de la Actividad</label><br>
+                        <div class="btn-group" role="group" aria-label="Estado de la Construcción">
+                            <button
+                                    type="button"
+                                    class="btn"
+                                    :class="{'btn-danger': !dataActividad.estadoConstruccion, 'grey': dataActividad.estadoConstruccion}"
+                                    @click="dataActividad.estadoConstruccion = false">
+                              <i class="fa fa-times-circle"></i> Cerrada
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn"
+                                    :class="{'btn-success': dataActividad.estadoConstruccion, 'grey': !dataActividad.estadoConstruccion}"
+                                    @click="dataActividad.estadoConstruccion = true">
+                              <i class="fa fa-check-circle"></i> Abierta
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,7 +164,6 @@
                     <!--</div>-->
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -269,9 +270,9 @@
         <!-- /.box-header -->
     <div class="box-body">
         <div class="row">
-            <div class="col-md-1">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="limiteInscripciones">Límite</label>
+                    <label for="limiteInscripciones">Límite de voluntarios</label>
                     <input id="limiteInscripciones"
                            type="number"
                            min="1"
@@ -282,23 +283,25 @@
 
                 </div>
             </div>
-            <div class="col-md-2"><p style="margin-top: 3em"> voluntarios permitidos</p></div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="inscripcionInterna">Visibilidad de las Inscripciones</label>
-                    <br>
-                    <v-switch
-                            v-model="dataActividad.inscripcionInterna"
-                            theme="bootstrap"
-                            color="primary"
-                            id="inscripcionInterna"
-                            name="inscripcionInterna"
-                            type-bold="true"
-                            text-enabled="Privadas"
-                            text-disabled="Públicas"
-                            :disabled="readonly"
-                    >
-                    </v-switch>
+                    <label>Estado de las inscripciones</label>
+                    <div class="btn-group" role="group" aria-label="Estado de la Inscripción">
+                        <button
+                                type="button"
+                                class="btn"
+                                :class="{'btn-danger': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
+                                @click="dataActividad.inscripcionInterna = true">
+                          <i class="fa fa-times-circle"></i> Internas
+                        </button>
+                        <button
+                                type="button"
+                                class="btn"
+                                :class="{'btn-success': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
+                                @click="dataActividad.inscripcionInterna = false">
+                          <i class="fa fa-check-circle"></i> Públicas
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="col-md-3">
@@ -454,8 +457,13 @@
         computed: {
             tieneErrores:  function () {
                 return (this.validationErrors.length > 0);
-            }
-
+            },
+            // objEstadoActividad: function () {
+            //     return {
+            //         'btn-danger': !this.dataActividad.estadoConstruccion,
+            //         // 'btn-success': this.dataActividad.estadoConstruccion
+            //     }
+            // }
         },
         filters: {
             estado: function (value) {
@@ -712,5 +720,7 @@
 </script>
 
 <style scoped>
-
+    .grey {
+        color: grey;
+    }
 </style>
