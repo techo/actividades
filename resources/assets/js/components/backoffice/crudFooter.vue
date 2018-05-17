@@ -2,9 +2,14 @@
     <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
-        <div class="col-md-8">
+        <div class="col-md-6">
             <button class="btn btn-default" @click="this.cancelar">
                 <i class="fa fa-arrow-circle-left"></i> Volver al listado
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
+                <i class="fa fa-share-alt"></i>  Compartir
             </button>
         </div>
         <div class="col-md-4">
@@ -24,7 +29,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'cancelarUrl', 'canEditar', 'canBorrar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")

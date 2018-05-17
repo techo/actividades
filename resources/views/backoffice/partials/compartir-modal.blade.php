@@ -18,30 +18,30 @@
                 <div class="row">
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" href="{{ $medias['facebook'] }}" target="_blank">
-                            <i class="fab fa-facebook-f fa-2x" style="color:black"></i>
+                            <i class="fa fa-facebook fa-2x" style="color:black"></i>
                             <br>
-                            <h5>Facebook</h5>
+                            <h3>Facebook</h3>
                         </a>
                     </div>
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" href="{{ $medias['twitter'] }}" target="_blank">
-                            <i class="fab fa-twitter fa-2x" style="color:black"></i>
+                            <i class="fa fa-twitter fa-2x" style="color:black"></i>
                             <br>
-                            <h5>Twitter</h5>
+                            <h3>Twitter</h3>
                         </a>
                     </div>
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" href="{{ $medias['email'] }}" target="_blank">
-                            <i class="far fa-envelope fa-2x" style="color:black"></i>
+                            <i class="fa fa-envelope fa-2x" style="color:black"></i>
                             <br>
-                            <h5>Correo</h5>
+                            <h3>Correo</h3>
                         </a>
                     </div>
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" data-toggle="tooltip" title="Link copiado" data-placement="top" onclick="mostrarTooltip()" href="#" id="copiar_url" data-clipboard-text="{{ $url }}">
                             <i class="fa fa-clipboard fa-2x" style="color:black"></i>
                             <br>
-                            <h5>Copiar link</h5>
+                            <h3>Copiar link</h3>
                         </a>
                     </div>
                 </div>
