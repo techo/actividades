@@ -6,6 +6,7 @@
     Ultima modificación por
     {{ $actividad->modificadoPor->nombres OR 'N/A' }}
     {{ $actividad->modificadoPor->apellidoPaterno OR '' }}
+    el {{ $actividad->fechaModificacion->format('d-m-Y') }}
 @endsection
 
 @section('content')
