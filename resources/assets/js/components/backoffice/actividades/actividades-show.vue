@@ -37,7 +37,7 @@
                         <v-select
                                 :options="dataCoordinadores"
                                 label="nombre"
-                                placeholder="Escribe el nombre o apellido del coordinador"
+                                placeholder="Escribe el nombre o apellido"
                                 name="coordinador"
                                 id="coordinador"
                                 v-model="coordinadorSeleccionado"
@@ -123,7 +123,7 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label for="fechaInicio">Fecha de Inicio De La Actividad</label>
+                        <label for="fechaInicio">Fecha de Inicio</label>
                         <datepicker
                                 placeholder="Seleccione una fecha"
                                 v-model="dataActividad.fechaInicio"
@@ -144,7 +144,7 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaFin">Fecha de Fin De La Actividad</label>
+                        <label for="fechaFin">Fecha de Fin</label>
                         <datepicker
                                 placeholder="Seleccione una fecha"
                                 v-model="dataActividad.fechaFin"
