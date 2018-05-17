@@ -101,7 +101,7 @@ Route::get('admin/ajax/usuarios', 'backoffice\ajax\UsuariosController@index'); /
 Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(function () {
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::post('/roles/usuario/{id}', 'backoffice\UsuariosRolesController@update')->middleware('permission:asignar_roles');
-    Route::get('/actividades', 'backoffice\ActividadesController@index');
+    Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');

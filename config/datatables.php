@@ -70,9 +70,8 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'nombreActividad',
-                'sortField' => 'nombreActividad',
-                'direction' => 'asc'
+                'sortField' => 'fechaCreacion',
+                'direction' => 'desc'
             ]
         ],
     ],
@@ -145,9 +144,8 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'nombreActividad',
-                'sortField' => 'nombreActividad',
-                'direction' => 'asc'
+                'sortField' => 'fechaCreacion',
+                'direction' => 'desc'
             ]
         ],
     ],

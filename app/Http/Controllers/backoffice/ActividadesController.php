@@ -359,6 +359,10 @@ class ActividadesController extends Controller
                 ->idUnidadOrganizacional;
         }
 
+        if ($request->is('admin/actividades/crear')) {
+            $actividad->idPersonaCreacion = auth()->user()->idPersona;
+        }
+
         $actividad->idPersonaModificacion = auth()->user()->idPersona;
 
         // Campos definidos en la DB como NOT NULL, sin valor default y que no estan presentes en el $request //
