@@ -3,7 +3,12 @@
         <div class="modal-content">
             <div class="modal-body" style="padding: 1px">
                 <div class="">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="opacity: 1; margin-top: -1em">
+                    <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Cerrar"
+                            style="opacity: 1; margin-top: -1em; text-shadow: none; color: #fff">
                         <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
                     </button>
                 </div>
