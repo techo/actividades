@@ -4,9 +4,9 @@
     <!-- Logo -->
     <a href="#" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><img src="{{ asset('/img/logo_small.png') }}" alt="Techo"></span>
+        <span class="logo-mini"><img src="{{ asset('/img/logo_small.png') }}" alt="Techo" width="40"></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ asset('/img/logo_large.png') }}" alt="Techo"></span>
+        <span class="logo-lg"><img src="{{ asset('/img/logo_large.png') }}" alt="Techo" width="140"></span>
     </a>
 
     <!-- Header Navbar -->
