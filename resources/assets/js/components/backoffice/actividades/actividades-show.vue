@@ -56,6 +56,7 @@
                             <button
                                     type="button"
                                     class="btn"
+                                    :disabled="readonly"
                                     :class="{'btn-danger': !dataActividad.estadoConstruccion, 'grey': dataActividad.estadoConstruccion}"
                                     @click="dataActividad.estadoConstruccion = false">
                               <i class="fa fa-times-circle"></i> Cerrada
@@ -63,6 +64,7 @@
                             <button
                                     type="button"
                                     class="btn"
+                                    :disabled="readonly"
                                     :class="{'btn-success': dataActividad.estadoConstruccion, 'grey': !dataActividad.estadoConstruccion}"
                                     @click="dataActividad.estadoConstruccion = true">
                               <i class="fa fa-check-circle"></i> Abierta
@@ -290,6 +292,7 @@
                         <button
                                 type="button"
                                 class="btn"
+                                :disabled="readonly"
                                 :class="{'btn-danger': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = true">
                           <i class="fa fa-times-circle"></i> Internas
@@ -297,6 +300,7 @@
                         <button
                                 type="button"
                                 class="btn"
+                                :disabled="readonly"q
                                 :class="{'btn-success': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = false">
                           <i class="fa fa-check-circle"></i> Públicas
