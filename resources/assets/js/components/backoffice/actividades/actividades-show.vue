@@ -182,6 +182,17 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-4">
+                        <daterange-picker  @apply="onDateChange"
+                                           :start-date="20180101"
+                                           :end-date="20180101"
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                        ></daterange-picker>
+                </div>
+            </div>
         </div>
         <!-- /.box-body -->
     </div>
@@ -398,11 +409,14 @@
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
+    import daterangepicker from '../../../components/plugins/daterangepicker';
+
+    window.moment = moment;
 
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker},
+        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker},
         data() {
             return {
                 dataCategorias: [],
@@ -432,7 +446,9 @@
                     mm: "",
                     ss: ""
                 },
-                horario: ''
+                horario: '',
+                fechaPruebaInicio: '',
+                fechaPruebaFin: ''
             }
         },
         created() {
@@ -713,6 +729,11 @@
             },
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
+            },
+
+            onDateChange: function (start, end) {
+                this.fechaPruebaInicio = start;
+                this.fechaPruebaFin = end;
             }
 
         }
