@@ -25,19 +25,12 @@
                         <div class="card-body px-0">
                             <h5 class="card-title">{{ $categoria->nombre }}</h5>
                             <p class="card-text">{{ $categoria->descripcion }}</p>
-                            <p>
-                                <a class="techo-h6 techo-blue" data-toggle="collapse" href="#collapse_{{ $categoria->id }}" role="button">
-                                    Actividades a Realizar <i class="fas fa-chevron-down"></i>
-
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapse_{{ $categoria->id }}">
+                            <p>Actividades a Realizar &nbsp;<i class="fas fa-chevron-down"></i></p>
                                 <ul>
                                     @foreach($categoria->tipos as $tipo)
                                         <li>{{ $tipo->nombre }}</li>
                                     @endforeach
                                 </ul>
-                            </div>
                             <a href="/actividades?categoria={{ $categoria->id }}" class="btn techo-btn-azul">Quiero Participar</a>
                         </div>
                     </div>
