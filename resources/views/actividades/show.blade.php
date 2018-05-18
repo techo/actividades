@@ -223,3 +223,12 @@
 @section('aditional_html')
 	@include('partials.compartir-modal', ['url' => Request::url(), 'title' => $actividad->nombreActividad])
 @endsection
+
+@push('additional_scripts')
+	<script>
+        function mostrarTooltip(){
+            $("#copiar_url").tooltip({trigger: 'manual'});
+            $("#copiar_url").tooltip('show');
+        }
+	</script>
+@endpush

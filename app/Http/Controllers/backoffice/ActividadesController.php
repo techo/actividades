@@ -108,6 +108,7 @@ class ActividadesController extends Controller
     public function show($id)
     {
         $edicion = false;
+        $compartir = true;
         $paises = Pais::all();
         $actividad = Actividad::with(
             [
@@ -146,7 +147,8 @@ class ActividadesController extends Controller
                     'localidades',
                     'edicion',
                     'tipos',
-                    'categorias'
+                    'categorias',
+                    'compartir'
                 )
             );
         }

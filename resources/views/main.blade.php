@@ -24,5 +24,6 @@
     </div>
     @yield('aditional_html')
     @include('partials.scripts')
+    @stack('additional_scripts')
 </body>
 </html>

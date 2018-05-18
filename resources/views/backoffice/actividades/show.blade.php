@@ -35,10 +35,20 @@
             edicion={{ $edicion }}
     ></actividades-show>
     <p style="margin-bottom: 4em"></p>
+    @include('backoffice.partials.compartir-modal', ['url' => action('ActividadesController@show', ['id' => $actividad->idActividad]), 'title' => $actividad->nombreActividad])
 @endsection
 
 @push('additional_scripts')
     <script src="{{ asset('/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+    <script>
+        new ClipboardJS('#copiar_url');
+
+        function mostrarTooltip(){
+            $("#copiar_url").tooltip({trigger: 'manual'});
+            $("#copiar_url").tooltip('show');
+        }
+    </script>
 @endpush
 
 @push('additional_css')
@@ -49,6 +59,7 @@
     <crud-footer
             cancelar-url="/admin/actividades"
             edicion="{{ $edicion }}"
+            compartir="{{ $compartir }}"
             can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
             (
                 ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
