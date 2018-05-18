@@ -62,12 +62,13 @@
                 </li>
             @endif
             <li class="treeview">
-                <a href="#"><i class="fa fa-globe"></i> <span>Front Office</span>
+                <a href="#"><i class="fa fa-globe"></i> <span>Portal de Actividades</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                 </a>
                 <ul class="treeview-menu">
+                    <li><a href="/">Home</a></li>
                     <li><a href="/actividades">Ver filtros</a></li>
                 </ul>
             </li>
