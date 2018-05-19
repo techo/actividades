@@ -321,7 +321,9 @@ class ActividadesController extends Controller
             'modificado_por.idPersona',
             'idOficina',
             'fechaInicio',
-            'fechaFin'
+            'fechaFin',
+            'fechaInicioInscripciones',
+            'fechaFinInscripciones'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -343,17 +345,10 @@ class ActividadesController extends Controller
         $actividad->idLocalidad = $request['localidad']['id'];
         $actividad->idCoordinador = $request['coordinador']['idPersona'];
         $actividad->idOficina = $request['oficina']['id'];
-
-
-        $fechaInicio = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaInicio))
-            ->addHours((int)$request->objHora['HH'])
-            ->addMinutes((int)$request->objHora['mm']);
-        $actividad->fechaInicio = $fechaInicio;
-
-        $actividad->fechaFin = \Illuminate\Support\Carbon::parse($this->trimDate($request->fechaFin))
-            ->addHours(23)
-            ->addMinutes(59);
-
+        $actividad->fechaInicio = $request->fechaInicio;
+        $actividad->fechaFin = $request->fechaFin;
+        $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
+        $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')

@@ -15,58 +15,26 @@
 
     export default {
         name: "daterangepicker",
-        props: ['startDate', 'endDate', 'minDate', 'opens', 'maxDate'],
-        // props: {
-        //     showRanges: {
-        //         type: Boolean,
-        //         default: false
-        //     },
-        //     startDate: {
-        //         default: function () {
-        //             return moment().subtract(30, 'days');
-        //         }
-        //     },
-        //     endDate: {
-        //         default: function () {
-        //             return moment();
-        //         }
-        //     },
-        //     minDate: {
-        //         default: false
-        //     },
-        //     opens: {
-        //         default: 'right'
-        //     },
-        //     maxDate: {
-        //         default: false
-        //     },
-        //     autoApply: {
-        //         default: false
-        //     },
-        // },
+        props: ['startDate', 'endDate', 'minDate', 'opens', 'maxDate', 'input', 'drops'],
         data: function () {
             return {
                 start: this.startDate,
                 end: this.endDate,
                 showRanges: false,
                 autoApply: false,
+                eventName: 'apply' + this.input
             };
         },
         computed: {
             dateRange: function () {
                 var start = moment(this.start);
                 var end = moment(this.end);
-                var today = moment();
-                if (
-                    start.format('LL') === end.format('LL') &&
-                    today.format('LL') === start.format('LL')
-                ) {
-                    return 'Today';
-                } else if (start.format('MM-DD-YYYY') === end.format('MM-DD-YYYY')) {
-                    return start.format('LL');
+
+                if (start.format('MM-DD-YYYY') === end.format('MM-DD-YYYY')) {
+                    return start.format('LL LT') + ' - ' + end.format('LT');
                 }
 
-                return start.format('LL') + ' - ' + end.format('LL');
+                return start.format('LL LT') + ' - ' + end.format('LL LT');
             }
         },
         mounted: function () {
@@ -75,8 +43,43 @@
             this.end = moment(this.end);
             this.$nextTick(function () {
                 var options = {
+                    locale: {
+                        format: "DD/MM/YYYY",
+                        separator: " - ",
+                        applyLabel: "Aplicar",
+                        cancelLabel: "Cancelar",
+                        fromLabel: "Desde",
+                        toLabel: "Hasta",
+                        customRangeLabel: "Actividad",
+                        weekLabel: "S",
+                        daysOfWeek: [
+                            "Do",
+                            "Lu",
+                            "Ma",
+                            "Mi",
+                            "Ju",
+                            "Vi",
+                            "Sa"
+                        ],
+                        monthNames: [
+                            "Enero",
+                            "Febrero",
+                            "Marzo",
+                            "Abril",
+                            "Mayo",
+                            "Junio",
+                            "Julio",
+                            "Agosto",
+                            "Septiembre",
+                            "Octubre",
+                            "Noviembre",
+                            "Diciembre"
+                        ],
+                        "firstDay": 1
+                    },
                     timePicker: true,
                     opens: this.opens,
+                    drops: this.drops,
                     startDate: this.start,
                     endDate: this.end,
                     autoApply: this.autoApply,
@@ -118,7 +121,7 @@
                 window.$(this.$el)
                     .daterangepicker(options)
                     .on('apply.daterangepicker', function (e, picker) {
-                        vm.$emit('apply', picker.startDate, picker.endDate);
+                        vm.$emit(vm.eventName, picker.startDate, picker.endDate);
                         vm.start = picker.startDate;
                         vm.end = picker.endDate;
                     });

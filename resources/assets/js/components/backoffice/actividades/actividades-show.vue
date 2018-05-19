@@ -123,45 +123,23 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="fechaInicio">Fecha de Inicio</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicio"
-                                id="fechaInicio"
-                                name="fechaInicio"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
+                        <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasActividad }}</p>
+                        <daterange-picker v-else @applyfechaActividad="cambioFechaActividad"
+                                           :start-date=this.dataActividad.fechaInicio
+                                           :end-date=this.dataActividad.fechaFin
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                                           drops="down"
+                                           :input="'fechaActividad'"
+                                           name="fechaActividad"
+                                           id="fechaActividad"
+                        ></daterange-picker>
                     </div>
-                </div>
-                <div class="col-md-2 text-right">
-                    <div class="form-group">
-                        <label for="horario">Horario de inicio</label> <br>
-                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaFin">Fecha de Fin</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFin"
-                                id="fechaFin"
-                                name="fechaFin"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <!--<div class="form-group">-->
-                        <!--<label for="horario">Horario</label> <br>-->
-                        <!--<vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>-->
-                    <!--</div>-->
                 </div>
             </div>
             <div class="row">
@@ -180,17 +158,6 @@
                             {{ dataActividad.descripcion }}
                         </textarea>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                        <daterange-picker  @apply="onDateChange"
-                                           :start-date="20180101"
-                                           :end-date="20180101"
-                                           :max-date="20350101"
-                                           min-date="01-01-2018"
-                                           opens="right"
-                        ></daterange-picker>
                 </div>
             </div>
         </div>
@@ -315,30 +282,22 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaInicioInscripciones"
-                            id="fechaInicioInscripciones"
-                            name="fechaInicioInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaFinInscripciones"
-                            id="fechaFinInscripciones"
-                            name="fechaFinInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
+                    <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
+                    <br>
+                    <p v-if="readonly">{{ this.fechasInscripcion }}</p>
+                    <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
+                                       :start-date=this.dataActividad.fechaInicioInscripciones
+                                       :end-date=this.dataActividad.fechaFinInscripciones
+                                       :max-date="20350101"
+                                       min-date="01-01-2018"
+                                       opens="left"
+                                       drops="up"
+                                       :input="'fechaInscripciones'"
+                                       name="fechaInscripciones"
+                                       id="fechaInscripciones"
+                    ></daterange-picker>
                 </div>
             </div>
         </div>
@@ -413,6 +372,8 @@
 
     window.moment = moment;
 
+    window.moment.locale('es');
+
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
@@ -446,9 +407,7 @@
                     mm: "",
                     ss: ""
                 },
-                horario: '',
-                fechaPruebaInicio: '',
-                fechaPruebaFin: ''
+                horario: ''
             }
         },
         created() {
@@ -474,6 +433,12 @@
             tieneErrores:  function () {
                 return (this.validationErrors.length > 0);
             },
+            fechasActividad: function () {
+                return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
+            },
+            fechasInscripcion: function () {
+                return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
+            }
             // objEstadoActividad: function () {
             //     return {
             //         'btn-danger': !this.dataActividad.estadoConstruccion,
@@ -526,6 +491,13 @@
                 if (this.dataActividad.fechaInicio !== null) {
                     this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
                     this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
+                }
+
+                if (this.dataActividad.fechaInicio == null){
+                    this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
+                    this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
                 }
             },
             actualizarOficina() {
@@ -731,9 +703,13 @@
                 this.$refs.loading.justCloseSimplert();
             },
 
-            onDateChange: function (start, end) {
-                this.fechaPruebaInicio = start;
-                this.fechaPruebaFin = end;
+            cambioFechaActividad: function (start, end) {
+                this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
+            },
+            cambioFechaInscripciones: function (start, end) {
+                this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
             }
 
         }
