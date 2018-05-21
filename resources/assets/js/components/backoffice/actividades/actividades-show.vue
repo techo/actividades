@@ -402,12 +402,6 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
-                objHora: {
-                    HH: "",
-                    mm: "",
-                    ss: ""
-                },
-                horario: ''
             }
         },
         created() {
@@ -439,12 +433,6 @@
             fechasInscripcion: function () {
                 return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
             }
-            // objEstadoActividad: function () {
-            //     return {
-            //         'btn-danger': !this.dataActividad.estadoConstruccion,
-            //         // 'btn-success': this.dataActividad.estadoConstruccion
-            //     }
-            // }
         },
         filters: {
             estado: function (value) {
@@ -463,9 +451,6 @@
             }
         },
         watch: {
-            objHora: function () {
-                this.dataActividad.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
-            }
         },
         methods: {
             inicializar: function () {
@@ -488,10 +473,6 @@
                     this.dataActividad.coordinador = null;
                     this.coordinadorSeleccionado = null;
                 }
-                if (this.dataActividad.fechaInicio !== null) {
-                    this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
-                    this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
-                }
 
                 if (this.dataActividad.fechaInicio == null){
                     this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD');
@@ -509,7 +490,7 @@
             },
             search: _.debounce((loading, search, vm) => {
                 fetch(
-                    `/ajax/coordinadores?coordinador=${escape(search)}`
+                    `/ajax/coordinadores?coordinador=${encodeURI(search)}`
                 ).then(res => {
                     res.json().then(json => (vm.dataCoordinadores = json.data));
                     loading(false);
@@ -528,7 +509,6 @@
                             self.localidadSeleccionada = '';
                             self.dataActividad.provincia = {};
                             self.dataActividad.localidad = {};
-
                         });
                 }
             },
@@ -550,7 +530,6 @@
                                 self.tiposDeActividad = data;
                                 self.tipoSeleccionado = null;
                                 self.dataActividad.idTipo = null;
-
                             }
                         );
                         this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -593,18 +572,12 @@
                         // Error
                         console.error('Error en: ' + url);
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.error(error.response.data);
                             console.error(error.response.status);
                             console.error(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.error(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.error('Error', error.message);
                         }
                         console.error(error.config);
@@ -626,22 +599,12 @@
                         console.info('Error en: ' + url);
                         console.error(error.response.status);
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            // console.error(error.response.data);
-                            // console.error(error.response.status);
-                            // console.error(error.response.headers);
                             if (error.response.status === 422) {
-                                // debugger;
                                 this.validationErrors = Object.values(error.response.data);
                             }
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.error(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.error('Error', error.message);
                         }
                         console.error(error.config);
@@ -654,21 +617,18 @@
             editar() {
                 this.readonly = false;
             },
-            cancelar: function () {
-
-            },
             guardar(){
+                let url;
+
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
+                window.scrollTo(0, 0);
 
-                let url;
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
                 } else {
                     url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 }
-                window.scrollTo(0, 0);
-                this.dataActividad.objHora = this.objHora;
 
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
@@ -686,7 +646,7 @@
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
             },
             eliminar: function () {
-                var form = document.getElementById('formDelete');
+                let form = document.getElementById('formDelete');
                 form.submit();
             },
             mostrarLoadingAlert() {
@@ -711,7 +671,6 @@
                 this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
             }
-
         }
     }
 </script>
