@@ -20,11 +20,12 @@
 @endsection
 
 @push('additional_scripts')
-    <script src="{{ asset('/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 @endpush
 
 @push('additional_css')
     <link rel="stylesheet" href="{{ asset('/css/custom.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endpush
 
 @section('footer')

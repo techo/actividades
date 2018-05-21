@@ -76,3 +76,11 @@
             )}}"
     ></crud-footer>
 @endsection
+
+@push('additional_scripts')
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+@endpush
+
+@push('addiitional_css')
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+@endpush

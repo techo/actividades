@@ -125,45 +125,23 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="fechaInicio">Fecha de Inicio</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaInicio"
-                                id="fechaInicio"
-                                name="fechaInicio"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
+                        <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasActividad }}</p>
+                        <daterange-picker v-else @applyfechaActividad="cambioFechaActividad"
+                                           :start-date=this.dataActividad.fechaInicio
+                                           :end-date=this.dataActividad.fechaFin
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                                           drops="down"
+                                           :input="'fechaActividad'"
+                                           name="fechaActividad"
+                                           id="fechaActividad"
+                        ></daterange-picker>
                     </div>
-                </div>
-                <div class="col-md-2 text-right">
-                    <div class="form-group">
-                        <label for="horario">Horario de inicio</label> <br>
-                        <vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>
-                    </div>
-                </div>
-
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaFin">Fecha de Fin</label>
-                        <datepicker
-                                placeholder="Seleccione una fecha"
-                                v-model="dataActividad.fechaFin"
-                                id="fechaFin"
-                                name="fechaFin"
-                                language="es"
-                                :disabled-picker="readonly"
-                        ></datepicker>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <!--<div class="form-group">-->
-                        <!--<label for="horario">Horario</label> <br>-->
-                        <!--<vue-timepicker v-model="objHora" id="horario" name="horario"></vue-timepicker>-->
-                    <!--</div>-->
                 </div>
             </div>
             <div class="row">
@@ -308,30 +286,22 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="fechaInicioInscripciones">Fecha de Inicio De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaInicioInscripciones"
-                            id="fechaInicioInscripciones"
-                            name="fechaInicioInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="fechaFinInscripciones">Fecha de Fin De La Inscripción</label>
-                    <datepicker
-                            placeholder="Seleccione una fecha"
-                            v-model="dataActividad.fechaFinInscripciones"
-                            id="fechaFinInscripciones"
-                            name="fechaFinInscripciones"
-                            language="es"
-                            :disabled-picker="readonly"
-                    ></datepicker>
+                    <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
+                    <br>
+                    <p v-if="readonly">{{ this.fechasInscripcion }}</p>
+                    <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
+                                       :start-date=this.dataActividad.fechaInicioInscripciones
+                                       :end-date=this.dataActividad.fechaFinInscripciones
+                                       :max-date="20350101"
+                                       min-date="01-01-2018"
+                                       opens="left"
+                                       drops="up"
+                                       :input="'fechaInscripciones'"
+                                       name="fechaInscripciones"
+                                       id="fechaInscripciones"
+                    ></daterange-picker>
                 </div>
             </div>
         </div>
@@ -402,11 +372,16 @@
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
+    import daterangepicker from '../../../components/plugins/daterangepicker';
+
+    window.moment = moment;
+
+    window.moment.locale('es');
 
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker},
+        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker},
         data() {
             return {
                 dataCategorias: [],
@@ -431,12 +406,6 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
-                objHora: {
-                    HH: "",
-                    mm: "",
-                    ss: ""
-                },
-                horario: ''
             }
         },
         created() {
@@ -462,12 +431,12 @@
             tieneErrores:  function () {
                 return (this.validationErrors.length > 0);
             },
-            // objEstadoActividad: function () {
-            //     return {
-            //         'btn-danger': !this.dataActividad.estadoConstruccion,
-            //         // 'btn-success': this.dataActividad.estadoConstruccion
-            //     }
-            // }
+            fechasActividad: function () {
+                return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
+            },
+            fechasInscripcion: function () {
+                return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
+            }
         },
         filters: {
             estado: function (value) {
@@ -486,9 +455,6 @@
             }
         },
         watch: {
-            objHora: function () {
-                this.dataActividad.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
-            }
         },
         methods: {
             inicializar: function () {
@@ -511,9 +477,12 @@
                     this.dataActividad.coordinador = null;
                     this.coordinadorSeleccionado = null;
                 }
-                if (this.dataActividad.fechaInicio !== null) {
-                    this.objHora.HH = moment(this.dataActividad.fechaInicio).format('HH');
-                    this.objHora.mm = moment(this.dataActividad.fechaInicio).format('mm');
+
+                if (this.dataActividad.fechaInicio == null){
+                    this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
+                    this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
                 }
             },
             actualizarOficina() {
@@ -525,7 +494,7 @@
             },
             search: _.debounce((loading, search, vm) => {
                 fetch(
-                    `/ajax/coordinadores?coordinador=${escape(search)}`
+                    `/ajax/coordinadores?coordinador=${encodeURI(search)}`
                 ).then(res => {
                     res.json().then(json => (vm.dataCoordinadores = json.data));
                     loading(false);
@@ -544,7 +513,6 @@
                             self.localidadSeleccionada = '';
                             self.dataActividad.provincia = {};
                             self.dataActividad.localidad = {};
-
                         });
                 }
             },
@@ -566,7 +534,6 @@
                                 self.tiposDeActividad = data;
                                 self.tipoSeleccionado = null;
                                 self.dataActividad.idTipo = null;
-
                             }
                         );
                         this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -609,18 +576,12 @@
                         // Error
                         console.error('Error en: ' + url);
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
                             console.error(error.response.data);
                             console.error(error.response.status);
                             console.error(error.response.headers);
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.error(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.error('Error', error.message);
                         }
                         console.error(error.config);
@@ -642,22 +603,12 @@
                         console.info('Error en: ' + url);
                         console.error(error.response.status);
                         if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            // console.error(error.response.data);
-                            // console.error(error.response.status);
-                            // console.error(error.response.headers);
                             if (error.response.status === 422) {
-                                // debugger;
                                 this.validationErrors = Object.values(error.response.data);
                             }
                         } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
                             console.error(error.request);
                         } else {
-                            // Something happened in setting up the request that triggered an Error
                             console.error('Error', error.message);
                         }
                         console.error(error.config);
@@ -670,21 +621,18 @@
             editar() {
                 this.readonly = false;
             },
-            cancelar: function () {
-
-            },
             guardar(){
+                let url;
+
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
+                window.scrollTo(0, 0);
 
-                let url;
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
                 } else {
                     url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 }
-                window.scrollTo(0, 0);
-                this.dataActividad.objHora = this.objHora;
 
                 this.axiosPost(url, function (data, self) {
                     if (self.dataActividad.idActividad === null) {
@@ -702,7 +650,7 @@
                 this.dataActividad.puntosEncuentroBorrados.push(obj);
             },
             eliminar: function () {
-                var form = document.getElementById('formDelete');
+                let form = document.getElementById('formDelete');
                 form.submit();
             },
             mostrarLoadingAlert() {
@@ -717,8 +665,16 @@
             },
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
-            }
+            },
 
+            cambioFechaActividad: function (start, end) {
+                this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
+            },
+            cambioFechaInscripciones: function (start, end) {
+                this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
+            }
         }
     }
 </script>
