@@ -271,15 +271,15 @@
                                 type="button"
                                 class="btn"
                                 :disabled="readonly"
-                                :class="{'btn-danger': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
+                                :class="{'btn-warning': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = true">
                           <i class="fa fa-times-circle"></i> Internas
                         </button>
                         <button
                                 type="button"
                                 class="btn"
-                                :disabled="readonly"q
-                                :class="{'btn-success': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
+                                :disabled="readonly"
+                                :class="{'btn-info': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = false">
                           <i class="fa fa-check-circle"></i> Públicas
                         </button>

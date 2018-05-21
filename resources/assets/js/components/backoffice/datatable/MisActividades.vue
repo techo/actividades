@@ -33,16 +33,12 @@
         },
         methods: {
             verDetalle: function () {
-                let lastSlash = location.href.lastIndexOf('/');
-                let url = location.href.substr(0, lastSlash) + '/' + this.idActividad;
-
+                let url = '/admin/actividades/' + this.idActividad;
                 location.href = url;
             },
 
             verInscriptos: function () {
-                let lastSlash = location.href.lastIndexOf('/');
-                let url = location.href.substr(0, lastSlash) + '/' + this.idActividad + '/inscripciones';
-
+                let url = '/admin/actividades/' + this.idActividad + '/inscripciones';
                 location.href = url;
             }
         }

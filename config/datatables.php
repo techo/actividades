@@ -62,7 +62,7 @@ return [
             // ],
             // [
             [
-                'name' => '__component:custom-actions',
+                'name' => '__component:mis-actividades',
                 'title' => 'Acciones',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center'
