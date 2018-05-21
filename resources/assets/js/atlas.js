@@ -8,7 +8,7 @@ import Inscripcion from './components/inscripcion';
 import Autenticar from './components/autenticar';
 import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
-import Datepicker from 'vuejs-datepicker';
+import Datepicker from 'vue2-datepicker';
 import Perfil from './components/perfil/perfil';
 import MisActividades from './components/perfil/actividades';
 import Simplert from 'vue2-simplert';
