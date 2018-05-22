@@ -33,7 +33,7 @@
             <!-- Optionally, you can add icons to the links -->
             {{--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>--}}
             {{--<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>--}}
-            <li class="treeview {{ request()->is('admin/actividades/*') ? 'active menu-open' : ''}}">
+            <li class="treeview {{ request()->is('admin/actividades*') ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-calendar"></i> <span>Actividades</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
@@ -41,7 +41,7 @@
                 </a>
                 <ul class="treeview-menu">
                     @if (Auth::user()->hasRole('admin'))
-                        <li class="{{request()->is('admin/actividades/') ? 'active' : ''}}"><a href="/admin/actividades/">Ver Todas</a></li>
+                        <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">Ver Todas</a></li>
                     @endif
                     <li class="{{request()->is('admin/actividades/crear') ? 'active' : ''}}"><a href="/admin/actividades/crear">Crear Nueva Actividad</a></li>
                     @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))

@@ -2,6 +2,15 @@
 
 @section('page_title', 'Mis Actividades')
 
+@section('add-new')
+
+    <span class="pull-right">
+        <a href="/admin/actividades/crear" class="btn btn-primary btn-lg">
+            <i class="fa fa-plus"></i> Nueva Actividad
+        </a>
+    </span>
+@endsection
+
 @section('content')
     <div class="box">
         <div class="box-body  with-border">
