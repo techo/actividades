@@ -448,10 +448,10 @@
             },
             visibilidad: function (value) {
                 if (value) {
-                    return '<span class="label label-warning pull-right">Privado</span>';
+                    return '<span class="label label-warning pull-right">Interna</span>';
                 }
 
-                return '<span class="label label-info pull-right">Público</span>';
+                return '<span class="label label-info pull-right">Pública</span>';
             }
         },
         watch: {
