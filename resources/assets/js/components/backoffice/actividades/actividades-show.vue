@@ -271,15 +271,15 @@
                                 type="button"
                                 class="btn"
                                 :disabled="readonly"
-                                :class="{'btn-danger': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
+                                :class="{'btn-warning': dataActividad.inscripcionInterna, 'grey': !dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = true">
                           <i class="fa fa-times-circle"></i> Internas
                         </button>
                         <button
                                 type="button"
                                 class="btn"
-                                :disabled="readonly"q
-                                :class="{'btn-success': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
+                                :disabled="readonly"
+                                :class="{'btn-info': !dataActividad.inscripcionInterna, 'grey': dataActividad.inscripcionInterna}"
                                 @click="dataActividad.inscripcionInterna = false">
                           <i class="fa fa-check-circle"></i> Públicas
                         </button>
@@ -448,10 +448,10 @@
             },
             visibilidad: function (value) {
                 if (value) {
-                    return '<span class="label label-warning pull-right">Privado</span>';
+                    return '<span class="label label-warning pull-right">Interna</span>';
                 }
 
-                return '<span class="label label-info pull-right">Público</span>';
+                return '<span class="label label-info pull-right">Pública</span>';
             }
         },
         watch: {
