@@ -271,7 +271,7 @@
                     this.punto = '';
                     this.coordinador = '';
                     this.horario = '';
-                    this.paisSeleccionado = '';
+                    // this.paisSeleccionado = '';
                     this.provinciaSeleccionada = '';
                     this.localidadSeleccionada = '';
 
@@ -287,7 +287,7 @@
                         HH: "",
                         mm: "",
                         ss: ""
-                    }
+                    };
                     this.verFormulario = false;
                 }
             },
