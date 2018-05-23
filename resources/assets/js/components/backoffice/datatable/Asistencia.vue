@@ -15,8 +15,11 @@
 </template>
 
 <script>
+    import vSwitch from 'vue-switches';
+
     export default {
         name: "asistencia",
+        components: {'v-switch': vSwitch},
         props: {
             rowData: {
                 type: Object,
