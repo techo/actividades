@@ -91,6 +91,19 @@ class Actividad extends Model
         return $this->LinkPago . "&numero=" .$this->idActividad;
     }
 
+    public function idPersonaInscriptos($idActividad)
+    {
+       $query = Actividad::newQuery();
+
+       $query->join('Inscripcion', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
+           ->join('Persona', 'Inscripcion.idPersona', '=', 'Persona.idPersona')
+           ->where('Actividad.idActividad', '=', $idActividad)
+           ->where('Inscripcion.estado', '<>', 'Desinscripto' )
+           ->select('Persona.idPersona');
+
+       return $query->get()->pluck('idPersona')->toArray();
+    }
+
     protected static function boot()
     {
         parent::boot();

@@ -1,7 +1,12 @@
 <template>
   <div class="col-md-4">
     <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
-        <img class="card-img-top" :src="actividad.tipo.imagen" alt="Card image cap">
+        <div class="img-tarjeta">
+            <span v-show="inscripto" class="inscripto badge badge-pill badge-success">¡Ya estás inscripto!</span>
+            <span v-show="!inscripto && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
+            <span v-show="!inscripto && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
+            <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
+        </div>
       <div class="card-body px-0">
         <p class="techo-titulo-card">{{ actividad.tipo.nombre }}</p>
         <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
@@ -23,10 +28,27 @@
         props: ['actividad'],
         data () {
             return {
-                key: ''
+                key: '',
             }
         },
-
+        computed: {
+          inscripto: function () {
+              if(this.$parent.$parent.$refs.login.user.id != ""){
+                  if( this.actividad.inscriptos.indexOf(this.$parent.$parent.$refs.login.user.id) != -1){
+                      return true;
+                  }
+              }
+              return false;
+          },
+          pocosCupos: function(){
+              let umbral = 0.9;
+              let porcentajeActual = this.actividad.cantInscriptos / this.actividad.limiteInscripciones;
+              return porcentajeActual >= umbral;
+          },
+          cuposLlenos: function () {
+              return this.actividad.    cuposRestantes <= 0;
+          }
+        },
         filters: {
             truncate: function(string, value) {
                 if(!string) return '';
@@ -51,6 +73,28 @@ div.tarjeta {
     cursor: pointer;
     border: 0px;
     text-align: center;
+}
+
+.img-tarjeta {
+    position: relative;
+}
+
+.img-tarjeta .inscripto {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.img-tarjeta .sin-cupos {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}
+
+.img-tarjeta .pocos-cupos {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
 }
 
 </style>
