@@ -203,6 +203,11 @@
             },
             pais: function() {
                 this.paisSeleccionado = this.pais
+            },
+            readonly: function (viejo, nuevo) {
+                if (viejo === false && this.dataProvincias.length === 0) {
+                    this.getProvincias();
+                }
             }
         },
         computed: {
