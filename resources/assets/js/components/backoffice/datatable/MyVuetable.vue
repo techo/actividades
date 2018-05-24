@@ -59,7 +59,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -201,7 +201,9 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked (data, field, event) {
-      console.log('cellClicked: ', field.name)
+        if (this.detailUrl !== undefined) {
+            window.location.href = this.detailUrl + data.id;
+        }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
   },
