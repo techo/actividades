@@ -54,7 +54,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>País</label>
-                    <p style="font-size: larger">{{ paisSeleccionado.nombre }}</p>
+                    <p style="font-size: larger">{{ paisValidado }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -110,17 +110,21 @@
                 </div>
             </div>
         </div>
-        <table class="table table-striped table-hover table-condensed" v-if="dataPuntosEncuentro.length > 0">
+        <table class="table table-striped table-hover table-condensed" v-if="puntosEncuentro.length > 0">
             <thead class="thead-light">
+                <th scope="col">Punto</th>
                 <th scope="col">Lugar</th>
                 <th scope="col">Horario</th>
                 <th scope="col">Coordinador</th>
                 <th scope="col"><span v-show="!readonly">Borrar</span></th>
             </thead>
             <tbody>
-                <tr v-for="punto in dataPuntosEncuentro" :key="punto.idPuntoEncuentro">
+                <tr v-for="punto in puntosEncuentro" :key="punto.idPuntoEncuentro">
                     <td>
                         <p>{{ punto.punto }}</p>
+                    </td>
+                    <td>
+                        <p>{{ punto.localidad.localidad }}, {{ punto.provincia.provincia }}, {{ punto.pais.nombre}}</p>
                     </td>
                     <td>
                         <p v-html="$options.filters.hora(punto.horario)"></p>
@@ -158,7 +162,6 @@
         data: function () {
             return {
                 verFormulario: false,
-                dataPuntosEncuentro: (this.$parent.dataActividad.puntos_encuentro === undefined) ? [] : this.$parent.dataActividad.puntos_encuentro,
                 coordinador: '',
                 punto: '',
                 horario: '',
@@ -189,11 +192,14 @@
             if (this.paisSeleccionado === undefined || this.paisSeleccionado === null) {
                 this.paisSeleccionado = {id:1, nombre: "Argentina"}
             }
+
             Event.$on('cancelar', this.cancelar);
         },
         watch: {
-            paisSeleccionado: function () {
-                this.getProvincias();
+            paisSeleccionado: function (nuevo, viejo) {
+                if (nuevo !== null) {
+                    this.getProvincias();
+                }
             },
             provinciaSeleccionada: function () {
                 this.getLocalidades();
@@ -204,11 +210,11 @@
             pais: function() {
                 this.paisSeleccionado = this.pais
             },
-            readonly: function (viejo, nuevo) {
-                if (viejo === false && this.dataProvincias.length === 0) {
+            readonly: function (nuevo, viejo) {
+                if (nuevo === false && this.dataProvincias.length === 0) {
                     this.getProvincias();
                 }
-            }
+            },
         },
         computed: {
             errorPunto: function () {
@@ -234,6 +240,12 @@
             errorLocalidad: function () {
                 return (this.validationErrors.localidad && this.localidadSeleccionada === '')
             },
+            paisValidado: function () {
+                if (this.paisSeleccionado === null) {
+                    return '';
+                }
+                return this.paisSeleccionado.nombre;
+            }
 
         },
         filters: {
@@ -257,9 +269,9 @@
             incluirPunto: function (e) {
                 let valid = this.validate();
                 // genero un id provisional para identificar el punto
-                let id = this.getRandomInt(10000, 100000);
+                let id = this.getRandomInt(100000, 1000000);
                 if (valid) {
-                    this.dataPuntosEncuentro.push({
+                    this.puntosEncuentro.push({
                         'responsable': {
                             'dni': this.coordinador.dni,
                             'idPersona': this.coordinador.idPersona,
@@ -270,13 +282,16 @@
                         'idPais': this.paisSeleccionado.id,
                         'idProvincia': this.provinciaSeleccionada.id,
                         'idLocalidad': this.localidadSeleccionada.id,
-                        'idPuntoEncuentro': id
+                        'idPuntoEncuentro': id,
+                        'nuevo': true,
+                        'pais': this.paisSeleccionado,
+                        'provincia': this.provinciaSeleccionada,
+                        'localidad': this.localidadSeleccionada
                     });
 
                     this.punto = '';
                     this.coordinador = '';
                     this.horario = '';
-                    // this.paisSeleccionado = '';
                     this.provinciaSeleccionada = '';
                     this.localidadSeleccionada = '';
 
@@ -297,12 +312,12 @@
                 }
             },
             borrar: function (id) {
-                let data = this.findObjectByKey(this.dataPuntosEncuentro, 'idPuntoEncuentro', id);
-                this.dataPuntosEncuentro.splice(data.index, 1);
+                let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
+                this.puntosEncuentro.splice(data.index, 1);
                 Event.$emit('borrar-punto', data.obj);
             },
             getProvincias() {
-                if (this.paisSeleccionado.id !== undefined) {
+                if (this.paisSeleccionado !== null && this.paisSeleccionado.id !== undefined) {
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
                             self.dataProvincias = data;
@@ -312,7 +327,7 @@
                 }
             },
             getLocalidades() {
-                if (this.provinciaSeleccionada !== '' && this.provinciaSeleccionada.id !== undefined) {
+                if (this.paisSeleccionado !== null && this.provinciaSeleccionada.id !== undefined && this.provinciaSeleccionada.id !== null) {
                     let url = '/ajax/paises/' + this.paisSeleccionado.id +
                         '/provincias/' + this.provinciaSeleccionada.id + '/localidades';
                     this.axiosGet(url,
