@@ -1,7 +1,9 @@
 <template>
   <div>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <vuetable ref="vuetable"
+    <vuetable
+      class="vuetable"
+      ref="vuetable"
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
@@ -25,7 +27,7 @@
 </template>
 
 <script>
-  //https://github.com/ratiw/vuetable-2-tutorial/wiki
+    //https://github.com/ratiw/vuetable-2-tutorial/wiki
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -59,7 +61,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -201,7 +203,9 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked (data, field, event) {
-      console.log('cellClicked: ', field.name)
+        if (this.detailUrl !== undefined) {
+            window.location.href = this.detailUrl + data.id;
+        }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
   },
@@ -260,5 +264,13 @@ export default {
 }
 .pagination-info {
   float: left;
+}
+
+.vuetable tr {
+  cursor: pointer;
+}
+
+.vuetable tr td:hover{
+  text-decoration: underline;
 }
 </style>

@@ -19,6 +19,7 @@
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
                     placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                    detail-url="/admin/actividades/"
             ></datatable>
         </div>
         <!-- /.box-body -->
