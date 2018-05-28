@@ -1,7 +1,9 @@
 <template>
   <div>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <vuetable ref="vuetable"
+    <vuetable
+      class="vuetable"
+      ref="vuetable"
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
@@ -25,7 +27,7 @@
 </template>
 
 <script>
-  //https://github.com/ratiw/vuetable-2-tutorial/wiki
+    //https://github.com/ratiw/vuetable-2-tutorial/wiki
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -262,5 +264,13 @@ export default {
 }
 .pagination-info {
   float: left;
+}
+
+.vuetable tr {
+  cursor: pointer;
+}
+
+.vuetable tr td:hover{
+  text-decoration: underline;
 }
 </style>
