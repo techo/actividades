@@ -318,8 +318,6 @@
             },
             borrar: function (id) {
                 let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
-                // debugger
-                // this.puntosEncuentro.splice(data.index, 1);
                 Event.$emit('borrar-punto', data);
             },
             getProvincias() {
