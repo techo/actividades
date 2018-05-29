@@ -252,10 +252,10 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="limiteInscripciones">Límite de voluntarios</label>
+                    <label for="limiteInscripciones">Límite de voluntarios (0 = Sin Límite)</label>
                     <input id="limiteInscripciones"
                            type="number"
-                           min="1"
+                           min="0"
                            class="form-control"
                            v-bind:disabled="readonly"
                            v-model="dataActividad.limiteInscripciones"
@@ -469,6 +469,7 @@
                 this.tipoSeleccionado = this.dataActividad.tipo !== undefined  ? this.dataActividad.tipo : null;
                 this.oficinaSeleccionada = this.dataActividad.oficina !== undefined  ? this.dataActividad.oficina : null;
                 this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+                this.dataActividad.limiteInscripciones = this.dataActividad.limiteInscripciones !== null ?  this.dataActividad.limiteInscripciones : 0;
                 if (this.dataActividad.coordinador !== undefined) {
                     this.coordinadorSeleccionado =  this.dataActividad.coordinador;
                 } else {

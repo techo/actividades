@@ -65,10 +65,9 @@ class actividadesController extends Controller
 
         $limiteInscriptos = $actividad->limiteInscripciones;
 
-        $hayCupos = ($limiteInscriptos - $cantInscriptos) > 0;
+        $hayCupos = (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0);
 
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d 00:00:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d 00:00:00'));
-
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
         return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
     }
 

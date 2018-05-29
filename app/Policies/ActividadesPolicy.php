@@ -28,9 +28,9 @@ class ActividadesPolicy
 
         $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
 
-        $hayCupos = ($actividad->limiteInscripciones - $cantInscriptos) > 0;
+        $hayCupos = (($actividad->limiteInscripciones - $cantInscriptos) > 0 || $actividad->limiteInscripciones == 0);
 
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d 00:00:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d 00:00:00'));
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
 
         $ActividadAbierta = $actividad->estadoConstruccion === "Abierta";
 

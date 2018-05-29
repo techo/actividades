@@ -42,11 +42,15 @@
           },
           pocosCupos: function(){
               let umbral = 0.9;
-              let porcentajeActual = this.actividad.cantInscriptos / this.actividad.limiteInscripciones;
-              return porcentajeActual >= umbral;
+              let porcentajeActual;
+              if (this.actividad.limiteInscripciones == 0){
+                  return false;
+              }
+              porcentajeActual = this.actividad.cantInscriptos / this.actividad.limiteInscripciones;
+              return porcentajeActual >= umbral ;
           },
           cuposLlenos: function () {
-              return this.actividad.    cuposRestantes <= 0;
+              return this.actividad.cuposRestantes <= 0 && this.actividad.limiteInscripciones != 0;
           }
         },
         filters: {

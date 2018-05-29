@@ -46,9 +46,9 @@ class ActividadesSearch
             ->orderBy('fechaInicio', 'desc')
             ->where('estadoConstruccion', 'Abierta')
             ->where('inscripcionInterna', 0) //Visibilidad pública
-            ->whereDate('fechaInicioInscripciones', '<=', date('Y-m-d'))
-            ->whereDate('fechaFinInscripciones', '>=', date('Y-m-d'))
-            ->whereDate('fechaInicio', '>=', date('Y-m-d'));
+            ->where('fechaInicioInscripciones', '<=', date('Y-m-d H:i'))
+            ->where('fechaFinInscripciones', '>=', date('Y-m-d H:i'))
+            ->where('fechaInicio', '>=', date('Y-m-d H:i'));
         return $query;
     }
 }
