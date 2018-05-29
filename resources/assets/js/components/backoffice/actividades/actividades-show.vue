@@ -255,7 +255,7 @@
                     <label for="limiteInscripciones">Límite de voluntarios</label>
                     <input id="limiteInscripciones"
                            type="number"
-                           min="1"
+                           min="0"
                            class="form-control"
                            v-bind:disabled="readonly"
                            v-model="dataActividad.limiteInscripciones"
@@ -656,7 +656,8 @@
 
             },
             borrarPunto: function (obj) {
-                this.dataActividad.puntosEncuentroBorrados.push(obj);
+                this.dataActividad.puntosEncuentroBorrados.push(obj.obj);
+                this.dataActividad.puntos_encuentro.splice(obj.index, 1);
             },
             eliminar: function () {
                 let form = document.getElementById('formDelete');
