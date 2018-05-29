@@ -119,7 +119,7 @@
                 <th scope="col"><span v-show="!readonly">Borrar</span></th>
             </thead>
             <tbody>
-                <tr v-for="punto in puntosEncuentro" :key="punto.idPuntoEncuentro">
+                <tr v-for="punto in dataPuntos" :key="punto.idPuntoEncuentro">
                     <td>
                         <p>{{ punto.punto }}</p>
                     </td>
@@ -186,7 +186,8 @@
                     pais: false,
                     provincia: false,
                     localidad: false,
-                }
+                },
+                dataPuntos: this.puntosEncuentro
             }
         },
         created: function () {
@@ -216,6 +217,9 @@
                     this.getProvincias();
                 }
             },
+            puntosEncuentro: function (nuevo, viejo) {
+                this.dataPuntos = nuevo;
+            }
         },
         computed: {
             errorPunto: function () {
@@ -314,8 +318,7 @@
             },
             borrar: function (id) {
                 let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
-                this.puntosEncuentro.splice(data.index, 1);
-                Event.$emit('borrar-punto', data.obj);
+                Event.$emit('borrar-punto', data);
             },
             getProvincias() {
                 if (this.paisSeleccionado !== null && this.paisSeleccionado.id !== undefined) {
