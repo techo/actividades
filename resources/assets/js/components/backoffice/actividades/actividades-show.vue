@@ -443,14 +443,12 @@
                 if (value) {
                     return '<span class="label label-success pull-right">Abierta</span>';
                 }
-
                 return '<span class="label label-danger pull-right">Cerrada</span>';
             },
             visibilidad: function (value) {
                 if (value) {
                     return '<span class="label label-warning pull-right">Interna</span>';
                 }
-
                 return '<span class="label label-info pull-right">Pública</span>';
             }
         },
@@ -677,7 +675,6 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
-
             cambioFechaActividad: function (start, end) {
                 this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");

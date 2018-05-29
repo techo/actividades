@@ -124,7 +124,8 @@
                         <p>{{ punto.punto }}</p>
                     </td>
                     <td>
-                        <p>{{ punto.localidad.localidad }}, {{ punto.provincia.provincia }}, {{ punto.pais.nombre}}</p>
+                        <p v-if="punto.localidad">{{ punto.localidad.localidad }}, {{ punto.provincia.provincia }}, {{ punto.pais.nombre}}</p>
+                        <p v-else>No definido</p>
                     </td>
                     <td>
                         <p v-html="$options.filters.hora(punto.horario)"></p>
