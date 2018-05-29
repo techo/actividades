@@ -91,5 +91,5 @@
             </div>
         </div>
     </div>
-    <inscripciones></inscripciones>
+
 @endsection

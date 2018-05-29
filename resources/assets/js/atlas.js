@@ -16,8 +16,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-
-require('./bootstrap');
+// require('./bootstrap');
 
 window.Vue = require('vue');
 window.events = new Vue();
@@ -35,7 +34,6 @@ Vue.component('perfil', Perfil);
 Vue.component('mis-inscripciones', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
-
 
 
 var app = new Vue({

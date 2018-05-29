@@ -8,6 +8,7 @@ import asignacionDeRol from './components/backoffice/roles/asignacionDeRol'
 import CrudFooter from './components/backoffice/crudFooter'
 import Datepicker from 'vuejs-datepicker'; // https://github.com/charliekassel/vuejs-datepicker
 import vSelect2 from 'vue-select';
+import vSwitch from 'vue-switches';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('asignacion-de-rol', asignacionDeRol);
@@ -16,6 +17,8 @@ Vue.component('datatable', VueTable);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);
+Vue.component('v-switch', vSwitch);
+
 
 window.Event = new Vue();
 

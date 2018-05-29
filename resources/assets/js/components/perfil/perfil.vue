@@ -2,8 +2,8 @@
   <div>
     <div>
       <div class="row">
-        <div class="col-md-4">
-          <h2>Bienvenido, {{usernombre}}</h2>
+        <div class="col-md-12">
+          <h2>Bienvenido, {{usernombre}} ({{ user.email }})</h2>
         </div>
       </div>
       <div class="alert alert-success" v-show='guardo'>
@@ -275,7 +275,8 @@
             text: ''
           }
         }
-        data.usernombre = data.user.nombre
+        data.usernombre = data.user.nombre;
+
         var campos = ['id','email','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id','pass_actual','pass','pass_confirmacion'];
         for(var i in campos) {
           var campo = campos[i]
@@ -286,11 +287,11 @@
             invalido: false
           }
         }
-        if(data.user.facebook_id || data.user.google_id) {
+        if (data.user.facebook_id || data.user.google_id) {
           data.paso_actual = 'personales'
           data.volver = false
         }
-      	if(this.linkear) {
+      	if (this.linkear) {
       	  data.paso_actual = 'linkear'
       	}
         data.pass = '';
