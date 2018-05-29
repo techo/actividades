@@ -15,10 +15,11 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import vSwitch from 'vue-switches';
 
     export default {
         name: "pago",
+        components: {'v-switch': vSwitch},
         props: {
             rowData: {
                 type: Object,

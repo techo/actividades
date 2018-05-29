@@ -235,7 +235,7 @@
         <div class="box-body">
             <punto-encuentro
                     :readonly="readonly"
-                    :puntos-encuentro="dataActividad.puntosEncuentro"
+                    :puntos-encuentro="dataActividad.puntos_encuentro"
                     :paises="dataPaises"
                     :pais="paisSeleccionado"
             ></punto-encuentro>
@@ -443,14 +443,12 @@
                 if (value) {
                     return '<span class="label label-success pull-right">Abierta</span>';
                 }
-
                 return '<span class="label label-danger pull-right">Cerrada</span>';
             },
             visibilidad: function (value) {
                 if (value) {
                     return '<span class="label label-warning pull-right">Interna</span>';
                 }
-
                 return '<span class="label label-info pull-right">Pública</span>';
             }
         },
@@ -504,7 +502,7 @@
                 this.dataActividad.coordinador = this.coordinadorSeleccionado;
             },
             getProvincias() {
-                if (this.paisSeleccionado !== undefined && this.dataActividad.pais !== this.paisSeleccionado) {
+                if (this.paisSeleccionado !== undefined && this.dataActividad.pais !== this.paisSeleccionado && this.paisSeleccionado !== null) {
                     this.dataActividad.pais = this.paisSeleccionado;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
@@ -517,7 +515,7 @@
                 }
             },
             getLocalidades() {
-                if (this.provinciaSeleccionada !== '' && this.dataActividad.provincia !== this.provinciaSeleccionada) {
+                if (this.paisSeleccionado !== null && this.provinciaSeleccionada !== '' && this.dataActividad.provincia !== this.provinciaSeleccionada) {
                     this.dataActividad.provincia = this.provinciaSeleccionada;
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + this.provinciaSeleccionada.id + '/localidades',
                         function (data, self) {
@@ -605,6 +603,10 @@
                         if (error.response) {
                             if (error.response.status === 422) {
                                 this.validationErrors = Object.values(error.response.data);
+                                if (this.dataActividad.puntos_encuentro.length === 0) {
+                                    this.dataActividad.puntos_encuentro = this.dataActividad.puntosEncuentroBorrados;
+                                    this.dataActividad.puntosEncuentroBorrados = [];
+                                }
                             }
                         } else if (error.request) {
                             console.error(error.request);
@@ -641,8 +643,15 @@
                     self.mensajeGuardado = data;
                     self.guardado = true;
                     self.validationErrors = [];
+                    self.dataActividad.puntosEncuentroBorrados = [];
+                    for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
+                        if (self.dataActividad.puntos_encuentro[i].nuevo) {
+                            self.dataActividad.puntos_encuentro[i].nuevo = false;
+                        }
+
+                    }
                     self.$refs.loading.justCloseSimplert();
-                    // this.ocultarLoadingAlert();
+
                 }, this.dataActividad);
 
             },
@@ -666,7 +675,6 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
-
             cambioFechaActividad: function (start, end) {
                 this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
@@ -674,7 +682,19 @@
             cambioFechaInscripciones: function (start, end) {
                 this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
-            }
+            },
+            findObjectByKey(array, key, value) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i][key] === value) {
+                        return {
+                            'obj': array[i],
+                            'index': i
+                        };
+                    }
+                }
+                return null;
+            },
+
         }
     }
 </script>

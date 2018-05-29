@@ -30,7 +30,6 @@ class ActividadesController extends Controller
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
         isset($request->msg) ? Session::flash('mensaje', 'La actividad se eliminó correctamente') : false;
-//        isset($request->ok) ? Session::flash('mensaje', 'La actividad se creó correctamente') : false;
         return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'mensaje'));
     }
 
@@ -115,7 +114,9 @@ class ActividadesController extends Controller
                 'tipo.categoria',
                 'oficina',
                 'modificadoPor',
-                'puntosEncuentro',
+                'puntosEncuentro.pais',
+                'puntosEncuentro.provincia',
+                'puntosEncuentro.localidad',
                 'pais',
                 'provincia',
                 'localidad',
@@ -378,7 +379,7 @@ class ActividadesController extends Controller
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {
-                    if (!in_array($punto['idPuntoEncuentro'], $puntosGuardados)) {
+                    if (!empty($punto['nuevo']) && $punto['nuevo'] == true) {
                         $punto = $this->guardarPunto($punto, $actividad);
                     }
                 }
@@ -386,7 +387,9 @@ class ActividadesController extends Controller
 
             foreach ($request->puntosEncuentroBorrados as $borrado) {
                 $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
-                $punto->delete();
+                if ($punto) {
+                    $punto->delete();
+                }
             }
             return true;
         }
