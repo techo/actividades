@@ -7,7 +7,7 @@
 @section('main_image')
     <div class="techo-hero">
         <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
-        <h1 class="text-uppercase">Tu ayuda comienza acá</h1>
+        <h1 class="text-uppercase">Ayudanos a transformar esta realidad</h1>
     </div>
 @endsection
 
@@ -20,7 +20,12 @@
                 @php($categoria = $categoriaActividad->shift())
                     <div class="card border-light">
                         <a href="/actividades?categoria={{ $categoria->id }}">
-                            <img class="card-img-top" src="{{ asset('/img/tarjeta-1.jpg') }}" alt="Card image cap" >
+                            <img
+                                    class="card-img-top"
+                                    src="{{ $categoria->imagen }}"
+                                    alt="{{ $categoria->nombre }}"
+                                    width="380"
+                            >
                         </a>
                         <div class="card-body px-0">
                             <h5 class="card-title">{{ $categoria->nombre }}</h5>
