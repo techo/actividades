@@ -68,7 +68,7 @@
                         <span>{{ actividad.fecha}}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ actividad.hora }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ actividad.lugar }}</span>
+                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ localidad }}</span>
                     </div>
                 </div>
                 <hr>
@@ -88,7 +88,8 @@
         props: ['id','csrf_token'],
         data: function(){
           return {
-            actividad: {}
+            actividad: {},
+            localidad: {}
           }
         },
         mounted: function() {
@@ -98,6 +99,7 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
+            self.localidad = self.actividad.localidad.localidad;
             self.es_inscripto(self.actividad.idActividad);
           })
         },

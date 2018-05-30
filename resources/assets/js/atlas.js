@@ -15,11 +15,11 @@ import Simplert from 'vue2-simplert';
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-// require('./bootstrap');
+import axios from 'axios';
 
 window.Vue = require('vue');
 window.events = new Vue();
+window.axios = axios;
 
 Vue.use(BootstrapVue);
 

@@ -351,3 +351,17 @@ footer.inscripcion-bar .text-primary {
     }
 
 }
+
+.coordinador-img {
+    position: relative;
+    background-color: gray;
+    width: 100px; !important;
+    height: 100px; !important;
+}
+
+.coordinador-img h4 {
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    font-weight: bold;
+}

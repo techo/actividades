@@ -39,7 +39,9 @@ class InscripcionesController extends Controller
     public function create(Request $request, $id)
     {
         $actividad = Actividad::find($id);
+        $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
+        $punto_encuentro->load('pais','provincia','localidad');
         $persona = Auth::user();
         $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
         if (!$inscripcion) {
