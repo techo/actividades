@@ -158,6 +158,9 @@
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
             }
+            //Eventos
+            events.$on('cerrar-sesion', this.logout);
+
         },
         methods: {
             registro_facebook: function() {
