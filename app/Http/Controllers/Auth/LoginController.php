@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Socialite;
 use App\Persona;
 
@@ -31,7 +32,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -52,13 +53,21 @@ class LoginController extends Controller
     {
         $credentials = $request->only($this->username(), 'password');
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
-
+        $afterLoginUrl = '';
         if($authSuccess) {
             $request->session()->regenerate();
+
+            if($request->hasCookie('after_login_url')){
+                $afterLoginUrl = $request->cookie('after_login_url');
+                Cookie::queue(Cookie::make('after_login_url', ''));
+            }
+
             return response(
                 [
                     'success' => true,
-                    'user' => Auth::user()
+                    'user' => Auth::user(),
+                    'permisos' => Auth::user()->getAllPermissions(),
+                    'after_login' => $afterLoginUrl,
                 ],
                 200
             );
@@ -67,7 +76,7 @@ class LoginController extends Controller
         return response(
             [
                 'success' => false,
-                'message' => 'Las credenciales no coinciden'
+                'message' => 'El correo electrónico y/o la contraseña es incorrecta'
             ], 403
         );
     }
@@ -76,20 +85,34 @@ class LoginController extends Controller
     {
         $this->guard()->logout();
         $request->session()->invalidate();
-        return response(
-            [
-                'success' => true,
-                'redirect_to' => '/'
-            ],
-            200
-        );
+
+        if($request->wantsJson()){
+            return response(
+                [
+                    'success' => true,
+                    'redirect_to' => '/'
+                ],
+                200
+            );
+        }
+
+        return redirect('/');
+
     }
 
     public function redirectToProvider(Request $request, $provider)
     {
-	if(url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
-        if($provider == 'google') return Socialite::driver($provider)->redirect();
-        return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
+	if(url('/registro') != $request->headers->get('referer')) {
+        if($request->hasCookie('after_login_url') && !empty($request->cookie('after_login_url'))){
+            $afterLoginUrl = $request->cookie('after_login_url');
+            Cookie::queue(Cookie::make('after_login_url', ''));
+        } else {
+            $afterLoginUrl = $request->headers->get('referer');
+        }
+        $request->session()->put('login_callback', $afterLoginUrl);
+    }
+    if($provider == 'google') return Socialite::driver($provider)->redirect();
+    return Socialite::driver($provider)->fields(['first_name', 'last_name', 'email', 'gender'])->redirect();
     }
 
     public function callbackFromProvider(Request $request, $provider) {
@@ -114,6 +137,7 @@ class LoginController extends Controller
             $personaData->google_id = '';
             $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
         }
+//        $personaData->password = bcrypt(str_random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
         if(!$persona) {
             return view('registro')->with('persona', $personaData);

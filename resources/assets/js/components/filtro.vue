@@ -1,6 +1,6 @@
 <template>
-    <div class="row mt-4 mb-4 "id="filtro">
-        <div class="col-md-3">
+    <div class="row justify-content-center mt-4 mb-4 "id="filtro">
+        <div class="col-md-4">
             <select class="dropdown"
                 title="Categorías"
                 name="categorias"
@@ -12,28 +12,30 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-1">
-            <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda"> Lugar de actividad
-            <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda"> Punto de encuentro
+        <div class="col-md-2">
+            <div class="row">
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+            </div>
+            <div class="row">
+               <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
+            </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2 dropdown-container">
+
+            <contenedor-check-provincias
+                    v-bind:provincias="this.dataProvincias"
+            >
+            </contenedor-check-provincias>
+        </div>
+        <div class="col-md-2 dropdown-container">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
-
             </contenedor-check-tipos>
 
         </div>
         <div class="col-md-2">
-
-            <contenedor-check-provincias
-                v-bind:provincias="this.dataProvincias"
-            >
-            </contenedor-check-provincias>
-        </div>
-
-        <div class="col-md-1 pull-right">
-            <button class="btn techo-btn-azul btn-sm pull-right" v-on:click="borrarFiltros">
+            <button class="btn btn-default" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>
@@ -61,7 +63,7 @@
                  dataProvincias:    [],
                  dataLocalidades:   [],
                  dataTiposActividad: [],
-                 dataBusqueda: 'lugar'
+                 dataBusqueda: 'punto'
              }
         },
         methods: {
@@ -215,5 +217,13 @@
     #filtro {
         padding-bottom: 15px;
         border-bottom: solid thin #cecece
+    }
+
+    input[type="radio"] {
+        margin: 0 10px;
+    }
+
+    .dropdown-container {
+        padding-right: 0;
     }
 </style>

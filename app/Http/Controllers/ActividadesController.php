@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Actividad;
 
@@ -58,9 +59,16 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('localidad')->find($id);
+        $actividad = Actividad::with('localidad')->where('estadoConstruccion', 'Abierta')->findOrFail($id);
 
-        return view('actividades.show')->with('actividad', $actividad);
+        $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
+
+        $limiteInscriptos = $actividad->limiteInscripciones;
+
+        $hayCupos = (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0);
+
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
+        return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
     }
 
     /**

@@ -1,14 +1,12 @@
 <template>
     <span>
         <div class="row">
-            <div class="card-deck mb-3 text-center">
-                <tarjeta
-                    v-for="act in actividades"
-                    v-bind:actividad="act"
-                    v-bind:key="Math.random() + '_' + act.idActividad"
-                >
-                </tarjeta>
-            </div>
+            <tarjeta
+                v-for="act in actividades"
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+            >
+            </tarjeta>
         </div>
 
         <div v-show="loading" class="loading" style="text-align: center">
@@ -48,7 +46,7 @@
             window.addEventListener('cargarTarjetas', (event) => {
                 this.filtros = event.detail;
                 this.actividades = [];
-                this.agregarTarjetas(this.url, this.filtros);
+                this.agregarTarjetas(this.url, this.filtros, true);
             });
         },
         methods: {
@@ -60,7 +58,7 @@
                 const bottomOfPage = visible + scrollY >= pageHeight;
                 return bottomOfPage || pageHeight < visible;
             },
-            agregarTarjetas(url, filtros) {
+            agregarTarjetas(url, filtros, refresh) {
                 let self = this;
                 this.loading = true;
                 this.vacio = false;
@@ -70,7 +68,11 @@
                             this.loading = false;
                             this.vacio = true;
                         }
-                        self.actividades = [];
+                        
+                        if (refresh) {
+                            self.actividades = [];
+                        }
+
                         for (let element in response.data.data) {
                             self.actividades.push(response.data.data[element]);
                         }
@@ -111,7 +113,7 @@
             bottom(bottom) {
                 if (bottom) {
                     if (this.ultimaTarjeta < this.totalTarjetas ) {
-                        this.agregarTarjetas(this.next_page, this.filtros);
+                        this.agregarTarjetas(this.next_page, this.filtros, false);
                     }
                 }
             }

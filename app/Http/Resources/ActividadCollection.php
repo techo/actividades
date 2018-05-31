@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Actividad;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ActividadCollection extends ResourceCollection

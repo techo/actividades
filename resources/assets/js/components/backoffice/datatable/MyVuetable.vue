@@ -1,7 +1,9 @@
 <template>
   <div>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <vuetable ref="vuetable"
+    <vuetable
+      class="vuetable"
+      ref="vuetable"
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
@@ -25,7 +27,7 @@
 </template>
 
 <script>
-  //https://github.com/ratiw/vuetable-2-tutorial/wiki
+    //https://github.com/ratiw/vuetable-2-tutorial/wiki
 import accounting from 'accounting'
 import moment from 'moment'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
@@ -36,11 +38,22 @@ import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import DetailRow from './DetailRow'
 import FilterBar from './FilterBar'
+  import Pago from './Pago';
+  import Asistencia from './Asistencia';
+  import ActualizarInscripcion from './actualizarInscripcion';
+  import EstadoInscripcion from './estadoInscripcion';
+  import MisActividades from './MisActividades';
+
 
 Vue.use(VueEvents);
-Vue.component('custom-actions', CustomActions)
-Vue.component('my-detail-row', DetailRow)
-Vue.component('filter-bar', FilterBar)
+  Vue.component('custom-actions', CustomActions);
+  Vue.component('my-detail-row', DetailRow);
+  Vue.component('filter-bar', FilterBar);
+  Vue.component('asistencia', Asistencia);
+  Vue.component('pago', Pago);
+  Vue.component('actualizar-inscripcion', ActualizarInscripcion);
+  Vue.component('estado-inscripcion', EstadoInscripcion);
+  Vue.component('mis-actividades', MisActividades);
 
 export default {
   components: {
@@ -48,7 +61,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -135,7 +148,7 @@ export default {
         // ],
         css: {
         table: {
-          tableClass: 'table table-bordered table-striped table-hover',
+            tableClass: 'table table-hover table-condensed',
           ascendingIcon: 'glyphicon glyphicon-chevron-up',
           descendingIcon: 'glyphicon glyphicon-chevron-down'
         },
@@ -190,7 +203,9 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked (data, field, event) {
-      console.log('cellClicked: ', field.name)
+        if (this.detailUrl !== undefined) {
+            window.location.href = this.detailUrl + data.id;
+        }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
   },
@@ -222,6 +237,7 @@ export default {
   border-radius: 3px;
   padding: 5px 10px;
   margin-right: 2px;
+    cursor: pointer;
 }
 .pagination a.page.active {
   color: white;
@@ -236,6 +252,7 @@ export default {
   border-radius: 3px;
   padding: 5px 7px;
   margin-right: 2px;
+    cursor: pointer;
 }
 .pagination a.btn-nav.disabled {
   color: lightgray;
@@ -247,5 +264,13 @@ export default {
 }
 .pagination-info {
   float: left;
+}
+
+.vuetable tr {
+  cursor: pointer;
+}
+
+.vuetable tr td:hover{
+  text-decoration: underline;
 }
 </style>

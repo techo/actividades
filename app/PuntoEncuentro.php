@@ -8,6 +8,7 @@ class PuntoEncuentro extends Model
 {
     protected $table = 'PuntoEncuentro';
     protected $primaryKey = 'idPuntoEncuentro';
+    public $timestamps = false;
 
     public function actividad()
     {
@@ -31,6 +32,6 @@ class PuntoEncuentro extends Model
 
     public function localidad()
     {
-        return $this->belongsTo( Localidad::class, 'idlocalidad', 'id');
+        return $this->belongsTo(Localidad::class, 'idLocalidad', 'id');
     }
 }

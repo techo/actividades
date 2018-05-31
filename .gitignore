@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/js/app.js
+/public/css/app.css
 /public/js/atlas.js
 /storage/*.key
 /public/storage

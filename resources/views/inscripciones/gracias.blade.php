@@ -14,7 +14,7 @@
 
 @section('main_content')
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-12">
 				<h1 class="card-subtitle">¡Inscripción confirmada! Gracias por ayudar.</h3>
 			</div>
 		<hr>
@@ -48,13 +48,18 @@
 				<h2>Coordinadores</h2>
 			</div>
 		</div>
-		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
-			<div class="row">
-				<div class="col-md-12">
-				  	{{$puntoEncuentro->responsable->nombre_completo}}	
+		<div class="row">
+			@foreach($actividad->puntosEncuentro as $puntoEncuentro)
+				<div class="col-md-2">
+				<div class="text-center">
+					<div class="mx-auto rounded-circle coordinador-img">
+						<h4>{{ strtoupper(substr($puntoEncuentro->responsable->nombres,0,1)) . strtoupper(substr($puntoEncuentro->responsable->apellidoPaterno,0,1)) }}</h4>
+					</div>
+					<span>{{$puntoEncuentro->responsable->nombre_completo}}</span>
 				</div>
-			</div>
-		@endforeach
+				</div>
+			@endforeach
+		</div>
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
@@ -63,7 +68,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<p>{{ $actividad->lugar }}</p>
+				<p>{{ $actividad->localidad->localidad . ", " . $actividad->provincia->provincia . ", " . $actividad->pais->nombre }}</p>
 			</div>
 		</div>
 		<hr>
@@ -75,110 +80,111 @@
 		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
 			<div class="row">
 				<div class="col-md-12">
-				  {{$puntoEncuentro->punto}}	
+				  {{$puntoEncuentro->punto}} en {{ $puntoEncuentro->localidad->localidad . ", " . $puntoEncuentro->provincia->provincia . ", " . $puntoEncuentro->pais->nombre}}
 				</div>
 			</div>
 		@endforeach
-		<hr>
-		<div class="row">
-			<div class="col-md-12">
-				<h2>Actividades relacionadas</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="card">
-					<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">
-					<div class="row">
-						<div class="col-md-12">
-							<h6>[Tipo actividad]</h6>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<h5>[Nombre actividad]</h5>
-						</div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>
-						<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>
-						<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-12">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-							consequat.
-						</div>
-					</div>
+		{{-- COMING SOON --}}
+		{{--<hr>--}}
+		{{--<div class="row">--}}
+			{{--<div class="col-md-12">--}}
+				{{--<h2>Actividades relacionadas</h2>--}}
+			{{--</div>--}}
+		{{--</div>--}}
+		{{--<div class="row">--}}
+			{{--<div class="col-md-4">--}}
+				{{--<div class="card">--}}
+					{{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h6>[Tipo actividad]</h6>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h5>[Nombre actividad]</h5>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
+						{{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
+						{{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
+							{{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
+							{{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
+							{{--consequat.--}}
+						{{--</div>--}}
+					{{--</div>--}}
 
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">
-					<div class="row">
-						<div class="col-md-12">
-							<h6>[Tipo actividad]</h6>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<h5>[Nombre actividad]</h5>
-						</div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>
-						<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>
-						<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-12">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-							consequat.
-						</div>
-					</div>
+				{{--</div>--}}
+			{{--</div>--}}
+			{{--<div class="col-md-4">--}}
+				{{--<div class="card">--}}
+					{{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h6>[Tipo actividad]</h6>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h5>[Nombre actividad]</h5>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
+						{{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
+						{{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
+							{{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
+							{{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
+							{{--consequat.--}}
+						{{--</div>--}}
+					{{--</div>--}}
 
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">
-					<div class="row">
-						<div class="col-md-12">
-							<h6>[Tipo actividad]</h6>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<h5>[Nombre actividad]</h5>
-						</div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>
-						<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>
-						<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>
-					</div>
-					<hr>
-					<div class="row">
-						<div class="col-md-12">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-							tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-							quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-							consequat.
-						</div>
-					</div>
+				{{--</div>--}}
+			{{--</div>--}}
+			{{--<div class="col-md-4">--}}
+				{{--<div class="card">--}}
+					{{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h6>[Tipo actividad]</h6>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--<h5>[Nombre actividad]</h5>--}}
+						{{--</div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
+						{{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
+						{{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
+					{{--</div>--}}
+					{{--<hr>--}}
+					{{--<div class="row">--}}
+						{{--<div class="col-md-12">--}}
+							{{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
+							{{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
+							{{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
+							{{--consequat.--}}
+						{{--</div>--}}
+					{{--</div>--}}
 
-				</div>
-			</div>
+				{{--</div>--}}
+			{{--</div>--}}
 
-		</div>
+		{{--</div>--}}
 @endsection

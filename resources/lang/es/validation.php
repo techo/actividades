@@ -113,7 +113,8 @@ return [
 	*/
 
 	'attributes' => [
-		'username' => 'usuario',
-		'password' => 'contraseña'
-	],
+        'username' => 'usuario',
+        'password' => 'contraseña',
+        'LinkPago' => 'link de pago'
+    ],
 ];

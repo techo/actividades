@@ -1,6 +1,17 @@
 <section class="content-header">
-    <h1>
-        @yield('page_title')
-        <small>@yield('subtitulo','')</small>
-    </h1>
+    <div class="row">
+        <div class="col-md-11">
+            <h2>
+                @yield('page_title')
+
+            </h2>
+            <p class="text-muted">@yield('subtitulo','')</p>
+        </div>
+
+        <div class="col-md-1">
+            <br>
+            @yield('add-new')
+        </div>
+
+    </div>
 </section>

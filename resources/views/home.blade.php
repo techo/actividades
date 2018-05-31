@@ -1,27 +1,33 @@
 @extends('main')
 
 @section('page_title')
-    Home
+    TECHO: Bienvenido
 @endsection
 
 @section('main_image')
     <div class="techo-hero">
         <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
-        <h1>Tu ayuda comienza acá</h1>
+        <h1 class="text-uppercase">Ayudanos a transformar esta realidad</h1>
     </div>
 @endsection
 
 @section('main_content')
-    <h1 class="mt-1 techo-h1">¿En qué actividad quieres participar?</h1>
-    <div class="row">
+    <h1 class="text-primary font-weight-bold">¿En qué actividad quieres participar?</h1>
+    <div class="card-deck">
         @while($categoriaActividad->count() > 0)
             @php($i = 0)
             @while ( ($i <= 3) AND ($categoriaActividad->count() > 0))
                 @php($categoria = $categoriaActividad->shift())
-                <div class="col-md-4 col-sm-12">
-                    <div class="card">
-                        <img class="card-img-top" src="{{ asset('/img/tarjeta-1.jpg') }}" alt="Card image cap" >
-                        <div class="card-body px-0" style="overflow-x: scroll; ">
+                    <div class="card border-light">
+                        <a href="/actividades?categoria={{ $categoria->id }}">
+                            <img
+                                    class="card-img-top"
+                                    src="{{ $categoria->imagen }}"
+                                    alt="{{ $categoria->nombre }}"
+                                    width="380"
+                            >
+                        </a>
+                        <div class="card-body px-0">
                             <h5 class="card-title">{{ $categoria->nombre }}</h5>
                             <p class="card-text">{{ $categoria->descripcion }}</p>
                             <p>
@@ -40,7 +46,6 @@
                             <a href="/actividades?categoria={{ $categoria->id }}" class="btn techo-btn-azul">Quiero Participar</a>
                         </div>
                     </div>
-                </div>
                 @php($i++)
             @endwhile
         @endwhile

@@ -17,6 +17,8 @@ class TipoResource extends Resource
       return  [
             'idTipo' => $this->idTipo,
             'nombre' => $this->nombre,
+            'imagen' => $this->imagen,
+            'flujo'  => $this->flujo
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -48,6 +49,24 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof AuthenticationException){
+            return $this->unauthenticated($request, $exception);
+        }
         return parent::render($request, $exception);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+
+        if ($request->hasHeader('referer')){
+           $afterLoginUrl = $request->header('referer');
+        } else {
+            $afterLoginUrl = $request->getUri();
+        }
+
+        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 10);
     }
 }

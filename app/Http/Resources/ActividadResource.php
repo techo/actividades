@@ -18,7 +18,7 @@ class ActividadResource extends Resource
             'idActividad' => $this->idActividad,
             'tipo' => new TipoResource($this->tipo),
             'fecha' => $this->fechaInicio->format('d/m'),
-            'hora' => $this->fechaInicio->format('h:m'),
+            'hora' => $this->fechaInicio->format('H:i'),
             'fechaInicio' => ActividadResource::convertirFecha($this->fechaInicio),
             'fechaFin' => ActividadResource::convertirFecha($this->fechaFin),
             'fechaInicioInscripciones' => ActividadResource::convertirFecha($this->fechaInicioInscripciones),
@@ -30,7 +30,11 @@ class ActividadResource extends Resource
             'lugar' => $this->lugar,
             'moneda' => $this->moneda,
             'puntosEncuentro' => PuntoEncuentroResource::collection($this->puntosEncuentro),
-            'localidad' => $this->localidad
+            'localidad' => $this->localidad,
+            'inscriptos' => $this->idPersonaInscriptos($this->idActividad),
+            'limiteInscripciones' => $this->limiteInscripciones,
+            'cantInscriptos' => $this->inscripciones()->inscripto()->count(),
+            'cuposRestantes' => $this->limiteInscripciones - $this->inscripciones()->inscripto()->count()
         ];
     }
 

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Actividad;
+use App\Inscripcion;
+use App\Policies\ActividadesPolicy;
+use App\Policies\InscripcionesPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -14,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+        Actividad::class => ActividadesPolicy::class,
+        Inscripcion::class => InscripcionesPolicy::class,
     ];
 
     /**
@@ -25,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        //Definición de Gates
+
+        Gate::define('accesoBackoffice', function ($user){
+            return $user->hasPermissionTo('ver_backoffice');
+        });
     }
 }

@@ -9,9 +9,9 @@
                 <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p>Nombre y Apellido</p>
+                <p>{{ Auth::user()->nombreCompleto }}</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> Administrador</a>
+                <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->getRoleNames()->first() }}</a>
             </div>
         </div>
 
@@ -33,15 +33,43 @@
             <!-- Optionally, you can add icons to the links -->
             {{--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>--}}
             {{--<li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>--}}
-            <li class="treeview">
-                <a href="#"><i class="fa fa-link"></i> <span>Actividades</span>
+            <li class="treeview {{ request()->is('admin/actividades*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-calendar"></i> <span>Actividades</span>
                     <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/admin/actividades">Ver Todas</a></li>
-                    <li><a href="/admin/actividades/crear">Crear Nueva Actividad</a></li>
+                    @if (Auth::user()->hasRole('admin'))
+                        <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">Ver Todas</a></li>
+                    @endif
+                    <li class="{{request()->is('admin/actividades/crear') ? 'active' : ''}}"><a href="/admin/actividades/crear">Crear Nueva Actividad</a></li>
+                    @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
+                        <li class="{{request()->is('admin/actividades/usuario') ? 'active' : ''}}"><a href="/admin/actividades/usuario">Mis Actividades</a></li>
+                    @endif
+                </ul>
+            </li>
+            @if(Auth::user()->hasPermissionTo('asignar_roles'))
+                <li class="treeview {{ request()->is('admin/roles') ? 'active menu-open' : ''}}">
+                    <a href="#"><i class="fa fa-shield"></i> <span>Roles</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                    </a>
+                    <ul class="treeview-menu">
+                            <li class="{{request()->is('admin/roles') ? 'active' : ''}}"><a href="/admin/roles">Asignar roles</a></li>
+                    </ul>
+                </li>
+            @endif
+            <li class="treeview">
+                <a href="#"><i class="fa fa-globe"></i> <span>Portal de Actividades</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/actividades">Ver filtros</a></li>
                 </ul>
             </li>
         </ul>

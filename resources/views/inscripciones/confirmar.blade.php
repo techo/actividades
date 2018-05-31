@@ -46,6 +46,14 @@
                         {{ $punto_encuentro->horario }}
                     </div>
                 </div>
+                @if($tipo->flujo == "CONSTRUCCION")
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="card-title">Costo de la contrucción: ${{$actividad->costo}} Pesos</h5>
+                            <p>Recordá que esta actividad tiene costo. Te enviaremos un email con el link de pago para que puedas completar tu inscripción!</p>
+                        </div>
+                    </div>
+                @endif
                 <div class="row  align-middle">
                     <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a
                                 href="/inscripciones/actividad/{{$actividad->idActividad}}"> Volver</a></div>
@@ -83,5 +91,5 @@
             </div>
         </div>
     </div>
-    <inscripciones></inscripciones>
+
 @endsection

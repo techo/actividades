@@ -19,7 +19,7 @@
         "cross-env": "^5.1.4",
         "jquery": "^3.2",
         "laravel-mix": "^1.0",
-        "lodash": "^4.17.4",
+        "lodash": "^4.17.5",
         "moment": "^2.17.1",
         "vue": "^2.5.16",
         "vue-events": "^3.0.0",
@@ -27,12 +27,21 @@
     },
     "dependencies": {
         "ajv": "^6.4.0",
+        "babel-loader": "^7.1.4",
+        "bootstrap-vue": "^2.0.0-rc.6",
+        "extract-text-webpack-plugin": "^3.0.2",
         "minimist": "^1.2.0",
         "vue-axios": "^2.1.1",
         "vue-loader": "^14.2.2",
         "vue-router": "^3.0.1",
         "vue-select": "^2.4.0",
+        "vue-switches": "^2.0.1",
         "vue-template-compiler": "^2.5.16",
-        "vuejs-datepicker": "^0.9.29"
+        "vue2-datepicker": "^1.9.7",
+        "vue2-simplert": "^0.8.0",
+        "vue2-simplert-plugin": "^0.4.1",
+        "vue2-timepicker": "^0.1.4",
+        "vuejs-datepicker": "^0.9.29",
+        "webpack": "^3.11.0"
     }
 }

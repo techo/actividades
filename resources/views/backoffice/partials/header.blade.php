@@ -4,9 +4,9 @@
     <!-- Logo -->
     <a href="#" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><img src="{{ asset('/img/techo_logo_sm.png') }}" alt="Techo"></span>
+        <span class="logo-mini"><img src="{{ asset('/img/logo_small.png') }}" alt="Techo" width="40"></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ asset('/img/techo-logo_200x50.png') }}" alt="Techo"></span>
+        <span class="logo-lg"><img src="{{ asset('/img/logo_large.png') }}" alt="Techo" width="140"></span>
     </a>
 
     <!-- Header Navbar -->
@@ -19,6 +19,7 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Notifications Menu -->
+{{--
                 <li class="dropdown notifications-menu">
                     <!-- Menu toggle button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -41,6 +42,7 @@
                         <li class="footer"><a href="#">View all</a></li>
                     </ul>
                 </li>
+--}}
                 <!-- User Account Menu -->
                 <li class="dropdown user user-menu">
                     <!-- Menu Toggle Button -->
@@ -48,7 +50,7 @@
                         <!-- The user image in the navbar-->
                         <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="user-image" alt="User Image">
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs"> Usuario </span>
+                        <span class="hidden-xs"> {{ Auth::user()->nombreCompleto }} </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
@@ -56,7 +58,7 @@
                             <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="img-circle" alt="User Image">
 
                             <p>
-                                Usuario - Rol
+                                {{ Auth::user()->nombreCompleto }}
                                 {{--<small>Member since Nov. 2012</small>--}}
                             </p>
                         </li>
@@ -78,10 +80,13 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">Perfil</a>
+                                <a href="/perfil" class="btn btn-default btn-flat">Perfil</a>
                             </div>
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat">Salir</a>
+                                <form action="/logout" method="post">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-default btn-flat">Salir</button>
+                                </form>
                             </div>
                         </li>
                     </ul>

@@ -7,6 +7,9 @@ use App\Actividad;
 use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Mail;
+use App\Mail\MailConfimacionInscripcion;
 
 class InscripcionesController extends Controller
 {
@@ -20,7 +23,11 @@ class InscripcionesController extends Controller
         $actividad = Actividad::find($id);
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
-        return view('inscripciones.confirmar')->with('actividad', $actividad)->with('punto_encuentro', $puntoEncuentro);
+        $tipo = $actividad->tipo;
+        return view('inscripciones.confirmar')
+            ->with('actividad', $actividad)
+            ->with('punto_encuentro', $puntoEncuentro)
+            ->with('tipo', $tipo);
 
     }
 
@@ -31,21 +38,26 @@ class InscripcionesController extends Controller
      */
     public function create(Request $request, $id)
     {
-        if (Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->get()->count() == 0) {
+        $actividad = Actividad::find($id);
+        $actividad->load('pais','provincia','localidad');
+        $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
+        $punto_encuentro->load('pais','provincia','localidad');
+        $persona = Auth::user();
+        $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
+        if (!$inscripcion) {
             $inscripcion = new Inscripcion();
-            $actividad = Actividad::find($id);
-            $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
             $inscripcion->idActividad = $id;
             $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
             $inscripcion->idPersona = Auth::user()->idPersona;
-            $inscripcion->estado = 'Sin Contactar';
             $inscripcion->evaluacion = 0;
             $inscripcion->acompanante = '';
+            $inscripcion->estado = 'Sin Contactar';
+            $inscripcion->fechaInscripcion = new Carbon();
             $inscripcion->save();
+            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }
-        return redirect('actividades/' . $id);
-
+        return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
     }
 
     /**

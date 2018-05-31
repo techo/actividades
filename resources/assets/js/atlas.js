@@ -8,13 +8,20 @@ import Inscripcion from './components/inscripcion';
 import Autenticar from './components/autenticar';
 import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
-import Datepicker from 'vuejs-datepicker';
-
-
-require('./bootstrap');
+import Datepicker from 'vue2-datepicker';
+import Perfil from './components/perfil/perfil';
+import MisActividades from './components/perfil/actividades';
+import Simplert from 'vue2-simplert';
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import axios from 'axios';
 
 window.Vue = require('vue');
 window.events = new Vue();
+window.axios = axios;
+
+Vue.use(BootstrapVue);
 
 Vue.component('filtro', Filtro);
 Vue.component('login', Login);
@@ -23,8 +30,10 @@ Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
 Vue.component('inscripcion', Inscripcion);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
+Vue.component('perfil', Perfil);
+Vue.component('mis-inscripciones', MisActividades);
 Vue.component('datepicker', Datepicker);
-
+Vue.component('simplert', Simplert);
 
 
 var app = new Vue({

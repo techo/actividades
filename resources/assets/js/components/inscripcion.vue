@@ -34,6 +34,13 @@
                     {{item.punto}} - {{item.horario | format_time}}
                   </div>
               </div>
+                <hr>
+                <div v-show="esConstruccion" class="row">
+                    <div class="col-md-12">
+                        <h5 class="card-title">Costo de la construcción: ${{actividad.costo}} Pesos</h5>
+                    </div>
+                    <hr>
+                </div>
               <div class="row  align-middle">
                   <input type="hidden" name="_token" v-bind:value="csrf_token">
                   <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
@@ -61,7 +68,7 @@
                         <span>{{ actividad.fecha}}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ actividad.hora }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ actividad.lugar }}</span>
+                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ localidad }}</span>
                     </div>
                 </div>
                 <hr>
@@ -81,7 +88,8 @@
         props: ['id','csrf_token'],
         data: function(){
           return {
-            actividad: {}
+            actividad: {},
+            localidad: {}
           }
         },
         mounted: function() {
@@ -91,6 +99,7 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
+            self.localidad = self.actividad.localidad.localidad;
             self.es_inscripto(self.actividad.idActividad);
           })
         },
@@ -103,9 +112,13 @@
             return hora
           }
         },
+        computed: {
+            esConstruccion() {
+                return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
+            }
+        },
         methods: {
           validateForm: function(event) {
-            debugger
             if(!this.$parent.$refs.login.authenticated) {
               event.preventDefault();
               this.mostrarLogin();
