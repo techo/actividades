@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
          $this->call(RolesTableSeeder::class);
          $this->call(PermissionsTableSeeder::class);
          $this->call(RolePermissionsSeeder::class);
+         $this->call(ImagenesActividadesSeeder::class);
          //TODO: definir usuario Admin y asignar el rol
     }
 }
