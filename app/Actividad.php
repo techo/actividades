@@ -32,6 +32,23 @@ class Actividad extends Model
         return $this->hasMany(Inscripcion::class, 'idActividad');
     }
 
+    public function grupos()
+    {
+        return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');
+    }
+
+    public function getInscriptosAttribute()
+    {
+       return Persona::whereIn('idPersona', $this->inscripciones->pluck('idPersona'))
+           ->orderBy('nombres')
+           ->get();
+    }
+
+    public function getMiembrosAttribute()
+    {
+        return $this->grupos->prepend($this->inscriptos)->flatten();
+    }
+
     public function inscripciones_validas() {
         return $this->inscripciones;
     }
