@@ -152,6 +152,16 @@ return [
     'inscripciones' => [
         'fields' => [
             [
+                'name' => '__checkbox',
+                'titleClass' => 'center aligned',
+                'dataClass' => 'center aligned'
+            ],
+            [
+                'name' => 'id',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
+            [
                 'name' => 'dni',
                 'sortField' => 'dni',
                 'title' => 'DNI/Pasaporte',

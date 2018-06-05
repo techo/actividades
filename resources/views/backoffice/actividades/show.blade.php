@@ -55,6 +55,7 @@
             <div class="tab-pane" id="inscripciones">
                 <div class="box">
                     <div class="box-body  with-border">
+                        <filtros-inscripciones></filtros-inscripciones>
                         <datatable
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
@@ -119,5 +120,5 @@
 
 @push('addiitional_css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-@endpush
+        <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+    @endpush
