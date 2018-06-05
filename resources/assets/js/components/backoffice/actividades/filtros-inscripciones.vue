@@ -40,7 +40,7 @@
             </div>
             <div class="col-md-3">
                 <br>
-                <button class="btn btn-primary">Agregar condición</button>
+                <button class="btn btn-primary" @click="this.agregar">Agregar condición</button>
             </div>
         </div>
     </div>
@@ -56,6 +56,17 @@
                 condiciones: ['mayor que', 'mayor o igual que', 'menor que', 'menor o igual que', 'igual a', 'distinto de', 'contiene', 'está en lista'],
                 condicionSeleccionada: "",
                 valorCondicion: ""
+            }
+        },
+        methods: {
+            agregar: function () {
+                let condicion = {
+                  'campo': this.campoSeleccionado,
+                  'condicion': this.condicionSeleccionada,
+                  'valor': this.valorCondicion
+                };
+                Event.$emit('agregar-condicion', condicion);
+                this.campoSeleccionado = this.condicionSeleccionada = this.valorCondicion = "";
             }
         }
     }
