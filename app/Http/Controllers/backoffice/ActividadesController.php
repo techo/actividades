@@ -155,19 +155,19 @@ class ActividadesController extends Controller
             $fields = json_encode($fields);
             $sortOrder = json_encode($datatableConfig['sortOrder']);
             $camposInscripciones = [
-                'Nombre',
-                'Apellido',
-                'DNI/Pasaporte',
-                'e-mail',
-                'Estado',
-                'Punto de Encuentro',
-                'Rol',
-                'Grupo',
-                'Cantidad Actividades',
-                'Tipo de Actividad Anterior',
-                'Promedio Evaluación'
-
+                ['id' => 'nombre','campo' => 'Nombre'],
+                ['id' => 'apellido', 'campo' => 'Apellido'],
+                ['id' => 'dni', 'campo' => 'DNI/Pasaporte'],
+                ['id' => 'email', 'campo' => 'e-mail'],
+                ['id' => 'estado', 'campo' => 'Estado (No disponible)'],
+                ['id' => 'punto' , 'campo' =>  'Punto de Encuentro (No disponible)'],
+                ['id' => 'rol' , 'campo' =>  'Rol (No disponible)'],
+                ['id' => 'grupo' , 'campo' =>  'Grupo (No disponible)'],
+                ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades (No disponible)'],
+                ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior (No disponible)'],
+                ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
             ];
+            $camposInscripciones = json_encode($camposInscripciones);
 
             return view(
                 'backoffice.actividades.show',

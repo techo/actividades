@@ -74,7 +74,8 @@
         methods: {
             agregar: function () {
                 let condicion = {
-                  'campo': this.campoSeleccionado,
+                  'campo': this.campoSeleccionado.id,
+                  'label': this.campoSeleccionado.campo,
                   'condicion': this.condicionSeleccionada,
                   'valor': this.valorCondicion
                 };

@@ -129,10 +129,18 @@ export default {
         }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
+     // Custom
+      agregarCondicion(condicion){
+          this.moreParams.condiciones.push(condicion);
+          Vue.nextTick( () => this.$refs.vuetable.refresh());
+      }
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
       this.dataFields = JSON.parse(this.fields);
+      // Custom
+      Event.$on('agregar-condicion', this.agregarCondicion);
+      this.moreParams.condiciones = [];
   },
   events: {
     'filter-set' (filterText) {

@@ -6,7 +6,7 @@ namespace App\Search\filters\inscripciones;
 use App\Search\filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
-class Apellido implements Filter
+class Dni implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
@@ -17,13 +17,13 @@ class Apellido implements Filter
 
         if (in_array($condicion['comparacion'], ['like', '<', '<=', '>', '>=', '=', '<>']))
         {
-            $builder->where('Persona.apellidoPaterno', $condicion['comparacion'], $condicion['valor']);
+            $builder->where('Persona.mail', $condicion['comparacion'], $condicion['valor']);
         }
 
         if ($condicion['comparacion'] == 'in')
         {
-           $builder->whereIn('Persona.apellidoPaterno', $condicion['valor']);
+           $builder->whereIn('Persona.mail', $condicion['valor']);
         }
-        return $builder;
+        return $builder;    
     }
 }

@@ -3,6 +3,7 @@ import Simplert from "vue2-simplert";
 Vue.config.devtools = true;
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
+import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import ActividadesShow from './components/backoffice/actividades/actividades-show'
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
 import InscripcionesToolbar from './components/backoffice/actividades/inscripciones-toolbar'
@@ -20,6 +21,7 @@ Vue.component('condiciones-seleccionadas', CondicionesSeleccionadas);
 Vue.component('asignacion-de-rol', asignacionDeRol);
 Vue.component('crud-footer', CrudFooter);
 Vue.component('datatable', VueTable);
+Vue.component('inscripciones-table', InscripcionesTable);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);

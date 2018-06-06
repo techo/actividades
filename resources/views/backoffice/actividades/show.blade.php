@@ -55,14 +55,14 @@
             <div class="tab-pane" id="inscripciones">
                 <div class="box">
                     <div class="box-body  with-border">
-                        <filtros-inscripciones campos="{{ json_encode($camposInscripciones, true) }}"></filtros-inscripciones>
+                        <filtros-inscripciones campos="{{ $camposInscripciones }}"></filtros-inscripciones>
                         <condiciones-seleccionadas></condiciones-seleccionadas>
-                        <datatable
+                        <inscripciones-table
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"
                                 placeholder-text="Buscar por cualquier campo"
-                        ></datatable>
+                        ></inscripciones-table>
                     </div>
                     <!-- /.box-body -->
                 </div>

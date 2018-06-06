@@ -1,7 +1,7 @@
 <template>
     <div class="list-group">
         <li v-for="condicion in condiciones" :key="condicion.id" class="list-group-item">
-            {{ condicion.campo }} {{ condicion.condicion }} {{ condicion.valor}}
+            {{ condicion.label }} {{ condicion.condicion }} {{ condicion.valor}}
         </li>
     </div>
 </template>
