@@ -55,7 +55,7 @@
             <div class="tab-pane" id="inscripciones">
                 <div class="box">
                     <div class="box-body  with-border">
-                        <filtros-inscripciones></filtros-inscripciones>
+                        <filtros-inscripciones campos="{{ json_encode($camposInscripciones, true) }}"></filtros-inscripciones>
                         <condiciones-seleccionadas></condiciones-seleccionadas>
                         <datatable
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"

@@ -6,7 +6,7 @@
                 <div class="form-group">
                     <label for="campo">Campo</label>
                     <v-select
-                            :options="campos"
+                            :options="dataCampos"
                             label="campo"
                             placeholder="Seleccione"
                             name="campo"
@@ -49,14 +49,27 @@
 <script>
     export default {
         name: "filtros-inscripciones",
+        props: ['campos'],
         data() {
             return {
-                campos: ['campo1', 'campo2', 'campo3'],
+                dataCampos: [],
                 campoSeleccionado: "",
-                condiciones: ['mayor que', 'mayor o igual que', 'menor que', 'menor o igual que', 'igual a', 'distinto de', 'contiene', 'está en lista'],
+                condiciones: [
+                    'mayor que',
+                    'mayor o igual que',
+                    'menor que',
+                    'menor o igual que',
+                    'igual a',
+                    'distinto de',
+                    'contiene',
+                    'está en lista'
+                ],
                 condicionSeleccionada: "",
                 valorCondicion: ""
             }
+        },
+        created(){
+            this.dataCampos = JSON.parse(this.campos);
         },
         methods: {
             agregar: function () {

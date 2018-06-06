@@ -154,6 +154,20 @@ class ActividadesController extends Controller
             }
             $fields = json_encode($fields);
             $sortOrder = json_encode($datatableConfig['sortOrder']);
+            $camposInscripciones = [
+                'Nombre',
+                'Apellido',
+                'DNI/Pasaporte',
+                'e-mail',
+                'Estado',
+                'Punto de Encuentro',
+                'Rol',
+                'Grupo',
+                'Cantidad Actividades',
+                'Tipo de Actividad Anterior',
+                'Promedio Evaluación'
+
+            ];
 
             return view(
                 'backoffice.actividades.show',
@@ -167,7 +181,8 @@ class ActividadesController extends Controller
                     'categorias',
                     'compartir',
                     'fields',
-                    'sortOrder'
+                    'sortOrder',
+                    'camposInscripciones'
                 )
             );
         }

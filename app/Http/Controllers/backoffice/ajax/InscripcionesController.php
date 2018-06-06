@@ -18,7 +18,24 @@ class InscripcionesController extends BaseController
      */
     public function index($id, Request $request)
     {
-        $export = new InscripcionesExport($id, $request->filter, $request->sort);
+        $filtros = array_merge($request->all(), ['idActividad' => $id]);
+        if($request->has('filter')){
+            $filtros['HotFilter'] = $request->filter;
+            unset($filtros['filter']);
+        }
+        if($request->has('condiciones'))
+        {
+            foreach ($request->condiciones as $condicion)
+            {
+                $condicion = json_decode($condicion, true);
+                $filtros[$condicion['campo']] = [
+                    'condicion' => $condicion['condicion'],
+                    'valor' => $condicion['valor']
+                ];
+            }
+            unset($filtros['condiciones']);
+        }
+        $export = new InscripcionesExport($filtros);
         $collection = $export->collection();
         $result = $this->paginate($collection, 10);
         return $result;
