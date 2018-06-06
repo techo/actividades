@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\CategoriaActividad;
+use App\Grupo;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
@@ -86,7 +87,7 @@ class ActividadesController extends Controller
         $actividad = new Actividad();
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
-            if ($this->guardarActividad($request, $actividad)) {
+            if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
                 $request->session()->put('mensaje', 'La actividad se creó correctamente');
                 return response('Actividad guardada correctamente.', 200);
             } else {
@@ -415,12 +416,15 @@ class ActividadesController extends Controller
         return false;
     }
 
-    private function trimDate($fecha)
+    private function crearGrupo(Actividad $actividad)
     {
-        $i = strpos($fecha, 'T');
-        if ($i > 0) {
-            return substr($fecha, 0, $i);
+        $grupo = new Grupo();
+        $grupo->idActividad = $actividad->idActividad;
+        $grupo->idPadre = 0;
+        $grupo->nombre = $actividad->nombre;
+        if ($grupo->save()) {
+            return true;
         }
-        return $fecha;
+        return false;
     }
 }

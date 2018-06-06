@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -46,10 +47,32 @@ class Actividad extends Model
 
     public function getMiembrosAttribute()
     {
-        return $this->grupos->prepend($this->inscriptos)->flatten();
+        $grupoRaiz = Grupo::where('idPadre', '=', 0)
+            ->where('idActividad','=', $this->idActividad)
+            ->first();
+        // en las actividades viejas $grupoRaiz = null
+        if (!is_null($grupoRaiz)) {
+            $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
+                ->where('Grupo_Persona.idActividad', '=', $this->idActividad)
+                ->where('Grupo_Persona.idGrupo', '=', $grupoRaiz->idGrupo)
+                ->get();
+
+            foreach ($personas as $persona) {
+                $todosArray['arbol'][] = new MiembroResource($persona);
+            }
+
+            foreach ($grupoRaiz->grupos as $grupo) {
+                $todosArray['arbol'][] = new MiembroResource($grupo);
+            }
+            $todosArray['idRaiz'] = $grupoRaiz->idGrupo;
+            return $todosArray;
+        }
+
+        return new \stdClass();
     }
 
-    public function inscripciones_validas() {
+    public function inscripciones_validas()
+    {
         return $this->inscripciones;
     }
 

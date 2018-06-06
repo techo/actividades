@@ -205,5 +205,45 @@ return [
             ]
         ],
 
+    ],
+    'miembros' => [
+        'fields' => [
+             [
+               'name' => '__checkbox',
+               'titleClass' => 'text-center',
+               'dataClass' => 'text-center',
+             ],
+             [
+               'name' => 'idGrupo',
+               'sortField' => 'icon',
+               'callback' => 'getIcon'
+             ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre',
+//                'callback' => 'getNombre'
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol',
+                'callback' => 'getRol'
+            ],
+            [
+                'name' => 'miembros',
+                'sortField' => 'miembros',
+                'title' => 'MiembroCollection',
+                'callback' => 'getMiembros'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ]
+        ],
+
     ]
 ];

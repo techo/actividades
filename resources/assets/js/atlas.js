@@ -1,6 +1,6 @@
 Vue.config.devtools = true;
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+// import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';

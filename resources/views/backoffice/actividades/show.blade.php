@@ -50,7 +50,15 @@
                 ></actividades-show>
             </div>
             <div class="tab-pane" id="grupos">
-                {{--TODO: Panel de grupos--}}
+                <btn-grupo-persona
+                        actividad="{{ $actividad }}"
+                ></btn-grupo-persona>
+                <miembros
+                        actividad="{{ $actividad }}"
+                        items = "{{ json_encode($actividad->miembros) }}"
+                >
+                </miembros>
+                {{--TODO: Componente de tabla de grupos/personas --}}
             </div>
             <div class="tab-pane" id="inscripciones">
                 <div class="box">

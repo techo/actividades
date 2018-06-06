@@ -67,85 +67,6 @@ export default {
         dataPlaceholderText: this.placeholderText,
         dataSortOrder: [],
         dataFields: [],
-        // apiUrl: this.apiUrl,
-        // fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
-        // {
-        //   name: 'nombreActividad',
-        //   title: 'Nombre',
-        //   sortField: 'nombreActividad',
-        // },
-        // {
-        //   name: 'nombreUnidad',
-        //   sortField: 'nombreUnidad',
-        //   title: 'Oficina'
-        // },
-        // {
-        //   name: 'fechaInicio',
-        //   sortField: 'fechaInicio',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Fecha Inicio',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
-        //   {
-        //   name: 'fechaFin',
-        //   sortField: 'fechaFin',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Fecha Fin',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
-        //   {
-        //   name: 'tipoActividad',
-        //   sortField: 'tipoActividad',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Tipo',
-        // },
-        //   {
-        //   name: 'estadoConstruccion',
-        //   sortField: 'estadoConstruccion',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Estado',
-        // },
-        // {
-        //   name: 'nickname',
-        //   sortField: 'nickname',
-        //   callback: 'allcap'
-        // },
-        // {
-        //   name: 'gender',
-        //   sortField: 'gender',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   callback: 'genderLabel'
-        // },
-        // {
-        //   name: 'salary',
-        //   sortField: 'salary',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // }
-        // ],
         css: {
         table: {
             tableClass: 'table table-hover table-condensed',
@@ -179,21 +100,16 @@ export default {
     }
   },
   methods: {
-    allcap (value) {
-      return value.toUpperCase()
+    getIcon (value) {
+        return value
+            ? '<span class="label label-success"><i class="fa fa-users"></i></span>'
+            : '<span class="label label-danger"><i class="fa fa-user"></i></span>'
     },
-    estadoBadge (value) {
-      return value === 'M'
-        ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-        : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-    },
-    formatNumber (value) {
-      return accounting.formatNumber(value, 2)
-    },
-    formatDate (value, fmt = 'D MMM YYYY') {
-      return (value == null)
-        ? ''
-        : moment(value, 'YYYY-MM-DD').format(fmt)
+
+    getRol (value) {
+        return value
+            ? '<p>' + value + '</p>'
+            : '<p>&nbsp;</p>'
     },
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);
@@ -208,12 +124,12 @@ export default {
         }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
-  },
-  created()  {
+    },
+    created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
       this.dataFields = JSON.parse(this.fields);
-  },
-  events: {
+    },
+    events: {
     'filter-set' (filterText) {
       this.moreParams = {
         filter: filterText
@@ -224,53 +140,53 @@ export default {
       this.moreParams = {};
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
-  }
+    }
 }
 </script>
 <style>
-.pagination {
-  margin: 0;
-  float: right;
-}
-.pagination a.page {
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 10px;
-  margin-right: 2px;
-    cursor: pointer;
-}
-.pagination a.page.active {
-  color: white;
-  background-color: #337ab7;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 10px;
-  margin-right: 2px;
-}
-.pagination a.btn-nav {
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 7px;
-  margin-right: 2px;
-    cursor: pointer;
-}
-.pagination a.btn-nav.disabled {
-  color: lightgray;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 7px;
-  margin-right: 2px;
-  cursor: not-allowed;
-}
-.pagination-info {
-  float: left;
-}
+  .pagination {
+    margin: 0;
+    float: right;
+  }
+  .pagination a.page {
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 2px;
+      cursor: pointer;
+  }
+  .pagination a.page.active {
+    color: white;
+    background-color: #337ab7;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 2px;
+  }
+  .pagination a.btn-nav {
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 5px 7px;
+    margin-right: 2px;
+      cursor: pointer;
+  }
+  .pagination a.btn-nav.disabled {
+    color: lightgray;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 5px 7px;
+    margin-right: 2px;
+    cursor: not-allowed;
+  }
+  .pagination-info {
+    float: left;
+  }
 
-.vuetable tr {
-  cursor: pointer;
-}
+  .vuetable tr {
+    cursor: pointer;
+  }
 
-.vuetable tr td:hover{
-  text-decoration: underline;
-}
+  .vuetable tr td:hover{
+    text-decoration: underline;
+  }
 </style>
