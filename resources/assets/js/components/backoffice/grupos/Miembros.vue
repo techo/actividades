@@ -90,7 +90,7 @@
         created: function() {
             this.dataActividad = JSON.parse(this.actividad);
             this.miembros = JSON.parse(this.items);
-            this.breadcrumb.push({nombre: this.dataActividad.nombreActividad, id: 0});
+            this.breadcrumb.push({nombre: this.dataActividad.nombreActividad, id: this.miembros.idRaiz});
             this.padreActual = this.miembros.idRaiz;
             Event.$on('guardar-grupo', this.guardarGrupo);
             Event.$on('guardar-inscripto', this.guardarInscripto);

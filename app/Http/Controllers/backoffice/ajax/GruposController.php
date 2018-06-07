@@ -10,15 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 class GruposController extends BaseController
 {
-    public function index($idGrupo)
+    public function index($idGrupo, Request $request)
     {
+        $perPage = $request->per_page ?? 10;
         $grupo = Grupo::findOrFail($idGrupo);
         $collection = [];
         $miembros = $grupo->miembros;
         foreach ($miembros as $i => $item) {
             $collection[] = new MiembroResource($item);
         }
-        return $this->paginate($collection, 10);
+        return $this->paginate($collection, $perPage);
     }
 
     public function store(Request $request)
