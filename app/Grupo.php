@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Grupo extends Model
 {
@@ -18,7 +17,8 @@ class Grupo extends Model
 
     public function getMiembrosAttribute()
     {
-        return $this->grupos->merge($this->personas);
+        $personas = $this->personas;
+        return $this->grupos->merge($personas);
     }
 
     public function getPersonasAttribute()
@@ -58,8 +58,3 @@ class Grupo extends Model
         return !empty($registro->idPersona);
     }
 }
-
-/*
- * Esto debe devolver el arbol si es que existen grupos dentro del grupo
- *
- */

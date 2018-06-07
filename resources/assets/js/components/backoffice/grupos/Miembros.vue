@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <div>
         <div id="breadcrumb">
             <!-- ToDo: Hacer el Breadcrumb. Otro Componente? -->
             <ol class="breadcrumb">
@@ -11,24 +11,26 @@
                 </li>
             </ol>
         </div>
-        <div v-if="!this.isEmpty(this.miembros)">
+        <div v-if="this.miembros.arbol.length > 0">
             <table class="table table-hover" v-if="!loading">
                 <thead>
-                    <th>
-                        <input type="checkbox">
-                    </th>
-                    <th>
-                        Tipo
-                    </th>
-                    <th>
-                        Nombre
-                    </th>
-                    <th>
-                        Rol
-                    </th>
-                    <th>
-                        Miembros
-                    </th>
+                    <tr>
+                        <th>
+                            <input type="checkbox">
+                        </th>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Rol
+                        </th>
+                        <th>
+                            Miembros
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr v-for="miembro in miembros.arbol">
@@ -67,7 +69,7 @@
         <div v-else>
             <p><i>No hay grupos ni personas asignadas</i></p>
         </div>
-    </span>
+    </div>
 </template>
 
 <script>
@@ -89,6 +91,7 @@
             this.dataActividad = JSON.parse(this.actividad);
             this.miembros = JSON.parse(this.items);
             this.breadcrumb.push({nombre: this.dataActividad.nombreActividad, id: 0});
+            this.padreActual = this.miembros.idRaiz;
             Event.$on('guardar-grupo', this.guardarGrupo);
             Event.$on('guardar-inscripto', this.guardarInscripto);
 
@@ -98,6 +101,7 @@
         methods: {
             actualizarTabla(miembro) {
                 let url = '/admin/ajax/grupos/'+ miembro.id +'/miembros';
+                this.padreActual = miembro.id;
                 this.axiosPost(url, function(response, self){
                     self.miembros.arbol = response.data;
                     self.breadcrumb.push(miembro);
@@ -120,9 +124,9 @@
                     idPadre: this.padreActual
                 };
                 let url = '/admin/ajax/grupos';
-                this.axiosPost(url, function(data, self) {
-                    self.miembros.push(data);
-                    Even.$emit('guardado');
+                this.axiosPost(url, function(result, self) {
+                    self.miembros.arbol.unshift(result.data);
+                    Event.$emit('guardado');
                 }, grupo);
             },
             guardarInscripto(payload) {
@@ -130,8 +134,21 @@
                     idPersona: payload.inscripto.idPersona,
                     rol: payload.rol,
                     idActividad: this.dataActividad.idActividad,
-
+                    idGrupo: this.padreActual,
                 };
+                let url = '/admin/ajax/grupos/'+ this.padreActual +'/inscriptos';
+                this.axiosPost(url, function(result, self) {
+                    let nuevaPersona = {
+                        id: inscripto.idPersona,
+                        cantidad: '-',
+                        dni: payload.inscripto.dni,
+                        nombre: payload.inscripto.nombre,
+                        rol: payload.rol,
+                        tipo: 'persona'
+                    };
+                    self.miembros.arbol.unshift(nuevaPersona);
+                    Event.$emit('guardado');
+                }, inscripto);
             },
             axiosPost(url, fCallback, params = []) {
                 this.loading = true;
@@ -183,7 +200,7 @@
                 return null;
             },
             isEmpty(obj) {
-                for(var prop in obj) {
+                for(let prop in obj) {
                     if(obj.hasOwnProperty(prop))
                         return false;
                 }

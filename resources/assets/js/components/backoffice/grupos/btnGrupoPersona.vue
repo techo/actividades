@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <div>
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
             <button
@@ -60,13 +60,13 @@
                             </v-select>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="nombre">Rol </label>
-                            <input type="text" class="form-control" v-model="rol">
+                            <input type="text" class="form-control" v-model="rol" id="nombre">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <br>
                         <button type="button" class="btn btn-primary" @click="guardarInscripto">
                             <i class="fa fa-check"></i> Agregar
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </div>
-    </span>
+    </div>
 </template>
 
 <script>
@@ -119,17 +119,18 @@
                 Event.$emit('guardar-inscripto', payload);
             },
             confirmarGuardado: function () {
-              this.ocultarLoadingAlert();
+                this.nombreGrupo = '';
+                this.rol = '';
+                this.inscripto = null;
+                this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
-                console.log('boton: grupo');
                 this.formGrupo = true;
                 this.formInscripto = false;
             },
             verFormInscripto: function () {
                 this.formGrupo = false;
                 this.formInscripto = true;
-                console.log('boton: inscripto');
             },
             cancelar: function () {
                 this.formGrupo = false;
