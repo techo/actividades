@@ -46,7 +46,8 @@
                         categorias="{{ $categorias }}"
                         provincias="{{  $provincias }}"
                         localidades="{{ $localidades }}"
-                        edicion={{ $edicion }}
+                        edicion="{{ $edicion }}"
+                        ref="actividad"
                 ></actividades-show>
             </div>
             <div class="tab-pane" id="grupos">
@@ -60,11 +61,13 @@
                                 condiciones="{{ $condiciones }}"
                         ></filtros-inscripciones>
                         <condiciones-seleccionadas></condiciones-seleccionadas>
+                        <inscripciones-mensajes></inscripciones-mensajes>
                         <inscripciones-table
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"
                                 placeholder-text="Buscar por cualquier campo"
+                                actividad="{{$actividad->idActividad}}"
                         ></inscripciones-table>
                     </div>
                     <!-- /.box-body -->

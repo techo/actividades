@@ -14,4 +14,9 @@ class Grupo extends Model
     {
         return $this->belongsTo(Actividad::class, 'idActividad');
     }
+
+    public function scopeRaiz()
+    {
+       return $this->where('idPadre', 0)->first();
+    }
 }

@@ -6,8 +6,9 @@ import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import ActividadesShow from './components/backoffice/actividades/actividades-show'
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
-import InscripcionesToolbar from './components/backoffice/actividades/inscripciones-toolbar'
 import CondicionesSeleccionadas from './components/backoffice/actividades/condiciones-seleccionadas'
+import InscripcionesMensajes from './components/backoffice/actividades/inscripciones-mensajes'
+import InscripcionesGrupoModal from './components/backoffice/actividades/inscripciones-grupo-modal'
 import InscripcionesRolModal from './components/backoffice/actividades/inscripciones-rol-modal'
 import asignacionDeRol from './components/backoffice/roles/asignacionDeRol'
 import CrudFooter from './components/backoffice/crudFooter'
@@ -17,9 +18,10 @@ import vSwitch from 'vue-switches';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
-Vue.component('inscripciones-toolbar', InscripcionesToolbar);
 Vue.component('condiciones-seleccionadas', CondicionesSeleccionadas);
+Vue.component('inscripciones-mensajes', InscripcionesMensajes);
 Vue.component('inscripciones-rol-modal', InscripcionesRolModal);
+Vue.component('inscripciones-grupo-modal', InscripcionesGrupoModal);
 Vue.component('asignacion-de-rol', asignacionDeRol);
 Vue.component('crud-footer', CrudFooter);
 Vue.component('datatable', VueTable);

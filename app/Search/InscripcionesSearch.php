@@ -48,6 +48,8 @@ class InscripcionesSearch
             ->leftJoin('atl_pais as personaPais', 'Persona.idPais', '=', 'personaPais.id')
             ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
             ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
+            ->leftJoin('Grupo_Persona as Rol', 'Rol.idPersona', '=', 'Persona.idPersona')
+            ->leftJoin('Grupo', 'Rol.idGrupo', '=', 'Grupo.idGrupo')
             ->select(
                 [
                     'Inscripcion.idPersona',
@@ -71,7 +73,9 @@ class InscripcionesSearch
                     'atl_provincias.provincia as puntoProvincia',
                     'atl_localidades.localidad as puntoLocalidad',
                     'Actividad.costo',
-                    'Actividad.idActividad'
+                    'Actividad.idActividad',
+                    'Grupo.nombre as nombreGrupo',
+                    'Rol.rol as nombreRol'
                 ]
             )
             ->where('Inscripcion.estado', '<>', 'Desinscripto');

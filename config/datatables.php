@@ -187,6 +187,16 @@ return [
                 'title' => 'Teléfono Móvil'
             ],
             [
+                'name' => 'nombreGrupo',
+                'sortField' => 'nombreGrupo',
+                'title' => 'Grupo'
+            ],
+            [
+                'name' => 'nombreRol',
+                'sortField' => 'nombreRol',
+                'title' => 'Rol'
+            ],
+            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',

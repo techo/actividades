@@ -37,18 +37,21 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import DetailRow from './DetailRow'
-import FilterBar from './InscripcionesFilterBar'
+import InscripcionesFilterBar from './InscripcionesFilterBar'
+import InscripcionesToolbar from '../actividades/inscripciones-toolbar'
 import Pago from './Pago';
 import Asistencia from './Asistencia';
 import ActualizarInscripcion from './actualizarInscripcion';
 import EstadoInscripcion from './estadoInscripcion';
 import MisActividades from './MisActividades';
+import axios from 'axios';
 
 
 Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
   Vue.component('my-detail-row', DetailRow);
-  Vue.component('filter-bar', FilterBar);
+  Vue.component('inscripciones-filter-bar', InscripcionesFilterBar);
+  Vue.component('inscripciones-toolbar', InscripcionesToolbar);
   Vue.component('asistencia', Asistencia);
   Vue.component('pago', Pago);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
@@ -58,10 +61,11 @@ Vue.use(VueEvents);
 export default {
   components: {
     Vuetable,
+    'filter-bar': InscripcionesFilterBar,
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -140,7 +144,6 @@ export default {
             })
             .catch((error) => {
                 Event.$emit('error');
-                this.ocultarLoadingAlert();
                 // Error
                 console.info('Error en: ' + url);
                 console.error(error.response.status);
@@ -154,19 +157,46 @@ export default {
       },
       agregarCondicion(condicion){
           this.moreParams.condiciones.push({campo: condicion.campo, condicion: condicion.condicion, valor: condicion.valor});
-          Vue.nextTick( () => this.$refs.vuetable.refresh());
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
       asignarRol: function (rol) {
-          let url = this.apiUrl + '/asignar/rol';
+          let url = this.apiUrl + 'asignar/rol';
           let params = {
               rol: rol,
+              actividad: this.actividad,
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
-          axiosPost(url, function () {
-              Vue.nextTick( () => this.$refs.vuetable.refresh());
-              //TODO: mostrar mensaje de roles asignados correctamente.
+          this.axiosPost(url, function (data, self) {
+              Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+              Event.$emit('mensaje-success', data);
           },
           params);
+      },
+      asignarGrupo: function (grupo) {
+          let url = this.apiUrl + 'asignar/grupo';
+          let params = {
+              grupo: grupo,
+              actividad: this.actividad,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
+      cambiarEstado: function (estado) {
+          let url = this.apiUrl + 'cambiar/estado';
+          let params = {
+              estado: estado,
+              actividad: this.actividad,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
       }
   },
   created()  {
@@ -175,18 +205,21 @@ export default {
       // Custom
       Event.$on('agregar-condicion', this.agregarCondicion);
       Event.$on('rol-asignado', this.asignarRol);
+      Event.$on('grupo-asignado', this.asignarGrupo);
+      Event.$on('cambiar-estado', this.cambiarEstado);
       this.moreParams.condiciones = [];
   },
   events: {
     'filter-set' (filterText) {
-      this.moreParams = {
-        filter: filterText
-      };
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+      // this.moreParams = {
+      //   filter: filterText
+      // };
+      this.moreParams.filter = filterText;
+      Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },
     'filter-reset' () {
       this.moreParams = {};
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+      Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     }
   }
 }

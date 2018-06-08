@@ -40,7 +40,7 @@
                 this.$events.fire('filter-reset');
             },
             exportar() {
-                location.href = location.href + '/exportar?filter=' + this.filterText
+                location.href = location.href + '/inscripciones/exportar?filter=' + this.$parent.moreParams.filter + '&condiciones=' + JSON.stringify(this.$parent.moreParams.condiciones)
             }
         }
     }

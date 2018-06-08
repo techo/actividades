@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Exports\InscripcionesExport;
+use App\GrupoRolPersona;
 use App\Inscripcion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
@@ -60,6 +61,62 @@ class InscripcionesController extends BaseController
 
     public function asignarRol(Request $request)
     {
-        //loop sobre registros seleccionados
+        $idActividad = $request->actividad;
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $persona = Inscripcion::findOrFail($idInscripcion)->persona;
+            if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
+            {
+                $grupoRol->rol = $request->rol;
+                $grupoRol->save();
+            } else {
+                //Nuevo
+                $grupoRol = new GrupoRolPersona();
+                $grupoRol->idPersona = $persona->idPersona;
+                $grupoRol->idActividad = $idActividad;
+                $grupoRol->idGrupo = Actividad::find($idActividad)->grupos()->raiz()->idGrupo;
+                $grupoRol->rol = $request->rol;
+                $grupoRol->save();
+            }
+        }
+        return response()
+            ->json("Rol " . $request->rol . " configurado a " . $request->inscripciones->count() . " voluntarios correctamente.", 200);
+    }
+
+    public function asignarGrupo(Request $request)
+    {
+        $idActividad = $request->actividad;
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $persona = Inscripcion::findOrFail($idInscripcion)->persona;
+            if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
+            {
+                $grupoRol->idGrupo = $request->grupo['id'];
+                $grupoRol->save();
+            } else {
+                //Nuevo
+                $grupoRol = new GrupoRolPersona();
+                $grupoRol->idPersona = $persona->idPersona;
+                $grupoRol->idActividad = $idActividad;
+                $grupoRol->idGrupo = $request->grupo['id'];
+                $grupoRol->rol = "";
+                $grupoRol->save();
+            }
+        }
+        return response()
+            ->json("Grupo " . $request->grupo['nombre']. " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function cambiarEstado(Request $request, $id)
+    {
+        //$idActividad = $request->actividad;
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->estado = $request->estado;
+            $inscripcion->save();
+        }
+        return response()
+            ->json("Estado actualizado a " . $request->estado . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 }
