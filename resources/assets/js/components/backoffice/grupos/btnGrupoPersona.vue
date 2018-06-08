@@ -12,9 +12,9 @@
                 Agregar <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" @click="verFormGrupo">Grupo</a></li>
+                <li><a @click="verFormGrupo">Grupo</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#" @click="verFormInscripto">Voluntario Inscripto</a></li>
+                <li><a @click="verFormInscripto">Voluntario Inscripto</a></li>
             </ul>
         </div>
         <div  v-if="formGrupo" class="panel panel-info">
@@ -62,8 +62,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="nombre">Rol </label>
-                            <input type="text" class="form-control" v-model="rol" id="nombre">
+                            <label for="rol">Rol </label>
+                            <input type="text" class="form-control" v-model="rol" id="rol">
                         </div>
                     </div>
                     <div class="col-md-3">

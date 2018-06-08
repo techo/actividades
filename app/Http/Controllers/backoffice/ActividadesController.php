@@ -156,6 +156,7 @@ class ActividadesController extends Controller
             $fields = json_encode($fields);
             $sortOrder = json_encode($datatableConfig['sortOrder']);
 
+
             return view(
                 'backoffice.actividades.show',
                 compact(

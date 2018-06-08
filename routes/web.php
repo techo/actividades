@@ -120,7 +120,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::post('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index');
-    Route::get('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index');
+    Route::get('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index'); // para testing only. eliminar
     Route::post('/ajax/grupos', 'backoffice\ajax\GruposController@store');
     Route::post('/ajax/grupos/{idGrupo}/inscriptos', 'backoffice\ajax\GruposController@incluirInscripto');
 });

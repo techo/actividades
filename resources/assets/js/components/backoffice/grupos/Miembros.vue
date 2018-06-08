@@ -12,53 +12,79 @@
             </ol>
         </div>
         <div v-if="this.miembros.arbol.length > 0">
-            <table class="table table-hover" v-if="!loading">
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox">
-                        </th>
-                        <th>
-                            Tipo
-                        </th>
-                        <th>
-                            Nombre
-                        </th>
-                        <th>
-                            Rol
-                        </th>
-                        <th>
-                            Miembros
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="miembro in miembros.arbol">
-                        <td>
-                            <input type="checkbox">
-                        </td>
-                        <td>
-                            <span>
-                                <i class="fa" :class="{'fa-users': esGrupo(miembro), 'fa-user': !esGrupo(miembro)}"></i>
-                            </span>
+            <span v-if="!loading">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox">
+                                </th>
+                                <th>
+                                    Tipo
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Rol
+                                </th>
+                                <th>
+                                    Miembros
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="miembro in miembros.arbol">
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td>
+                                    <span>
+                                        <i class="fa" :class="{'fa-users': esGrupo(miembro), 'fa-user': !esGrupo(miembro)}"></i>
+                                    </span>
 
-                        </td>
-                        <td>
-                            <p>
-                                <a @click="actualizarTabla(miembro)">
-                                {{ miembro.nombre }}
-                                </a>
-                            </p>
-                        </td>
-                        <td>
-                            <p>{{ miembro.rol }}</p>
-                        </td>
-                        <td>
-                            <p>{{ miembro.cantidad }}</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                </td>
+                                <td>
+                                    <p>
+                                        <a @click="actualizarTabla(miembro)">
+                                        {{ miembro.nombre }}
+                                        </a>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>{{ miembro.rol }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ miembro.cantidad }}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p class="text-muted" style="padding-top: 2em">
+                            <i> Registros desde el {{ paginationData.from }} al {{ paginationData.to}}</i>
+                        </p>
+                    </div>
+                    <div class="col-md-10">
+                        <paginate
+                                :page-count="paginationData.pageCount"
+                                :container-class="'pagination'"
+                                :prev-text="'Anterior'"
+                                :next-text="'Siguiente'"
+                                :click-handler="clickPagination"
+                                :force-page="paginationData.currentPage-1"
+                                ref="paginacion"
+                        >
+                        </paginate>
+                    </div>
+                </div>
+
+            </span>
             <div v-else  class="row">
                 <div class="col-md-1 col-md-offset-5">
                     <i class="fa fa-refresh fa-spin fa-5x fa-fw"></i>
@@ -74,10 +100,11 @@
 
 <script>
     import axios from 'axios';
-
+    import Paginate from 'vuejs-paginate'; // https://github.com/lokyoung/vuejs-paginate
     export default {
         name: "Miembros",
         props: ['actividad', 'items'],
+        components: {'paginate': Paginate},
         data: function () {
             return {
                 dataActividad: {},
@@ -85,13 +112,19 @@
                 padreActual: 0,
                 breadcrumb: [],
                 loading: false,
+                paginationData: {},
+                urlGrupos: '',
+                registrosPorPag: 2,
+                pagSeleccionada: 1
             }
         },
         created: function() {
             this.dataActividad = JSON.parse(this.actividad);
             this.miembros = JSON.parse(this.items);
             this.breadcrumb.push({nombre: this.dataActividad.nombreActividad, id: this.miembros.idRaiz});
+            this.actualizarBreadcrumb({id: this.miembros.idRaiz, nombre: this.dataActividad.nombreActividad});
             this.padreActual = this.miembros.idRaiz;
+            this.paginationData.firstPageUrl +=  this.miembros.idRaiz + '/miembros?page=1';
             Event.$on('guardar-grupo', this.guardarGrupo);
             Event.$on('guardar-inscripto', this.guardarInscripto);
 
@@ -105,6 +138,8 @@
                 this.axiosPost(url, function(response, self){
                     self.miembros.arbol = response.data;
                     self.breadcrumb.push(miembro);
+                    self.actualizarPaginationData(response);
+                    self.urlGrupos = response.path;
                 });
             },
             actualizarBreadcrumb(item) {
@@ -161,7 +196,7 @@
                     .catch((error) => {
                         this.loading = false;
                         // Error
-                        console.error('Error en: ' + url);
+                        console.error('Error en el post: ' + url); debugger;
                         if (error.response) {
                             // The request was made and the server responded with a status code
                             // that falls out of the range of 2xx
@@ -210,8 +245,41 @@
             esGrupo(obj) {
                 return (obj.tipo === 'grupo');
             },
+            clickPagination(pageNum) {
+                let url = this.urlGrupos;
+                let payload = {
+                    per_page: this.registrosPorPag,
+                    page: pageNum
+                };
+                this.axiosPost(url, function(response, self) {
+                    if (typeof response.data === 'object') {
+                        self.miembros.arbol = Object.values(response.data);
+                    } else {
+                        self.miembros.arbol = response.data;
+                    }
+                    self.actualizarPaginationData(response);
+                }, payload);
+            },
+            actualizarPaginationData(response) {
+                this.paginationData.firstPageUrl = response.first_page_url;
+                this.paginationData.lastPageUrl = response.last_page_url;
+                this.paginationData.nextPageUrl = response.next_page_url;
+                this.paginationData.prevPageUrl = response.prev_page_url;
+                this.paginationData.from = response.from;
+                this.paginationData.to = response.to;
+                this.paginationData.total = response.total;
+                this.perPage = response.per_page;
+                this.paginationData.currentPage = response.current_page;
+                this.paginationData.lastPageUrl = response.last_page_url;
+                this.paginationData.lastPage = response.last_page;
+                this.paginationData.pageCount = Math.ceil((response.total/response.per_page));
+
+            }
         },
-        filters: {
+        watch: {
+            'paginationData.currentPage': function (nuevo, viejo) {
+                this.$refs.paginacion.selected = nuevo; console.log(nuevo + ', '+viejo);
+            }
         }
     }
 </script>
@@ -219,5 +287,9 @@
 <style scoped>
     a {
         cursor: pointer;
+    }
+
+    ol.breadcrumb {
+        margin-top: 2em;
     }
 </style>

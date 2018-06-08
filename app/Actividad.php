@@ -50,7 +50,6 @@ class Actividad extends Model
         $grupoRaiz = Grupo::where('idPadre', '=', 0)
             ->where('idActividad','=', $this->idActividad)
             ->first();
-        // en las actividades viejas $grupoRaiz = null
         if (!is_null($grupoRaiz)) {
             $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
                 ->where('Grupo_Persona.idActividad', '=', $this->idActividad)
@@ -67,8 +66,16 @@ class Actividad extends Model
             $todosArray['idRaiz'] = $grupoRaiz->idGrupo;
             return $todosArray;
         }
+        // en las actividades viejas $grupoRaiz = null
 
-        return new \stdClass();
+        $grupoRaiz = Grupo::create([
+                'nombre'    => $this->nombreActividad,
+                'idPadre'   => 0,
+                'idActividad' => $this->idActividad
+                ]);
+        $todosArray['arbol'] = [];
+        $todosArray['idRaiz'] = $grupoRaiz->idGrupo;
+        return $todosArray;
     }
 
     public function inscripciones_validas()
