@@ -3,7 +3,7 @@
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
     <vuetable
       class="vuetable"
-      ref="vuetable"
+      ref="inscripcionesVuetable"
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
@@ -37,12 +37,12 @@ import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
 import DetailRow from './DetailRow'
-import FilterBar from './FilterBar'
-  import Pago from './Pago';
-  import Asistencia from './Asistencia';
-  import ActualizarInscripcion from './actualizarInscripcion';
-  import EstadoInscripcion from './estadoInscripcion';
-  import MisActividades from './MisActividades';
+import FilterBar from './InscripcionesFilterBar'
+import Pago from './Pago';
+import Asistencia from './Asistencia';
+import ActualizarInscripcion from './actualizarInscripcion';
+import EstadoInscripcion from './estadoInscripcion';
+import MisActividades from './MisActividades';
 
 
 Vue.use(VueEvents);
@@ -130,9 +130,43 @@ export default {
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
      // Custom
+      axiosPost(url, fCallback, params = []) {
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        axios.post(url, params)
+            .then(response => {
+                fCallback(response.data, this);
+                Event.$emit('success');
+                this.readonly = true;
+            })
+            .catch((error) => {
+                Event.$emit('error');
+                this.ocultarLoadingAlert();
+                // Error
+                console.info('Error en: ' + url);
+                console.error(error.response.status);
+                if (error.request) {
+                    console.error(error.request);
+                } else {
+                    console.error('Error', error.message);
+                }
+                console.error(error.config);
+            });
+      },
       agregarCondicion(condicion){
-          this.moreParams.condiciones.push(condicion);
+          this.moreParams.condiciones.push({campo: condicion.campo, condicion: condicion.condicion, valor: condicion.valor});
           Vue.nextTick( () => this.$refs.vuetable.refresh());
+      },
+      asignarRol: function (rol) {
+          let url = this.apiUrl + '/asignar/rol';
+          let params = {
+              rol: rol,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          axiosPost(url, function () {
+              Vue.nextTick( () => this.$refs.vuetable.refresh());
+              //TODO: mostrar mensaje de roles asignados correctamente.
+          },
+          params);
       }
   },
   created()  {
@@ -140,6 +174,7 @@ export default {
       this.dataFields = JSON.parse(this.fields);
       // Custom
       Event.$on('agregar-condicion', this.agregarCondicion);
+      Event.$on('rol-asignado', this.asignarRol);
       this.moreParams.condiciones = [];
   },
   events: {

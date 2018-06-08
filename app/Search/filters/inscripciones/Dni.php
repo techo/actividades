@@ -10,10 +10,8 @@ class Dni implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-        $condicion = $value['condicion'];
-        $valor = $value['valor'];
-
-        $condicion = convertirCondicion($condicion, $valor);
+        $condicion['comparacion'] = $value['condicion'];
+        $condicion['valor'] = $value['valor'];
 
         if (in_array($condicion['comparacion'], ['like', '<', '<=', '>', '>=', '=', '<>']))
         {

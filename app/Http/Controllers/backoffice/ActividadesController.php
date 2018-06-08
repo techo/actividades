@@ -154,20 +154,12 @@ class ActividadesController extends Controller
             }
             $fields = json_encode($fields);
             $sortOrder = json_encode($datatableConfig['sortOrder']);
-            $camposInscripciones = [
-                ['id' => 'nombre','campo' => 'Nombre'],
-                ['id' => 'apellido', 'campo' => 'Apellido'],
-                ['id' => 'dni', 'campo' => 'DNI/Pasaporte'],
-                ['id' => 'email', 'campo' => 'e-mail'],
-                ['id' => 'estado', 'campo' => 'Estado (No disponible)'],
-                ['id' => 'punto' , 'campo' =>  'Punto de Encuentro (No disponible)'],
-                ['id' => 'rol' , 'campo' =>  'Rol (No disponible)'],
-                ['id' => 'grupo' , 'campo' =>  'Grupo (No disponible)'],
-                ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades (No disponible)'],
-                ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior (No disponible)'],
-                ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
-            ];
+
+            $camposInscripciones = config('dropdownOptions.actividad.filtroInscripciones.campos');
+            $condiciones = config('dropdownOptions.actividad.filtroInscripciones.condiciones');;
+
             $camposInscripciones = json_encode($camposInscripciones);
+            $condiciones = json_encode($condiciones);
 
             return view(
                 'backoffice.actividades.show',
@@ -182,7 +174,8 @@ class ActividadesController extends Controller
                     'compartir',
                     'fields',
                     'sortOrder',
-                    'camposInscripciones'
+                    'camposInscripciones',
+                    'condiciones'
                 )
             );
         }

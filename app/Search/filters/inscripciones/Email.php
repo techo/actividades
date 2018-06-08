@@ -6,14 +6,12 @@ namespace App\Search\filters\inscripciones;
 use App\Search\filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
 
-class Dni implements Filter
+class Email implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-        $condicion = $value['condicion'];
-        $valor = $value['valor'];
-
-        $condicion = convertirCondicion($condicion, $valor);
+        $condicion['comparacion'] = $value['condicion'];
+        $condicion['valor'] = $value['valor'];
 
         if (in_array($condicion['comparacion'], ['like', '<', '<=', '>', '>=', '=', '<>']))
         {
@@ -24,6 +22,6 @@ class Dni implements Filter
         {
            $builder->whereIn('Persona.mail', $condicion['valor']);
         }
-        return $builder;    
+        return $builder;
     }
 }

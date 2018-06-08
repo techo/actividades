@@ -21,8 +21,8 @@
                 <div class="form-group">
                     <label for="condicion">Condición</label>
                     <v-select
-                            :options="condiciones"
-                            label="condicion"
+                            :options="dataCondiciones"
+                            label="label"
                             placeholder="Seleccione"
                             name="condicion"
                             id="condicion"
@@ -49,34 +49,27 @@
 <script>
     export default {
         name: "filtros-inscripciones",
-        props: ['campos'],
+        props: ['campos', 'condiciones'],
         data() {
             return {
                 dataCampos: [],
                 campoSeleccionado: "",
-                condiciones: [
-                    'mayor que',
-                    'mayor o igual que',
-                    'menor que',
-                    'menor o igual que',
-                    'igual a',
-                    'distinto de',
-                    'contiene',
-                    'está en lista'
-                ],
+                dataCondiciones: [],
                 condicionSeleccionada: "",
                 valorCondicion: ""
             }
         },
         created(){
             this.dataCampos = JSON.parse(this.campos);
+            this.dataCondiciones = JSON.parse(this.condiciones);
         },
         methods: {
             agregar: function () {
                 let condicion = {
                   'campo': this.campoSeleccionado.id,
-                  'label': this.campoSeleccionado.campo,
-                  'condicion': this.condicionSeleccionada,
+                  'campoLabel': this.campoSeleccionado.campo,
+                  'condicion': this.condicionSeleccionada.value,
+                  'condicionLabel': this.condicionSeleccionada.label,
                   'valor': this.valorCondicion
                 };
                 Event.$emit('agregar-condicion', condicion);

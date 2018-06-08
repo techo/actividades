@@ -57,4 +57,9 @@ class InscripcionesController extends BaseController
 
         return response('Ocurrió un error al actualizar el estado', 500);
     }
+
+    public function asignarRol(Request $request)
+    {
+        //loop sobre registros seleccionados
+    }
 }

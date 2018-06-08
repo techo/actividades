@@ -55,7 +55,10 @@
             <div class="tab-pane" id="inscripciones">
                 <div class="box">
                     <div class="box-body  with-border">
-                        <filtros-inscripciones campos="{{ $camposInscripciones }}"></filtros-inscripciones>
+                        <filtros-inscripciones
+                                campos="{{ $camposInscripciones }}"
+                                condiciones="{{ $condiciones }}"
+                        ></filtros-inscripciones>
                         <condiciones-seleccionadas></condiciones-seleccionadas>
                         <inscripciones-table
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
