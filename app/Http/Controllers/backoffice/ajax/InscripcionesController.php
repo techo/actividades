@@ -109,7 +109,6 @@ class InscripcionesController extends BaseController
 
     public function cambiarEstado(Request $request, $id)
     {
-        //$idActividad = $request->actividad;
         foreach ($request->inscripciones as $idInscripcion)
         {
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
@@ -118,5 +117,19 @@ class InscripcionesController extends BaseController
         }
         return response()
             ->json("Estado actualizado a " . $request->estado . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function cambiarAsistencia(Request $request, $id)
+    {
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->presente = $request->asistencia;
+            $inscripcion->save();
+        }
+
+        $msgAsistencia = $request->asistencia === 1 ? "Presente" : "Ausente";
+        return response()
+            ->json("Asistencia actualizada a " . $msgAsistencia . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 }

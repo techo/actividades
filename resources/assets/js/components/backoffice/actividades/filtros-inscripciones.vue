@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>Filtros</h2>
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">

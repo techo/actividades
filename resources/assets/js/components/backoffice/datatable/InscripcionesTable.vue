@@ -159,11 +159,15 @@ export default {
           this.moreParams.condiciones.push({campo: condicion.campo, condicion: condicion.condicion, valor: condicion.valor});
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
+      removerCondicion(condicion){
+          this.moreParams.condiciones.splice(condicion.index, 1);
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+      },
       asignarRol: function (rol) {
           let url = this.apiUrl + 'asignar/rol';
           let params = {
               rol: rol,
-              actividad: this.actividad,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
@@ -176,7 +180,7 @@ export default {
           let url = this.apiUrl + 'asignar/grupo';
           let params = {
               grupo: grupo,
-              actividad: this.actividad,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
@@ -189,7 +193,20 @@ export default {
           let url = this.apiUrl + 'cambiar/estado';
           let params = {
               estado: estado,
-              actividad: this.actividad,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
+      cambiarAsistencia: function (asistencia) {
+          let url = this.apiUrl + 'cambiar/asistencia';
+          let params = {
+              asistencia: asistencia,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
@@ -204,9 +221,11 @@ export default {
       this.dataFields = JSON.parse(this.fields);
       // Custom
       Event.$on('agregar-condicion', this.agregarCondicion);
+      Event.$on('remover-condicion', this.removerCondicion);
       Event.$on('rol-asignado', this.asignarRol);
       Event.$on('grupo-asignado', this.asignarGrupo);
       Event.$on('cambiar-estado', this.cambiarEstado);
+      Event.$on('cambiar-asistencia', this.cambiarAsistencia);
       this.moreParams.condiciones = [];
   },
   events: {

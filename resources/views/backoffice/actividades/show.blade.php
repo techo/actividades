@@ -54,13 +54,32 @@
                 {{--TODO: Panel de grupos--}}
             </div>
             <div class="tab-pane" id="inscripciones">
-                <div class="box">
-                    <div class="box-body  with-border">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Buscar</h3>
+                        <div class="box-tools pull-right">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
                         <filtros-inscripciones
                                 campos="{{ $camposInscripciones }}"
                                 condiciones="{{ $condiciones }}"
                         ></filtros-inscripciones>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
                         <condiciones-seleccionadas></condiciones-seleccionadas>
+                    </div>
+                    <!-- box-footer -->
+                </div>
+                <!-- /.box -->
+                <div class="box">
+                    <div class="box-body  with-border">
                         <inscripciones-mensajes></inscripciones-mensajes>
                         <inscripciones-table
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"

@@ -1,12 +1,13 @@
 <template>
     <div>
-        <div v-show="success" class="callout callout-success">
-            <h4>{{ mensaje }}</h4>
+        <div v-show="success" class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-check"></i>{{ mensaje }}</h4>
         </div>
         <!--<simplert ref="loading"></simplert>-->
-
-        <div v-show="error" class="callout callout-danger">
-            <h4>{{ mensaje }}</h4>
+        <div v-show="error" class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-warning"></i>{{ mensaje }}</h4>
         </div>
     </div>
 </template>

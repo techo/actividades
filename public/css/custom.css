@@ -1,3 +1,16 @@
 .vdp-datepicker__calendar {
     z-index: 850 !important;
 }
+
+.tab-content {
+    background-color: #ECF0F1 !important;
+}
+
+ul.nav.nav-tabs {
+    border-bottom: 3px solid #d2d6de !important;
+}
+
+ul.nav.nav-tabs li.active a {
+    border-bottom-width: 0 !important;
+    padding-bottom: 9px !important;
+}

@@ -27,11 +27,13 @@ class ReportController extends Controller
     public function exportarInscripciones($id, Request $request)
     {
         $filtros['idActividad'] = $id;
-        if($request->has('filter')){
+
+        if(!empty($request->filter)){
             $filtros['HotFilter'] = $request->filter;
             unset($filtros['filter']);
         }
-        if($request->has('condiciones'))
+
+        if(!empty($request->condiciones))
         {
             $condiciones = json_decode($request->condiciones, true);
             foreach ($condiciones as $condicion)
@@ -42,7 +44,6 @@ class ReportController extends Controller
                     'valor' => $condicion['valor']
                 ];
             }
-            unset($filtros['condiciones']);
         }
         $inscripciones = (new InscripcionesExport($filtros));
         return Excel::download($inscripciones, 'inscripciones_' . $id . '.xlsx');

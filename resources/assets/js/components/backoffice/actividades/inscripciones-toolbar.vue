@@ -1,11 +1,20 @@
 <template>
     <div class="btn-group" role="group" aria-label="toolbar">
-        <button type="button" class="btn btn-default" @click="this.mostrarRolModal">Asignar Rol</button>
-        <button type="button" class="btn btn-default" @click="this.mostrarGrupoModal">Asignar Grupo</button>
-        <!--<button type="button" class="btn btn-default">Cambiar Estado</button>-->
+        <button type="button" class="btn btn-default" @click="this.mostrarRolModal">Rol</button>
+        <button type="button" class="btn btn-default" @click="this.mostrarGrupoModal">Grupo</button>
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Cambiar Estado
+                Asistencia
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a @click="cambiarAsistencia(1, $event)">Presente</a></li>
+                <li><a @click="cambiarAsistencia(0, $event)">Ausente</a></li>
+            </ul>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Estado
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
@@ -32,6 +41,9 @@
             },
             cambiarEstado: function (estado, event) {
                 Event.$emit('cambiar-estado', estado);
+            },
+            cambiarAsistencia: function (asistencia, event) {
+                Event.$emit('cambiar-asistencia', asistencia);
             }
         }
     }
