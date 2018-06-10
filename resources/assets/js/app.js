@@ -11,6 +11,7 @@ import Datepicker from 'vuejs-datepicker'; // https://github.com/charliekassel/v
 import vSelect2 from 'vue-select';
 import vSwitch from 'vue-switches';
 import Miembros from './components/backoffice/grupos/Miembros';
+import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla'
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('asignacion-de-rol', asignacionDeRol);
@@ -22,6 +23,7 @@ Vue.component('simplert', Simplert);
 Vue.component('v-switch', vSwitch);
 Vue.component('btn-grupo-persona', BtnGrupoPersona);
 Vue.component('miembros', Miembros);
+Vue.component('miembros-tabla', MiembrosTabla)
 
 window.Event = new Vue();
 

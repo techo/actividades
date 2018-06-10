@@ -55,9 +55,22 @@
                 ></btn-grupo-persona>
                 <miembros
                         actividad="{{ $actividad }}"
-                        items = "{{ json_encode($actividad->miembros) }}"
+                        items = "{{ json_encode($miembros) }}"
+                        id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
                 >
                 </miembros>
+                <div class="row">
+                    <div class="col-md-12">
+                        <miembros-tabla
+                                api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
+                                fields="{{ $fieldsMiembros }}"
+                                sort-order = "{{ $sortOrderMiembros }}"
+                                placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                                id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
+                        ></miembros-tabla>
+                    </div>
+                </div>
+
                 {{--TODO: Componente de tabla de grupos/personas --}}
             </div>
             <div class="tab-pane" id="inscripciones">

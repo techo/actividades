@@ -1,10 +1,10 @@
 <template>
   <div>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <vuetable
+    <vuetable-miembros
       class="vuetable"
-      ref="vuetable"
-      v-bind:api-url="apiUrl"
+      ref="vuetableMiembros"
+      v-bind:api-url="url"
       :fields="dataFields"
       pagination-path=""
       :css="css.table"
@@ -13,7 +13,7 @@
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
-    ></vuetable>
+    ></vuetable-miembros>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
         info-class="pagination-info"
@@ -27,41 +27,31 @@
 </template>
 
 <script>
-    //https://github.com/ratiw/vuetable-2-tutorial/wiki
+
   import accounting from 'accounting'
   import moment from 'moment'
-  import Vuetable from 'vuetable-2/src/components/Vuetable'
+  import Vuetable from 'vuetable-2/src/components/Vuetable'; //https://github.com/ratiw/vuetable-2-tutorial/wiki
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
   import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
   import Vue from 'vue'
   import VueEvents from 'vue-events'
-  import CustomActions from './CustomActions'
-  import DetailRow from './DetailRow'
-  import FilterBar from './FilterBar'
-  import Pago from './Pago';
-  import Asistencia from './Asistencia';
-  import ActualizarInscripcion from './actualizarInscripcion';
-  import EstadoInscripcion from './estadoInscripcion';
-  import MisActividades from './MisActividades';
+  import CustomActions from '../datatable/CustomActions'
+  import DetailRow from '../datatable/DetailRow'
+  import FilterBar from '../datatable/FilterBar'
 
 
   Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
   Vue.component('my-detail-row', DetailRow);
   Vue.component('filter-bar', FilterBar);
-  Vue.component('asistencia', Asistencia);
-  Vue.component('pago', Pago);
-  Vue.component('actualizar-inscripcion', ActualizarInscripcion);
-  Vue.component('estado-inscripcion', EstadoInscripcion);
-  Vue.component('mis-actividades', MisActividades);
 
 export default {
   components: {
-    Vuetable,
+    'vuetable-miembros': Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'id-grupo-raiz'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -70,8 +60,8 @@ export default {
         css: {
         table: {
             tableClass: 'table table-hover table-condensed',
-          ascendingIcon: 'glyphicon glyphicon-chevron-up',
-          descendingIcon: 'glyphicon glyphicon-chevron-down'
+            ascendingIcon: 'glyphicon glyphicon-chevron-up',
+            descendingIcon: 'glyphicon glyphicon-chevron-down'
         },
         pagination: {
           wrapperClass: 'pagination',
@@ -96,51 +86,70 @@ export default {
         // sortOrder: [
         // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
         // ],
-        moreParams: {}
+        moreParams: {},
+        idGrupoActual: 1
     }
   },
   methods: {
-    getIcon (value) {
-        return value
-            ? '<span class="label label-success"><i class="fa fa-users"></i></span>'
-            : '<span class="label label-danger"><i class="fa fa-user"></i></span>'
-    },
+        getIcon (value) {
+            return value==='grupo'
+                ? '<span class="label label-success"><i class="fa fa-users"></i></span>'
+                : '<span class="label label-info"><i class="fa fa-user"></i></span>'
+        },
 
-    getRol (value) {
-        return value
-            ? '<p>' + value + '</p>'
-            : '<p>&nbsp;</p>'
-    },
-    onPaginationData (paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData);
-      this.$refs.paginationInfo.setPaginationData(paginationData);
-    },
-    onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
-    },
-    onCellClicked (data, field, event) {
-        if (this.detailUrl !== undefined) {
-            window.location.href = this.detailUrl + data.id;
+        getRol (value) {
+            return value
+                ? '<p>' + value + '</p>'
+                : '<p>&nbsp;</p>'
+        },
+        onPaginationData (paginationData) {
+          this.$refs.pagination.setPaginationData(paginationData);
+          this.$refs.paginationInfo.setPaginationData(paginationData);
+        },
+        onChangePage (page) {
+          this.$refs.vuetableMiembros.changePage(page)
+        },
+        onCellClicked (data, field, event) {
+            if (data.tipo === 'grupo') {
+                this.idGrupoActual = data.id;
+                Vue.nextTick( () => this.$refs.vuetableMiembros.refresh());
+                Event.$emit('vuetable-addToBreadcrumb', data);
+            }
+
+            if (data.tipo === 'persona') {
+                Event.$emit('vuetable-verVoluntario', data);
+            }
+            // this.$refs.vuetableMiembros.toggleDetailRow(data.id);
+        },
+        actualizarTabla (grupo) {
+            this.idGrupoActual = grupo.id;
+            Vue.nextTick( () => this.$refs.vuetableMiembros.refresh());
         }
-      this.$refs.vuetable.toggleDetailRow(data.id)
-    },
     },
     created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
       this.dataFields = JSON.parse(this.fields);
+      this.idGrupoActual = this.idGrupoRaiz;
+        Event.$on('vuetable-actualizarTabla', this.actualizarTabla);
     },
     events: {
-    'filter-set' (filterText) {
-      this.moreParams = {
-        filter: filterText
-      };
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+        'filter-set' (filterText) {
+          this.moreParams = {
+            filter: filterText
+          };
+          Vue.nextTick( () => this.$refs.vuetableMiembros.refresh() )
+        },
+        'filter-reset' () {
+          this.moreParams = {};
+          Vue.nextTick( () => this.$refs.vuetableMiembros.refresh() )
+        }
     },
-    'filter-reset' () {
-      this.moreParams = {};
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    computed: {
+      url: function () {
+          return '/admin/ajax/grupos/'+ this.idGrupoActual +'/miembros';
+      }
     }
-    }
+
 }
 </script>
 <style>
