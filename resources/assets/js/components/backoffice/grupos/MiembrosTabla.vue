@@ -1,6 +1,7 @@
 <template>
   <div>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
+    <miembros-mover></miembros-mover>
     <vuetable-miembros
       class="vuetable"
       ref="vuetableMiembros"
@@ -13,6 +14,7 @@
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
+      @vuetable:checkbox-toggled="checkboxToggledEmitter"
     ></vuetable-miembros>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -37,7 +39,8 @@
   import VueEvents from 'vue-events'
   import CustomActions from '../datatable/CustomActions'
   import DetailRow from '../datatable/DetailRow'
-  import FilterBar from '../datatable/FilterBar'
+  import FilterBar from '../datatable/FilterBar';
+  import MiembrosMover from './MiembrosMover';
 
 
   Vue.use(VueEvents);
@@ -46,11 +49,12 @@
   Vue.component('filter-bar', FilterBar);
 
 export default {
-  components: {
-    'vuetable-miembros': Vuetable,
-    VuetablePagination,
-    VuetablePaginationInfo,
-  },
+    components: {
+        'vuetable-miembros': Vuetable,
+        VuetablePagination,
+        VuetablePaginationInfo,
+        'miembros-mover': MiembrosMover
+    },
     props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'id-grupo-raiz'],
     data () {
     return {
@@ -121,16 +125,20 @@ export default {
             }
             // this.$refs.vuetableMiembros.toggleDetailRow(data.id);
         },
+        checkboxToggledEmitter (status, obj) {
+            Event.$emit('checkbox-toggled', {'status': status, 'obj': obj });
+        },
         actualizarTabla (grupo) {
             this.idGrupoActual = grupo.id;
             Vue.nextTick( () => this.$refs.vuetableMiembros.refresh());
         }
     },
     created()  {
-      this.dataSortOrder = JSON.parse(this.sortOrder);
-      this.dataFields = JSON.parse(this.fields);
-      this.idGrupoActual = this.idGrupoRaiz;
+        this.dataSortOrder = JSON.parse(this.sortOrder);
+        this.dataFields = JSON.parse(this.fields);
+        this.idGrupoActual = this.idGrupoRaiz;
         Event.$on('vuetable-actualizarTabla', this.actualizarTabla);
+
     },
     events: {
         'filter-set' (filterText) {

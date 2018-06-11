@@ -33,6 +33,10 @@ class Actividad extends Model
         return $this->hasMany(Inscripcion::class, 'idActividad');
     }
 
+    /**
+     * Todos los grupos de la actividad (hasta el más interno)
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function grupos()
     {
         return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');

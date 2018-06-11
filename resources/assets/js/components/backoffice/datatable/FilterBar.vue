@@ -1,5 +1,5 @@
 <template>
-    <div class="filter-bar">
+    <span class="filter-bar">
         <form class="form-inline">
             <div class="form-group">
                 <label>Filtrar por:</label>
@@ -19,7 +19,7 @@
 
             </div>
         </form>
-    </div>
+    </span>
 </template>
 
 <script>

@@ -208,11 +208,11 @@ return [
     ],
     'miembros' => [
         'fields' => [
-//             [
-//               'name' => '__checkbox',
-//               'titleClass' => 'text-center',
-//               'dataClass' => 'text-center',
-//             ],
+             [
+               'name' => '__checkbox',
+               'titleClass' => 'text-center',
+               'dataClass' => 'text-center',
+             ],
              [
                'name' => 'tipo',
                'sortField' => 'tipo',

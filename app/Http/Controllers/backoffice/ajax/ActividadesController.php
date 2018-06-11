@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
+use App\Actividad;
 use App\Exports\ActividadesExport;
 use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
@@ -19,6 +20,12 @@ class ActividadesController extends BaseController
         $collection = $export->collection();
         $result = $this->paginate($collection, 10);
         return $result;
+    }
+
+    public function grupos($id)
+    {
+        $actividad = Actividad::findorFail($id);
+        return $actividad->grupos;
     }
 
 }

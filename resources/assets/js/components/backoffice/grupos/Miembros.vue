@@ -12,24 +12,6 @@
                 </li>
             </ol>
         </div>
-        <!--<div v-if="this.miembros.arbol.length > 0">-->
-            <!--<span v-if="!loading">-->
-                <!--<div class="row">-->
-                    <!--<div class="col-md-12">-->
-                    <!--</div>-->
-                <!--</div>-->
-
-            <!--</span>-->
-            <!--<div v-else  class="row">-->
-                <!--<div class="col-md-1 col-md-offset-5">-->
-                    <!--<i class="fa fa-refresh fa-spin fa-5x fa-fw"></i>-->
-                <!--</div>-->
-            <!--</div>-->
-
-        <!--</div>-->
-        <!--<div v-else>-->
-            <!--<p><i>No hay grupos ni personas asignadas</i></p>-->
-        <!--</div>-->
     </div>
 </template>
 

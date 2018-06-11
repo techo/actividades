@@ -12,7 +12,7 @@ class GruposController extends BaseController
 {
     public function index($idGrupo, Request $request)
     {
-        $perPage = $request->per_page ?? 2;
+        $perPage = $request->per_page ?? 10;
         $grupo = Grupo::findOrFail($idGrupo);
         $collection = [];
         $miembros = $grupo->miembros;
