@@ -166,7 +166,11 @@ export default {
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
       checkboxToggledEmitter: function (status) {
-          Event.$emit('checkbox-toggled', status);
+          let info = {
+              status: status,
+              count: this.$refs.inscripcionesVuetable.selectedTo.length
+          };
+          Event.$emit('checkbox-toggled', info);
       },
       asignarRol: function (rol) {
           let url = this.apiUrl + 'asignar/rol';

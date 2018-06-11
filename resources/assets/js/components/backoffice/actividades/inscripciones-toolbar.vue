@@ -55,8 +55,8 @@
             cambiarAsistencia: function (asistencia, event) {
                 Event.$emit('cambiar-asistencia', asistencia);
             },
-            toggleButtons: function (valor) {
-                this.disabled = !valor;
+            toggleButtons: function (info) {
+                this.disabled = (info.count === 0);
             }
         }
     }

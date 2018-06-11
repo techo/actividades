@@ -182,8 +182,7 @@ class ActividadesController extends Controller
                     'sortOrder',
                     'fieldsMiembros',
                     'sortOrderMiembros',
-                    'miembros'
-                    'sortOrder',
+                    'miembros',
                     'camposInscripciones',
                     'condiciones'
                 )
