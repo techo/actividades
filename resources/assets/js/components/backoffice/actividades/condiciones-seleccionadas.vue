@@ -39,5 +39,8 @@
 </script>
 
 <style scoped>
-
+    .row {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
 </style>
