@@ -80,7 +80,7 @@ class InscripcionesController extends BaseController
             }
         }
         return response()
-            ->json("Rol " . $request->rol . " configurado a " . $request->inscripciones->count() . " voluntarios correctamente.", 200);
+            ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
     public function asignarGrupo(Request $request)

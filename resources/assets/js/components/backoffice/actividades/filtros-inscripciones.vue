@@ -14,6 +14,7 @@
                             :filterable=true
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorCampo"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -29,6 +30,7 @@
                             :filterable=true
                     >
                     </v-select>
+                    <p class="text-danger" v-show="errorCondicion"><small>Este campo es requerido</small></p>
                 </div>
             </div>
             <div class="col-md-3">
@@ -55,24 +57,38 @@
                 campoSeleccionado: "",
                 dataCondiciones: [],
                 condicionSeleccionada: "",
-                valorCondicion: ""
+                valorCondicion: "",
+                validacion: true
             }
         },
         created(){
             this.dataCampos = JSON.parse(this.campos);
             this.dataCondiciones = JSON.parse(this.condiciones);
         },
+        computed: {
+            errorCampo: function () {
+                return (!this.validacion && this.campoSeleccionado === "");
+            },
+            errorCondicion: function () {
+                return (!this.validacion && this.condicionSeleccionada === "");
+            }
+        },
         methods: {
             agregar: function () {
-                let condicion = {
-                  'campo': this.campoSeleccionado.id,
-                  'campoLabel': this.campoSeleccionado.campo,
-                  'condicion': this.condicionSeleccionada.value,
-                  'condicionLabel': this.condicionSeleccionada.label,
-                  'valor': this.valorCondicion
-                };
-                Event.$emit('agregar-condicion', condicion);
-                this.campoSeleccionado = this.condicionSeleccionada = this.valorCondicion = "";
+                if(this.campoSeleccionado !== "" && this.condicionSeleccionada !== ""){
+                    let condicion = {
+                        'campo': this.campoSeleccionado.id,
+                        'campoLabel': this.campoSeleccionado.campo,
+                        'condicion': this.condicionSeleccionada.value,
+                        'condicionLabel': this.condicionSeleccionada.label,
+                        'valor': this.valorCondicion
+                    };
+                    Event.$emit('agregar-condicion', condicion);
+                    this.campoSeleccionado = this.condicionSeleccionada = this.valorCondicion = "";
+                    return this.validacion = true;
+                }
+                return this.validacion = false;
+
             }
         }
     }

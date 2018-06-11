@@ -10,7 +10,7 @@ ul.nav.nav-tabs {
     border-bottom: 3px solid #d2d6de !important;
 }
 
-ul.nav.nav-tabs li.active a {
+ul.nav.nav-tabs li.active {
     border-bottom-width: 0 !important;
-    padding-bottom: 9px !important;
+    padding-bottom: 2px !important;
 }

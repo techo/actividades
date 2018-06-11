@@ -13,6 +13,8 @@
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
+      @vuetable:checkbox-toggled="checkboxToggledEmitter"
+      @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
     ></vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -162,6 +164,9 @@ export default {
       removerCondicion(condicion){
           this.moreParams.condiciones.splice(condicion.index, 1);
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+      },
+      checkboxToggledEmitter: function (status) {
+          Event.$emit('checkbox-toggled', status);
       },
       asignarRol: function (rol) {
           let url = this.apiUrl + 'asignar/rol';

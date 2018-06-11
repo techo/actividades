@@ -69,6 +69,7 @@
                         <filtros-inscripciones
                                 campos="{{ $camposInscripciones }}"
                                 condiciones="{{ $condiciones }}"
+                                ref="filtro"
                         ></filtros-inscripciones>
                     </div>
                     <!-- /.box-body -->
@@ -82,6 +83,7 @@
                     <div class="box-body  with-border">
                         <inscripciones-mensajes></inscripciones-mensajes>
                         <inscripciones-table
+                                ref="inscripcionestable"
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"

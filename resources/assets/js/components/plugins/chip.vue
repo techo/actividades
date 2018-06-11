@@ -28,10 +28,6 @@
 
 <style scoped>
     .chip {
-        /*background-color: gray;*/
-        /*padding-left: 4px;*/
-        /*padding-right: 4px;*/
-        /*border-radius: 5px;*/
         align-items: center;
         line-height: 2;
         background: #e0e0e0;
@@ -49,7 +45,6 @@
 
     .chip .chip-content {
         border-radius: 28px;
-        vertical-align:middle;
         cursor: default;
         height: 32px;
         justify-content: space-between;
@@ -57,10 +52,6 @@
         white-space: nowrap;
         z-index: 1;
     }
-
-    /*.chip-content {*/
-        /*padding: 5px 4px 5px 12px;*/
-    /*}*/
 
     .chip-close {
         color: inherit;

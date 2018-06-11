@@ -1,9 +1,9 @@
 <template>
     <div class="btn-group" role="group" aria-label="toolbar">
-        <button type="button" class="btn btn-default" @click="this.mostrarRolModal">Rol</button>
-        <button type="button" class="btn btn-default" @click="this.mostrarGrupoModal">Grupo</button>
+        <button type="button" class="btn btn-default" :class="{'disabled': disabled}" @click="this.mostrarRolModal">Rol</button>
+        <button type="button" class="btn btn-default" :class="{'disabled': disabled}" @click="this.mostrarGrupoModal">Grupo</button>
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Asistencia
                 <span class="caret"></span>
             </button>
@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Estado
                 <span class="caret"></span>
             </button>
@@ -32,11 +32,21 @@
 <script>
     export default {
         name: "inscripciones-toolbar",
+        data() {
+           return {
+                disabled: true
+            }
+        },
+        created(){
+            Event.$on('checkbox-toggled', this.toggleButtons);
+        },
         methods: {
             mostrarRolModal: function () {
+                if(this.disabled) return;
                 Event.$emit('show-rol-modal');
             },
             mostrarGrupoModal: function () {
+                if(this.disabled) return;
                 Event.$emit('show-grupo-modal');
             },
             cambiarEstado: function (estado, event) {
@@ -44,6 +54,9 @@
             },
             cambiarAsistencia: function (asistencia, event) {
                 Event.$emit('cambiar-asistencia', asistencia);
+            },
+            toggleButtons: function (valor) {
+                this.disabled = !valor;
             }
         }
     }
