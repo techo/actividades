@@ -29,8 +29,18 @@ class Persona extends Authenticatable
         return $this->hasMany(Actividad::class, 'idCoordinador');
     }
 
+    public function gruposRoles()
+    {
+        return $this->hasMany(GrupoRolPersona::class, 'idPersona', 'idPersona');
+    }
+
     public function getNombreCompletoAttribute() {
         return $this->nombres . ' ' . $this->apellidoPaterno;
+    }
+
+    public function grupoAsignadoEnActividad($idActividad)
+    {
+        return $this->gruposRoles()->where('idActividad', $idActividad)->first();
     }
 
     public function estaInscripto($idActividad) {

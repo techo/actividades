@@ -156,6 +156,12 @@ class ActividadesController extends Controller
             $fields = json_encode($fields);
             $sortOrder = json_encode($datatableConfig['sortOrder']);
 
+            $camposInscripciones = config('dropdownOptions.actividad.filtroInscripciones.campos');
+            $condiciones = config('dropdownOptions.actividad.filtroInscripciones.condiciones');;
+
+            $camposInscripciones = json_encode($camposInscripciones);
+            $condiciones = json_encode($condiciones);
+
             $datatableMiembrosConfig = config('datatables.miembros');
             $fieldsMiembros = json_encode($datatableMiembrosConfig['fields']);
             $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
@@ -177,6 +183,9 @@ class ActividadesController extends Controller
                     'fieldsMiembros',
                     'sortOrderMiembros',
                     'miembros'
+                    'sortOrder',
+                    'camposInscripciones',
+                    'condiciones'
                 )
             );
         }

@@ -1,0 +1,297 @@
+<template>
+  <div>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
+    <vuetable
+      class="vuetable"
+      ref="inscripcionesVuetable"
+      v-bind:api-url="apiUrl"
+      :fields="dataFields"
+      pagination-path=""
+      :css="css.table"
+      :sort-order="dataSortOrder"
+      :multi-sort="true"
+      :append-params="moreParams"
+      @vuetable:cell-clicked="onCellClicked"
+      @vuetable:pagination-data="onPaginationData"
+      @vuetable:checkbox-toggled="checkboxToggledEmitter"
+      @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
+    ></vuetable>
+    <div class="vuetable-pagination">
+      <vuetable-pagination-info ref="paginationInfo"
+        info-class="pagination-info"
+      ></vuetable-pagination-info>
+      <vuetable-pagination ref="pagination"
+        :css="css.pagination"
+        @vuetable-pagination:change-page="onChangePage"
+      ></vuetable-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+    //https://github.com/ratiw/vuetable-2-tutorial/wiki
+import accounting from 'accounting'
+import moment from 'moment'
+import Vuetable from 'vuetable-2/src/components/Vuetable'
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
+import Vue from 'vue'
+import VueEvents from 'vue-events'
+import CustomActions from './CustomActions'
+import DetailRow from './DetailRow'
+import InscripcionesFilterBar from './InscripcionesFilterBar'
+import InscripcionesToolbar from '../actividades/inscripciones-toolbar'
+import Pago from './Pago';
+import Asistencia from './Asistencia';
+import ActualizarInscripcion from './actualizarInscripcion';
+import EstadoInscripcion from './estadoInscripcion';
+import MisActividades from './MisActividades';
+import axios from 'axios';
+
+
+Vue.use(VueEvents);
+  Vue.component('custom-actions', CustomActions);
+  Vue.component('my-detail-row', DetailRow);
+  Vue.component('inscripciones-filter-bar', InscripcionesFilterBar);
+  Vue.component('inscripciones-toolbar', InscripcionesToolbar);
+  Vue.component('asistencia', Asistencia);
+  Vue.component('pago', Pago);
+  Vue.component('actualizar-inscripcion', ActualizarInscripcion);
+  Vue.component('estado-inscripcion', EstadoInscripcion);
+  Vue.component('mis-actividades', MisActividades);
+
+export default {
+  components: {
+    Vuetable,
+    'filter-bar': InscripcionesFilterBar,
+    VuetablePagination,
+    VuetablePaginationInfo,
+  },
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
+    data () {
+    return {
+        dataPlaceholderText: this.placeholderText,
+        dataSortOrder: [],
+        dataFields: [],
+        css: {
+        table: {
+            tableClass: 'table table-hover table-condensed',
+          ascendingIcon: 'glyphicon glyphicon-chevron-up',
+          descendingIcon: 'glyphicon glyphicon-chevron-down'
+        },
+        pagination: {
+          wrapperClass: 'pagination',
+          activeClass: 'active',
+          disabledClass: 'disabled',
+          pageClass: 'page',
+          linkClass: 'link',
+          icons: {
+            first: '',
+            prev: '',
+            next: '',
+            last: '',
+          },
+        },
+        icons: {
+          first: 'glyphicon glyphicon-step-backward',
+          prev: 'glyphicon glyphicon-chevron-left',
+          next: 'glyphicon glyphicon-chevron-right',
+          last: 'glyphicon glyphicon-step-forward',
+        },
+        },
+        // sortOrder: [
+        // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
+        // ],
+        moreParams: {}
+    }
+  },
+  methods: {
+    allcap (value) {
+      return value.toUpperCase()
+    },
+    estadoBadge (value) {
+      return value === 'M'
+        ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
+        : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+    },
+    formatNumber (value) {
+      return accounting.formatNumber(value, 2)
+    },
+    formatDate (value, fmt = 'D MMM YYYY') {
+      return (value == null)
+        ? ''
+        : moment(value, 'YYYY-MM-DD').format(fmt)
+    },
+    onPaginationData (paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
+    },
+    onChangePage (page) {
+      this.$refs.vuetable.changePage(page)
+    },
+    onCellClicked (data, field, event) {
+        if (this.detailUrl !== undefined) {
+            window.location.href = this.detailUrl + data.id;
+        }
+      this.$refs.vuetable.toggleDetailRow(data.id)
+    },
+     // Custom
+      axiosPost(url, fCallback, params = []) {
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        axios.post(url, params)
+            .then(response => {
+                fCallback(response.data, this);
+                Event.$emit('success');
+                this.readonly = true;
+            })
+            .catch((error) => {
+                Event.$emit('error');
+                // Error
+                console.info('Error en: ' + url);
+                console.error(error.response.status);
+                if (error.request) {
+                    console.error(error.request);
+                } else {
+                    console.error('Error', error.message);
+                }
+                console.error(error.config);
+            });
+      },
+      agregarCondicion(condicion){
+          this.moreParams.condiciones.push({campo: condicion.campo, condicion: condicion.condicion, valor: condicion.valor});
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+      },
+      removerCondicion(condicion){
+          this.moreParams.condiciones.splice(condicion.index, 1);
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+      },
+      checkboxToggledEmitter: function (status) {
+          Event.$emit('checkbox-toggled', status);
+      },
+      asignarRol: function (rol) {
+          let url = this.apiUrl + 'asignar/rol';
+          let params = {
+              rol: rol,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+              Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+              Event.$emit('mensaje-success', data);
+          },
+          params);
+      },
+      asignarGrupo: function (grupo) {
+          let url = this.apiUrl + 'asignar/grupo';
+          let params = {
+              grupo: grupo,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
+      cambiarEstado: function (estado) {
+          let url = this.apiUrl + 'cambiar/estado';
+          let params = {
+              estado: estado,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
+      cambiarAsistencia: function (asistencia) {
+          let url = this.apiUrl + 'cambiar/asistencia';
+          let params = {
+              asistencia: asistencia,
+              actividad: this.actividad, //TODO: remover y usar id de ruta
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      }
+  },
+  created()  {
+      this.dataSortOrder = JSON.parse(this.sortOrder);
+      this.dataFields = JSON.parse(this.fields);
+      // Custom
+      Event.$on('agregar-condicion', this.agregarCondicion);
+      Event.$on('remover-condicion', this.removerCondicion);
+      Event.$on('rol-asignado', this.asignarRol);
+      Event.$on('grupo-asignado', this.asignarGrupo);
+      Event.$on('cambiar-estado', this.cambiarEstado);
+      Event.$on('cambiar-asistencia', this.cambiarAsistencia);
+      this.moreParams.condiciones = [];
+  },
+  events: {
+    'filter-set' (filterText) {
+      // this.moreParams = {
+      //   filter: filterText
+      // };
+      this.moreParams.filter = filterText;
+      Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
+    },
+    'filter-reset' () {
+      this.moreParams = {};
+      Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
+    }
+  }
+}
+</script>
+<style>
+.pagination {
+  margin: 0;
+  float: right;
+}
+.pagination a.page {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+    cursor: pointer;
+}
+.pagination a.page.active {
+  color: white;
+  background-color: #337ab7;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+}
+.pagination a.btn-nav {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+    cursor: pointer;
+}
+.pagination a.btn-nav.disabled {
+  color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+  cursor: not-allowed;
+}
+.pagination-info {
+  float: left;
+}
+
+.vuetable tr {
+  cursor: pointer;
+}
+
+.vuetable tr td:hover{
+  text-decoration: underline;
+}
+</style>

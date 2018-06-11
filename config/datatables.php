@@ -152,6 +152,16 @@ return [
     'inscripciones' => [
         'fields' => [
             [
+                'name' => '__checkbox',
+                'titleClass' => 'center aligned',
+                'dataClass' => 'center aligned'
+            ],
+            [
+                'name' => 'id',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
+            [
                 'name' => 'dni',
                 'sortField' => 'dni',
                 'title' => 'DNI/Pasaporte',
@@ -175,6 +185,16 @@ return [
                 'name' => 'telefonoMovil',
                 'sortField' => 'telefonoMovil',
                 'title' => 'Teléfono Móvil'
+            ],
+            [
+                'name' => 'nombreGrupo',
+                'sortField' => 'nombreGrupo',
+                'title' => 'Grupo'
+            ],
+            [
+                'name' => 'nombreRol',
+                'sortField' => 'nombreRol',
+                'title' => 'Rol'
             ],
             [
                 'name' => '__component:asistencia',

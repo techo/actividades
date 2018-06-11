@@ -46,7 +46,8 @@
                         categorias="{{ $categorias }}"
                         provincias="{{  $provincias }}"
                         localidades="{{ $localidades }}"
-                        edicion={{ $edicion }}
+                        edicion="{{ $edicion }}"
+                        ref="actividad"
                 ></actividades-show>
             </div>
             <div class="tab-pane" id="grupos">
@@ -74,14 +75,42 @@
                 {{--TODO: Componente de tabla de grupos/personas --}}
             </div>
             <div class="tab-pane" id="inscripciones">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Buscar</h3>
+                        <div class="box-tools pull-right">
+                            <!-- Collapse Button -->
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <filtros-inscripciones
+                                campos="{{ $camposInscripciones }}"
+                                condiciones="{{ $condiciones }}"
+                                ref="filtro"
+                        ></filtros-inscripciones>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <condiciones-seleccionadas></condiciones-seleccionadas>
+                    </div>
+                    <!-- box-footer -->
+                </div>
+                <!-- /.box -->
                 <div class="box">
                     <div class="box-body  with-border">
-                        <datatable
+                        <inscripciones-mensajes></inscripciones-mensajes>
+                        <inscripciones-table
+                                ref="inscripcionestable"
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"
                                 placeholder-text="Buscar por cualquier campo"
-                        ></datatable>
+                                actividad="{{$actividad->idActividad}}"
+                        ></inscripciones-table>
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -140,5 +169,5 @@
 
 @push('addiitional_css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-@endpush
+        <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+    @endpush

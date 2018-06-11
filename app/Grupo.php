@@ -57,4 +57,9 @@ class Grupo extends Model
     {
         return !empty($registro->idPersona);
     }
+
+    public function scopeRaiz()
+    {
+       return $this->where('idPadre', 0)->first();
+    }
 }
