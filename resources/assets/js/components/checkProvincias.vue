@@ -29,7 +29,7 @@
                     return this.datos.localidades ? this.selected.length === this.datos.localidades.length : false;
                 },
                 set: function (value) {
-                    var selected = [];
+                    let selected = [];
 
                     if (value) {
                         this.datos.localidades.forEach(function (localidad) {

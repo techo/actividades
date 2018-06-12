@@ -1,7 +1,7 @@
 <template>
-    <div class="row justify-content-center mt-4 mb-4 "id="filtro">
-        <div class="col-md-4">
-            <select class="dropdown"
+    <div class="row justify-content-center mt-4 mb-4" id="filtro">
+        <div class="contenedor-dropdown">
+            <select class="dropdown boton-filtro"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -12,30 +12,30 @@
                 </option>
             </select>
         </div>
-        <div class="col-md-2">
-            <div class="row">
+        <div class="btn-group btn-group-toggle botones-rad" data-toggle="buttons">
+            <label class="btn boton-filtro active">
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
-            </div>
-            <div class="row">
+            </label>
+            <label class="btn boton-filtro">
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
-            </div>
+            </label>
         </div>
-        <div class="col-md-2 dropdown-container">
+        <div class="col-md-2 boton-filtro cont-check">
 
             <contenedor-check-provincias
                     v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
-        <div class="col-md-2 dropdown-container">
+        <div class="col-md-2 boton-filtro cont-check">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
             </contenedor-check-tipos>
 
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-default" v-on:click="borrarFiltros">
+        <div class="">
+            <button class="btn btn-default boton-filtro" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </button>
@@ -95,7 +95,12 @@
                 };
                 axios.post(url, filtros)
                     .then(response => {
-                        this.tiposDeActividad = response.data;
+                        this.tiposDeActividad = [{ 
+                                    id: 0,
+                                    titulo: 'Marcar todas',
+                                    actividades: response.data
+                        }];
+                        //this.tiposDeActividad[0].todas = 'Marcar todas';
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaTipos = this.tiposDeActividad;
                         }
@@ -159,6 +164,7 @@
                         console.log(error.config);
                     });
             },
+
             borrarFiltros: function () {
                 this.dataLocalidades = [];
                 this.dataTiposActividad = [];
@@ -193,21 +199,58 @@
 </script>
 
 <style scoped>
-    .dropdown {
+    * {
         font-family: Montserrat, sans-serif;
         font-size: 12px;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
+    }
+    #filtro {
+        margin: 0 -5%;
+        padding: 0;
+    }
+    .botones-rad {
+        display: table;
+        margin-right: 15px;
+        vertical-align: middle;
+    }
+    .botones-rad label {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .boton-filtro {
+        border: 1px solid #a9a9a9;
+        color: #0092dd;
+        height: 40px;
         line-height: normal;
         letter-spacing: normal;
         text-align: left;
         text-transform: uppercase;
-        color: #0092dd;
-        height: 40px;
-        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
+        border-radius: 5px;
     }
-
+    .botones-rad label:first-child {
+        border-right: none;
+    }
+    .boton-filtro:focus {outline:0;}
+    select.boton-filtro option {
+        color: #494848;
+    }
+    label.boton-filtro {
+        color: #a9a9a9;
+    }
+    label.boton-filtro.active {
+        color: #0092dd;
+    }
+    .contenedor-dropdown {
+        padding: 0;
+        margin-right: 15px;
+    }
+    .cont-check {
+        margin-right: 15px;
+        padding-left: 0;
+        padding-right: 0;
+    }
     .techo-btn-azul {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
         padding: 1em 1em;
