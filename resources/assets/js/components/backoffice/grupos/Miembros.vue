@@ -44,10 +44,12 @@
             this.breadcrumb.push({nombre: this.dataActividad.nombreActividad, id: this.miembros.idRaiz});
             this.idGrupoActual = this.miembros.idRaiz;
             this.paginationData.firstPageUrl +=  this.miembros.idRaiz + '/miembros?page=1';
-            Event.$on('guardar-grupo', this.guardarGrupo);
-            Event.$on('guardar-inscripto', this.guardarInscripto);
+            Event.$on('btnGrupoPersona:guardar-grupo', this.guardarGrupo);
+            Event.$on('btnGrupoPersona:guardar-inscripto', this.guardarInscripto);
             Event.$on('vuetable-addToBreadcrumb', this.addToBreadcrumb);
             Event.$on('vuetable-verVoluntario', this.verVoluntario);
+            Event.$on('grupos-toolbar:getRoles', this.getRoles);
+
         },
         computed: {
         },
@@ -63,9 +65,6 @@
                 this.breadcrumb.push(item);
                 this.idGrupoActual = item.id;
             },
-            spliceFromBreadcrumb(item) {
-
-            },
             guardarGrupo(payload){
                 let grupo = {
                     nombre: payload,
@@ -75,7 +74,8 @@
                 let url = '/admin/ajax/grupos';
                 this.axiosPost(url, function(result, self) {
                     self.miembros.arbol.unshift(result.data);
-                    Event.$emit('guardado');
+                    Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
+                    Event.$emit('Miembros:guardado');
                 }, grupo);
             },
             guardarInscripto(payload) {
@@ -97,7 +97,7 @@
                     };
                     //self.miembros.arbol.unshift(nuevaPersona);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
-                    Event.$emit('guardado');
+                    Event.$emit('Miembros:guardado');
                 }, inscripto);
             },
             axiosPost(url, fCallback, params = []) {
@@ -189,21 +189,6 @@
             },
             esGrupo(obj) {
                 return (obj.tipo === 'grupo');
-            },
-            actualizarPaginationData(response) {
-                this.paginationData.firstPageUrl = response.first_page_url;
-                this.paginationData.lastPageUrl = response.last_page_url;
-                this.paginationData.nextPageUrl = response.next_page_url;
-                this.paginationData.prevPageUrl = response.prev_page_url;
-                this.paginationData.from = response.from;
-                this.paginationData.to = response.to;
-                this.paginationData.total = response.total;
-                this.perPage = response.per_page;
-                this.paginationData.currentPage = response.current_page;
-                this.paginationData.lastPageUrl = response.last_page_url;
-                this.paginationData.lastPage = response.last_page;
-                this.paginationData.pageCount = Math.ceil((response.total/response.per_page));
-
             },
             verVoluntario(user) {
                 let url = '/admin/ajax/personas/' + user.id;

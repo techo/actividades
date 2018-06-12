@@ -1,7 +1,6 @@
 <template>
   <div>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <miembros-mover></miembros-mover>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText" ref="gruposToolbar"></filter-bar>
     <vuetable-miembros
       class="vuetable"
       ref="vuetableMiembros"
@@ -15,6 +14,7 @@
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:checkbox-toggled="checkboxToggledEmitter"
+      @vuetable:checkbox-toggled-all="checkboxToggledAllEmitter"
     ></vuetable-miembros>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -39,23 +39,21 @@
   import VueEvents from 'vue-events'
   import CustomActions from '../datatable/CustomActions'
   import DetailRow from '../datatable/DetailRow'
-  import FilterBar from '../datatable/FilterBar';
-  import MiembrosMover from './MiembrosMover';
+  import GruposFilterBar from '../datatable/GruposFilterBar';
 
 
   Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
   Vue.component('my-detail-row', DetailRow);
-  Vue.component('filter-bar', FilterBar);
+  Vue.component('filter-bar', GruposFilterBar);
 
 export default {
     components: {
         'vuetable-miembros': Vuetable,
         VuetablePagination,
         VuetablePaginationInfo,
-        'miembros-mover': MiembrosMover
     },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'id-grupo-raiz'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'id-grupo-raiz', 'id-actividad'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -87,9 +85,6 @@ export default {
           last: 'glyphicon glyphicon-step-forward',
         },
         },
-        // sortOrder: [
-        // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
-        // ],
         moreParams: {},
         idGrupoActual: 1
     }
@@ -100,7 +95,6 @@ export default {
                 ? '<span class="label label-success"><i class="fa fa-users"></i></span>'
                 : '<span class="label label-info"><i class="fa fa-user"></i></span>'
         },
-
         getRol (value) {
             return value
                 ? '<p>' + value + '</p>'
@@ -126,10 +120,14 @@ export default {
             // this.$refs.vuetableMiembros.toggleDetailRow(data.id);
         },
         checkboxToggledEmitter (status, obj) {
-            Event.$emit('checkbox-toggled', {'status': status, 'obj': obj });
+            Event.$emit('MiembrosTabla:miembro-seleccionado', {'status': status, 'obj': obj });
+        },
+        checkboxToggledAllEmitter(valor) {
+            let data = {tableData: this.$refs.vuetableMiembros.tableData, selected: valor};
+            Event.$emit('MiembrosTabla:miembro-seleccionado-todos', data);
         },
         actualizarTabla (grupo) {
-            this.idGrupoActual = grupo.id;
+            if (grupo !== undefined) { this.idGrupoActual = grupo.id; }
             Vue.nextTick( () => this.$refs.vuetableMiembros.refresh());
         }
     },
@@ -137,8 +135,8 @@ export default {
         this.dataSortOrder = JSON.parse(this.sortOrder);
         this.dataFields = JSON.parse(this.fields);
         this.idGrupoActual = this.idGrupoRaiz;
+        this.moreParams.idActividad = JSON.parse(this.idActividad);
         Event.$on('vuetable-actualizarTabla', this.actualizarTabla);
-
     },
     events: {
         'filter-set' (filterText) {

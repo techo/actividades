@@ -103,12 +103,12 @@
             }
         },
         created: function() {
-            Event.$on('guardado', this.confirmarGuardado)
+            Event.$on('Miembros:guardado', this.confirmarGuardado)
         },
         methods: {
             guardarGrupo: function () {
                 this.mostrarLoadingAlert();
-                Event.$emit('guardar-grupo', this.nombreGrupo);
+                Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo);
             },
             guardarInscripto: function () {
                 this.mostrarLoadingAlert();
@@ -116,7 +116,7 @@
                   inscripto: this.inscripto,
                   rol: this.rol
                 };
-                Event.$emit('guardar-inscripto', payload);
+                Event.$emit('btnGrupoPersona:guardar-inscripto', payload);
             },
             confirmarGuardado: function () {
                 this.nombreGrupo = '';
