@@ -93,6 +93,7 @@
                 this.axiosPost(url, function(response, self) {
                     $('#rol-modal').modal('hide');
                     Event.$emit('vuetable-actualizarTabla');
+                    Event.$emit('inscripciones-actualizar-tabla');
                 }, payload);
 
 

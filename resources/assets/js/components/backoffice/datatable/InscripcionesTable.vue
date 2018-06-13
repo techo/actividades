@@ -180,6 +180,7 @@ export default {
           this.axiosPost(url, function (data, self) {
               Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
               Event.$emit('mensaje-success', data);
+              Event.$emit('vuetable-actualizarTabla');
           },
           params);
       },
@@ -193,6 +194,7 @@ export default {
           this.axiosPost(url, function (data, self) {
                   Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
                   Event.$emit('mensaje-success', data);
+                  Event.$emit('vuetable-actualizarTabla');
               },
               params);
       },
@@ -221,6 +223,9 @@ export default {
                   Event.$emit('mensaje-success', data);
               },
               params);
+      },
+      actualizarInscripcionesTable: function () {
+          Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
       }
   },
   created()  {
@@ -233,6 +238,7 @@ export default {
       Event.$on('grupo-asignado', this.asignarGrupo);
       Event.$on('cambiar-estado', this.cambiarEstado);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
+      Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
       this.moreParams.condiciones = [];
   },
   events: {
