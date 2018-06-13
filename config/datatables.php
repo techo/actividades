@@ -152,6 +152,16 @@ return [
     'inscripciones' => [
         'fields' => [
             [
+                'name' => '__checkbox',
+                'titleClass' => 'center aligned',
+                'dataClass' => 'center aligned'
+            ],
+            [
+                'name' => 'id',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
+            [
                 'name' => 'dni',
                 'sortField' => 'dni',
                 'title' => 'DNI/Pasaporte',
@@ -166,15 +176,25 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
+//            [
+//                'name' => 'mail',
+//                'sortField' => 'mail',
+//                'title' => 'Email'
+//            ],
+//            [
+//                'name' => 'telefonoMovil',
+//                'sortField' => 'telefonoMovil',
+//                'title' => 'Teléfono Móvil'
+//            ],
             [
-                'name' => 'mail',
-                'sortField' => 'mail',
-                'title' => 'Email'
+                'name' => 'nombreGrupo',
+                'sortField' => 'nombreGrupo',
+                'title' => 'Grupo'
             ],
             [
-                'name' => 'telefonoMovil',
-                'sortField' => 'telefonoMovil',
-                'title' => 'Teléfono Móvil'
+                'name' => 'nombreRol',
+                'sortField' => 'nombreRol',
+                'title' => 'Rol'
             ],
             [
                 'name' => '__component:asistencia',
@@ -201,6 +221,41 @@ return [
             [
                 'field' => 'nombres',
                 'sortField' => 'nombres',
+                'direction' => 'asc'
+            ]
+        ],
+
+    ],
+    'miembros' => [
+        'fields' => [
+             [
+               'name' => '__checkbox',
+               'titleClass' => 'text-center',
+               'dataClass' => 'text-center',
+             ],
+             [
+               'name' => 'tipo',
+               'callback' => 'getIcon'
+             ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre',
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol',
+            ],
+            [
+                'name' => 'cantidad',
+                'title' => 'Miembros',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
                 'direction' => 'asc'
             ]
         ],

@@ -16,7 +16,7 @@
         "babel-preset-es2015": "^6.24.1",
         "babel-preset-stage-2": "^6.24.1",
         "bootstrap-sass": "^3.3.7",
-        "cross-env": "^5.1.4",
+        "cross-env": "^5.1.6",
         "jquery": "^3.2",
         "laravel-mix": "^1.0",
         "lodash": "^4.17.5",
@@ -42,6 +42,7 @@
         "vue2-simplert-plugin": "^0.4.1",
         "vue2-timepicker": "^0.1.4",
         "vuejs-datepicker": "^0.9.29",
+        "vuejs-paginate": "^1.9.3",
         "webpack": "^3.11.0"
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\CategoriaActividad;
+use App\Grupo;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
@@ -86,7 +87,7 @@ class ActividadesController extends Controller
         $actividad = new Actividad();
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
-            if ($this->guardarActividad($request, $actividad)) {
+            if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
                 $request->session()->put('mensaje', 'La actividad se creó correctamente');
                 return response('Actividad guardada correctamente.', 200);
             } else {
@@ -139,6 +140,33 @@ class ActividadesController extends Controller
                 $provincias = null;
                 $localidades = null;
             }
+
+            $datatableConfig = config('datatables.inscripciones');
+            $fields = $datatableConfig['fields'];
+            if ($actividad->costo > 0) {
+                $checkPago = [[
+                    'name' => '__component:pago',
+                    'title' => 'Pago',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ]];
+                array_splice($fields, count($fields) - 2, 0, $checkPago);
+
+            }
+            $fields = json_encode($fields);
+            $sortOrder = json_encode($datatableConfig['sortOrder']);
+
+            $camposInscripciones = config('dropdownOptions.actividad.filtroInscripciones.campos');
+            $condiciones = config('dropdownOptions.actividad.filtroInscripciones.condiciones');;
+
+            $camposInscripciones = json_encode($camposInscripciones);
+            $condiciones = json_encode($condiciones);
+
+            $datatableMiembrosConfig = config('datatables.miembros');
+            $fieldsMiembros = json_encode($datatableMiembrosConfig['fields']);
+            $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
+            $miembros = $actividad->miembros;
+
             return view(
                 'backoffice.actividades.show',
                 compact(
@@ -149,7 +177,14 @@ class ActividadesController extends Controller
                     'edicion',
                     'tipos',
                     'categorias',
-                    'compartir'
+                    'compartir',
+                    'fields',
+                    'sortOrder',
+                    'fieldsMiembros',
+                    'sortOrderMiembros',
+                    'miembros',
+                    'camposInscripciones',
+                    'condiciones'
                 )
             );
         }
@@ -397,12 +432,15 @@ class ActividadesController extends Controller
         return false;
     }
 
-    private function trimDate($fecha)
+    private function crearGrupo(Actividad $actividad)
     {
-        $i = strpos($fecha, 'T');
-        if ($i > 0) {
-            return substr($fecha, 0, $i);
+        $grupo = new Grupo();
+        $grupo->idActividad = $actividad->idActividad;
+        $grupo->idPadre = 0;
+        $grupo->nombre = $actividad->nombre;
+        if ($grupo->save()) {
+            return true;
         }
-        return $fecha;
+        return false;
     }
 }
