@@ -1,9 +1,10 @@
 <template>
     <div>
         <input type="checkbox" v-model="selectAll">
-        <strong>Marcar Todos</strong>
+        <strong>{{ this.datos.titulo }}</strong>
 
-        <div v-for="t in this.datos">
+
+        <div v-for="t in datos.actividades">
             <input type="checkbox" :value="t.idTipo" v-model="selected">
             {{ t.nombre }}
         </div>
@@ -14,35 +15,33 @@
 <script>
     export default {
         name: "check-tipo-actividades",
-        props: ['proptipos'],
+        props: ['propdatos'],
         data() {
             return {
                 selected: [],
-                datos: this.proptipos,
             }
         },
-        mounted() {
-            this.datos = this.proptipos;
-
-        },
         computed: {
+            datos: function() {
+                return this.propdatos;
+            },
             selectAll: {
                 get: function () {
-                    return this.datos ? this.selected.length === this.datos.length : false;
+                    return this.datos.actividades ? this.selected.length === this.datos.actividades.length : false;
                 },
                 set: function (value) {
                     let selected = [];
 
                     if (value) {
-
-                        this.datos.forEach(function (tipo) {
+                        this.datos.actividades.forEach(function (tipo) {
                             selected.push(tipo.idTipo);
                         });
                     }
+
                     this.selected = selected;
                 }
-            },
-        },
+            }
+        }
     }
 </script>
 
