@@ -114,7 +114,8 @@
             },
             confirmar: function () {
                 let payload = { miembros: this.$parent.selected, rol: this.rolSeleccionado};
-                let url = '/admin/ajax/actividades/' + this.idActividad + '/grupos/cambiar/rol';
+                let idActividad = this.$root.$refs.miembrosTabla.moreParams.idActividad;
+                let url = '/admin/ajax/actividades/' + idActividad + '/grupos/cambiar/rol';
                 this.axiosPost(url, function (result, self) {
                     Event.$emit('vuetable-actualizarTabla');
                     self.$root.$refs.miembrosTabla.$refs.vuetableMiembros.selectedTo = [];

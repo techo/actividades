@@ -70,7 +70,7 @@ class GruposActividadesController extends BaseController
             if (count($personaArray) > 0) {
                 $personas = GrupoRolPersona::whereIn('idPersona', $personaArray)
                     ->where('idActividad', '=', (int)$id)
-                    ->update(['rol' => (int)$request->rol]);
+                    ->update(['rol' => $request->rol]);
             }
 
         } catch (\Exception $exception) {
