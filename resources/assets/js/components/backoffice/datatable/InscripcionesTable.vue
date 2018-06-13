@@ -11,10 +11,11 @@
       :sort-order="dataSortOrder"
       :multi-sort="true"
       :append-params="moreParams"
-      @vuetable:cell-clicked="onCellClicked"
+      detail-row-component="inscripciones-detail-row"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:checkbox-toggled="checkboxToggledEmitter"
       @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
+      @vuetable:cell-clicked="mostrarDetalle"
     ></vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -38,7 +39,7 @@ import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePagination
 import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
-import DetailRow from './DetailRow'
+import DetailRow from '../actividades/inscripciones-detail-row'
 import InscripcionesFilterBar from './InscripcionesFilterBar'
 import InscripcionesToolbar from '../actividades/inscripciones-toolbar'
 import Pago from './Pago';
@@ -51,7 +52,7 @@ import axios from 'axios';
 
 Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
-  Vue.component('my-detail-row', DetailRow);
+  Vue.component('inscripciones-detail-row', DetailRow);
   Vue.component('inscripciones-filter-bar', InscripcionesFilterBar);
   Vue.component('inscripciones-toolbar', InscripcionesToolbar);
   Vue.component('asistencia', Asistencia);
@@ -129,11 +130,8 @@ export default {
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
     },
-    onCellClicked (data, field, event) {
-        if (this.detailUrl !== undefined) {
-            window.location.href = this.detailUrl + data.id;
-        }
-      this.$refs.vuetable.toggleDetailRow(data.id)
+    mostrarDetalle (data, field, event) {
+      this.$refs.inscripcionesVuetable.toggleDetailRow(data.id)
     },
      // Custom
       axiosPost(url, fCallback, params = []) {

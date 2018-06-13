@@ -176,16 +176,16 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
-            [
-                'name' => 'mail',
-                'sortField' => 'mail',
-                'title' => 'Email'
-            ],
-            [
-                'name' => 'telefonoMovil',
-                'sortField' => 'telefonoMovil',
-                'title' => 'Teléfono Móvil'
-            ],
+//            [
+//                'name' => 'mail',
+//                'sortField' => 'mail',
+//                'title' => 'Email'
+//            ],
+//            [
+//                'name' => 'telefonoMovil',
+//                'sortField' => 'telefonoMovil',
+//                'title' => 'Teléfono Móvil'
+//            ],
             [
                 'name' => 'nombreGrupo',
                 'sortField' => 'nombreGrupo',
