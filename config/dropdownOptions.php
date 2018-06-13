@@ -22,7 +22,7 @@ return [
               ['id' => 'rol' , 'campo' =>  'Rol'],
               ['id' => 'grupo' , 'campo' =>  'Grupo'],
               ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades'],
-              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior (No disponible)'],
+              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior'],
               ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
           ],
           'condiciones' => [
