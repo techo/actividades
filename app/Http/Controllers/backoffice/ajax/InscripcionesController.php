@@ -85,20 +85,21 @@ class InscripcionesController extends BaseController
 
     public function asignarGrupo(Request $request)
     {
+        $datos = $request->all();
         $idActividad = $request->actividad;
         foreach ($request->inscripciones as $idInscripcion)
         {
             $persona = Inscripcion::findOrFail($idInscripcion)->persona;
             if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
             {
-                $grupoRol->idGrupo = $request->grupo['id'];
+                $grupoRol->idGrupo = $datos['grupo']['idGrupo'];
                 $grupoRol->save();
             } else {
                 //Nuevo
                 $grupoRol = new GrupoRolPersona();
                 $grupoRol->idPersona = $persona->idPersona;
                 $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = $request->grupo['id'];
+                $grupoRol->idGrupo = $datos['grupo']['idGrupo'];
                 $grupoRol->rol = "";
                 $grupoRol->save();
             }

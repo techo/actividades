@@ -34,9 +34,9 @@
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
         name: "inscripciones-grupo-modal",
-        //props: ['grupos'],
         data(){
             return {
                 dataGrupos: [],
@@ -45,25 +45,40 @@
         },
         created(){
             Event.$on('show-grupo-modal', this.mostrarModal);
-            //this.dataGrupos = JSON.parse(this.grupos);
-            this.dataGrupos = [
-                {id: 6, nombre: 'Escuela 1'},
-                {id: 7, nombre: 'Escuela 2'},
-                {id: 3, nombre: 'Cuadrilla 1'},
-                {id: 4, nombre: 'Cuadrilla 2'},
-                {id: 5, nombre: 'Cuadrilla 3'},
-                {id: 2, nombre: 'Barrio'},
-                {id: 1, nombre: 'Actividad'}
-            ];
         },
         methods: {
             mostrarModal: function () {
                 $('#grupo-modal').modal('show');
+                this.axiosGet('/admin/ajax/actividades/' + this.$root.$refs.inscripcionestable.actividad + '/grupos',
+                function (data, self) {
+                    self.dataGrupos = data;
+                });
             },
             confirmar: function () {
                 $('#grupo-modal').modal('hide');
                 Event.$emit('grupo-asignado', this.grupoSeleccionado);
-            }
+            },
+            axiosGet(url, fCallback, params = []) {
+                axios.get(url, params)
+                    .then(response => {
+                        fCallback(response.data, this)
+                    })
+                    .catch((error) => {
+                        // Error
+                        console.error('Error en: ' + url);
+                        if (error.response) {
+                            console.error(error.response.data);
+                            console.error(error.response.status);
+                            console.error(error.response.headers);
+                        } else if (error.request) {
+                            console.error(error.request);
+                        } else {
+                            console.error('Error', error.message);
+                        }
+                        console.error(error.config);
+                    });
+
+            },
         }
     }
 </script>
