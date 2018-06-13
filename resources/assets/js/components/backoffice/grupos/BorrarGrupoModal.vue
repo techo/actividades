@@ -91,7 +91,7 @@
                 let payload = { miembros: this.$parent.selected };
                 let url = '/admin/ajax/actividades/' + idActividad + '/grupos/borrar';
                 this.axiosPost(url, function(response, self) {
-                    $('#rol-modal').modal('hide');
+                    $('#borrarModal').modal('hide');
                     Event.$emit('vuetable-actualizarTabla');
                 }, payload);
 

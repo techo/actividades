@@ -82,16 +82,28 @@ class GruposActividadesController extends BaseController
 
     public function delete($id, Request $request)
     {
+        $idsGrupo = [];
+        $idsPersona = [];
         foreach ($request->miembros as $miembro) {
             if ($miembro['tipo'] === 'grupo') {
-                $ids[] = $miembro['id'];
+                $idsGrupo[] = $miembro['id'];
+            }
+
+            if ($miembro['tipo'] === 'persona') {
+                $idsPersona[] = $miembro['id'];
             }
         }
-        $grupos = Grupo::whereIn('idGrupo', $ids)->get();
-        $result = $this->buscarRecursivo($grupos);
-        $arrayResult = array_merge(explode('|', $result), $ids);
-        $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
-        $personasBorradas = GrupoRolPersona::whereIn('idPadre', $arrayResult)->delete();
+
+        if (count($idsGrupo) > 0) {
+            $grupos = Grupo::whereIn('idGrupo', $idsGrupo)->get();
+            $strResult = $this->buscarRecursivo($grupos);
+            $arrayResult = array_merge(explode('|', $strResult), $idsGrupo);
+            $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
+        }
+
+        if (count($idsPersona) > 0) {
+            $personasBorradas = GrupoRolPersona::whereIn('idPersona', $idsPersona)->delete();
+        }
         return response('ok');
     }
 
