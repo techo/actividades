@@ -235,7 +235,6 @@ return [
              ],
              [
                'name' => 'tipo',
-               'sortField' => 'tipo',
                'callback' => 'getIcon'
              ],
             [
@@ -250,7 +249,6 @@ return [
             ],
             [
                 'name' => 'cantidad',
-                'sortField' => 'cantidad',
                 'title' => 'Miembros',
             ],
         ],

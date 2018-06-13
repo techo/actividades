@@ -51,28 +51,44 @@
                 ></actividades-show>
             </div>
             <div class="tab-pane" id="grupos">
-                <btn-grupo-persona
-                        actividad="{{ $actividad }}"
-                ></btn-grupo-persona>
-                <miembros
-                        actividad="{{ $actividad }}"
-                        items = "{{ json_encode($miembros) }}"
-                        id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
-                >
-                </miembros>
-                <div class="row">
-                    <div class="col-md-12">
-                        <miembros-tabla
-                                api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
-                                fields="{{ $fieldsMiembros }}"
-                                sort-order = "{{ $sortOrderMiembros }}"
-                                placeholder-text="Buscar por nombre, oficina, tipo o estado"
-                                id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
-                        ></miembros-tabla>
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Buscar</h3>
+                    </div>
+                    <div class="box-body">
+                        <btn-grupo-persona
+                                actividad="{{ $actividad }}"
+                        ></btn-grupo-persona>
+
                     </div>
                 </div>
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <miembros
+                                actividad="{{ $actividad }}"
+                                items = "{{ json_encode($miembros) }}"
+                                id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
+                        >
+                        </miembros>
+                    </div>
+                    <div class="box-body">
 
-                {{--TODO: Componente de tabla de grupos/personas --}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <miembros-tabla
+                                        api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
+                                        fields="{{ $fieldsMiembros }}"
+                                        sort-order = "{{ $sortOrderMiembros }}"
+                                        placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                                        id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
+                                        id-actividad = {{ $actividad->idActividad }}
+                                        ref="miembrosTabla"
+                                ></miembros-tabla>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <div class="tab-pane" id="inscripciones">
                 <div class="box box-primary">
@@ -169,5 +185,5 @@
 
 @push('addiitional_css')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-        <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    @endpush
+    <link rel="stylesheet" href="{{ asset('/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+@endpush
