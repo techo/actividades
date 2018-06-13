@@ -4,11 +4,11 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Exports\InscripcionesExport;
+use App\Exports\InscriptosExport;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-use Illuminate\Support\Facades\DB;
 
 class InscripcionesController extends BaseController
 {
@@ -131,5 +131,18 @@ class InscripcionesController extends BaseController
         $msgAsistencia = $request->asistencia === 1 ? "Presente" : "Ausente";
         return response()
             ->json("Asistencia actualizada a " . $msgAsistencia . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function getInscriptos($id, Request $request)
+    {
+        if($request->has('inscriptos')){
+            $filtros['inscriptos'] = $request->inscriptos;
+        }
+
+        $export = new InscripcionesExport($filtros);
+        $collection = $export->collection();
+//        $result = $collection->only(['idPersona', 'nombres', 'apellidoPaterno']);
+        return $collection;
+
     }
 }

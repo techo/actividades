@@ -54,7 +54,7 @@
                                     name="inscripto"
                                     id="inscripto"
                                     v-model="inscripto"
-                                    :filterable=false
+                                    :filterable=true
                                     @search="onSearch"
                             >
                             </v-select>
@@ -77,12 +77,16 @@
                     </div>
 
                 </div>
+                <p class="text-danger" v-if="yaInscripto">
+                    <i>Esta persona ya pertenece a otro equipo.</i>
+                </p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import axios from 'axios';
     export default {
         name: "btnGrupoPersona",
         props: {
@@ -99,11 +103,13 @@
                 nombreGrupo: '',
                 listadoInscriptos: [],
                 inscripto: null,
-                rol: ''
+                rol: '',
+                yaInscripto: false
             }
         },
         created: function() {
-            Event.$on('Miembros:guardado', this.confirmarGuardado)
+            Event.$on('Miembros:guardado', this.confirmarGuardado);
+            Event.$on('Miembros:voluntario-duplicado', this.voluntarioDuplicado);
         },
         methods: {
             guardarGrupo: function () {
@@ -122,6 +128,8 @@
                 this.nombreGrupo = '';
                 this.rol = '';
                 this.inscripto = null;
+                this.listadoInscriptos = [];
+                this.yaInscripto = false;
                 this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
@@ -153,18 +161,75 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
+            voluntarioDuplicado: function (grupo) {
+                this.yaInscripto = true; console.info(grupo);
+                this.$refs.loading.justCloseSimplert();
+            },
             onSearch: function (text, loading) {
                 loading(true);
                 this.search(loading, text, this);
             },
-            search: _.debounce((loading, search, vm) => {
+            search: function(loading, text, vm) {
+                if (text.length > 3) {
+                    let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
+                    this.axiosGet(url, function (response, self){
+                        self.listadoInscriptos = [];
+                        for (var i = 0, len = response.length; i < len; i++) {
+                            let nombre = response[i].nombres + ' ' + response[i].apellidoPaterno;
+                            let id = response[i].idPersona;
+                            self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
+                        }
+                        loading(false)
+                    });
+
+                }
+            },
+
+            axiosGet(url, fCallback, params = []) {
+                this.loading = true;
+                axios.get(url, params)
+                    .then(response => {
+                        fCallback(response.data, this);
+                        this.loading = false;
+
+                    })
+                    .catch((error) => {
+                        this.loading = false;
+                        // Error
+                        console.error('Error en el get: ' + url);
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.error(error.response.data);
+                            console.error(error.response.status);
+                            console.error(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.error(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.error('Error', error.message);
+                        }
+                        console.error(error.config);
+                    });
+            },
+
+/*
+            search: _.debounce((loading, search, vm) => { console.info('search:' + search);
+                //let url = '/admin/ajax/actividades/' + encodeURI(vm.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(search);
+                //console.info('url:' + url);
                 fetch(
-                    `/ajax/coordinadores?coordinador=${encodeURI(search)}`
-                ).then(res => {
+                    //'/admin/ajax/actividades/' + encodeURI(vm.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(search)
+                    '/admin/ajax/actividades/12983/grupos/getInscriptos?inscriptos=sara'
+                    //url
+                ).then(res => { console.log(JSON.stringify(res)); debugger;
                     res.json().then(json => (vm.listadoInscriptos = json.data));
                     loading(false);
                 });
             }, 1000),
+*/
         },
         computed: {
             edit: function () {

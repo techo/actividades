@@ -91,10 +91,11 @@
                 let payload = { miembros: this.$parent.selected };
                 let url = '/admin/ajax/actividades/' + idActividad + '/grupos/borrar';
                 this.axiosPost(url, function(response, self) {
-                    console.log(response);
+                    $('#rol-modal').modal('hide');
+                    Event.$emit('vuetable-actualizarTabla');
                 }, payload);
-                $('#rol-modal').modal('hide');
-                Event.$emit('RolModal:rol-asignado-grupo', this.rolSeleccionado);
+
+
             },
         }
     }

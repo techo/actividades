@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
+use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\MiembroResource;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class GruposController extends BaseController
         $grupos = $this->queryGrupos($request, $idGrupo, $array)->get();
         $personas = $this->queryPersonas($request, $idGrupo, $array)->get();
         $miembros = $grupos->merge($personas);
-
+        $collection = [];
         foreach ($miembros as $i => $item) {
             $collection[] = new MiembroResource($item);
         }
@@ -52,9 +53,17 @@ class GruposController extends BaseController
             'idGrupo'       => 'required|numeric',
             'idActividad'   => 'required|numeric',
         ]);
-        $id = DB::table('Grupo_Persona')->insertGetId($request->all());
-        $result = array_merge($request->all(), ['idPersona' => $id, 'tipo' => 'persona']);
-        return json_encode($result);
+
+        $persona = GrupoRolPersona::where('idPersona', '=', $request->idPersona)
+            ->where('idActividad', '=', $request->idActividad)
+            ->first();
+        if (!$persona) {
+            $id = DB::table('Grupo_Persona')->insertGetId($request->all());
+            $result = array_merge($request->all(), ['idPersona' => $id, 'tipo' => 'persona']);
+            return json_encode($result);
+        }
+        $grupo = Grupo::find($persona->idPadre);
+        return response($grupo, 428);
     }
 
     private function queryPersonas(Request $request, $idGrupo, $array)

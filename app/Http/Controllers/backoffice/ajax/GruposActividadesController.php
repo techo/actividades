@@ -24,7 +24,6 @@ class GruposActividadesController extends BaseController
         $result = $this->paginate($collection, 10);
         return $result;
     }
-
     public function update($id, Request $request)
     {
         $grupoArray = [];
@@ -83,30 +82,29 @@ class GruposActividadesController extends BaseController
 
     public function delete($id, Request $request)
     {
-        $result = $this->buscarRecursivo($request->miembros);
-        return $result;
+        foreach ($request->miembros as $miembro) {
+            if ($miembro['tipo'] === 'grupo') {
+                $ids[] = $miembro['id'];
+            }
+        }
+        $grupos = Grupo::whereIn('idGrupo', $ids)->get();
+        $result = $this->buscarRecursivo($grupos);
+        $arrayResult = array_merge(explode('|', $result), $ids);
+        $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
+        $personasBorradas = GrupoRolPersona::whereIn('idPadre', $arrayResult)->delete();
+        return response('ok');
     }
 
     private function buscarRecursivo($lista)
     {
-        $personas = '';
         $grupos = '';
         foreach ($lista as $item) {
-            if ($this->esPersona($item)) {
-                $personas .= $item['id'];
+            if ($item->grupos->count() === 0) {
+                $grupos .= $item->idGrupo . '|';
             } else {
-                $grupos .= $item['id'];
-                $grupos .= $this->buscarRecursivo((Grupo::find($item['id']))->miembros);
+                $grupos .= $this->buscarRecursivo($item->grupos);
             }
         }
-        $cuenta['personas'] = $personas;
-        $cuenta['grupos'] = $grupos;
-        return $cuenta;
+        return $grupos;
     }
-
-    private function esPersona($item)
-    {
-        return (!empty($item['tipo']) && $item['tipo'] === 'persona') || ($item instanceof Persona);
-    }
-
 }
