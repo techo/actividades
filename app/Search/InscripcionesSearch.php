@@ -48,14 +48,17 @@ class InscripcionesSearch
         $query = (new Persona)->newQuery();
         $query->join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-            ->join('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
+            ->leftJoin('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
             ->leftJoin('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
             ->leftJoin('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
             ->leftJoin('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
             ->leftJoin('atl_pais as personaPais', 'Persona.idPais', '=', 'personaPais.id')
             ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
             ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
-            ->leftJoin('Grupo_Persona as Rol', 'Rol.idPersona', '=', 'Persona.idPersona')
+            ->leftJoin('Grupo_Persona as Rol', function ($join) {
+                $join->on('Rol.idPersona', '=', 'Persona.idPersona');
+                $join->on('Rol.idActividad', '=', 'Inscripcion.idActividad');
+            })
             ->leftJoin('Grupo', 'Rol.idGrupo', '=', 'Grupo.idGrupo')
             ->select(
                 [

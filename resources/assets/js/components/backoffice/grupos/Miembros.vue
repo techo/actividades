@@ -75,6 +75,7 @@
                 this.axiosPost(url, function(result, self) {
                     self.miembros.arbol.unshift(result.data);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
+                    Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
                 }, grupo);
             },
@@ -97,6 +98,7 @@
                     };
                     //self.miembros.arbol.unshift(nuevaPersona);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
+                    Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
                 }, inscripto);
             },
