@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-3">
+    <div class="chip-flex">
         <span class="chip">
             <span class="chip-content">
                 {{ valor }}
@@ -72,5 +72,9 @@
 
     .chip-close .icon:hover {
         opacity: 1;
+    }
+
+    .chip-flex {
+        margin-bottom: 10px;
     }
 </style>

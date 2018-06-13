@@ -1,10 +1,13 @@
 <template>
     <div class="row">
+        <div class="contenedor">
             <chip v-for="(condicion, index) in condiciones"
                   :valor="condicion.campoLabel + ' ' + condicion.condicionLabel + ' ' + condicion.valor"
                   :key="condicion.id"
                   :index="index"
+                  class="flex"
             ></chip>
+        </div>
     </div>
 </template>
 
@@ -39,5 +42,10 @@
 </script>
 
 <style scoped>
-
+    .contenedor {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 </style>

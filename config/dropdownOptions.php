@@ -17,12 +17,12 @@ return [
               ['id' => 'apellido', 'campo' => 'Apellido'],
               ['id' => 'dni', 'campo' => 'DNI/Pasaporte'],
               ['id' => 'email', 'campo' => 'e-mail'],
-              ['id' => 'estado', 'campo' => 'Estado (No disponible)'],
-              ['id' => 'punto' , 'campo' =>  'Punto de Encuentro (No disponible)'],
-              ['id' => 'rol' , 'campo' =>  'Rol (No disponible)'],
-              ['id' => 'grupo' , 'campo' =>  'Grupo (No disponible)'],
-              ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades (No disponible)'],
-              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior (No disponible)'],
+              ['id' => 'estado', 'campo' => 'Estado'],
+              ['id' => 'punto' , 'campo' =>  'Punto de Encuentro'],
+              ['id' => 'rol' , 'campo' =>  'Rol'],
+              ['id' => 'grupo' , 'campo' =>  'Grupo'],
+              ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades'],
+              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior'],
               ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
           ],
           'condiciones' => [

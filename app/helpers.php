@@ -13,3 +13,8 @@ function convertirCondicion($comparacion, $valor)
             return $valor;
     }
 }
+
+function quote($valor)
+{
+    return "'" . $valor . "'";
+}

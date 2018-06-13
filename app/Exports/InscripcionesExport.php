@@ -55,7 +55,8 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'Punto de Encuentro',
             'País del punto de encuentro',
             'Localidad del punto de encuentro',
-            'Provincia del Punto de encuentro'
+            'Provincia del Punto de encuentro',
+            'Cantidad de Actividades (según filtro previo)'
         ];
     }
 
@@ -92,7 +93,8 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->punto,
             $query->puntoPais,
             $query->puntoLocalidad,
-            $query->puntoProvincia
+            $query->puntoProvincia,
+            $query->cantActividades
         ];
     }
 

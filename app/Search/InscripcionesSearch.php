@@ -4,6 +4,8 @@ namespace App\Search;
 
 
 use App\Persona;
+use App\Search\filters\inscripciones\CantidadActividades;
+use App\Search\filters\inscripciones\IdActividad;
 use Illuminate\Database\Eloquent\Builder;
 
 class InscripcionesSearch
@@ -18,7 +20,12 @@ class InscripcionesSearch
         foreach ($filters as $filterName => $value) {
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
-                $query = $decorator::apply($query, $value);
+                //hack para condicion Tipo de Actividad y Cantidad de actividades
+                if(in_array($decorator, array('App\Search\filters\inscripciones\IdActividad', 'App\Search\filters\inscripciones\CantidadActividades'))) {
+                    $query = $decorator::apply($query, $value, $filters);
+                }  else {
+                    $query = $decorator::apply($query, $value);
+                }
             }
         }
         return $query;
