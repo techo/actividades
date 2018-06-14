@@ -1,7 +1,6 @@
 <template>
-    <div class="row justify-content-center mt-4 mb-4" id="filtro">
-        <div class="contenedor-dropdown">
-            <select class="dropdown boton-filtro"
+    <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
+            <select class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -11,8 +10,7 @@
                     {{ categoria.nombre }}
                 </option>
             </select>
-        </div>
-        <div class="btn-group btn-group-toggle botones-rad">
+        <div class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
             <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
             </label>
@@ -20,22 +18,22 @@
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </label>
         </div>
-        <div class="col-md-2 boton-filtro cont-check">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
                     v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
-        <div class="col-md-2 boton-filtro cont-check">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
             </contenedor-check-tipos>
 
         </div>
-        <div class="borrar-filtros">
-            <span class="btn btn-default boton-filtro" v-on:click="borrarFiltros">
+        <div class="borrar-filtros col-xs-12 col-md-2 col-lg-1 mr-md-3 pl-lg-0">
+            <span class="btn btn-default boton-filtro text-center" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
             </span>
@@ -215,7 +213,7 @@
     }
     .botones-rad {
         display: table;
-        margin-right: 15px;
+        padding: 0;
         vertical-align: middle;
     }
     .botones-rad label {
@@ -256,7 +254,6 @@
     }
 
     .cont-check {
-        margin-right: 15px;
         padding-left: 0;
         padding-right: 0;
     }
