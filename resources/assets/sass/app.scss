@@ -8,6 +8,10 @@
 // Bootstrap
 // @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
+html {
+    overflow-y: scroll;
+}
+
 body * {
     font-family: Montserrat;
 }

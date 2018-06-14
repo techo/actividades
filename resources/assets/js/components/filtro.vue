@@ -12,11 +12,11 @@
                 </option>
             </select>
         </div>
-        <div class="btn-group btn-group-toggle botones-rad" data-toggle="buttons">
-            <label class="btn boton-filtro active">
-               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+        <div class="btn-group btn-group-toggle botones-rad">
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
             </label>
-            <label class="btn boton-filtro">
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'lugar'}" >
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </label>
         </div>
@@ -34,11 +34,11 @@
             </contenedor-check-tipos>
 
         </div>
-        <div class="">
-            <button class="btn btn-default boton-filtro" v-on:click="borrarFiltros">
+        <div class="borrar-filtros">
+            <span class="btn btn-default boton-filtro" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
-            </button>
+            </span>
         </div>
     </div>
 </template>
@@ -95,11 +95,13 @@
                 };
                 axios.post(url, filtros)
                     .then(response => {
-                        this.tiposDeActividad = [{ 
-                                    id: 0,
-                                    titulo: 'Marcar todas',
-                                    actividades: response.data
-                        }];
+                        if(response.data.length) {
+                            this.tiposDeActividad = [{ 
+                                        id: 0,
+                                        titulo: 'Marcar todas',
+                                        actividades: response.data
+                            }];
+                        }
                         //this.tiposDeActividad[0].todas = 'Marcar todas';
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaTipos = this.tiposDeActividad;
@@ -184,6 +186,7 @@
 
             },
             dataBusqueda: function() {
+                console.log(this.dataBusqueda);
                 this.borrarFiltros();
             }
         },
@@ -207,7 +210,7 @@
         font-stretch: normal;
     }
     #filtro {
-        margin: 0 -5%;
+        margin: 0 -6%;
         padding: 0;
     }
     .botones-rad {
@@ -218,6 +221,10 @@
     .botones-rad label {
         display: table-cell;
         vertical-align: middle;
+    }
+    .borrar-filtros .boton-filtro {
+        border: none;
+        padding-top: 12px;
     }
     .boton-filtro {
         border: 1px solid #a9a9a9;
@@ -240,12 +247,14 @@
         color: #a9a9a9;
     }
     label.boton-filtro.active {
-        color: #0092dd;
+        background-color: #0092dd;
+        color: #fff;
     }
     .contenedor-dropdown {
         padding: 0;
         margin-right: 15px;
     }
+
     .cont-check {
         margin-right: 15px;
         padding-left: 0;

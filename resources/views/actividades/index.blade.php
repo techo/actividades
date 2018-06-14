@@ -5,8 +5,8 @@
 @endsection
 
 @section('main_image')
-    <div class="techo-hero">
-        <img src="{{ asset('/img/hero-slim.jpg') }}" alt="hero image" height="210">
+    <div class="techo-hero actividades">
+        <!-- <img src="{{ asset('/img/hero-slim.jpg') }}" alt="hero image" height="210"> -->
         <h2 class="text-uppercase">Si te da lo mismo, estás haciendo mal las cuentas <br>
             Anotate y participá</h2>
     </div>
