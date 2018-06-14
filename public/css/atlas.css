@@ -300,6 +300,7 @@ a {
 }
 .techo-hero.actividades h2 {
     font-size: 2.5vw;
+    padding: 0;
     position: relative;
 }
 
