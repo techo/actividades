@@ -11,7 +11,7 @@ class Email implements Filter
     public static function apply(Builder $builder, $value)
     {
         $condicion['comparacion'] = $value['condicion'];
-        $condicion['valor'] = $value['valor'];
+        $condicion['valor'] = convertirCondicion($value['condicion'], $value['valor']);
 
         if (in_array($condicion['comparacion'], ['like', '<', '<=', '>', '>=', '=', '<>']))
         {
