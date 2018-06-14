@@ -1,7 +1,6 @@
 <template>
-    <div class="row justify-content-center mt-4 mb-4" id="filtro">
-        <div class="contenedor-dropdown">
-            <select class="dropdown boton-filtro"
+    <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
+            <select class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -11,34 +10,33 @@
                     {{ categoria.nombre }}
                 </option>
             </select>
-        </div>
-        <div class="btn-group btn-group-toggle botones-rad" data-toggle="buttons">
-            <label class="btn boton-filtro active">
-               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
+        <div class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
             </label>
-            <label class="btn boton-filtro">
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'lugar'}" >
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </label>
         </div>
-        <div class="col-md-2 boton-filtro cont-check">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
                     v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
-        <div class="col-md-2 boton-filtro cont-check">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
             </contenedor-check-tipos>
 
         </div>
-        <div class="">
-            <button class="btn btn-default boton-filtro" v-on:click="borrarFiltros">
+        <div class="borrar-filtros col-xs-12 col-md-2 col-lg-1 mr-md-3 pl-lg-0">
+            <span class="btn btn-default boton-filtro text-center" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
-            </button>
+            </span>
         </div>
     </div>
 </template>
@@ -95,11 +93,13 @@
                 };
                 axios.post(url, filtros)
                     .then(response => {
-                        this.tiposDeActividad = [{ 
-                                    id: 0,
-                                    titulo: 'Marcar todas',
-                                    actividades: response.data
-                        }];
+                        if(response.data.length) {
+                            this.tiposDeActividad = [{ 
+                                        id: 0,
+                                        titulo: 'Marcar todas',
+                                        actividades: response.data
+                            }];
+                        }
                         //this.tiposDeActividad[0].todas = 'Marcar todas';
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaTipos = this.tiposDeActividad;
@@ -184,6 +184,7 @@
 
             },
             dataBusqueda: function() {
+                console.log(this.dataBusqueda);
                 this.borrarFiltros();
             }
         },
@@ -207,17 +208,21 @@
         font-stretch: normal;
     }
     #filtro {
-        margin: 0 -5%;
+        margin: 0 -6%;
         padding: 0;
     }
     .botones-rad {
         display: table;
-        margin-right: 15px;
+        padding: 0;
         vertical-align: middle;
     }
     .botones-rad label {
         display: table-cell;
         vertical-align: middle;
+    }
+    .borrar-filtros .boton-filtro {
+        border: none;
+        padding-top: 12px;
     }
     .boton-filtro {
         border: 1px solid #a9a9a9;
@@ -240,14 +245,15 @@
         color: #a9a9a9;
     }
     label.boton-filtro.active {
-        color: #0092dd;
+        background-color: #0092dd;
+        color: #fff;
     }
     .contenedor-dropdown {
         padding: 0;
         margin-right: 15px;
     }
+
     .cont-check {
-        margin-right: 15px;
         padding-left: 0;
         padding-right: 0;
     }

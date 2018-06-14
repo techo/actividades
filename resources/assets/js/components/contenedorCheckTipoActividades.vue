@@ -96,7 +96,8 @@
         font-weight: 900;
     }
     .acordion a.active {
-        color: #0092dd;
+        background-color: #0092dd;
+        color: #fff;
     }
     .acordion a svg {
         color: #494848;
@@ -119,6 +120,8 @@
         background: #fff;
         border: 1px solid #0092dd;
         border-top: 1px solid #a9a9a9;
+        margin-left: 1px;
+        position: absolute;
     }
     .acordion .collapsing.lista-opciones {
         display: none;
