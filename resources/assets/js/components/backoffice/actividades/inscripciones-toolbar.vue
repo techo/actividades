@@ -5,6 +5,7 @@
             <div class="btn-group" role="group" aria-label="toolbar">
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarRolModal">Asignar Rol</button>
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarGrupoModal">Asignar Grupo</button>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">Asignar Punto</button>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Cambiar Asistencia
@@ -29,6 +30,7 @@
                 </div>
                 <inscripciones-rol-modal></inscripciones-rol-modal>
                 <inscripciones-grupo-modal></inscripciones-grupo-modal>
+                <inscripciones-punto-modal></inscripciones-punto-modal>
             </div>
         </div>
     </div>
@@ -53,6 +55,10 @@
             mostrarGrupoModal: function () {
                 if(this.disabled) return;
                 Event.$emit('show-grupo-modal');
+            },
+            mostrarPuntoModal: function () {
+                if(this.disabled) return;
+                Event.$emit('show-punto-modal');
             },
             cambiarEstado: function (estado, event) {
                 Event.$emit('cambiar-estado', estado);
