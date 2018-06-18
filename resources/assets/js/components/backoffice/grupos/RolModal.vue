@@ -2,6 +2,7 @@
     <div class="modal fade" id="rolModal" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
+                <form>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
@@ -21,8 +22,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Confirmar</button>
+                    <button type="submit" class="btn btn-primary" @click.prevent="confirmar">Confirmar</button>
                 </div>
+                </form>
             </div>
             <!-- /.modal-content -->
         </div>
@@ -118,6 +120,7 @@
                 let url = '/admin/ajax/actividades/' + idActividad + '/grupos/cambiar/rol';
                 this.axiosPost(url, function (result, self) {
                     Event.$emit('vuetable-actualizarTabla');
+                    Event.$emit('inscripciones-actualizar-tabla');
                     self.$root.$refs.miembrosTabla.$refs.vuetableMiembros.selectedTo = [];
                     $('#rolModal').modal('hide');
                 }, payload);

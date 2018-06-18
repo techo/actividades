@@ -138,6 +138,7 @@ class InscripcionesController extends BaseController
     {
         if($request->has('inscriptos')){
             $filtros['inscriptos'] = $request->inscriptos;
+            $filtros['idActividad'] = $id;
         }
 
         $export = new InscripcionesExport($filtros);

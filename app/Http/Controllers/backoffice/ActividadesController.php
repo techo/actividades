@@ -437,7 +437,7 @@ class ActividadesController extends Controller
         $grupo = new Grupo();
         $grupo->idActividad = $actividad->idActividad;
         $grupo->idPadre = 0;
-        $grupo->nombre = $actividad->nombre;
+        $grupo->nombre = $actividad->nombreActividad;
         if ($grupo->save()) {
             return true;
         }
