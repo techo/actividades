@@ -140,9 +140,10 @@ export default {
     },
     events: {
         'filter-set' (filterText) {
-          this.moreParams = {
-            filter: filterText
-          };
+          // this.moreParams = {
+          //   filter: filterText
+          // };
+          this.moreParams.filter = filterText;
           Vue.nextTick( () => this.$refs.vuetableMiembros.refresh() )
         },
         'filter-reset' () {

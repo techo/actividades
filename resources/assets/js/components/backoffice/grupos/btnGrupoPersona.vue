@@ -170,7 +170,7 @@
                 this.search(loading, text, this);
             },
             search: function(loading, text, vm) {
-                if (text.length > 3) {
+                if (text.length >= 3) {
                     let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
                     this.axiosGet(url, function (response, self){
                         self.listadoInscriptos = [];

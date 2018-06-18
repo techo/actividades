@@ -4,7 +4,7 @@
                 type="button"
                 class="btn btn-default"
                 :class="{'disabled': disabled}"
-                @click="this.mostrarRolModal">
+                @click="mostrarRolModal">
 
             Rol
         </button>
@@ -12,14 +12,14 @@
                 type="button"
                 class="btn btn-default"
                 :class="{'disabled': disabled}"
-                @click="this.mostrarGrupoModal">
+                @click="mostrarGrupoModal">
             Grupo
         </button>
         <button
                 type="button"
                 class="btn btn-default"
                 :class="{'disabled': disabled}"
-                @click="this.mostrarEliminarModal">
+                @click="mostrarEliminarModal">
             Borrar
         </button>
         <rol-modal></rol-modal>
@@ -42,6 +42,7 @@
             }
         },
         created(){
+            Event.$on('vuetable-actualizarTabla', this.clearSelected);
             Event.$on('MiembrosTabla:miembro-seleccionado', this.actualizarSeleccionados);
             Event.$on('MiembrosTabla:miembro-seleccionado-todos', this.actualizarSeleccionadosTodos);
         },
@@ -84,7 +85,9 @@
                 }
                 return null;
             },
-
+            clearSelected: function() {
+                this.selected = [];
+            },
             axiosPost(url, fCallback, params = []) {
                 this.loading = true;
                 axios.post(url, params)

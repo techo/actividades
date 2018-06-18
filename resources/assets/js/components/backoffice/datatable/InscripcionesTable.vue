@@ -225,7 +225,7 @@ export default {
               params);
       },
       actualizarInscripcionesTable: function () {
-          Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       }
   },
   created()  {

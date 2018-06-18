@@ -27,7 +27,7 @@
                     <button
                             type="button"
                             class="btn btn-danger"
-                            @click="this.confirmar"
+                            @click.prevent="confirmar"
                     >
                         Confirmar
                     </button>
@@ -95,8 +95,6 @@
                     Event.$emit('vuetable-actualizarTabla');
                     Event.$emit('inscripciones-actualizar-tabla');
                 }, payload);
-
-
             },
         }
     }
