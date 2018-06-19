@@ -193,7 +193,7 @@
                 }
             },
             guardarNoInscripto: function () {
-                if (this.noInscripto && idPuntoSeleccionado) {
+                if (this.noInscripto && this.idPuntoSeleccionado) {
                     this.mostrarLoadingAlert();
                     let payload = {
                         noInscripto: this.noInscripto,
