@@ -1,24 +1,35 @@
 <template>
     <div class="filter-bar">
-        <form class="form-inline">
-            <div class="form-group">
-                <label>Filtrar por:</label>
-                <input
-                        type="text"
-                        v-model="filterText"
-                        class="form-control input"
-                        @keyup.enter="doFilter"
-                        :placeholder="dataPlaceholderText"
-                        style="width: 20em"
-                >
-                <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
-                <button class="btn" @click.prevent="resetFilter">Borrar</button>
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label>Filtrar por:</label>
+                        <input
+                                type="text"
+                                v-model="filterText"
+                                class="form-control input"
+                                @keyup.enter="doFilter"
+                                :placeholder="dataPlaceholderText"
+                                style="width: 20em"
+                        >
+                        <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
+                        <button class="btn" @click.prevent="resetFilter">Borrar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2 pull-right">
                 <button class="btn" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
                 </button>
             </div>
-            <inscripciones-toolbar class="pull-right"></inscripciones-toolbar>
-        </form>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <inscripciones-toolbar></inscripciones-toolbar>
+            </div>
+        </div>
     </div>
 </template>
 
