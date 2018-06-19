@@ -15,6 +15,7 @@
                 <li><a @click="verFormGrupo">Grupo</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a @click="verFormInscripto">Voluntario Inscripto</a></li>
+                <li><a @click="verFormNoInscripto">Voluntario No Inscripto</a></li>
             </ul>
         </div>
         <div  v-if="formGrupo" class="panel panel-info">
@@ -55,7 +56,7 @@
                                     id="inscripto"
                                     v-model="inscripto"
                                     :filterable=true
-                                    @search="onSearch"
+                                    @search="onSearchInscripto"
                             >
                             </v-select>
                         </div>
@@ -69,6 +70,56 @@
                     <div class="col-md-3">
                         <br>
                         <button type="button" class="btn btn-primary" @click="guardarInscripto">
+                            <i class="fa fa-check"></i> Agregar
+                        </button>
+                        <button type="button" class="btn btn-default" @click="cancelar">
+                            <i class="fa fa-ban"></i> Cancelar
+                        </button>
+                    </div>
+
+                </div>
+                <p class="text-danger" v-if="yaInscripto">
+                    <i>Esta persona ya pertenece a otro equipo.</i>
+                </p>
+            </div>
+        </div>
+        <div v-if="formNoInscripto" class="panel panel-info">
+            <div class="panel-heading">Agregar Voluntario No Inscripto</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nombre">Nombre </label>
+                            <v-select
+                                    :options="listadoNoInscriptos"
+                                    label="nombre"
+                                    placeholder="Escribe el nombre, apellido o DNI"
+                                    name="noInscripto"
+                                    id="noInscripto"
+                                    v-model="noInscripto"
+                                    :filterable=true
+                                    @search="onSearchNoInscripto"
+                            >
+                            </v-select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="rol">Rol </label>
+                            <input type="text" class="form-control" v-model="rol" id="rol">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="rol">Punto de Encuentro </label>
+                            <select type="text" class="form-control" v-model="puntoSeleccionado" id="puntoEncuentro">
+                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.nombre }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <br>
+                        <button type="button" class="btn btn-primary" @click="guardarNoInscripto">
                             <i class="fa fa-check"></i> Agregar
                         </button>
                         <button type="button" class="btn btn-default" @click="cancelar">
@@ -99,15 +150,25 @@
                 dataActividad: JSON.parse(this.actividad),
                 formGrupo: false,
                 formInscripto: false,
+                formNoInscripto: false,
                 loading: false,
                 nombreGrupo: '',
                 listadoInscriptos: [],
+                listadoNoInscriptos: [],
                 inscripto: null,
+                noInscripto: null,
                 rol: '',
-                yaInscripto: false
+                yaInscripto: false,
+                puntosEncuentro: [
+                    { id: 1, nombre: 'punto 1'},
+                    { id: 2, nombre: 'punto 2'},
+                    { id: 3, nombre: 'punto 3'},
+                ],
+                idPuntoSeleccionado: '',
             }
         },
         created: function() {
+            // cargar puntos de encuentro
             Event.$on('Miembros:guardado', this.confirmarGuardado);
             Event.$on('Miembros:voluntario-duplicado', this.voluntarioDuplicado);
         },
@@ -124,25 +185,43 @@
                 };
                 Event.$emit('btnGrupoPersona:guardar-inscripto', payload);
             },
+            guardarNoInscripto: function () {
+                this.mostrarLoadingAlert();
+                let payload = {
+                    noInscripto: this.noInscripto,
+                    rol: this.rol,
+                    punto: this.idPuntoSeleccionado
+                };
+                Event.$emit('btnGrupoPersona:guardar-no-inscripto', payload);
+            },
             confirmarGuardado: function () {
                 this.nombreGrupo = '';
                 this.rol = '';
                 this.inscripto = null;
                 this.listadoInscriptos = [];
+                this.listadoNoInscriptos = [];
                 this.yaInscripto = false;
                 this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
                 this.formGrupo = true;
                 this.formInscripto = false;
+                this.formNoInscripto = false;
             },
             verFormInscripto: function () {
                 this.formGrupo = false;
                 this.formInscripto = true;
+                this.formNoInscripto = false;
+            },
+            verFormNoInscripto: function () {
+                this.formGrupo = false;
+                this.formNoInscripto = true;
+                this.formInscripto = false;
             },
             cancelar: function () {
                 this.formGrupo = false;
                 this.formInscripto = false;
+                this.formNoInscripto = false;
                 this.nombreGrupo = '';
                 this.inscripto = null;
                 this.listadoInscriptos = [];
@@ -162,15 +241,15 @@
                 this.$refs.loading.justCloseSimplert();
             },
             voluntarioDuplicado: function (grupo) {
-                this.yaInscripto = true; console.info(grupo);
+                this.yaInscripto = true;
                 this.$refs.loading.justCloseSimplert();
             },
-            onSearch: function (text, loading) {
+            onSearchInscripto: function (text, loading) {
                 loading(true);
-                this.search(loading, text, this);
+                this.searchInscripto(loading, text, this);
             },
-            search: function(loading, text, vm) {
-                if (text.length > 3) {
+            searchInscripto: function(loading, text, vm) {
+                if (text.length > 2) {
                     let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
                     this.axiosGet(url, function (response, self){
                         self.listadoInscriptos = [];
@@ -179,12 +258,28 @@
                             let id = response[i].idPersona;
                             self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
                         }
-                        loading(false)
+                        loading(false);
                     });
-
                 }
             },
-
+            onSearchNoInscripto: function (text, loading) {
+                loading(true);
+                this.searchNoInscripto(loading, text, this);
+            },
+            searchNoInscripto: function(loading, text, vm) {
+                if (text.length > 2) {
+                    let url = "/ajax/coordinadores?coordinador=" + encodeURI(text);
+                    this.axiosGet(url, function (response, vm){
+                        vm.listadoNoInscriptos = [];
+                        for (var i = 0, len = response.data.length; i < len; i++) {
+                            vm.listadoNoInscriptos.unshift(
+                                    {idPersona: response.data[i].idPersona, nombre: response.data[i].nombre}
+                                );
+                        }
+                        loading(false);
+                    });
+                }
+            },
             axiosGet(url, fCallback, params = []) {
                 this.loading = true;
                 axios.get(url, params)
@@ -215,25 +310,10 @@
                         console.error(error.config);
                     });
             },
-
-/*
-            search: _.debounce((loading, search, vm) => { console.info('search:' + search);
-                //let url = '/admin/ajax/actividades/' + encodeURI(vm.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(search);
-                //console.info('url:' + url);
-                fetch(
-                    //'/admin/ajax/actividades/' + encodeURI(vm.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(search)
-                    '/admin/ajax/actividades/12983/grupos/getInscriptos?inscriptos=sara'
-                    //url
-                ).then(res => { console.log(JSON.stringify(res)); debugger;
-                    res.json().then(json => (vm.listadoInscriptos = json.data));
-                    loading(false);
-                });
-            }, 1000),
-*/
         },
         computed: {
             edit: function () {
-                return ( !this.formGrupo && !this.formInscripto);
+                return ( !this.formGrupo && !this.formInscripto && !this.formNoInscripto);
             }
         }
     }
