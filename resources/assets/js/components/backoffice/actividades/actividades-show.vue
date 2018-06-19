@@ -367,7 +367,6 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import PuntoEncuentro from './punto-encuentro';
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
@@ -566,58 +565,6 @@
                         self.dataOficinas = data;
                     });
             },
-            axiosGet(url, fCallback, params = []) {
-                axios.get(url, params)
-                    .then(response => {
-                        fCallback(response.data, this)
-                    })
-                    .catch((error) => {
-                        // Error
-                        console.error('Error en: ' + url);
-                        if (error.response) {
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                        } else if (error.request) {
-                            console.error(error.request);
-                        } else {
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-
-            },
-            axiosPost(url, fCallback, params = []) {
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                axios.post(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        Event.$emit('success');
-                        this.readonly = true;
-                    })
-                    .catch((error) => {
-                        Event.$emit('error');
-                        this.ocultarLoadingAlert();
-                        // Error
-                        console.info('Error en: ' + url);
-                        console.error(error.response.status);
-                        if (error.response) {
-                            if (error.response.status === 422) {
-                                this.validationErrors = Object.values(error.response.data);
-                                if (this.dataActividad.puntos_encuentro.length === 0) {
-                                    this.dataActividad.puntos_encuentro = this.dataActividad.puntosEncuentroBorrados;
-                                    this.dataActividad.puntosEncuentroBorrados = [];
-                                }
-                            }
-                        } else if (error.request) {
-                            console.error(error.request);
-                        } else {
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-
-            },
             setLocalidad(){
                 this.dataActividad.localidad = this.localidadSeleccionada;
             },
@@ -637,23 +584,38 @@
                     url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
                 }
 
-                this.axiosPost(url, function (data, self) {
-                    if (self.dataActividad.idActividad === null) {
-                        window.location.replace('/admin/actividades');
-                    }
-                    self.mensajeGuardado = data;
-                    self.guardado = true;
-                    self.validationErrors = [];
-                    self.dataActividad.puntosEncuentroBorrados = [];
-                    for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
-                        if (self.dataActividad.puntos_encuentro[i].nuevo) {
-                            self.dataActividad.puntos_encuentro[i].nuevo = false;
+                this.axiosPost(url, //endpoint
+                    function (data, self) { //handler de success
+                        if (self.dataActividad.idActividad === null) {
+                            window.location.replace('/admin/actividades');
                         }
+                        self.mensajeGuardado = data;
+                        self.guardado = true;
+                        self.validationErrors = [];
+                        self.dataActividad.puntosEncuentroBorrados = [];
+                        for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
+                            if (self.dataActividad.puntos_encuentro[i].nuevo) {
+                                self.dataActividad.puntos_encuentro[i].nuevo = false;
+                            }
 
+                        }
+                        self.$refs.loading.justCloseSimplert();
+                    },
+                    this.dataActividad, // request data
+                    function (error, self) { //handler de error
+                    self.ocultarLoadingAlert();
+                    debugger
+                    // Error
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            self.validationErrors = Object.values(error.response.data);
+                            if (self.dataActividad.puntos_encuentro.length === 0) {
+                                self.dataActividad.puntos_encuentro = self.dataActividad.puntosEncuentroBorrados;
+                                self.dataActividad.puntosEncuentroBorrados = [];
+                            }
+                        }
                     }
-                    self.$refs.loading.justCloseSimplert();
-
-                }, this.dataActividad);
+                });
 
             },
             borrarPunto: function (obj) {
