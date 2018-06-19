@@ -21,23 +21,30 @@
         <div  v-if="formGrupo" class="panel panel-info">
             <div class="panel-heading">Agregar Nuevo Grupo</div>
             <div class="panel-body">
-                <form class="form-inline">
-                    <div class="form-group">
-                        <label for="nombre">Nombre </label>
-                        <input
-                                type="text"
-                                class="form-control"
-                                id="nombre"
-                                placeholder="Escribe el nombre del grupo"
-                                v-model="nombreGrupo"
-                        >
+                <form>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group" :class="{'has-error': nombreGrupo.length === 0}">
+                            <label for="nombre">Nombre </label>
+                            <input
+                                    type="text"
+                                    class="form-control"
+                                    id="nombre"
+                                    placeholder="Escribe el nombre del grupo"
+                                    v-model="nombreGrupo"
+
+                            >
+                        </div>
                     </div>
-                    <button type="button" class="btn btn-primary" @click="guardarGrupo">
-                        <i class="fa fa-check"></i> Agregar
-                    </button>
-                    <button type="button" class="btn btn-default" @click="cancelar">
-                        <i class="fa fa-ban"></i> Cancelar
-                    </button>
+                    <div class="col-md-2" style="padding-top: 1.5em">
+                        <button type="button" class="btn btn-primary" @click="guardarGrupo">
+                            <i class="fa fa-check"></i> Agregar
+                        </button>
+                        <button type="button" class="btn btn-default" @click="cancelar">
+                            <i class="fa fa-ban"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
                 </form>
             </div>
         </div>
@@ -46,7 +53,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="form-group">
+                        <div class="form-group" :class="{'has-error': !inscripto }">
                             <label for="nombre">Nombre </label>
                             <v-select
                                     :options="listadoInscriptos"
@@ -88,7 +95,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
+                        <div class="form-group" :class="{'has-error': !noInscripto}">
                             <label for="nombre">Nombre </label>
                             <v-select
                                     :options="listadoNoInscriptos"
@@ -110,15 +117,14 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="rol">Punto de Encuentro </label>
-                            <select type="text" class="form-control" v-model="puntoSeleccionado" id="puntoEncuentro">
-                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.nombre }}</option>
+                        <div class="form-group" :class="{'has-error': !idPuntoSeleccionado}">
+                            <label for="puntoEncuentro">Punto de Encuentro </label>
+                            <select class="form-control" v-model="idPuntoSeleccionado" id="puntoEncuentro">
+                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.punto }}, {{ punto.localidad}}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <br>
+                    <div class="col-md-2" style="padding-top: 1.5em">
                         <button type="button" class="btn btn-primary" @click="guardarNoInscripto">
                             <i class="fa fa-check"></i> Agregar
                         </button>
@@ -159,12 +165,9 @@
                 noInscripto: null,
                 rol: '',
                 yaInscripto: false,
-                puntosEncuentro: [
-                    { id: 1, nombre: 'punto 1'},
-                    { id: 2, nombre: 'punto 2'},
-                    { id: 3, nombre: 'punto 3'},
-                ],
+                puntosEncuentro: [],
                 idPuntoSeleccionado: '',
+                errorGrupo: false
             }
         },
         created: function() {
@@ -174,30 +177,37 @@
         },
         methods: {
             guardarGrupo: function () {
-                this.mostrarLoadingAlert();
-                Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo);
+                if (this.nombreGrupo.length > 0) {
+                    this.mostrarLoadingAlert();
+                    Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo);
+                }
             },
             guardarInscripto: function () {
-                this.mostrarLoadingAlert();
-                let payload = {
-                  inscripto: this.inscripto,
-                  rol: this.rol
-                };
-                Event.$emit('btnGrupoPersona:guardar-inscripto', payload);
+                if (this.inscripto) {
+                    this.mostrarLoadingAlert();
+                    let payload = {
+                        inscripto: this.inscripto,
+                        rol: this.rol
+                    };
+                    Event.$emit('btnGrupoPersona:guardar-inscripto', payload);
+                }
             },
             guardarNoInscripto: function () {
-                this.mostrarLoadingAlert();
-                let payload = {
-                    noInscripto: this.noInscripto,
-                    rol: this.rol,
-                    punto: this.idPuntoSeleccionado
-                };
-                Event.$emit('btnGrupoPersona:guardar-no-inscripto', payload);
+                if (this.noInscripto && idPuntoSeleccionado) {
+                    this.mostrarLoadingAlert();
+                    let payload = {
+                        noInscripto: this.noInscripto,
+                        rol: this.rol,
+                        punto: this.idPuntoSeleccionado
+                    };
+                    Event.$emit('btnGrupoPersona:guardar-no-inscripto', payload);
+                }
             },
             confirmarGuardado: function () {
                 this.nombreGrupo = '';
                 this.rol = '';
                 this.inscripto = null;
+                this.noInscripto = null;
                 this.listadoInscriptos = [];
                 this.listadoNoInscriptos = [];
                 this.yaInscripto = false;
@@ -214,6 +224,10 @@
                 this.formNoInscripto = false;
             },
             verFormNoInscripto: function () {
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/puntos';
+                this.axiosGet(url, function(response, self) {
+                    self.puntosEncuentro = response;
+                });
                 this.formGrupo = false;
                 this.formNoInscripto = true;
                 this.formInscripto = false;
@@ -224,7 +238,9 @@
                 this.formNoInscripto = false;
                 this.nombreGrupo = '';
                 this.inscripto = null;
+                this.noInscripto = null;
                 this.listadoInscriptos = [];
+                this.idPuntoSeleccionado = '';
                 this.rol = '';
             },
             mostrarLoadingAlert() {
@@ -253,7 +269,7 @@
                     let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
                     this.axiosGet(url, function (response, self){
                         self.listadoInscriptos = [];
-                        for (var i = 0, len = response.length; i < len; i++) {
+                        for (let i = 0, len = response.length; i < len; i++) {
                             let nombre = response[i].nombres + ' ' + response[i].apellidoPaterno;
                             let id = response[i].idPersona;
                             self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
@@ -271,7 +287,7 @@
                     let url = "/ajax/coordinadores?coordinador=" + encodeURI(text);
                     this.axiosGet(url, function (response, vm){
                         vm.listadoNoInscriptos = [];
-                        for (var i = 0, len = response.data.length; i < len; i++) {
+                        for (let i = 0, len = response.data.length; i < len; i++) {
                             vm.listadoNoInscriptos.unshift(
                                     {idPersona: response.data[i].idPersona, nombre: response.data[i].nombre}
                                 );

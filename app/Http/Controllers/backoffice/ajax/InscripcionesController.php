@@ -4,7 +4,6 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Exports\InscripcionesExport;
-use App\Exports\InscriptosExport;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use App\Persona;
@@ -165,6 +164,12 @@ class InscripcionesController extends BaseController
     public function store($id, Request $request)
     {
         $user = Persona::findOrFail($request->idPersona);
+        $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
+            ->where('idActividad', '=', $id)
+            ->first();
+        if ($yaInscripto) {
+            return response('Voluntario ya inscripto', 428);
+        }
         $inscripcion = $this->inscribir($request);
         $grupo = $this->incluirEnGrupo($request);
         if ($inscripcion &&  $grupo) {

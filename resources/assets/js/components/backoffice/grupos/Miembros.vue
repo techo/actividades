@@ -76,7 +76,6 @@
                 };
                 let url = '/admin/ajax/grupos';
                 this.axiosPost(url, function(result, self) {
-                    //self.miembros.arbol.unshift(result.data);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
@@ -91,15 +90,6 @@
                 };
                 let url = '/admin/ajax/grupos/'+ this.idGrupoActual +'/inscriptos';
                 this.axiosPost(url, function(result, self) {
-                    let nuevaPersona = {
-                        id: inscripto.idPersona,
-                        cantidad: '-',
-                        dni: payload.inscripto.dni,
-                        nombre: payload.inscripto.nombre,
-                        rol: payload.rol,
-                        tipo: 'persona'
-                    };
-                    //self.miembros.arbol.unshift(nuevaPersona);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
