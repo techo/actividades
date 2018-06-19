@@ -36,6 +36,9 @@
             <li>
                 <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
             </li>
+            <li>
+                <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
@@ -53,7 +56,7 @@
             <div class="tab-pane" id="grupos">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Buscar</h3>
+                        <h3 class="box-title">Incluir en este Grupo</h3>
                     </div>
                     <div class="box-body">
                         <btn-grupo-persona
@@ -127,6 +130,29 @@
                                 placeholder-text="Buscar por cualquier campo"
                                 actividad="{{$actividad->idActividad}}"
                         ></inscripciones-table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <div class="tab-pane" id="evaluaciones">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Evaluaciones</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <btn-enviar-evaluaciones prop-actividad="{{ $actividad }}"></btn-enviar-evaluaciones>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                    </div>
+                    <!-- box-footer -->
+                </div>
+                <!-- /.box -->
+                <div class="box">
+                    <div class="box-body  with-border">
+                        <i>Poner algo acá</i>
                     </div>
                     <!-- /.box-body -->
                 </div>

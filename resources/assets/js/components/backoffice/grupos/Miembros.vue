@@ -2,7 +2,6 @@
     <div>
         <modal-voluntario :voluntario="voluntario"></modal-voluntario>
         <div id="breadcrumb">
-            <!-- ToDo: Hacer el Breadcrumb. Otro Componente? -->
             <ol class="breadcrumb">
                 <li v-for="(item, key) in breadcrumb" :class="{active: (key === breadcrumb.length-1)}">
                     <a v-if="breadcrumb.indexOf(item) !== breadcrumb.length-1" @click="actualizarTabla(item)">
