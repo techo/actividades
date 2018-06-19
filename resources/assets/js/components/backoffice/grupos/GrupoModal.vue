@@ -24,7 +24,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Confirmar</button>
+                    <button type="button" class="btn btn-primary" @click.prevent="confirmar">Confirmar</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -127,6 +127,7 @@
                 let url = '/admin/ajax/actividades/' + this.idActividad + '/grupos/cambiar/grupo';
                 this.axiosPost(url, function (result, self) {
                     Event.$emit('vuetable-actualizarTabla');
+                    Event.$emit('inscripciones-actualizar-tabla');
                     self.$root.$refs.miembrosTabla.$refs.vuetableMiembros.selectedTo = [];
                     $('#grupoModal').modal('hide');
                 }, payload);

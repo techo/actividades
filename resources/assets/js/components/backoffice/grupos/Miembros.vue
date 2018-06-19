@@ -26,7 +26,9 @@
         data: function () {
             return {
                 dataActividad: {},
-                miembros: {},
+                miembros: {
+                    arbol: []
+                },
                 campos: [],
                 idGrupoActual: 0,
                 breadcrumb: [],
@@ -74,7 +76,7 @@
                 };
                 let url = '/admin/ajax/grupos';
                 this.axiosPost(url, function(result, self) {
-                    self.miembros.arbol.unshift(result.data);
+                    //self.miembros.arbol.unshift(result.data);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');

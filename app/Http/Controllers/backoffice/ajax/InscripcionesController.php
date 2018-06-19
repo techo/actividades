@@ -111,6 +111,17 @@ class InscripcionesController extends BaseController
             ->json("Grupo " . $request->grupo['nombre']. " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
+    public function asignarPunto($idActividad, Request $request)
+    {
+        foreach ($request->inscripciones as $idInscripcion) {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->idPuntoEncuentro = $request->punto;
+            $inscripcion->save();
+        }
+        return response()
+            ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
     public function cambiarEstado(Request $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
@@ -141,6 +152,7 @@ class InscripcionesController extends BaseController
     {
         if($request->has('inscriptos')){
             $filtros['inscriptos'] = $request->inscriptos;
+            $filtros['idActividad'] = $id;
         }
 
         $export = new InscripcionesExport($filtros);
