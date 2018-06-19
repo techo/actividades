@@ -4,11 +4,14 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Exports\InscripcionesExport;
-use App\Exports\InscriptosExport;
 use App\GrupoRolPersona;
 use App\Inscripcion;
+use App\Persona;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Mail\MailConfimacionInscripcion;
+use Illuminate\Support\Facades\Mail;
 
 class InscripcionesController extends BaseController
 {
@@ -51,7 +54,6 @@ class InscripcionesController extends BaseController
         if ($request->estado !== null) {
             $inscripcion->estado = $request->estado;
         }
-
         if ($inscripcion->save()) {
             return response('Ok');
         }
@@ -108,6 +110,17 @@ class InscripcionesController extends BaseController
             ->json("Grupo " . $request->grupo['nombre']. " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
+    public function asignarPunto($idActividad, Request $request)
+    {
+        foreach ($request->inscripciones as $idInscripcion) {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->idPuntoEncuentro = $request->punto;
+            $inscripcion->save();
+        }
+        return response()
+            ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
     public function cambiarEstado(Request $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
@@ -146,5 +159,52 @@ class InscripcionesController extends BaseController
 //        $result = $collection->only(['idPersona', 'nombres', 'apellidoPaterno']);
         return $collection;
 
+    }
+
+    public function store($id, Request $request)
+    {
+        $user = Persona::findOrFail($request->idPersona);
+        $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
+            ->where('idActividad', '=', $id)
+            ->first();
+        if ($yaInscripto) {
+            return response('Voluntario ya inscripto', 428);
+        }
+        $inscripcion = $this->inscribir($request);
+        $grupo = $this->incluirEnGrupo($request);
+        if ($inscripcion &&  $grupo) {
+            Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            return response('ok');
+        }
+
+        return response('Error al guardar la Inscripción', 500);
+    }
+
+    private function incluirEnGrupo(Request $request)
+    {
+        $arr = [
+            'idPersona' => (int)$request->idPersona,
+            'idGrupo' => (int)$request->idGrupo,
+            'idActividad' => (int)$request->idActividad,
+            'rol' => $request->rol
+        ];
+
+        return GrupoRolPersona::create($arr);
+    }
+
+    private function inscribir(Request $request)
+    {
+        $data = [
+            'idActividad'       => (int)$request->idActividad,
+            'idPersona'         => (int)$request->idPersona,
+            'fechaInscripcion'  => Carbon::now(),
+            'idPersonaModificacion' => auth()->user()->idPersona,
+            'idPuntoEncuentro'  => $request->idPuntoEncuentro,
+            'estado'            => 'Sin Contactar',
+            'evaluacion'        => 0,
+            'acompanante'       => ''
+        ];
+
+        return Inscripcion::create($data);
     }
 }

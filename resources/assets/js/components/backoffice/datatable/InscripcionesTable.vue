@@ -198,6 +198,20 @@ export default {
               },
               params);
       },
+      asignarPunto: function (punto) {
+          let url = this.apiUrl + 'asignar/punto';
+          let params = {
+              punto: punto,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('mensaje-success', data);
+                  Event.$emit('vuetable-actualizarTabla');
+              },
+              params);
+      },
+
       cambiarEstado: function (estado) {
           let url = this.apiUrl + 'cambiar/estado';
           let params = {
@@ -236,6 +250,7 @@ export default {
       Event.$on('remover-condicion', this.removerCondicion);
       Event.$on('rol-asignado', this.asignarRol);
       Event.$on('grupo-asignado', this.asignarGrupo);
+      Event.$on('punto-asignado', this.asignarPunto);
       Event.$on('cambiar-estado', this.cambiarEstado);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
