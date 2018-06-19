@@ -198,7 +198,7 @@
                     let payload = {
                         noInscripto: this.noInscripto,
                         rol: this.rol,
-                        punto: this.idPuntoSeleccionado
+                        idPuntoEncuentro: this.idPuntoSeleccionado
                     };
                     Event.$emit('btnGrupoPersona:guardar-no-inscripto', payload);
                 }

@@ -101,7 +101,7 @@
                     rol: payload.rol,
                     idActividad: this.dataActividad.idActividad,
                     idGrupo: this.idGrupoActual,
-                    idPuntoEncuentro: payload.idPunto
+                    idPuntoEncuentro: payload.idPuntoEncuentro
                 };
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/inscripciones';
                 this.axiosPost(url, function(result, self) {
