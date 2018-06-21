@@ -76,6 +76,9 @@ Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar
 
 Route::get('/actividades/{id}', 'ActividadesController@show');
 
+// Evaluaciones
+Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('auth');
+
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
@@ -91,6 +94,7 @@ Route::prefix('/perfil')->middleware('auth')->group(function (){
     Route::get('/', 'PerfilController@show');
     Route::get('/actividades', 'PerfilController@actividades');
 });
+
 
 //Fin Frontoffice
 

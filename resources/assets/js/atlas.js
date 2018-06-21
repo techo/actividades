@@ -15,6 +15,7 @@ import Simplert from 'vue2-simplert';
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import EvaluarActividad from './components/evaluaciones/evaluarActividad';
 import axios from 'axios';
 
 window.Vue = require('vue');
@@ -34,7 +35,7 @@ Vue.component('perfil', Perfil);
 Vue.component('mis-inscripciones', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
-
+Vue.component('evaluar-actividad', EvaluarActividad);
 window.Event = new Vue();
 
 Vue.mixin({
@@ -85,6 +86,7 @@ Vue.mixin({
         },
     }
 });
+
 
 var app = new Vue({
     el: "#app",
