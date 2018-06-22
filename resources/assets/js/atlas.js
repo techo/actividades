@@ -52,7 +52,6 @@ Vue.mixin({
                     Event.$emit('error');
                     // Error
                     console.info('Error en: ' + url);
-                    debugger;
                     console.error(error.response.status);
                     if (error.request) {
                         console.error(error.request);

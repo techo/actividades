@@ -138,7 +138,6 @@
                 };
 
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
-                    debugger
                     self.dataProvincias = Object.keys(response).map(i => response[i]);
                             for (let i=0; i< self.$children.length; i++) {
                                 self.$children[i].listaProvincias = self.dataProvincias;

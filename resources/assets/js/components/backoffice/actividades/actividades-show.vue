@@ -604,7 +604,6 @@
                     this.dataActividad, // request data
                     function (error, self) { //handler de error
                     self.ocultarLoadingAlert();
-                    debugger
                     // Error
                     if (error.response) {
                         if (error.response.status === 422) {
