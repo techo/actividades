@@ -209,12 +209,12 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center'
             ],
-            [
-                'name' => '__component:actualizar-inscripcion',
-                'title' => 'Actualizar',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ],
+//            [
+//                'name' => '__component:actualizar-inscripcion',
+//                'title' => 'Actualizar',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ],
 
         ],
         'sortOrder' => [

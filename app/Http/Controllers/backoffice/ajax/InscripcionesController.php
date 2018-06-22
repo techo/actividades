@@ -6,10 +6,11 @@ use App\Actividad;
 use App\Exports\InscripcionesExport;
 use App\GrupoRolPersona;
 use App\Inscripcion;
-use App\Persona;
-use Carbon\Carbon;
+use App\Mail\ActualizacionActividad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Persona;
+use Carbon\Carbon;
 use App\Mail\MailConfimacionInscripcion;
 use Illuminate\Support\Facades\Mail;
 
@@ -49,13 +50,20 @@ class InscripcionesController extends BaseController
     public function update(Request $request, $id, $inscripcion)
     {
         $inscripcion = Inscripcion::findOrFail($inscripcion);
-        $inscripcion->presente = $request->presente;
-        $inscripcion->pago = $request->pago;
-        if ($request->estado !== null) {
+
+        if($request->has('presente')){
+            $inscripcion->presente = $request->presente;
+        }
+
+        if($request->has('pago')){
+            $inscripcion->pago = $request->pago;
+        }
+
+        if (!empty($request->estado)){
             $inscripcion->estado = $request->estado;
         }
         if ($inscripcion->save()) {
-            return response('Ok');
+            return response()->json('Ok', 200);
         }
 
         return response('Ocurrió un error al actualizar el estado', 500);
@@ -116,6 +124,7 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
+            Mail::to($inscripcion->persona->mail)->send(new ActualizacionActividad($inscripcion));
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
