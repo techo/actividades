@@ -20,17 +20,30 @@
 
                 <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" data-parent="#evaluaciones">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="slider">Puntaje Social</label>
-                            <vue-slider
-                                    :min=1
-                                    :max=10
-                                    :interval=1
-                                    ref="slider"
-                                    id="slider"
-                                    v-model="puntaje"
-                            >
-                            </vue-slider>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="slider">Puntaje General</label>
+                                    <vue-slider
+                                            :min=1
+                                            :max=10
+                                            :interval=1
+                                            ref="slider"
+                                            id="slider"
+                                            :disabled="noAplica"
+                                            v-model="puntaje"
+                                    >
+                                    </vue-slider>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="noAplica" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
+                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica">
+                                </div>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <label for="comentarios">Comentarios</label>
@@ -67,7 +80,8 @@
                 actividad: {},
                 comentarios: '',
                 enviado: false,
-                abierto: true
+                abierto: true,
+                noAplica: false
             }
         },
         methods: {
