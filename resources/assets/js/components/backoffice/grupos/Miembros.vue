@@ -48,6 +48,7 @@
             this.paginationData.firstPageUrl +=  this.miembros.idRaiz + '/miembros?page=1';
             Event.$on('btnGrupoPersona:guardar-grupo', this.guardarGrupo);
             Event.$on('btnGrupoPersona:guardar-inscripto', this.guardarInscripto);
+            Event.$on('btnGrupoPersona:guardar-no-inscripto', this.guardarNoInscripto);
             Event.$on('vuetable-addToBreadcrumb', this.addToBreadcrumb);
             Event.$on('vuetable-verVoluntario', this.verVoluntario);
             Event.$on('grupos-toolbar:getRoles', this.getRoles);
@@ -75,7 +76,6 @@
                 };
                 let url = '/admin/ajax/grupos';
                 this.axiosPost(url, function(result, self) {
-                    //self.miembros.arbol.unshift(result.data);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
@@ -90,19 +90,25 @@
                 };
                 let url = '/admin/ajax/grupos/'+ this.idGrupoActual +'/inscriptos';
                 this.axiosPost(url, function(result, self) {
-                    let nuevaPersona = {
-                        id: inscripto.idPersona,
-                        cantidad: '-',
-                        dni: payload.inscripto.dni,
-                        nombre: payload.inscripto.nombre,
-                        rol: payload.rol,
-                        tipo: 'persona'
-                    };
-                    //self.miembros.arbol.unshift(nuevaPersona);
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
                 }, inscripto);
+            },
+            guardarNoInscripto(payload) {
+                let noInscripto = {
+                    idPersona: payload.noInscripto.idPersona,
+                    rol: payload.rol,
+                    idActividad: this.dataActividad.idActividad,
+                    idGrupo: this.idGrupoActual,
+                    idPuntoEncuentro: payload.idPuntoEncuentro
+                };
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/inscripciones';
+                this.axiosPost(url, function(result, self) {
+                    Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
+                    Event.$emit('inscripciones-actualizar-tabla');
+                    Event.$emit('Miembros:guardado');
+                }, noInscripto);
             },
             axiosPost(url, fCallback, params = []) {
                 this.loading = true;

@@ -1,30 +1,33 @@
 <template>
-    <div class="btn-group" role="group" aria-label="toolbar">
-        <button
-                type="button"
-                class="btn btn-default"
-                :class="{'disabled': disabled}"
-                @click="mostrarRolModal">
+    <div>
+        <label for="toolbar">Acciones </label>
+        <div class="btn-group" role="group" aria-label="toolbar" id="toolbar">
+            <button
+                    type="button"
+                    class="btn btn-sm btn-default"
+                    :class="{'disabled': disabled}"
+                    @click="mostrarRolModal">
+                Asignar Rol
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-sm btn-default"
+                    :class="{'disabled': disabled}"
+                    @click="mostrarGrupoModal">
+                Asignar Grupo
+            </button>
+            <button
+                    type="button"
+                    class="btn btn-sm btn-default"
+                    :class="{'disabled': disabled}"
+                    @click="mostrarEliminarModal">
+                Asignar Borrar
+            </button>
+            <rol-modal></rol-modal>
+            <grupo-modal></grupo-modal>
+            <borrar-modal></borrar-modal>
+        </div>
 
-            Rol
-        </button>
-        <button
-                type="button"
-                class="btn btn-default"
-                :class="{'disabled': disabled}"
-                @click="mostrarGrupoModal">
-            Grupo
-        </button>
-        <button
-                type="button"
-                class="btn btn-default"
-                :class="{'disabled': disabled}"
-                @click="mostrarEliminarModal">
-            Borrar
-        </button>
-        <rol-modal></rol-modal>
-        <grupo-modal></grupo-modal>
-        <borrar-modal></borrar-modal>
     </div>
 </template>
 
