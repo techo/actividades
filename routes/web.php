@@ -72,12 +72,14 @@ Route::get('autenticado', function () {
 });
 Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
 
+// Evaluaciones
+Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
+Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('auth');
+
+
 // Flujo de inscripciones
 
 Route::get('/actividades/{id}', 'ActividadesController@show');
-
-// Evaluaciones
-Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('auth');
 
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');

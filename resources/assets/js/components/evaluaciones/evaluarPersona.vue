@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="accordion" id="evaluaciones">
+        <div class="accordion" id="evaluacion">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
@@ -23,15 +23,15 @@
                         <div class="row">
                             <div class="col-md-9">
                                 <div class="form-group">
-                                    <label for="slider">Puntaje General</label>
+                                    <label for="sliderTecnico">Puntaje Técnico</label>
                                     <vue-slider
                                             :min=1
                                             :max=10
                                             :interval=1
-                                            ref="slider"
-                                            id="slider"
-                                            :disabled="noAplica"
-                                            v-model="puntaje"
+                                            ref="sliderTecnico"
+                                            id="sliderTecnico"
+                                            :disabled="noAplicaTecnico"
+                                            v-model="puntajeTecnico"
                                     >
                                     </vue-slider>
                                 </div>
@@ -39,8 +39,33 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="noAplica" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
-                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica">
+                                    <label for="noAplicaTecnico" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
+                                    <input type="checkbox" id="noAplicaTecnico" :value="1" v-model="noAplicaTecnico">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="sliderSocial">Puntaje Social</label>
+                                    <vue-slider
+                                            :min=1
+                                            :max=10
+                                            :interval=1
+                                            ref="sliderSocial"
+                                            id="sliderSocial"
+                                            :disabled="noAplicaSocial"
+                                            v-model="puntajeSocial"
+                                    >
+                                    </vue-slider>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="noAplicaSocial" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
+                                    <input type="checkbox" id="noAplicaSocial" :value="1" v-model="noAplicaSocial">
                                 </div>
                             </div>
 
@@ -72,32 +97,35 @@
         </div>
     </div>
 </template>
-
 <script>
     import VueSlider from 'vue-slider-component'; //https://github.com/NightCatSama/vue-slider-component
     export default {
-        name: "evaluarActividad",
+        name: "evaluarPersona",
         components: {
             'vue-slider': VueSlider
         },
-        props: ['prop-actividad', 'respuesta'],
+        props: ['prop-persona', 'respuesta', 'prop-actividad'],
         created: function () {
-          this.actividad = JSON.parse(this.propActividad);
-          if (this.respuesta) {
-              this.respuestaAnterior = JSON.parse(this.respuesta);
-              this.puntaje = this.respuestaAnterior.puntaje;
-              if (this.puntaje === null) { this.noAplica = true; }
-              this.comentario = this.respuestaAnterior.comentario;
-              this.enviado = true;
-          }
+            this.persona = JSON.parse(this.propPersona);
+            if (this.respuesta) {
+                this.respuestaAnterior = JSON.parse(this.respuesta);
+                this.puntajeTecnico = this.respuestaAnterior.puntajeTecnico;
+                this.puntajeSocial = this.respuestaAnterior.puntajeSocial;
+                if (this.puntajeTecnico === null) { this.puntajeTecnico = true; }
+                if (this.puntajeSocial === null) { this.puntajeSocial = true; }
+                this.comentario = this.respuestaAnterior.comentario;
+                this.enviado = true;
+            }
         },
         data: function () {
             return {
-                puntaje: 5,
-                actividad: {},
+                puntajeSocial: 5,
+                puntajeTecnico: 5,
+                persona: {},
                 comentario: '',
                 abierto: true,
-                noAplica: false,
+                noAplicaTecnico: false,
+                noAplicaSocial: false,
                 error: false,
                 enviado: false,
             }
@@ -105,10 +133,11 @@
         methods: {
             enviarEvaluacion: function () {
                 this.abierto = !this.abierto;
-                let url = '/actividades/' + this.actividad.idActividad + '/evaluaciones';
+                let url = '/actividades/' + this.actividad.idActividad + '/evaluaciones/' + this.persona.idPersona + '/persona';
                 let payload = {
                     idActividad: this.actividad.idActividad,
-                    puntaje: (this.noAplica) ? null : this.puntaje,
+                    puntajeTecnico: (this.noAplicaTecnico) ? null : this.puntajeTecnico,
+                    puntajeSocial: (this.noAplicaSocial) ? null : this.puntajeSocial,
                     comentario: this.comentario
                 };
                 this.axiosPost(url,

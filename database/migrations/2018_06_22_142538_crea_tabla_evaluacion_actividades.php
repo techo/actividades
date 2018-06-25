@@ -19,8 +19,9 @@ class CreaTablaEvaluacionActividades extends Migration
                 $table->increments('idEvaluacion');
                 $table->integer('idPersona')->unsigned();
                 $table->integer('idActividad')->unsigned();
-                $table->integer('puntaje')->unsigned();
-                $table->text('comentario');
+                $table->integer('puntaje')->unsigned()->nullable();
+                $table->text('comentario')->nullable();
+                $table->timestamps();
             });
         }
     }

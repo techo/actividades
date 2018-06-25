@@ -13,7 +13,8 @@
 
 @section('main_content')
     <h1>Evaluaciones de {{ $actividad->nombreActividad }}</h1>
-    <evaluar-actividad prop-actividad="{{ $actividad }}"></evaluar-actividad>
+    <evaluar-actividad prop-actividad="{{ $actividad }}" respuesta="{{ $respuestaActividad }}"></evaluar-actividad>
+    <contenedor-evaluaciones prop-inscriptos="{{ $inscriptos }}"></contenedor-evaluaciones>
 @endsection
 
 @section('additional_scripts')

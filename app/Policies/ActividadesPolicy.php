@@ -20,7 +20,19 @@ class ActividadesPolicy
     {
         //
     }
-    
+
+    public function evaluar(Persona $user, $id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $inscripto = Inscripcion::where('idActividad', '=', $actividad->idActividad)
+            ->where('idPersona', '=', $user->idPersona)
+            ->first();
+        $inicioEvaluaciones = ($actividad->fechaInicioEvaluaciones <= Carbon::now());
+        $finEvaluaciones = ($actividad->fechaFinEvaluaciones >= Carbon::now());
+
+        return ($inscripto && $inicioEvaluaciones && $finEvaluaciones);
+
+    }
     public function inscribir(Persona $user, $id)
     {
         //estadoConstruccion es EstadoActividad (nombre legacy)

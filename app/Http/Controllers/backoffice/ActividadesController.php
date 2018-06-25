@@ -290,23 +290,25 @@ class ActividadesController extends Controller
         $v = Validator::make(
             $request->all(),
             [
-                'coordinador.idPersona' => 'required | numeric',
-                'descripcion' => 'required',
-                'fechaFin' => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
-                'fechaInicio' => 'required | date',
-                'fechaInicioInscripciones' => 'required | date | before_or_equal:fechaInicio',
-                'fechaFinInscripciones' => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
-                'idTipo' => 'required',
-                'inscripcionInterna' => 'required',
-                'limiteInscripciones' => 'numeric',
-                'localidad.id' => 'required',
-                'mensajeInscripcion' => 'required',
-                'nombreActividad' => 'required',
-                'oficina.id' => 'required',
-                'pais.id' => 'required',
-                'provincia.id' => 'required',
-                'puntos_encuentro' => [new PuntoEncuentroRule],
-                'tipo.categoria.id' => 'required',
+                'coordinador.idPersona'     => 'required | numeric',
+                'descripcion'               => 'required',
+                'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
+                'fechaInicio'               => 'required | date',
+                'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
+                'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
+                'fechaInicioEvaluaciones'   => 'required | date | before_or_equal:fechaFin',
+                'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
+                'idTipo'                    => 'required',
+                'inscripcionInterna'        => 'required',
+                'limiteInscripciones'       => 'numeric',
+                'localidad.id'              => 'required',
+                'mensajeInscripcion'        => 'required',
+                'nombreActividad'           => 'required',
+                'oficina.id'                => 'required',
+                'pais.id'                   => 'required',
+                'provincia.id'              => 'required',
+                'puntos_encuentro'          => [new PuntoEncuentroRule],
+                'tipo.categoria.id'         => 'required',
             ], $messages
         );
 
@@ -359,7 +361,9 @@ class ActividadesController extends Controller
             'fechaInicio',
             'fechaFin',
             'fechaInicioInscripciones',
-            'fechaFinInscripciones'
+            'fechaFinInscripciones',
+            'fechaInicioEvaluaciones',
+            'fechaFinEvaluaciones'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -385,6 +389,8 @@ class ActividadesController extends Controller
         $actividad->fechaFin = $request->fechaFin;
         $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
+        $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
+        $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')

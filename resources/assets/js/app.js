@@ -19,7 +19,8 @@ import vSelect2 from 'vue-select';
 import vSwitch from 'vue-switches';
 import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
-import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla'
+import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
+import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaciones';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -38,7 +39,8 @@ Vue.component('simplert', Simplert);
 Vue.component('v-switch', vSwitch);
 Vue.component('btn-grupo-persona', BtnGrupoPersona);
 Vue.component('miembros', Miembros);
-Vue.component('miembros-tabla', MiembrosTabla)
+Vue.component('miembros-tabla', MiembrosTabla);
+Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
 
 window.Event = new Vue();
 

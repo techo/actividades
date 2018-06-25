@@ -36,7 +36,7 @@
                             >
                         </div>
                     </div>
-                    <div class="col-md-2" style="padding-top: 1.5em">
+                    <div class="col-md-3" style="padding-top: 1.5em">
                         <button type="button" class="btn btn-primary" @click="guardarGrupo">
                             <i class="fa fa-check"></i> Agregar
                         </button>
