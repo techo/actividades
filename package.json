@@ -44,6 +44,7 @@
         "vue2-timepicker": "^0.1.4",
         "vuejs-datepicker": "^0.9.29",
         "vuejs-paginate": "^1.9.3",
+        "vuex": "^3.0.1",
         "webpack": "^3.11.0"
     }
 }
