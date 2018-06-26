@@ -14,9 +14,20 @@
 @section('main_content')
     <h1>Evaluaciones de {{ $actividad->nombreActividad }}</h1>
     <evaluar-actividad prop-actividad="{{ $actividad }}" respuesta="{{ $respuestaActividad }}"></evaluar-actividad>
-    <contenedor-evaluaciones prop-inscriptos="{{ $inscriptos }}"></contenedor-evaluaciones>
+    <contenedor-evaluaciones
+            prop-actividad="{{ $actividad }}"
+            prop-user="{{ auth()->user() }}"
+            prop-inscriptos="{{ json_encode($listadoInscriptos) }}"
+            prop-mi-grupo = "{{ json_encode($miGrupo) }}"
+            prop-grupos-subordinados="{{ json_encode($gruposSubordinados) }}"
+    >
+    </contenedor-evaluaciones>
 @endsection
 
 @section('additional_scripts')
 
+@endsection
+
+@section('footer')
+    @include('partials.footer')
 @endsection

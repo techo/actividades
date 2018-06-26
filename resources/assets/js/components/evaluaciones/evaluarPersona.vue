@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="accordion" id="evaluacion">
+        <div class="accordion" id="evaluacionPersona">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
@@ -11,9 +11,9 @@
                                 aria-controls="cardEvaluacion"
                                 @click="enviarEvaluacion"
                         >
-                            Evaluación de {{ actividad.nombreActividad }}
-                            <span v-show="abierto"><i class="fa fa-chevron-up"></i></span>
-                            <span v-show="!abierto"><i class="fa fa-chevron-down"></i></span>
+                            Evaluación de {{ persona.nombre }} - {{ persona.rol }}
+                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
+                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
                     </h5>
                 </div>
@@ -104,11 +104,11 @@
         components: {
             'vue-slider': VueSlider
         },
-        props: ['prop-persona', 'respuesta', 'prop-actividad'],
+        props: ['persona', 'prop-respuesta', 'actividad'],
         created: function () {
-            this.persona = JSON.parse(this.propPersona);
-            if (this.respuesta) {
-                this.respuestaAnterior = JSON.parse(this.respuesta);
+            //this.persona = JSON.parse(this.propPersona);
+            if (this.propRespuesta !== undefined) {
+                this.respuestaAnterior = JSON.parse(this.propRespuesta);
                 this.puntajeTecnico = this.respuestaAnterior.puntajeTecnico;
                 this.puntajeSocial = this.respuestaAnterior.puntajeSocial;
                 if (this.puntajeTecnico === null) { this.puntajeTecnico = true; }
@@ -121,7 +121,7 @@
             return {
                 puntajeSocial: 5,
                 puntajeTecnico: 5,
-                persona: {},
+                //persona: {},
                 comentario: '',
                 abierto: true,
                 noAplicaTecnico: false,
@@ -133,7 +133,7 @@
         methods: {
             enviarEvaluacion: function () {
                 this.abierto = !this.abierto;
-                let url = '/actividades/' + this.actividad.idActividad + '/evaluaciones/' + this.persona.idPersona + '/persona';
+                let url = '/actividades/' + this.actividad.idActividad + '/persona/' + this.persona.idPersona + '/evaluar';
                 let payload = {
                     idActividad: this.actividad.idActividad,
                     puntajeTecnico: (this.noAplicaTecnico) ? null : this.puntajeTecnico,

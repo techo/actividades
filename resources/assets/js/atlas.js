@@ -16,6 +16,8 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import EvaluarActividad from './components/evaluaciones/evaluarActividad';
+import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaciones';
+
 import axios from 'axios';
 
 window.Vue = require('vue');
@@ -36,6 +38,8 @@ Vue.component('mis-inscripciones', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
 Vue.component('evaluar-actividad', EvaluarActividad);
+Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
+
 window.Event = new Vue();
 
 Vue.mixin({

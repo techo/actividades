@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="accordion" id="evaluaciones">
+        <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
-                <div class="card-header" id="headingOne">
+                <div class="card-header accordion" id="headingOne">
                     <h5 class="mb-0">
                         <h6
                                 data-toggle="collapse"
@@ -56,7 +56,7 @@
                                     v-model="comentario"
                             >{{ comentario }}</textarea>
                         </div>
-                        <button class="btn btn-primary pull-right" v-if="!enviado" @click="enviarEvaluacion">
+                        <button class="btn btn-primary pull-right" v-if="!enviado" @click.prevent="enviarEvaluacion">
                             Enviar Evaluación
                         </button>
                         <p class="pull-right" v-else><strong>¡Gracias por tu opinión!</strong></p>
@@ -86,7 +86,7 @@
           if (this.respuesta) {
               this.respuestaAnterior = JSON.parse(this.respuesta);
               this.puntaje = this.respuestaAnterior.puntaje;
-              if (this.puntaje === null) { this.noAplica = true; }
+              if (this.puntaje === null) { this.noAplica = true; this.puntaje = 5; }
               this.comentario = this.respuestaAnterior.comentario;
               this.enviado = true;
           }
