@@ -1,3 +1,3 @@
 @foreach($logs as $log)
-    {{ $log->detalle . PHP_EOL }}
+{{ $log->detalle }}
 @endforeach

@@ -50,6 +50,12 @@ class InscripcionesController extends BaseController
         $export = new InscripcionesExport($filtros);
         $collection = $export->collection();
         $result = $this->paginate($collection, 10);
+
+        //hack para solucionar problema con vuetable con checkboxes
+        // https://github.com/ratiw/vuetable-2/issues/422
+        $flattenCollection = $result->getCollection()->flatten();
+        $result->setCollection($flattenCollection);
+
         return $result;
 
     }

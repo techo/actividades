@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <p>Para inscribir voluntarios a la actividad desde un archivo,
                         el mismo deberá respetar un formato específico. Puede descargar el archivo
-                        de ejemplo desde <a href="#">aquí</a></p>
+                        de ejemplo desde <a href="/admin/inscripciones/importar/template" download>aquí</a></p>
                     <div class="form-group">
                         <label for="archivo">Seleccionar archivo</label>
                         <input type="file"
@@ -21,6 +21,9 @@
                         >
                         <p class="text-error" v-show="uploadError">Seleccionar solo un archivo</p>
                     </div>
+                    <p>
+                        <a href="/admin/logs/importar_inscripciones">Descargar el úlitmo registro de errores</a>
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
