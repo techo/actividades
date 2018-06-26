@@ -238,6 +238,25 @@ export default {
               },
               params);
       },
+      procesarArchivo: function (archivo) {
+          let url = this.apiUrl + 'procesar/archivo';
+          let formData = new FormData();
+          formData.append('archivo', archivo);
+          axios.post(url, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+              .then(function (data, self) {
+                      // loading(false);
+                      Event.$emit('inscripciones-actualizar-tabla');
+                      if(data.data.errores > 0) {
+                          Event.$emit('mensaje-warning', data.data);
+                      } else {
+                          Event.$emit('mensaje-success', data.data);
+                      }
+                      Event.$emit('vuetable-actualizarTabla');
+              })
+              .catch(function (data) {
+                  Event.$emit('mensaje-error', data);
+              });
+      },
       actualizarInscripcionesTable: function () {
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       }
@@ -253,14 +272,12 @@ export default {
       Event.$on('punto-asignado', this.asignarPunto);
       Event.$on('cambiar-estado', this.cambiarEstado);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
+      Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
       this.moreParams.condiciones = [];
   },
   events: {
     'filter-set' (filterText) {
-      // this.moreParams = {
-      //   filter: filterText
-      // };
       this.moreParams.filter = filterText;
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },

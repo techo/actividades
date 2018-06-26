@@ -127,6 +127,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/actividades/{id}/inscripciones/asignar/punto', 'backoffice\ajax\InscripcionesController@asignarPunto')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/estado', 'backoffice\ajax\InscripcionesController@cambiarEstado')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/asistencia', 'backoffice\ajax\InscripcionesController@cambiarAsistencia')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::post('/ajax/actividades/{id}/inscripciones/procesar/archivo', 'backoffice\ajax\InscripcionesController@procesarArchivo')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
     Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
@@ -136,5 +137,6 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/grupos', 'backoffice\ajax\GruposController@store');
     Route::post('/ajax/grupos/{idGrupo}/inscriptos', 'backoffice\ajax\GruposController@incluirInscripto');
     Route::get('/ajax/personas/{id}', 'ajax\PersonasController@show');
+    Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
 });
 
