@@ -22,6 +22,13 @@ class EvaluacionesController extends Controller
             ->where('Grupo_Persona.idActividad', '=', $actividad->idActividad)
             ->first();
 
+        if (is_null($miGrupo)) {
+            $miGrupo = Grupo::where('idActividad', '=', $actividad->idActividad)
+                ->where('idPadre', '=', 0)
+                ->first();
+
+        }
+
         $gruposSubordinados = Grupo::where('idPadre', '=', $miGrupo->idGrupo)->pluck('idGrupo');
 
         $respuestaActividad = EvaluacionActividad::where('idPersona', '=', $user->idPersona)

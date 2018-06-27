@@ -32,7 +32,10 @@ class GruposController extends BaseController
         foreach ($miembros as $i => $item) {
             $collection[] = new MiembroResource($item);
         }
-        return $this->paginate($collection, $perPage);
+        $result = $this->paginate($collection, $perPage);
+        $flattenCollection = $result->getCollection()->flatten();
+        $result->setCollection($flattenCollection);
+        return $result;
     }
 
     public function store(Request $request)

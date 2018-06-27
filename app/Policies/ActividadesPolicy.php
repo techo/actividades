@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Actividad;
 use App\Persona;
 use Carbon\Carbon;
+use App\Inscripcion;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ActividadesPolicy
