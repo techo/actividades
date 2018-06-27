@@ -9,7 +9,7 @@
                     aria-haspopup="true"
                     aria-expanded="false"
             >
-                Agregar <span class="caret"></span>
+                Agregar a este grupo <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a @click="verFormGrupo">Grupo</a></li>
@@ -24,7 +24,7 @@
                 <form>
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="form-group" :class="{'has-error': nombreGrupo.length === 0}">
+                        <div class="form-group" :class="{'has-error': nombreGrupoError}">
                             <label for="nombre">Nombre </label>
                             <input
                                     type="text"
@@ -34,6 +34,7 @@
                                     v-model="nombreGrupo"
 
                             >
+                            <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
                         </div>
                     </div>
                     <div class="col-md-2" style="padding-top: 1.5em">
@@ -53,7 +54,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="form-group" :class="{'has-error': !inscripto }">
+                        <div class="form-group" :class="{'has-error': inscriptoNombreError }">
                             <label for="nombre">Nombre </label>
                             <v-select
                                     :options="listadoInscriptos"
@@ -66,6 +67,7 @@
                                     @search="onSearchInscripto"
                             >
                             </v-select>
+                            <p class="red" v-show="inscriptoNombreError">Este campo es requerido</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -95,7 +97,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group" :class="{'has-error': !noInscripto}">
+                        <div class="form-group" :class="{'has-error': noInscriptoNombreError}">
                             <label for="nombre">Nombre </label>
                             <v-select
                                     :options="listadoNoInscriptos"
@@ -108,6 +110,7 @@
                                     @search="onSearchNoInscripto"
                             >
                             </v-select>
+                            <p class="red" v-show="noInscriptoNombreError">Este campo es requerido</p>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -117,11 +120,12 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="form-group" :class="{'has-error': !idPuntoSeleccionado}">
+                        <div class="form-group" :class="{'has-error': noInscriptoPuntoError}">
                             <label for="puntoEncuentro">Punto de Encuentro </label>
                             <select class="form-control" v-model="idPuntoSeleccionado" id="puntoEncuentro">
                                 <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.punto }}, {{ punto.localidad}}</option>
                             </select>
+                            <p class="red" v-show="noInscriptoPuntoError">Este campo es requerido</p>
                         </div>
                     </div>
                     <div class="col-md-2" style="padding-top: 1.5em">
@@ -167,7 +171,10 @@
                 yaInscripto: false,
                 puntosEncuentro: [],
                 idPuntoSeleccionado: '',
-                errorGrupo: false
+                nombreGrupoError: false,
+                inscriptoNombreError: false,
+                noInscriptoNombreError: false,
+                noInscriptoPuntoError: false,
             }
         },
         created: function() {
@@ -178,8 +185,11 @@
         methods: {
             guardarGrupo: function () {
                 if (this.nombreGrupo.length > 0) {
+                    this.nombreGrupoError = false;
                     this.mostrarLoadingAlert();
                     Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo);
+                } else {
+                    this.nombreGrupoError = true;
                 }
             },
             guardarInscripto: function () {
@@ -190,6 +200,8 @@
                         rol: this.rol
                     };
                     Event.$emit('btnGrupoPersona:guardar-inscripto', payload);
+                } else {
+                    this.inscriptoNombreError = true;
                 }
             },
             guardarNoInscripto: function () {
@@ -202,15 +214,27 @@
                     };
                     Event.$emit('btnGrupoPersona:guardar-no-inscripto', payload);
                 }
+
+                if (!this.noInscripto) {
+                    this.noInscriptoNombreError = true;
+                }
+
+                if (!this.idPuntoSeleccionado) {
+                    this.noInscriptoPuntoError = true;
+                }
             },
             confirmarGuardado: function () {
                 this.nombreGrupo = '';
+                this.nombreGrupoError = false;
                 this.rol = '';
                 this.inscripto = null;
                 this.noInscripto = null;
                 this.listadoInscriptos = [];
                 this.listadoNoInscriptos = [];
                 this.yaInscripto = false;
+                this.inscriptoNombreError = false;
+                this.noInscriptoNombreError = false;
+                this.noInscriptoPuntoError = false;
                 this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
@@ -237,11 +261,15 @@
                 this.formInscripto = false;
                 this.formNoInscripto = false;
                 this.nombreGrupo = '';
+                this.nombreGrupoError = false;
                 this.inscripto = null;
                 this.noInscripto = null;
                 this.listadoInscriptos = [];
                 this.idPuntoSeleccionado = '';
                 this.rol = '';
+                this.inscriptoNombreError = false;
+                this.noInscriptoNombreError = false;
+                this.noInscriptoPuntoError = false;
             },
             mostrarLoadingAlert() {
                 this.$refs.loading.openSimplert({
@@ -336,5 +364,8 @@
 </script>
 
 <style scoped>
-
+.red {
+    color: red;
+    font-size: smaller;
+}
 </style>

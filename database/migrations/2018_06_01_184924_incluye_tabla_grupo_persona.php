@@ -19,7 +19,7 @@ class IncluyeTablaGrupoPersona extends Migration
                 $table->integer('idPersona')->unsigned();
                 $table->integer('idGrupo')->unsigned();
                 $table->integer('idActividad')->unsigned();
-                $table->string('rol');
+                $table->string('rol')->nullable();
                 $table->timestamps();
             });
         }
