@@ -2,25 +2,28 @@
 
 namespace App\Mail;
 
+use App\Actividad;
+use App\Persona;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MailConfimacionInscripcion extends Mailable implements ShouldQueue
+class InvitacionEvaluacion extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-
-    public $inscripcion;
+    public $persona;
+    public $actividad;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($inscripcion)
+    public function __construct(Persona $persona, Actividad $actividad)
     {
-        $this->inscripcion = $inscripcion;
+        $this->persona = $persona;
+        $this->actividad = $actividad;
     }
 
     /**
@@ -31,8 +34,8 @@ class MailConfimacionInscripcion extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Te inscribiste a ' . $this->inscripcion->actividad->nombreActividad)
+            ->subject('TECHO: Tu opinión sobre '. $this->actividad->nombreActividad .' es importante')
             ->from('no-reply@techo.org')
-            ->view('emails.confimacionInscripcion');
+            ->view('emails.invitacionEvaluacion');
     }
 }
