@@ -20,7 +20,7 @@ import vSelect2 from 'vue-select';
 import vSwitch from 'vue-switches';
 import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
-import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla'
+import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
 import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
 
 Vue.component('actividades-show', ActividadesShow);

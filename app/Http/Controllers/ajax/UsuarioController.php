@@ -140,11 +140,14 @@ class UsuarioController extends Controller
 
 
     public function inscripciones(Request $request) {
-        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')->where('idPersona',Auth::user()->idPersona)->whereNotIn('estado',['Desinscripto'])->get();
+        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
+            ->where('idPersona', Auth::user()->idPersona)
+            ->whereNotIn('estado',['Desinscripto'])->select(['Actividad.*'])
+            ->get();
         $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
-                $resourceCollection[] = new InscripcionResource($inscripcion);
+                $resourceCollection[] = new ActividadResource($inscripcion);
             }
         }
         return $resourceCollection;

@@ -5,6 +5,7 @@ namespace App;
 use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\EvaluacionActividad;
 
 class Actividad extends Model
 {
@@ -31,6 +32,11 @@ class Actividad extends Model
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idActividad');
+    }
+
+    public function evaluaciones()
+    {
+        return $this->hasMany(EvaluacionActividad::class, 'idActividad');
     }
 
     /**
@@ -82,6 +88,13 @@ class Actividad extends Model
         return $todosArray;
     }
 
+    public function getPromedioEvaluacionesAttribute()
+    {
+        return EvaluacionActividad::where('idActividad', '=', $this->idActividad)
+            ->whereNotNull('puntaje')
+            ->get()
+            ->avg('puntaje');
+    }
     public function inscripciones_validas()
     {
         return $this->inscripciones;

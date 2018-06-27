@@ -125,7 +125,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
                         <br>
@@ -140,6 +140,24 @@
                                            :input="'fechaActividad'"
                                            name="fechaActividad"
                                            id="fechaActividad"
+                        ></daterange-picker>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaEvaluaciones">Fecha de Inicio y Fin de las Evaluaciones</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasEvaluaciones }}</p>
+                        <daterange-picker v-else @applyfechaEvaluaciones="cambioFechaEvaluaciones"
+                                           :start-date=this.dataActividad.fechaInicioEvaluaciones
+                                           :end-date=this.dataActividad.fechaFinEvaluaciones
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                                           drops="down"
+                                           :input="'fechaEvaluaciones'"
+                                           name="fechaEvaluaciones"
+                                           id="fechaEvaluaciones"
                         ></daterange-picker>
                     </div>
                 </div>
@@ -433,6 +451,10 @@
             fechasActividad: function () {
                 return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
             },
+            fechasEvaluaciones: function () {
+                return window.moment(this.dataActividad.fechaInicioEvaluaciones).locale("es").format("LL LT")
+                    + " - " + window.moment(this.dataActividad.fechaFinEvaluaciones).locale("es").format("LL LT")
+            },
             fechasInscripcion: function () {
                 return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
             }
@@ -573,7 +595,6 @@
             },
             guardar(){
                 let url;
-
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
                 window.scrollTo(0, 0);
@@ -581,7 +602,7 @@
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
                 } else {
-                    url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
+                    url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
                 this.axiosPost(url, //endpoint
@@ -641,6 +662,10 @@
             cambioFechaActividad: function (start, end) {
                 this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
+            },
+            cambioFechaEvaluaciones: function (start, end) {
+                this.dataActividad.fechaInicioEvaluaciones = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFinEvaluaciones = end.format("YYYY-MM-DD HH:mm:ss");
             },
             cambioFechaInscripciones: function (start, end) {
                 this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
