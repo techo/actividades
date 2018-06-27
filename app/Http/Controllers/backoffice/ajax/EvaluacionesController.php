@@ -14,14 +14,14 @@ class EvaluacionesController extends Controller
 {
     public function enviar($id, Request $request)
     {
+        $actividad = Actividad::findOrFail($id);
         $personas = Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->where('Inscripcion.idActividad', '=', $id)
             ->where('Inscripcion.presente', '=', '1')
             ->get();
 
-        $actividad = Actividad::find($id);
         foreach ($personas as $persona) {
-            Mail::to($persona->mail)->send(new InvitacionEvaluacion($persona, $actividad));
+            Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
         }
         return 'ok';
     }
