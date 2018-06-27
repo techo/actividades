@@ -1,5 +1,6 @@
 <template>
   <div>
+    <simple-alert ref="loading"></simple-alert>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
     <vuetable
       class="vuetable"
@@ -48,6 +49,7 @@ import ActualizarInscripcion from './actualizarInscripcion';
 import EstadoInscripcion from './estadoInscripcion';
 import MisActividades from './MisActividades';
 import axios from 'axios';
+import Simplert from 'vue2-simplert';
 
 
 Vue.use(VueEvents);
@@ -60,6 +62,7 @@ Vue.use(VueEvents);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
   Vue.component('mis-actividades', MisActividades);
+  Vue.component('simple-alert', Simplert);
 
 export default {
   components: {
@@ -128,7 +131,7 @@ export default {
       this.$refs.paginationInfo.setPaginationData(paginationData);
     },
     onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
+      this.$refs.inscripcionesVuetable.changePage(page)
     },
     mostrarDetalle (data, field, event) {
       this.$refs.inscripcionesVuetable.toggleDetailRow(data.id)
@@ -238,9 +241,44 @@ export default {
               },
               params);
       },
+      procesarArchivo: function (archivo) {
+          let url = this.apiUrl + 'procesar/archivo';
+          let formData = new FormData();
+          this.mostrarLoadingAlert();
+          formData.append('archivo', archivo);
+          axios.post(url, formData, {headers: {'Content-Type': 'multipart/form-data'}})
+              .then(function (data, self) {
+                      // loading(false);
+                      Event.$emit('inscripciones-actualizar-tabla');
+                      if(data.data.errores > 0) {
+                          Event.$emit('mensaje-warning', data.data);
+                      } else {
+                          Event.$emit('mensaje-success', data.data);
+                      }
+                      Event.$emit('vuetable-actualizarTabla');
+                      Event.$emit('ocultar-Loading-alert');
+              })
+              .catch(function (data, self) {
+                  Event.$emit('mensaje-error', data);
+                  Event.$emit('ocultar-Loading-alert');
+              });
+      },
       actualizarInscripcionesTable: function () {
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
-      }
+      },
+      mostrarLoadingAlert() {
+          this.$refs.loading.openSimplert({
+              title: 'Espera...',
+              message: "<i class=\"fa fa-spinner fa-spin fa-4x\"></i>",
+              hideAllButton: true,
+              isShown: true,
+              disableOverlayClick: true,
+              type: ''
+          })
+      },
+      ocultarLoadingAlert: function () {
+          this.$refs.loading.justCloseSimplert();
+      },
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
@@ -253,14 +291,13 @@ export default {
       Event.$on('punto-asignado', this.asignarPunto);
       Event.$on('cambiar-estado', this.cambiarEstado);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
+      Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
+      Event.$on('ocultar-Loading-alert', this.ocultarLoadingAlert);
       this.moreParams.condiciones = [];
   },
   events: {
     'filter-set' (filterText) {
-      // this.moreParams = {
-      //   filter: filterText
-      // };
       this.moreParams.filter = filterText;
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },

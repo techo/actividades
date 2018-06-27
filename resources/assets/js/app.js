@@ -11,6 +11,7 @@ import InscripcionesMensajes from './components/backoffice/actividades/inscripci
 import InscripcionesGrupoModal from './components/backoffice/actividades/inscripciones-grupo-modal'
 import InscripcionesRolModal from './components/backoffice/actividades/inscripciones-rol-modal'
 import InscripcionesPuntoModal from './components/backoffice/actividades/inscripciones-punto-modal'
+import InscripcionesImportarModal from './components/backoffice/actividades/inscripciones-importar-modal'
 import asignacionDeRol from './components/backoffice/roles/asignacionDeRol'
 import CrudFooter from './components/backoffice/crudFooter';
 import BtnGrupoPersona from './components/backoffice/grupos/btnGrupoPersona';
@@ -28,6 +29,7 @@ Vue.component('inscripciones-mensajes', InscripcionesMensajes);
 Vue.component('inscripciones-rol-modal', InscripcionesRolModal);
 Vue.component('inscripciones-grupo-modal', InscripcionesGrupoModal);
 Vue.component('inscripciones-punto-modal', InscripcionesPuntoModal);
+Vue.component('inscripciones-importar-modal', InscripcionesImportarModal);
 Vue.component('asignacion-de-rol', asignacionDeRol);
 Vue.component('crud-footer', CrudFooter);
 Vue.component('datatable', VueTable);

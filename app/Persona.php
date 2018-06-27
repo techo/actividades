@@ -47,6 +47,10 @@ class Persona extends Authenticatable
         return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count();
     }
 
+    public function noEstaInscripto($idActividad) {
+        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count() == 0;
+    }
+
     public function verificacion()
     {
         return $this->hasOne('App\VerificacionMailPersona', 'idPersona');
