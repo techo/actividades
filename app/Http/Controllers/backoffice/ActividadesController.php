@@ -131,7 +131,14 @@ class ActividadesController extends Controller
             }
 
             $categorias = CategoriaActividad::all();
-            $tipos = $actividad->tipo->categoria->tipos;
+
+            try {
+                $tipos = $actividad->tipo->categoria->tipos;
+            } catch (\Exception $e) {
+                $actividad->tipo->categoria = null;
+                $tipos = null;
+            }
+
             try {
                 $provincias = $actividad->pais->provincias;
                 $localidades = $actividad->provincia->localidades;
