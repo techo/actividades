@@ -1,24 +1,24 @@
 <template>
     <div>
-        <div class="accordion" id="evaluacionPersona">
+        <div class="accordion" :id="'evaluacionPersona_' + persona.idPersona">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
-                    <h5 class="mb-0">
+                    <span class="mb-0">
                         <h6
                                 data-toggle="collapse"
-                                data-target="#cardEvaluacion"
+                                :data-target="'#cardEvaluacionPersona_'+ persona.idPersona"
                                 aria-expanded="true"
-                                aria-controls="cardEvaluacion"
-                                @click="enviarEvaluacion"
+                                :aria-controls="'cardEvaluacionPersona_'+ persona.idPersona"
+                                @click="cambiarIcono"
                         >
                             Evaluación de {{ persona.nombre }} - {{ persona.rol }}
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
-                    </h5>
+                    </span>
                 </div>
 
-                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" data-parent="#evaluaciones">
+                <div :id="'cardEvaluacionPersona_'+ persona.idPersona" class="collapse show" aria-labelledby="headingOne" :data-parent="'#evaluacionPersona_' + persona.idPersona">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-9">
@@ -28,6 +28,7 @@
                                             :min=1
                                             :max=10
                                             :interval=1
+                                            :piecewise=true
                                             ref="sliderTecnico"
                                             id="sliderTecnico"
                                             :disabled="noAplicaTecnico"
@@ -53,6 +54,7 @@
                                             :min=1
                                             :max=10
                                             :interval=1
+                                            :piecewise=true
                                             ref="sliderSocial"
                                             id="sliderSocial"
                                             :disabled="noAplicaSocial"
@@ -151,6 +153,9 @@
                     }
                 );
             },
+            cambiarIcono: function () {
+                this.abierto = !this.abierto;
+            }
         }
     }
 </script>

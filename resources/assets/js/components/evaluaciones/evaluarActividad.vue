@@ -1,24 +1,26 @@
 <template>
     <div>
+        <h4>Evalúa la actividad</h4>
+        <p class="text-muted">Este es un texto en donde se explica cuál es la importancia de evaluar la actividad</p>
         <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
                 <div class="card-header accordion" id="headingOne">
-                    <h5 class="mb-0">
+                    <span class="mb-0">
                         <h6
                                 data-toggle="collapse"
                                 data-target="#cardEvaluacion"
                                 aria-expanded="true"
                                 aria-controls="cardEvaluacion"
-                                @click="enviarEvaluacion"
+                                @click="cambiarIcono"
                         >
                             Evaluación de {{ actividad.nombreActividad }}
-                            <span v-show="abierto"><i class="fa fa-chevron-up"></i></span>
-                            <span v-show="!abierto"><i class="fa fa-chevron-down"></i></span>
+                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
+                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
-                    </h5>
+                    </span>
                 </div>
 
-                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" data-parent="#evaluaciones">
+                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-9">
@@ -31,6 +33,7 @@
                                             ref="slider"
                                             id="slider"
                                             :disabled="noAplica"
+                                            :piecewise=true
                                             v-model="puntaje"
                                     >
                                     </vue-slider>
@@ -122,6 +125,9 @@
                     }
                 );
             },
+            cambiarIcono: function () {
+                this.abierto = !this.abierto;
+            }
         }
     }
 </script>
