@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Persona;
+use Carbon\Carbon;
 use App\Mail\MailConfimacionInscripcion;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Support\Facades\File;

@@ -2,6 +2,7 @@
     <div class="filter-bar">
         <div class="row">
             <div class="col-md-7">
+
                 <form class="form-inline">
                     <div class="form-group">
                         <label>Filtrar por:</label>
@@ -18,12 +19,14 @@
                     </div>
                 </form>
             </div>
+
             <div class="col-md-3 pull-right">
                 <button class="btn" @click.prevent="mostrarModalImportar">
                     <i class="glyphicon glyphicon-upload"></i> Importar desde Excel
                 </button>
                 <inscripciones-importar-modal></inscripciones-importar-modal>
             </div>
+
             <div class="col-md-2 pull-right">
                 <button class="btn" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
