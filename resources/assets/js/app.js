@@ -21,6 +21,7 @@ import vSwitch from 'vue-switches';
 import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
 import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla'
+import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -40,7 +41,8 @@ Vue.component('simplert', Simplert);
 Vue.component('v-switch', vSwitch);
 Vue.component('btn-grupo-persona', BtnGrupoPersona);
 Vue.component('miembros', Miembros);
-Vue.component('miembros-tabla', MiembrosTabla)
+Vue.component('miembros-tabla', MiembrosTabla);
+Vue.component('btn-enviar-evaluaciones', BtnEnviarEvaluaciones);
 
 window.Event = new Vue();
 

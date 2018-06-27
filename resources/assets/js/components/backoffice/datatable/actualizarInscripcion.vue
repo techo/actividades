@@ -93,7 +93,6 @@
                 this.axiosPost(url,
                     function () {
                         // se dispara el evento success en axiosPost
-                        console.log('bien!');
                     }, params);
             },
             axiosPost(url, fCallback, params = []) {
