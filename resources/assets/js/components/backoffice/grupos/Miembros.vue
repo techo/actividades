@@ -103,7 +103,6 @@
                 };
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/inscripciones';
                 this.axiosPost(url, function(result, self) {
-                    //Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
                 }, noInscripto, function (error, self){
