@@ -293,8 +293,8 @@ class ActividadesController extends Controller
                 'Debe seleccionar el país de la actividad',
             'costo.*' =>
                 'Debe especificar el costo de participar en la construcción',
-            'fechaInicioEvaluaciones.after_or_equal' =>
-                'Las evaluaciones deben comenzar luego de la fecha de fin de la actividad',
+            'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
+            posterior al final de la actividad'
         ];
         $v = Validator::make(
             $request->all(),
