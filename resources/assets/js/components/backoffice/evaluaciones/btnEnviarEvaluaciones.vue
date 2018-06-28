@@ -1,7 +1,7 @@
 <template>
     <span>
         <div class="row">
-            <div class="col-sm-2 col-md-offset-10">
+            <div class="col-md-2">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
                     <i class="fa fa-paper-plane"></i> Enviar Evaluaciones
                 </button>
