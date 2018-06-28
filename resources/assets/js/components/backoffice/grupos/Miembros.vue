@@ -148,9 +148,6 @@
             }
         },
         watch: {
-            // 'paginationData.currentPage': function (nuevo, viejo) {
-            //     this.$refs.paginacion.selected = nuevo;
-            // }
         }
     }
 </script>
