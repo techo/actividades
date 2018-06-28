@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p class="alert alert-danger" v-if="mensajeError !== ''">{{ mensajeError }}</p>
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
             <button
@@ -147,7 +148,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    //import axios from 'axios';
     export default {
         name: "btnGrupoPersona",
         props: {
@@ -175,6 +176,7 @@
                 inscriptoNombreError: false,
                 noInscriptoNombreError: false,
                 noInscriptoPuntoError: false,
+                mensajeError: ''
             }
         },
         created: function() {
@@ -224,17 +226,8 @@
                 }
             },
             confirmarGuardado: function () {
-                this.nombreGrupo = '';
-                this.nombreGrupoError = false;
-                this.rol = '';
-                this.inscripto = null;
-                this.noInscripto = null;
-                this.listadoInscriptos = [];
-                this.listadoNoInscriptos = [];
-                this.yaInscripto = false;
-                this.inscriptoNombreError = false;
-                this.noInscriptoNombreError = false;
-                this.noInscriptoPuntoError = false;
+                Event.$emit('vuetable-actualizarTabla');
+                this.inicializar();
                 this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
@@ -249,8 +242,13 @@
             },
             verFormNoInscripto: function () {
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/puntos';
+                let payload = '';
                 this.axiosGet(url, function(response, self) {
                     self.puntosEncuentro = response;
+                }, payload, function () {
+                    this.mensajeError = 'Ocurrió un error al recuperar los puntos de encuentro. ' +
+                        'Recarga la página o intentalo de nuevo maś tarde.  ' +
+                        'Si el error persiste, comunícalo al administrador del sistema';
                 });
                 this.formGrupo = false;
                 this.formNoInscripto = true;
@@ -259,17 +257,21 @@
             cancelar: function () {
                 this.formGrupo = false;
                 this.formInscripto = false;
-                this.formNoInscripto = false;
+                this.inicializar();
+            },
+            inicializar: function() {
                 this.nombreGrupo = '';
                 this.nombreGrupoError = false;
+                this.rol = '';
                 this.inscripto = null;
                 this.noInscripto = null;
                 this.listadoInscriptos = [];
-                this.idPuntoSeleccionado = '';
-                this.rol = '';
+                this.listadoNoInscriptos = [];
+                this.yaInscripto = false;
                 this.inscriptoNombreError = false;
                 this.noInscriptoNombreError = false;
                 this.noInscriptoPuntoError = false;
+                this.mensajeError ='';
             },
             mostrarLoadingAlert() {
                 this.$refs.loading.openSimplert({
@@ -303,6 +305,11 @@
                             self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
                         }
                         loading(false);
+                    }, function (response, self) {
+                        loading(false);
+                        self.mensajeError = 'Ocurrió un error al buscar los voluntarios. ' +
+                            'Recarga la página o intenta de nuevo más tarde, y si el error persiste, comunícalo al ' +
+                            'administrador del sistema.';
                     });
                 }
             },
@@ -324,7 +331,7 @@
                     });
                 }
             },
-            axiosGet(url, fCallback, params = []) {
+         /*   axiosGet(url, fCallback, params = []) {
                 this.loading = true;
                 axios.get(url, params)
                     .then(response => {
@@ -353,7 +360,7 @@
                         }
                         console.error(error.config);
                     });
-            },
+            },*/
         },
         computed: {
             edit: function () {
