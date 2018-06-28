@@ -193,9 +193,9 @@ class InscripcionesController extends BaseController
             return response('Voluntario ya inscripto', 428);
         }
         $inscripcion = $request->all();
-        $inscripcion = $this->inscribir($inscripcion);
+        $inscripto = $this->inscribir($inscripcion);
         $grupo = $this->incluirEnGrupo($inscripcion);
-        if ($inscripcion &&  $grupo) {
+        if ($inscripto &&  $grupo) {
             Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return response('ok');
         }
