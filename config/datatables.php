@@ -61,12 +61,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-            [
-                'name' => '__component:mis-actividades',
-                'title' => 'Acciones',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ]
+//            [
+//                'name' => '__component:mis-actividades',
+//                'title' => 'Acciones',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ]
         ],
         'sortOrder' => [
             [
@@ -135,12 +135,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-            [
-                'name' => '__component:mis-actividades',
-                'title' => 'Acciones',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ]
+//            [
+//                'name' => '__component:mis-actividades',
+//                'title' => 'Acciones',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ]
         ],
         'sortOrder' => [
             [

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText" ref="gruposToolbar"></filter-bar>
+    <grupos-filter-bar v-bind:placeholder-text="dataPlaceholderText" ref="gruposToolbar"></grupos-filter-bar>
     <vuetable-miembros
       class="vuetable"
       ref="vuetableMiembros"
@@ -45,7 +45,7 @@
   Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
   Vue.component('my-detail-row', DetailRow);
-  Vue.component('filter-bar', GruposFilterBar);
+  Vue.component('grupos-filter-bar', GruposFilterBar);
 
 export default {
     components: {
