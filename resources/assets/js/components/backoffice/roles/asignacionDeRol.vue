@@ -87,7 +87,7 @@
                 };
                 fetchData.headers.set('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 fetch(
-                    `/admin/ajax/usuarios?usuario=${escape(search)}`
+                    `/admin/ajax/search/usuarios?usuario=${escape(search)}`
                 , fetchData).then(res => {
                     res.json().then(json => (vm.dataUsuarios = json));
                     loading(false);
