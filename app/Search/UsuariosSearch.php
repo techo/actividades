@@ -5,18 +5,17 @@ namespace App\Search;
 
 use App\Persona;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class UsuariosSearch
 {
-    public static function apply(Request $filters)
+    public static function apply($filters)
     {
         $query = static::applyDecoratorsFromRequest($filters, UsuariosSearch::newQuery());
         return static::getResults($query);
     }
-    private static function applyDecoratorsFromRequest(Request $request, Builder $query)
+    private static function applyDecoratorsFromRequest($filters, Builder $query)
     {
-        foreach ($request->all() as $filterName => $value) {
+        foreach ($filters as $filterName => $value) {
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);
@@ -34,12 +33,14 @@ class UsuariosSearch
     }
     private static function getResults(Builder $query)
     {
-        return $query->get();
+        // return $query->get();
+        return $query->paginate(10);
     }
 
     private static function newQuery(){
         $query = (new Persona())->newQuery();
-        $query->orderBy('apellidoPaterno', 'asc')->orderBy('nombres');
+        $query->orderBy('idPersona', 'desc');
+        //$query->orderBy('apellidoPaterno', 'asc')->orderBy('nombres');
 
         return $query;
     }
