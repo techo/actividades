@@ -260,5 +260,46 @@ return [
             ]
         ],
 
+    ],
+    'usuarios' => [
+        'fields' => [
+            [
+                'name' => 'idPersona',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellido',
+                'sortField' => 'apellidoPaterno',
+                'title' => 'Apellido'
+            ],
+            [
+                'name' => 'dni',
+                'sortField' => 'dni',
+                'title' => 'Documento'
+            ],
+            [
+                'name' => 'email',
+                'sortField' => 'mail',
+                'title' => 'Email'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'apellido',
+                'sortField' => 'apellidoPaterno',
+                'direction' => 'asc'
+            ],
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombres',
+                'direction' => 'asc'
+            ]
+        ]
     ]
 ];

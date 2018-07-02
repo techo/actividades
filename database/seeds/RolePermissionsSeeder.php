@@ -21,7 +21,17 @@ class RolePermissionsSeeder extends Seeder
 
         $rol = Role::findByName('coordinador');
 
-        $permissions = Permission::whereIn('name', ['crear_actividad', 'editar_actividad', 'borrar_actividad', 'tomar_asistencia', 'control_pagos', 'ver_mis_actividades', 'ver_backoffice'])->get();
+        $permissions = Permission::whereIn('name',
+            [
+                'crear_actividad',
+                'editar_actividad',
+                'borrar_actividad',
+                'tomar_asistencia',
+                'control_pagos',
+                'ver_mis_actividades',
+                'ver_backoffice',
+                'ver_usuarios'
+            ])->get();
 
         $rol->givePermissionTo($permissions);
     }
