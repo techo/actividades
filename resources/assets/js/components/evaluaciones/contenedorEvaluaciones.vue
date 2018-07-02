@@ -4,16 +4,16 @@
         <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <h4 v-if="evaluados.length > 0">Compañeros ya evaluados</h4>
+        <h4>Compañeros ya evaluados</h4>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
+        <p class="alert alert-info mt-3">
             <i class="fa fa-star" style="margin-right: 0.5em"></i>
             ¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla
         </p>
 
-        <div class="row"  v-if="!evaluacionPasada">
+        <div class="row">
             <div class="col-md-9">
                 <div class="form-group">
                     <label for="listadoInscriptos">Nombre, apellido o DNI del voluntario</label>
@@ -130,13 +130,6 @@
                 this.excluirUsuario(this.personasNoEvaluadas, persona);
                 //this.listadoInscriptos.splice(result.pos, 1);
             },
-        },
-        computed: {
-            evaluacionPasada: function () {
-                let ahora = new Date();
-                let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
-                return ahora.getTime() > fechaFinEvaluaciones.getTime();
-            }
         }
     }
 </script>
