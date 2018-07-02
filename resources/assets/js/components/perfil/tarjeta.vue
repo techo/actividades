@@ -84,9 +84,6 @@
             }
         },
         computed: {
-            hoy: function() { return Date.now();
-                return moment();
-            },
             actividadPasada: function () {
                 let fechaFin = new Date(this.inscripcion.fechaFin.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")).getTime();
 
