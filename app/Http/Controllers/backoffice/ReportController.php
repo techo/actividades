@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Exports\ActividadesExport;
+use App\Exports\EvaluacionesActividadExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\MisActividadesExport;
 use Illuminate\Http\Request;
@@ -50,10 +51,18 @@ class ReportController extends Controller
         return Excel::download($inscripciones, 'inscripciones_' . $id . '.xlsx');
     }
 
-    public function exportarEvaluacionesPersonas(Request $request, $id)
+    public function exportarEvaluacionesPersonas($id)
     {
         $actividad = Actividad::find($id);
         $evaluaciones = new EvaluacionesPersonasExport($actividad);
+
+        return Excel::download($evaluaciones,'Evaluaciones de Participantes en '. $actividad->nombreActividad . '.xlsx');
+    }
+
+    public function exportarEvaluacionesActividad($id)
+    {
+        $actividad = Actividad::find($id);
+        $evaluaciones = new EvaluacionesActividadExport($actividad);
 
         return Excel::download($evaluaciones,'Evaluaciones de '. $actividad->nombreActividad . '.xlsx');
     }
