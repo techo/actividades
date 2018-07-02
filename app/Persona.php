@@ -34,6 +34,26 @@ class Persona extends Authenticatable
         return $this->hasMany(GrupoRolPersona::class, 'idPersona', 'idPersona');
     }
 
+    public function evaluacionesRecibidas()
+    {
+        return $this->hasMany(EvaluacionPersona::class, 'idEvaluado', 'idPersona');
+    }
+
+    public function evaluacionesRealizadas()
+    {
+        return $this->hasMany(EvaluacionPersona::class, 'idEvaluador', 'idPersona');
+    }
+
+    public function getPromedioSocialAttribute()
+    {
+        return $this->evaluacionesRecibidas->avg('puntajeSocial');
+    }
+
+    public function getPromedioTecnicoAttribute()
+    {
+        return $this->evaluacionesRecibidas->avg('puntajeTecnico');
+    }
+
     public function getNombreCompletoAttribute() {
         return $this->nombres . ' ' . $this->apellidoPaterno;
     }
@@ -82,5 +102,12 @@ class Persona extends Authenticatable
     public function getEmailForPasswordReset()
     {
         return $this->mail;
+    }
+
+    public function getYaEvaluadaAttributte($idActividad)
+    {
+        return EvaluacionPersona::where('idActividad', '=', $idActividad)
+            ->where('idEvaluador', '=', auth()->user()->idPersona)
+            ->get();
     }
 }

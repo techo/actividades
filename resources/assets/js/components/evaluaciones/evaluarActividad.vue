@@ -23,7 +23,7 @@
                 <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="slider">Puntaje General</label>
                                     <vue-slider
@@ -40,6 +40,7 @@
                                 </div>
 
                             </div>
+                            <div class="col-md-3"></div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="noAplica" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
