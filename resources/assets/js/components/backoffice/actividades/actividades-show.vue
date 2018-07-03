@@ -443,6 +443,7 @@
             Event.$on('guardar', this.guardar);
             Event.$on('borrar-punto', this.borrarPunto);
             Event.$on('eliminar', this.eliminar);
+            Event.$on('clonar', this.clonar);
         },
         computed: {
             tieneErrores:  function () {
@@ -758,6 +759,20 @@
 
                 tinymce.init(editor_config);
             },
+            clonar: function() {
+                this.mostrarLoadingAlert();
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
+                let params = { idActividad: this.dataActividad.idActividad };
+                this.axiosPost(url, function(response, self) {
+                    if (response.idActividad) {
+                        window.location = '/admin/actividades/' + response.idActividad
+                    }
+                }, params,
+                    function (response, self) {
+                    // Si hay error
+                        debugger;
+                })
+            },
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {
@@ -769,7 +784,6 @@
                 }
                 return null;
             },
-
         }
     }
 </script>
