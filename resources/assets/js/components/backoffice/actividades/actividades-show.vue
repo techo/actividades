@@ -503,6 +503,8 @@
                     this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
                     this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
                     this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
+                    this.dataActividad.fechaInicioEvaluaciones = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFinEvaluaciones = moment().format('YYYY-MM-DD 23:59');
                 }
             },
             actualizarOficina() {
