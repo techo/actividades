@@ -20,10 +20,8 @@
                         <a class="btn btn-success text-light font-weight-bold pull-right" @click="desincribir(inscripcion.idActividad)">Desinscribirme</a>
                     </span>
                     <span v-else>
-                        <a class="btn btn-info text-light font-weight-bold pull-right" @click="ir_a_evaluar">Evaluar</a>
+                        <a class="btn btn-info text-light font-weight-bold pull-right" @click="ir_a_evaluar">Ver Evaluaciones</a>
                     </span>
-
-
                 </div>
             </div>
         </div>
@@ -31,7 +29,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     export default {
         name: 'tarjeta',
         props: ['inscripcion'],
