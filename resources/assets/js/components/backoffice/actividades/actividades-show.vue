@@ -594,6 +594,8 @@
             },
             editar() {
                 this.readonly = false;
+                this.enableTinymce();
+
             },
             guardar(){
                 let url;
@@ -607,6 +609,9 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
+                let descripcion = tinymce.get('descripcion').getContent();
+                this.dataActividad.descripcion = descripcion;
+
                 this.axiosPost(url, //endpoint
                     function (data, self) { //handler de success
                         if (self.dataActividad.idActividad === null) {
@@ -615,6 +620,7 @@
                         self.mensajeGuardado = data;
                         self.guardado = true;
                         self.validationErrors = [];
+                        self.disableTinymce();
                         self.dataActividad.puntosEncuentroBorrados = [];
                         for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
                             if (self.dataActividad.puntos_encuentro[i].nuevo) {
@@ -672,6 +678,85 @@
             cambioFechaInscripciones: function (start, end) {
                 this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
+            },
+            enableTinymce: function () {
+                tinymce.get('descripcion').remove();
+                var editor_config = {
+                    path_absolute : "/",
+                    selector: "textarea#descripcion",
+                    menubar: false,
+                    statusbar: true,
+                    resize: true,
+                    toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                    plugins: [
+                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons template paste textcolor colorpicker textpattern"
+                    ],
+                    relative_urls: false,
+                    file_browser_callback : function(field_name, url, type, win) {
+                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        if (type == 'image') {
+                            cmsURL = cmsURL + "&type=Images";
+                        } else {
+                            cmsURL = cmsURL + "&type=Files";
+                        }
+
+                        tinyMCE.activeEditor.windowManager.open({
+                            file : cmsURL,
+                            title : 'Administrador de archivos',
+                            width : x * 0.8,
+                            height : y * 0.8,
+                            resizable : "yes",
+                            close_previous : "no"
+                        });
+                    }
+                };
+
+                tinymce.init(editor_config);
+            },
+            disableTinymce: function () {
+                tinymce.get('descripcion').remove();
+                var editor_config = {
+                    path_absolute : "/",
+                    selector: "textarea#descripcion",
+                    menubar: false,
+                    statusbar: true,
+                    resize: true,
+                    readonly: 1,
+                    plugins: [
+                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons template paste textcolor colorpicker textpattern"
+                    ],
+                    toolbar: false,
+                    relative_urls: false,
+                    file_browser_callback : function(field_name, url, type, win) {
+                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        if (type == 'image') {
+                            cmsURL = cmsURL + "&type=Images";
+                        } else {
+                            cmsURL = cmsURL + "&type=Files";
+                        }
+
+                        tinyMCE.activeEditor.windowManager.open({
+                            file : cmsURL,
+                            title : 'Administrador de archivos',
+                            width : x * 0.8,
+                            height : y * 0.8,
+                            resizable : "yes",
+                            close_previous : "no"
+                        });
+                    }
+                };
+
+                tinymce.init(editor_config);
             },
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {

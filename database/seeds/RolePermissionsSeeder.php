@@ -30,6 +30,7 @@ class RolePermissionsSeeder extends Seeder
                 'control_pagos',
                 'ver_mis_actividades',
                 'ver_backoffice',
+                'administrar_imagenes',
                 'ver_usuarios'
             ])->get();
 
