@@ -4,7 +4,7 @@
         <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <h4>Compañeros ya evaluados</h4>
+        <h4 v-if="evaluados.length > 0">Compañeros ya evaluados</h4>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
