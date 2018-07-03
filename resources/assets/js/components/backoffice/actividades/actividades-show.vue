@@ -770,8 +770,17 @@
                 }, params,
                     function (response, self) {
                     // Si hay error
-                        debugger;
-                })
+                        self.ocultarLoadingAlert();
+                        self.$refs.loading.openSimplert({
+                            title: 'Algo salió mal',
+                            message: "<i class=\"fa fa-exclamation-triangle fa-4x\"></i> <br>" +
+                            "<p>Ocurrió un error al clonar la actividad.  Recarga la página e intentalo de nuevo o " +
+                            "repórtalo al administrador del sistema.</p>",
+                            isShown: true,
+                            disableOverlayClick: true,
+                            type: ''
+                        })
+                    })
             },
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {
