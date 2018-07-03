@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
+use Illuminate\Support\Facades\DB;
 
 class ActividadesController extends Controller
 {
@@ -331,6 +332,34 @@ class ActividadesController extends Controller
     }
 
 
+    public function clonar(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $original = Actividad::find($request->idActividad);
+            $clon = $original->replicate();
+            $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
+            $clon->push();
+            foreach ($original->puntosEncuentro as $punto) {
+                $nuevoPunto = $punto->replicate();
+                $nuevoPunto->idActividad = $clon->idActividad;
+                $nuevoPunto->push();
+            }
+
+            foreach ($original->grupos as $grupo) {
+                $nuevoGrupo = $grupo->replicate();
+                $nuevoGrupo->idActividad = $clon->idActividad;
+                $nuevoGrupo->push();
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return response($exception->getMessage(), 500);
+        }
+        DB::commit();
+        return $clon;
+    }
+
+
     /**
      * @param $punto PuntoEncuentro
      * @param $actividad Actividad
@@ -424,6 +453,7 @@ class ActividadesController extends Controller
         $actividad->moneda = 'ARS';
 
         if ($actividad->save()) {
+
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {
