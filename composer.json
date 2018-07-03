@@ -14,7 +14,8 @@
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^3.0",
         "rap2hpoutre/fast-excel": "^0.3.2",
-        "spatie/laravel-permission": "^2.11"
+        "spatie/laravel-permission": "^2.11",
+        "unisharp/laravel-filemanager": "~1.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",

@@ -85,7 +85,9 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="col-md-12">{{ $actividad->descripcion }}</div>
+                    <div class="col-md-12">
+                        {!! $actividad->descripcion !!}
+                    </div>
                 </div>
 
             </div>
