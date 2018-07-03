@@ -293,6 +293,8 @@ class ActividadesController extends Controller
                 'Debe seleccionar el país de la actividad',
             'costo.*' =>
                 'Debe especificar el costo de participar en la construcción',
+            'fechaInicioEvaluaciones.after_or_equal' =>
+                'Las evaluaciones deben comenzar luego de la fecha de fin de la actividad',
         ];
         $v = Validator::make(
             $request->all(),
@@ -303,7 +305,7 @@ class ActividadesController extends Controller
                 'fechaInicio'               => 'required | date',
                 'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
                 'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
-                'fechaInicioEvaluaciones'   => 'required | date | before_or_equal:fechaFin',
+                'fechaInicioEvaluaciones'   => 'required | date | after_or_equal:fechaFin',
                 'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
                 'idTipo'                    => 'required',
                 'inscripcionInterna'        => 'required',
