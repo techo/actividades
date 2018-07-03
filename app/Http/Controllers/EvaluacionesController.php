@@ -24,10 +24,12 @@ class EvaluacionesController extends Controller
             ->where('Grupo_Persona.idActividad', '=', $actividad->idActividad)
             ->first();
 
+        // si no estoy en ningun grupo, estoy en la raíz
         if (is_null($miGrupo)) {
-            $miGrupo = Grupo::where('idActividad', '=', $actividad->idActividad)
-                ->where('idPadre', '=', 0)
-                ->first();
+            // El grupo raíz no existe en actividades de legacy
+            $miGrupo = Grupo::firstOrCreate(
+                ['idActividad' => $actividad->idActividad,'nombre' => $actividad->nombreActividad,'idPadre' => 0]
+            );
         }
 
         $gruposSubordinados = Grupo::where('idPadre', '=', $miGrupo->idGrupo)->pluck('idGrupo');
