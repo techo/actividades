@@ -39,9 +39,6 @@ class UsuariosSearch
 
     private static function newQuery(){
         $query = (new Persona())->newQuery();
-        $query->orderBy('idPersona', 'desc');
-        //$query->orderBy('apellidoPaterno', 'asc')->orderBy('nombres');
-
         return $query;
     }
 }
