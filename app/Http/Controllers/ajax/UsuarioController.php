@@ -147,6 +147,8 @@ class UsuarioController extends Controller
         $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
+                $inscripcion->descripcion = strip_tags($inscripcion->descripcion);
+                $inscripcion->descripcion = str_replace("&nbsp;", '', $inscripcion->descripcion);
                 $resourceCollection[] = new ActividadResource($inscripcion);
             }
         }
