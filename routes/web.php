@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
 Route::get('/actividades', 'ActividadesController@index');
+Route::get('/terminos/actividades', function (){
+    return view('terminos.actividades.show');
+});
 
 
 // Ajax calls

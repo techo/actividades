@@ -54,6 +54,16 @@
                         </div>
                     </div>
                 @endif
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="checkbox" name="aceptar_terminos" id="aceptar_terminos" value="1" required> Acepto los <a href="/terminos/actividades" target="_blank">Términos y condiciones.</a>
+                        @if($mensaje = Session::get('status'))
+                            <p class="text-danger">{{ $mensaje }}</p>
+                        @endif
+                    </div>
+                </div>
+                <hr>
                 <div class="row  align-middle">
                     <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a
                                 href="/inscripciones/actividad/{{$actividad->idActividad}}"> Volver</a></div>
