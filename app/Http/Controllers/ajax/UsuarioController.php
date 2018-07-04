@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers\ajax;
 
+use App\Http\Resources\PerfilResource;
 use App\Search\CoordinadoresSearch;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Mail;
-use Event;
-use App\Mail\VerificarMail;
 use App\Persona;
 use App\Actividad;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\InscripcionResource;
-
 use App\Rules\PassExiste;
 use App\Inscripcion;
-use App\Http\Resources\ActividadResource;
-use App\Http\Resources\TipoResource;
-
-use App\Events\RegistroUsuario;
 
 class UsuarioController extends Controller
 {
@@ -66,14 +59,12 @@ class UsuarioController extends Controller
       $persona->idCiudad = 0;
       $persona->verificado = false;
       $persona->save();
-      #$response = Event::fire(new RegistroUsuario($persona));
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
       $verificacion->token = str_random(40);
       $verificacion->save();
       Auth::login($persona, true);
       $request->session()->regenerate();
-//      Mail::to($persona->mail)->send(new VerificarMail($persona));
       return ['login_callback' =>  $url, 'user' => $persona];
   }
 
@@ -85,7 +76,7 @@ class UsuarioController extends Controller
           $persona->password = Hash::make($request->pass);
       }
       $persona->save();
-      return ['user' => $persona->perfil()];
+      return ['user' => new PerfilResource($persona)];
   }
 
   public function cargar_cambios($request,$persona) {
@@ -134,7 +125,7 @@ class UsuarioController extends Controller
   public function perfil(Request $request)
   {
     $persona = Auth::user();
-    $usuario = $persona->perfil();
+    $usuario = new PerfilResource($persona);
     return $usuario;
   }
 
