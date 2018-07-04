@@ -9,18 +9,39 @@
                 <h5 class="card-title text-left" v-on:click="ir_a_actividad">{{ inscripcion.nombreActividad }}</h5>
                 <div>
                     <hr>
-                    <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.fecha }}</span></span>
-                    <span class="col-sm-4"><i class="fas fa-clock"></i> {{ inscripcion.hora }}</span>
-                    <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.localidad | ubicacion }}</span>
+                    <span class="col-sm-4">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span style="padding-bottom: 5px">
+                            {{ inscripcion.fecha }}
+                        </span>
+                    </span>
+                    <span class="col-sm-4">
+                        <i class="fas fa-clock"></i>
+                        {{ inscripcion.hora }}
+                    </span>
+                    <span class="col-sm-4">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ inscripcion.localidad | ubicacion }}
+                    </span>
                     <hr>
                 </div>
                 <p class="card-text text-left">{{ inscripcion.descripcion | truncate(120) }}</p>
                 <div>
                     <span v-if="!actividadPasada">
-                        <a class="btn btn-success text-light font-weight-bold pull-right" @click="desincribir(inscripcion.idActividad)">Desinscribirme</a>
+                        <a
+                            class="btn btn-success text-light font-weight-bold pull-right"
+                            @click="desincribir(inscripcion.idActividad)"
+                        >
+                            Desinscribirme
+                        </a>
                     </span>
                     <span v-else>
-                        <a class="btn btn-info text-light font-weight-bold pull-right" @click="ir_a_evaluar">Evaluar</a>
+                        <a
+                            class="btn btn-info text-light font-weight-bold pull-right"
+                            @click="ir_a_evaluar"
+                        >
+                            Ver Evaluaciones
+                        </a>
                     </span>
 
 
