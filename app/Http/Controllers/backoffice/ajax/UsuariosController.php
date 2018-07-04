@@ -23,7 +23,7 @@ class UsuariosController extends Controller
 
     public function index(Request $request)
     {
-        $filtro = [];
+        $filtro = $request->all();
         if($request->has('filter')){
             $filtro['usuario'] = $request->filter;
         }

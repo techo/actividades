@@ -291,15 +291,10 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'apellido',
-                'sortField' => 'apellidoPaterno',
-                'direction' => 'asc'
+                'field' => 'idPersona',
+                'sortField' => 'idPersona',
+                'direction' => 'desc'
             ],
-            [
-                'field' => 'nombre',
-                'sortField' => 'nombres',
-                'direction' => 'asc'
-            ]
         ]
     ]
 ];
