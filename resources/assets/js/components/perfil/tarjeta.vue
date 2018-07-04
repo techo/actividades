@@ -59,10 +59,10 @@
                 window.location.href = '/actividades/' + this.inscripcion.idActividad
             },
             desincribir: function (idActividad) {
-                var self = this;
+                let self = this;
                 self.$refs.confirmar.openSimplert({
                     title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.actividad.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
+                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
@@ -73,7 +73,7 @@
                     customConfirmBtnClass: '', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario/inscripciones/' + idActividad).then(response => {
-                            self.$parent.traer_inscripciones()
+                            self.$parent.traer_inscripciones();
                             self.$parent.borro = true;
                             setTimeout(function(){
                                 self.$parent.borro = false;
@@ -84,7 +84,7 @@
             }
         },
         computed: {
-            hoy: function() { return Date.now();
+            hoy: function() {
                 return moment();
             },
             actividadPasada: function () {
@@ -105,7 +105,7 @@
 
 div.tarjeta {
     cursor: pointer;
-    border: 0px;
+    border: 0;
     text-align: center;
 }
 
