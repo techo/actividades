@@ -27,8 +27,7 @@ class actividadesController extends BaseController
 
         if ($actividades->count() > 0) {
             foreach ($actividades as $actividad) {
-                $actividad->descripcion = strip_tags($actividad->descripcion);
-                $actividad->descripcion = str_replace("&nbsp;", '', $actividad->descripcion);
+                $actividad->descripcion = clean_string($actividad->descripcion);
                 $resourceCollection[] = new ActividadResource($actividad);
             }
             return $this->paginate($resourceCollection, $items, $request->query());
@@ -45,8 +44,7 @@ class actividadesController extends BaseController
     public function show($id)
     {
         $actividad = Actividad::find($id);
-        $actividad->descripcion = strip_tags($actividad->descripcion);
-        $actividad->descripcion = str_replace("&nbsp;", '', $actividad->descripcion);
+        $actividad->descripcion = clean_string($actividad->descripcion);
         return new ActividadResource($actividad);
     }
 
