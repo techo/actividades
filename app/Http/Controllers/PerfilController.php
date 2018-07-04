@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PerfilResource;
 use Illuminate\Http\Request;
 use Auth;
 
@@ -9,7 +10,7 @@ class PerfilController extends Controller
 {
 	public function show(Request $request) {
 		$persona = Auth::user();
-		$usuario = $persona->perfil();
+		$usuario = new PerfilResource($persona);
 		return view('perfil.index', compact('usuario'));
 	}
 
