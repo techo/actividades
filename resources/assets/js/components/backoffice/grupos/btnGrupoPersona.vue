@@ -286,7 +286,7 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
-            voluntarioDuplicado: function (grupo) {
+            voluntarioDuplicado: function () {
                 this.yaInscripto = true;
                 this.$refs.loading.justCloseSimplert();
             },
@@ -294,20 +294,22 @@
                 loading(true);
                 this.searchInscripto(loading, text, this);
             },
-            searchInscripto: function(loading, text, vm) {
+            searchInscripto: function(loading, text) {
                 if (text.length > 2) {
                     let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
-                    this.axiosGet(url, function (response, self){
+                    let payload = { inscriptos: encodeURI(text)};
+                    this.axiosGet(url, function (response, self) {
                         self.listadoInscriptos = [];
+                        self.mensajeError = '';
                         for (let i = 0, len = response.length; i < len; i++) {
                             let nombre = response[i].nombres + ' ' + response[i].apellidoPaterno;
                             let id = response[i].idPersona;
                             self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
                         }
                         loading(false);
-                    }, function (response, self) {
+                    }, payload, function (response, self) {
                         loading(false);
-                        self.mensajeError = 'Ocurrió un error al buscar los voluntarios. ' +
+                        self.mensajeError = 'Ocurrió un error al recuperar el listado de inscriptos. ' +
                             'Recarga la página o intenta de nuevo más tarde, y si el error persiste, comunícalo al ' +
                             'administrador del sistema.';
                     });
@@ -320,6 +322,7 @@
             searchNoInscripto: function(loading, text, vm) {
                 if (text.length > 2) {
                     let url = "/ajax/coordinadores?coordinador=" + encodeURI(text);
+                    let payload = { coordinador: encodeURI(text) };
                     this.axiosGet(url, function (response, vm){
                         vm.listadoNoInscriptos = [];
                         for (let i = 0, len = response.data.length; i < len; i++) {
@@ -328,39 +331,14 @@
                                 );
                         }
                         loading(false);
+                    }, payload, function (response, self) {
+                        loading(false);
+                        self.mensajeError = 'Ocurrió un error al recuperar el listado de voluntarios. ' +
+                            'Recarga la página o intenta de nuevo más tarde, y si el error persiste, comunícalo al ' +
+                            'administrador del sistema.';
                     });
                 }
             },
-         /*   axiosGet(url, fCallback, params = []) {
-                this.loading = true;
-                axios.get(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        this.loading = false;
-
-                    })
-                    .catch((error) => {
-                        this.loading = false;
-                        // Error
-                        console.error('Error en el get: ' + url);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-            },*/
         },
         computed: {
             edit: function () {

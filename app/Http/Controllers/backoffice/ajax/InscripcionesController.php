@@ -174,13 +174,12 @@ class InscripcionesController extends BaseController
         if($request->has('inscriptos')){
             $filtros['inscriptos'] = $request->inscriptos;
             $filtros['idActividad'] = $id;
+            $export = new InscripcionesExport($filtros);
+            $collection = $export->collection();
+            return $collection;
         }
 
-        $export = new InscripcionesExport($filtros);
-        $collection = $export->collection();
-//        $result = $collection->only(['idPersona', 'nombres', 'apellidoPaterno']);
-        return $collection;
-
+        return response('La petición debe tener el parámetro "inscriptos"', 500);
     }
 
     public function store($id, Request $request)
