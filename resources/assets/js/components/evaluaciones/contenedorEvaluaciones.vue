@@ -100,21 +100,21 @@
                 //let inscripcion = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
                 //this.user.idGrupo = inscripcion.obj.idGrupo;
                 let voluntario;
-                for (let i = 0; i < this.personasNoEvaluadas.length; i++) {
+                for (let i = 0; i < this.personasNoEvaluadas.length; i++) { debugger;
                     voluntario = this.personasNoEvaluadas[i];
                     // los que estan en mi grupo sin incluirme a mi mismo
-                    if (this.personasNoEvaluadas[i].idGrupo === this.miGrupo.idGrupo && this.personasNoEvaluadas[i].idPersona !== this.user.idPersona) {
+                    if (voluntario.idGrupo === this.miGrupo.idGrupo && voluntario.idPersona !== this.user.idPersona) {
                         this.incluirEnListadoParaEvaluar(this.personasNoEvaluadas[i]);
                     }
 
                     // los que estan en el grupo padre
-                    if (this.personasNoEvaluadas[i].idGrupo === this.miGrupo.idPadre) {
+                    if (voluntario.idGrupo === this.miGrupo.idPadre) {
                         this.incluirEnListadoParaEvaluar(this.personasNoEvaluadas[i]);
                     }
 
                     // los que estan en los grupos subordinados
-                    if (this.gruposSubordinados.indexOf(this.personasNoEvaluadas[i].idGrupo) !== -1) {
-                        this.incluirEnListadoParaEvaluar(this.personasNoEvaluadas[i]);
+                    if (this.gruposSubordinados.indexOf(voluntario.idGrupo) !== -1) {
+                        this.incluirEnListadoParaEvaluar(voluntario);
                     }
                 }
             },
