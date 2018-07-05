@@ -118,7 +118,6 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');
-    //Route::get('/actividades/{id}/inscripciones', 'backoffice\InscripcionesController@index')->middleware('can:verInscripciones,App\Inscripcion,id'); // En desuso
     Route::get('/actividades/{id}/inscripciones/exportar', 'backoffice\ReportController@exportarInscripciones')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@index')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@store')->middleware('can:verInscripciones,App\Inscripcion,id');

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Grupo;
+use App\GrupoRolPersona;
 use Illuminate\Http\Request;
 use App\Actividad;
 use App\PuntoEncuentro;
@@ -42,7 +44,6 @@ class InscripcionesController extends Controller
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
-        $persona = Auth::user();
         $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
         if (!$inscripcion) {
             $inscripcion = new Inscripcion();
@@ -54,7 +55,9 @@ class InscripcionesController extends Controller
             $inscripcion->estado = 'Sin Contactar';
             $inscripcion->fechaInscripcion = new Carbon();
             $inscripcion->save();
-            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+
+            $this->incluirEnGrupoRaiz($actividad, Auth::user()->idPersona);
+            $res = Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }
         return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
@@ -82,4 +85,29 @@ class InscripcionesController extends Controller
         $actividad = Actividad::find($id);
         return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
     }
+
+    /**
+     * @param Actividad $idActividad
+     * @param int $idPersona
+     * @return GrupoRolPersona
+     */
+    private function incluirEnGrupoRaiz(Actividad $actividad, int $idPersona)
+    {
+        $grupoRaiz = Grupo::firstOrCreate(
+            [
+                'idActividad' => $actividad->idActividad,
+                'idPadre' => 0,
+                'nombre' => $actividad->nombreActividad
+            ]
+        );
+        $arr = [
+            'idPersona' => $idPersona,
+            'idGrupo' => $grupoRaiz->idGrupo,
+            'idActividad' => $actividad->idActividad,
+            'rol' => ''
+        ];
+
+        return GrupoRolPersona::create($arr);
+    }
+
 }

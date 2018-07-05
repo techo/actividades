@@ -13,7 +13,7 @@ use App\Persona;
 use App\Actividad;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
-use App\Http\Resources\InscripcionResource;
+use App\Http\Resources\ActividadResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
 
