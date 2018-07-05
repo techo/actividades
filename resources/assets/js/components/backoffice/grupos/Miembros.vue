@@ -16,7 +16,6 @@
 
 <script>
     import ModalVoluntario from './ModalVoluntario';
-    import axios from 'axios';
 
     export default {
         name: "Miembros",
@@ -104,9 +103,14 @@
                 };
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/inscripciones';
                 this.axiosPost(url, function(result, self) {
+                    Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
-                }, noInscripto);
+                }, noInscripto, function (error, self){
+                    if (error.response.status === 428) {
+                        Event.$emit('Miembros:voluntario-duplicado', error.response.data);
+                    }
+                });
             },
             findObjectByKey(array, key, value) {
                 for (let i = 0; i < array.length; i++) {
