@@ -49,6 +49,18 @@
                     @endif
                 </ul>
             </li>
+            @if(Auth::user()->hasPermissionTo('ver_usuarios'))
+                <li class="treeview {{ request()->is('admin/usuarios*') ? 'active menu-open' : ''}}">
+                    <a href="#"><i class="fa fa-user"></i> <span>Usuarios</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver listado</a></li>
+                    </ul>
+                </li>
+            @endif
             @if(Auth::user()->hasPermissionTo('asignar_roles'))
                 <li class="treeview {{ request()->is('admin/roles') ? 'active menu-open' : ''}}">
                     <a href="#"><i class="fa fa-shield"></i> <span>Roles</span>
