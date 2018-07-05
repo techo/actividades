@@ -257,6 +257,7 @@
             cancelar: function () {
                 this.formGrupo = false;
                 this.formInscripto = false;
+                this.formNoInscripto = false;
                 this.inicializar();
             },
             inicializar: function() {
