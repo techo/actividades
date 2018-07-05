@@ -18,3 +18,10 @@ function quote($valor)
 {
     return "'" . $valor . "'";
 }
+
+function clean_string($string){
+    $string = strip_tags($string);
+    $string = html_entity_decode($string);
+
+    return $string;
+}

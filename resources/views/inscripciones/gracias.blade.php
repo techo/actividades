@@ -33,12 +33,12 @@
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-				<h2>Descripcion</h2>
+				<h2>Descripción</h2>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<p>{{ $actividad->descripcion }}</p>
+				<p>{!! $actividad->descripcion !!}</p>
 			</div>
 		</div>
 		<div>
