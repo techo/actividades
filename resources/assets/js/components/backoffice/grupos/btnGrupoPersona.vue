@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p class="alert alert-danger" v-if="mensajeError !== ''">{{ mensajeError }}</p>
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
             <button
@@ -147,7 +148,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    //import axios from 'axios';
     export default {
         name: "btnGrupoPersona",
         props: {
@@ -175,6 +176,7 @@
                 inscriptoNombreError: false,
                 noInscriptoNombreError: false,
                 noInscriptoPuntoError: false,
+                mensajeError: ''
             }
         },
         created: function() {
@@ -224,17 +226,8 @@
                 }
             },
             confirmarGuardado: function () {
-                this.nombreGrupo = '';
-                this.nombreGrupoError = false;
-                this.rol = '';
-                this.inscripto = null;
-                this.noInscripto = null;
-                this.listadoInscriptos = [];
-                this.listadoNoInscriptos = [];
-                this.yaInscripto = false;
-                this.inscriptoNombreError = false;
-                this.noInscriptoNombreError = false;
-                this.noInscriptoPuntoError = false;
+                Event.$emit('vuetable-actualizarTabla');
+                this.inicializar();
                 this.ocultarLoadingAlert();
             },
             verFormGrupo: function () {
@@ -249,8 +242,13 @@
             },
             verFormNoInscripto: function () {
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/puntos';
+                let payload = '';
                 this.axiosGet(url, function(response, self) {
                     self.puntosEncuentro = response;
+                }, payload, function () {
+                    this.mensajeError = 'Ocurrió un error al recuperar los puntos de encuentro. ' +
+                        'Recarga la página o intentalo de nuevo maś tarde.  ' +
+                        'Si el error persiste, comunícalo al administrador del sistema';
                 });
                 this.formGrupo = false;
                 this.formNoInscripto = true;
@@ -260,16 +258,21 @@
                 this.formGrupo = false;
                 this.formInscripto = false;
                 this.formNoInscripto = false;
+                this.inicializar();
+            },
+            inicializar: function() {
                 this.nombreGrupo = '';
                 this.nombreGrupoError = false;
+                this.rol = '';
                 this.inscripto = null;
                 this.noInscripto = null;
                 this.listadoInscriptos = [];
-                this.idPuntoSeleccionado = '';
-                this.rol = '';
+                this.listadoNoInscriptos = [];
+                this.yaInscripto = false;
                 this.inscriptoNombreError = false;
                 this.noInscriptoNombreError = false;
                 this.noInscriptoPuntoError = false;
+                this.mensajeError ='';
             },
             mostrarLoadingAlert() {
                 this.$refs.loading.openSimplert({
@@ -284,7 +287,7 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
-            voluntarioDuplicado: function (grupo) {
+            voluntarioDuplicado: function () {
                 this.yaInscripto = true;
                 this.$refs.loading.justCloseSimplert();
             },
@@ -292,17 +295,24 @@
                 loading(true);
                 this.searchInscripto(loading, text, this);
             },
-            searchInscripto: function(loading, text, vm) {
+            searchInscripto: function(loading, text) {
                 if (text.length > 2) {
                     let url = '/admin/ajax/actividades/' + encodeURI(this.dataActividad.idActividad) + '/grupos/getInscriptos?inscriptos=' + encodeURI(text);
-                    this.axiosGet(url, function (response, self){
+                    let payload = { inscriptos: encodeURI(text)};
+                    this.axiosGet(url, function (response, self) {
                         self.listadoInscriptos = [];
+                        self.mensajeError = '';
                         for (let i = 0, len = response.length; i < len; i++) {
                             let nombre = response[i].nombres + ' ' + response[i].apellidoPaterno;
                             let id = response[i].idPersona;
                             self.listadoInscriptos.unshift({idPersona: id, nombre: nombre});
                         }
                         loading(false);
+                    }, payload, function (response, self) {
+                        loading(false);
+                        self.mensajeError = 'Ocurrió un error al recuperar el listado de inscriptos. ' +
+                            'Recarga la página o intenta de nuevo más tarde, y si el error persiste, comunícalo al ' +
+                            'administrador del sistema.';
                     });
                 }
             },
@@ -313,6 +323,7 @@
             searchNoInscripto: function(loading, text, vm) {
                 if (text.length > 2) {
                     let url = "/ajax/coordinadores?coordinador=" + encodeURI(text);
+                    let payload = { coordinador: encodeURI(text) };
                     this.axiosGet(url, function (response, vm){
                         vm.listadoNoInscriptos = [];
                         for (let i = 0, len = response.data.length; i < len; i++) {
@@ -321,38 +332,13 @@
                                 );
                         }
                         loading(false);
+                    }, payload, function (response, self) {
+                        loading(false);
+                        self.mensajeError = 'Ocurrió un error al recuperar el listado de voluntarios. ' +
+                            'Recarga la página o intenta de nuevo más tarde, y si el error persiste, comunícalo al ' +
+                            'administrador del sistema.';
                     });
                 }
-            },
-            axiosGet(url, fCallback, params = []) {
-                this.loading = true;
-                axios.get(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        this.loading = false;
-
-                    })
-                    .catch((error) => {
-                        this.loading = false;
-                        // Error
-                        console.error('Error en el get: ' + url);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
             },
         },
         computed: {

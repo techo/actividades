@@ -78,7 +78,7 @@
             filtrarInscriptos: function () {
                 //let inscripcion = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
                 //this.user.idGrupo = inscripcion.obj.idGrupo;
-                let voluntario; console.info(JSON.stringify(this.listadoInscriptos));
+                let voluntario;
                 for (let i = 0; i < this.listadoInscriptos.length; i++) {
                     voluntario = this.listadoInscriptos[i];
                     // los que estan en mi grupo sin incluirme a mi mismo

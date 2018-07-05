@@ -16,7 +16,6 @@
 
 <script>
     import ModalVoluntario from './ModalVoluntario';
-    import axios from 'axios';
 
     export default {
         name: "Miembros",
@@ -107,71 +106,11 @@
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
-                }, noInscripto);
-            },
-            axiosPost(url, fCallback, params = []) {
-                this.loading = true;
-                axios.post(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        this.loading = false;
-
-                    })
-                    .catch((error) => {
-                        this.loading = false;
-                        // Error
-                        console.error('Error en el post: ' + url);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                            if (error.response.status === 428) {
-                                Event.$emit('Miembros:voluntario-duplicado', error.response.data);
-                            }
-
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-            },
-            axiosGet(url, fCallback, params = []) {
-                this.loading = true;
-                axios.get(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        this.loading = false;
-
-                    })
-                    .catch((error) => {
-                        this.loading = false;
-                        // Error
-                        console.error('Error en el post: ' + url);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.error(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
+                }, noInscripto, function (error, self){
+                    if (error.response.status === 428) {
+                        Event.$emit('Miembros:voluntario-duplicado', error.response.data);
+                    }
+                });
             },
             findObjectByKey(array, key, value) {
                 for (let i = 0; i < array.length; i++) {
@@ -212,9 +151,6 @@
             }
         },
         watch: {
-            // 'paginationData.currentPage': function (nuevo, viejo) {
-            //     this.$refs.paginacion.selected = nuevo;
-            // }
         }
     }
 </script>

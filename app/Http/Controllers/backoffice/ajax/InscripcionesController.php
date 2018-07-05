@@ -174,13 +174,12 @@ class InscripcionesController extends BaseController
         if($request->has('inscriptos')){
             $filtros['inscriptos'] = $request->inscriptos;
             $filtros['idActividad'] = $id;
+            $export = new InscripcionesExport($filtros);
+            $collection = $export->collection();
+            return $collection;
         }
 
-        $export = new InscripcionesExport($filtros);
-        $collection = $export->collection();
-//        $result = $collection->only(['idPersona', 'nombres', 'apellidoPaterno']);
-        return $collection;
-
+        return response('La petición debe tener el parámetro "inscriptos"', 500);
     }
 
     public function store($id, Request $request)
@@ -192,11 +191,11 @@ class InscripcionesController extends BaseController
         if ($yaInscripto) {
             return response('Voluntario ya inscripto', 428);
         }
-        $inscripcion = $request->all();
-        $inscripcion = $this->inscribir($inscripcion);
-        $grupo = $this->incluirEnGrupo($inscripcion);
+
+        $inscripcion = $this->inscribir($request->all());
+        $grupo = $this->incluirEnGrupo($request->all());
         if ($inscripcion &&  $grupo) {
-            Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return response('ok');
         }
 
