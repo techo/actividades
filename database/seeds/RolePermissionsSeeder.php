@@ -13,13 +13,13 @@ class RolePermissionsSeeder extends Seeder
      */
     public function run()
     {
-        $rol = Role::findByName('admin');
+        $admin = Role::findByName('admin');
 
         $permissions = Permission::all();
 
-        $rol->givePermissionTo($permissions);
+        $admin->givePermissionTo($permissions);
 
-        $rol = Role::findByName('coordinador');
+        $coordinador = Role::findByName('coordinador');
 
         $permissions = Permission::whereIn('name',
             [
@@ -30,9 +30,10 @@ class RolePermissionsSeeder extends Seeder
                 'control_pagos',
                 'ver_mis_actividades',
                 'ver_backoffice',
+                'administrar_imagenes'
                 'ver_usuarios'
             ])->get();
 
-        $rol->givePermissionTo($permissions);
+        $coordinador->givePermissionTo($permissions);
     }
 }

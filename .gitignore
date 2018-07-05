@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/photos
 /public/js/app.js
 /public/css/app.css
 /public/js/atlas.js

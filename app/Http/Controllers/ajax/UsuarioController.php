@@ -138,6 +138,7 @@ class UsuarioController extends Controller
         $resourceCollection = [];
         if ($inscripciones->count() > 0) {
             foreach ($inscripciones as $inscripcion) {
+                $inscripcion->descripcion = clean_string($inscripcion->descripcion);
                 $resourceCollection[] = new ActividadResource($inscripcion);
             }
         }

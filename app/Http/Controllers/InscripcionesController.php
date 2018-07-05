@@ -23,6 +23,7 @@ class InscripcionesController extends Controller
     public function confirmar(Request $request, $id)
     {
         $actividad = Actividad::find($id);
+        $actividad->descripcion = clean_string($actividad->descripcion);
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
         $tipo = $actividad->tipo;
