@@ -14,7 +14,7 @@ Route::prefix('ajax')->group(function () {
     Route::get('categorias', 'ajax\CategoriasController@index');
     Route::get('categorias/{id}', 'ajax\CategoriasController@show');
     Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
-    Route::get('xcoordinadores', 'ajax\UsuarioController@getCoordinadores');
+    Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
 
     Route::prefix('paises')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
