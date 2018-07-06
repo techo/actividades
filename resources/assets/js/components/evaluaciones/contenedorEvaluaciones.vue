@@ -99,7 +99,7 @@
                 //let inscripcion = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
                 //this.user.idGrupo = inscripcion.obj.idGrupo;
                 let voluntario;
-                for (let i = 0; i < this.personasNoEvaluadas.length; i++) { debugger;
+                for (let i = 0; i < this.personasNoEvaluadas.length; i++) {
                     voluntario = this.personasNoEvaluadas[i];
                     // los que estan en mi grupo sin incluirme a mi mismo
                     if (voluntario.idGrupo === this.miGrupo.idGrupo && voluntario.idPersona !== this.user.idPersona) {

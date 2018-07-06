@@ -130,20 +130,24 @@ class UsuarioController extends Controller
   }
 
 
-    public function inscripciones(Request $request) {
-        $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
-            ->where('idPersona', Auth::user()->idPersona)
-            ->whereNotIn('estado',['Desinscripto'])->select(['Actividad.*'])
-            ->get();
-        $resourceCollection = [];
-        if ($inscripciones->count() > 0) {
-            foreach ($inscripciones as $inscripcion) {
-                $inscripcion->descripcion = clean_string($inscripcion->descripcion);
+  public function inscripciones(Request $request) {
+    $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
+        ->where('idPersona', Auth::user()->idPersona)
+        ->whereNotIn('estado',['Desinscripto'])->select(['Actividad.*', 'Inscripcion.presente'])
+        ->orderBy('Actividad.fechaInicio', 'DESC')
+        ->get();
+    $resourceCollection = [];
+    if ($inscripciones->count() > 0) {
+        $hoy = Carbon::now();
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->descripcion = clean_string($inscripcion->descripcion);
+            //if ($inscripcion->fechaInicio > $hoy && $inscripcion->presente == 1) {
                 $resourceCollection[] = new ActividadResource($inscripcion);
-            }
+            //}
         }
-        return $resourceCollection;
     }
+    return $resourceCollection;
+  }
 
     public function desinscribir(Request $request, $idActividad) {
         $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
