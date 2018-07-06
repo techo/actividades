@@ -11,7 +11,7 @@
                                 :aria-controls="'cardEvaluacionPersona_'+ persona.idPersona"
                                 @click="cambiarIcono"
                         >
-                            Evaluación de {{ persona.nombre }} - {{ persona.rol }}
+                            Evaluación de {{ nombre }} - {{ persona.rol }}
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
@@ -106,16 +106,15 @@
         components: {
             'vue-slider': VueSlider
         },
-        props: ['persona', 'prop-respuesta', 'actividad'],
+        props: ['persona', 'actividad'],
         created: function () {
-            //this.persona = JSON.parse(this.propPersona);
-            if (this.propRespuesta !== undefined) {
-                this.respuestaAnterior = JSON.parse(this.propRespuesta);
-                this.puntajeTecnico = this.respuestaAnterior.puntajeTecnico;
-                this.puntajeSocial = this.respuestaAnterior.puntajeSocial;
-                if (this.puntajeTecnico === null) { this.puntajeTecnico = true; }
-                if (this.puntajeSocial === null) { this.puntajeSocial = true; }
-                this.comentario = this.respuestaAnterior.comentario;
+            // Si puntaje Social existe, puntaje tecnico también
+            if (this.persona.puntajeSocial !== undefined) {
+                this.puntajeTecnico = this.persona.puntajeTecnico;
+                this.puntajeSocial = this.persona.puntajeSocial;
+                if (this.puntajeTecnico === null) { this.noAplicaTecnico = true; }
+                if (this.puntajeSocial === null) { this.noAplicaSocial = true; }
+                this.comentario = this.persona.comentario;
                 this.enviado = true;
             }
         },
@@ -123,7 +122,6 @@
             return {
                 puntajeSocial: 5,
                 puntajeTecnico: 5,
-                //persona: {},
                 comentario: '',
                 abierto: true,
                 noAplicaTecnico: false,
@@ -140,7 +138,10 @@
                     idActividad: this.actividad.idActividad,
                     puntajeTecnico: (this.noAplicaTecnico) ? null : this.puntajeTecnico,
                     puntajeSocial: (this.noAplicaSocial) ? null : this.puntajeSocial,
-                    comentario: this.comentario
+                    comentario: this.comentario,
+                    evaluado: this.persona,
+                    noAplicaSocial: this.noAplicaSocial,
+                    noAplicaTecnico: this.noAplicaTecnico
                 };
                 this.axiosPost(url,
                     function(response, self) {
@@ -155,6 +156,14 @@
             },
             cambiarIcono: function () {
                 this.abierto = !this.abierto;
+            }
+        },
+        computed: {
+            nombre: function () {
+                if (this.persona.nombres !== undefined) {
+                    return this.persona.nombres + ' ' + this.persona.apellidoPaterno;
+                }
+                return this.persona.nombre;
             }
         }
     }
