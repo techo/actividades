@@ -4,7 +4,7 @@
         <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <h4 v-if="evaluados.length > 0">Compañeros ya evaluados</h4>
+        <h4>Compañeros ya evaluados</h4>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
@@ -45,7 +45,6 @@
         components: {'evaluar-persona': EvaluarPersona, 'v-select': vSelect2 },
         name: "contenedor-evaluaciones",
         props: [
-            //'prop-personas',
             'prop-actividad',
             'prop-evaluados',
             'prop-inscriptos',
@@ -69,7 +68,6 @@
         },
         created: function () {
             let result = {};
-            //this.personasAEvaluar = (this.propPersonas === undefined) ? [] : JSON.parse(this.propPersonas);
             this.evaluados = JSON.parse(this.propEvaluados);
             this.actividad = JSON.parse(this.propActividad);
             this.user = JSON.parse(this.propUser);
