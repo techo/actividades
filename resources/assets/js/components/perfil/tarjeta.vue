@@ -17,10 +17,24 @@
                 <p class="card-text text-left">{{ inscripcion.descripcion | truncate(120) }}</p>
                 <div>
                     <span v-if="!actividadPasada">
-                        <a class="btn btn-success text-light font-weight-bold pull-right" @click="desincribir(inscripcion.idActividad)">Desinscribirme</a>
+                        <a
+                                class="btn btn-success text-light font-weight-bold pull-right"
+                                @click="desincribir(inscripcion.idActividad)"
+                        >
+                            Desinscribirme
+                        </a>
                     </span>
                     <span v-else>
-                        <a class="btn btn-info text-light font-weight-bold pull-right" @click="ir_a_evaluar">Ver Evaluaciones</a>
+                        <a
+                                class="btn btn-info text-light font-weight-bold pull-right"
+                                v-show="inscripcion.presente === 1"
+                                @click="ir_a_evaluar"
+                        >
+                            Ver Evaluaciones
+                        </a>
+                        <p v-show="inscripcion.presente === 0">
+                            <strong>No asististe a esta actividad</strong>
+                        </p>
                     </span>
                 </div>
             </div>
