@@ -96,25 +96,27 @@
                 }
             },
             filtrarInscriptos: function () {
-                //let inscripcion = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
-                //this.user.idGrupo = inscripcion.obj.idGrupo;
-                let voluntario;
+                let voluntario; let eliminados = [];
                 for (let i = 0; i < this.personasNoEvaluadas.length; i++) {
                     voluntario = this.personasNoEvaluadas[i];
                     // los que estan en mi grupo sin incluirme a mi mismo
                     if (voluntario.idGrupo === this.miGrupo.idGrupo && voluntario.idPersona !== this.user.idPersona) {
-                        this.incluirEnListadoParaEvaluar(this.personasNoEvaluadas[i]);
+                        this.listadoParaEvaluar.push(voluntario);
                     }
 
                     // los que estan en el grupo padre
                     if (voluntario.idGrupo === this.miGrupo.idPadre) {
-                        this.incluirEnListadoParaEvaluar(this.personasNoEvaluadas[i]);
+                        this.listadoParaEvaluar.push(voluntario);
                     }
 
                     // los que estan en los grupos subordinados
                     if (this.gruposSubordinados.indexOf(voluntario.idGrupo) !== -1) {
-                        this.incluirEnListadoParaEvaluar(voluntario);
+                        this.listadoParaEvaluar.push(voluntario);
                     }
+                }
+
+                for (let i = 0; i < this.listadoParaEvaluar.length; i++) {
+                    this.excluirUsuario(this.personasNoEvaluadas, this.listadoParaEvaluar[i]);
                 }
             },
             buscarPersonaPorId(array, persona) {
