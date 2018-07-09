@@ -782,6 +782,29 @@
                         })
                     })
             },
+            clonar: function() {
+                this.mostrarLoadingAlert();
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
+                let params = { idActividad: this.dataActividad.idActividad };
+                this.axiosPost(url, function(response, self) {
+                    if (response.idActividad) {
+                        window.location = '/admin/actividades/' + response.idActividad
+                    }
+                }, params,
+                    function (response, self) {
+                    // Si hay error
+                        self.ocultarLoadingAlert();
+                        self.$refs.loading.openSimplert({
+                            title: 'Algo salió mal',
+                            message: "<i class=\"fa fa-exclamation-triangle fa-4x\"></i> <br>" +
+                            "<p>Ocurrió un error al clonar la actividad.  Recarga la página e intentalo de nuevo o " +
+                            "repórtalo al administrador del sistema.</p>",
+                            isShown: true,
+                            disableOverlayClick: true,
+                            type: ''
+                        })
+                    })
+            },
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {
@@ -793,6 +816,7 @@
                 }
                 return null;
             },
+
         }
     }
 </script>
