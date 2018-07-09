@@ -2,7 +2,7 @@
     <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <button class="btn btn-default" @click="cancelar">
                 <i class="fa fa-arrow-circle-left"></i> Volver al listado
             </button>
@@ -12,7 +12,7 @@
                 <i class="fa fa-share-alt"></i>  Compartir
             </button>
         </div>
-        <div class="col-md-1">
+        <div class="col-md-2">
             <button class="btn btn-primary" v-show="readonly" @click="clonar">
                 <i class="fa fa-clone"></i>
                 Clonar Actividad

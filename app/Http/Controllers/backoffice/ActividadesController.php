@@ -243,7 +243,7 @@ class ActividadesController extends Controller
     {
         $actividad = Actividad::findOrFail($id);
 
-        if ($actividad->fechaInicio < Carbon::today()) {
+        if ($actividad->fechaFin < Carbon::today()) {
             Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
             return redirect()->back();
         }
@@ -331,7 +331,6 @@ class ActividadesController extends Controller
         return $v;
     }
 
-
     public function clonar(Request $request)
     {
         DB::beginTransaction();
@@ -346,11 +345,10 @@ class ActividadesController extends Controller
                 $nuevoPunto->push();
             }
 
-            foreach ($original->grupos as $grupo) {
-                $nuevoGrupo = $grupo->replicate();
-                $nuevoGrupo->idActividad = $clon->idActividad;
-                $nuevoGrupo->push();
-            }
+            $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
+                ->where('idPadre', 0)
+                ->first();
+            $this->clonarGrupo($grupoRaizOriginal, $clon);
         } catch (\Exception $exception) {
             DB::rollBack();
             return response($exception->getMessage(), 500);
@@ -358,7 +356,6 @@ class ActividadesController extends Controller
         DB::commit();
         return $clon;
     }
-
 
     /**
      * @param $punto PuntoEncuentro
@@ -485,5 +482,19 @@ class ActividadesController extends Controller
             return true;
         }
         return false;
+    }
+
+    private function clonarGrupo(Grupo $grupoOriginal, Actividad $actividad, $idPadre = 0)
+    {
+
+        $nuevoGrupo = Grupo::create([
+            'nombre'    => $grupoOriginal->nombre,
+            'idPadre'   => $idPadre,
+            'idActividad'   => $actividad->idActividad
+        ]);
+        foreach ($grupoOriginal->grupos as $grupo) {
+            $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
+        }
+        return;
     }
 }
