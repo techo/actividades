@@ -23,6 +23,8 @@ class ActividadResource extends Resource
             'fechaFin' => empty($this->fechaFin) ? '' : $this->fechaFin->format('d-m-Y'),
             'fechaInicioInscripciones' =>empty($this->fechaInicioInscripciones) ? '' : $this->fechaInicioInscripciones->format('d-m-Y'),
             'fechaFinInscripciones' => empty($this->fechaFinInscripciones) ? '' : $this->fechaFinInscripciones->format('d-m-Y'),
+            'fechaInicioEvaluaciones' =>empty($this->fechaInicioEvaluaciones) ? '' : $this->fechaInicioEvaluaciones->format('d-m-Y'),
+            'fechaFinEvaluaciones' => empty($this->fechaFinEvaluaciones) ? '' : $this->fechaFinEvaluaciones->format('d-m-Y'),
             'nombreActividad' => $this->nombreActividad,
             'descripcion' => $this->descripcion,
             'compromiso' => $this->compromiso,
