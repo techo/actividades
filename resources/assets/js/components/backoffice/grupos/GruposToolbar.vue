@@ -21,7 +21,7 @@
                     class="btn btn-sm btn-default"
                     :class="{'disabled': disabled}"
                     @click="mostrarEliminarModal">
-                Asignar Borrar
+                Borrar
             </button>
             <rol-modal></rol-modal>
             <grupo-modal></grupo-modal>
