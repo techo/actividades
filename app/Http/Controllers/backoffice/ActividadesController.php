@@ -474,6 +474,11 @@ class ActividadesController extends Controller
         return false;
     }
 
+    /**
+     * Crea grupo Raiz al crear una actividad nueva
+     * @param Actividad $actividad
+     * @return bool
+     */
     private function crearGrupo(Actividad $actividad)
     {
         $grupo = new Grupo();
@@ -486,6 +491,12 @@ class ActividadesController extends Controller
         return false;
     }
 
+    /**
+     * Recursividad para clonar subgrupos
+     * @param Grupo $grupoOriginal
+     * @param Actividad $actividad
+     * @param int $idPadre
+     */
     private function clonarGrupo(Grupo $grupoOriginal, Actividad $actividad, $idPadre = 0)
     {
 
