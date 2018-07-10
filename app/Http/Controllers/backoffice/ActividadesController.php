@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice;
 use App\Actividad;
 use App\CategoriaActividad;
 use App\Grupo;
+use App\GrupoRolPersona;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
@@ -250,6 +251,8 @@ class ActividadesController extends Controller
 
 
         try {
+            $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
+            $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -295,7 +298,7 @@ class ActividadesController extends Controller
             'costo.*' =>
                 'Debe especificar el costo de participar en la construcción',
             'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
-            posterior al final de la actividad'
+             posterior al final de la actividad'
         ];
         $v = Validator::make(
             $request->all(),
@@ -452,7 +455,12 @@ class ActividadesController extends Controller
         $actividad->moneda = 'ARS';
 
         if ($actividad->save()) {
-
+            $grupoRaiz = Grupo::where('idActividad', '=', $actividad->idActividad)
+                ->where('idPadre', '=', 0)->first();
+            if ($grupoRaiz) {
+                $grupoRaiz->nombre = $actividad->nombreActividad;
+                $grupoRaiz->save();
+            }
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {

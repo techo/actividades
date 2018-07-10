@@ -15,7 +15,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Inscripción confirmada! Gracias por ayudar.</h1>
+            <h1 class="card-subtitle">¡Inscripción confirmada! Gracias por ayudar.</h3>
         </div>
         <hr>
     </div>

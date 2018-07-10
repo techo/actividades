@@ -1,15 +1,19 @@
 <template>
     <span>
         <h4>Evalúa a tus compañeros</h4>
-        <div v-for="persona in personas" class="mt-2">
+        <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <p class="alert alert-info mt-3">
-                    <i class="fa fa-star" style="margin-right: 0.5em"></i>
-                    ¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla
+        <h4 v-if="evaluados.length > 0">Compañeros ya evaluados</h4>
+        <div v-for="persona in evaluados" class="mt-2">
+            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
+        </div>
+        <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
+            <i class="fa fa-star" style="margin-right: 0.5em"></i>
+            ¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla
         </p>
 
-        <div class="row">
+        <div class="row"  v-if="!evaluacionPasada">
             <div class="col-md-9">
                 <div class="form-group">
                     <label for="listadoInscriptos">Nombre, apellido o DNI del voluntario</label>
@@ -40,10 +44,17 @@
     export default {
         components: {'evaluar-persona': EvaluarPersona, 'v-select': vSelect2 },
         name: "contenedor-evaluaciones",
-        props: [ 'prop-personas', 'prop-actividad', 'prop-respuestas', 'prop-inscriptos', 'prop-user', 'prop-mi-grupo', 'prop-grupos-subordinados'],
+        props: [
+            'prop-actividad',
+            'prop-evaluados',
+            'prop-inscriptos',
+            'prop-user',
+            'prop-mi-grupo',
+            'prop-grupos-subordinados'
+        ],
         data: function () {
             return {
-                personas: [],
+                listadoParaEvaluar: [],
                 personaSeleccionada: null,
                 actividad: {},
                 respuestas: [],
@@ -51,53 +62,61 @@
                 user: {},
                 miGrupo: {},
                 gruposSubordinados: [],
-                personasNoEvaluadas: []
+                personasNoEvaluadas: [],
+                evaluados: []
             }
         },
         created: function () {
             let result = {};
-            this.personas = (this.propPersonas === undefined) ? [] : JSON.parse(this.propPersonas);
-            //this.respuestas = JSON.parse(this.propRespuestas);
+            this.evaluados = JSON.parse(this.propEvaluados);
             this.actividad = JSON.parse(this.propActividad);
             this.user = JSON.parse(this.propUser);
             this.listadoInscriptos = JSON.parse(this.propInscriptos);
-            result = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
-            this.listadoInscriptos.splice(result.pos, 1);
             this.miGrupo = JSON.parse(this.propMiGrupo);
             this.gruposSubordinados = JSON.parse(this.propGruposSubordinados);
+            this.personasNoEvaluadas = this.listadoInscriptos.slice(0);
+            this.excluirUsuario(this.personasNoEvaluadas, this.user);
+            //
+            for (let i = 0; i < this.evaluados.length; i++) {
+                this.excluirUsuario(this.personasNoEvaluadas, this.evaluados[i])
+            }
             this.filtrarInscriptos();
-            this.personasNoEvaluadas = this.listadoInscriptos.filter(this.filtrarPorIdPersona(this.personas));
         },
         methods: {
             incluirPersona: function () {
-                this.personas.push(this.personaSeleccionada);
-                let result = this.buscarPersonaPorId(this.personasNoEvaluadas, this.personaSeleccionada); console.info(result);
+                this.listadoParaEvaluar.push(this.personaSeleccionada);
+                let result = this.buscarPersonaPorId(this.personasNoEvaluadas, this.personaSeleccionada);
                 this.personasNoEvaluadas.splice(result.pos, 1);
                 this.personaSeleccionada = null;
             },
+            excluirUsuario: function (array, user) {
+                let result = this.buscarPersonaPorId(array, user);
+                if (result) {
+                    array.splice(result.pos, 1);
+                }
+            },
             filtrarInscriptos: function () {
-                //let inscripcion = this.buscarPersonaPorId(this.listadoInscriptos, this.user);
-                //this.user.idGrupo = inscripcion.obj.idGrupo;
-                let voluntario;
-                for (let i = 0; i < this.listadoInscriptos.length; i++) {
-                    voluntario = this.listadoInscriptos[i];
+                let voluntario; let eliminados = [];
+                for (let i = 0; i < this.personasNoEvaluadas.length; i++) {
+                    voluntario = this.personasNoEvaluadas[i];
                     // los que estan en mi grupo sin incluirme a mi mismo
-                    if (this.listadoInscriptos[i].idGrupo === this.miGrupo.idGrupo && this.listadoInscriptos[i].idPersona !== this.user.idPersona) {
-                        //this.personas.push(this.listadoInscriptos[i]);
-                        this.incluirEnListadoParaEvaluar(this.listadoInscriptos[i]);
+                    if (voluntario.idGrupo === this.miGrupo.idGrupo && voluntario.idPersona !== this.user.idPersona) {
+                        this.listadoParaEvaluar.push(voluntario);
                     }
 
                     // los que estan en el grupo padre
-                    if (this.listadoInscriptos[i].idGrupo === this.miGrupo.idPadre) {
-                        //this.personas.push(this.listadoInscriptos[i]);
-                        this.incluirEnListadoParaEvaluar(this.listadoInscriptos[i]);
+                    if (voluntario.idGrupo === this.miGrupo.idPadre) {
+                        this.listadoParaEvaluar.push(voluntario);
                     }
 
                     // los que estan en los grupos subordinados
-                    if (this.gruposSubordinados.indexOf(this.listadoInscriptos[i].idGrupo) !== -1) {
-                        //this.personas.push(this.listadoInscriptos[i]);
-                        this.incluirEnListadoParaEvaluar(this.listadoInscriptos[i]);
+                    if (this.gruposSubordinados.indexOf(voluntario.idGrupo) !== -1) {
+                        this.listadoParaEvaluar.push(voluntario);
                     }
+                }
+
+                for (let i = 0; i < this.listadoParaEvaluar.length; i++) {
+                    this.excluirUsuario(this.personasNoEvaluadas, this.listadoParaEvaluar[i]);
                 }
             },
             buscarPersonaPorId(array, persona) {
@@ -109,19 +128,17 @@
                 return null;
             },
             incluirEnListadoParaEvaluar(persona) {
-                this.personas.push(persona);
-                let result = this.buscarPersonaPorId(this.listadoInscriptos, persona);
+                this.listadoParaEvaluar.push(persona);
+                this.excluirUsuario(this.personasNoEvaluadas, persona);
                 //this.listadoInscriptos.splice(result.pos, 1);
             },
-
-            filtrarPorIdPersona(otherArray){
-                return function(current){
-                    return otherArray.filter(function(other){
-                        return other.idPersona == current.idPersona
-                    }).length == 0;
-                }
+        },
+        computed: {
+            evaluacionPasada: function () {
+                let ahora = new Date();
+                let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
+                return ahora.getTime() > fechaFinEvaluaciones.getTime();
             }
-
         }
     }
 </script>

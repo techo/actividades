@@ -53,7 +53,7 @@
 </script>
 
 <style>
-.confirmar: {
+.confirmar {
     min-width: 800px;
 }
 .confirmar > .simplert_content: {

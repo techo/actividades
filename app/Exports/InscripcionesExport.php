@@ -2,11 +2,8 @@
 
 namespace App\Exports;
 
-use App\Actividad;
 use App\Search\InscripcionesSearch;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -17,15 +14,12 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFormatting, WithMapping, WithStrictNullComparison, ShouldAutoSize
-
 {
     protected $filter;
 
-    // public function __construct($idActividad, $filter = null, $sort = 'nombreActividad|asc')
     public function __construct($filter)
     {
         $this->filter = $filter;
-
     }
 
     public function collection()

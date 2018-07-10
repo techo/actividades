@@ -17,13 +17,30 @@
                 <p class="card-text text-left">{{ inscripcion.descripcion | truncate(120) }}</p>
                 <div>
                     <span v-if="!actividadPasada">
-                        <a class="btn btn-success text-light font-weight-bold pull-right" @click="desincribir(inscripcion.idActividad)">Desinscribirme</a>
+                        <a
+                            class="btn btn-success text-light font-weight-bold pull-right"
+                            @click="desincribir(inscripcion.idActividad)"
+                        >
+                            Desinscribirme
+                        </a>
                     </span>
-                    <span v-else>
-                        <a class="btn btn-info text-light font-weight-bold pull-right" @click="ir_a_evaluar">Evaluar</a>
+                    <span v-else> <!-- la actividad ya terminó -->
+                        <span v-if="periodoDeEvaluacionYaComenzo">
+                            <a
+                                    class="btn btn-info text-light font-weight-bold pull-right"
+                                    v-show="inscripcion.presente === 1"
+                                    @click="ir_a_evaluar"
+                            >
+                                Ver Evaluaciones
+                            </a>
+                            <p v-show="inscripcion.presente === 0">
+                                <strong>No asististe a esta actividad</strong>
+                            </p>
+                        </span>
+                        <span v-else>  <!-- Actividad terminó pero no esta en el periodo de evaluación -->
+                            <p><strong>Las evaluaciones comienzan el {{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
+                        </span>
                     </span>
-
-
                 </div>
             </div>
         </div>
@@ -31,7 +48,6 @@
 </template>
 
 <script>
-    import moment from 'moment';
     export default {
         name: 'tarjeta',
         props: ['inscripcion'],
@@ -84,9 +100,6 @@
             }
         },
         computed: {
-            hoy: function() { return Date.now();
-                return moment();
-            },
             actividadPasada: function () {
                 let fechaFin = new Date(this.inscripcion.fechaFin.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")).getTime();
 
@@ -97,6 +110,15 @@
                 if (fechaFin  < Date.now()) {
                     return true;
                 }
+            },
+            periodoDeEvaluacionYaComenzo: function () {
+                let fechaInicioEvaluaciones = new Date(
+                    this.inscripcion.fechaInicioEvaluaciones.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")
+                ).getTime();
+
+                let ahora = new Date();
+
+                return (ahora > fechaInicioEvaluaciones)
             }
         }
     }

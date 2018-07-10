@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="col-md-8">
         <h4>Evalúa la actividad</h4>
         <p class="text-muted">Este es un texto en donde se explica cuál es la importancia de evaluar la actividad</p>
         <div :id="'evaluaciones_' + actividad.idActividad">
@@ -23,7 +23,7 @@
                 <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="slider">Puntaje General</label>
                                     <vue-slider
@@ -40,7 +40,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplica" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
                                     <input type="checkbox" id="noAplica" :value="1" v-model="noAplica">
@@ -59,10 +59,15 @@
                                     v-model="comentario"
                             >{{ comentario }}</textarea>
                         </div>
-                        <button class="btn btn-primary pull-right" v-if="!enviado" @click.prevent="enviarEvaluacion">
+                        <button
+                                class="btn btn-primary pull-right"
+                                v-if="!enviado && !evaluacionPasada"
+                                @click="enviarEvaluacion"
+                        >
                             Enviar Evaluación
                         </button>
-                        <p class="pull-right" v-else><strong>¡Gracias por tu opinión!</strong></p>
+                        <p class="pull-right" v-if="enviado"><strong>¡Gracias por tu opinión!</strong></p>
+                        <p class="pull-right" v-if="evaluacionPasada">La fecha de fin de las evaluaciones ya pasó &#9785;</p>
                         <p class="red" v-if="error">
                             <i class="fas fa-exclamation"></i> &nbsp;
                             <i style="margin-left: 0.5em">
@@ -127,6 +132,13 @@
             },
             cambiarIcono: function () {
                 this.abierto = !this.abierto;
+            }
+        },
+        computed: {
+            evaluacionPasada: function () {
+                let ahora = new Date();
+                let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
+                return ahora.getTime() > fechaFinEvaluaciones.getTime();
             }
         }
     }
