@@ -56,7 +56,9 @@ class ReportController extends Controller
         $actividad = Actividad::find($id);
         $evaluaciones = new EvaluacionesPersonasExport($actividad);
 
-        return Excel::download($evaluaciones,'Evaluaciones de Participantes en '. $actividad->nombreActividad . '.xlsx');
+        //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones,'Evaluaciones de Participantes en ' . $nombreActividad . '.xlsx');
     }
 
     public function exportarEvaluacionesActividad($id)
@@ -64,7 +66,9 @@ class ReportController extends Controller
         $actividad = Actividad::find($id);
         $evaluaciones = new EvaluacionesActividadExport($actividad);
 
-        return Excel::download($evaluaciones,'Evaluaciones de '. $actividad->nombreActividad . '.xlsx');
+        //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones,'Evaluaciones de '. $nombreActividad . '.xlsx');
     }
 
 }
