@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
+use Illuminate\Support\Facades\DB;
 
 class ActividadesController extends Controller
 {
@@ -243,7 +244,7 @@ class ActividadesController extends Controller
     {
         $actividad = Actividad::findOrFail($id);
 
-        if ($actividad->fechaInicio < Carbon::today()) {
+        if ($actividad->fechaFin < Carbon::today()) {
             Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
             return redirect()->back();
         }
@@ -335,6 +336,31 @@ class ActividadesController extends Controller
         return $v;
     }
 
+    public function clonar(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $original = Actividad::find($request->idActividad);
+            $clon = $original->replicate();
+            $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
+            $clon->push();
+            foreach ($original->puntosEncuentro as $punto) {
+                $nuevoPunto = $punto->replicate();
+                $nuevoPunto->idActividad = $clon->idActividad;
+                $nuevoPunto->push();
+            }
+
+            $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
+                ->where('idPadre', 0)
+                ->first();
+            $this->clonarGrupo($grupoRaizOriginal, $clon);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return response($exception->getMessage(), 500);
+        }
+        DB::commit();
+        return $clon;
+    }
 
     /**
      * @param $punto PuntoEncuentro
@@ -435,7 +461,6 @@ class ActividadesController extends Controller
                 $grupoRaiz->nombre = $actividad->nombreActividad;
                 $grupoRaiz->save();
             }
-
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {
@@ -457,6 +482,11 @@ class ActividadesController extends Controller
         return false;
     }
 
+    /**
+     * Crea grupo Raiz al crear una actividad nueva
+     * @param Actividad $actividad
+     * @return bool
+     */
     private function crearGrupo(Actividad $actividad)
     {
         $grupo = new Grupo();
@@ -467,5 +497,25 @@ class ActividadesController extends Controller
             return true;
         }
         return false;
+    }
+
+    /**
+     * Recursividad para clonar subgrupos
+     * @param Grupo $grupoOriginal
+     * @param Actividad $actividad
+     * @param int $idPadre
+     */
+    private function clonarGrupo(Grupo $grupoOriginal, Actividad $actividad, $idPadre = 0)
+    {
+
+        $nuevoGrupo = Grupo::create([
+            'nombre'    => $grupoOriginal->nombre,
+            'idPadre'   => $idPadre,
+            'idActividad'   => $actividad->idActividad
+        ]);
+        foreach ($grupoOriginal->grupos as $grupo) {
+            $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
+        }
+        return;
     }
 }
