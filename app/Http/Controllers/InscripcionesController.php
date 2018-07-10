@@ -45,23 +45,29 @@ class InscripcionesController extends Controller
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
-        $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
-        if (!$inscripcion) {
-            $inscripcion = new Inscripcion();
-            $inscripcion->idActividad = $id;
-            $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
-            $inscripcion->idPersona = Auth::user()->idPersona;
-            $inscripcion->evaluacion = 0;
-            $inscripcion->acompanante = '';
-            $inscripcion->estado = 'Sin Contactar';
-            $inscripcion->fechaInscripcion = new Carbon();
-            $inscripcion->save();
-
-            $this->incluirEnGrupoRaiz($actividad, Auth::user()->idPersona);
-            $res = Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+        $persona = Auth::user();
+        if($request->has('aceptar_terminos') && $request->aceptar_terminos == 1){
+            $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
+            if (!$inscripcion) {
+                $inscripcion = new Inscripcion();
+                $inscripcion->idActividad = $id;
+                $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
+                $inscripcion->idPersona = Auth::user()->idPersona;
+                $inscripcion->evaluacion = 0;
+                $inscripcion->acompanante = '';
+                $inscripcion->estado = 'Sin Contactar';
+                $inscripcion->fechaInscripcion = new Carbon();
+                $inscripcion->save();
+                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+                return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+            }
             return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }
-        return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+        $request->session()->flash('status', 'Debe aceptar los términos para continuar');
+        return view('inscripciones.confirmar')
+            ->with('actividad', $actividad)
+            ->with('punto_encuentro', $punto_encuentro)
+            ->with('tipo', $actividad->tipo);
     }
 
     /**
