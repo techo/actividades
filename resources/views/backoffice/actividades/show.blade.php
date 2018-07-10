@@ -142,39 +142,34 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="btn-group">
-                            <button
-                                    type="button"
-                                    class="btn btn-primary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                            >
-                                <i class="fa fa-download"></i>
-                                Exportar a Excel <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a  href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones-voluntarios">
-                                        Exportar Evaluaciones de Voluntarios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones">
-                                        Exportar Evaluaciones de la Actividad
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-
-
                         <div class="row">
                             <div class="col-md-2">
+                                <div class="btn-group">
+                                    <button
+                                            type="button"
+                                            class="btn btn-primary dropdown-toggle"
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                    >
+                                        <i class="fa fa-download"></i>
+                                        Exportar a Excel <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a  href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones-voluntarios">
+                                                Exportar Evaluaciones de Voluntarios
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones">
+                                                Exportar Evaluaciones de la Actividad
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
 
-
-                                </a>
                             </div>
                             <div class="col-md-2">
                                 <btn-enviar-evaluaciones prop-actividad="{{ $actividad }}"></btn-enviar-evaluaciones>
