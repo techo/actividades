@@ -15,11 +15,13 @@ class PersonaEvaluadaResource extends Resource
     public function toArray($request)
     {
         return [
-            'idPersona' => $this->idPersona,
-            'dni'       => $this->dni,
-            'nombre'    => $this->nombreCompleto,
-            'rol'       => $this->rol,
-            'idGrupo'   => $this->idGrupo
+            'idPersona'     => $this->idPersona,
+            'dni'           => $this->dni,
+            'nombre'        => $this->nombreCompleto,
+            'rol'           => $this->rol,
+            'idGrupo'       => $this->idGrupo
         ];
     }
+
+
 }

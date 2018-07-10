@@ -31,7 +31,6 @@ class ActividadesPolicy
         $inicioEvaluaciones = ($actividad->fechaInicioEvaluaciones <= Carbon::now());
         $finEvaluaciones = ($actividad->fechaFinEvaluaciones >= Carbon::now());
 
-        //return ($inscripto && $inicioEvaluaciones && $finEvaluaciones);
         return ($inscripto && $inicioEvaluaciones);
 
     }

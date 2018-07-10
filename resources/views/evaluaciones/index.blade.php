@@ -20,6 +20,7 @@
             prop-inscriptos="{{ json_encode($listadoInscriptos) }}"
             prop-mi-grupo = "{{ json_encode($miGrupo) }}"
             prop-grupos-subordinados="{{ json_encode($gruposSubordinados) }}"
+            prop-evaluados="{{ json_encode($evaluados) }}"
     >
     </contenedor-evaluaciones>
 @endsection

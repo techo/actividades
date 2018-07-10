@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="col-md-8">
         <div class="accordion" :id="'evaluacionPersona_' + persona.idPersona">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
@@ -11,17 +11,21 @@
                                 :aria-controls="'cardEvaluacionPersona_'+ persona.idPersona"
                                 @click="cambiarIcono"
                         >
-                            Evaluación de {{ persona.nombre }} - {{ persona.rol }}
+                            Evaluación de {{ nombre }} - {{ persona.rol }}
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
                     </span>
                 </div>
 
-                <div :id="'cardEvaluacionPersona_'+ persona.idPersona" class="collapse show" aria-labelledby="headingOne" :data-parent="'#evaluacionPersona_' + persona.idPersona">
+                <div
+                        :id="'cardEvaluacionPersona_'+ persona.idPersona"
+                        class="collapse show"
+                        :data-parent="'#evaluacionPersona_' + persona.idPersona"
+                >
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="sliderTecnico">Puntaje Técnico</label>
                                     <vue-slider
@@ -38,7 +42,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplicaTecnico" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
                                     <input type="checkbox" id="noAplicaTecnico" :value="1" v-model="noAplicaTecnico">
@@ -47,7 +51,7 @@
 
                         </div>
                         <div class="row">
-                            <div class="col-md-9">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="sliderSocial">Puntaje Social</label>
                                     <vue-slider
@@ -64,7 +68,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplicaSocial" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
                                     <input type="checkbox" id="noAplicaSocial" :value="1" v-model="noAplicaSocial">
@@ -83,10 +87,16 @@
                                     v-model="comentario"
                             >{{ comentario }}</textarea>
                         </div>
-                        <button class="btn btn-primary pull-right" v-if="!enviado" @click="enviarEvaluacion">
+
+                        <button
+                                class="btn btn-primary pull-right"
+                                v-if="!enviado && !evaluacionPasada"
+                                @click="enviarEvaluacion"
+                        >
                             Enviar Evaluación
                         </button>
-                        <p class="pull-right" v-else><strong>¡Gracias por tu opinión!</strong></p>
+                        <p class="pull-right" v-if="enviado"><strong>¡Gracias por tu opinión!</strong></p>
+                        <p class="pull-right" v-if="evaluacionPasada">La fecha de fin de las evaluaciones ya pasó &#9785;</p>
                         <p class="red" v-if="error">
                             <i class="fas fa-exclamation"></i> &nbsp;
                             <i style="margin-left: 0.5em">
@@ -106,16 +116,15 @@
         components: {
             'vue-slider': VueSlider
         },
-        props: ['persona', 'prop-respuesta', 'actividad'],
+        props: ['persona', 'actividad'],
         created: function () {
-            //this.persona = JSON.parse(this.propPersona);
-            if (this.propRespuesta !== undefined) {
-                this.respuestaAnterior = JSON.parse(this.propRespuesta);
-                this.puntajeTecnico = this.respuestaAnterior.puntajeTecnico;
-                this.puntajeSocial = this.respuestaAnterior.puntajeSocial;
-                if (this.puntajeTecnico === null) { this.puntajeTecnico = true; }
-                if (this.puntajeSocial === null) { this.puntajeSocial = true; }
-                this.comentario = this.respuestaAnterior.comentario;
+            // Si puntaje Social existe, puntaje tecnico también
+            if (this.persona.puntajeSocial !== undefined) {
+                this.puntajeTecnico = this.persona.puntajeTecnico;
+                this.puntajeSocial = this.persona.puntajeSocial;
+                if (this.puntajeTecnico === null) { this.noAplicaTecnico = true; }
+                if (this.puntajeSocial === null) { this.noAplicaSocial = true; }
+                this.comentario = this.persona.comentario;
                 this.enviado = true;
             }
         },
@@ -123,7 +132,6 @@
             return {
                 puntajeSocial: 5,
                 puntajeTecnico: 5,
-                //persona: {},
                 comentario: '',
                 abierto: true,
                 noAplicaTecnico: false,
@@ -140,7 +148,10 @@
                     idActividad: this.actividad.idActividad,
                     puntajeTecnico: (this.noAplicaTecnico) ? null : this.puntajeTecnico,
                     puntajeSocial: (this.noAplicaSocial) ? null : this.puntajeSocial,
-                    comentario: this.comentario
+                    comentario: this.comentario,
+                    evaluado: this.persona,
+                    noAplicaSocial: this.noAplicaSocial,
+                    noAplicaTecnico: this.noAplicaTecnico
                 };
                 this.axiosPost(url,
                     function(response, self) {
@@ -155,6 +166,19 @@
             },
             cambiarIcono: function () {
                 this.abierto = !this.abierto;
+            }
+        },
+        computed: {
+            nombre: function () {
+                if (this.persona.nombres !== undefined) {
+                    return this.persona.nombres + ' ' + this.persona.apellidoPaterno;
+                }
+                return this.persona.nombre;
+            },
+            evaluacionPasada: function () {
+                let ahora = new Date();
+                let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
+                return ahora.getTime() > fechaFinEvaluaciones.getTime();
             }
         }
     }

@@ -76,7 +76,7 @@
         },
         methods: {
             verVoluntario(data) {
-                this.voluntario = data;
+                this.info = data;
                 $('#myModal').modal('show')
             }
         },

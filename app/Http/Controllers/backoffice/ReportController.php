@@ -9,6 +9,7 @@ use App\Exports\MisActividadesExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EvaluacionesPersonasExport;
 
 class ReportController extends Controller
 {
@@ -48,4 +49,13 @@ class ReportController extends Controller
         $inscripciones = (new InscripcionesExport($filtros));
         return Excel::download($inscripciones, 'inscripciones_' . $id . '.xlsx');
     }
+
+    public function exportarEvaluacionesPersonas(Request $request, $id)
+    {
+        $actividad = Actividad::find($id);
+        $evaluaciones = new EvaluacionesPersonasExport($actividad);
+
+        return Excel::download($evaluaciones,'Evaluaciones de '. $actividad->nombreActividad . '.xlsx');
+    }
+
 }
