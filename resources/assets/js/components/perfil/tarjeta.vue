@@ -38,7 +38,7 @@
                             </p>
                         </span>
                         <span v-else>  <!-- Actividad terminó pero no esta en el periodo de evaluación -->
-                            <p><strong>Las evaluaciones comienzan el {{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
+                            <p><strong>Las evaluaciones comienzan el <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
                         </span>
                     </span>
                 </div>
@@ -116,7 +116,7 @@
                     this.inscripcion.fechaInicioEvaluaciones.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")
                 ).getTime();
 
-                let ahora = new Date();
+                let ahora = new Date().getTime();
 
                 return (ahora > fechaInicioEvaluaciones)
             }
