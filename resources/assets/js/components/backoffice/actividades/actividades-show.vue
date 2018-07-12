@@ -389,6 +389,7 @@
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
+    import store from '../store';
     import daterangepicker from '../../../components/plugins/daterangepicker';
 
     window.moment = moment;
@@ -432,7 +433,7 @@
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
             this.dataCategorias = JSON.parse(this.categorias);
             this.tiposDeActividad = (this.tipos !== '') ? JSON.parse(this.tipos) :  [];
-
+            store.commit('initIdActividad', this.dataActividad.idActividad); // Id de Actividad visible para otros componentes mediante Vuex
             this.inicializar();
             this.getTiposDeActividad();
             this.getOficinas();

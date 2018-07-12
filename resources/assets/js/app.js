@@ -22,6 +22,7 @@ import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
 import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
 import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
+import store from './components/backoffice/store'
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -97,4 +98,5 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#app',
+    store,
 });
