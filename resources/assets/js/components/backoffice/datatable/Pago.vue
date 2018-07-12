@@ -80,8 +80,11 @@
             pago() {
                 this.actualizar();
             },
-            'rowData.pago': function () {
-                this.pago = (this.rowData.pago === null) ? 0 : this.rowData.pago;
+            // 'rowData.pago': function () {
+            //     this.pago = (this.rowData.pago === null) ? 0 : this.rowData.pago;
+            // }
+            "this.rowData.pago": function (newData) {
+                this.pago = (newData === null) ? 0 : newData;
             }
 
         }

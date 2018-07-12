@@ -40,6 +40,14 @@
         },
         created() {
         },
+        watch: {
+            "this.rowData.presente": function(newData){
+                this.presente = newData;
+            },
+            "this.rowData.id": function(newData){
+                this.idInscripcion = newData;
+            },
+        },
         computed: {},
         methods: {
             actualizar() {
