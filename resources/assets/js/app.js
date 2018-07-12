@@ -22,7 +22,6 @@ import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
 import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
 import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
-import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla'
 import store from './components/backoffice/store'
 
 Vue.component('actividades-show', ActividadesShow);
