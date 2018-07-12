@@ -185,8 +185,30 @@
                 </div>
                 <!-- /.box -->
                 <div class="box">
-                    <div class="box-body  with-border">
-                        <i>Poner algo acá</i>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <evaluaciones-actividad-stats></evaluaciones-actividad-stats>
+                            </div>
+                            <div class="col-md-6">
+                                {{--Componente EvaluacionesActividadChart--}}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+                <!-- /.box -->
+                <div class="box">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{--Componente EvaluacionesPersonasStats--}}
+                            </div>
+                            <div class="col-md-6">
+                                {{--Componente EvaluacionesPersonasChart--}}
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>

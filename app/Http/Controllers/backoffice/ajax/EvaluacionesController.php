@@ -25,4 +25,9 @@ class EvaluacionesController extends Controller
         }
         return 'ok';
     }
+
+    public function getActividadStats($id)
+    {
+            
+    }
 }

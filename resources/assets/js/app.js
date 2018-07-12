@@ -1,6 +1,6 @@
 import Simplert from "vue2-simplert";
 
-Vue.config.devtools = true;
+Vue.config.devtools = true; //TODO: Quitar en producción
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
@@ -22,7 +22,8 @@ import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
 import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
 import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
-import store from './components/backoffice/store'
+import store from './components/backoffice/store';
+import EvaluacionesActividadStats from './components/backoffice/evaluaciones/EvaluacionesActividadStats';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -44,6 +45,7 @@ Vue.component('btn-grupo-persona', BtnGrupoPersona);
 Vue.component('miembros', Miembros);
 Vue.component('miembros-tabla', MiembrosTabla);
 Vue.component('btn-enviar-evaluaciones', BtnEnviarEvaluaciones);
+Vue.component('evaluaciones-actividad-stats', EvaluacionesActividadStats);
 
 window.Event = new Vue();
 
