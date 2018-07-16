@@ -182,6 +182,7 @@
             // cargar puntos de encuentro
             Event.$on('Miembros:guardado', this.confirmarGuardado);
             Event.$on('Miembros:voluntario-duplicado', this.voluntarioDuplicado);
+            Event.$on('error', this.error);
         },
         methods: {
             guardarGrupo: function () {
@@ -339,6 +340,9 @@
                     });
                 }
             },
+            error() {
+                this.$refs.loading.justCloseSimplert();
+            }
         },
         computed: {
             edit: function () {

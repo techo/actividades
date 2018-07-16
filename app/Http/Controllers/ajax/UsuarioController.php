@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Persona;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
-use App\Http\Resources\ActividadResource;
+use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Search\MisActividadesSearch;
@@ -136,7 +136,7 @@ class UsuarioController extends BaseController
     $resourceCollection = [];
     if ($inscripciones->count() > 0) {
         foreach ($inscripciones as $inscripcion) {
-            $resourceCollection[] = new ActividadResource($inscripcion);
+            $resourceCollection[] = new MisActividadesResource($inscripcion);
         }
         return $this->paginate($resourceCollection, $items, $request->query());
     }
