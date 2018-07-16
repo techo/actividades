@@ -42,8 +42,11 @@
             <div class="col-md-8">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>
-                    {{ isset($actividad->localidad) ? $actividad->localidad->localidad : "Localidad No Definida" }}, {{ isset($actividad->provincia) ? $actividad->provincia->provincia : "Provincia No Definida" }}
-                    , {{ $actividad->pais->nombre }}
+					@if (isset($actividad->localidad))
+                        Sin especificar
+                    @else
+                        {{ $actividad->localidad }}, {{ $actividad->provincia }}, {{ $actividad->pais->nombre }}
+                    @endif
                 </span>
             </div>
 		</div>

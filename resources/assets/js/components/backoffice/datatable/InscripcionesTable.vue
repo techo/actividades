@@ -47,7 +47,6 @@ import Pago from './Pago';
 import Asistencia from './Asistencia';
 import ActualizarInscripcion from './actualizarInscripcion';
 import EstadoInscripcion from './estadoInscripcion';
-import MisActividades from './MisActividades';
 import axios from 'axios';
 import Simplert from 'vue2-simplert';
 
@@ -61,7 +60,6 @@ Vue.use(VueEvents);
   Vue.component('pago', Pago);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
-  Vue.component('mis-actividades', MisActividades);
   Vue.component('simple-alert', Simplert);
 
 export default {
