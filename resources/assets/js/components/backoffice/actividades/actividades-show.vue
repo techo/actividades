@@ -389,7 +389,7 @@
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
-    import store from '../store';
+    import store from '../stores/store';
     import daterangepicker from '../../../components/plugins/daterangepicker';
 
     window.moment = moment;

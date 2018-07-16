@@ -39,6 +39,11 @@ class Actividad extends Model
         return $this->hasMany(EvaluacionActividad::class, 'idActividad');
     }
 
+    public function evaluacionesVoluntarios()
+    {
+        return $this->hasMany(EvaluacionPersona::class, 'idActividad');
+    }
+
     /**
      * Todos los grupos de la actividad (hasta el más interno)
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

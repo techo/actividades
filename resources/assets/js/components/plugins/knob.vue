@@ -7,11 +7,14 @@
 <script>
     export default {
         name: "knob",
-        props: ['valor', 'simbolo'],
+        props: ['valor', 'simbolo', 'listener'],
         data() {
             return {
                 dataValor: this.valor,
             }
+        },
+        created(){
+            Event.$on(this.listener, this.actualizar);
         },
         mounted() {
             var vm = this;
@@ -25,6 +28,13 @@
                     }
                 });
             });
+        },
+        methods: {
+            actualizar: function (valor) {
+                 window.$(this.$el).find('input')
+                     .val(valor)
+                     .trigger('change');
+            }
         }
     }
 </script>

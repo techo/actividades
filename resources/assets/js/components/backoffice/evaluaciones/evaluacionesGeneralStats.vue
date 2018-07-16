@@ -1,0 +1,80 @@
+<template>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Inscriptos</span>
+                        <span class="info-box-number">{{ this.inscriptos }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-green"><i class="fa fa-check-circle"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Presentes</span>
+                        <span class="info-box-number">{{ this.presentes }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-red"><i class="fa fa-times-circle"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Ausentes</span>
+                        <span class="info-box-number">{{ this.ausentes }}</span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+</template>
+
+<script>
+    import store from '../stores/store';
+
+    export default {
+        name: "evaluaciones-general-stats",
+        computed: {
+            inscriptos: function () {
+                return store.state.inscriptos;
+            },
+            presentes: function () {
+                return store.state.presentes;
+            },
+            ausentes: function () {
+                return store.state.inscriptos - store.state.presentes;
+            }
+        },
+        created(){
+            this.getData();
+        },
+        methods:{
+            getData: function () {
+                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/general/stats";
+                this.axiosGet(url,
+                //successCallback
+                function (data, self) {
+                    store.commit("updatePresentes", data.presentes);
+                    store.commit("updateInscriptos", data.inscriptos);
+                },
+                    //payload
+                    //errorCallback
+                );
+            }
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

@@ -1,53 +1,49 @@
 <template>
     <span>
-        <div class="row">
-            <div class="col-md-2">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
-                    <i class="fa fa-paper-plane"></i> Enviar Evaluaciones
-                </button>
-            </div>
-        </div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
+            <i class="fa fa-paper-plane"></i> Enviar Evaluaciones
+        </button>
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="modalConfirmar">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Confirmar Envío de Evaluaciones</h4>
-                </div>
-                <div class="modal-body">
-                    <span v-if="!error && !success">
-                        <p>Se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}</p>
-                        <p>¿Estás seguro?</p>
-                    </span>
-                    <span v-if="success">
-                        <strong>
-                            ¡Felicidades! Los correos ya van en camino.
-                        </strong>
-                    </span>
-                    <span v-if="error">
-                        <p class="text-error">¡Ocurrió un error al enviar los correos! intentalo de nuevo o
-                            contacta al administrador del sistema para más información.</p>
-                    </span>
-                </div>
-              <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-ban"></i>
-                        Cerrar
-                    </button>
-                    <button type="button" class="btn btn-primary" @click="enviarEvaluaciones" v-if="!loading">
-                        <i class="fa fa-paper-plane"></i>
-                        Enviar
-                    </button>
-                    <button type="button" class="btn btn-default" v-else>
-                        <i class="fa fa-spinner fa-spin fa-fw"></i>
-                        <span class="sr-only">Loading...</span> Espera
-                    </button>
-              </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="modalConfirmar">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Confirmar Envío de Evaluaciones</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span v-if="!error && !success">
+                            <p>Se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}</p>
+                            <p>¿Estás seguro?</p>
+                        </span>
+                        <span v-if="success">
+                            <strong>
+                                ¡Felicidades! Los correos ya van en camino.
+                            </strong>
+                        </span>
+                        <span v-if="error">
+                            <p class="text-error">¡Ocurrió un error al enviar los correos! intentalo de nuevo o
+                                contacta al administrador del sistema para más información.</p>
+                        </span>
+                    </div>
+                  <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-ban"></i>
+                            Cerrar
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="enviarEvaluaciones" v-if="!loading">
+                            <i class="fa fa-paper-plane"></i>
+                            Enviar
+                        </button>
+                        <button type="button" class="btn btn-default" v-else>
+                            <i class="fa fa-spinner fa-spin fa-fw"></i>
+                            <span class="sr-only">Loading...</span> Espera
+                        </button>
+                  </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
     </span>
 </template>
@@ -66,7 +62,7 @@ export default {
         }
     },
     created: function () {
-        this.actividad = JSON.parse(this.propActividad);
+        this.actividad = this.propActividad;
     },
     methods: {
         enviarEvaluaciones: function () {

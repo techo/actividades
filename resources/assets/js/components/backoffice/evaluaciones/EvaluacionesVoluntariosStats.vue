@@ -29,7 +29,7 @@
                     <!--grafico knob-->
                     <knob :valor="porcentajeEvaluaciones"
                           :simbolo="'%'"
-                          :listener="'knob-eval-actividad-upd'"
+                          :listener="'knob-eval-voluntarios-upd'"
                     ></knob>
                 </div>
             </div>
@@ -42,7 +42,7 @@
     import store from '../stores/store';
 
     export default {
-        name: "evaluaciones-actividad-stats",
+        name: "evaluaciones-voluntarios-stats",
         components: { knob },
         data(){
             return {
@@ -56,26 +56,30 @@
               if(this.loading) return 0;
 
               let porcentaje = Math.round(this.evaluaron * 100 / store.state.presentes);
-              Event.$emit("knob-eval-actividad-upd", porcentaje);
+              Event.$emit("knob-eval-voluntarios-upd", porcentaje);
               return porcentaje;
+          },
+          totalPresentes: function () {
+              return store.state.presentes;
           },
           pendientesEvaluar: function () {
               if(this.loading) return 0;
               return store.state.presentes - this.evaluaron;
-            }
+          }
         },
         created(){
             this.getStats();
         },
         methods: {
             getStats: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/stats";
+                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/voluntarios/stats";
                 this.axiosGet(
                     url,
                     //success callback
                     function (data, self) {
+                        // store.commit("updatePresentes", data.presentes);
                         self.evaluaron = data.evaluaron;
-                        Event.$emit('stats-actividad-loaded');
+                        Event.$emit('stats-voluntarios-loaded');
                         self.loading = false;
                     }
                     //payload
