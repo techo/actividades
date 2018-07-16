@@ -75,36 +75,36 @@ return [
             [
                 'name' => 'nombreActividad',
                 'title' => 'Nombre',
-                'sortField' => 'nombreActividad',
+                'sortField' => 'Actividad.nombreActividad',
             ],
             [
                 'name' => 'fechaInicio',
-                'sortField' => 'fechaInicio',
+                'sortField' => 'Actividad.fechaInicio',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Fecha Inicio',
             ],
             [
-                'name' => 'localidad',
-                'sortField' => 'atl_localidades.localidad',
+                'name' => 'lugar',
+                'sortField' => 'Actividad.idLocalidad',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Localidad',
-                'callback' => 'getLocalidad'
+                //'callback' => 'getLocalidad'
             ],
             [
-                'name' => 'PuntoEncuentro',
-                'sortField' => 'PuntoEncuentro.punto',
+                'name' => 'tipo',
+                'sortField' => 'Actividad.idTipo',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Punto de Encuentro',
+                'title' => 'Tipo',
             ],
-//            [
-//                'name' => '__component:mis-actividades',
-//                'title' => 'Acciones',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ]
+            [
+                'name' => '__component:btn-mis-actividades',
+                'title' => 'Acciones',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center'
+            ]
         ],
         'sortOrder' => [
             [

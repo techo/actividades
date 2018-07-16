@@ -18,6 +18,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import EvaluarActividad from './components/evaluaciones/evaluarActividad';
 import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaciones';
 import DataTable from './components/datatable/DataTable';
+import BtnMisActividades from './components/perfil/btnMisActividades'
 
 import axios from 'axios';
 
@@ -41,6 +42,7 @@ Vue.component('simplert', Simplert);
 Vue.component('evaluar-actividad', EvaluarActividad);
 Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
 Vue.component('datatable', DataTable);
+Vue.component('btn-mis-actividades', BtnMisActividades);
 
 window.Event = new Vue();
 
