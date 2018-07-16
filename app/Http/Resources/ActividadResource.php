@@ -29,7 +29,7 @@ class ActividadResource extends Resource
             'descripcion' => $this->descripcion,
             'compromiso' => $this->compromiso,
             'costo' => $this->costo,
-            'lugar' => $this->lugar,
+            'lugar' => $this->localidad->localidad . ', ' . $this->provincia->provincia,
             'moneda' => $this->moneda,
             'puntosEncuentro' => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'localidad' => $this->localidad,
