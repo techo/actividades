@@ -55,12 +55,6 @@ return [
                 'dataClass' => 'text-center',
                 'title' => 'Estado',
             ],
-            // [
-            //   name' => 'nickname',
-            //   sortField' => 'nickname',
-            //   callback' => 'allcap'
-            // ],
-            // [
 //            [
 //                'name' => '__component:mis-actividades',
 //                'title' => 'Acciones',
@@ -71,6 +65,50 @@ return [
         'sortOrder' => [
             [
                 'sortField' => 'fechaCreacion',
+                'direction' => 'desc'
+            ]
+        ],
+    ],
+    'voluntario-actividades' => [
+
+        'fields' => [
+            [
+                'name' => 'nombreActividad',
+                'title' => 'Nombre',
+                'sortField' => 'nombreActividad',
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+                'title' => 'Fecha Inicio',
+            ],
+            [
+                'name' => 'localidad',
+                'sortField' => 'atl_localidades.localidad',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+                'title' => 'Localidad',
+                'callback' => 'getLocalidad'
+            ],
+            [
+                'name' => 'PuntoEncuentro',
+                'sortField' => 'PuntoEncuentro.punto',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+                'title' => 'Punto de Encuentro',
+            ],
+//            [
+//                'name' => '__component:mis-actividades',
+//                'title' => 'Acciones',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ]
+        ],
+        'sortOrder' => [
+            [
+                'sortField' => 'fechaInicio',
                 'direction' => 'desc'
             ]
         ],
