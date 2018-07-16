@@ -72,33 +72,6 @@ return [
     'voluntario-actividades' => [
 
         'fields' => [
-/*            [
-                'name' => 'nombreActividad',
-                'title' => 'Nombre',
-                'sortField' => 'Actividad.nombreActividad',
-            ],
-            [
-                'name' => 'fechaInicio',
-                'sortField' => 'Actividad.fechaInicio',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center',
-                'title' => 'Fecha Inicio',
-            ],
-            [
-                'name' => 'lugar',
-                'sortField' => 'Actividad.idLocalidad',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center',
-                'title' => 'Localidad',
-                'callback' => 'bold'
-            ],
-            [
-                'name' => 'tipo',
-                'sortField' => 'Actividad.idTipo',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center',
-                'title' => 'Tipo',
-            ],*/
             [
                 'name' => '__component:tarjeta-horizontal',
                 'title' => 'Actividades Anteriores',
