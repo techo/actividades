@@ -28,16 +28,16 @@
 
 <script>
     //https://github.com/ratiw/vuetable-2-tutorial/wiki
-import accounting from 'accounting'
-import moment from 'moment'
-import Vuetable from 'vuetable-2/src/components/Vuetable'
-import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
-import Vue from 'vue'
-import VueEvents from 'vue-events'
-import CustomActions from './CustomActions'
-import DetailRow from './DetailRow'
-import FilterBar from './FilterBar'
+  import accounting from 'accounting'
+  import moment from 'moment'
+  import Vuetable from 'vuetable-2/src/components/Vuetable'
+  import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+  import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
+  import Vue from 'vue'
+  import VueEvents from 'vue-events'
+  import CustomActions from './CustomActions'
+  import DetailRow from './DetailRow'
+  import FilterBar from './FilterBar'
   import Pago from './Pago';
   import Asistencia from './Asistencia';
   import ActualizarInscripcion from './actualizarInscripcion';
@@ -45,7 +45,7 @@ import FilterBar from './FilterBar'
   import MisActividades from './MisActividades';
 
 
-Vue.use(VueEvents);
+  Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
   Vue.component('my-detail-row', DetailRow);
   Vue.component('filter-bar', FilterBar);
@@ -67,85 +67,6 @@ export default {
         dataPlaceholderText: this.placeholderText,
         dataSortOrder: [],
         dataFields: [],
-        // apiUrl: this.apiUrl,
-        // fields: [
-        // {
-        //   name: '__sequence',
-        //   title: '#',
-        //   titleClass: 'text-right',
-        //   dataClass: 'text-right'
-        // },
-        // {
-        //   name: '__checkbox',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        // },
-        // {
-        //   name: 'nombreActividad',
-        //   title: 'Nombre',
-        //   sortField: 'nombreActividad',
-        // },
-        // {
-        //   name: 'nombreUnidad',
-        //   sortField: 'nombreUnidad',
-        //   title: 'Oficina'
-        // },
-        // {
-        //   name: 'fechaInicio',
-        //   sortField: 'fechaInicio',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Fecha Inicio',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
-        //   {
-        //   name: 'fechaFin',
-        //   sortField: 'fechaFin',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Fecha Fin',
-        //   callback: 'formatDate|DD-MM-YYYY'
-        // },
-        //   {
-        //   name: 'tipoActividad',
-        //   sortField: 'tipoActividad',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Tipo',
-        // },
-        //   {
-        //   name: 'estadoConstruccion',
-        //   sortField: 'estadoConstruccion',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   title: 'Estado',
-        // },
-        // {
-        //   name: 'nickname',
-        //   sortField: 'nickname',
-        //   callback: 'allcap'
-        // },
-        // {
-        //   name: 'gender',
-        //   sortField: 'gender',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center',
-        //   callback: 'genderLabel'
-        // },
-        // {
-        //   name: 'salary',
-        //   sortField: 'salary',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-right',
-        //   callback: 'formatNumber'
-        // },
-        // {
-        //   name: '__component:custom-actions',
-        //   title: 'Actions',
-        //   titleClass: 'text-center',
-        //   dataClass: 'text-center'
-        // }
-        // ],
         css: {
         table: {
             tableClass: 'table table-hover table-condensed',

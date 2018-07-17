@@ -292,6 +292,18 @@ a {
     text-shadow: 0 0 3px #60676a;
 }
 
+.techo-hero.actividades {
+    background: url(/img/hero-slim.jpg);
+    background-size: cover;
+    height: 210px;
+    padding-top: 8vh;
+}
+.techo-hero.actividades h2 {
+    font-size: 2.5vw;
+    padding: 0;
+    position: relative;
+}
+
 .techo-hero p {
     font-size: 1.5em;
     margin: auto;

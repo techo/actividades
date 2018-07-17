@@ -1,7 +1,6 @@
 <template>
-    <div class="row justify-content-center mt-4 mb-4 "id="filtro">
-        <div class="col-md-4">
-            <select class="dropdown"
+    <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
+            <select class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -11,34 +10,33 @@
                     {{ categoria.nombre }}
                 </option>
             </select>
-        </div>
-        <div class="col-md-2">
-            <div class="row">
-               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda">Punto de encuentro
-            </div>
-            <div class="row">
+        <div class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
+               <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
+            </label>
+            <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'lugar'}" >
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
-            </div>
+            </label>
         </div>
-        <div class="col-md-2 dropdown-container">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
                     v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
-        <div class="col-md-2 dropdown-container">
+        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
             </contenedor-check-tipos>
 
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-default" v-on:click="borrarFiltros">
+        <div class="borrar-filtros col-xs-12 col-md-2 col-lg-1 mr-md-3 pl-lg-0">
+            <span class="btn btn-default boton-filtro text-center" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
                 Borra Filtros
-            </button>
+            </span>
         </div>
     </div>
 </template>
@@ -95,7 +93,14 @@
                 };
                 axios.post(url, filtros)
                     .then(response => {
-                        this.tiposDeActividad = response.data;
+                        if(response.data.length) {
+                            this.tiposDeActividad = [{ 
+                                        id: 0,
+                                        titulo: 'Marcar todas',
+                                        actividades: response.data
+                            }];
+                        }
+                        //this.tiposDeActividad[0].todas = 'Marcar todas';
                         for (let i=0; i< this.$children.length; i++) {
                             this.$children[i].listaTipos = this.tiposDeActividad;
                         }
@@ -131,34 +136,18 @@
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
-                axios.post(url, formData)
-                    .then(response => {
-                        this.dataProvincias = Object.keys(response.data).map(i => response.data[i]);
-                        for (let i=0; i< this.$children.length; i++) {
-                            this.$children[i].listaProvincias = this.dataProvincias;
-                        }
-                    })
-                    .catch((error) => {
-                        // Error
-                        console.log('error en getTiposDeActividad. url: ' + url);
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                            // http.ClientRequest in node.js
-                            console.log(error.request);
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            console.log('Error', error.message);
-                        }
-                        console.log(error.config);
-                    });
+
+                this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
+                    self.dataProvincias = Object.keys(response).map(i => response[i]);
+                            for (let i=0; i< self.$children.length; i++) {
+                                self.$children[i].listaProvincias = self.dataProvincias;
+                            }
+                        },formData,
+                function (error) {
+                    console.log('error en getTiposDeActividad. url: ' + url);
+                });
             },
+
             borrarFiltros: function () {
                 this.dataLocalidades = [];
                 this.dataTiposActividad = [];
@@ -178,6 +167,7 @@
 
             },
             dataBusqueda: function() {
+                console.log(this.dataBusqueda);
                 this.borrarFiltros();
             }
         },
@@ -193,21 +183,63 @@
 </script>
 
 <style scoped>
-    .dropdown {
+    * {
         font-family: Montserrat, sans-serif;
         font-size: 12px;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
+    }
+    #filtro {
+        margin: 0 -6%;
+        padding: 0;
+    }
+    .botones-rad {
+        display: table;
+        padding: 0;
+        vertical-align: middle;
+    }
+    .botones-rad label {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .borrar-filtros .boton-filtro {
+        border: none;
+        padding-top: 12px;
+    }
+    .boton-filtro {
+        border: 1px solid #a9a9a9;
+        color: #0092dd;
+        height: 40px;
         line-height: normal;
         letter-spacing: normal;
         text-align: left;
         text-transform: uppercase;
-        color: #0092dd;
-        height: 40px;
-        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
+        border-radius: 5px;
+    }
+    .botones-rad label:first-child {
+        border-right: none;
+    }
+    .boton-filtro:focus {outline:0;}
+    select.boton-filtro option {
+        color: #494848;
+    }
+    label.boton-filtro {
+        color: #a9a9a9;
+    }
+    label.boton-filtro.active {
+        background-color: #0092dd;
+        color: #fff;
+    }
+    .contenedor-dropdown {
+        padding: 0;
+        margin-right: 15px;
     }
 
+    .cont-check {
+        padding-left: 0;
+        padding-right: 0;
+    }
     .techo-btn-azul {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);
         padding: 1em 1em;

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\CategoriaActividad;
+use App\Grupo;
+use App\GrupoRolPersona;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
+use Illuminate\Support\Facades\DB;
 
 class ActividadesController extends Controller
 {
@@ -86,7 +89,7 @@ class ActividadesController extends Controller
         $actividad = new Actividad();
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
-            if ($this->guardarActividad($request, $actividad)) {
+            if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
                 $request->session()->put('mensaje', 'La actividad se creó correctamente');
                 return response('Actividad guardada correctamente.', 200);
             } else {
@@ -130,7 +133,14 @@ class ActividadesController extends Controller
             }
 
             $categorias = CategoriaActividad::all();
-            $tipos = $actividad->tipo->categoria->tipos;
+
+            try {
+                $tipos = $actividad->tipo->categoria->tipos;
+            } catch (\Exception $e) {
+                $actividad->tipo->categoria = null;
+                $tipos = null;
+            }
+
             try {
                 $provincias = $actividad->pais->provincias;
                 $localidades = $actividad->provincia->localidades;
@@ -139,6 +149,33 @@ class ActividadesController extends Controller
                 $provincias = null;
                 $localidades = null;
             }
+
+            $datatableConfig = config('datatables.inscripciones');
+            $fields = $datatableConfig['fields'];
+            if ($actividad->costo > 0) {
+                $checkPago = [[
+                    'name' => '__component:pago',
+                    'title' => 'Pago',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ]];
+                array_splice($fields, count($fields) - 2, 0, $checkPago);
+
+            }
+            $fields = json_encode($fields);
+            $sortOrder = json_encode($datatableConfig['sortOrder']);
+
+            $camposInscripciones = config('dropdownOptions.actividad.filtroInscripciones.campos');
+            $condiciones = config('dropdownOptions.actividad.filtroInscripciones.condiciones');;
+
+            $camposInscripciones = json_encode($camposInscripciones);
+            $condiciones = json_encode($condiciones);
+
+            $datatableMiembrosConfig = config('datatables.miembros');
+            $fieldsMiembros = json_encode($datatableMiembrosConfig['fields']);
+            $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
+            $miembros = $actividad->miembros;
+
             return view(
                 'backoffice.actividades.show',
                 compact(
@@ -149,7 +186,14 @@ class ActividadesController extends Controller
                     'edicion',
                     'tipos',
                     'categorias',
-                    'compartir'
+                    'compartir',
+                    'fields',
+                    'sortOrder',
+                    'fieldsMiembros',
+                    'sortOrderMiembros',
+                    'miembros',
+                    'camposInscripciones',
+                    'condiciones'
                 )
             );
         }
@@ -200,13 +244,15 @@ class ActividadesController extends Controller
     {
         $actividad = Actividad::findOrFail($id);
 
-        if ($actividad->fechaInicio < Carbon::today()) {
+        if ($actividad->fechaFin < Carbon::today()) {
             Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
             return redirect()->back();
         }
 
 
         try {
+            $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
+            $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -251,27 +297,31 @@ class ActividadesController extends Controller
                 'Debe seleccionar el país de la actividad',
             'costo.*' =>
                 'Debe especificar el costo de participar en la construcción',
+            'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
+             posterior al final de la actividad'
         ];
         $v = Validator::make(
             $request->all(),
             [
-                'coordinador.idPersona' => 'required | numeric',
-                'descripcion' => 'required',
-                'fechaFin' => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
-                'fechaInicio' => 'required | date',
-                'fechaInicioInscripciones' => 'required | date | before_or_equal:fechaInicio',
-                'fechaFinInscripciones' => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
-                'idTipo' => 'required',
-                'inscripcionInterna' => 'required',
-                'limiteInscripciones' => 'numeric',
-                'localidad.id' => 'required',
-                'mensajeInscripcion' => 'required',
-                'nombreActividad' => 'required',
-                'oficina.id' => 'required',
-                'pais.id' => 'required',
-                'provincia.id' => 'required',
-                'puntos_encuentro' => [new PuntoEncuentroRule],
-                'tipo.categoria.id' => 'required',
+                'coordinador.idPersona'     => 'required | numeric',
+                'descripcion'               => 'required',
+                'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
+                'fechaInicio'               => 'required | date',
+                'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
+                'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
+                'fechaInicioEvaluaciones'   => 'required | date | after_or_equal:fechaFin',
+                'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
+                'idTipo'                    => 'required',
+                'inscripcionInterna'        => 'required',
+                'limiteInscripciones'       => 'numeric',
+                'localidad.id'              => 'required',
+                'mensajeInscripcion'        => 'required',
+                'nombreActividad'           => 'required',
+                'oficina.id'                => 'required',
+                'pais.id'                   => 'required',
+                'provincia.id'              => 'required',
+                'puntos_encuentro'          => [new PuntoEncuentroRule],
+                'tipo.categoria.id'         => 'required',
             ], $messages
         );
 
@@ -286,6 +336,31 @@ class ActividadesController extends Controller
         return $v;
     }
 
+    public function clonar(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $original = Actividad::find($request->idActividad);
+            $clon = $original->replicate();
+            $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
+            $clon->push();
+            foreach ($original->puntosEncuentro as $punto) {
+                $nuevoPunto = $punto->replicate();
+                $nuevoPunto->idActividad = $clon->idActividad;
+                $nuevoPunto->push();
+            }
+
+            $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
+                ->where('idPadre', 0)
+                ->first();
+            $this->clonarGrupo($grupoRaizOriginal, $clon);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return response($exception->getMessage(), 500);
+        }
+        DB::commit();
+        return $clon;
+    }
 
     /**
      * @param $punto PuntoEncuentro
@@ -324,7 +399,9 @@ class ActividadesController extends Controller
             'fechaInicio',
             'fechaFin',
             'fechaInicioInscripciones',
-            'fechaFinInscripciones'
+            'fechaFinInscripciones',
+            'fechaInicioEvaluaciones',
+            'fechaFinEvaluaciones'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -350,6 +427,8 @@ class ActividadesController extends Controller
         $actividad->fechaFin = $request->fechaFin;
         $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
+        $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
+        $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
@@ -376,6 +455,12 @@ class ActividadesController extends Controller
         $actividad->moneda = 'ARS';
 
         if ($actividad->save()) {
+            $grupoRaiz = Grupo::where('idActividad', '=', $actividad->idActividad)
+                ->where('idPadre', '=', 0)->first();
+            if ($grupoRaiz) {
+                $grupoRaiz->nombre = $actividad->nombreActividad;
+                $grupoRaiz->save();
+            }
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {
@@ -397,12 +482,40 @@ class ActividadesController extends Controller
         return false;
     }
 
-    private function trimDate($fecha)
+    /**
+     * Crea grupo Raiz al crear una actividad nueva
+     * @param Actividad $actividad
+     * @return bool
+     */
+    private function crearGrupo(Actividad $actividad)
     {
-        $i = strpos($fecha, 'T');
-        if ($i > 0) {
-            return substr($fecha, 0, $i);
+        $grupo = new Grupo();
+        $grupo->idActividad = $actividad->idActividad;
+        $grupo->idPadre = 0;
+        $grupo->nombre = $actividad->nombreActividad;
+        if ($grupo->save()) {
+            return true;
         }
-        return $fecha;
+        return false;
+    }
+
+    /**
+     * Recursividad para clonar subgrupos
+     * @param Grupo $grupoOriginal
+     * @param Actividad $actividad
+     * @param int $idPadre
+     */
+    private function clonarGrupo(Grupo $grupoOriginal, Actividad $actividad, $idPadre = 0)
+    {
+
+        $nuevoGrupo = Grupo::create([
+            'nombre'    => $grupoOriginal->nombre,
+            'idPadre'   => $idPadre,
+            'idActividad'   => $actividad->idActividad
+        ]);
+        foreach ($grupoOriginal->grupos as $grupo) {
+            $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
+        }
+        return;
     }
 }

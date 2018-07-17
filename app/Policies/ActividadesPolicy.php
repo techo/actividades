@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Actividad;
 use App\Persona;
 use Carbon\Carbon;
+use App\Inscripcion;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ActividadesPolicy
@@ -20,7 +21,19 @@ class ActividadesPolicy
     {
         //
     }
-    
+
+    public function evaluar(Persona $user, $id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $inscripto = Inscripcion::where('idActividad', '=', $actividad->idActividad)
+            ->where('idPersona', '=', $user->idPersona)
+            ->first();
+        $inicioEvaluaciones = ($actividad->fechaInicioEvaluaciones <= Carbon::now());
+        $finEvaluaciones = ($actividad->fechaFinEvaluaciones >= Carbon::now());
+
+        return ($inscripto && $inicioEvaluaciones);
+
+    }
     public function inscribir(Persona $user, $id)
     {
         //estadoConstruccion es EstadoActividad (nombre legacy)

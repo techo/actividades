@@ -2,21 +2,45 @@
      <div class="col-sm-4">
         <div class="card tarjeta p-3">
             <simplert ref="confirmar"></simplert>
-            <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.actividad.tipo.imagen"
+            <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.tipo.imagen"
                  alt="Card image cap">
             <div class="card-body px-0">
-                <p class="techo-titulo-card">{{ inscripcion.actividad.tipo.nombre }}</p>
-                <h5 class="card-title text-left" v-on:click="ir_a_actividad">{{ inscripcion.actividad.nombreActividad }}</h5>
+                <p class="techo-titulo-card">{{ inscripcion.tipo.nombre }}</p>
+                <h5 class="card-title text-left" v-on:click="ir_a_actividad">{{ inscripcion.nombreActividad }}</h5>
                 <div>
                     <hr>
-                    <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.actividad.fecha }}</span></span>
-                    <span class="col-sm-4"><i class="fas fa-clock"></i> {{ inscripcion.actividad.hora }}</span>
-                    <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.actividad.localidad | ubicacion }}</span>
+                    <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.fecha }}</span></span>
+                    <span class="col-sm-4"><i class="fas fa-clock"></i> {{ inscripcion.hora }}</span>
+                    <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.localidad | ubicacion }}</span>
                     <hr>
                 </div>
-                <p class="card-text text-left">{{ inscripcion.actividad.descripcion | truncate(100) }}</p>
-                <div class="">
-                    <a class="btn btn-success text-light font-weight-bold" @click="desincribir(inscripcion.actividad.idActividad)">Desinscribirme</a>
+                <p class="card-text text-left">{{ inscripcion.descripcion | truncate(120) }}</p>
+                <div>
+                    <span v-if="!actividadPasada">
+                        <a
+                            class="btn btn-success text-light font-weight-bold pull-right"
+                            @click="desincribir(inscripcion.idActividad)"
+                        >
+                            Desinscribirme
+                        </a>
+                    </span>
+                    <span v-else> <!-- la actividad ya terminó -->
+                        <span v-if="periodoDeEvaluacionYaComenzo">
+                            <a
+                                    class="btn btn-info text-light font-weight-bold pull-right"
+                                    v-show="inscripcion.presente === 1"
+                                    @click="ir_a_evaluar"
+                            >
+                                Ver Evaluaciones
+                            </a>
+                            <p v-show="inscripcion.presente === 0">
+                                <strong>No asististe a esta actividad</strong>
+                            </p>
+                        </span>
+                        <span v-else>  <!-- Actividad terminó pero no esta en el periodo de evaluación -->
+                            <p><strong>Las evaluaciones comienzan el <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -44,14 +68,18 @@
             }
         },
         methods: {
-          ir_a_actividad: function () {
-            window.location.href = '/actividades/' + this.inscripcion.actividad.idActividad
-          },
+            ir_a_evaluar: function () {
+                window.location.href = '/actividades/' + this.inscripcion.idActividad + '/evaluaciones'
+            },
+            ir_a_actividad: function () {
+                window.location.href = '/actividades/' + this.inscripcion.idActividad
+            },
             desincribir: function (idActividad) {
-                var self = this;
+                let self = this;
                 self.$refs.confirmar.openSimplert({
                     title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.actividad.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
+                    message:"Estás por desinscribirte de la actividad, se borrarán tus datos para participar. " +
+                    "Puedes inscribirte  de nuevo mientras el período de inscripciones lo permita. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
@@ -70,6 +98,28 @@
                         })
                     }
                 })
+            }
+        },
+        computed: {
+            actividadPasada: function () {
+                let fechaFin = new Date(this.inscripcion.fechaFin.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")).getTime();
+
+                if (fechaFin === null || fechaFin === undefined) {
+                    return false;
+                }
+
+                if (fechaFin  < Date.now()) {
+                    return true;
+                }
+            },
+            periodoDeEvaluacionYaComenzo: function () {
+                let fechaInicioEvaluaciones = new Date(
+                    this.inscripcion.fechaInicioEvaluaciones.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")
+                ).getTime();
+
+                let ahora = new Date().getTime();
+
+                return (ahora > fechaInicioEvaluaciones)
             }
         }
     }

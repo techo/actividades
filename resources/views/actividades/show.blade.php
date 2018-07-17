@@ -42,7 +42,7 @@
             <div class="col-md-8">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>
-                    {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
+                    {{ isset($actividad->localidad) ? $actividad->localidad->localidad : "Localidad No Definida" }}, {{ isset($actividad->provincia) ? $actividad->provincia->provincia : "Provincia No Definida" }}
                     , {{ $actividad->pais->nombre }}
                 </span>
             </div>
@@ -55,7 +55,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<p>{{ $actividad->descripcion }}</p>
+				{!! $actividad->descripcion !!}
 			</div>
 		</div>
 		<div>

@@ -19,10 +19,12 @@ class ActividadResource extends Resource
             'tipo' => new TipoResource($this->tipo),
             'fecha' => $this->fechaInicio->format('d/m'),
             'hora' => $this->fechaInicio->format('H:i'),
-            'fechaInicio' => ActividadResource::convertirFecha($this->fechaInicio),
-            'fechaFin' => ActividadResource::convertirFecha($this->fechaFin),
-            'fechaInicioInscripciones' => ActividadResource::convertirFecha($this->fechaInicioInscripciones),
-            'fechaFinInscripciones' => ActividadResource::convertirFecha($this->fechaFinInscripciones),
+            'fechaInicio' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y'),
+            'fechaFin' => empty($this->fechaFin) ? '' : $this->fechaFin->format('d-m-Y'),
+            'fechaInicioInscripciones' =>empty($this->fechaInicioInscripciones) ? '' : $this->fechaInicioInscripciones->format('d-m-Y'),
+            'fechaFinInscripciones' => empty($this->fechaFinInscripciones) ? '' : $this->fechaFinInscripciones->format('d-m-Y'),
+            'fechaInicioEvaluaciones' =>empty($this->fechaInicioEvaluaciones) ? '' : $this->fechaInicioEvaluaciones->format('d-m-Y H:i'),
+            'fechaFinEvaluaciones' => empty($this->fechaFinEvaluaciones) ? '' : $this->fechaFinEvaluaciones->format('d-m-Y H:i'),
             'nombreActividad' => $this->nombreActividad,
             'descripcion' => $this->descripcion,
             'compromiso' => $this->compromiso,
@@ -34,7 +36,8 @@ class ActividadResource extends Resource
             'inscriptos' => $this->idPersonaInscriptos($this->idActividad),
             'limiteInscripciones' => $this->limiteInscripciones,
             'cantInscriptos' => $this->inscripciones()->inscripto()->count(),
-            'cuposRestantes' => $this->limiteInscripciones - $this->inscripciones()->inscripto()->count()
+            'cuposRestantes' => $this->limiteInscripciones - $this->inscripciones()->inscripto()->count(),
+            'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0
         ];
     }
 

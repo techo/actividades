@@ -265,7 +265,7 @@
             },
             search: _.debounce((loading, search, vm) => {
                 fetch(
-                    `/ajax/coordinadores?coordinador=${escape(search)}`
+                    `/ajax/coordinadores?coordinador=${encodeURI(search)}`
                 ).then(res => {
                     res.json().then(json => (vm.dataCoordinadores = json.data));
                     loading(false);

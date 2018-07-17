@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\EvaluacionActividad;
 
 class Actividad extends Model
 {
@@ -32,7 +34,69 @@ class Actividad extends Model
         return $this->hasMany(Inscripcion::class, 'idActividad');
     }
 
-    public function inscripciones_validas() {
+    public function evaluaciones()
+    {
+        return $this->hasMany(EvaluacionActividad::class, 'idActividad');
+    }
+
+    /**
+     * Todos los grupos de la actividad (hasta el más interno)
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function grupos()
+    {
+        return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');
+    }
+
+    public function getInscriptosAttribute()
+    {
+       return Persona::whereIn('idPersona', $this->inscripciones->pluck('idPersona'))
+           ->orderBy('nombres')
+           ->get();
+    }
+
+    public function getMiembrosAttribute()
+    {
+        $grupoRaiz = Grupo::where('idPadre', '=', 0)
+            ->where('idActividad','=', $this->idActividad)
+            ->first();
+        if (!is_null($grupoRaiz)) {
+            $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
+                ->where('Grupo_Persona.idActividad', '=', $this->idActividad)
+                ->where('Grupo_Persona.idGrupo', '=', $grupoRaiz->idGrupo)
+                ->get();
+
+            foreach ($personas as $persona) {
+                $todosArray['arbol'][] = new MiembroResource($persona);
+            }
+
+            foreach ($grupoRaiz->grupos as $grupo) {
+                $todosArray['arbol'][] = new MiembroResource($grupo);
+            }
+            $todosArray['idRaiz'] = $grupoRaiz->idGrupo;
+            return $todosArray;
+        }
+        // en las actividades viejas $grupoRaiz = null
+
+        $grupoRaiz = Grupo::create([
+                'nombre'    => $this->nombreActividad,
+                'idPadre'   => 0,
+                'idActividad' => $this->idActividad
+                ]);
+        $todosArray['arbol'] = [];
+        $todosArray['idRaiz'] = $grupoRaiz->idGrupo;
+        return $todosArray;
+    }
+
+    public function getPromedioEvaluacionesAttribute()
+    {
+        return EvaluacionActividad::where('idActividad', '=', $this->idActividad)
+            ->whereNotNull('puntaje')
+            ->get()
+            ->avg('puntaje');
+    }
+    public function inscripciones_validas()
+    {
         return $this->inscripciones;
     }
 

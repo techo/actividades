@@ -80,11 +80,11 @@
         <!-- Modal End-->
     <!-- Si esta autenticado -->
         <span id="userDetail" v-if="authenticated">
-            <div class="btn-group techo-btn-blanco" role="group" >
+            <div class="btn-group" role="group" >
                 <button
                     id="btnUser"
                     type="button"
-                    class="btn btn-secondary dropdown-toggle techo-btn-blanco"
+                    class="btn btn-secondary dropdown-toggle"
                     style="margin-right: 4em"
                     data-toggle="dropdown"
                     aria-haspopup="true"
@@ -158,6 +158,9 @@
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
             }
+            //Eventos
+            events.$on('cerrar-sesion', this.logout);
+
         },
         methods: {
             registro_facebook: function() {
@@ -265,8 +268,8 @@
 <style scoped>
     .techo-btn-blanco {
      border: none;
-     background-color: #0092dd;
-     color: #ffffff;
+     color: #0092dd;
+     background-color: #ffffff;
     }
 
     .registro {
@@ -293,17 +296,30 @@
         text-align: left;
         color: #0092dd;
     }
-
+    .dropdown-item:focus {
+        outline:0;
+    }
+    .dropdown-item:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+    .dropdown-item:active {
+        background-color: #007bff;
+        color: #fff;
+    }
+    #btnUser {
+        border: none;
+        background: #0092dd;
+        text-transform: capitalize;
+    }
     .dropdown-menu {
         width: 10em;
-        padding: 1em;
+        padding: 1em 0;
         margin: 0;
     }
-
     a.google {
         border: none;
     }
-
     a.facebook {
         border:none;
     }

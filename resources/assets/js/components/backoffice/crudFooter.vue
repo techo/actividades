@@ -2,24 +2,39 @@
     <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
-        <div class="col-md-6">
-            <button class="btn btn-default" @click="this.cancelar">
+        <div class="col-md-5">
+            <button class="btn btn-default" @click="cancelar">
                 <i class="fa fa-arrow-circle-left"></i> Volver al listado
             </button>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             <button type="button" class="btn btn-primary" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
                 <i class="fa fa-share-alt"></i>  Compartir
             </button>
         </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary" v-show="readonly && canEditar" @click="this.editar"><i class="fa fa-edit"></i> Editar
+        <div class="col-md-2">
+            <button class="btn btn-primary" v-show="readonly" @click="clonar">
+                <i class="fa fa-clone"></i>
+                Clonar Actividad
             </button>
-            <button class="btn btn-danger" v-show="readonly && canBorrar" @click="this.eliminar"><i class="fa fa-trash"></i> Borrar
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary" v-show="readonly && canEditar" @click="editar">
+                <i class="fa fa-edit"></i>
+                Editar
+            </button>
+            <button class="btn btn-danger" v-show="readonly && canBorrar" @click="eliminar">
+                <i class="fa fa-trash"></i>
+                Borrar
             </button>
 
-            <button class="btn btn-success" v-show="!readonly" @click="this.guardar"><i class="fa fa-save"></i> Guardar</button>
-            <button class="btn btn-secondary" v-show="!readonly" @click="this.cancelar"><i class="fa fa-ban"></i> Cancelar
+            <button class="btn btn-success" v-show="!readonly" @click="this.guardar">
+                <i class="fa fa-save"></i>
+                Guardar
+            </button>
+            <button class="btn btn-secondary" v-show="!readonly" @click="cancelar">
+                <i class="fa fa-ban"></i>
+                Cancelar
             </button>
         </div>
 
@@ -55,9 +70,9 @@
                 location.href= this.cancelarUrl;
             },
             eliminar: function () {
-                var self = this;
+                let self = this;
                 self.$refs.confirmar.openSimplert({
-                    title: 'BORRAR ACTIVIDAD',
+                    title: 'Borrar Actividad',
                     message: "Estás por eliminar este registro, se borrará permanentemente y no podrá recuperarse. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,
@@ -65,10 +80,29 @@
                     customClass: 'confirmar',
                     customCloseBtnText: 'CANCELAR',
                     customCloseBtnClass: 'btn btn-default',
-                    customConfirmBtnText: 'SI, BORRAR',
+                    customConfirmBtnText: 'Si, borrar',
                     customConfirmBtnClass: 'btn btn-danger',
                     onConfirm: function () {
                         Event.$emit('eliminar');
+                    }
+                })
+            },
+            clonar: function () {
+                let self = this;
+                self.$refs.confirmar.openSimplert({
+                    title: 'Clonar Actividad',
+                    message: "Estás por duplicar esta actividad, se creará una copia de la información y de los grupos que " +
+                    "hayan sido creados.  Los participantes no quedarán inscriptos en la copia. ¿Desea continuar?",
+                    useConfirmBtn: true,
+                    isShown: true,
+                    disableOverlayClick: true,
+                    customClass: 'confirmar',
+                    customCloseBtnText: 'CANCELAR',
+                    customCloseBtnClass: 'btn btn-default',
+                    customConfirmBtnText: 'Si, clonar',
+                    customConfirmBtnClass: 'btn btn-primary',
+                    onConfirm: function () {
+                        Event.$emit('clonar');
                     }
                 })
             },

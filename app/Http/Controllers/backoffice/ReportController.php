@@ -4,11 +4,13 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Exports\ActividadesExport;
+use App\Exports\EvaluacionesActividadExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\MisActividadesExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EvaluacionesPersonasExport;
 
 class ReportController extends Controller
 {
@@ -26,7 +28,47 @@ class ReportController extends Controller
 
     public function exportarInscripciones($id, Request $request)
     {
-        $inscripciones = (new InscripcionesExport($id, $request->filter));
+        $filtros['idActividad'] = $id;
+
+        if(!empty($request->filter)){
+            $filtros['HotFilter'] = $request->filter;
+            unset($filtros['filter']);
+        }
+
+        if(!empty($request->condiciones))
+        {
+            $condiciones = json_decode($request->condiciones, true);
+            foreach ($condiciones as $condicion)
+            {
+                //$condicion = json_decode($condicion, true);
+                $filtros[$condicion['campo']] = [
+                    'condicion' => $condicion['condicion'],
+                    'valor' => $condicion['valor']
+                ];
+            }
+        }
+        $inscripciones = (new InscripcionesExport($filtros));
         return Excel::download($inscripciones, 'inscripciones_' . $id . '.xlsx');
     }
+
+    public function exportarEvaluacionesPersonas($id)
+    {
+        $actividad = Actividad::find($id);
+        $evaluaciones = new EvaluacionesPersonasExport($actividad);
+
+        //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones,'Evaluaciones de Participantes en ' . $nombreActividad . '.xlsx');
+    }
+
+    public function exportarEvaluacionesActividad($id)
+    {
+        $actividad = Actividad::find($id);
+        $evaluaciones = new EvaluacionesActividadExport($actividad);
+
+        //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones,'Evaluaciones de '. $nombreActividad . '.xlsx');
+    }
+
 }

@@ -10,7 +10,7 @@
         </div>
 
         <div v-show="loading" class="loading" style="text-align: center">
-            <i class="fas fa-sync fa-spin fa-5x"></i>
+            <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="vacio" class="loading" style="text-align: center">
             La búsqueda no tiene resultados

@@ -61,12 +61,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-            [
-                'name' => '__component:mis-actividades',
-                'title' => 'Acciones',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ]
+//            [
+//                'name' => '__component:mis-actividades',
+//                'title' => 'Acciones',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ]
         ],
         'sortOrder' => [
             [
@@ -135,12 +135,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-            [
-                'name' => '__component:mis-actividades',
-                'title' => 'Acciones',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ]
+//            [
+//                'name' => '__component:mis-actividades',
+//                'title' => 'Acciones',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ]
         ],
         'sortOrder' => [
             [
@@ -151,6 +151,16 @@ return [
     ],
     'inscripciones' => [
         'fields' => [
+            [
+                'name' => '__checkbox',
+                'titleClass' => 'center aligned',
+                'dataClass' => 'center aligned'
+            ],
+            [
+                'name' => 'id',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
             [
                 'name' => 'dni',
                 'sortField' => 'dni',
@@ -166,15 +176,25 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
+//            [
+//                'name' => 'mail',
+//                'sortField' => 'mail',
+//                'title' => 'Email'
+//            ],
+//            [
+//                'name' => 'telefonoMovil',
+//                'sortField' => 'telefonoMovil',
+//                'title' => 'Teléfono Móvil'
+//            ],
             [
-                'name' => 'mail',
-                'sortField' => 'mail',
-                'title' => 'Email'
+                'name' => 'nombreGrupo',
+                'sortField' => 'nombreGrupo',
+                'title' => 'Grupo'
             ],
             [
-                'name' => 'telefonoMovil',
-                'sortField' => 'telefonoMovil',
-                'title' => 'Teléfono Móvil'
+                'name' => 'nombreRol',
+                'sortField' => 'nombreRol',
+                'title' => 'Rol'
             ],
             [
                 'name' => '__component:asistencia',
@@ -189,12 +209,12 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center'
             ],
-            [
-                'name' => '__component:actualizar-inscripcion',
-                'title' => 'Actualizar',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ],
+//            [
+//                'name' => '__component:actualizar-inscripcion',
+//                'title' => 'Actualizar',
+//                'titleClass' => 'text-center',
+//                'dataClass' => 'text-center'
+//            ],
 
         ],
         'sortOrder' => [
@@ -205,5 +225,76 @@ return [
             ]
         ],
 
+    ],
+    'miembros' => [
+        'fields' => [
+             [
+               'name' => '__checkbox',
+               'titleClass' => 'text-center',
+               'dataClass' => 'text-center',
+             ],
+             [
+               'name' => 'tipo',
+               'callback' => 'getIcon'
+             ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre',
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol',
+            ],
+            [
+                'name' => 'cantidad',
+                'title' => 'Miembros',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ]
+        ],
+
+    ],
+    'usuarios' => [
+        'fields' => [
+            [
+                'name' => 'idPersona',
+                'sortField' => 'idPersona',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellido',
+                'sortField' => 'apellidoPaterno',
+                'title' => 'Apellido'
+            ],
+            [
+                'name' => 'dni',
+                'sortField' => 'dni',
+                'title' => 'Documento'
+            ],
+            [
+                'name' => 'email',
+                'sortField' => 'mail',
+                'title' => 'Email'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'idPersona',
+                'sortField' => 'idPersona',
+                'direction' => 'desc'
+            ],
+        ]
     ]
 ];

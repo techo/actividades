@@ -63,7 +63,7 @@ class actividadesController extends Controller
 
         $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
 
-        $limiteInscriptos = $actividad->limiteInscripciones;
+        $limiteInscriptos = (empty($actividad->limiteInscripciones)) ? 0 : $actividad->limiteInscripciones;
 
         $hayCupos = (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0);
 

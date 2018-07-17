@@ -125,7 +125,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
                         <br>
@@ -140,6 +140,24 @@
                                            :input="'fechaActividad'"
                                            name="fechaActividad"
                                            id="fechaActividad"
+                        ></daterange-picker>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaEvaluaciones">Fecha de Inicio y Fin de las Evaluaciones</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasEvaluaciones }}</p>
+                        <daterange-picker v-else @applyfechaEvaluaciones="cambioFechaEvaluaciones"
+                                           :start-date=this.dataActividad.fechaInicioEvaluaciones
+                                           :end-date=this.dataActividad.fechaFinEvaluaciones
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                                           drops="down"
+                                           :input="'fechaEvaluaciones'"
+                                           name="fechaEvaluaciones"
+                                           id="fechaEvaluaciones"
                         ></daterange-picker>
                     </div>
                 </div>
@@ -367,11 +385,11 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import PuntoEncuentro from './punto-encuentro';
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
+    import store from '../store';
     import daterangepicker from '../../../components/plugins/daterangepicker';
 
     window.moment = moment;
@@ -415,7 +433,7 @@
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
             this.dataCategorias = JSON.parse(this.categorias);
             this.tiposDeActividad = (this.tipos !== '') ? JSON.parse(this.tipos) :  [];
-
+            store.commit('initIdActividad', this.dataActividad.idActividad); // Id de Actividad visible para otros componentes mediante Vuex
             this.inicializar();
             this.getTiposDeActividad();
             this.getOficinas();
@@ -426,6 +444,7 @@
             Event.$on('guardar', this.guardar);
             Event.$on('borrar-punto', this.borrarPunto);
             Event.$on('eliminar', this.eliminar);
+            Event.$on('clonar', this.clonar);
         },
         computed: {
             tieneErrores:  function () {
@@ -433,6 +452,10 @@
             },
             fechasActividad: function () {
                 return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
+            },
+            fechasEvaluaciones: function () {
+                return window.moment(this.dataActividad.fechaInicioEvaluaciones).locale("es").format("LL LT")
+                    + " - " + window.moment(this.dataActividad.fechaFinEvaluaciones).locale("es").format("LL LT")
             },
             fechasInscripcion: function () {
                 return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
@@ -482,6 +505,8 @@
                     this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
                     this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
                     this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
+                    this.dataActividad.fechaInicioEvaluaciones = moment().format('YYYY-MM-DD');
+                    this.dataActividad.fechaFinEvaluaciones = moment().format('YYYY-MM-DD 23:59');
                 }
             },
             actualizarOficina() {
@@ -566,67 +591,16 @@
                         self.dataOficinas = data;
                     });
             },
-            axiosGet(url, fCallback, params = []) {
-                axios.get(url, params)
-                    .then(response => {
-                        fCallback(response.data, this)
-                    })
-                    .catch((error) => {
-                        // Error
-                        console.error('Error en: ' + url);
-                        if (error.response) {
-                            console.error(error.response.data);
-                            console.error(error.response.status);
-                            console.error(error.response.headers);
-                        } else if (error.request) {
-                            console.error(error.request);
-                        } else {
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-
-            },
-            axiosPost(url, fCallback, params = []) {
-                axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                axios.post(url, params)
-                    .then(response => {
-                        fCallback(response.data, this);
-                        Event.$emit('success');
-                        this.readonly = true;
-                    })
-                    .catch((error) => {
-                        Event.$emit('error');
-                        this.ocultarLoadingAlert();
-                        // Error
-                        console.info('Error en: ' + url);
-                        console.error(error.response.status);
-                        if (error.response) {
-                            if (error.response.status === 422) {
-                                this.validationErrors = Object.values(error.response.data);
-                                if (this.dataActividad.puntos_encuentro.length === 0) {
-                                    this.dataActividad.puntos_encuentro = this.dataActividad.puntosEncuentroBorrados;
-                                    this.dataActividad.puntosEncuentroBorrados = [];
-                                }
-                            }
-                        } else if (error.request) {
-                            console.error(error.request);
-                        } else {
-                            console.error('Error', error.message);
-                        }
-                        console.error(error.config);
-                    });
-
-            },
             setLocalidad(){
                 this.dataActividad.localidad = this.localidadSeleccionada;
             },
             editar() {
                 this.readonly = false;
+                this.enableTinymce();
+
             },
             guardar(){
                 let url;
-
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
                 window.scrollTo(0, 0);
@@ -634,26 +608,44 @@
                 if (this.dataActividad.idActividad === undefined || this.dataActividad.idActividad === null) {
                     url = `/admin/actividades/crear`;
                 } else {
-                    url = `/admin/actividades/${escape(this.dataActividad.idActividad)}/editar`;
+                    url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
-                this.axiosPost(url, function (data, self) {
-                    if (self.dataActividad.idActividad === null) {
-                        window.location.replace('/admin/actividades');
-                    }
-                    self.mensajeGuardado = data;
-                    self.guardado = true;
-                    self.validationErrors = [];
-                    self.dataActividad.puntosEncuentroBorrados = [];
-                    for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
-                        if (self.dataActividad.puntos_encuentro[i].nuevo) {
-                            self.dataActividad.puntos_encuentro[i].nuevo = false;
+                let descripcion = tinymce.get('descripcion').getContent();
+                this.dataActividad.descripcion = descripcion;
+
+                this.axiosPost(url, //endpoint
+                    function (data, self) { //handler de success
+                        if (self.dataActividad.idActividad === null) {
+                            window.location.replace('/admin/actividades');
                         }
+                        self.mensajeGuardado = data;
+                        self.guardado = true;
+                        self.validationErrors = [];
+                        self.disableTinymce();
+                        self.dataActividad.puntosEncuentroBorrados = [];
+                        for (let i = 1; i < self.dataActividad.puntos_encuentro.length; i++) {
+                            if (self.dataActividad.puntos_encuentro[i].nuevo) {
+                                self.dataActividad.puntos_encuentro[i].nuevo = false;
+                            }
 
+                        }
+                        self.$refs.loading.justCloseSimplert();
+                    },
+                    this.dataActividad, // request data
+                    function (error, self) { //handler de error
+                    self.ocultarLoadingAlert();
+                    // Error
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            self.validationErrors = Object.values(error.response.data);
+                            if (self.dataActividad.puntos_encuentro.length === 0) {
+                                self.dataActividad.puntos_encuentro = self.dataActividad.puntosEncuentroBorrados;
+                                self.dataActividad.puntosEncuentroBorrados = [];
+                            }
+                        }
                     }
-                    self.$refs.loading.justCloseSimplert();
-
-                }, this.dataActividad);
+                });
 
             },
             borrarPunto: function (obj) {
@@ -681,9 +673,138 @@
                 this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
             },
+            cambioFechaEvaluaciones: function (start, end) {
+                this.dataActividad.fechaInicioEvaluaciones = start.format("YYYY-MM-DD HH:mm:ss");
+                this.dataActividad.fechaFinEvaluaciones = end.format("YYYY-MM-DD HH:mm:ss");
+            },
             cambioFechaInscripciones: function (start, end) {
                 this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
                 this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
+            },
+            enableTinymce: function () {
+                tinymce.get('descripcion').remove();
+                var editor_config = {
+                    path_absolute : "/",
+                    selector: "textarea#descripcion",
+                    menubar: false,
+                    statusbar: true,
+                    resize: true,
+                    toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+                    plugins: [
+                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons template paste textcolor colorpicker textpattern"
+                    ],
+                    relative_urls: false,
+                    file_browser_callback : function(field_name, url, type, win) {
+                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        if (type == 'image') {
+                            cmsURL = cmsURL + "&type=Images";
+                        } else {
+                            cmsURL = cmsURL + "&type=Files";
+                        }
+
+                        tinyMCE.activeEditor.windowManager.open({
+                            file : cmsURL,
+                            title : 'Administrador de archivos',
+                            width : x * 0.8,
+                            height : y * 0.8,
+                            resizable : "yes",
+                            close_previous : "no"
+                        });
+                    }
+                };
+
+                tinymce.init(editor_config);
+            },
+            disableTinymce: function () {
+                tinymce.get('descripcion').remove();
+                var editor_config = {
+                    path_absolute : "/",
+                    selector: "textarea#descripcion",
+                    menubar: false,
+                    statusbar: true,
+                    resize: true,
+                    readonly: 1,
+                    plugins: [
+                        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen",
+                        "insertdatetime nonbreaking save table contextmenu directionality",
+                        "emoticons template paste textcolor colorpicker textpattern"
+                    ],
+                    toolbar: false,
+                    relative_urls: false,
+                    file_browser_callback : function(field_name, url, type, win) {
+                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        if (type == 'image') {
+                            cmsURL = cmsURL + "&type=Images";
+                        } else {
+                            cmsURL = cmsURL + "&type=Files";
+                        }
+
+                        tinyMCE.activeEditor.windowManager.open({
+                            file : cmsURL,
+                            title : 'Administrador de archivos',
+                            width : x * 0.8,
+                            height : y * 0.8,
+                            resizable : "yes",
+                            close_previous : "no"
+                        });
+                    }
+                };
+
+                tinymce.init(editor_config);
+            },
+            clonar: function() {
+                this.mostrarLoadingAlert();
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
+                let params = { idActividad: this.dataActividad.idActividad };
+                this.axiosPost(url, function(response, self) {
+                    if (response.idActividad) {
+                        window.location = '/admin/actividades/' + response.idActividad
+                    }
+                }, params,
+                    function (response, self) {
+                    // Si hay error
+                        self.ocultarLoadingAlert();
+                        self.$refs.loading.openSimplert({
+                            title: 'Algo salió mal',
+                            message: "<i class=\"fa fa-exclamation-triangle fa-4x\"></i> <br>" +
+                            "<p>Ocurrió un error al clonar la actividad.  Recarga la página e intentalo de nuevo o " +
+                            "repórtalo al administrador del sistema.</p>",
+                            isShown: true,
+                            disableOverlayClick: true,
+                            type: ''
+                        })
+                    })
+            },
+            clonar: function() {
+                this.mostrarLoadingAlert();
+                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
+                let params = { idActividad: this.dataActividad.idActividad };
+                this.axiosPost(url, function(response, self) {
+                    if (response.idActividad) {
+                        window.location = '/admin/actividades/' + response.idActividad
+                    }
+                }, params,
+                    function (response, self) {
+                    // Si hay error
+                        self.ocultarLoadingAlert();
+                        self.$refs.loading.openSimplert({
+                            title: 'Algo salió mal',
+                            message: "<i class=\"fa fa-exclamation-triangle fa-4x\"></i> <br>" +
+                            "<p>Ocurrió un error al clonar la actividad.  Recarga la página e intentalo de nuevo o " +
+                            "repórtalo al administrador del sistema.</p>",
+                            isShown: true,
+                            disableOverlayClick: true,
+                            type: ''
+                        })
+                    })
             },
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {

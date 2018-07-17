@@ -1,10 +1,15 @@
 <template>
-    <div class="acordion">
-        <a class="btn btn-primary dropdown-button" data-toggle="collapse" href="#provincias" role="button" aria-expanded="false">Provincias <i class="fas fa-caret-down"></i></a>
-        <div id="provincias" class="collapse" style="border:black 1px">
+    <div class="acordion ">
+        <a 
+            v-bind:class="{active: $parent.dataLocalidades.length > 0}"
+            data-toggle="collapse" href="#provincias" 
+            role="button" aria-expanded="false"
+        ><span> Provincias</span> <i class="fas fa-caret-down"></i>
+        </a>
+        <div id="provincias" class="collapse lista-opciones" >
 
             <div v-for="provincia in listaProvincias">
-                <check-provincias
+                <check-provincias class="opciones"
                     :key="provincia.id_provincia"
                     v-bind:propdatos="provincia"
                 >
@@ -12,7 +17,7 @@
 
             </div>
             <button class="btn btn-sm" type="button" v-on:click="borrar">Borrar</button>
-            <button class="btn btn-sm" type="button" v-on:click="aplicar">Aplicar</button>
+            <button class="btn btn-sm aplicar" type="button" v-on:click="aplicar">Aplicar</button>
         </div>
     </div>
 </template>
@@ -37,6 +42,7 @@
                    seleccionados.push(this.$children[i].selected);
                }
                this.$parent.dataLocalidades = [].concat.apply([], seleccionados);
+               $('#provincias').collapse('hide')
             },
 
             borrar() {
@@ -44,6 +50,7 @@
                     this.$children[i].selected = [];
                 }
                 this.$parent.dataLocalidades = [];
+                $('#provincias').collapse('hide')
             },
             // seleccionarTodos() {
             //     for (let i =0; i < this.$children.length; i++) {
@@ -64,19 +71,62 @@
 </script>
 
 <style scoped>
- .acordion .collapsing, .acordion .collapse.in {
-     position: absolute !important;
-     z-index: 20;
-     width: auto;
-     overflow:visible;
-     background-color:#eee;
-     border:1px solid #ddd;
-     border-bottom-left-radius:5px;
-     border-bottom-right-radius:5px;
-     padding: 5% 5%;
- }
-
- .dropdown-button {
-     width: 100%;
- }
+    .acordion {
+        height: 100%;
+        margin-left: -1px;
+        margin-right: -1px;
+    }
+    .acordion a {
+        color: #494848;
+        display: inline-block;
+        height: 100%;
+        padding-top: 11px;
+        text-decoration: none;
+        vertical-align: middle;
+        width: 100%;
+    }
+    .acordion a span {
+        margin: auto 15px;
+    }
+    .opciones {
+        color: black;
+        font-weight: 500;
+    }
+    .opciones strong {
+        font-weight: 900;
+    }
+    .acordion a.active {
+        background-color: #0092dd;
+        color: #fff;
+    }
+    .acordion a svg {
+        color: #494848;
+        float: right;
+        margin-right: 15px;
+    }
+    .aplicar {
+        background-color: #0092dd;
+        color: #fff;
+    }
+    .acordion .collapsing, .acordion .collapse.show {
+        z-index: 20;
+        width: 100%;
+        overflow:visible;
+        border-bottom-left-radius:5px;
+        border-bottom-right-radius:5px;
+        padding: 5% 5%;
+    }
+    .lista-opciones {
+        background: #fff;
+        border: 1px solid #0092dd;
+        border-top: 1px solid #a9a9a9;
+        margin-left: 1px;
+        position: absolute;
+    }
+    .acordion .collapsing.lista-opciones {
+        display: none;
+    }
+    .dropdown-button {
+        width: 100%;
+    }
 </style>

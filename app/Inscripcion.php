@@ -11,6 +11,7 @@ class Inscripcion extends Model
     protected $table = 'Inscripcion';
     protected $primaryKey = 'idInscripcion';
     protected $dates = ['fechaInscripcion'];
+    protected $guarded = ['idInscripcion'];
 
     public function actividad()
     {

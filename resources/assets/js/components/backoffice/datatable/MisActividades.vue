@@ -18,7 +18,7 @@
                 required: true
             },
             rowIndex: {
-                type: Number
+                //type: Number
             }
         },
         data() {

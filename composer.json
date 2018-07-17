@@ -12,8 +12,10 @@
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
-      "maatwebsite/excel": "^3.0",
-        "spatie/laravel-permission": "^2.11"
+        "maatwebsite/excel": "^3.0",
+        "rap2hpoutre/fast-excel": "^0.3.2",
+        "spatie/laravel-permission": "^2.11",
+        "unisharp/laravel-filemanager": "~1.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.1",
@@ -24,6 +26,9 @@
         "symfony/thanks": "^1.0"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "classmap": [
             "database/seeds",
             "database/factories"

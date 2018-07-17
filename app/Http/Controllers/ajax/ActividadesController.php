@@ -27,6 +27,7 @@ class actividadesController extends BaseController
 
         if ($actividades->count() > 0) {
             foreach ($actividades as $actividad) {
+                $actividad->descripcion = clean_string($actividad->descripcion);
                 $resourceCollection[] = new ActividadResource($actividad);
             }
             return $this->paginate($resourceCollection, $items, $request->query());
@@ -42,7 +43,9 @@ class actividadesController extends BaseController
      */
     public function show($id)
     {
-        return new ActividadResource(Actividad::find($id));
+        $actividad = Actividad::find($id);
+        $actividad->descripcion = clean_string($actividad->descripcion);
+        return new ActividadResource($actividad);
     }
 
     private function filtrar(Request $request, $items)
