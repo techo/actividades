@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <div class="box-header with-border">
-            <h2 class="box-title">Evaluaciones entre inscriptos</h2>
+            <h2 class="box-title"><strong>Evaluaciones entre inscriptos</strong></h2>
             <span class="pull-right">
                 <a  class="btn btn-primary" :href="urlExportar">
                     <i class="fa fa-download"></i>
@@ -11,7 +11,7 @@
         </div>
         <div class="box-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 divisor">
                     <evaluaciones-voluntarios-stats></evaluaciones-voluntarios-stats>
                 </div>
                 <div class="col-md-6">
@@ -58,5 +58,7 @@
 </script>
 
 <style scoped>
-
+    .divisor {
+        border-right: 1px rgb(244,244,244) solid;
+    }
 </style>

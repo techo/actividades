@@ -7,31 +7,29 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="row vertical-align">
-                    <div class="col-md-3">
-                        <h2 class="text-center"><strong>{{ evaluaron }}</strong></h2>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <h1><strong>{{ evaluaron }}</strong></h1>
+                        <h4>Evaluaron</h4>
                     </div>
-                    <div class="col-md-9">
-                        <h4 class="mt-0">Evaluaron</h4>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <h1><strong>{{ pendientesEvaluar }}</strong></h1>
+                        <h4>Faltan evaluar</h4>
                     </div>
                 </div>
-                <div class="row vertical-align">
-                    <div class="col-md-3">
-                        <h2 class="text-center"><strong>{{ pendientesEvaluar }}</strong></h2>
-                    </div>
-                    <div class="col-md-9">
-                        <h4 class="mt-0">Faltan evaluar</h4>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Promedio puntaje</h4>
+                        <h1 class="promedio"><strong>{{ promedio }}</strong></h1>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="row">
-                    <!--grafico knob-->
-                    <knob :valor="porcentajeEvaluaciones"
-                          :simbolo="'%'"
-                          :listener="'knob-eval-actividad-upd'"
-                    ></knob>
-                </div>
+                <!--grafico knob-->
+                <knob :valor="porcentajeEvaluaciones"
+                      :simbolo="'%'"
+                      :listener="'knob-eval-actividad-upd'"
+                ></knob>
             </div>
         </div>
     </div>
@@ -47,6 +45,7 @@
         data(){
             return {
                 evaluaron: 0,
+                promedio: 0,
                 loading: true,
               //  presentes: store.state.presentes,
             }
@@ -75,6 +74,7 @@
                     //success callback
                     function (data, self) {
                         self.evaluaron = data.evaluaron;
+                        self.promedio = data.promedio;
                         Event.$emit('stats-actividad-loaded');
                         self.loading = false;
                     }
@@ -87,5 +87,7 @@
 </script>
 
 <style scoped>
-
+    .promedio {
+        font-size: 300%;
+    }
 </style>

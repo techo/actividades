@@ -32,8 +32,10 @@ class EvaluacionesController extends Controller
     {
         $actividad = Actividad::find($id);
         $evaluaron = $actividad->evaluaciones->count();
+        $promedio = round($actividad->evaluaciones->avg('puntaje'),2);
         return response()->json([
-            'evaluaron' => $evaluaron
+            'evaluaron' => $evaluaron,
+            'promedio' => $promedio
         ]);
 
     }
@@ -66,10 +68,14 @@ class EvaluacionesController extends Controller
     {
         $actividad = Actividad::find($id);
         $evaluaron = $actividad->evaluacionesVoluntarios()->distinct('idEvaluador')->count('idEvaluador');
+        $promedioSocial = round($actividad->evaluacionesVoluntarios->avg('puntajeSocial'),2);
+        $promedioTecnico = round($actividad->evaluacionesVoluntarios->avg('puntajeTecnico'),2);
 
         return response()->json(
             [
-                'evaluaron' => $evaluaron
+                'evaluaron' => $evaluaron,
+                'promedioSocial' => $promedioSocial,
+                'promedioTecnico' => $promedioTecnico
             ]
         );
     }

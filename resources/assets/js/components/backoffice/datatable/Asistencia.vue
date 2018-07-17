@@ -51,6 +51,7 @@
                 this.axiosPost(url,
                     function (data, self) {
                         self.errorIcon = false;
+                        Event.$emit('asistencia:cambio');
                     }, params);
             },
             axiosPost(url, fCallback, params = []) {

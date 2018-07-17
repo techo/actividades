@@ -16,6 +16,8 @@
                         <span v-if="!error && !success">
                             <p>Se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}</p>
                             <p>¿Estás seguro?</p>
+                            <br>
+                            <input type="text" id="data-url-evaluaciones" tabindex="-1" aria-hidden="true" :value="urlEvaluaciones">
                         </span>
                         <span v-if="success">
                             <strong>
@@ -28,6 +30,12 @@
                         </span>
                     </div>
                   <div class="modal-footer">
+                             <button v-bind:class="getClass(copiarClicked)"
+                                     type="button"
+                                     @click="copiarClipboard">
+                                <i class="fa fa-clipboard"></i>
+                                &nbsp {{ mensajeCopiar }}
+                            </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <i class="fa fa-ban"></i>
                             Cerrar
@@ -50,6 +58,8 @@
 
 <script>
 import axios from 'axios';
+import store from '../stores/store';
+
 export default {
     name: "btnEnviarEvaluaciones",
     props: ['prop-actividad'],
@@ -58,7 +68,10 @@ export default {
             loading: false,
             success: false,
             error: false,
-            actividad: {}
+            actividad: {},
+            mensajeCopiar: "Copiar link",
+            copiarClicked: false,
+            urlEvaluaciones: window.location.origin + '/actividades/' + store.state.idActividad + '/evaluaciones'
         }
     },
     created: function () {
@@ -77,6 +90,21 @@ export default {
                 self.error = false;
                 self.success = true;
             }, payload);
+        },
+        getClass: function (clicked) {
+            let btnClass = clicked ? 'btn-success' : 'btn-default';
+            return {
+                'btn': true,
+                'pull-left': true,
+                [btnClass]: true
+            };
+        },
+        copiarClipboard: function () {
+            let url = document.getElementById('data-url-evaluaciones');
+            url.select();
+            document.execCommand("copy");
+            this.copiarClicked = true;
+            this.mensajeCopiar = "Copiado!";
         },
         axiosPost(url, fCallback, params = []) {
             axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -118,5 +146,9 @@ export default {
 <style scoped>
     .text-error {
         color: red;
+    }
+    #data-url-evaluaciones {
+        position: absolute;
+        left: -9999px;
     }
 </style>

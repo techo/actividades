@@ -23,6 +23,7 @@
                     'min': 0,
                     'max': 100,
                     'readOnly': true,
+                    'thickness': 0.3,
                     'format': function (value) {
                         return value + vm.simbolo;
                     }

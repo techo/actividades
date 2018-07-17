@@ -5,9 +5,9 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
 
-                    <div class="info-box-content">
+                    <div class="info-box-content text-center">
+                        <span class="info-box-number"><h3>{{ this.inscriptos }}</h3></span>
                         <span class="info-box-text">Inscriptos</span>
-                        <span class="info-box-number">{{ this.inscriptos }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -16,9 +16,9 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-green"><i class="fa fa-check-circle"></i></span>
 
-                    <div class="info-box-content">
+                    <div class="info-box-content text-center">
+                        <span class="info-box-number"><h3>{{ this.presentes }}</h3></span>
                         <span class="info-box-text">Presentes</span>
-                        <span class="info-box-number">{{ this.presentes }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -27,9 +27,9 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-red"><i class="fa fa-times-circle"></i></span>
 
-                    <div class="info-box-content">
+                    <div class="info-box-content text-center">
+                        <span class="info-box-number"><h3>{{ this.ausentes }}</h3></span>
                         <span class="info-box-text">Ausentes</span>
-                        <span class="info-box-number">{{ this.ausentes }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -57,6 +57,8 @@
         },
         created(){
             this.getData();
+            Event.$on('btnGrupoPersona:guardar-no-inscripto', this.getData);
+            Event.$on('asistencia:cambio', this.getData);
         },
         methods:{
             getData: function () {
