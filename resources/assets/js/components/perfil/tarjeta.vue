@@ -75,10 +75,11 @@
                 window.location.href = '/actividades/' + this.inscripcion.idActividad
             },
             desincribir: function (idActividad) {
-                var self = this;
+                let self = this;
                 self.$refs.confirmar.openSimplert({
                     title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.actividad.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
+                    message:"Estás por desinscribirte de la actividad, se borrarán tus datos para participar. " +
+                    "Puedes inscribirte  de nuevo mientras el período de inscripciones lo permita. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
