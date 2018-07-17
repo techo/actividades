@@ -64,8 +64,9 @@ class ActividadesController extends Controller
 
 
         $actividad = json_encode($arrayColumnas);
-        $categorias = CategoriaActividad::all();
+        $categorias = CategoriaActividad::with('tipos')->get();
         $tipos = $categorias->first()->tipos; //dd($actividad);
+        $categorias = json_encode($categorias);
         return view(
             'backoffice.actividades.create',
             compact(

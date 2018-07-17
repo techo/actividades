@@ -558,6 +558,7 @@
                                 self.tiposDeActividad = data;
                                 self.tipoSeleccionado = null;
                                 self.dataActividad.idTipo = null;
+                                //self.categoriaSeleccionada.tipos = data;
                             }
                         );
                         this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -574,15 +575,15 @@
                     if (this.dataActividad.tipo === undefined) {
                         this.dataActividad.tipo = {};
                     }
-
-                    if (!this.dataActividad.descripcion) {
-                        this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
+                    if (typeof tinymce !== 'undefined' && tinymce.get('descripcion') !== null && this.tipoSeleccionado.descripcion !== null) { console.log('!');
+                        tinymce.get('descripcion').setContent(this.tipoSeleccionado.descripcion);
                     }
 
+                    //this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
                     this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
                     this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
                     this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
-                    this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+                    this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
                 }
             },
             getOficinas() {
@@ -611,9 +612,7 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
-                let descripcion = tinymce.get('descripcion').getContent();
-                this.dataActividad.descripcion = descripcion;
-
+                this.dataActividad.descripcion = tinymce.get('descripcion').getContent();
                 this.axiosPost(url, //endpoint
                     function (data, self) { //handler de success
                         if (self.dataActividad.idActividad === null) {
@@ -683,7 +682,7 @@
             },
             enableTinymce: function () {
                 tinymce.get('descripcion').remove();
-                var editor_config = {
+                let editor_config = {
                     path_absolute : "/",
                     selector: "textarea#descripcion",
                     menubar: false,
@@ -722,7 +721,7 @@
             },
             disableTinymce: function () {
                 tinymce.get('descripcion').remove();
-                var editor_config = {
+                let editor_config = {
                     path_absolute : "/",
                     selector: "textarea#descripcion",
                     menubar: false,
@@ -783,6 +782,7 @@
                         })
                     })
             },
+/*
             clonar: function() {
                 this.mostrarLoadingAlert();
                 let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
@@ -806,6 +806,7 @@
                         })
                     })
             },
+*/
             findObjectByKey(array, key, value) {
                 for (var i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {
@@ -817,7 +818,6 @@
                 }
                 return null;
             },
-
         }
     }
 </script>
