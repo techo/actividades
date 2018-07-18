@@ -14,9 +14,9 @@
                     </div>
                     <div class="modal-body">
                         <span v-if="!error && !success">
-                            <p>Se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}</p>
-                            <p>¿Estás seguro?</p>
+                            <p>Al hacer click en <strong>Enviar</strong> se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}.</p>
                             <br>
+                            <p>También podés <strong>Copiar el link</strong> a las evaluaciones para enviar por otros medios.</p>
                             <input type="text" id="data-url-evaluaciones" tabindex="-1" aria-hidden="true" :value="urlEvaluaciones">
                         </span>
                         <span v-if="success">
@@ -30,15 +30,15 @@
                         </span>
                     </div>
                   <div class="modal-footer">
-                             <button v-bind:class="getClass(copiarClicked)"
-                                     type="button"
-                                     @click="copiarClipboard">
-                                <i class="fa fa-clipboard"></i>
-                                &nbsp {{ mensajeCopiar }}
-                            </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                             <i class="fa fa-ban"></i>
                             Cerrar
+                        </button>
+                        <button v-bind:class="getClass(copiarClicked)"
+                             type="button"
+                             @click="copiarClipboard">
+                            <i class="fa fa-clipboard"></i>
+                            &nbsp {{ mensajeCopiar }}
                         </button>
                         <button type="button" class="btn btn-primary" @click="enviarEvaluaciones" v-if="!loading">
                             <i class="fa fa-paper-plane"></i>
@@ -92,10 +92,9 @@ export default {
             }, payload);
         },
         getClass: function (clicked) {
-            let btnClass = clicked ? 'btn-success' : 'btn-default';
+            let btnClass = clicked ? 'btn-success' : 'btn-primary';
             return {
                 'btn': true,
-                'pull-left': true,
                 [btnClass]: true
             };
         },

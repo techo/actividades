@@ -28,6 +28,30 @@
             return {
                 info: {},
                 options: {
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Total"
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                userCallback: function(label, index, labels) {
+                                    // Si el entero del label es igual al label, mostrar
+                                    if (Math.floor(label) === label) {
+                                        return label;
+                                    }
+
+                                },
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Evaluación"
+                            }
+                        }]
+                    },
                     responsive: true,
                     maintainAspectRatio: true,
                     legend: {

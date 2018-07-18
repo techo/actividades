@@ -19,7 +19,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Promedio puntajes</h4>
+                        <h4>Promedio evaluaciones</h4>
                     </div>
                 </div>
                 <div class="row">
