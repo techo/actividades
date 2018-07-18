@@ -101,6 +101,9 @@ export default {
 
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
+      bold: function(value) {
+          return '<b>' + value + '</b>';
+      }
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
