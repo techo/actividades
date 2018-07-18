@@ -43,8 +43,9 @@
         },
         methods: {
             traer_inscripciones: function() {
-                axios.get('/ajax/usuario/inscripciones').then(response => {
-                    this.inscripciones = response.data
+                axios.get('/ajax/usuario/inscripciones?date=')
+                    .then(response => {
+                    this.inscripciones = response.data.data
                 })
             }
         }
@@ -53,11 +54,5 @@
 </script>
 
 <style>
-.confirmar {
-    min-width: 800px;
-}
-.confirmar > .simplert_content: {
-    min-width: 90% !important;
-    color: red;
-}
+
 </style>

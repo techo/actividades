@@ -72,7 +72,7 @@ return [
     'voluntario-actividades' => [
 
         'fields' => [
-            [
+/*            [
                 'name' => 'nombreActividad',
                 'title' => 'Nombre',
                 'sortField' => 'Actividad.nombreActividad',
@@ -90,7 +90,7 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Localidad',
-                //'callback' => 'getLocalidad'
+                'callback' => 'bold'
             ],
             [
                 'name' => 'tipo',
@@ -98,10 +98,14 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Tipo',
+            ],*/
+            [
+                'name' => '__component:tarjeta-horizontal',
+                'title' => 'Actividades Anteriores',
             ],
             [
                 'name' => '__component:btn-mis-actividades',
-                'title' => 'Acciones',
+                'title' => '',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center'
             ]

@@ -47,9 +47,10 @@ class MisActividadesSearch
         $query->join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
             ->join('atl_localidades', 'atl_localidades.id', '=', 'Actividad.idLocalidad')
             ->join('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
+            ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->where('Inscripcion.idPersona', auth()->user()->idPersona)
             ->whereNotIn('estado',['Desinscripto'])
-            ->select(['Actividad.*', 'Inscripcion.presente', 'PuntoEncuentro.punto']);
+            ->select(['Actividad.*', 'Inscripcion.presente', 'PuntoEncuentro.punto', 'Tipo.*']);
         return $query;
     }
 }

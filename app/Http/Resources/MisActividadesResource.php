@@ -17,6 +17,8 @@ class MisActividadesResource extends Resource
         return [
             'idActividad' => $this->idActividad,
             'tipo' => $this->tipo->nombre,
+            'fecha' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y'),
+            'hora' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('H:i'),
             'fechaInicio' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y H:i'),
             'fechaFin' => empty($this->fechaFin) ? '' : $this->fechaFin->format('d-m-Y H:i'),
             'fechaInicioInscripciones' =>empty($this->fechaInicioInscripciones) ? '' : $this->fechaInicioInscripciones->format('d-m-Y H:i'),
@@ -26,7 +28,9 @@ class MisActividadesResource extends Resource
             'nombreActividad' => $this->nombreActividad,
             'lugar' => $this->localidad->localidad . ', ' . $this->provincia->provincia,
             'puntoEncuentro' => $this->puntosEncuentro,
-            'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0
+            'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
+            'img' => $this->imagen,
+            'descripcion' => clean_string($this->descripcion)
         ];
     }
 }

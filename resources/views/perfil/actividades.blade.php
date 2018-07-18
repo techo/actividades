@@ -8,14 +8,16 @@
 @endsection
 
 @section('main_content')
-	{{--<mis-inscripciones></mis-inscripciones>--}}
+	<mis-actividades></mis-actividades>
     <datatable
-            api-url="/ajax/usuario/inscripciones"
+            api-url="/ajax/usuario/inscripciones?date=pasadas"
             fields="{{ $fields }}"
             sort-order="{{ $sortOrder }}"
             placeholder-text="Nombre o localidad de la actividad"
             detail-url="/actividades/"
-    ></datatable>@endsection
+    ></datatable>
+    <p>&nbsp;</p>
+@endsection
 
 @section('footer')
     @include('partials.footer')

@@ -80,9 +80,6 @@ export default {
           last: 'glyphicon glyphicon-step-forward',
         },
         },
-        // sortOrder: [
-        // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
-        // ],
         moreParams: {}
     }
   },
@@ -104,6 +101,9 @@ export default {
 
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
+      bold: function(value) {
+          return '<b>' + value + '</b>';
+      }
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
@@ -162,11 +162,20 @@ export default {
   float: left;
 }
 
+.align-bottom {
+    position:absolute;
+    bottom: 0;
+}
+
+.vuetable-component {
+    padding: 0.4rem
+}
+/*
 .vuetable tr {
   cursor: pointer;
 }
 
 .vuetable tr td:hover{
-  text-decoration: underline;
-}
+ text-decoration: underline;
+}*/
 </style>

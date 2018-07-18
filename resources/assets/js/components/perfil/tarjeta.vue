@@ -2,16 +2,16 @@
      <div class="col-sm-4">
         <div class="card tarjeta p-3">
             <simplert ref="confirmar"></simplert>
-            <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.tipo.imagen"
+            <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.img"
                  alt="Card image cap">
             <div class="card-body px-0">
                 <p class="techo-titulo-card">{{ inscripcion.tipo.nombre }}</p>
                 <h5 class="card-title text-left" v-on:click="ir_a_actividad">{{ inscripcion.nombreActividad }}</h5>
                 <div>
                     <hr>
-                    <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.fecha }}</span></span>
-                    <span class="col-sm-4"><i class="fas fa-clock"></i> {{ inscripcion.hora }}</span>
-                    <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.localidad | ubicacion }}</span>
+                    <span class="small-text"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ inscripcion.fecha }}</span></span>
+                    <span class="small-text"><i class="fas fa-clock"></i> {{ inscripcion.hora }}</span>
+                    <span class="small-text"><i class="fas fa-map-marker-alt"></i> {{ inscripcion.lugar }}</span>
                     <hr>
                 </div>
                 <p class="card-text text-left">{{ inscripcion.descripcion | truncate(120) }}</p>
@@ -78,8 +78,7 @@
                 let self = this;
                 self.$refs.confirmar.openSimplert({
                     title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad, se borrarán tus datos para participar. " +
-                    "Puedes inscribirte  de nuevo mientras el período de inscripciones lo permita. ¿Deseas continuar?",
+                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
@@ -90,7 +89,7 @@
                     customConfirmBtnClass: '', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario/inscripciones/' + idActividad).then(response => {
-                            self.$parent.traer_inscripciones()
+                            self.$parent.traer_inscripciones();
                             self.$parent.borro = true;
                             setTimeout(function(){
                                 self.$parent.borro = false;
@@ -128,7 +127,7 @@
 
 div.tarjeta {
     cursor: pointer;
-    border: 0px;
+    border: 0;
     text-align: center;
 }
 
@@ -139,4 +138,9 @@ div.tarjeta {
     display: none;
 }
 
+    .small-text {
+        font-size: smaller;
+        margin-right: 10px;
+        text-align: left;
+    }
 </style>
