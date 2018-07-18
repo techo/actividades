@@ -135,7 +135,7 @@ class LoginController extends Controller
             $personaData->email = $user->user['email'];
             $personaData->facebook_id = $user->user['id'];
             $personaData->google_id = '';
-            $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
+            $personaData->sexo = isset($user->user['gender']) && $user->user['gender'] == 'male' ? 'M' : 'F';
         }
 //        $personaData->password = bcrypt(str_random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
