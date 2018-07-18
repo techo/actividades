@@ -11,30 +11,45 @@
             <div class="panel-heading">Agregar Nuevo Grupo</div>
             <div class="panel-body">
                 <form>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group" :class="{'has-error': nombreGrupoError}">
-                            <label for="nombre">Nombre </label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nombre"
-                                    placeholder="Escribe el nombre del grupo"
-                                    v-model="nombreGrupo"
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group" :class="{'has-error': nombreGrupoError}">
+                                <label for="nombre">Nombre </label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="nombre"
+                                        placeholder="Escribe el nombre del grupo"
+                                        v-model="nombreGrupo"
 
+                                >
+                                <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="padding-top: 1.5em">
+                            <button
+                                    type="button"
+                                    class="btn btn-default pull-right  btnSeparador"
+                                    @click="cancelar"
                             >
-                            <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
+                                <i class="fa fa-ban"></i> Cancelar
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary pull-right btnSeparador"
+                                    @click="guardarGrupo"
+                            >
+                                <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary pull-right btnSeparador"
+                                    @click="guardarGrupoCerrar"
+                            >
+                                <i class="fa fa-check"></i> Incluir y Cerrar
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-3" style="padding-top: 1.5em">
-                        <button type="button" class="btn btn-primary" @click="guardarGrupo">
-                            <i class="fa fa-check"></i> Agregar
-                        </button>
-                        <button type="button" class="btn btn-default" @click="cancelar">
-                            <i class="fa fa-ban"></i> Cerrar
-                        </button>
-                    </div>
-                </div>
                 </form>
             </div>
         </div>
@@ -187,6 +202,10 @@
                 } else {
                     this.nombreGrupoError = true;
                 }
+            },
+            guardarGrupoCerrar: function () {
+              this.guardarGrupo();
+              this.cancelar();
             },
             guardarInscripto: function () {
                 if (this.inscripto) {
