@@ -55,12 +55,6 @@ return [
                 'dataClass' => 'text-center',
                 'title' => 'Estado',
             ],
-            // [
-            //   name' => 'nickname',
-            //   sortField' => 'nickname',
-            //   callback' => 'allcap'
-            // ],
-            // [
 //            [
 //                'name' => '__component:mis-actividades',
 //                'title' => 'Acciones',
@@ -71,6 +65,27 @@ return [
         'sortOrder' => [
             [
                 'sortField' => 'fechaCreacion',
+                'direction' => 'desc'
+            ]
+        ],
+    ],
+    'voluntario-actividades' => [
+
+        'fields' => [
+            [
+                'name' => '__component:tarjeta-horizontal',
+                'title' => 'Actividades Anteriores',
+            ],
+            [
+                'name' => '__component:btn-mis-actividades',
+                'title' => '',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center'
+            ]
+        ],
+        'sortOrder' => [
+            [
+                'sortField' => 'fechaInicio',
                 'direction' => 'desc'
             ]
         ],

@@ -7,6 +7,7 @@
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
+      noDataTemplate="No hay registros para mostrar"
       :css="css.table"
       :sort-order="dataSortOrder"
       :multi-sort="true"
@@ -15,8 +16,11 @@
       @vuetable:pagination-data="onPaginationData"
     ></vuetable>
     <div class="vuetable-pagination">
-      <vuetable-pagination-info ref="paginationInfo"
-        info-class="pagination-info"
+      <vuetable-pagination-info
+              ref="paginationInfo"
+              infoTemplate="Mostrando {from} de {to} de un total de {total} actividades"
+              info-class="pagination-info"
+              noDataTemplate="No hay registros para mostrar"
       ></vuetable-pagination-info>
       <vuetable-pagination ref="pagination"
         :css="css.pagination"
@@ -28,30 +32,15 @@
 
 <script>
     //https://github.com/ratiw/vuetable-2-tutorial/wiki
-  import accounting from 'accounting'
-  import moment from 'moment'
   import Vuetable from 'vuetable-2/src/components/Vuetable'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
   import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
   import Vue from 'vue'
   import VueEvents from 'vue-events'
-  import CustomActions from './CustomActions'
-  import DetailRow from './DetailRow'
   import FilterBar from './FilterBar'
-  import Pago from './Pago';
-  import Asistencia from './Asistencia';
-  import ActualizarInscripcion from './actualizarInscripcion';
-  import EstadoInscripcion from './estadoInscripcion';
-
 
   Vue.use(VueEvents);
-  Vue.component('custom-actions', CustomActions);
-  Vue.component('my-detail-row', DetailRow);
   Vue.component('filter-bar', FilterBar);
-  Vue.component('asistencia', Asistencia);
-  Vue.component('pago', Pago);
-  Vue.component('actualizar-inscripcion', ActualizarInscripcion);
-  Vue.component('estado-inscripcion', EstadoInscripcion);
 
 export default {
   components: {
@@ -59,7 +48,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl'],
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detail-url'],
     data () {
     return {
         dataPlaceholderText: this.placeholderText,
@@ -91,29 +80,13 @@ export default {
           last: 'glyphicon glyphicon-step-forward',
         },
         },
-        // sortOrder: [
-        // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
-        // ],
         moreParams: {}
     }
   },
   methods: {
-    allcap (value) {
-      return value.toUpperCase()
-    },
-    estadoBadge (value) {
-      return value === 'M'
-        ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-        : '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-    },
-    formatNumber (value) {
-      return accounting.formatNumber(value, 2)
-    },
-    formatDate (value, fmt = 'D MMM YYYY') {
-      return (value == null)
-        ? ''
-        : moment(value, 'YYYY-MM-DD').format(fmt)
-    },
+      getLocalidad (objLocalidad) {
+          return objLocalidad.localidad + ', ' + objLocalidad.provincia;
+      },
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);
       this.$refs.paginationInfo.setPaginationData(paginationData);
@@ -121,12 +94,16 @@ export default {
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
     },
-    onCellClicked (data, field, event) {
+    onCellClicked (data, field, event) { console.log(data);
         if (this.detailUrl !== undefined) {
-            window.location.href = this.detailUrl + data.id;
+            window.location.href = this.detailUrl + data.idActividad;
         }
+
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
+      bold: function(value) {
+          return '<b>' + value + '</b>';
+      }
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
@@ -185,11 +162,21 @@ export default {
   float: left;
 }
 
+.align-bottom {
+    position:absolute;
+    bottom: 0;
+}
+
+.vuetable-component {
+    padding: 0.4rem
+}
+
+/*
 .vuetable tr {
   cursor: pointer;
 }
 
 .vuetable tr td:hover{
-  text-decoration: underline;
-}
+ text-decoration: underline;
+}*/
 </style>

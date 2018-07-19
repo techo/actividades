@@ -17,6 +17,10 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import EvaluarActividad from './components/evaluaciones/evaluarActividad';
 import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaciones';
+import DataTable from './components/datatable/DataTable';
+import BtnMisActividades from './components/perfil/btnMisActividades';
+import TarjetaHorizontal from './components/perfil/tarjeta-horizontal';
+
 
 import axios from 'axios';
 
@@ -34,11 +38,14 @@ Vue.component('inscripcion', Inscripcion);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('perfil', Perfil);
-Vue.component('mis-inscripciones', MisActividades);
+Vue.component('mis-actividades', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
 Vue.component('evaluar-actividad', EvaluarActividad);
 Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
+Vue.component('datatable', DataTable);
+Vue.component('btn-mis-actividades', BtnMisActividades);
+Vue.component('tarjeta-horizontal', TarjetaHorizontal);
 
 window.Event = new Vue();
 

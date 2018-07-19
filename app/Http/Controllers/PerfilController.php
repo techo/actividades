@@ -16,6 +16,9 @@ class PerfilController extends Controller
 
 
 	public function actividades(Request $request) {
-		return view('perfil.actividades');
+        $datatableConfig = config('datatables.voluntario-actividades');
+        $fields = json_encode($datatableConfig['fields']);
+	    $sortOrder = json_encode($datatableConfig['sortOrder']);
+		return view('perfil.actividades', compact('fields', 'sortOrder'));
 	}
 }

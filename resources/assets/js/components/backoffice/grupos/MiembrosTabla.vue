@@ -117,7 +117,6 @@ export default {
             if (data.tipo === 'persona') {
                 Event.$emit('vuetable-verVoluntario', data);
             }
-            // this.$refs.vuetableMiembros.toggleDetailRow(data.id);
         },
         checkboxToggledEmitter (status, obj) {
             Event.$emit('MiembrosTabla:miembro-seleccionado', {'status': status, 'obj': obj });
