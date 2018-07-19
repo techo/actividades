@@ -575,8 +575,12 @@
                     if (this.dataActividad.tipo === undefined) {
                         this.dataActividad.tipo = {};
                     }
-                    if (typeof tinymce !== 'undefined' && tinymce.get('descripcion') !== null && this.tipoSeleccionado.descripcion !== null) { console.log('!');
+                    if (typeof tinymce !== 'undefined'
+                        && tinymce.get('descripcion') !== null
+                        && this.tipoSeleccionado.descripcion !== null
+                        && (this.dataActividad.descripcion === null || tinymce.get('descripcion').getContent() == "")) {
                         tinymce.get('descripcion').setContent(this.tipoSeleccionado.descripcion);
+                        this.dataActividad.descripcion = null;
                     }
 
                     //this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
