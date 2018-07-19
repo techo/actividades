@@ -378,3 +378,8 @@ footer.inscripcion-bar .text-primary {
     left: 35%;
     font-weight: bold;
 }
+
+
+#datatable-mis-actividades thead {
+    display:none
+}

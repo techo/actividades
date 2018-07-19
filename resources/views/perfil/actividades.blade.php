@@ -8,13 +8,22 @@
 @endsection
 
 @section('main_content')
-	<mis-actividades></mis-actividades>
+    <h1>Tus Actividades de Voluntariado</h1>
+    <div class="col-md-4">
+        <h3>Actividades Futuras</h3>
+    </div>
+
+    <mis-actividades></mis-actividades>
+    <div class="col-md-4">
+        <h3>Actividades Pasadas</h3>
+    </div>
     <datatable
             api-url="/ajax/usuario/inscripciones?date=pasadas"
             fields="{{ $fields }}"
             sort-order="{{ $sortOrder }}"
             placeholder-text="Nombre o localidad de la actividad"
             detail-url="/actividades/"
+            id="datatable-mis-actividades"
     ></datatable>
     <p>&nbsp;</p>
 @endsection

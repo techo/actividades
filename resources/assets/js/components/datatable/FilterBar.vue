@@ -10,9 +10,9 @@
                         class="form-control input"
                         @keyup.enter="doFilter"
                         :placeholder="dataPlaceholderText"
-                        style="width: 20em"
+                        style="width: 35em"
                 >
-                <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
+                <button class="btn btn-primary" @click.prevent="doFilter">Filtrar</button>
                 <button class="btn" @click.prevent="resetFilter">Borrar</button>
             </div>
         </form>
@@ -36,9 +36,6 @@
                 this.filterText = '';
                 this.$events.fire('filter-reset');
             },
-            exportar() {
-                location.href = location.href + '/exportar?filter=' + this.filterText
-            }
         }
     }
 </script>

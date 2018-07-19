@@ -170,6 +170,7 @@ export default {
 .vuetable-component {
     padding: 0.4rem
 }
+
 /*
 .vuetable tr {
   cursor: pointer;
