@@ -3,50 +3,53 @@
         <p class="alert alert-danger" v-if="mensajeError !== ''">{{ mensajeError }}</p>
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
-            <button
-                    type="button"
-                    class="btn btn-primary dropdown-toggle"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-            >
-                Agregar a este grupo <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a @click="verFormGrupo">Grupo</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a @click="verFormInscripto">Voluntario Inscripto</a></li>
-                <li><a @click="verFormNoInscripto">Voluntario No Inscripto</a></li>
-            </ul>
+            <a class="btn btn-primary btn-sm" @click="verFormGrupo">Grupo</a>
+            <a class="btn btn-primary btn-sm" @click="verFormInscripto">Voluntario Inscripto</a>
+            <a class="btn btn-primary btn-sm" @click="verFormNoInscripto">Voluntario No Inscripto</a>
         </div>
         <div  v-if="formGrupo" class="panel panel-info">
             <div class="panel-heading">Agregar Nuevo Grupo</div>
             <div class="panel-body">
                 <form>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group" :class="{'has-error': nombreGrupoError}">
-                            <label for="nombre">Nombre </label>
-                            <input
-                                    type="text"
-                                    class="form-control"
-                                    id="nombre"
-                                    placeholder="Escribe el nombre del grupo"
-                                    v-model="nombreGrupo"
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group" :class="{'has-error': nombreGrupoError}">
+                                <label for="nombre">Nombre </label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="nombre"
+                                        placeholder="Escribe el nombre del grupo"
+                                        v-model="nombreGrupo"
 
+                                >
+                                <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="padding-top: 1.5em">
+                            <button
+                                    type="button"
+                                    class="btn btn-default pull-right  btnSeparador"
+                                    @click="cancelar"
                             >
-                            <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
+                                <i class="fa fa-ban"></i> Cancelar
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary pull-right btnSeparador"
+                                    @click="guardarGrupo"
+                            >
+                                <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary pull-right btnSeparador"
+                                    @click="guardarGrupoCerrar"
+                            >
+                                <i class="fa fa-check"></i> Incluir y Cerrar
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-3" style="padding-top: 1.5em">
-                        <button type="button" class="btn btn-primary" @click="guardarGrupo">
-                            <i class="fa fa-check"></i> Agregar
-                        </button>
-                        <button type="button" class="btn btn-default" @click="cancelar">
-                            <i class="fa fa-ban"></i> Cancelar
-                        </button>
-                    </div>
-                </div>
                 </form>
             </div>
         </div>
@@ -54,7 +57,7 @@
             <div class="panel-heading">Agregar Voluntario Inscripto</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         <div class="form-group" :class="{'has-error': inscriptoNombreError }">
                             <label for="nombre">Nombre </label>
                             <v-select
@@ -77,16 +80,19 @@
                             <input type="text" class="form-control" v-model="rol" id="rol">
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <br>
-                        <button type="button" class="btn btn-primary" @click="guardarInscripto">
-                            <i class="fa fa-check"></i> Agregar
-                        </button>
-                        <button type="button" class="btn btn-default" @click="cancelar">
-                            <i class="fa fa-ban"></i> Cancelar
-                        </button>
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <button type="button" class="btn btn-default pull-right  btnSeparador" @click="cancelar">
+                                <i class="fa fa-ban"></i> Cancelar
+                            </button>
+                            <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarInscripto">
+                                <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                            </button>
+                            <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarInscriptoCerrar">
+                                <i class="fa fa-check"></i> Incluir y Cerrar
+                            </button>
+                        </div>
                     </div>
-
                 </div>
                 <p class="text-danger" v-if="yaInscripto">
                     <i>Esta persona ya pertenece a otro equipo.</i>
@@ -97,7 +103,7 @@
             <div class="panel-heading">Agregar Voluntario No Inscripto</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group" :class="{'has-error': noInscriptoNombreError}">
                             <label for="nombre">Nombre </label>
                             <v-select
@@ -129,15 +135,19 @@
                             <p class="red" v-show="noInscriptoPuntoError">Este campo es requerido</p>
                         </div>
                     </div>
-                    <div class="col-md-2" style="padding-top: 1.5em">
-                        <button type="button" class="btn btn-primary" @click="guardarNoInscripto">
-                            <i class="fa fa-check"></i> Agregar
-                        </button>
-                        <button type="button" class="btn btn-default" @click="cancelar">
+                </div>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <button type="button" class="btn btn-default pull-right btnSeparador" @click="cancelar">
                             <i class="fa fa-ban"></i> Cancelar
                         </button>
+                        <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarNoInscripto">
+                            <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                        </button>
+                        <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarNoInscriptoCerrar">
+                            <i class="fa fa-check"></i> Incluir y Cerrar
+                        </button>
                     </div>
-
                 </div>
                 <p class="text-danger" v-if="yaInscripto">
                     <i>Esta persona ya pertenece a otro equipo.</i>
@@ -193,6 +203,10 @@
                     this.nombreGrupoError = true;
                 }
             },
+            guardarGrupoCerrar: function () {
+              this.guardarGrupo();
+              this.cancelar();
+            },
             guardarInscripto: function () {
                 if (this.inscripto) {
                     this.mostrarLoadingAlert();
@@ -204,6 +218,10 @@
                 } else {
                     this.inscriptoNombreError = true;
                 }
+            },
+            guardarInscriptoCerrar: function() {
+                this.guardarInscripto();
+                this.cancelar();
             },
             guardarNoInscripto: function () {
                 if (this.noInscripto && this.idPuntoSeleccionado) {
@@ -224,11 +242,16 @@
                     this.noInscriptoPuntoError = true;
                 }
             },
+            guardarNoInscriptoCerrar: function () {
+                this.guardarInscripto();
+                this.cancelar();
+            },
             confirmarGuardado: function () {
                 Event.$emit('vuetable-actualizarTabla');
                 this.inicializar();
                 this.ocultarLoadingAlert();
             },
+
             verFormGrupo: function () {
                 this.formGrupo = true;
                 this.formInscripto = false;
@@ -353,4 +376,9 @@
     color: red;
     font-size: smaller;
 }
+
+    .btnSeparador {
+        margin-left: 5px;
+        margin-right: 5px
+    }
 </style>
