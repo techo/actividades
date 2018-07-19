@@ -29,7 +29,7 @@
         },
         data: function() {
             return {
-                idActividad: ''
+                idActividad: this.rowData.idActividad
             }
         },
         methods: {
