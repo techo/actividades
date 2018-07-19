@@ -31,7 +31,7 @@ export default {
     },
     data: function () {
         return {
-            idActividad: '',
+            idActividad: this.rowData.idActividad,
             //urlDetalle: '/actividades/' + this.rowData.idActividad
         }
     },

@@ -22,7 +22,6 @@
             fields="{{ $fields }}"
             sort-order="{{ $sortOrder }}"
             placeholder-text="Nombre o localidad de la actividad"
-            detail-url="/actividades/"
             id="datatable-mis-actividades"
     ></datatable>
     <p>&nbsp;</p>
