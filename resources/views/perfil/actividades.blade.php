@@ -10,7 +10,7 @@
 @section('main_content')
     <h1>Tus Actividades de Voluntariado</h1>
     <div class="col-md-4">
-        <h3>Actividades Futuras</h3>
+        <h3>Próximas Actividades</h3>
     </div>
 
     <mis-actividades></mis-actividades>
