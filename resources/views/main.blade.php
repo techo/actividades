@@ -17,9 +17,9 @@
                 <autenticar></autenticar>
             @endif
             @yield('main_content')
+                @yield('footer')
         </div>
 
-        @yield('footer')
         </main>
     </div>
     @yield('aditional_html')

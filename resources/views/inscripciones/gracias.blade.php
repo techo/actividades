@@ -15,15 +15,16 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Inscripción confirmada! Gracias por ayudar.</h1>
+            <h1 class="card-subtitle">¡Inscripción confirmada!</h1>
         </div>
         <hr>
     </div>
     <div class="row">
         <div class="col-md-8">
             <h3 class="card-title">
-                Estas inscripto a <a
-                        href="/actividades/{{$actividad->idActividad}}">
+                <br>
+                Ya estás inscripto a
+                <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
@@ -31,8 +32,10 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-md-8">
-            <p>Te hemos enviado por mail toda la información pertinente para la actividad</p>
-            <p>Puedes ingresar al panel de usuario para visualizar o modificar tu presencia</p>
+            <p>
+                Te enviamos un mail con más información sobre esta actividad.
+                Entra al panel de usuario para ver las actividades a las que estás inscripto y modificarlas.
+            </p>
         </div>
     </div>
     {{-- COMING SOON --}}
@@ -138,4 +141,7 @@
     {{--</div>--}}
 
     {{--</div>--}}
+@endsection
+@section('footer')
+    @include('partials.footer')
 @endsection

@@ -75,3 +75,16 @@ nav.bg-techo-blue {
     line-height: normal;
     letter-spacing: normal;
 }
+
+.btn-primary {
+    background-color: $brand-primary !important;
+    border: none !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+
+.btn-link {
+    color: $brand-primary !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
