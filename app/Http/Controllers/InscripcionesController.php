@@ -58,6 +58,17 @@ class InscripcionesController extends Controller
                 $inscripcion->estado = 'Sin Contactar';
                 $inscripcion->fechaInscripcion = new Carbon();
                 $inscripcion->save();
+
+                $grupoRaiz = Grupo::where('idActividad',$id)->where('idPadre', 0)->first();
+                $arr = [
+                    'idPersona' => (int)$persona->idPersona,
+                    'idGrupo' => (int) $grupoRaiz->idGrupo,
+                    'idActividad' => (int) $id,
+                    'rol' => ''
+                ];
+
+                GrupoRolPersona::create($arr);
+
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
                 return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
             }
