@@ -38,6 +38,7 @@ class dbfix extends Command
     public function handle()
     {
         ini_set('max_execution_time', 30000);
+        ini_set('memory_limit', -1);
         $actividades = \App\Actividad::all();
         foreach ($actividades as $actividad) {
             $date = \Carbon\Carbon::create(2017, 5, 28, 0, 0, 0);
