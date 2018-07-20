@@ -67,5 +67,26 @@ class dbfix extends Command
             }
 //        break;
         }
+
+        $personas = \App\Persona::all();
+        foreach ($personas as $persona) {
+            $date = \Carbon\Carbon::create(1901, 1, 1, 0, 0, 0);
+            try {
+                if (\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $actividad->fechaNacimiento) !== false) {
+                    $persona->fechaNacimiento = $date;
+                }
+            } catch (\Exception $e) {
+                $persona->fechaNacimiento = $date;
+            }
+
+            try {
+                if (\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $actividad->fechaInscripcion) !== false) {
+                    $persona->fechaInscripcion = $date;
+                }
+            } catch (\Exception $e) {
+                $persona->fechaInscripcion = $date;
+            }
+            $persona->save();
+        }
     }
 }
