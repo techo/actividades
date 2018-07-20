@@ -52,4 +52,9 @@ class Inscripcion extends Model
         return $query->where('estado', '<>', 'Desinscripto' );
     }
 
+    public function scopePresente($query)
+    {
+        return $query->where('presente', '=', '1' );
+    }
+
 }

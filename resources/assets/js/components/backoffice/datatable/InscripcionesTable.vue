@@ -235,6 +235,7 @@ export default {
           };
           this.axiosPost(url, function (data, self) {
                   Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('asistencia:cambio');
                   Event.$emit('mensaje-success', data);
               },
               params);
