@@ -63,6 +63,7 @@
         computed: {
           porcentajeEvaluaciones: function () {
               if(this.loading) return 0;
+              if(store.state.presentes === 0) return 0;
 
               let porcentaje = Math.round(this.evaluaron * 100 / store.state.presentes);
               Event.$emit("knob-eval-voluntarios-upd", porcentaje);
