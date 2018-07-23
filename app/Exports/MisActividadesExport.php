@@ -47,16 +47,16 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             ->orderBy($sortField, $sortOrder);
 
         $result->orWhere(function ($result) {
-            $result->orWhere('idPersonaModificacion', Auth::user()->idPersona);
-            $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);
-            $result->orWhere('idCoordinador', Auth::user()->idPersona);
+            $result->orWhere('Actividad.idPersonaModificacion', Auth::user()->idPersona);
+            $result->orWhere('Actividad.idPersonaCreacion', Auth::user()->idPersona);
+            $result->orWhere('Actividad.idCoordinador', Auth::user()->idPersona);
         });
 
         if ($this->filter) {
             $filter = $this->filter;
-            $result->orWhere(function ($result) use ($filter) {
-                $result->orWhere('nombreActividad', 'like', '%' . $filter . '%');
-                $result->orWhere('estadoConstruccion', 'like', '%' . $filter . '%');
+            $result->where(function ($result) use ($filter) {
+                $result->orWhere('Actividad.nombreActividad', 'like', '%' . $filter . '%');
+                $result->orWhere('Actividad.estadoConstruccion', 'like', '%' . $filter . '%');
                 $result->orWhere('Tipo.nombre', 'like', '%' . $filter . '%');
                 $result->orWhere('atl_oficinas.nombre', 'like', '%' . $filter . '%');
             });
