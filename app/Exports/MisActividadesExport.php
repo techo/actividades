@@ -46,7 +46,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             )
             ->orderBy($sortField, $sortOrder);
 
-        $result->orWhere(function ($result) {
+        $result->where(function ($result) {
             $result->orWhere('idPersonaModificacion', Auth::user()->idPersona);
             $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);
             $result->orWhere('idCoordinador', Auth::user()->idPersona);
@@ -54,7 +54,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
 
         if ($this->filter) {
             $filter = $this->filter;
-            $result->orWhere(function ($result) use ($filter) {
+            $result->where(function ($result) use ($filter) {
                 $result->orWhere('nombreActividad', 'like', '%' . $filter . '%');
                 $result->orWhere('estadoConstruccion', 'like', '%' . $filter . '%');
                 $result->orWhere('Tipo.nombre', 'like', '%' . $filter . '%');
