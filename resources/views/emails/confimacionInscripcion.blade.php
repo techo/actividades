@@ -64,10 +64,16 @@
             </strong>
         </p>
         <p>
-            {{$inscripcion->punto_encuentro->punto}},
-            {{$inscripcion->punto_encuentro->localidad->localidad}},
-            {{$inscripcion->punto_encuentro->provincia->provincia}},
-            {{$inscripcion->punto_encuentro->pais->nombre}}
+            {{$inscripcion->punto_encuentro->punto}}
+            @if(!empty($inscripcion->punto_encuentro->localidad))
+                ,{{$inscripcion->punto_encuentro->localidad->localidad}}
+            @endif
+            @if(!empty($inscripcion->punto_encuentro->provincia))
+                ,{{$inscripcion->punto_encuentro->provincia->provincia}}
+            @endif
+            @if(!empty($inscripcion->punto_encuentro->pais))
+                ,{{$inscripcion->punto_encuentro->pais->nombre}}
+            @endif
         </p>
         <p>
             <strong>

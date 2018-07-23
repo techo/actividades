@@ -19,19 +19,12 @@
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="card-title">Donde nos encontramos</h5>
+                    <h5 class="card-title">Punto de Encuentro</h5>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <h5 class="card-title">Puntos de encuentro</h5>
+                    <p>Te esperamos en el siguiente lugar:</p>
                 </div>
             </div>
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
@@ -39,10 +32,10 @@
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                         {{ $punto_encuentro->punto }}
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         {{ $punto_encuentro->horario }}
                     </div>
                 </div>
@@ -57,7 +50,16 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="checkbox" name="aceptar_terminos" id="aceptar_terminos" value="1" required> Acepto los <a href="/terminos/actividades" target="_blank">Términos y condiciones.</a>
+                        <label for="aceptar_terminos">
+                            <input
+                                    type="checkbox"
+                                    name="aceptar_terminos"
+                                    id="aceptar_terminos"
+                                    value="1"
+                                    required
+                            >
+                            Acepto los <a href="/terminos/actividades" target="_blank">Términos y condiciones.</a>
+                        </label>
                         @if($mensaje = Session::get('status'))
                             <p class="text-danger">{{ $mensaje }}</p>
                         @endif
@@ -65,15 +67,18 @@
                 </div>
                 <hr>
                 <div class="row  align-middle">
-                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a
-                                href="/inscripciones/actividad/{{$actividad->idActividad}}"> Volver</a></div>
-                    <div class="col-md-3"><input type="submit" value="CONFIRMAR" class="btn btn-primary"></div>
+                    <div class="col-md-2 text-primary">
+                        <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link"> Volver</a>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" value="CONFIRMAR" class="btn btn-primary">
+                    </div>
                 </div>
             </form>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://placeholdit.co/i/555x150?bg=d3d3d3">
+            <div class="card" style="border: none">
+                <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em;">
                 <div class="row">
                     <div class="col-md-12">
                         <h6>{{ $actividad->tipo->nombre }}</h6>
@@ -87,10 +92,10 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-4"><i class="far fa-calendar"></i>
-                        <span>{{ $actividad->fechaInicio->format('d-m-Y')}}</span></div>
+                        <span>{{ $actividad->fechaInicio->format('d-m-Y') }}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
-                        <span>{{ $actividad->fechaInicio->format('h:m')}}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ $actividad->lugar }}</span>
+                        <span>{{ $actividad->fechaInicio->format('h:m') }}</span></div>
+                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ $actividad->localidad->localidad }}</span>
                     </div>
                 </div>
                 <hr>
@@ -104,4 +109,7 @@
         </div>
     </div>
 
+@endsection
+@section('footer')
+    @include('partials.footer')
 @endsection

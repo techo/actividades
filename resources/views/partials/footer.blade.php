@@ -1,8 +1,9 @@
 
 <footer class="footer">
+<div class="container">
     <div class="row">
         <div class="col-md-2">
-            <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo Argentina" style="padding-top: 5px;">
+            <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo Argentina" style="padding-top: 5px;" align="left">
         </div>
         <div class="col-md-8" style="padding-top:10px">
             <a href="http://lt.dplrtrack.info/a1ccecf1d4a82082506189b30dbb3789-1c48a2db5ffee7dd9b1dd7531c928471"
@@ -35,9 +36,11 @@
             </a>
         </div>
         <div class="col-md-2">
-            <p style="font-size: larger; padding-top: 15px; font-weight: bolder">
+            <p style="font-size: larger; padding-top: 15px; font-weight: bolder; text-align: right">
                 &copy; 2018 TECHO
             </p>
         </div>
     </div>
+
+</div>
 </footer>
