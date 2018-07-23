@@ -76,6 +76,10 @@ nav.bg-techo-blue {
     letter-spacing: normal;
 }
 
+.card-deck.home .card-text {
+    height: 161px;
+}
+
 .btn-primary {
     background-color: $brand-primary !important;
     border: none !important;
