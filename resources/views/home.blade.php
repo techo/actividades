@@ -43,7 +43,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <a href="/actividades?categoria={{ $categoria->id }}" class="btn techo-btn-azul">{{ $categoria->nombre == "Eventos Especiales" ? "Ver eventos" : "Quiero saber más"}}</a>
+                            <a href="/actividades?categoria={{ $categoria->id }}" class="btn btn-primary">{{ $categoria->nombre == "Eventos Especiales" ? "Ver eventos" : "Quiero saber más"}}</a>
                         </div>
                     </div>
                 @php($i++)
