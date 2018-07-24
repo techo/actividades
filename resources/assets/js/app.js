@@ -1,6 +1,6 @@
 import Simplert from "vue2-simplert";
 
-Vue.config.devtools = true;
+Vue.config.devtools = true; //TODO: Quitar en producción
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
@@ -22,7 +22,14 @@ import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';
 import MiembrosTabla from './components/backoffice/grupos/MiembrosTabla';
 import BtnEnviarEvaluaciones from './components/backoffice/evaluaciones/btnEnviarEvaluaciones';
-import store from './components/backoffice/store'
+import store from './components/backoffice/stores/store';
+import EvaluacionesActividad from './components/backoffice/evaluaciones/evaluacionesActividad';
+import EvaluacionesVoluntarios from './components/backoffice/evaluaciones/evaluacionesVoluntarios';
+import EvaluacionesGeneralStats from './components/backoffice/evaluaciones/evaluacionesGeneralStats';
+import EvaluacionesActividadStats from './components/backoffice/evaluaciones/EvaluacionesActividadStats';
+import EvaluacionesVoluntariosStats from './components/backoffice/evaluaciones/EvaluacionesVoluntariosStats';
+import EvaluacionesActividadChart from './components/backoffice/evaluaciones/EvaluacionesActividadChart';
+import EvaluacionesVoluntariosChart from './components/backoffice/evaluaciones/EvaluacionesVoluntariosChart';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -44,6 +51,13 @@ Vue.component('btn-grupo-persona', BtnGrupoPersona);
 Vue.component('miembros', Miembros);
 Vue.component('miembros-tabla', MiembrosTabla);
 Vue.component('btn-enviar-evaluaciones', BtnEnviarEvaluaciones);
+Vue.component('evaluaciones-actividad', EvaluacionesActividad);
+Vue.component('evaluaciones-voluntarios', EvaluacionesVoluntarios);
+Vue.component('evaluaciones-general-stats', EvaluacionesGeneralStats);
+Vue.component('evaluaciones-actividad-stats', EvaluacionesActividadStats);
+Vue.component('evaluaciones-voluntarios-stats', EvaluacionesVoluntariosStats);
+Vue.component('evaluaciones-actividad-chart', EvaluacionesActividadChart);
+Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
 
 window.Event = new Vue();
 

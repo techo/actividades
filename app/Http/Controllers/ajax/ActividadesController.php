@@ -23,7 +23,7 @@ class actividadesController extends BaseController
      */
     public function index(Request $request, $items=6)
     {
-        $actividades = $this->filtrar($request, $items);
+        $actividades = $this->filtrar($request);
 
         if ($actividades->count() > 0) {
             foreach ($actividades as $actividad) {
@@ -48,7 +48,7 @@ class actividadesController extends BaseController
         return new ActividadResource($actividad);
     }
 
-    private function filtrar(Request $request, $items)
+    private function filtrar(Request $request)
     {
         return ActividadesSearch::apply($request);
     }

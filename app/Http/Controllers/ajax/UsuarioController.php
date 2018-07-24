@@ -5,19 +5,19 @@ namespace App\Http\Controllers\ajax;
 use App\Http\Resources\PerfilResource;
 use App\Search\CoordinadoresSearch;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Persona;
-use App\Actividad;
 use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
-use App\Http\Resources\ActividadResource;
+use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
+use App\Search\MisActividadesSearch;
 
-class UsuarioController extends Controller
+class UsuarioController extends BaseController
 {
   public function validar(Request $request, $verbo) {
     if(!($verbo == 'update' || $verbo == 'create')) abort(404);
@@ -130,21 +130,15 @@ class UsuarioController extends Controller
   }
 
 
-  public function inscripciones(Request $request) {
-    $inscripciones = Actividad::join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
-        ->where('idPersona', Auth::user()->idPersona)
-        ->whereNotIn('estado',['Desinscripto'])->select(['Actividad.*', 'Inscripcion.presente'])
-        ->orderBy('Actividad.fechaInicio', 'DESC')
-        ->get();
+  public function inscripciones(Request $request, $items=10) {
+
+    $inscripciones = MisActividadesSearch::apply($request);
     $resourceCollection = [];
     if ($inscripciones->count() > 0) {
-        $hoy = Carbon::now();
         foreach ($inscripciones as $inscripcion) {
-            $inscripcion->descripcion = clean_string($inscripcion->descripcion);
-            //if ($inscripcion->fechaInicio > $hoy && $inscripcion->presente == 1) {
-                $resourceCollection[] = new ActividadResource($inscripcion);
-            //}
+            $resourceCollection[] = new MisActividadesResource($inscripcion);
         }
+        return $this->paginate($resourceCollection, $items, $request->query());
     }
     return $resourceCollection;
   }

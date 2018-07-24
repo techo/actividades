@@ -91,7 +91,7 @@
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
-                }, inscripto);
+                }, inscripto, this.axiosError);
             },
             guardarNoInscripto(payload) {
                 let noInscripto = {
@@ -106,11 +106,7 @@
                     Event.$emit('vuetable-actualizarTabla', {id: self.idGrupoActual});
                     Event.$emit('inscripciones-actualizar-tabla');
                     Event.$emit('Miembros:guardado');
-                }, noInscripto, function (error, self){
-                    if (error.response.status === 428) {
-                        Event.$emit('Miembros:voluntario-duplicado', error.response.data);
-                    }
-                });
+                }, noInscripto, this.axiosError);
             },
             findObjectByKey(array, key, value) {
                 for (let i = 0; i < array.length; i++) {
@@ -148,6 +144,11 @@
                     self.voluntario = response.data;
                     Event.$emit('vuetable-showModalVoluntario');
                 });
+            },
+            axiosError (error) {
+                if (error.response.status === 428) {
+                    Event.$emit('Miembros:voluntario-duplicado', error.response.data);
+                }
             }
         },
         watch: {

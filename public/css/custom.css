@@ -18,3 +18,8 @@ ul.nav.nav-tabs li.active {
 div[aria-label="Insert link"] .mce-btn.mce-open {
     display: none;
 }
+
+.vertical-align {
+    display: flex;
+    align-items: center;
+}

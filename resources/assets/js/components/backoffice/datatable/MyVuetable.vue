@@ -42,7 +42,6 @@
   import Asistencia from './Asistencia';
   import ActualizarInscripcion from './actualizarInscripcion';
   import EstadoInscripcion from './estadoInscripcion';
-  import MisActividades from './MisActividades';
 
 
   Vue.use(VueEvents);
@@ -53,7 +52,6 @@
   Vue.component('pago', Pago);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
-  Vue.component('mis-actividades', MisActividades);
 
 export default {
   components: {

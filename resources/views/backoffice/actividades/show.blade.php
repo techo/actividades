@@ -136,61 +136,18 @@
                 <!-- /.box -->
             </div>
             <div class="tab-pane" id="evaluaciones">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Evaluaciones</h3>
+                <div class="row vertical-align">
+                    <div class="col-md-12">
+                        <h3 class="pull-left">Evaluaciones</h3>
+                        <span class="pull-right">
+                            <br>
+                            <btn-enviar-evaluaciones :prop-actividad="{{$actividad}}"></btn-enviar-evaluaciones>
+                        </span>
                     </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="btn-group">
-                                    <button
-                                            type="button"
-                                            class="btn btn-primary dropdown-toggle"
-                                            data-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                    >
-                                        <i class="fa fa-download"></i>
-                                        Exportar a Excel <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a  href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones-voluntarios">
-                                                Exportar Evaluaciones de Voluntarios
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/admin/actividades/{{ $actividad->idActividad }}/exportar-evaluaciones">
-                                                Exportar Evaluaciones de la Actividad
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-
-                            </div>
-                            <div class="col-md-2">
-                                <btn-enviar-evaluaciones prop-actividad="{{ $actividad }}"></btn-enviar-evaluaciones>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer">
-                    </div>
-                    <!-- box-footer -->
                 </div>
-                <!-- /.box -->
-                <div class="box">
-                    <div class="box-body  with-border">
-                        <i>Poner algo acá</i>
-                    </div>
-                    <!-- /.box-body -->
-                </div>
-                <!-- /.box -->
+                <evaluaciones-general-stats></evaluaciones-general-stats>
+                <evaluaciones-actividad></evaluaciones-actividad>
+                <evaluaciones-voluntarios></evaluaciones-voluntarios>
             </div>
         </div>
     </div>
