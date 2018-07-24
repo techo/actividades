@@ -137,6 +137,7 @@ class UsuarioController extends BaseController
         'data' => []
     ];
     if ($inscripciones->count() > 0) {
+        $resourceCollection = [];
         foreach ($inscripciones as $inscripcion) {
             $resourceCollection[] = new MisActividadesResource($inscripcion);
         }

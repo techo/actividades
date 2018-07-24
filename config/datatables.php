@@ -73,6 +73,11 @@ return [
 
         'fields' => [
             [
+                'name' => 'idActividad',
+                'sortField' => 'idActividad',
+                'visible' => false
+            ],
+            [
                 'name' => '__component:tarjeta-horizontal',
                 'title' => 'Actividades Anteriores',
             ],
