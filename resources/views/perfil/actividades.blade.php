@@ -23,6 +23,7 @@
             sort-order="{{ $sortOrder }}"
             placeholder-text="Nombre o localidad de la actividad"
             id="datatable-mis-actividades"
+            track-by="idActividad"
     ></datatable>
     <p>&nbsp;</p>
 @endsection
