@@ -122,7 +122,7 @@ class UsuarioController extends BaseController
       return ['success' => $success, 'login_callback' => $url];
   }
 
-  public function perfil(Request $request)
+  public function perfil()
   {
     $persona = Auth::user();
     $usuario = new PerfilResource($persona);
@@ -133,7 +133,9 @@ class UsuarioController extends BaseController
   public function inscripciones(Request $request, $items=10) {
 
     $inscripciones = MisActividadesSearch::apply($request);
-    $resourceCollection = [];
+    $resourceCollection = [
+        'data' => []
+    ];
     if ($inscripciones->count() > 0) {
         foreach ($inscripciones as $inscripcion) {
             $resourceCollection[] = new MisActividadesResource($inscripcion);
@@ -144,7 +146,7 @@ class UsuarioController extends BaseController
   }
 
     public function desinscribir(Request $request, $idActividad) {
-        $inscripciones = Inscripcion::where('idPersona',Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
+        $inscripciones = Inscripcion::where('idPersona', Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
         foreach ($inscripciones as $inscripcion) {
           $inscripcion->estado = 'Desinscripto';
           $inscripcion->save();
