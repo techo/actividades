@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ajax;
 
+use App\GrupoRolPersona;
 use App\Http\Resources\PerfilResource;
 use App\Search\CoordinadoresSearch;
 use Illuminate\Http\Request;
@@ -147,12 +148,15 @@ class UsuarioController extends BaseController
   }
 
     public function desinscribir(Request $request, $idActividad) {
-        $inscripciones = Inscripcion::where('idPersona', Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
-        foreach ($inscripciones as $inscripcion) {
-          $inscripcion->estado = 'Desinscripto';
-          $inscripcion->save();
+        $inscripcion = Inscripcion::where('idPersona', Auth::user()->idPersona)
+            ->where('idActividad', $idActividad)
+            ->first();
+
+        if ($this->cambiar_estado($inscripcion) && $this->borrar_grupo($idActividad)) {
+            return ['success' => true];
         }
-        return ['success' => true];
+
+        return ['success' => false];
     }
 
     public function getCoordinadores(Request $request)
@@ -161,6 +165,19 @@ class UsuarioController extends BaseController
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;
+    }
+
+    private function cambiar_estado(Inscripcion $inscripcion)
+    {
+        $inscripcion->estado = 'Desinscripto';
+        return $inscripcion->save();
+    }
+
+    private function borrar_grupo($idActividad)
+    {
+        return GrupoRolPersona::where('idActividad', $idActividad)
+            ->where('idPersona', auth()->user()->idPersona)
+            ->delete();
     }
 }
 

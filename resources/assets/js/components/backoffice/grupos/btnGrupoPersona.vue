@@ -243,8 +243,8 @@
                     this.noInscriptoPuntoError = true;
                 }
             },
-            guardarNoInscriptoCerrar: function () {
-                this.guardarInscripto();
+            guardarNoInscriptoCerrar: function () { debugger;
+                this.guardarNoInscripto();
                 this.cancelar();
             },
             confirmarGuardado: function () {
