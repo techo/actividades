@@ -20,7 +20,7 @@
 
                 <div
                         :id="'cardEvaluacionPersona_'+ persona.idPersona"
-                        class="collapse show"
+                        class="collapse"
                         :data-parent="'#evaluacionPersona_' + persona.idPersona"
                 >
                     <div class="card-body">

@@ -20,7 +20,7 @@
                     </div>
                 </div>
 
-                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
+                <div id="cardEvaluacion" class="collapse" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-7">
