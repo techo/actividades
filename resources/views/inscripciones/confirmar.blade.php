@@ -32,11 +32,11 @@
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         {{ $punto_encuentro->punto }}
                     </div>
-                    <div class="col-md-6">
-                        {{ $punto_encuentro->horario }}
+                    <div class="col-md-4">
+                        {{ $punto_encuentro->horario->format('h:m') }}
                     </div>
                 </div>
                 @if($tipo->flujo == "CONSTRUCCION")
@@ -92,7 +92,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-4"><i class="far fa-calendar"></i>
-                        <span>{{ $actividad->fechaInicio->format('d-m-Y') }}</span></div>
+                        <span>{{ $actividad->fechaInicio->format('d/m/y') }}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ $actividad->fechaInicio->format('h:m') }}</span></div>
                     <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ $actividad->localidad->localidad }}</span>
