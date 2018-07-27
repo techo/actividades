@@ -1,6 +1,6 @@
 
 <template>
-    <span>
+    <div>
         <!-- Modal begin-->
         <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -51,7 +51,14 @@
                                             </div>
                                             <div class="row h-100 align-items-center">
                                                 <div class="col-4">
-                                                    <button id="btnLogin" v-on:click="login" type="button" class="btn techo-btn-azul">Ingresar</button>
+                                                    <button
+                                                            id="btnLogin"
+                                                            v-on:click="login"
+                                                            type="button"
+                                                            class="btn btn-primary"
+                                                    >
+                                                        Ingresar
+                                                    </button>
                                                 </div>
                                                <div class="col-8 text-right">
                                                     <a href="/password/reset">Olvidé mi contraseña</a>
@@ -66,7 +73,12 @@
                                     <div class="col">
                                         <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
                                         <br>
-                                        <a href="/registro" class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco">¡Quiero ser voluntario!</a>
+                                        <a
+                                                href="/registro"
+                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
+                                        >
+                                            ¡Quiero ser voluntario!
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -97,10 +109,37 @@
                     class="dropdown-menu"
                     aria-labelledby="btnUser"
                 >
-                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="misactividades">Mis Actividades</button>
-                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="perfil">Perfil</button>
-                    <button v-show="this.verAdmin" class="dropdown-item" id="btnLogout" type="button" v-on:click="admin">Admin</button>
-                    <button class="dropdown-item" id="btnLogout" type="button" v-on:click="logout">Salir</button>
+                    <button
+                            class="dropdown-item"
+                            id="btn-mis-actividades"
+                            type="button"
+                            v-on:click="misactividades"
+                    >
+                        Mis Actividades</button>
+                    <button
+                            class="dropdown-item"
+                            id="btn-perfil"
+                            type="button"
+                            v-on:click="perfil"
+                    >
+                        Perfil
+                    </button>
+                    <button
+                            v-show="this.verAdmin"
+                            class="dropdown-item"
+                            id="btn-admin" type="button"
+                            v-on:click="admin"
+                    >
+                        Admin
+                    </button>
+                    <button
+                            class="dropdown-item"
+                            id="btnLogout"
+                            type="button"
+                            v-on:click="logout"
+                    >
+                        Salir
+                    </button>
                 </div>
             </div>
         </span>
@@ -109,7 +148,7 @@
 
         <form class="form-inline mt-2 mt-md-0" v-else>
             <button
-                    class="btn my-2 my-sm-0 techo-btn-blanco"
+                    class="btn my-2 my-sm-0 btn-primary"
                     style="margin-right: 4em"
                     type="button"
                     data-toggle="modal"
@@ -122,7 +161,7 @@
 
 
 
-    </span>
+    </div>
 </template>
 
 <script>
@@ -130,7 +169,7 @@
         name: "login",
         props:['usuario', 'veradmin', 'showlogin'],
         data () {
-            var data = {
+            let data = {
                 credentials: {
                     mail: '',
                     password: '',
@@ -143,11 +182,11 @@
                     id: ''
                 },
                 verAdmin: this.veradmin
-            }
+            };
             if(this.usuario) {
-                var user = JSON.parse(this.usuario)
-                data.user.nombres = user.nombres
-                data.user.id = user.idPersona
+                let user = JSON.parse(this.usuario);
+                data.user.nombres = user.nombres;
+                data.user.id = user.idPersona;
             }
             return data
         },
@@ -180,7 +219,7 @@
             },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                if(this.credentials.mail == "" || this.credentials.password == ""){
+                if(this.credentials.mail === "" || this.credentials.password === ""){
                     this.hasError = true;
                     this.mensajeError = "El Correo electrónico y la contraseña son requeridos";
                     return
@@ -200,8 +239,8 @@
                             return permiso.name;
                         });
 
-                        if(permisos.find(function(permiso){
-                            return permiso == "ver_backoffice";
+                        if (permisos.find(function(permiso){
+                            return permiso === "ver_backoffice";
                         }) !== undefined){
                             this.verAdmin = true;
                         }
@@ -253,11 +292,10 @@
                 this.authenticated = true;
                 this.user.nombres = user.nombres;
                 this.user.id = user.idPersona;
-                var event = new CustomEvent('loggedIn');
+                let event = new CustomEvent('loggedIn');
                 window.dispatchEvent(event);
             },
             checkLogin() {
-        		var self = this;
                 if (this.user.nombres) return true;
                 return false;
             }
@@ -270,6 +308,7 @@
      border: none;
      color: #0092dd;
      background-color: #ffffff;
+     font-size: 1.4rem;
     }
 
     .registro {
@@ -277,7 +316,6 @@
     font-weight: bold;
     text-align: center;
     color: #ffffff;
-    font-weight: bold;
     }
 
     .registro h1{

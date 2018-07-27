@@ -38,110 +38,16 @@
             </p>
         </div>
     </div>
-    {{-- COMING SOON --}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h2>Actividades relacionadas</h2>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-4">--}}
-    {{--<div class="card">--}}
-    {{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h6>[Tipo actividad]</h6>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h5>[Nombre actividad]</h5>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
-    {{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
-    {{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
-    {{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
-    {{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
-    {{--consequat.--}}
-    {{--</div>--}}
-    {{--</div>--}}
-
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="col-md-4">--}}
-    {{--<div class="card">--}}
-    {{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h6>[Tipo actividad]</h6>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h5>[Nombre actividad]</h5>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
-    {{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
-    {{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
-    {{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
-    {{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
-    {{--consequat.--}}
-    {{--</div>--}}
-    {{--</div>--}}
-
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="col-md-4">--}}
-    {{--<div class="card">--}}
-    {{--<img src="https://placeholdit.co/i/555x150?bg=d3d3d3">--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h6>[Tipo actividad]</h6>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--<h5>[Nombre actividad]</h5>--}}
-    {{--</div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-4"><i class="far fa-calendar"></i> <span>[d-m-Y]</span></div>--}}
-    {{--<div class="col-md-4"><i class="far fa-clock"></i> <span>[h:m]</span></div>--}}
-    {{--<div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>[lugar]</span></div>--}}
-    {{--</div>--}}
-    {{--<hr>--}}
-    {{--<div class="row">--}}
-    {{--<div class="col-md-12">--}}
-    {{--Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod--}}
-    {{--tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,--}}
-    {{--quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo--}}
-    {{--consequat.--}}
-    {{--</div>--}}
-    {{--</div>--}}
-
-    {{--</div>--}}
-    {{--</div>--}}
-
-    {{--</div>--}}
+    <div class="row justify-content-start">
+        <div class="col-md-2">
+            <a href="/" class="btn btn-link">Volver al Inicio</a>
+        </div>
+        <div class="col-md-2">
+            <a href="/" class="btn btn-link">Volver al Inicio</a>
+        </div>
+    </div>
 @endsection
+
 @section('footer')
     @include('partials.footer')
 @endsection
