@@ -40,7 +40,9 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-md-2">
-            <a href="/" class="btn btn-link">Volver al Inicio</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compartirModal">
+                <i class="fas fa-share-alt"></i>  COMPARTIR
+            </button>
         </div>
         <div class="col-md-2">
             <a href="/" class="btn btn-link">Volver al Inicio</a>
@@ -50,4 +52,8 @@
 
 @section('footer')
     @include('partials.footer')
+@endsection
+
+@section('aditional_html')
+    @include('partials.compartir-modal', ['url' => action('ActividadesController@show', ['id' => $actividad->idActividad]), 'title' => $actividad->nombreActividad])
 @endsection
