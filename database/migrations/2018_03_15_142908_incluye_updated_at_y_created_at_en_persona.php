@@ -14,10 +14,10 @@ class IncluyeUpdatedAtYCreatedAtEnPersona extends Migration
     public function up()
     {
         if (!Schema::hasColumn('Persona', 'created_at')) {
-            DB::statement("UPDATE Persona SET fechaNacimiento = '1900-01-01 00:00:00' WHERE fechaNacimiento = '0000-00-00 00:00:00'");
-            DB::statement("UPDATE Persona SET fechaInscripcion = NULL WHERE fechaInscripcion = '0000-00-00 00:00:00'");
-            DB::statement("UPDATE Persona SET ultimaEntrada = NULL WHERE ultimaEntrada = '0000-00-00 00:00:00'");
-            DB::statement("UPDATE Persona SET ultimaActualizacion = NULL WHERE ultimaActualizacion = '0000-00-00 00:00:00'");
+            DB::statement("UPDATE IGNORE Persona SET fechaNacimiento = '1900-01-01 00:00:00' WHERE fechaNacimiento = '0000-00-00 00:00:00'");
+            DB::statement("UPDATE IGNORE Persona SET fechaInscripcion = NULL WHERE fechaInscripcion = '0000-00-00 00:00:00'");
+            DB::statement("UPDATE IGNORE Persona SET ultimaEntrada = NULL WHERE ultimaEntrada = '0000-00-00 00:00:00'");
+            DB::statement("UPDATE IGNORE Persona SET ultimaActualizacion = NULL WHERE ultimaActualizacion = '0000-00-00 00:00:00'");
             Schema::table('Persona', function (Blueprint $table) {
                 $table->timestamps();
             });
