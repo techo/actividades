@@ -1,7 +1,9 @@
 <template>
     <div class="col-md-8">
         <h4>Evalúa la actividad</h4>
-        <p class="text-muted">Este es un texto en donde se explica cuál es la importancia de evaluar la actividad</p>
+        <p class="text-muted">
+            Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.
+        </p>
         <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
                 <div class="card-header accordion" id="headingOne">

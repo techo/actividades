@@ -36,7 +36,7 @@
                         {{ $punto_encuentro->punto }}
                     </div>
                     <div class="col-md-4">
-                        {{ $punto_encuentro->horario->format('h:m') }}
+                        {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('h:m') }}
                     </div>
                 </div>
                 @if($tipo->flujo == "CONSTRUCCION")
