@@ -64,6 +64,7 @@
         created(){
             this.dataCampos = JSON.parse(this.campos);
             this.dataCondiciones = JSON.parse(this.condiciones);
+            this.condicionSeleccionada = {label:"contiene", value:"like"};
         },
         computed: {
             errorCampo: function () {
