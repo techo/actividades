@@ -18,3 +18,7 @@ before_script:
   - php artisan key:generate
   - php artisan config:clear
   - npm run prod
+  - composer require --dev phpcq/all-tasks
+  - pyrus install pear/PHP_CodeSniffer
+  - phpenv rehash
+  - phpcpd
