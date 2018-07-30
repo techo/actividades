@@ -8,6 +8,8 @@ services:
 
 before_script:
   - cp .env.travis .env
+  - php artisan key:generate
+  - php artisan config:clear
   - mysql -e 'create database test;'
   - composer self-update
   - composer install --no-interaction
