@@ -129,6 +129,9 @@ code {
     text-decoration: none;
 }
 
+.techo-small-text {
+    font-size: smaller;
+}
 .card-body h5 {
     font-weight: bolder;
 }
@@ -294,7 +297,7 @@ a {
 }
 
 .techo-hero.actividades {
-    background: url(/img/hero-slim.jpg);
+    background: url('/img/hero-slim.jpg');
     background-size: cover;
     height: 210px;
     padding-top: 8vh;
