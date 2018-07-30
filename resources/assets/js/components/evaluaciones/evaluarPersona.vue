@@ -3,7 +3,7 @@
         <div class="accordion" :id="'evaluacionPersona_' + persona.idPersona">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
-                    <span class="mb-0">
+                    <div class="mb-0">
                         <h6
                                 data-toggle="collapse"
                                 :data-target="'#cardEvaluacionPersona_'+ persona.idPersona"
@@ -15,12 +15,12 @@
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
-                    </span>
+                    </div>
                 </div>
 
                 <div
                         :id="'cardEvaluacionPersona_'+ persona.idPersona"
-                        class="collapse show"
+                        class="collapse"
                         :data-parent="'#evaluacionPersona_' + persona.idPersona"
                 >
                     <div class="card-body">
@@ -35,7 +35,7 @@
                                             :piecewise=true
                                             ref="sliderTecnico"
                                             id="sliderTecnico"
-                                            :disabled="noAplicaTecnico"
+                                            :disabled="noAplicaTecnico || evaluacionPasada"
                                             v-model="puntajeTecnico"
                                     >
                                     </vue-slider>
@@ -44,8 +44,15 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="noAplicaTecnico" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
-                                    <input type="checkbox" id="noAplicaTecnico" :value="1" v-model="noAplicaTecnico">
+                                    <label for="noAplicaTecnico" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
+                                        No Aplica / No tengo opinión
+                                    </label>
+                                    <input
+                                            type="checkbox"
+                                            id="noAplicaTecnico"
+                                            :value="1"
+                                            v-model="noAplicaTecnico"
+                                    >
                                 </div>
                             </div>
 
@@ -61,7 +68,7 @@
                                             :piecewise=true
                                             ref="sliderSocial"
                                             id="sliderSocial"
-                                            :disabled="noAplicaSocial"
+                                            :disabled="noAplicaSocial || evaluacionPasada"
                                             v-model="puntajeSocial"
                                     >
                                     </vue-slider>
@@ -70,8 +77,15 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="noAplicaSocial" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
-                                    <input type="checkbox" id="noAplicaSocial" :value="1" v-model="noAplicaSocial">
+                                    <label for="noAplicaSocial" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
+                                        No Aplica / No tengo opinión
+                                    </label>
+                                    <input
+                                            type="checkbox"
+                                            id="noAplicaSocial"
+                                            :value="1"
+                                            v-model="noAplicaSocial"
+                                    >
                                 </div>
                             </div>
 
@@ -85,6 +99,7 @@
                                     rows="5"
                                     class="form-control"
                                     v-model="comentario"
+                                    :disabled="evaluacionPasada"
                             >{{ comentario }}</textarea>
                         </div>
 
@@ -193,4 +208,9 @@
     .red {
         color: red;
     }
+
+    .gris {
+        color: #8F8F8F;
+    }
+
 </style>
