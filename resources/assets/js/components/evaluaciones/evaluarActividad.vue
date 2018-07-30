@@ -1,11 +1,13 @@
 <template>
     <div class="col-md-8">
         <h4>Evalúa la actividad</h4>
-        <p class="text-muted">Este es un texto en donde se explica cuál es la importancia de evaluar la actividad</p>
+        <p class="text-muted">
+            Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.
+        </p>
         <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
                 <div class="card-header accordion" id="headingOne">
-                    <span class="mb-0">
+                    <div class="mb-0">
                         <h6
                                 data-toggle="collapse"
                                 data-target="#cardEvaluacion"
@@ -17,10 +19,10 @@
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
-                    </span>
+                    </div>
                 </div>
 
-                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
+                <div id="cardEvaluacion" class="collapse" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-7">
@@ -32,7 +34,7 @@
                                             :interval=1
                                             ref="slider"
                                             id="slider"
-                                            :disabled="noAplica"
+                                            :disabled="noAplica || evaluacionPasada"
                                             :piecewise=true
                                             v-model="puntaje"
                                     >
@@ -42,8 +44,10 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="noAplica" style="margin-right: 2em; margin-top: 2em">No Aplica / No tengo opinión </label>
-                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica">
+                                    <label for="noAplica" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
+                                        No Aplica / No tengo opinión
+                                    </label>
+                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica" :disabled="evaluacionPasada">
                                 </div>
                             </div>
 
@@ -57,6 +61,7 @@
                                     rows="5"
                                     class="form-control"
                                     v-model="comentario"
+                                    :disabled="evaluacionPasada"
                             >{{ comentario }}</textarea>
                         </div>
                         <button
@@ -152,5 +157,9 @@
 
     .red {
         color: red;
+    }
+
+    .gris {
+        color: #8F8F8F;
     }
 </style>

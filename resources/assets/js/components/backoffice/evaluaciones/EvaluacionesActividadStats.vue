@@ -1,8 +1,11 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h4>Personas que evaluaron</h4>
+            </div>
+            <div class="col-md-6">
+                <h4 class="text-center">Porcentaje de evaluaciones</h4>
             </div>
         </div>
         <div class="row">
@@ -24,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 text-center">
                 <!--grafico knob-->
                 <knob :valor="porcentajeEvaluaciones"
                       :simbolo="'%'"
