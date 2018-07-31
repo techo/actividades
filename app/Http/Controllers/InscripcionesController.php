@@ -59,7 +59,7 @@ class InscripcionesController extends Controller
                 $inscripcion->fechaInscripcion = new Carbon();
                 $inscripcion->save();
 
-                $grupoRaiz = Grupo::where('idActividad',$id)->where('idPadre', 0)->first();
+                /*$grupoRaiz = Grupo::where('idActividad',$id)->where('idPadre', 0)->first();
                 $arr = [
                     'idPersona' => (int)$persona->idPersona,
                     'idGrupo' => (int) $grupoRaiz->idGrupo,
@@ -67,10 +67,14 @@ class InscripcionesController extends Controller
                     'rol' => ''
                 ];
 
-                GrupoRolPersona::create($arr);
+                GrupoRolPersona::create($arr);*/
+                $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
 
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
-                return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+                //return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+            }
+            if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+                return view('inscripciones.pagar')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
             }
             return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }

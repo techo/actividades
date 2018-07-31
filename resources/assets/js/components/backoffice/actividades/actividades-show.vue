@@ -1,5 +1,5 @@
 <template>
-<span>
+<div>
     <div v-show="guardado" class="callout callout-success">
         <h4>{{ mensajeGuardado }}</h4>
     </div>
@@ -125,6 +125,24 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasInscripcion }}</p>
+                        <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
+                                          :start-date=this.dataActividad.fechaInicioInscripciones
+                                          :end-date=this.dataActividad.fechaFinInscripciones
+                                          :max-date="20350101"
+                                          min-date="01-01-2018"
+                                          opens="left"
+                                          drops="up"
+                                          :input="'fechaInscripciones'"
+                                          name="fechaInscripciones"
+                                          id="fechaInscripciones"
+                        ></daterange-picker>
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
@@ -268,7 +286,7 @@
         <!-- /.box-header -->
     <div class="box-body">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
                     <label for="limiteInscripciones">Límite de voluntarios (0 = Sin Límite)</label>
                     <input id="limiteInscripciones"
@@ -281,9 +299,9 @@
 
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
-                    <label>Estado de las inscripciones</label>
+                    <label>Estado de las inscripciones</label><br>
                     <div class="btn-group" role="group" aria-label="Estado de la Inscripción">
                         <button
                                 type="button"
@@ -304,34 +322,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
-                    <br>
-                    <p v-if="readonly">{{ this.fechasInscripcion }}</p>
-                    <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
-                                       :start-date=this.dataActividad.fechaInicioInscripciones
-                                       :end-date=this.dataActividad.fechaFinInscripciones
-                                       :max-date="20350101"
-                                       min-date="01-01-2018"
-                                       opens="left"
-                                       drops="up"
-                                       :input="'fechaInscripciones'"
-                                       name="fechaInscripciones"
-                                       id="fechaInscripciones"
-                    ></daterange-picker>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
+            <!--</div>
+        <div class="row">-->
+            <div class="col-md-8">
                 <div class="form-group">
                     <label for="mensajeInscripcion">Mensaje De Inscripción</label>
+                    <span class="text-muted pull-right">Este texto se incluirá en el correo de bienvenida a la actividad.</span>
                     <textarea
                             name="mensajeInscripcion"
                             id="mensajeInscripcion"
                             cols="30"
-                            rows="3"
+                            rows="4"
                             class="form-control"
                             :disabled="readonly"
                             v-model="dataActividad.mensajeInscripcion"
@@ -363,7 +364,18 @@
                         >
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="beca">Formulario de solicitud de beca</label>
+                        <input id="beca" name="beca"
+                               type="url"
+                               class="form-control"
+                               v-bind:disabled="readonly"
+                               v-model="dataActividad.beca"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="linkPago">Link de Pago</label>
                         <input
@@ -380,7 +392,7 @@
         </div>
             <!-- /.box-body -->
     </div>
-    </span>
+    </div>
 
 </template>
 
@@ -701,9 +713,9 @@
                     ],
                     relative_urls: false,
                     file_browser_callback : function(field_name, url, type, win) {
-                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
-                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        let y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        let cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
                         if (type == 'image') {
                             cmsURL = cmsURL + "&type=Images";
                         } else {
@@ -741,9 +753,9 @@
                     toolbar: false,
                     relative_urls: false,
                     file_browser_callback : function(field_name, url, type, win) {
-                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
-                        var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+                        let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                        let y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                        let cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
                         if (type == 'image') {
                             cmsURL = cmsURL + "&type=Images";
                         } else {
@@ -812,7 +824,7 @@
             },
 */
             findObjectByKey(array, key, value) {
-                for (var i = 0; i < array.length; i++) {
+                for (let i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {
                         return {
                             'obj': array[i],
