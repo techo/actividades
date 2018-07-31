@@ -257,5 +257,9 @@ class PaisesSeeder extends Seeder
                             (239, 'Zambia'),
                             (240, 'Zimbabue');
                         ");
+
+        DB::table('atl_provincias')
+            ->where('id_Pais', 1)
+            ->update(['id_Pais' => 13]);
     }
 }
