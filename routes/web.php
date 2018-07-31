@@ -160,3 +160,8 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
 });
 
+Route::prefix('/pagos/')->group(function() {
+    Route::get('{idInscripcion}/response', 'PagosController@response');
+    Route::post('/confirmation', 'PagosController@confirmation');
+});
+

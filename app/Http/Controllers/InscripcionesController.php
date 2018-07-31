@@ -58,23 +58,18 @@ class InscripcionesController extends Controller
                 $inscripcion->estado = 'Sin Contactar';
                 $inscripcion->fechaInscripcion = new Carbon();
                 $inscripcion->save();
-
-                /*$grupoRaiz = Grupo::where('idActividad',$id)->where('idPadre', 0)->first();
-                $arr = [
-                    'idPersona' => (int)$persona->idPersona,
-                    'idGrupo' => (int) $grupoRaiz->idGrupo,
-                    'idActividad' => (int) $id,
-                    'rol' => ''
-                ];
-
-                GrupoRolPersona::create($arr);*/
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
 
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
-                //return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
             }
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
-                return view('inscripciones.pagar')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+                $referenceCode = $actividad->idActividad . '|' . auth()->user()->idPersona . '|' . $inscripcion->idInscripcion . '|' . rand(1,10000);
+                $signature = md5('4Vj8eK4rloUd272L48hsrarnUA~508029~' . $referenceCode . '~' . $actividad->costo . '~ARS');
+                return view('inscripciones.pagar')
+                    ->with('actividad', $actividad)
+                    ->with('punto_encuentro', $punto_encuentro)
+                    ->with('referenceCode', $referenceCode)
+                    ->with('signature', $signature);
             }
             return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
         }

@@ -50,7 +50,7 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-md-4">
-            <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Confirmar con tu donación</a>
+            @include('pagos.payu')
             <br>
             <span class="text-muted techo-small-text">Al hacer clic se te redirigirá a la plataforma de pago</span>
         </div>
