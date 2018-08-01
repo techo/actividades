@@ -63,7 +63,10 @@ class InscripcionesController extends Controller
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             }
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
-                $referenceCode = $actividad->idActividad . '|' . auth()->user()->idPersona . '|' . $inscripcion->idInscripcion . '|' . rand(1,10000);
+                $paymentClass = 'App\\Payments\\' . $inscripcion->pais->medio_pago;
+                $payment = new $paymentClass($request);
+
+                $referenceCode =
                 $signature = md5('4Vj8eK4rloUd272L48hsrarnUA~508029~' . $referenceCode . '~' . $actividad->costo . '~ARS');
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)

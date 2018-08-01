@@ -1,4 +1,5 @@
 {{--http://developers.payulatam.com/es/web_checkout/integration.html--}}
+{{  }}
 <form method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
     <input name="merchantId"    type="hidden"  value="508029"   >
     <input name="referenceCode" type="hidden"  value="{{ $referenceCode}}" >

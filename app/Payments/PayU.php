@@ -38,4 +38,9 @@ class PayU implements PaymentGateway
     {
         return config('payments.payu.messages.' . $this->request->lapResponseCode);
     }
+
+    public function signature()
+    {
+        $this->actividad->idActividad . '|' . auth()->user()->idPersona . '|' . $this->inscripcion->idInscripcion . '|' . rand(1,10000);
+    }
 }

@@ -15,7 +15,7 @@ class PagosController extends Controller
         $inscripcion = Inscripcion::findOrFail($idInscripcion)
             ->with(['pais', 'actividad']);
 
-        $paymentClass = 'App\\Payments\\' . $inscripcion->pais->medioDePago;
+        $paymentClass = 'App\\Payments\\' . $inscripcion->pais->medio_pago;
         $payment = new $paymentClass($request);
         if ($payment->success) {
             return view('inscripciones.gracias');
