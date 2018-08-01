@@ -19,4 +19,6 @@ before_script:
   - php artisan config:clear
   - npm run prod
   - composer require --dev phpcq/all-tasks
+
+after_script:
   - vendor/bin/phpcpd ./app
