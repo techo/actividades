@@ -49,7 +49,7 @@ Route::prefix('ajax')->group(function () {
 
 // Registracion
 Route::get('/registro', function (Request $request) {
-    $request = request();
+    //$request = request();
     if (url('/registro') != $request->headers->get('referer')) $request->session()->put('login_callback', $request->headers->get('referer'));
     return view('registro');
 })->middleware('guest');
@@ -88,6 +88,7 @@ Route::get('/actividades/{id}', 'ActividadesController@show');
 
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');
+    Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
     Route::post('/gracias', 'InscripcionesController@create');
     Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
@@ -162,6 +163,6 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
 
 Route::prefix('/pagos/')->group(function() {
     Route::get('{idInscripcion}/response', 'PagosController@response');
-    Route::post('/confirmation', 'PagosController@confirmation');
+    Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
 });
 

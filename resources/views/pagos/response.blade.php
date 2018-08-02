@@ -15,7 +15,7 @@
 @section('main_content')
     <h3>Hubo un problema</h3>
     <p>Hubo un problema con el pago:</p>
-    <p>{{ $payment->message }}</p>
+    <p>{{ $payment->message() }}</p>
 @endsection
 
 @section('additional_scripts')

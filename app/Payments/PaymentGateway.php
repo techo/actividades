@@ -17,4 +17,8 @@ interface PaymentGateway
 
     public function message();
 
+    public function url();
+
+    public function method();
+
 }

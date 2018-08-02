@@ -137,8 +137,10 @@ code {
 }
 
 .fixed-bottom .row {
+    /*
     background-color: #231837;
-    padding: 0.5em;
+
+    padding: 0.5em;*/
 }
 
 .footer {
@@ -322,7 +324,7 @@ a {
 footer.inscripcion-bar {
     background-color: #ffffff;
     height: 84px;
-    border: solid 1px #cecece;
+    border-top: solid 1px #cecece;
     padding-top: 20px;
     padding-left: 15px;
     padding-right: 15px;

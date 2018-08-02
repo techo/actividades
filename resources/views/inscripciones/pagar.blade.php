@@ -50,7 +50,7 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-md-4">
-            @include('pagos.payu')
+            @include('pagos.' . strtolower($actividad->pais->medio_pago))
             <br>
             <span class="text-muted techo-small-text">Al hacer clic se te redirigirá a la plataforma de pago</span>
         </div>

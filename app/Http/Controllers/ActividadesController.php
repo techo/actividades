@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
+use App\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Actividad;
@@ -59,7 +60,10 @@ class actividadesController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('localidad')->where('estadoConstruccion', 'Abierta')->findOrFail($id);
+
+        $actividad = Actividad::with('localidad')
+            ->where('estadoConstruccion', 'Abierta')
+            ->findOrFail($id);
 
         $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
 
@@ -67,7 +71,16 @@ class actividadesController extends Controller
 
         $hayCupos = (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0);
 
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00')) &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
+        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00'))
+                    &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
+
+        if (auth()->check() && auth()->user()->estaPreInscripto($id)) {
+            $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
+            $persona = Persona::find(auth()->user()->idPersona);
+            $inscripcion = $persona->inscripcionActividad($id);
+            $payment = new $paymentClass($inscripcion);
+            return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'payment'));
+        }
         return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
     }
 
