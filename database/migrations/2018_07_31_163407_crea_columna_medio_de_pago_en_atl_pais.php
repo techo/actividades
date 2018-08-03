@@ -13,9 +13,9 @@ class CreaColumnaMedioDePagoEnAtlPais extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('atl_pais', 'medio_pago')) {
+        if (!Schema::hasColumn('atl_pais', 'config_pago')) {
             Schema::table('atl_pais', function (Blueprint $table) {
-                $table->string('medio_pago')->nullable();
+                $table->text('config_pago')->nullable();
             });
         }
     }
@@ -28,7 +28,7 @@ class CreaColumnaMedioDePagoEnAtlPais extends Migration
     public function down()
     {
         Schema::table('atl_pais', function (Blueprint $table) {
-            $table->dropColumn('medio_pago');
+            $table->dropColumn('config_pago');
         });
     }
 }

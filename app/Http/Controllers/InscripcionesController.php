@@ -66,7 +66,8 @@ class InscripcionesController extends Controller
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
-                $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
+                $config = json_decode($actividad->pais->config_pago);
+                $paymentClass = 'App\\Payments\\' . $config->payment_class;
                 $payment = new $paymentClass($inscripcion);
 
                 return view('inscripciones.pagar')
@@ -114,7 +115,8 @@ class InscripcionesController extends Controller
         $actividad = Actividad::findOrFail($id);
         $inscripcion = auth()->user()->inscripcionActividad($id);
 
-        $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
+        $config = json_decode($actividad->pais->config_pago);
+        $paymentClass = 'App\\Payments\\' . $config->payment_class;
         $payment = new $paymentClass($inscripcion);
 
         return view('inscripciones.pagar')

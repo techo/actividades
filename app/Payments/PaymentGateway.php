@@ -9,6 +9,8 @@
 namespace App\Payments;
 
 
+use Illuminate\Http\Request;
+
 interface PaymentGateway
 {
     public function success();
@@ -20,5 +22,9 @@ interface PaymentGateway
     public function url();
 
     public function method();
+
+    public function setRequest(Request $request);
+
+    public function updateUserStatus();
 
 }

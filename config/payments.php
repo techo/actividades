@@ -31,7 +31,6 @@ return [
             'INACTIVE_PAYMENT_PROVIDER' => 'Error',
             'ERROR' => 'Error',
             'ERROR_CONVERTING_TRANSACTION_AMOUNTS' => 'Error',
-            'BANK_ACCOUNT_ACTIVATION_ERROR' => 'Error',
             'FIX_NOT_REQUIRED' => 'Error',
             'AUTOMATICALLY_FIXED_AND_SUCCESS_REVERSAL' => 'Error',
             'AUTOMATICALLY_FIXED_AND_UNSUCCESS_REVERSAL' => 'Error',

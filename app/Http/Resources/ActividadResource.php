@@ -31,8 +31,9 @@ class ActividadResource extends Resource
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'localidad'     => $this->localidad,
-            'inscriptos'    => $this->idPersonaInscriptos($this->idActividad),
-            'limiteInscripciones'       => $this->limiteInscripciones,
+            'inscriptos'    => $this->datosInscriptos($this->idActividad),
+//            'inscriptos'    => $this->idPersonaInscriptos($this->idActividad),
+            'limiteInscripciones'       => (int)$this->limiteInscripciones,
             'cantInscriptos' => $this->inscripciones()->inscripto()->count(),
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->inscripto()->count(),
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0

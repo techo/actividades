@@ -13,7 +13,8 @@ class PagosController extends Controller
         Log::info('Response: \n' . json_encode($request->all()));
         $inscripcion = Inscripcion::findOrFail($idInscripcion);
 
-        $paymentClass = 'App\\Payments\\' . $inscripcion->actividad->pais->medio_pago;
+        $config = json_decode($inscripcion->actividad->pais->config_pago);
+        $paymentClass = 'App\\Payments\\' . $config->payment_class;
         $payment = new $paymentClass($inscripcion);
         $payment->setRequest($request);
 
@@ -25,8 +26,15 @@ class PagosController extends Controller
 
     }
 
-    public function confirmation(Request $request)
+    public function confirmation(Request $request, $idInscripcion)
     {
         Log::info('Confirmación: \n' . json_encode($request->all()));
+
+        $inscripcion = Inscripcion::findOrFail($idInscripcion);
+        $config = json_decode($inscripcion->actividad->pais->config_pago);
+        $paymentClass = 'App\\Payments\\' . $config->payment_class;
+        $payment = new $paymentClass($inscripcion);
+        $payment->setRequest($request);
+        $payment->updateUserStatus();
     }
 }

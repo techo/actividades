@@ -3,6 +3,7 @@ namespace App\Payments;
 
 
 use App\Inscripcion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PayU implements PaymentGateway
@@ -15,7 +16,6 @@ class PayU implements PaymentGateway
 
     public function __construct(Inscripcion $inscripcion)
     {
-//        $this->request = null;
         $this->inscripcion = $inscripcion;
         $this->actividad = $this->inscripcion->actividad;
         $this->persona = $this->inscripcion->persona;
@@ -52,8 +52,11 @@ class PayU implements PaymentGateway
 
     public function signature()
     {
-        return md5(env('PAYU_APIKEY') . '~' .
-            env('PAYU_MERCHANT_ID') . '~' .
+        $pais = $this->actividad->pais;
+        $config = json_decode($pais->config_pago);
+
+        return md5($config->api_key . '~' .
+            $config->merchant_id . '~' .
             $this->referenceCode() . '~' .
             $this->actividad->costo . '~' .
             $this->actividad->moneda);
@@ -61,12 +64,12 @@ class PayU implements PaymentGateway
 
     public function referenceCode()
     {
-        return $this->actividad->idActividad .
-            '|' .
-            auth()->user()->idPersona .
-            '|' .
-            $this->inscripcion->idInscripcion .  '|' .
-            $this->random;
+        return $this->actividad->tipo->nombre . '-Voluntario-'
+            . auth()->user()->dni . '-'
+            . $this->actividad->nombreActividad . '-'
+            . $this->actividad->idActividad . '~|'
+            . $this->inscripcion->idInscripcion .  '-'
+            . $this->random;
 
     }
 
@@ -83,5 +86,18 @@ class PayU implements PaymentGateway
     public function setRequest(Request $request)
     {
         $this->request = $request;
+    }
+
+    public function updateUserStatus()
+    {
+        $mySignature = $this->signature();
+        if ($this->request->polTransactionState === '4' && $mySignature === $this->request->signature) {
+            $this->inscripcion->pago = 1;
+            $this->montoPago = $this->request->TX_VALUE;
+            $this->moneda = $this->request->currency;
+            $this->fechaPago = Carbon::now();
+            $this->inscripcion->save();
+        }
+        return false;
     }
 }
