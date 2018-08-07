@@ -48,4 +48,5 @@ interface PaymentGateway
      */
     public function updateUserStatus();
 
+    public function config();
 }

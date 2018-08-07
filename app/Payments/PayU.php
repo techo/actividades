@@ -72,8 +72,7 @@ class PayU implements PaymentGateway
      */
     public function signature()
     {
-        $pais = $this->actividad->pais;
-        $config = json_decode($pais->config_pago);
+        $config = $this->config();
 
         return md5($config->api_key . '~' .
             $config->merchant_id . '~' .
@@ -142,5 +141,10 @@ class PayU implements PaymentGateway
             return $this->inscripcion->save();
         }
         return false;
+    }
+
+    public function config()
+    {
+        return json_decode($this->actividad->pais->config_pago);
     }
 }
