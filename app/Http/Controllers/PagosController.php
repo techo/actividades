@@ -11,7 +11,9 @@ class PagosController extends Controller
     public function response(Request $request, $idInscripcion)
     {
         Log::info('Response: \n' . json_encode($request->all()));
-        $inscripcion = Inscripcion::findOrFail($idInscripcion);
+        $inscripcion = Inscripcion::where('idInscripcion', $idInscripcion)
+            ->with(['punto_encuentro'])
+            ->first();
 
         $config = json_decode($inscripcion->actividad->pais->config_pago);
         $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -19,9 +21,9 @@ class PagosController extends Controller
         $payment->setRequest($request);
 
         if ($payment->success()) {
-            return view('inscripciones.gracias')
-                ->with('actividad', $payment->actividad);
+            return view('inscripciones.pagada', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);
         }
+
         return view('pagos.response')->with('payment', $payment);
 
     }

@@ -59,7 +59,7 @@ class InscripcionesController extends Controller
                 $inscripcion->estado = 'Sin Contactar';
 
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
-
+                $inscripcion->save();
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             }
 
@@ -74,8 +74,6 @@ class InscripcionesController extends Controller
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
-
-            $inscripcion->save();
 
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);

@@ -348,7 +348,7 @@
                     result = false;
                 }
 
-                if (this.horario === '') {
+                if (this.objHora.HH === '' || this.objHora.mm === '') {
                     this.validationErrors.horario = true;
                     result = false;
                 }

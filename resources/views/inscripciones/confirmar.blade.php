@@ -44,6 +44,8 @@
                         <div class="col-md-12">
                             <h5 class="card-title">Costo de la contrucción: ${{$actividad->costo}} Pesos</h5>
                             <p>Recordá que esta actividad tiene costo. Te enviaremos un email con el link de pago para que puedas completar tu inscripción!</p>
+                            <p>También puedes solicitar una BECA o un solicitar una PRORROGA, después de confirmar tu
+                            pre-inscripción.</p>
                         </div>
                     </div>
                 @endif
