@@ -46,7 +46,7 @@ class InscripcionesController extends Controller
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
         $persona = Auth::user();
-        if($request->has('aceptar_terminos') && $request->aceptar_terminos == 1){
+        if (($request->has('aceptar_terminos') && $request->aceptar_terminos == 1)) {
             $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
             if (!$inscripcion) {
                 $inscripcion = new Inscripcion();
@@ -55,24 +55,28 @@ class InscripcionesController extends Controller
                 $inscripcion->idPersona = Auth::user()->idPersona;
                 $inscripcion->evaluacion = 0;
                 $inscripcion->acompanante = '';
-                $inscripcion->estado = 'Sin Contactar';
                 $inscripcion->fechaInscripcion = new Carbon();
+                $inscripcion->estado = 'Sin Contactar';
+
+                $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
                 $inscripcion->save();
-
-                $grupoRaiz = Grupo::where('idActividad',$id)->where('idPadre', 0)->first();
-                $arr = [
-                    'idPersona' => (int)$persona->idPersona,
-                    'idGrupo' => (int) $grupoRaiz->idGrupo,
-                    'idActividad' => (int) $id,
-                    'rol' => ''
-                ];
-
-                GrupoRolPersona::create($arr);
-
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
-                return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
             }
-            return view('inscripciones.gracias')->with('actividad', $actividad)->with('punto_encuentro', $punto_encuentro);
+
+            if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+                $inscripcion->estado = 'Pre-Inscripto';
+                $inscripcion->save();
+                $config = json_decode($actividad->pais->config_pago);
+                $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                $payment = new $paymentClass($inscripcion);
+
+                return view('inscripciones.pagar')
+                    ->with('actividad', $actividad)
+                    ->with('payment', $payment);
+            }
+
+            return view('inscripciones.gracias')
+                ->with('actividad', $actividad);
         }
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
         return view('inscripciones.confirmar')
@@ -104,6 +108,32 @@ class InscripcionesController extends Controller
         return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
     }
 
+    public function confirmarDonacion($id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $inscripcion = auth()->user()->inscripcionActividad($id);
+
+        $config = json_decode($actividad->pais->config_pago);
+        $paymentClass = 'App\\Payments\\' . $config->payment_class;
+        $payment = new $paymentClass($inscripcion);
+
+        return view('inscripciones.pagar')
+            ->with('actividad', $actividad)
+            ->with('payment', $payment);
+
+    }
+
+/*    public function donar(Request $request, $id)
+    {
+        $inscripcion = auth()->user()->InscripcionActividad($id);
+        $actividad = Actividad::findOrFail($id);
+        $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
+        $payment = new $paymentClass($request, $inscripcion);
+        return view('inscripciones.pagar')
+            ->with('actividad', $actividad)
+            ->with('payment', $payment);
+
+    }*/
     /**
      * @param Actividad $idActividad
      * @param int $idPersona

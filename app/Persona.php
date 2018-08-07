@@ -67,6 +67,10 @@ class Persona extends Authenticatable
         return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count();
     }
 
+    public function estaPreInscripto($idActividad) {
+        return $this->inscripciones->where('idActividad',$idActividad)->where('estado','Pre-Inscripto')->count();
+    }
+
     public function noEstaInscripto($idActividad) {
         return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count() == 0;
     }
@@ -86,10 +90,11 @@ class Persona extends Authenticatable
         return $this->mail;
     }
 
-    public function getYaEvaluadaAttributte($idActividad)
+    public function inscripcionActividad($idActividad)
     {
-        return EvaluacionPersona::where('idActividad', '=', $idActividad)
-            ->where('idEvaluador', '=', auth()->user()->idPersona)
-            ->get();
+        return Inscripcion::where('idActividad', $idActividad)
+            ->where('idPersona', auth()->user()->idPersona)
+            ->where('estado', '<>', 'Desinscripto')
+            ->first();
     }
 }

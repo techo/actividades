@@ -129,13 +129,18 @@ code {
     text-decoration: none;
 }
 
+.techo-small-text {
+    font-size: smaller;
+}
 .card-body h5 {
     font-weight: bolder;
 }
 
 .fixed-bottom .row {
+    /*
     background-color: #231837;
-    padding: 0.5em;
+
+    padding: 0.5em;*/
 }
 
 .footer {
@@ -294,7 +299,7 @@ a {
 }
 
 .techo-hero.actividades {
-    background: url(/img/hero-slim.jpg);
+    background: url('/img/hero-slim.jpg');
     background-size: cover;
     height: 210px;
     padding-top: 8vh;
@@ -319,7 +324,7 @@ a {
 footer.inscripcion-bar {
     background-color: #ffffff;
     height: 84px;
-    border: solid 1px #cecece;
+    border-top: solid 1px #cecece;
     padding-top: 20px;
     padding-left: 15px;
     padding-right: 15px;

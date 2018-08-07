@@ -15,7 +15,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Inscripción confirmada!</h1>
+            <h1 class="card-subtitle">¡Participación confirmada!</h1>
         </div>
         <hr>
     </div>
@@ -23,7 +23,7 @@
         <div class="col-md-8">
             <h3 class="card-title">
                 <br>
-                Ya estás inscripto a
+                Con esta donación, ya confirmaste tu participación en
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
@@ -33,9 +33,24 @@
     <div class="row justify-content-start">
         <div class="col-md-8">
             <p>
-                Te enviamos un mail con más información sobre esta actividad.
-                Entra al panel de usuario para ver las actividades a las que estás inscripto y modificarlas.
+                Te recordamos algunos datos importantes:
             </p>
+            <p>
+                <strong>Punto de Encuentro: </strong><br>
+                {{ $inscripcion->punto_encuentro->punto }}, {{ \Carbon\Carbon::parse($inscripcion->punto_encuentro->horario)->format('H:i') }} hs
+            </p>
+            <p>Este punto está coordinado por {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
+                (<a href="mailto:{{$inscripcion->punto_encuentro->responsable->mail}}">
+                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), puedes
+                comunicarte si tienes alguna duda o pregunta sobre el sitio de reunión.
+            </p>
+            <p>La actividad se realizará en {{ $actividad->localidad->localidad }},
+                {{ $actividad->provincia->provincia }},
+                {{ $actividad->pais->nombre }}
+            </p>
+            <p>Comienzo: {{ $actividad->fechaInicio->format('d/m/Y H:i') }}</p>
+            <p>Fin: {{ $actividad->fechaFin->format('d/m/Y H:i') }}</p>
+            <p class="h3">¡Te esperamos!</p>
         </div>
     </div>
     <div class="row justify-content-start">

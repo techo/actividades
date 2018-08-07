@@ -299,7 +299,8 @@ class ActividadesController extends Controller
             'costo.*' =>
                 'Debe especificar el costo de participar en la construcción',
             'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
-             posterior al final de la actividad'
+                posterior al final de la actividad',
+            'beca.url' => 'El enlace al formulario de solicitud de beca debe ser una URL válida'
         ];
         $v = Validator::make(
             $request->all(),
@@ -330,9 +331,13 @@ class ActividadesController extends Controller
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
 
-        $v->sometimes('LinkPago', 'url', function ($request) {
+        $v->sometimes('beca', 'url', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);
+        });
+
+/*        $v->sometimes('LinkPago', 'url', function ($request) {
+            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);*/
 
         return $v;
     }

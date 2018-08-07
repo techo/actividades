@@ -348,7 +348,7 @@
                     result = false;
                 }
 
-                if (this.horario === '') {
+                if (this.objHora.HH === '' || this.objHora.mm === '') {
                     this.validationErrors.horario = true;
                     result = false;
                 }
@@ -425,7 +425,7 @@
 
             },
             findObjectByKey(array, key, value) {
-                for (var i = 0; i < array.length; i++) {
+                for (let i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {
                         return {
                             'obj': array[i],
