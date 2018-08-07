@@ -53,7 +53,7 @@ class Actividad extends Model
         return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');
     }
 
-    public function getInscriptosAttribute()
+    public function inscriptos()
     {
        return Persona::whereIn('idPersona', $this->inscripciones->pluck('idPersona'))
            ->orderBy('nombres')
@@ -160,7 +160,7 @@ class Actividad extends Model
         return $this->LinkPago . "&numero=" .$this->idActividad;
     }
 
-    public function idPersonaInscriptos($idActividad)
+    public function datosInscriptos($idActividad)
     {
        $query = Actividad::newQuery();
 
@@ -168,9 +168,9 @@ class Actividad extends Model
            ->join('Persona', 'Inscripcion.idPersona', '=', 'Persona.idPersona')
            ->where('Actividad.idActividad', '=', $idActividad)
            ->where('Inscripcion.estado', '<>', 'Desinscripto' )
-           ->select('Persona.idPersona');
+           ->select(['Persona.idPersona', 'Inscripcion.estado']);
 
-       return $query->get()->pluck('idPersona')->toArray();
+       return $query->get()->toArray();
     }
 
     protected static function boot()

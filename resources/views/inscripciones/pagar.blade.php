@@ -50,7 +50,11 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-md-4">
-            <a href="#" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> Confirmar con tu donación</a>
+            @php
+                $config = json_decode($actividad->pais->config_pago);
+                $form = strtolower($config->payment_class)
+            @endphp
+            @include('pagos.' . $form)
             <br>
             <span class="text-muted techo-small-text">Al hacer clic se te redirigirá a la plataforma de pago</span>
         </div>

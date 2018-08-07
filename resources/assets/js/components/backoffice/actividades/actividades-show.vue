@@ -135,8 +135,8 @@
                                           :end-date=this.dataActividad.fechaFinInscripciones
                                           :max-date="20350101"
                                           min-date="01-01-2018"
-                                          opens="left"
-                                          drops="up"
+                                          opens="right"
+                                          drops="down"
                                           :input="'fechaInscripciones'"
                                           name="fechaInscripciones"
                                           id="fechaInscripciones"
@@ -322,8 +322,6 @@
                     </div>
                 </div>
             </div>
-            <!--</div>
-        <div class="row">-->
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="mensajeInscripcion">Mensaje De Inscripción</label>
@@ -361,6 +359,7 @@
                                class="form-control"
                                v-bind:disabled="readonly"
                                v-model="dataActividad.costo"
+                               min="1"
                         >
                     </div>
                 </div>
@@ -372,19 +371,6 @@
                                class="form-control"
                                v-bind:disabled="readonly"
                                v-model="dataActividad.beca"
-                        >
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="linkPago">Link de Pago</label>
-                        <input
-                                type="url"
-                                class="form-control"
-                                id="linkPago"
-                                name="linkPago"
-                                :disabled="readonly"
-                                v-model="dataActividad.LinkPago"
                         >
                     </div>
                 </div>
@@ -798,31 +784,6 @@
                         })
                     })
             },
-/*
-            clonar: function() {
-                this.mostrarLoadingAlert();
-                let url = '/admin/ajax/actividades/'+ this.dataActividad.idActividad +'/clonar';
-                let params = { idActividad: this.dataActividad.idActividad };
-                this.axiosPost(url, function(response, self) {
-                    if (response.idActividad) {
-                        window.location = '/admin/actividades/' + response.idActividad
-                    }
-                }, params,
-                    function (response, self) {
-                    // Si hay error
-                        self.ocultarLoadingAlert();
-                        self.$refs.loading.openSimplert({
-                            title: 'Algo salió mal',
-                            message: "<i class=\"fa fa-exclamation-triangle fa-4x\"></i> <br>" +
-                            "<p>Ocurrió un error al clonar la actividad.  Recarga la página e intentalo de nuevo o " +
-                            "repórtalo al administrador del sistema.</p>",
-                            isShown: true,
-                            disableOverlayClick: true,
-                            type: ''
-                        })
-                    })
-            },
-*/
             findObjectByKey(array, key, value) {
                 for (let i = 0; i < array.length; i++) {
                     if (array[i][key] === value) {

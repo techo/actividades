@@ -335,9 +335,9 @@ class ActividadesController extends Controller
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
 
-        $v->sometimes('LinkPago', 'url', function ($request) {
+/*        $v->sometimes('LinkPago', 'url', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);
+        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);*/
 
         return $v;
     }

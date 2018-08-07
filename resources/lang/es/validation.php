@@ -115,6 +115,5 @@ return [
 	'attributes' => [
         'username' => 'usuario',
         'password' => 'contraseña',
-        'LinkPago' => 'link de pago'
     ],
 ];

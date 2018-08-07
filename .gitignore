@@ -23,3 +23,5 @@ docker-compose.yml
 pilote.sql.tar
 web.dockerfile
 composer.lock
+/database/seeds/PayuArgentinaSeeder.php
+worker.log

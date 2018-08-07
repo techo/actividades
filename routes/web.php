@@ -88,6 +88,7 @@ Route::get('/actividades/{id}', 'ActividadesController@show');
 
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');
+    Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
     Route::post('/gracias', 'InscripcionesController@create');
     Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
@@ -160,3 +161,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
 });
 
+Route::prefix('/pagos/')->group(function() {
+    Route::get('{idInscripcion}/response', 'PagosController@response');
+    Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
+});
