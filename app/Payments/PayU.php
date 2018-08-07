@@ -12,7 +12,6 @@ class PayU implements PaymentGateway
     public $actividad;
     public $persona;
     public $inscripcion;
-    private $random; // testing
 
     /**
      * PayU constructor.
@@ -23,7 +22,6 @@ class PayU implements PaymentGateway
         $this->inscripcion = $inscripcion;
         $this->actividad = $this->inscripcion->actividad;
         $this->persona = $this->inscripcion->persona;
-        $this->random = rand(1,100000);
     }
 
     /**
@@ -92,9 +90,8 @@ class PayU implements PaymentGateway
         return $this->actividad->tipo->nombre . '-Voluntario-'
             . $this->persona->dni . '-'
             . $this->actividad->nombreActividad . '-'
-            . $this->actividad->idActividad . '~|'
-            . $this->inscripcion->idInscripcion .  '-'
-            . $this->random;
+            . $this->actividad->idActividad . '-'
+            . $this->inscripcion->idInscripcion;
 
     }
 

@@ -43,7 +43,7 @@ class UsuarioController extends BaseController
         return ['success' => true, 'params' => array_keys($rules)];
     }
 
-  public function create(Request $request) { dd('!');
+  public function create(Request $request) {
       $url = $request->session()->get('login_callback','');
       $this->validar($request,'create');
       $persona = new Persona();
