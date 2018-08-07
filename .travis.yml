@@ -15,4 +15,10 @@ before_script:
   - gunzip test_db.sql.gz
   - mysql -u root test < test_db.sql
   - php artisan migrate --seed
+  - php artisan key:generate
+  - php artisan config:clear
   - npm run prod
+  - composer require --dev phpcq/all-tasks
+
+after_script:
+  - vendor/bin/phpcpd ./app
