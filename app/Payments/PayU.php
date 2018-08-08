@@ -132,7 +132,7 @@ class PayU implements PaymentGateway
         if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
             Log::info('Confirmación: \n' . json_encode($this->request->all()));
             $this->inscripcion->pago = 1;
-            $this->inscripcion->montoPago = $this->request->TX_VALUE;
+            $this->inscripcion->montoPago = (float)$this->request->value;
             $this->inscripcion->estado = "Confirmado";
             $this->inscripcion->moneda = $this->request->currency;
             $this->inscripcion->fechaPago = Carbon::now();
