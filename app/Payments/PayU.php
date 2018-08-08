@@ -128,8 +128,7 @@ class PayU implements PaymentGateway
      */
     public function updateUserStatus()
     {
-        $mySignature = $this->signature();
-        if ($this->request->polTransactionState === '4' && $mySignature === $this->request->signature) {
+        if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
             $this->inscripcion->pago = 1;
             $this->montoPago = $this->request->TX_VALUE;
             $this->inscripcion->estado = "Confirmado";
