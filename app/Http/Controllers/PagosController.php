@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Inscripcion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class PagosController extends Controller
 {
     public function response(Request $request, $idInscripcion)
     {
-        Log::info('Response: \n' . json_encode($request->all()));
         $inscripcion = Inscripcion::where('idInscripcion', $idInscripcion)
             ->with(['punto_encuentro'])
             ->first();
