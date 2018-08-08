@@ -30,8 +30,6 @@ class PagosController extends Controller
 
     public function confirmation(Request $request, $idInscripcion)
     {
-        Log::info('Confirmación: \n' . json_encode($request->all()));
-
         $inscripcion = Inscripcion::findOrFail($idInscripcion);
         $config = json_decode($inscripcion->actividad->pais->config_pago);
         $paymentClass = 'App\\Payments\\' . $config->payment_class;

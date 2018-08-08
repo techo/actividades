@@ -5,6 +5,7 @@ namespace App\Payments;
 use App\Inscripcion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PayU implements PaymentGateway
 {
@@ -129,11 +130,12 @@ class PayU implements PaymentGateway
     public function updateUserStatus()
     {
         if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
+            Log::info('Confirmación: \n' . json_encode($this->request->all()));
             $this->inscripcion->pago = 1;
-            $this->montoPago = $this->request->TX_VALUE;
+            $this->inscripcion->montoPago = $this->request->TX_VALUE;
             $this->inscripcion->estado = "Confirmado";
-            $this->moneda = $this->request->currency;
-            $this->fechaPago = Carbon::now();
+            $this->inscripcion->moneda = $this->request->currency;
+            $this->inscripcion->fechaPago = Carbon::now();
             return $this->inscripcion->save();
         }
         return false;
