@@ -43,12 +43,12 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'provincia',
             'localidad',
             'fecha de inscripción',
+            'cantidad de actividades (según filtro previo)',
             'presente',
             'pago',
 //            'Costo De La Actividad',
             'estado',
             'punto de encuentro',
-            'cantidad de actividades (según filtro previo)',
             'grupo',
             'rol',
         ];
@@ -81,12 +81,12 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->pProvincia,
             $query->pLocalidad,
             Date::dateTimeToExcel(Carbon::parse($query->fechaInscripcion)),
+            $query->cantActividades,
             (is_null($query->presente) || $query->presente == 0) ? 'No' : 'Si',
             (is_null($query->pago) || $query->pago == 0) ? 'No' : 'Si',
 /*            $query->costo,*/
             $query->estado,
             $query->punto,
-            $query->cantActividades,
             $query->nombreGrupo,
             $query->nombreRol,
         ];
