@@ -12,10 +12,7 @@
                         style="width: 20em"
                 >
                 <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
-                <button class="btn" @click.prevent="resetFilter">Borrar</button>
-                <!--<button class="btn" @click.prevent="exportar">-->
-                    <!--<i class="glyphicon glyphicon-save-file"></i> Exportar a Excel-->
-                <!--</button>-->
+                <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
             </div>
             <grupos-toolbar
                     class="pull-right"

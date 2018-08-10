@@ -1,5 +1,5 @@
 <template>
-    <span>
+    <div>
         <div class="form-group">
             <button
                     type="button"
@@ -149,7 +149,7 @@
         </table>
 
         <p v-else class="text-muted text-center">No hay puntos de encuentro en esta actividad</p>
-    </span>
+    </div>
 </template>
 <script>
     import VueTimepicker from 'vue2-timepicker'
@@ -227,7 +227,7 @@
             },
 
             errorHorario: function () {
-                return (this.validationErrors.horario && this.horario === '')
+                return (this.validationErrors.horario || this.horario === '::00')
             },
 
             errorCoordinador: function () {
