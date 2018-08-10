@@ -97,7 +97,7 @@ class InscripcionesController extends BaseController
                 $grupoRol = new GrupoRolPersona();
                 $grupoRol->idPersona = $persona->idPersona;
                 $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = Actividad::find($idActividad)->grupos()->raiz()->idGrupo;
+                $grupoRol->idGrupo = Actividad::find($idActividad)->grupoRaiz->idGrupo;
                 $grupoRol->rol = $request->rol;
                 $grupoRol->save();
             }
@@ -250,6 +250,7 @@ class InscripcionesController extends BaseController
                         ->delete();
                     $counter = 0;
                     $errores = [];
+                    $actividad = Actividad::find($id);
                     foreach($data as $inscripcion){
                         $errorEnRegistro = false;
                         $counter++;
@@ -261,7 +262,7 @@ class InscripcionesController extends BaseController
                         }
 
                         try {
-                            $punto = PuntoEncuentro::where('punto', $inscripcion['punto'])
+                            $punto = PuntoEncuentro::where('punto', $inscripcion['punto de encuentro'])
                                 ->where('idActividad', $id)
                                 ->firstOrFail();
                         } catch (ModelNotFoundException $e) {
@@ -281,39 +282,93 @@ class InscripcionesController extends BaseController
                                 $errorEnRegistro = true;
                             }
                         }
+
+                        if (!in_array(strtolower($inscripcion['presente']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna presente debe ser 'si' o 'no'.";
+                            $errorEnRegistro = true;
+                        }
+
+                        if (!in_array(strtolower($inscripcion['pago']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna pago debe ser 'si' o 'no'.";
+                            $errorEnRegistro = true;
+                        }
+
+                        $estadosValidos = ['sin contactar', 'sin interés', 'confirmado', 'sin confirmar'];
+                        if ($actividad->tipo->flujo === 'CONSTRUCCION') {
+                            array_push($estadosValidos, 'pre-inscripto');
+                        }
+
+                        if (!in_array(strtolower($inscripcion['estado']), $estadosValidos) ) {
+                            $errores[] = "Error en linea "
+                                . $counter
+                                . ". el valor de la columna estado debe ser "
+                                . implode(', ', $estadosValidos) . ".";
+                            $errorEnRegistro = true;
+                        }
+
                         if(!$errorEnRegistro) {
                             $inscripcionValida = [
                                 'idActividad' => $id,
                                 'idPersona' => $persona->idPersona,
                                 'idPuntoEncuentro' => $punto->idPuntoEncuentro,
-                                'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : 0,
-                                'rol' => $inscripcion['rol']
+                                'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : $actividad->grupoRaiz->idGrupo,
+                                'rol' => $inscripcion['rol'],
+                                'estado' => $inscripcion['estado'],
+                                'pago' => strtolower($inscripcion['pago']) ==='si' ? 1 : 0,
+                                'presente' => strtolower($inscripcion['presente']) ==='si' ? 1 : 0
                             ];
 
-                            if($persona->noEstaInscripto($id)) {
+                            $inscripcion = $persona->noEstaInscripto($id);
+                            if (!$inscripcion) {
 
                                 $inscripto = $this->inscribir($inscripcionValida);
 
                                 if ($inscripto) { //Enviar mail al voluntario
                                     Mail::to($persona->mail)->send(new MailConfimacionInscripcion($inscripto));
                                 } else {
-                                    $errores[] = "Error interno al inscribir a " . $persona->nombreCompleto . "(" . $persona->mail. ")";
+                                    $errores[] = "Error interno al inscribir a "
+                                        . $persona->nombreCompleto
+                                        . "("
+                                        . $persona->mail. ")";
                                 }
 
                                 $incluidoEnGrupo = $this->incluirEnGrupo($inscripcionValida);
 
-                                if(empty($incluidoEnGrupo)){
-                                    $errores[] = "Error interno al incluir a " . $persona->nombreCompleto . "(" . $persona->mail. ") en el grupo " . $inscripcion['grupo'];
-                                }
-                                if($inscripto && $incluidoEnGrupo) {
-                                    $procesados++;
+                                if (empty($incluidoEnGrupo)){
+                                    $errores[] = "Error interno al incluir a "
+                                        . $persona->nombreCompleto
+                                        . "("
+                                        . $persona->mail. ") en el grupo "
+                                        . $inscripcion['grupo'];
                                 }
 
                             } else {
-                                $errores[] = "Error en linea " . $counter . ". Voluntario ya inscripto a la actividad.";
+                                $inscripto = $inscripcion->update(
+                                    [
+                                        'pago'      => $inscripcionValida['pago'],
+                                        'estado'    => $inscripcionValida['estado'],
+                                        'presente'  => $inscripcionValida['presente'],
+                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro']
+                                    ]
+                                );
+
+                                $incluidoEnGrupo = GrupoRolPersona::where('idActividad', $id)
+                                    ->where('idPersona', $persona->idPersona)
+                                    ->update(
+                                        [
+                                            'idGrupo' => $inscripcionValida['idGrupo'],
+                                            'rol' => $inscripcionValida['rol']
+                                        ]
+                                    );
                             }
+
+                            if($inscripto && $incluidoEnGrupo) {
+                                $procesados++;
+                            }
+
                         }
                     } //end foreach
+
                     foreach ($errores as $error){
                         Log::create([
                             'idPersona' => auth()->user()->idPersona,

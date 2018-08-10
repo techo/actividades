@@ -5,7 +5,6 @@ namespace App;
 use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\EvaluacionActividad;
 
 class Actividad extends Model
 {
@@ -51,6 +50,11 @@ class Actividad extends Model
     public function grupos()
     {
         return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');
+    }
+
+    public function getGrupoRaizAttribute()
+    {
+        return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->first();
     }
 
     public function inscriptos()

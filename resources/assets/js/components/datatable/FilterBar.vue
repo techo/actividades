@@ -1,5 +1,5 @@
 <template>
-    <span class="filter-bar">
+    <div class="filter-bar">
         <form class="form-inline">
 
             <div class="form-group">
@@ -13,10 +13,10 @@
                         style="width: 35em"
                 >
                 <button class="btn btn-primary" @click.prevent="doFilter">Filtrar</button>
-                <button class="btn" @click.prevent="resetFilter">Borrar</button>
+                <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
             </div>
         </form>
-    </span>
+    </div>
 </template>
 
 <script>
