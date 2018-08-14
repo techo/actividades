@@ -457,7 +457,7 @@
             },
             fechasInscripcion: function () {
                 return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
-            }
+            },
         },
         filters: {
             estado: function (value) {
@@ -490,6 +490,7 @@
                 this.tipoSeleccionado = this.dataActividad.tipo !== undefined  ? this.dataActividad.tipo : null;
                 this.oficinaSeleccionada = this.dataActividad.oficina !== undefined  ? this.dataActividad.oficina : null;
                 this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+                store.commit('updateEsConstruccion', this.esConstruccion);
                 this.dataActividad.limiteInscripciones = this.dataActividad.limiteInscripciones !== null ?  this.dataActividad.limiteInscripciones : 0;
                 if (this.dataActividad.coordinador !== undefined) {
                     this.coordinadorSeleccionado =  this.dataActividad.coordinador;
@@ -586,6 +587,7 @@
                     this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
                     this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
                     this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
+                    store.commit('updateEsConstruccion', this.esConstruccion);
                 }
             },
             getOficinas() {

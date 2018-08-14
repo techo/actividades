@@ -284,7 +284,7 @@ return [
     'usuarios' => [
         'fields' => [
             [
-                'name' => 'idPersona',
+                'name' => 'id',
                 'sortField' => 'idPersona',
                 'visible' => false
             ],

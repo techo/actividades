@@ -30,6 +30,7 @@ import EvaluacionesActividadStats from './components/backoffice/evaluaciones/Eva
 import EvaluacionesVoluntariosStats from './components/backoffice/evaluaciones/EvaluacionesVoluntariosStats';
 import EvaluacionesActividadChart from './components/backoffice/evaluaciones/EvaluacionesActividadChart';
 import EvaluacionesVoluntariosChart from './components/backoffice/evaluaciones/EvaluacionesVoluntariosChart';
+import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -58,6 +59,7 @@ Vue.component('evaluaciones-actividad-stats', EvaluacionesActividadStats);
 Vue.component('evaluaciones-voluntarios-stats', EvaluacionesVoluntariosStats);
 Vue.component('evaluaciones-actividad-chart', EvaluacionesActividadChart);
 Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
+Vue.component('usuario-form', UsuariosForm);
 
 window.Event = new Vue();
 

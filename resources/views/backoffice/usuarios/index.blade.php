@@ -5,9 +5,8 @@
 @section('add-new')
 
     <span class="pull-right">
-        <a href="" class="btn btn-primary btn-lg">
-            {{--href="/admin/usuarios/crear"--}}
-            <i class="fa fa-plus"></i> Nuevo Usuario
+        <a href="/admin/usuarios/registrar" class="btn btn-primary btn-lg">
+            <i class="fa fa-plus"></i> Registrar Usuario
         </a>
     </span>
 @endsection
