@@ -64,8 +64,6 @@ class InscripcionesController extends Controller
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
-                $actividad->costo = $request->costo;
-                $actividad->save();
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
                 $config = json_decode($actividad->pais->config_pago);
