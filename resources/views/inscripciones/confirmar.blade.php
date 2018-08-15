@@ -32,20 +32,35 @@
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <div class="row">
-                    <div class="col-md-6">
-                        {{ $punto_encuentro->punto }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('h:m') }}
+                    <div class="col-md-12">
+                        <p class="h4">
+                            {{ $punto_encuentro->punto }}{{', '. $punto_encuentro->localidad->localidad . ', ' . $punto_encuentro->provincia->provincia }}
+                            a las
+                            {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:m') }}
+                        </p>
                     </div>
                 </div>
                 @if($tipo->flujo == "CONSTRUCCION")
                     <div class="row">
                         <div class="col-md-12">
-                            <h5 class="card-title">Costo de la contrucción: ${{$actividad->costo}} Pesos</h5>
-                            <p>Recordá que esta actividad tiene costo. Te enviaremos un email con el link de pago para que puedas completar tu inscripción!</p>
+                            <p>Recordá que esta actividad tiene costo. Te enviaremos un email con el link de pago para
+                                que puedas completar tu inscripción o puedes pagar en línea al final de esta pre-inscripción.</p>
                             <p>También puedes solicitar una BECA o un solicitar una PRORROGA, después de confirmar tu
                             pre-inscripción.</p>
+                            @if ($actividad->montoMax === '0.00')
+                                <h5>Donación sugerida: ${{$actividad->moneda}}{{$actividad->montoMin}}</h5>
+                            @else
+                                <h5>Donación sugerida: Entre ${{$actividad->moneda}}{{$actividad->montoMin}}
+                                y ${{$actividad->moneda}}{{$actividad->montoMax}} </h5>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p style="padding-top: 0.5em">¿Cuánto quieres donar?</p>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto" required>
                         </div>
                     </div>
                 @endif

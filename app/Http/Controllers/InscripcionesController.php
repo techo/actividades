@@ -64,12 +64,14 @@ class InscripcionesController extends Controller
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+                $actividad->costo = $request->costo;
+                $actividad->save();
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
                 $config = json_decode($actividad->pais->config_pago);
                 $paymentClass = 'App\\Payments\\' . $config->payment_class;
                 $payment = new $paymentClass($inscripcion);
-
+                $payment->setMonto($request->monto);
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
@@ -123,17 +125,6 @@ class InscripcionesController extends Controller
 
     }
 
-/*    public function donar(Request $request, $id)
-    {
-        $inscripcion = auth()->user()->InscripcionActividad($id);
-        $actividad = Actividad::findOrFail($id);
-        $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
-        $payment = new $paymentClass($request, $inscripcion);
-        return view('inscripciones.pagar')
-            ->with('actividad', $actividad)
-            ->with('payment', $payment);
-
-    }*/
     /**
      * @param Actividad $idActividad
      * @param int $idPersona

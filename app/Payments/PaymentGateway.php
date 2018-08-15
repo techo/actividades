@@ -42,6 +42,8 @@ interface PaymentGateway
      */
     public function setRequest(Request $request);
 
+    public function setMonto($monto);
+
     /**
      * Actualiza el estatus de la inscripción en la DB
      * @return bool
