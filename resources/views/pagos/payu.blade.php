@@ -1,6 +1,6 @@
 {{--http://developers.payulatam.com/es/web_checkout/integration.html--}}
 @php
-    $config = $payment->config();
+    $config = $payment->getConfig();
 
 @endphp
 <form method="{{ $payment->method() }}" action="{{ $payment->url() }}">
