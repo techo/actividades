@@ -29,6 +29,8 @@ class UsuariosController extends Controller
         if(!empty($rol)){
             $rol = array_shift($rol);
             $rol['rol'] = $rol['name'];
+        } else {
+            $rol = null;
         }
         $arrUsuario = [
             'idUsuario' => $usuario->idPersona,
