@@ -290,8 +290,8 @@
                             self.dataProvincias = data;
                             self.provinciaSeleccionada = '';
                             self.localidadSeleccionada = '';
-                            self.usuario.provincia = {};
-                            self.usuario.localidad = {};
+                            self.usuario.provincia = null;
+                            self.usuario.localidad = null;
                         });
                 }
 
