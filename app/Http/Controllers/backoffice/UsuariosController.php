@@ -26,8 +26,10 @@ class UsuariosController extends Controller
     {
         $usuario = Persona::find($id);
         $rol = $usuario->roles->toArray();
-        $rol = array_shift($rol);
-        $rol['rol'] = $rol['name'];
+        if(!empty($rol)){
+            $rol = array_shift($rol);
+            $rol['rol'] = $rol['name'];
+        }
         $arrUsuario = [
             'idUsuario' => $usuario->idPersona,
             'email' => $usuario->mail,
