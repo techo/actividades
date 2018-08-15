@@ -13,7 +13,7 @@
             </button>
         </div>
         <div class="col-md-2">
-            <button class="btn btn-primary" v-show="readonly" @click="clonar">
+            <button class="btn btn-primary" v-show="readonly && canClonar" @click="clonar">
                 <i class="fa fa-clone"></i>
                 Clonar Actividad
             </button>
@@ -44,7 +44,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")

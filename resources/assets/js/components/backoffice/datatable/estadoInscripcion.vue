@@ -5,6 +5,7 @@
             <option value="Sin Confirmar">Sin Confirmar</option>
             <option value="Sin Interés">Sin Interés</option>
             <option value="Sin Contactar">Sin Contactar</option>
+            <option v-if="esConstruccion" value="Pre-Inscripto">Pre-inscripto</option>
         </select>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
     </span>
@@ -12,6 +13,7 @@
 
 <script>
     import axios from 'axios';
+    import store from '../stores/store';
     export default {
         name: "estadoInscripcion",
         props: {
@@ -28,6 +30,11 @@
                 estado: this.rowData.estado,
                 idInscripcion: this.rowData.id,
                 errorIcon: false,
+            }
+        },
+        computed: {
+            esConstruccion: function () {
+                return store.state.esConstruccion;
             }
         },
         methods: {

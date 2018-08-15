@@ -15,7 +15,7 @@ class UsuariosResource extends Resource
     public function toArray($request)
     {
         return [
-            'idPersona' => $this->idPersona,
+            'id' => $this->idPersona,
             'dni'       => $this->dni,
             'nombre'    => $this->nombres,
             'apellido'    => $this->apellidoPaterno,

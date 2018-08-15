@@ -261,5 +261,13 @@ class PaisesSeeder extends Seeder
         DB::table('atl_provincias')
             ->where('id_Pais', 1)
             ->update(['id_Pais' => 13]);
+
+        DB::table('Persona')
+            ->where('idPais', 1)
+            ->update(['idPais' => 13]);
+
+        DB::table('Persona')
+            ->where('idPaisResidencia', 1)
+            ->update(['idPaisResidencia' => 13]);
     }
 }

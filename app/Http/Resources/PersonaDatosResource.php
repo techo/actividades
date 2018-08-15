@@ -28,6 +28,6 @@ class PersonaDatosResource extends Resource
             'provincia' => $this->provincia->provincia ?? 'N/A',
             'localidad' => $this->localidad->localidad ?? 'N/A',
 
-        ];;
+        ];
     }
 }

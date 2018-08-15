@@ -10,8 +10,8 @@
             </div>
             <div class="pull-left info">
                 <p>{{ Auth::user()->nombreCompleto }}</p>
-                <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->getRoleNames()->first() }}</a>
+                <!-- Rol -->
+                <p class="small"><i class="fa fa-circle text-success"></i> {{ Auth::user()->getRoleNames()->first() }}</p>
             </div>
         </div>
 
@@ -58,6 +58,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver listado</a></li>
+                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">Registrar Usuario</a></li>
                     </ul>
                 </li>
             @endif

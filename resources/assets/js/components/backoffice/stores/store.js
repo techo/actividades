@@ -7,7 +7,8 @@ export default new Vuex.Store({
     state: {
         idActividad: null,
         presentes: 0,
-        inscriptos: 0
+        inscriptos: 0,
+        esConstruccion: false
     },
     mutations: {
         initIdActividad(state, id) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
         },
         updateInscriptos(state, valor){
             state.inscriptos = valor;
+        },
+        updateEsConstruccion(state, valor){
+            state.esConstruccion = valor;
         }
     },
     actions: {

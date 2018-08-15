@@ -193,6 +193,7 @@
                 ) ||
                 Auth::user()->hasRole('admin')
             )}}"
+            can-clonar="true"
     ></crud-footer>
 @endsection
 

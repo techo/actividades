@@ -97,4 +97,19 @@ class Persona extends Authenticatable
             ->where('estado', '<>', 'Desinscripto')
             ->first();
     }
+
+    public function pais()
+    {
+        return $this->hasOne(Pais::class, 'id', 'idPais');
+    }
+
+    public function provincia()
+    {
+        return $this->hasOne(Provincia::class, 'id', 'idProvincia');
+    }
+
+    public function localidad()
+    {
+        return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
+    }
 }
