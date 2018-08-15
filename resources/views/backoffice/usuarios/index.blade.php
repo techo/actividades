@@ -14,13 +14,13 @@
 @section('content')
     <div class="box">
         <div class="box-body  with-border">
-            <datatable
+            <usuarios-datatable
                     api-url="/admin/ajax/usuarios/"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
                     placeholder-text="Buscar por nombre, apellido o documento"
                     detail-url="/admin/usuarios/"
-            ></datatable>
+            ></usuarios-datatable>
         </div>
         <!-- /.box-body -->
     </div>

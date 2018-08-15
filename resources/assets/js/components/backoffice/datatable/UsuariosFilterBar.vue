@@ -13,10 +13,6 @@
                 >
                 <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
                 <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
-                <button class="btn btn-default" @click.prevent="exportar">
-                    <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
-                </button>
-
             </div>
         </form>
     </span>
@@ -24,7 +20,7 @@
 
 <script>
     export default {
-        name: "FilterBar",
+        name: "UsuariosFilterBar",
         props: ['placeholderText'],
         data() {
             return {
@@ -40,9 +36,6 @@
                 this.filterText = '';
                 this.$events.fire('filter-reset');
             },
-            exportar() {
-                location.href = location.href + '/exportar?filter=' + this.filterText
-            }
         }
     }
 </script>
