@@ -90,7 +90,6 @@ class PayU implements PaymentGateway
     {
 
         return $this->persona->dni . '-'
-            . $this->actividad->nombreActividad . '-'
             . $this->actividad->idActividad . '-'
             . $this->inscripcion->idInscripcion;
 

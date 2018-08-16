@@ -366,7 +366,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label for="montoMax">Monto máximo </label><span class="text-muted"> - Opcional</span>
+                        <label for="montoMax">Monto máximo </label>
                         <input id="montoMax" name="montoMax"
                                type="number"
                                class="form-control"
@@ -374,6 +374,7 @@
                                v-model="dataActividad.montoMax"
                                min="0"
                         >
+                        <span class="text-muted">Opcional</span>
                     </div>
                 </div>
                 <div class="col-md-4">

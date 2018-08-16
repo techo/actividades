@@ -48,10 +48,10 @@
                             <p>También puedes solicitar una BECA o un solicitar una PRORROGA, después de confirmar tu
                             pre-inscripción.</p>
                             @if ($actividad->montoMax === '0.00')
-                                <h5>Donación sugerida: ${{$actividad->moneda}}{{$actividad->montoMin}}</h5>
+                                <h5>Donación sugerida: ${{$actividad->moneda}}  {{$actividad->montoMin}}</h5>
                             @else
-                                <h5>Donación sugerida: Entre ${{$actividad->moneda}}{{$actividad->montoMin}}
-                                y ${{$actividad->moneda}}{{$actividad->montoMax}} </h5>
+                                <h5>Donación sugerida: Entre ${{$actividad->moneda}}  {{$actividad->montoMin}}
+                                y ${{$actividad->moneda}}  {{$actividad->montoMax}} </h5>
                             @endif
                         </div>
                     </div>
