@@ -60,7 +60,7 @@
                             <p style="padding-top: 0.5em">¿Cuánto quieres donar?</p>
                         </div>
                         <div class="col-md-6">
-                            <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto" required>
+                            <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto" min="1" required>
                         </div>
                     </div>
                 @endif

@@ -10,7 +10,7 @@ use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\MailConfimacionInscripcion;
 
 class InscripcionesController extends Controller
@@ -49,18 +49,7 @@ class InscripcionesController extends Controller
         if (($request->has('aceptar_terminos') && $request->aceptar_terminos == 1)) {
             $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
             if (!$inscripcion) {
-                $inscripcion = new Inscripcion();
-                $inscripcion->idActividad = $id;
-                $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
-                $inscripcion->idPersona = Auth::user()->idPersona;
-                $inscripcion->evaluacion = 0;
-                $inscripcion->acompanante = '';
-                $inscripcion->fechaInscripcion = new Carbon();
-                $inscripcion->estado = 'Sin Contactar';
-
-                $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
-                $inscripcion->save();
-                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+                $inscripcion = $this->crearInscripcion($request, $id, $actividad, $persona);
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
@@ -115,16 +104,17 @@ class InscripcionesController extends Controller
 
     public function confirmarDonacion($id)
     {
-        $actividad = Actividad::findOrFail($id);
-        $inscripcion = auth()->user()->inscripcionActividad($id);
-
-        $config = json_decode($actividad->pais->config_pago);
-        $paymentClass = 'App\\Payments\\' . $config->payment_class;
-        $payment = new $paymentClass($inscripcion);
-
-        return view('inscripciones.pagar')
+        $actividad = Actividad::find($id);
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->where('estado', 'Pre-inscripto')
+            ->first();
+        $punto_encuentro = PuntoEncuentro::find($inscripcion->idPuntoEncuentro);
+        return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
-            ->with('payment', $payment);
+            ->with('punto_encuentro', $punto_encuentro)
+            ->with('tipo', $actividad->tipo);
+
 
     }
 
@@ -150,6 +140,30 @@ class InscripcionesController extends Controller
         ];
 
         return GrupoRolPersona::create($arr);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param $actividad
+     * @param $persona
+     * @return Inscripcion
+     */
+    public function crearInscripcion(Request $request, $id, $actividad, $persona): Inscripcion
+    {
+        $inscripcion = new Inscripcion();
+        $inscripcion->idActividad = $id;
+        $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
+        $inscripcion->idPersona = $persona->idPersona;
+        $inscripcion->evaluacion = 0;
+        $inscripcion->acompanante = '';
+        $inscripcion->fechaInscripcion = new Carbon();
+        $inscripcion->estado = 'Sin Contactar';
+
+        $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
+        $inscripcion->save();
+        Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+        return $inscripcion;
     }
 
 }
