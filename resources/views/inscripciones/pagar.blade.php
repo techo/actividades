@@ -47,7 +47,7 @@
                 Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
                 Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
             </p>
-            <p><strong>Donarás ${{ $actividad->moneda }} {{ $payment->monto }}</strong></p>
+            <p><strong>Donarás ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
         </div>
     </div>
     <div class="row justify-content-start">
