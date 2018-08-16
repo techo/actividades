@@ -73,19 +73,21 @@ class UsuariosController extends Controller
             "nacimiento.required" => "El campo Fecha de nacimiento es requerido",
             "dni.required" => "El campo DNI/Pasaporte es requerido",
             "pais.required" => "El campo País es requerido",
-            "dni.regex" => "El campo DNI/Pasaporte tiene un formato inválido"
+            "dni.regex" => "El campo DNI/Pasaporte tiene un formato inválido",
+            "email.unique" => "El email ya existe en el sistema"
         ];
         $v = Validator::make(
             $request->all(),
             [
-                'nombre' => 'required',
-                'apellido' => 'required',
+                'nombre' => 'required|regex:/^[\pL\s]+$/',
+                'apellido' => 'required|regex:/^[\pL\s]+$/',
                 'rol' => 'required',
                 'pais' => 'required',
                 'sexo' => 'required',
                 'nacimiento' => 'required|date|before:' . date('Y-m-d'),
                 'telefono' => 'required|numeric',
                 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
+                'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email'
             ], $messages
         );
 
