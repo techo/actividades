@@ -12,14 +12,17 @@ class CancelacionActividad extends Mailable
     use Queueable, SerializesModels;
 
     public $inscripcion;
+    public $persona;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($inscripcion)
+    public function __construct($inscripcion, $persona)
     {
         $this->inscripcion = $inscripcion;
+        $this->persona = $inscripcion->persona;
     }
 
     /**

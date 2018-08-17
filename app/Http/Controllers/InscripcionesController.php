@@ -73,11 +73,17 @@ class InscripcionesController extends Controller
                 $inscripcion->save();
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
 
+
+                $inscripcion->estado = 'Pre-Inscripto';
+                $inscripcion->save();
+                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
             $inscripcion->estado = 'Sin Contactar';
+
             $inscripcion->save();
             Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return view('inscripciones.gracias')
@@ -127,8 +133,11 @@ class InscripcionesController extends Controller
             ->with('tipo', $actividad->tipo);
 
 
+<<<<<<< HEAD
     }
 
+=======
+>>>>>>> [TEC-379] incluye footer con link a desuscribir, incluye migración
     /**
      * @param Actividad $idActividad
      * @param int $idPersona

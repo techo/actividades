@@ -15,7 +15,7 @@ class IncluyeCampoUnsubscribeTokenEnPersona extends Migration
     {
         if (!Schema::hasColumn('Persona', 'unsubscribe_token')) {
             Schema::table('Persona', function (Blueprint $table) {
-                $table->string('unsubscribe_token')->default(md5(\Illuminate\Support\Carbon::now()));
+                $table->uuid('unsubscribe_token')->nullable();
             });
         }
     }
