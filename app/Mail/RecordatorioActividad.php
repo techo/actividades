@@ -12,6 +12,8 @@ class RecordatorioActividad extends Mailable
     use Queueable, SerializesModels;
 
     public $inscripcion;
+    public $persona;
+
     /**
      * Create a new message instance.
      *
@@ -20,6 +22,7 @@ class RecordatorioActividad extends Mailable
     public function __construct($inscripcion)
     {
         $this->inscripcion = $inscripcion;
+        $this->persona = $inscripcion->persona;
     }
 
     /**

@@ -12,6 +12,7 @@ class MailConfimacionInscripcion extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $inscripcion;
+    public $persona;
 
     /**
      * Create a new message instance.
@@ -21,6 +22,7 @@ class MailConfimacionInscripcion extends Mailable implements ShouldQueue
     public function __construct($inscripcion)
     {
         $this->inscripcion = $inscripcion;
+        $this->persona = $inscripcion->persona;
     }
 
     /**

@@ -59,22 +59,24 @@ class InscripcionesController extends Controller
                 $inscripcion->estado = 'Sin Contactar';
 
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
-                $inscripcion->save();
-                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
-                $inscripcion->estado = 'Pre-Inscripto';
-                $inscripcion->save();
                 $config = json_decode($actividad->pais->config_pago);
                 $paymentClass = 'App\\Payments\\' . $config->payment_class;
                 $payment = new $paymentClass($inscripcion);
+
+                $inscripcion->estado = 'Pre-Inscripto';
+                $inscripcion->save();
+                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
 
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
 
+            $inscripcion->save();
+            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
@@ -123,17 +125,6 @@ class InscripcionesController extends Controller
 
     }
 
-/*    public function donar(Request $request, $id)
-    {
-        $inscripcion = auth()->user()->InscripcionActividad($id);
-        $actividad = Actividad::findOrFail($id);
-        $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
-        $payment = new $paymentClass($request, $inscripcion);
-        return view('inscripciones.pagar')
-            ->with('actividad', $actividad)
-            ->with('payment', $payment);
-
-    }*/
     /**
      * @param Actividad $idActividad
      * @param int $idPersona
