@@ -41,7 +41,7 @@
                 <hr>
                 <div v-show="esConstruccion" class="row">
                     <div class="col-md-12">
-                        <h5 class="card-title">Costo de la construcción: ${{actividad.costo}} Pesos</h5>
+                        <h5 class="card-title">Donación sugerida: {{ montoSugerido }}</h5>
                     </div>
                     <hr>
                 </div>
@@ -135,6 +135,14 @@
         computed: {
             esConstruccion() {
                 return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
+            },
+            montoSugerido () {
+                if (this.actividad.montoMax !== '0.00') {
+                    return 'Entre $' + this.actividad.moneda + ' ' + this.actividad.montoMin +
+                        ' y $' + this.actividad.moneda + ' ' + this.actividad.montoMax;
+                }
+
+                return '$' + this.actividad.moneda + ' ' + this.actividad.montoMin;
             }
         },
         methods: {

@@ -47,7 +47,8 @@
                     href="{{ url('/inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion/') }}">detalle de la actividad.</a>
         </p>
         <p>
-            Te recordamos que el monto para abonar es de <b>${{$inscripcion->actividad->costo}}</b>, los cuales cubren
+            Te recordamos que el monto sugerido para abonar es a partir de <b>${{$inscripcion->actividad->montoMin}}</b>,
+            los cuales cubren
             los gastos de traslado, seguro y comida durante la construcción. En el caso que no puedas abonarlo,
             no queremos que dejes de participar, escribinos a
             <a href="mailto:problemasdepago.argentina@techo.org" target="_blank">problemasdepago.argentina@techo.org</a>

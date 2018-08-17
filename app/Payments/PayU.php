@@ -13,6 +13,7 @@ class PayU implements PaymentGateway
     public $actividad;
     public $persona;
     public $inscripcion;
+    public $monto;
 
     /**
      * PayU constructor.
@@ -71,12 +72,12 @@ class PayU implements PaymentGateway
      */
     public function signature()
     {
-        $config = $this->config();
+        $config = $this->getConfig();
 
         return md5($config->api_key . '~' .
             $config->merchant_id . '~' .
             $this->referenceCode() . '~' .
-            $this->actividad->costo . '~' .
+            $this->monto . '~' .
             $this->actividad->moneda);
     }
 
@@ -88,9 +89,7 @@ class PayU implements PaymentGateway
     public function referenceCode()
     {
 
-        return $this->actividad->tipo->nombre . '-Voluntario-'
-            . $this->persona->dni . '-'
-            . $this->actividad->nombreActividad . '-'
+        return $this->persona->dni . '-'
             . $this->actividad->idActividad . '-'
             . $this->inscripcion->idInscripcion;
 
@@ -141,8 +140,18 @@ class PayU implements PaymentGateway
         return false;
     }
 
-    public function config()
+    public function getConfig()
     {
         return json_decode($this->actividad->pais->config_pago);
+    }
+
+    public function setMonto($monto)
+    {
+        $this->monto = $monto;
+    }
+
+    public function getMonto()
+    {
+        return $this->monto;
     }
 }

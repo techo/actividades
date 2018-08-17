@@ -153,7 +153,7 @@ class ActividadesController extends Controller
 
             $datatableConfig = config('datatables.inscripciones');
             $fields = $datatableConfig['fields'];
-            if ($actividad->costo > 0) {
+            if ($actividad->montoMin > 0) {
                 $checkPago = [[
                     'name' => '__component:pago',
                     'title' => 'Pago',
@@ -296,8 +296,8 @@ class ActividadesController extends Controller
                 'La actividad debe tener un nombre',
             'pais.*' =>
                 'Debe seleccionar el país de la actividad',
-            'costo.*' =>
-                'Debe especificar el costo de participar en la construcción',
+            'montoMin.*' =>
+                'Debe especificar el monto mínimo de donación',
             'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
                 posterior al final de la actividad',
             'beca.url' => 'El enlace al formulario de solicitud de beca debe ser una URL válida'
@@ -327,17 +327,13 @@ class ActividadesController extends Controller
             ], $messages
         );
 
-        $v->sometimes('costo', 'required|numeric|min:1', function ($request) {
+        $v->sometimes('montoMin', 'required|numeric|min:1', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
 
         $v->sometimes('beca', 'url', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
-
-/*        $v->sometimes('LinkPago', 'url', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);*/
 
         return $v;
     }

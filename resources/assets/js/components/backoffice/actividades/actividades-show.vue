@@ -351,16 +351,30 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
-                        <label for="costo">Costo (ARS)</label>
-                        <input id="costo" name="costo"
+                        <label for="montoMin">Monto Mínimo (ARS)</label>
+                        <input id="montoMin" name="montoMin"
                                type="number"
                                class="form-control"
                                v-bind:disabled="readonly"
-                               v-model="dataActividad.costo"
+                               v-model="dataActividad.montoMin"
                                min="1"
+                               required
                         >
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="montoMax">Monto máximo </label>
+                        <input id="montoMax" name="montoMax"
+                               type="number"
+                               class="form-control"
+                               v-bind:disabled="readonly"
+                               v-model="dataActividad.montoMax"
+                               min="0"
+                        >
+                        <span class="text-muted">Opcional</span>
                     </div>
                 </div>
                 <div class="col-md-4">
