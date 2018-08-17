@@ -24,7 +24,7 @@
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input id="email"
-                                           type="text"
+                                           type="email"
                                            class="form-control"
                                            v-model="usuario.email"
                                            :disabled="readonly"
