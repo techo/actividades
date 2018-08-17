@@ -61,10 +61,14 @@ class InscripcionesController extends Controller
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
-                $config = json_decode($actividad->pais->config_pago);
-                $paymentClass = 'App\\Payments\\' . $config->payment_class;
-                $payment = new $paymentClass($inscripcion);
-
+                try {
+                    $config = json_decode($actividad->pais->config_pago);
+                    $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                    $payment = new $paymentClass($inscripcion);
+                } catch (\Exception $e) {
+                    return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+                }
+                $payment->setMonto($request->monto);
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
