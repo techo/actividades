@@ -49,7 +49,15 @@ class InscripcionesController extends Controller
         if (($request->has('aceptar_terminos') && $request->aceptar_terminos == 1)) {
             $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
             if (!$inscripcion) {
-                $inscripcion = $this->crearInscripcion($request, $id, $actividad, $persona);
+                $inscripcion = new Inscripcion();
+                $inscripcion->idActividad = $id;
+                $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
+                $inscripcion->idPersona = Auth::user()->idPersona;
+                $inscripcion->evaluacion = 0;
+                $inscripcion->acompanante = '';
+                $inscripcion->fechaInscripcion = new Carbon();
+
+                $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
@@ -57,18 +65,21 @@ class InscripcionesController extends Controller
                     $config = json_decode($actividad->pais->config_pago);
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;
                     $payment = new $paymentClass($inscripcion);
-                    $payment->setMonto($request->monto);
-                    $inscripcion->estado = 'Pre-Inscripto';
-                    $inscripcion->save();
-                    return view('inscripciones.pagar')
-                        ->with('actividad', $actividad)
-                        ->with('payment', $payment);
-
-                } catch (\Exception $exception) {
+                } catch (\Exception $e) {
                     return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
                 }
-            }
+                $payment->setMonto($request->monto);
+                $inscripcion->estado = 'Pre-Inscripto';
+                $inscripcion->save();
+                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
 
+                return view('inscripciones.pagar')
+                    ->with('actividad', $actividad)
+                    ->with('payment', $payment);
+            }
+            $inscripcion->estado = 'Sin Contactar';
+            $inscripcion->save();
+            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
