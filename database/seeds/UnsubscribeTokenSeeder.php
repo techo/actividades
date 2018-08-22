@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UnsubscribeTokenSeeder extends Seeder
 {
@@ -11,10 +12,6 @@ class UnsubscribeTokenSeeder extends Seeder
      */
     public function run()
     {
-        \App\Persona::chunk(1000, function ($personas) {
-            foreach ($personas as $persona) {
-                $persona->update(['unsubscribe_token' => Webpatser\Uuid\Uuid::generate()->string]);
-            }
-        });
+                DB::statement('UPDATE Persona SET unsubscribe_token = UUID()');
     }
 }

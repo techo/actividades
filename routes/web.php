@@ -12,7 +12,8 @@ Route::get('/cookie/close', function(){
 Route::get('/terminos/actividades', function (){
     return view('terminos.actividades.show');
 });
-
+Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
+Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
 // Ajax calls
 Route::prefix('ajax')->group(function () {
