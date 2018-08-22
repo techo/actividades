@@ -74,10 +74,6 @@ class InscripcionesController extends Controller
                 $inscripcion->save();
                 Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
 
-                $inscripcion->estado = 'Pre-Inscripto';
-                $inscripcion->save();
-                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
-
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
