@@ -6,7 +6,14 @@
 <form method="{{ $payment->method() }}" action="{{ $payment->url() }}">
     <input name="merchantId"    type="hidden"  value="{{ $config->merchant_id }}"   >
     <input name="referenceCode" type="hidden"  value="{{ $payment->referenceCode()}}" >
-    <input name="description"   type="hidden"  value="{{ $actividad->nombreActividad . ', ' . $actividad->localidad->localidad . ', ' . $actividad->provincia->provincia}}"  >
+    <input name="description"   type="hidden"
+           value="{{ $actividad->tipo->nombre . ', '
+                    . $actividad->idActividad . ', '
+                    . $actividad->nombreActividad . ', '
+                    . $actividad->localidad->localidad . ', '
+                    . $actividad->provincia->provincia . ', '
+                    . $actividad->fechaInicio->format('d/m/Y')
+                    }}"  >
     <input name="amount"        type="hidden"  value="{{ $payment->monto }}"   >
     <input name="tax"           type="hidden"  value="0">
     <input name="taxReturnBase" type="hidden"  value="0">

@@ -250,7 +250,7 @@ class InscripcionesController extends BaseController
                         ->where('idPersona', auth()->user()->idPersona)
                         ->where('nombreProceso', 'importar_inscripciones')
                         ->delete();
-                    $counter = 0;
+                    $counter = 1;
                     $errores = [];
                     $actividad = Actividad::find($id);
                     foreach($data as $inscripcion){
@@ -380,7 +380,7 @@ class InscripcionesController extends BaseController
                     }
                     return response()->json(
                         [
-                            'mensaje' => "Se procesaron " . $procesados . " registros de " . $counter . " correctamente."
+                            'mensaje' => "Se procesaron " . $procesados . " registros de " . --$counter . " correctamente."
                                            . " Se encontraron " . count($errores) . " errores." ,
                             'log_link' => route('logs', 'importar_inscripciones'),
                             'errores' => count($errores)

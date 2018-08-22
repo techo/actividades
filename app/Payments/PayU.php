@@ -89,7 +89,9 @@ class PayU implements PaymentGateway
     public function referenceCode()
     {
 
-        return $this->persona->dni . '-'
+        return $this->actividad->tipo->nombre . '-'
+            . 'Voluntario-'
+            . $this->persona->dni . '-'
             . $this->actividad->idActividad . '-'
             . $this->inscripcion->idInscripcion;
 
