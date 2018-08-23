@@ -19,7 +19,7 @@ class CancelacionActividad extends Mailable
      *
      * @return void
      */
-    public function __construct($inscripcion, $persona)
+    public function __construct($inscripcion)
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;

@@ -137,7 +137,7 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            Mail::to($inscripcion->persona->mail)->send(new ActualizacionActividad($inscripcion));
+            $this->intentaEnviar(Mail::to($inscripcion->persona->mail), new ActualizacionActividad($inscripcion), $inscripcion->persona);
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
@@ -195,7 +195,8 @@ class InscripcionesController extends BaseController
         $inscripcion = $this->inscribir($request->all());
         $grupo = $this->incluirEnGrupo($request->all());
         if ($inscripcion &&  $grupo) {
-            $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
             return response('ok');
         }
 
@@ -324,7 +325,7 @@ class InscripcionesController extends BaseController
                                 $inscripto = $this->inscribir($inscripcionValida);
 
                                 if ($inscripto) { //Enviar mail al voluntario
-                                    Mail::to($persona->mail)->send(new MailConfimacionInscripcion($inscripto));
+                                    $this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
                                 } else {
                                     $errores[] = "Error interno al inscribir a "
                                         . $persona->nombreCompleto

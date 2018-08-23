@@ -19,7 +19,7 @@ class ActualizacionActividad extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($inscripcion, $persona)
+    public function __construct($inscripcion)
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
