@@ -427,6 +427,8 @@ class ActividadesController extends Controller
         $actividad->idOficina = $request['oficina']['id'];
         $actividad->fechaInicio = $request->fechaInicio;
         $actividad->fechaFin = $request->fechaFin;
+        $actividad->montoMin = $request->montoMin > 0 ? $request->montoMin : 0;
+        $actividad->montoMax = $request->montoMax > 0 ? $request->montoMax : 0;
         $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
         $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
