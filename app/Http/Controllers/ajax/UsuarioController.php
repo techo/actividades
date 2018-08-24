@@ -62,6 +62,7 @@ class UsuarioController extends BaseController
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
       $verificacion->token = str_random(40);
+      $persona->recibirMails = 1;
       $verificacion->save();
       Auth::login($persona, true);
       $request->session()->regenerate();
@@ -72,6 +73,7 @@ class UsuarioController extends BaseController
       $this->validar($request,'update');
       $persona = Auth::user();
       $this->cargar_cambios($request, $persona);
+      $persona->recibirMails = (int) $request->recibirMails;
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
       }

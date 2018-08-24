@@ -28,6 +28,7 @@ class PerfilResource extends Resource
             'telefono'      => $this->telefonoMovil,
             'google_id'     => $this->google_id,
             'facebook_id'   => $this->facebook_id,
+            'recibirMails'  => $this->recibirMails,
             'pass'          => ''
         ];
     }
