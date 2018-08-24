@@ -6,6 +6,7 @@ use App\Actividad;
 use App\CategoriaActividad;
 use App\Grupo;
 use App\GrupoRolPersona;
+use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
@@ -254,6 +255,7 @@ class ActividadesController extends Controller
         try {
             $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
             $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
+            $this->enviarNotificaciones($actividad);
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -519,5 +521,13 @@ class ActividadesController extends Controller
             $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
         }
         return;
+    }
+
+    private function enviarNotificaciones(Actividad $actividad)
+    {
+        foreach ($actividad->inscripciones_validas() as $inscripcion) {
+            $job = (new EnviarMailsCancelacionActividad($inscripcion));
+            dispatch($job);
+        };
     }
 }
