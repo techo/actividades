@@ -72,7 +72,7 @@ class InscripcionesController extends BaseController
                 $payment->setMonto($request->monto);
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
-                $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion));
+                $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
 
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
@@ -81,7 +81,7 @@ class InscripcionesController extends BaseController
             $inscripcion->estado = 'Sin Contactar';
 
             $inscripcion->save();
-            $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion));
+            $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
