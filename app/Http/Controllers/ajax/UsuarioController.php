@@ -168,5 +168,40 @@ class UsuarioController extends BaseController
         $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;
     }
+
+    public function delete(Request $request)
+    {
+        // Traer todas las inscripciones de actividades futuras del usuario
+
+        $persona = Persona::find(auth()->user()->idPersona);
+
+        $inscripcionesFuturas = $persona->inscripciones()
+            ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
+            ->whereNotIn('estado',['Desinscripto'])
+            ->whereDate('Actividad.fechaInicio', '>=', Carbon::now())
+            ->get();
+
+        // actualizar las inscripciones como desinscripto
+        foreach ($inscripcionesFuturas as $inscripcion){
+            $inscripcion = Inscripcion::find($inscripcion->idInscripcion);
+            $inscripcion->estado = 'Desinscripto';
+            $inscripcion->save();
+        }
+
+        // ofuscar en tabla persona
+        $persona->nombres = str_random(30);
+        $persona->apellidoPaterno = str_random(30);
+        $persona->telefono = str_random(30);
+        $persona->telefonoMovil = str_random(30);
+        $persona->dni = str_random(8);
+        $persona->mail = str_random(40);
+        $persona->recibirMails = 0;
+        $persona->acepta_marketing = 0;
+
+        // grabar
+        $persona->save();
+        $request->session()->flush();
+        return response()->json('Usuario eliminado correctamente', 200);
+    }
 }
 
