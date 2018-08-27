@@ -398,7 +398,7 @@
         methods: {
             cancelar: function () {
                 axios.get('/ajax/usuario/perfil').then(response => {
-                    this.user = response.data
+                    this.user = response.data.data
                     this.limpia_validacion_pass(this.user)
                 })
             },
