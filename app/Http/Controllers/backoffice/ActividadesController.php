@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Pais;
 use App\PuntoEncuentro;
 use App\UnidadOrganizacional;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -525,9 +526,14 @@ class ActividadesController extends Controller
 
     private function enviarNotificaciones(Actividad $actividad)
     {
-        foreach ($actividad->inscripciones_validas() as $inscripcion) {
-            $job = (new EnviarMailsCancelacionActividad($inscripcion));
-            dispatch($job);
-        };
+        try{
+            foreach ($actividad->inscripciones_validas() as $inscripcion) {
+                $job = (new EnviarMailsCancelacionActividad($inscripcion));
+                dispatch($job);
+            };
+        } catch (ModelNotFoundException $e){
+            \Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');
+        }
+
     }
 }
