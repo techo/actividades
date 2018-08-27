@@ -1,5 +1,6 @@
 <template>
     <div>
+        <simplert ref="confirmar"></simplert>
         <div>
             <div class="row">
                 <div class="col-md-12">
@@ -305,7 +306,16 @@
                         </a>
                     </span>
                 </div>
-                <div class="col-md-5"><a class="btn btn-primary" href="#" @click="guardar()">Guardar</a></div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a class="btn btn-primary" href="#" @click="guardar()">Guardar</a>
+                        </div>
+                        <div class="col-md-8">
+                            <a class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <hr>
         </div>
@@ -515,7 +525,29 @@
             logout: function (e) {
                 e.preventDefault();
                 events.$emit('cerrar-sesion');
+            },
+            eliminar: function () {
+                let self = this;
+                self.$refs.confirmar.openSimplert({
+                    title:'ELIMINAR MI CUENTA',
+                    message:"Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
+                    useConfirmBtn: true,
+                    isShown: true,
+                    disableOverlayClick: true,
+                    customClass: 'confirmar',
+                    customCloseBtnText: 'CANCELAR', //string -- close button text
+                    customCloseBtnClass: 'btn btn-secondary', //string -- custom class for close button
+                    customConfirmBtnText: 'SI, ELIMINAR', //string -- confirm button text
+                    customConfirmBtnClass: 'btn btn-danger', //string -- custom class for confirm button
+                    onConfirm: function() {
+                        axios.delete('/ajax/usuario').then(response => {
+                            debugger
+                            window.location.href = '/';
+                        })
+                    }
+                })
             }
+
         },
         computed: {
             loginSocial: function () {
@@ -524,3 +556,16 @@
         }
     }
 </script>
+
+<style scoped>
+    .btn-secondary {
+        text-transform: uppercase !important;
+        font-weight: bold !important;
+    }
+
+    .btn-danger {
+        text-transform: uppercase !important;
+        font-weight: bold !important;
+    }
+
+</style>

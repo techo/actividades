@@ -28,7 +28,8 @@ Route::prefix('ajax')->group(function () {
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
-	Route::prefix('usuario')->group(function(){
+	Route::prefix('usuario')->middleware(['auth'])->group(
+	    function(){
 		Route::get('', function(){
 			if(Auth::check()) {
 				return Auth::user();
@@ -39,7 +40,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('perfil', 'ajax\UsuarioController@perfil');
         Route::post('', 'ajax\UsuarioController@create');
         Route::put('', 'ajax\UsuarioController@update');
-		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
+        Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
+		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail'); //TODO revisar si se está usando
         Route::put('linkear', 'ajax\UsuarioController@linkear');
         Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
         Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
