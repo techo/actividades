@@ -12,7 +12,8 @@ Route::get('/cookie/close', function(){
 Route::get('/terminos/actividades', function (){
     return view('terminos.actividades.show');
 });
-
+Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
+Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
 // Ajax calls
 Route::prefix('ajax')->group(function () {
@@ -171,4 +172,10 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
 Route::prefix('/pagos/')->group(function() {
     Route::get('{idInscripcion}/response', 'PagosController@response');
     Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
+});
+
+Route::get('/johan', function() {
+    $inscripcion = \App\Inscripcion::latest()->first();
+    $persona = \App\Persona::find(768227);
+    return new App\Mail\MailConfimacionInscripcion($inscripcion);
 });

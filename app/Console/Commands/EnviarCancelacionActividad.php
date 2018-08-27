@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Carbon\Carbon;
 use App\Actividad;
 use Mail;
 #use App\Mail\CancelacionActividad;
@@ -41,10 +40,10 @@ class EnviarCancelacionActividad extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle($id)
     {
 
-        $actividad = Actividad::find(10575);
+        $actividad = Actividad::find($id);
         foreach ($actividad->inscripciones as $inscripcion) {
             $job = (new EnviarMailsCancelacionActividad($inscripcion));
             dispatch($job);

@@ -131,7 +131,7 @@ class PayU implements PaymentGateway
     public function updateUserStatus()
     {
         if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
-            Log::info('Confirmación: \n' . json_encode($this->request->all()));
+            // Log::info('Confirmación: \n' . json_encode($this->request->all()));
             $this->inscripcion->pago = 1;
             $this->inscripcion->montoPago = (float)$this->request->value;
             $this->inscripcion->estado = "Confirmado";

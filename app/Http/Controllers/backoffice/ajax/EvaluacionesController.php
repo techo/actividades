@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 use App\Actividad;
 use App\EvaluacionActividad;
 use App\EvaluacionPersona;
+use App\Http\Controllers\BaseController;
 use App\Inscripcion;
 use App\Mail\InvitacionEvaluacion;
 use App\Persona;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
-class EvaluacionesController extends Controller
+class EvaluacionesController extends BaseController
 {
     public function enviar($id, Request $request)
     {
@@ -23,7 +24,8 @@ class EvaluacionesController extends Controller
             ->get();
 
         foreach ($personas as $persona) {
-            Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
+            //Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
+            $this->intentaEnviar(Mail::to($persona->mail), new InvitacionEvaluacion($persona, $actividad), $persona);
         }
         return 'ok';
     }

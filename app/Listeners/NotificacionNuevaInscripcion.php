@@ -26,8 +26,8 @@ class NotificacionNuevaInscripcion
      */
     public function handle(NuevaInscripcion $event)
     {
-      $inscripcion = $event->inscripcion;
-      Mail::to($persona->mail)->send(new MailConfimacionInscripcion($inscripcion));
+      //$inscripcion = $event->inscripcion;
+      //Mail::to($persona->mail)->send(new MailConfimacionInscripcion($inscripcion));
 
     }
 }
