@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailConfimacionInscripcion;
 
-class InscripcionesController extends Controller
+class InscripcionesController extends BaseController
 {
     /**
      * Show the form for creating a new resource.
@@ -61,6 +61,7 @@ class InscripcionesController extends Controller
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+
                 try {
                     $config = json_decode($actividad->pais->config_pago);
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -71,15 +72,16 @@ class InscripcionesController extends Controller
                 $payment->setMonto($request->monto);
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
-                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+                $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
 
                 return view('inscripciones.pagar')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
             $inscripcion->estado = 'Sin Contactar';
+
             $inscripcion->save();
-            Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
@@ -126,7 +128,6 @@ class InscripcionesController extends Controller
             ->with('punto_encuentro', $punto_encuentro)
             ->with('tipo', $actividad->tipo);
 
-
     }
 
     /**
@@ -153,28 +154,28 @@ class InscripcionesController extends Controller
         return GrupoRolPersona::create($arr);
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @param $actividad
-     * @param $persona
-     * @return Inscripcion
-     */
-    public function crearInscripcion(Request $request, $id, $actividad, $persona): Inscripcion
-    {
-        $inscripcion = new Inscripcion();
-        $inscripcion->idActividad = $id;
-        $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
-        $inscripcion->idPersona = $persona->idPersona;
-        $inscripcion->evaluacion = 0;
-        $inscripcion->acompanante = '';
-        $inscripcion->fechaInscripcion = new Carbon();
-        $inscripcion->estado = 'Sin Contactar';
-
-        $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
-        $inscripcion->save();
-        Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
-        return $inscripcion;
-    }
+//    /**
+//     * @param Request $request
+//     * @param $id
+//     * @param $actividad
+//     * @param $persona
+//     * @return Inscripcion
+//     */
+//    public function crearInscripcion(Request $request, $id, $actividad, $persona): Inscripcion
+//    {
+//        $inscripcion = new Inscripcion();
+//        $inscripcion->idActividad = $id;
+//        $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
+//        $inscripcion->idPersona = $persona->idPersona;
+//        $inscripcion->evaluacion = 0;
+//        $inscripcion->acompanante = '';
+//        $inscripcion->fechaInscripcion = new Carbon();
+//        $inscripcion->estado = 'Sin Contactar';
+//
+//        $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
+//        $inscripcion->save();
+//        Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
+//        return $inscripcion;
+//    }
 
 }

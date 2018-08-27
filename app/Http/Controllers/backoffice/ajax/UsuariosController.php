@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Webpatser\Uuid\Uuid;
 
 class UsuariosController extends Controller
 {
@@ -110,6 +111,8 @@ class UsuariosController extends Controller
             $persona->idUnidadOrganizacional = 0;
             $persona->idCiudad = 0;
             $persona->verificado = false;
+            $persona->recibirMails = 1;
+            $persona->unsubscribe_token = Uuid::generate()->string;
             $persona->save();
             $verificacion = new VerificacionMailPersona();
             $verificacion->idPersona = $persona->idPersona;

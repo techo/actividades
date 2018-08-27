@@ -33,7 +33,7 @@ class EnviarMailsRecordatorioActividad implements ShouldQueue
      */
     public function handle()
     {
-        if($this->inscripcion) {
+        if($this->inscripcion && $this->inscripcion->persona->recibirMails) {
             Mail::to($this->inscripcion->persona->mail)->send(new RecordatorioActividad($this->inscripcion));
         }
     }

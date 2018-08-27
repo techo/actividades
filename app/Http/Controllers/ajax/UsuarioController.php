@@ -16,6 +16,7 @@ use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Search\MisActividadesSearch;
+use Webpatser\Uuid\Uuid;
 
 class UsuarioController extends BaseController
 {
@@ -58,6 +59,8 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->idCiudad = 0;
       $persona->verificado = false;
+      $persona->recibirMails = 1;
+      $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
@@ -72,6 +75,7 @@ class UsuarioController extends BaseController
       $this->validar($request,'update');
       $persona = Auth::user();
       $this->cargar_cambios($request, $persona);
+      $persona->recibirMails = (int) $request->recibirMails;
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
       }

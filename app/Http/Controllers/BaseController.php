@@ -1,8 +1,12 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Persona;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\PendingMail;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
@@ -21,4 +25,14 @@ class BaseController extends Controller
         );
     }
 
+    public function intentaEnviar(PendingMail $mail, Mailable $mailable, Persona $persona = null)
+    {
+        $persona = $persona == null ? Auth::user() : $persona;
+
+        if($persona->recibirMails){
+          return $mail->queue($mailable);
+        }
+
+        //\Log::info('Mail a: ' . Auth::user()->mail . ' no enviado por no aceptar notificaciones.');
+    }
 }

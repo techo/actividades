@@ -275,7 +275,17 @@
 
             </div>
 
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.recibirMails" class="form-check-input" type="checkbox" id="recibirMails">
+                        <label class="form-check-label" for="recibirMails">
+                            Recibir notificaciones operativas de la plataforma (necesario para mantenerte informado de las actividades en las que participas)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br><br>
             <div class="row">
                 <div class="col-md-5">
                     <span v-show='volver'>

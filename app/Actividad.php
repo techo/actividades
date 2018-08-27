@@ -106,7 +106,7 @@ class Actividad extends Model
     }
     public function inscripciones_validas()
     {
-        return $this->inscripciones;
+        return $this->inscripciones()->whereNotIn('estado',['Desinscripto'])->get();
     }
 
     public function puntosEncuentro()

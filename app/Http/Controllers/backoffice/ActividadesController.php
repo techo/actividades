@@ -6,11 +6,13 @@ use App\Actividad;
 use App\CategoriaActividad;
 use App\Grupo;
 use App\GrupoRolPersona;
+use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
 use App\PuntoEncuentro;
 use App\UnidadOrganizacional;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -254,6 +256,7 @@ class ActividadesController extends Controller
         try {
             $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
             $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
+            $this->enviarNotificaciones($actividad);
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -521,5 +524,18 @@ class ActividadesController extends Controller
             $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
         }
         return;
+    }
+
+    private function enviarNotificaciones(Actividad $actividad)
+    {
+        try{
+            foreach ($actividad->inscripciones_validas() as $inscripcion) {
+                $job = (new EnviarMailsCancelacionActividad($inscripcion));
+                dispatch($job);
+            };
+        } catch (ModelNotFoundException $e){
+            \Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');
+        }
+
     }
 }

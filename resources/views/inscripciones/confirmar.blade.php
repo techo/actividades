@@ -75,7 +75,7 @@
                                     value="1"
                                     required
                             >
-                            Acepto los <a href="/terminos/actividades" target="_blank">Términos y condiciones.</a>
+                            Acepto la <a href="/terminos/actividades" target="_blank">carta de voluntariado.</a>
                         </label>
                         @if($mensaje = Session::get('status'))
                             <p class="text-danger">{{ $mensaje }}</p>

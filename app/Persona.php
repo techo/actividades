@@ -82,7 +82,7 @@ class Persona extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        Mail::to($this->mail)->send(new ForgotPassword($token));
+        Mail::to($this->mail)->send(new ForgotPassword($token, $this));
     }
 
     public function getEmailForPasswordReset()
