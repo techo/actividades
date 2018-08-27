@@ -32,6 +32,7 @@ class UsuarioController extends BaseController
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
+          if($request->has('privacidad')) $rules['privacidad'] = 'required';
         break;
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';

@@ -259,7 +259,22 @@
 
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.privacidad" class="form-check-input" type="checkbox" id="privacidad" required>
+                        <label class="form-check-label" for="privacidad">
+                            Acepta la <a href="https://www.techo.org/politica-de-privacidad" target="_blank">Política de privacidad</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <span v-bind:class="{'d-none':!validacion.privacidad.invalido}">
+                        <i class="fas fa-times text-danger"></i>
+                        Debe aceptar las políticas de privacidad para continuar
+                    </span>
+                </div>
+            </div>
             <hr>
             <div class="row">
                 <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i
@@ -338,7 +353,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
