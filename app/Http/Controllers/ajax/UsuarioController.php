@@ -99,6 +99,7 @@ class UsuarioController extends BaseController
       $persona->telefonoMovil = $request->telefono;
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;
+      $persona->acepta_marketing = $request->acepta_marketing;
       return $persona;
   }
 

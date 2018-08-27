@@ -264,7 +264,7 @@
                     <div class="form-check">
                         <input v-model="user.privacidad" class="form-check-input" type="checkbox" id="privacidad" required>
                         <label class="form-check-label" for="privacidad">
-                            Acepta la <a href="https://www.techo.org/politica-de-privacidad" target="_blank">Política de privacidad</a>
+                            Acepto la <a href="https://www.techo.org/politica-de-privacidad" target="_blank">Política de privacidad</a> *
                         </label>
                     </div>
                 </div>
@@ -273,6 +273,16 @@
                         <i class="fas fa-times text-danger"></i>
                         Debe aceptar las políticas de privacidad para continuar
                     </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
+                        <label class="form-check-label" for="acepta_marketing">
+                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                        </label>
+                    </div>
                 </div>
             </div>
             <hr>

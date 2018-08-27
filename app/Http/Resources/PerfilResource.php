@@ -29,6 +29,7 @@ class PerfilResource extends Resource
             'google_id'     => $this->google_id,
             'facebook_id'   => $this->facebook_id,
             'recibirMails'  => $this->recibirMails,
+            'acepta_marketing' => $this->acepta_marketing,
             'pass'          => ''
         ];
     }

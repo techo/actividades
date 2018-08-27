@@ -285,6 +285,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
+                        <label class="form-check-label" for="acepta_marketing">
+                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                        </label>
+                    </div>
+                </div>
+            </div>
             <br><br>
             <div class="row">
                 <div class="col-md-5">
