@@ -173,9 +173,3 @@ Route::prefix('/pagos/')->group(function() {
     Route::get('{idInscripcion}/response', 'PagosController@response');
     Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
 });
-
-Route::get('/johan', function() {
-    $inscripcion = \App\Inscripcion::latest()->first();
-    $persona = \App\Persona::find(768227);
-    return new App\Mail\MailConfimacionInscripcion($inscripcion);
-});
