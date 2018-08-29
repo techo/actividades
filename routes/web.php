@@ -9,7 +9,7 @@ Route::get('/actividades', 'ActividadesController@index');
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
-Route::get('/terminos/actividades', function (){
+Route::get('/carta-voluntariado', function (){
     return view('terminos.actividades.show');
 });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
