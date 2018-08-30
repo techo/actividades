@@ -39,12 +39,6 @@
                   </div>
               </div>
                 <hr>
-                <div v-show="esConstruccion" class="row">
-                    <div class="col-md-12">
-                        <h5 class="card-title">Donación sugerida: {{ montoSugerido }}</h5>
-                    </div>
-                    <hr>
-                </div>
               <div class="row  align-middle">
                   <input type="hidden" name="_token" v-bind:value="csrf_token">
                   <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
@@ -136,14 +130,6 @@
             esConstruccion() {
                 return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
             },
-            montoSugerido () {
-                if (this.actividad.montoMax !== '0.00') {
-                    return 'Entre $' + this.actividad.moneda + ' ' + this.actividad.montoMin +
-                        ' y $' + this.actividad.moneda + ' ' + this.actividad.montoMax;
-                }
-
-                return '$' + this.actividad.moneda + ' ' + this.actividad.montoMin;
-            }
         },
         methods: {
           validateForm: function(event) {

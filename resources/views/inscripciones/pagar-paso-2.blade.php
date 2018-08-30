@@ -24,7 +24,7 @@
         <div class="col-md-9">
             <h3 class="card-title">
                 <br>
-                Ya estás pre-inscripto a
+                Estás pre-inscripto a
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
@@ -47,32 +47,34 @@
                 Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
                 Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
             </p>
-            <p><strong>Donarás ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
-        </div>
-    </div>
-    <div class="row justify-content-start">
-        <div class="col-md-6 col-sm-6">
-            @php
-                $config = json_decode($actividad->pais->config_pago);
-                $form = strtolower($config->payment_class)
-            @endphp
-            @include('pagos.' . $form)
-            <span class="text-muted techo-small-text" style ="margin-top: -0.5em">Al hacer clic se te redirigirá a la plataforma de pago</span>
-        </div>
-        <div class="col-sm-6 col-md-6">
-            <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">SOLICITAR BECA</a>
-        </div>
-    </div>
-    <div class="row justify-content-start">
-        <div class="col-md-4">
-            <p>
-                <a href="/" class="btn btn-link">VOLVER AL HOME</a>
-            </p>
-        </div>
-        <div class="col-md-4">
 
+            @if($actividad->tipo->flujo == "CONSTRUCCION")
+
+                <p><strong>Donarás ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
+                <div class="row justify-content-start">
+                    <div class="col-md-6 col-sm-6">
+                        @php
+                            $config = json_decode($actividad->pais->config_pago);
+                            $form = strtolower($config->payment_class)
+                        @endphp
+                        @include('pagos.' . $form)
+                        <span class="text-muted techo-small-text" style="margin-top: -0.5em">Al hacer clic se te redirigirá a la plataforma de pago</span>
+                    </div>
+                </div>
+            @endif
+
+            <br><br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <br><br>
+                        <p>
+                            <a href="{{ url()->previous() }}" class="btn btn-link">VOLVER</a>
+                        </p>
+                    </div>
+                </div>
         </div>
     </div>
+
 @endsection
 
 @section('footer')

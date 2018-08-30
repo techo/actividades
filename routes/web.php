@@ -95,6 +95,7 @@ Route::get('/actividades/{id}', 'ActividadesController@show');
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
+    Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
     Route::post('/gracias', 'InscripcionesController@create');
     Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
