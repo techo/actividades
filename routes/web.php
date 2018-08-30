@@ -9,7 +9,7 @@ Route::get('/actividades', 'ActividadesController@index');
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
-Route::get('/terminos/actividades', function (){
+Route::get('/carta-voluntariado', function (){
     return view('terminos.actividades.show');
 });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
@@ -28,7 +28,7 @@ Route::prefix('ajax')->group(function () {
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
-	Route::prefix('usuario')->middleware(['auth'])->group(
+	Route::prefix('usuario')->group(
 	    function(){
 		Route::get('', function(){
 			if(Auth::check()) {

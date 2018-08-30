@@ -1,7 +1,7 @@
 <template>
     <div id="cookies-bar">
         Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las
-        <a href="#">Politicas de Cookies</a>
+        <a href="https://www.techo.org/politica-de-privacidad#cookies" target="_blank">Politicas de Cookies</a>
         <span class="pull-right" @click="cerrar">
            <i class="fas fa-times"></i>
        </span>
