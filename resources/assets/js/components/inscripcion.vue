@@ -52,7 +52,7 @@
             </form>
         </div>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card d-none d-lg-block">
                 <img :src="imagen" class="img-tarjeta">
                 <div class="row">
                     <div class="col-md-12">

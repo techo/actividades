@@ -21,7 +21,7 @@
                     <div class="card border-light">
                         <a href="/actividades?categoria={{ $categoria->id }}">
                             <img
-                                    class="card-img-top"
+                                    class="card-img-top img-fluid"
                                     src="{{ $categoria->imagen }}"
                                     alt="{{ $categoria->nombre }}"
                                     width="380"

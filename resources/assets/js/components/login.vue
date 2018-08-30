@@ -312,10 +312,19 @@
     }
 
     .registro {
-     background-color: #0092dd;
-    font-weight: bold;
-    text-align: center;
-    color: #ffffff;
+        background-color: #0092dd;
+        font-weight: bold;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .registro {
+            margin-left: 15px;
+            margin-right: 15px;
+            padding-top: 10%;
+            padding-bottom: 10%;
+        }
     }
 
     .registro h1{

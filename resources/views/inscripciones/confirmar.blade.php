@@ -80,7 +80,7 @@
             </form>
         </div>
         <div class="col-md-4">
-            <div class="card" style="border: none">
+            <div class="card d-none d-lg-block" style="border: none">
                 <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em;">
                 <div class="row">
                     <div class="col-md-12">

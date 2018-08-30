@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-techo-blue">
+<nav class="navbar navbar-expand navbar-dark bg-techo-blue">
     <div class="container">
         <a class="navbar-brand" href="/"><img class="techo-logo" src="{{ asset('/img/techo-logo_269x83.png') }}" alt="Techo"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">

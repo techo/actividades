@@ -271,15 +271,18 @@ a {
 }
 
 .techo-hero h1 {
-    font-size: 4.1em;
+    font-size: 5vw;
     margin: auto;
     position: absolute;
-    top: 120px;
+    /*top: 120px;*/
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 1;
     font-weight: bold;
+    vertical-align: middle;
+    line-height: normal;
+    padding-bottom: 3rem;
     text-shadow: 0 0 3px #60676a;
 }
 
@@ -301,12 +304,14 @@ a {
 .techo-hero.actividades {
     background: url('/img/hero-slim.jpg');
     background-size: cover;
-    height: 210px;
+    /*height: 210px;*/
     padding-top: 8vh;
+    max-width: 100%;
+    height: auto;
 }
 .techo-hero.actividades h2 {
     font-size: 2.5vw;
-    padding: 0;
+    /*padding: 0;*/
     position: relative;
 }
 
@@ -323,7 +328,7 @@ a {
 
 footer.inscripcion-bar {
     background-color: #ffffff;
-    height: 84px;
+    /*height: 84px;*/
     border-top: solid 1px #cecece;
     padding-top: 20px;
     padding-left: 15px;
@@ -388,4 +393,66 @@ footer.inscripcion-bar .text-primary {
 
 #datatable-mis-actividades thead {
     display:none
+}
+
+/* Media queries */
+
+@media (max-width: 543px) {
+    h1.text-primary {
+        font-size:1.5rem; /*1rem = 16px*/
+    }
+
+    main {
+        margin-bottom: 175px;
+    }
+}
+@media (min-width: 544px) {
+    .techo-hero h1, .techo-hero h2 {
+        font-size:2.5rem; /*1rem = 16px*/
+    }
+
+    h1 {
+        font-size:2.5rem; /*1rem = 16px*/
+    }
+
+    main {
+        margin-bottom: 175px;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+    .techo-hero h1, .techo-hero h2 {
+        font-size:3.5rem; /*1rem = 16px*/
+    }
+
+    h1 {
+        font-size:2.5rem; /*1rem = 16px*/
+    }
+
+    main {
+        margin-bottom: 175px;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .techo-hero h1, .techo-hero h2 {
+        font-size:4rem; /*1rem = 16px*/
+    }
+
+    h1 {
+        font-size:2rem; /*1rem = 16px*/
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .techo-hero h1, .techo-hero h2 {
+        font-size:5rem; /*1rem = 16px*/
+    }
+
+    h1 {
+        font-size:3rem; /*1rem = 16px*/
+    }
 }
