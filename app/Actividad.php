@@ -177,6 +177,11 @@ class Actividad extends Model
        return $query->get()->toArray();
     }
 
+    public function setFechaFinInscripcionesAttribute($value)
+    {
+        $this->attributes['fechaFinInscripciones'] = \Carbon\Carbon::parse($value);
+    }
+
     protected static function boot()
     {
         parent::boot();
