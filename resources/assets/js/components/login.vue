@@ -97,7 +97,6 @@
                     id="btnUser"
                     type="button"
                     class="btn btn-secondary dropdown-toggle"
-                    style="margin-right: 4em"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
@@ -146,10 +145,9 @@
 
     <!-- Si no esta autenticado -->
 
-        <form class="form-inline mt-2 mt-md-0" v-else>
+        <form class="form-inline" v-else>
             <button
-                    class="btn my-2 my-sm-0 btn-primary"
-                    style="margin-right: 4em"
+                    class="btn btn-primary"
                     type="button"
                     data-toggle="modal"
                     data-target="#login-modal"
@@ -324,6 +322,20 @@
             margin-right: 15px;
             padding-top: 10%;
             padding-bottom: 10%;
+        }
+
+        .dropdown-menu {
+            margin-left: -120% !important;
+        }
+    }
+
+    @media (min-width: 768px) {
+        #btnUser {
+            left: 70vw !important;
+        }
+
+        .dropdown-menu {
+            left: 67vw !important;
         }
     }
 

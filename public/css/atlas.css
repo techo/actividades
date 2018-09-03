@@ -48,7 +48,7 @@ code {
 
 .card {
     border: none;
-    width: 380px;
+    /*width: 380px;*/
 }
 
 .card:hover {
