@@ -4,6 +4,15 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        @auth
+            <login ref="login"
+                   usuario="{{Auth::user()}}"
+                   veradmin="{{ Auth::user()->hasPermissionTo('ver_backoffice') }}"
+            ></login>
+        @endauth
+        @guest
+            <login ref="login" showlogin="{{empty($showLogin) ? "" : "1" }}"></login>
+        @endguest
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -12,14 +21,5 @@
                 </li>
             </ul>
         </div>
-        @auth
-        <login ref="login"
-               usuario="{{Auth::user()}}"
-               veradmin="{{ Auth::user()->hasPermissionTo('ver_backoffice') }}"
-        ></login>
-        @endauth
-        @guest
-        <login ref="login" showlogin="{{empty($showLogin) ? "" : "1" }}"></login>
-        @endguest
     </div>
 </nav>

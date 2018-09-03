@@ -2,10 +2,10 @@
 <footer class="footer">
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-sm-12 col-lg-2">
             <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo Argentina" style="padding-top: 5px;" align="left">
         </div>
-        <div class="col-md-8" style="padding-top:10px">
+        <div class="col-sm-12 col-lg-8" style="padding-top:10px">
             <a href="http://lt.dplrtrack.info/a1ccecf1d4a82082506189b30dbb3789-1c48a2db5ffee7dd9b1dd7531c928471"
                target="_blank"
                data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://lt.dplrtrack.info/a1ccecf1d4a82082506189b30dbb3789-1c48a2db5ffee7dd9b1dd7531c928471&amp;source=gmail&amp;ust=1524658654821000&amp;usg=AFQjCNFBy0FCWzlSTZDEAzLTyaMYyZolAA">
@@ -35,7 +35,7 @@
                      alt="Twitter" class="CToWUd">
             </a>
         </div>
-        <div class="col-md-2">
+        <div class="col-sm-12 col-lg-2">
             <p style="font-size: larger; padding-top: 15px; font-weight: bolder; text-align: right">
                 &copy; 2018 TECHO
             </p>

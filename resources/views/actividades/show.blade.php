@@ -6,8 +6,9 @@
 
 
 @section('main_image')
-    <div class="techo-hero">
-        <img src="/img/hero-slim.jpg" alt="hero image" height="210">
+    <div class="techo-hero actividades">
+        {{--<img src="/img/hero-slim.jpg" alt="hero image">--}}
+        <h2></h2>
     </div>
 @endsection
 
