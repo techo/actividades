@@ -1,7 +1,7 @@
 <template>
      <div class="col-sm-4">
+         <simplert ref="confirmar"></simplert>
         <div class="card tarjeta p-3">
-            <simplert ref="confirmar"></simplert>
             <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.img"
                  alt="Card image cap">
             <div class="card-body px-0">
@@ -18,7 +18,7 @@
                 <div>
                     <span v-if="!actividadPasada">
                         <a
-                            class="btn btn-success text-light font-weight-bold pull-right"
+                            class="btn btn-danger text-light font-weight-bold pull-right"
                             @click="desincribir(inscripcion.idActividad)"
                         >
                             Desinscribirme
@@ -84,9 +84,9 @@
                     disableOverlayClick: true,
                     customClass: 'confirmar',
                     customCloseBtnText: 'CANCELAR', //string -- close button text
-                    customCloseBtnClass: '', //string -- custom class for close button
+                    customCloseBtnClass: 'btn btn-default', //string -- custom class for close button
                     customConfirmBtnText: 'SI, DESINSCRIBIRME', //string -- confirm button text
-                    customConfirmBtnClass: '', //string -- custom class for confirm button
+                    customConfirmBtnClass: 'btn btn-danger mb-1', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario/inscripciones/' + idActividad).then(response => {
                             self.$parent.traer_inscripciones();
