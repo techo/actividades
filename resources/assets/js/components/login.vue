@@ -334,6 +334,11 @@
             left: 70vw !important;
         }
 
+        #btnShowModal {
+            position: relative;
+            left: 70vw;
+        }
+
         .dropdown-menu {
             left: 67vw !important;
         }

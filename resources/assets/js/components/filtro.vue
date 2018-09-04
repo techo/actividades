@@ -136,7 +136,7 @@
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
-                debugger
+                
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
                     self.dataProvincias = Object.keys(response).map(i => response[i]);
                             for (let i=0; i< self.$children.length; i++) {
