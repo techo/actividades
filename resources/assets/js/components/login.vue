@@ -325,7 +325,7 @@
         }
 
         .dropdown-menu {
-            margin-left: -120% !important;
+            margin-left: -90% !important;
         }
     }
 
