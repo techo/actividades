@@ -541,7 +541,6 @@
                     customConfirmBtnClass: 'btn btn-danger', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario').then(response => {
-                            debugger
                             window.location.href = '/';
                         })
                     }

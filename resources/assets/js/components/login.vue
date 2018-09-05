@@ -331,16 +331,31 @@
 
     @media (min-width: 768px) {
         #btnUser {
-            left: 70vw !important;
+            left: 50vw !important;
         }
 
         #btnShowModal {
             position: relative;
-            left: 70vw;
+            left: 50vw;
         }
 
         .dropdown-menu {
-            left: 67vw !important;
+            left: 47vw !important;
+        }
+    }
+
+    @media only screen  and (min-width : 1824px) {
+        #btnUser {
+            left: 60vw !important;
+        }
+
+        #btnShowModal {
+            position: relative;
+            left: 60vw;
+        }
+
+        .dropdown-menu {
+            left: 57vw !important;
         }
     }
 
