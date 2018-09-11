@@ -22,14 +22,16 @@
     @endif
 
     <div class="box">
-        <div class="box-body  with-border">
-            <datatable
-                    api-url="/admin/ajax/actividades"
-                    fields="{{ $fields }}"
-                    sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre, oficina, tipo o estado"
-                    detail-url="/admin/actividades/"
-            ></datatable>
+        <div class="box-body with-border">
+            <div class="table-responsive">
+                <datatable
+                        api-url="/admin/ajax/actividades"
+                        fields="{{ $fields }}"
+                        sort-order="{{ $sortOrder }}"
+                        placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                        detail-url="/admin/actividades/"
+                ></datatable>
+            </div>
         </div>
         <!-- /.box-body -->
     </div>

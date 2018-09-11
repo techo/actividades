@@ -23,3 +23,10 @@ div[aria-label="Insert link"] .mce-btn.mce-open {
     display: flex;
     align-items: center;
 }
+
+/*Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (max-width: 768px) {
+    section.content {
+        margin-bottom: 120px;
+    }
+}
