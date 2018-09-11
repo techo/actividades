@@ -2,22 +2,24 @@
   <div>
     <simple-alert ref="loading"></simple-alert>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
-    <vuetable
-      class="vuetable"
-      ref="inscripcionesVuetable"
-      v-bind:api-url="apiUrl"
-      :fields="dataFields"
-      pagination-path=""
-      :css="css.table"
-      :sort-order="dataSortOrder"
-      :multi-sort="true"
-      :append-params="moreParams"
-      detail-row-component="inscripciones-detail-row"
-      @vuetable:pagination-data="onPaginationData"
-      @vuetable:checkbox-toggled="checkboxToggledEmitter"
-      @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
-      @vuetable:cell-clicked="mostrarDetalle"
-    ></vuetable>
+    <div class="table-responsive">
+      <vuetable
+              class="vuetable"
+              ref="inscripcionesVuetable"
+              v-bind:api-url="apiUrl"
+              :fields="dataFields"
+              pagination-path=""
+              :css="css.table"
+              :sort-order="dataSortOrder"
+              :multi-sort="true"
+              :append-params="moreParams"
+              detail-row-component="inscripciones-detail-row"
+              @vuetable:pagination-data="onPaginationData"
+              @vuetable:checkbox-toggled="checkboxToggledEmitter"
+              @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
+              @vuetable:cell-clicked="mostrarDetalle"
+      ></vuetable>
+    </div>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
         info-class="pagination-info"
