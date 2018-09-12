@@ -416,7 +416,7 @@
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.$parent.$refs.login.showValidUser(response.data.user)
-                if(response.data.login_callback) window.location.href = response.data.login_callback;
+                //if(response.data.login_callback) window.location.href = response.data.login_callback;
               }).catch((error) => {
                 this.validar_data()
               });
