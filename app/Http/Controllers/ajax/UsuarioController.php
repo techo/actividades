@@ -200,7 +200,7 @@ class UsuarioController extends BaseController
 
         // grabar
         $persona->save();
-        $request->session()->flush();
+        $request->session()->invalidate();
         return response()->json('Usuario eliminado correctamente', 200);
     }
 }
