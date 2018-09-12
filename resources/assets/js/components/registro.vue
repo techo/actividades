@@ -315,6 +315,11 @@
                 </div>
             </div>
             <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/" class="btn btn-primary btn-lg">VOLVER AL HOME</a>
+                </div>
+            </div>
         </div>
         <div v-show="paso('linkear')">
             <div class="row">
