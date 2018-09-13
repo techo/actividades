@@ -200,8 +200,7 @@ class UsuarioController extends BaseController
 
         // grabar
         $persona->save();
-        $request->session()->flush();
-        return response()->json('Usuario eliminado correctamente', 200);
+        return app('App\Http\Controllers\Auth\LoginController')->logout($request); //Todo: Mejorar pasandolo a un servicio
     }
 }
 
