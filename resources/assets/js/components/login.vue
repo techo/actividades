@@ -1,13 +1,14 @@
-
 <template>
     <div>
         <!-- Modal begin-->
-        <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="opacity: 1; margin-top: -1em">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
+                                    style="opacity: 1; margin-top: -1em">
                                 <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
                             </button>
                         </div>
@@ -15,7 +16,8 @@
                             <div class="col-md-6">
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo" height="25" width="95">
+                                        <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo"
+                                             height="25" width="95">
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
@@ -25,12 +27,14 @@
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
+                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary google" @click="registro_google()"><i class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
+                                        <a class="btn btn-primary google" @click="registro_google()"><i
+                                                class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
@@ -38,11 +42,15 @@
                                         <form id="frmLogin">
                                             <div class="form-group">
                                                 <label for="mail">Correo Electrónico</label>
-                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email" v-model="credentials.mail" class="form-control" id="mail" placeholder="Ingresa tu correo electrónico" required>
+                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email"
+                                                       v-model="credentials.mail" class="form-control" id="mail"
+                                                       placeholder="Ingresa tu correo electrónico" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="password">Contraseña</label>
-                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }" v-model="credentials.password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }"
+                                                       v-model="credentials.password" class="form-control" id="password"
+                                                       placeholder="Ingresa tu contraseña" required>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
@@ -60,9 +68,9 @@
                                                         Ingresar
                                                     </button>
                                                 </div>
-                                               <div class="col-8 text-right">
+                                                <div class="col-8 text-right">
                                                     <a href="/password/reset">Olvidé mi contraseña</a>
-                                               </div>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>
@@ -87,78 +95,108 @@
                 </div>
             </div>
         </div>
-
-
         <!-- Modal End-->
-    <!-- Si esta autenticado -->
-        <span id="userDetail" v-if="authenticated">
-            <div class="btn-group" role="group" >
-                <button
-                    id="btnUser"
-                    type="button"
-                    class="btn btn-secondary dropdown-toggle"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    v-model="user.nombres"
-                >
-                        {{ user.nombres }}
-                </button>
-                <div
-                    class="dropdown-menu"
-                    aria-labelledby="btnUser"
-                >
-                    <button
-                            class="dropdown-item"
-                            id="btn-mis-actividades"
-                            type="button"
-                            v-on:click="misactividades"
-                    >
-                        Mis Actividades</button>
-                    <button
-                            class="dropdown-item"
-                            id="btn-perfil"
-                            type="button"
-                            v-on:click="perfil"
-                    >
-                        Perfil
-                    </button>
-                    <button
-                            v-show="this.verAdmin"
-                            class="dropdown-item"
-                            id="btn-admin" type="button"
-                            v-on:click="admin"
-                    >
-                        Admin
-                    </button>
-                    <button
-                            class="dropdown-item"
-                            id="btnLogout"
-                            type="button"
-                            v-on:click="logout"
-                    >
-                        Salir
-                    </button>
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-techo-blue">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a class="navbar-brand" href="/">
+                            <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
+                        </a>
+                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">Hola, {{ user.nombres }}</a>
+                    </div>
                 </div>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link text-uppercase" href="/actividades">Actividades <span class="sr-only">(current)</span></a>
+
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="misactividades">Mis Actividades</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="perfil">Perfil</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
+                            <a class="nav-link text-uppercase" v-on:click="admin">Admin</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="logout">Salir</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Si esta autenticado -->
+                <div id="userDetail" class="col-md-2 offset-md-4 d-none d-md-block" v-if="authenticated">
+                    <div class="btn-group" role="group">
+                        <button
+                                type="button"
+                                class="btn btn-secondary btnUser dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                v-model="user.nombres"
+                        >
+                               Hola, {{ user.nombres }}
+                        </button>
+                        <div
+                                class="dropdown-menu"
+                                aria-labelledby="btnUser"
+                        >
+                            <button
+                                    class="dropdown-item"
+                                    id="btn-mis-actividades"
+                                    type="button"
+                                    v-on:click="misactividades"
+                            >
+                                Mis Actividades</button>
+                            <button
+                                    class="dropdown-item"
+                                    id="btn-perfil"
+                                    type="button"
+                                    v-on:click="perfil"
+                            >
+                                Perfil
+                            </button>
+                            <button
+                                    v-show="this.verAdmin"
+                                    class="dropdown-item"
+                                    id="btn-admin" type="button"
+                                    v-on:click="admin"
+                            >
+                                Admin
+                            </button>
+                            <button
+                                    class="dropdown-item"
+                                    id="btnLogout"
+                                    type="button"
+                                    v-on:click="logout"
+                            >
+                                Salir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Si no esta autenticado -->
+                <form class="form-inline col-md-2 offset-md-4 " v-else>
+                    <button
+                            class="btn btn-primary"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#login-modal"
+                            id="btnShowModal"
+                    >
+                        Ingresar
+                    </button>
+                </form>
             </div>
-        </span>
-
-    <!-- Si no esta autenticado -->
-
-        <form class="form-inline" v-else>
-            <button
-                    class="btn btn-primary"
-                    type="button"
-                    data-toggle="modal"
-                    data-target="#login-modal"
-                    id="btnShowModal"
-            >
-                Ingresar
-            </button>
-        </form>
-
-
-
+        </nav>
     </div>
 </template>
 
@@ -323,40 +361,6 @@
             padding-top: 10%;
             padding-bottom: 10%;
         }
-
-        .dropdown-menu {
-            margin-left: -90% !important;
-        }
-    }
-
-    @media (min-width: 768px) {
-        #btnUser {
-            left: 50vw !important;
-        }
-
-        #btnShowModal {
-            position: relative;
-            left: 50vw;
-        }
-
-        .dropdown-menu {
-            left: 47vw !important;
-        }
-    }
-
-    @media only screen  and (min-width : 1824px) {
-        #btnUser {
-            left: 60vw !important;
-        }
-
-        #btnShowModal {
-            position: relative;
-            left: 60vw;
-        }
-
-        .dropdown-menu {
-            left: 57vw !important;
-        }
     }
 
     .registro h1{
@@ -386,10 +390,11 @@
         background-color: #007bff;
         color: #fff;
     }
-    #btnUser {
+    .btnUser {
         border: none;
         background: #0092dd;
         text-transform: capitalize;
+        color: #fff !important;
     }
     .dropdown-menu {
         width: 10em;

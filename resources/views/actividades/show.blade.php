@@ -164,12 +164,12 @@
                         </a>
                     </div>
                 @elseif (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-                    <div><span class="btn btn-success w-100">¡YA TE INSCRIBISTE!</span></div>
+                    <div><span class="btn btn-success w-100"><strong>¡YA TE INSCRIBISTE!</strong></span></div>
                 @elseif($hayCupos && $inscripcionAbierta)
                     <div>
                         <a class="btn btn-primary inscripcion-btn w-100"
                            href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                            INSCRIBIRME
+                            <strong>INSCRIBIRME<strong>
                         </a>
                     </div>
                 @elseif(!$hayCupos)

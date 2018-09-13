@@ -37,7 +37,7 @@ main {
 nav.bg-techo-blue {
     .container {
         a.navbar-brand {
-            margin-left: -5%;
+            //margin-left: -5%;
         }
         >span{
             margin-right: -8%;
@@ -105,4 +105,7 @@ nav.bg-techo-blue {
 
 span.cerrar {
     color: #fff;
+}
+h1.text-primary {
+    padding-bottom: 20px;
 }
