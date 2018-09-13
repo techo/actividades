@@ -315,6 +315,11 @@
                 </div>
             </div>
             <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/" class="btn btn-primary btn-lg">VOLVER AL HOME</a>
+                </div>
+            </div>
         </div>
         <div v-show="paso('linkear')">
             <div class="row">
@@ -416,7 +421,7 @@
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.$parent.$refs.login.showValidUser(response.data.user)
-                if(response.data.login_callback) window.location.href = response.data.login_callback;
+                //if(response.data.login_callback) window.location.href = response.data.login_callback;
               }).catch((error) => {
                 this.validar_data()
               });
