@@ -22,13 +22,7 @@
                     <h5>Crea tu cuenta de voluntario de Techo</h5>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                </div>
-            </div>
+
             <div class="row">
                 <div class="col-md-3">
                     <a class="btn facebook" @click="registro_facebook()">
@@ -331,13 +325,7 @@
                 <div class="col-md-6">
                     <h2>Relacionar la cuenta de techo con tu cuenta de red social</h2>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">
                         Volver</a></div>
