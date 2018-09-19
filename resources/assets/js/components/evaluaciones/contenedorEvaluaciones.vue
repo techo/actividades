@@ -26,6 +26,7 @@
                             v-model="personaSeleccionada"
                             :filterable=true
                     >
+                        <span slot="no-options">Empezá a escribir para buscar.</span>
                     </v-select>
                 </div>
             </div>
