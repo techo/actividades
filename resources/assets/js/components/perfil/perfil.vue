@@ -550,7 +550,8 @@
         },
         computed: {
             loginSocial: function () {
-                return (this.user.facebook_id != '' || this.user.google_id != '');
+                return $.inArray(this.user.facebook_id, ['', null])  === -1 ||
+                    $.inArray(this.user.google_id, ['', null]) === -1;
             }
         }
     }
