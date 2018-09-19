@@ -27,18 +27,15 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="slider">Puntaje General</label>
-                                    <vue-slider
-                                            :min=1
-                                            :max=10
-                                            :interval=1
-                                            ref="slider"
-                                            id="slider"
-                                            :disabled="noAplica || evaluacionPasada"
-                                            :piecewise=true
-                                            v-model="puntaje"
-                                    >
-                                    </vue-slider>
+                                    <label for="slider">Puntaje General <div v-show="!noAplica" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntaje}">{{ puntaje }}</div></label>
+                                    <input type="range"
+                                           class="form-control-range"
+                                           id="slider"
+                                           min="1"
+                                           max="10"
+                                           step="1"
+                                           :disabled="evaluacionPasada || enviado"
+                                           v-model="puntaje">
                                 </div>
 
                             </div>
@@ -47,7 +44,7 @@
                                     <label for="noAplica" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
                                         No Aplica / No tengo opinión
                                     </label>
-                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica" :disabled="evaluacionPasada">
+                                    <input type="checkbox" id="noAplica" :value="1" v-model="noAplica" :disabled="evaluacionPasada || enviado">
                                 </div>
                             </div>
 
@@ -61,7 +58,7 @@
                                     rows="5"
                                     class="form-control"
                                     v-model="comentario"
-                                    :disabled="evaluacionPasada"
+                                    :disabled="evaluacionPasada || enviado"
                             >{{ comentario }}</textarea>
                         </div>
                         <button
@@ -140,6 +137,15 @@
             }
         },
         computed: {
+            colorPuntaje: function() {
+                if (this.puntaje <= 3) {
+                    return '#F7977A';
+                } else if (this.puntaje <= 6) {
+                    return '#FFF79A';
+                } else if (this.puntaje <= 10) {
+                    return '#82CA9D';
+                }
+            },
             evaluacionPasada: function () {
                 let ahora = new Date();
                 let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
@@ -161,5 +167,17 @@
 
     .gris {
         color: #8F8F8F;
+    }
+
+    .infoPuntaje {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        background: gray;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 3px;
+        margin-left: 3px;
     }
 </style>
