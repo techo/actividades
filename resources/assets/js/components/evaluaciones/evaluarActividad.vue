@@ -34,7 +34,7 @@
                                            min="1"
                                            max="10"
                                            step="1"
-                                           :disabled="evaluacionPasada || enviado"
+                                           :disabled="noAplica || evaluacionPasada || enviado"
                                            v-model="puntaje">
                                 </div>
 
