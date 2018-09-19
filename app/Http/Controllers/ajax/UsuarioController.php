@@ -189,8 +189,8 @@ class UsuarioController extends BaseController
         }
 
         // ofuscar en tabla persona
-        $persona->nombres = str_random(30);
-        $persona->apellidoPaterno = str_random(30);
+        $persona->nombres = 'Usuario Anónimo';
+        $persona->apellidoPaterno = '';
         $persona->telefono = str_random(30);
         $persona->telefonoMovil = str_random(30);
         $persona->dni = str_random(8);
