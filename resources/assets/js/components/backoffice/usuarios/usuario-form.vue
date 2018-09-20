@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="usuario-component">
         <div v-show="guardado" class="callout callout-success">
             <h4>{{ mensajeGuardado }}</h4>
         </div>
@@ -371,5 +371,9 @@
 </script>
 
 <style scoped>
-
+    @media (max-width: 768px) {
+        .usuario-component {
+            margin-bottom: 120px;
+        }
+    }
 </style>
