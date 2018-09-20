@@ -67,7 +67,7 @@
                     <div class="col-md-4">
                         <br><br>
                         <p>
-                            <a href="{{ url()->previous() }}" class="btn btn-link">VOLVER</a>
+                            <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
                         </p>
                     </div>
                 </div>
