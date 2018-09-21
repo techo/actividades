@@ -1,0 +1,45 @@
+version: '2'
+services:
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=database"
+    ports:
+      - 9000:9000
+    user: "${UID}"
+
+  # The Web Server
+  web:
+    build:
+      context: ./
+      dockerfile: web.dockerfile
+    working_dir: /var/www
+    volumes_from:
+      - app
+    ports:
+      - 8080:80
+
+  # The Database
+  database:
+    image: mysql:5.7
+    volumes:
+#      - dbdata:/var/lib/mysql
+      - ./db.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      - "MYSQL_DATABASE=actividades"
+      - "MYSQL_USER=actividades"
+      - "MYSQL_PASSWORD=actividades"
+      - "MYSQL_ROOT_PASSWORD=actividades"
+    ports:
+        - 33061:3306
+
+#volumes:
+#  dbdata:

@@ -18,10 +18,8 @@ storage/debugbar/
 package-lock.json
 /public/mix-manifest.json
 /storage/debugbar
-app.dockerfile
-docker-compose.yml
 pilote.sql.tar
-web.dockerfile
 composer.lock
+composer.phar
 /database/seeds/PayuArgentinaSeeder.php
 worker.log
