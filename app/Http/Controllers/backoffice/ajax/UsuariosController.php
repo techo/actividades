@@ -5,18 +5,22 @@ namespace App\Http\Controllers\backoffice\ajax;
 use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\RolResource;
 use App\Http\Resources\UsuariosResource;
+use App\Http\Services\UserService;
 use App\Persona;
 use App\Search\UsuariosSearch;
-use App\VerificacionMailPersona;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Webpatser\Uuid\Uuid;
 
 class UsuariosController extends Controller
 {
+
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function usuariosSearch(Request $request)
     {
         $filtros = $request->all();
@@ -42,86 +46,13 @@ class UsuariosController extends Controller
         return new RolResource($rol);
     }
 
-    public function cargar_cambios($request,$persona)
-    {
-        $fechaNacimiento = new Carbon($request->nacimiento);
-        $persona->apellidoPaterno = $request->apellido;
-        $persona->dni = $request->dni;
-        $persona->mail = $request->email;
-        if(!empty($request->localidad)) {
-            $persona->idLocalidad = $request->localidad['id'];
-        }
-        $persona->fechaNacimiento = $fechaNacimiento;
-        $persona->nombres = $request->nombre;
-        $persona->idPais = $request->pais['id'];
-        $persona->idPaisResidencia = $request->pais['id'];
-        if(!empty($request->provincia)) {
-            $persona->idProvincia = $request->provincia['id'];
-        }
-        $persona->sexo = $request->sexo['id'];
-        $persona->telefonoMovil = $request->telefono;
-        return $persona;
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    private function createValidator(Request $request)
-    {
-        $messages = [
-            "sexo.required" => "El campo Género es requerido",
-            "nacimiento.required" => "El campo Fecha de nacimiento es requerido",
-            "dni.required" => "El campo DNI/Pasaporte es requerido",
-            "pais.required" => "El campo País es requerido",
-            "dni.regex" => "El campo DNI/Pasaporte tiene un formato inválido",
-            "email.unique" => "El email ya existe en el sistema"
-        ];
-        $v = Validator::make(
-            $request->all(),
-            [
-                'nombre' => 'required|regex:/^[\pL\s]+$/',
-                'apellido' => 'required|regex:/^[\pL\s]+$/',
-                'rol' => 'required',
-                'pais' => 'required',
-                'sexo' => 'required',
-                'nacimiento' => 'required|date|before:' . date('Y-m-d'),
-                'telefono' => 'required|numeric',
-                'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
-                'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email'
-            ], $messages
-        );
-
-        return $v;
-    }
-
     public function store(Request $request) {
-        $validator = $this->createValidator($request);
+        $validator = $this->userService->createValidator($request);
 
         if ($validator->passes()) {
-            $persona = new Persona();
-            $this->cargar_cambios($request, $persona);
-            $persona->password = Hash::make(str_random(30));
-            $persona->carrera = '';
-            $persona->anoEstudio = '';
-            $persona->idContactoCTCT = '';
-            $persona->statusCTCT = '';
-            $persona->lenguaje = '';
-            $persona->idRegionLT = 0;
-            $persona->idUnidadOrganizacional = 0;
-            $persona->idCiudad = 0;
-            $persona->verificado = false;
-            $persona->recibirMails = 1;
-            $persona->unsubscribe_token = Uuid::generate()->string;
-            $persona->save();
-            $verificacion = new VerificacionMailPersona();
-            $verificacion->idPersona = $persona->idPersona;
-            $verificacion->token = str_random(40);
-            $verificacion->save();
-            if (!empty($persona->idPersona) && $persona->assignRole($request->rol['rol'])) {
-                return response()->json(['Usuario registrado correctamente'], 200);
-            }
-
+              if ($this->userService->crearUsuario($request)) {
+                  return response()->json(['Usuario registrado correctamente'], 200);
+              }
             return response()->json('Error desconocido', 500);
         }
         return response($validator->errors()->all(), 422);
