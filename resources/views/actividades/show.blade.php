@@ -111,37 +111,6 @@
 @endsection
 
 @section('footer')
-{{--<footer class="row fixed-bottom align-middle inscripcion-bar">--}}
-{{--
-    <div class="container">
-        <div class="col-md-7">
-            <h5>{{ $actividad->nombreActividad }}</h5>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#compartirModal">
-                <i class="fas fa-share-alt"></i>  COMPARTIR
-            </button>
-        </div>
-        @if (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-            <div class="col-md-3"><span class="btn btn-success w-100">YA TE INSCRIBISTE!</span></div>
-        @elseif($hayCupos && $inscripcionAbierta)
-            <div class="col-md-3">
-                <a class="btn btn-primary inscripcion-btn w-100"
-                   href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                    INSCRIBIRME
-                </a>
-            </div>
-        @else
-            <div class="col-md-3">
-            <span class="btn btn-danger inscripcion-btn w-100">
-                INSCRIPCIÓN CERRADA
-            </span>
-            </div>
-        @endif
-    </div>
-</footer>
---}}
-
 <footer class="footer inscripcion-bar fixed-bottom">
     <div class="container">
         <div class="row">

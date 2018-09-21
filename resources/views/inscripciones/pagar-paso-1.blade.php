@@ -94,7 +94,11 @@
                             <div class="col-md-4">
                                 <br><br>
                                 <p>
-                                    <a href="{{ url()->previous() }}" class="btn btn-link">VOLVER</a>
+                                    @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
+                                        <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
+                                    @else
+                                        <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
+                                    @endif
                                 </p>
                             </div>
                         </div>
