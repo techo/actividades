@@ -37,11 +37,11 @@ return [
     'facebook' => [
         'client_id'     => '146696142692543',
         'client_secret' => '206e76d3afcff91448abd36cd7bd71fe',
-        'redirect'      => 'https://actividades.techo.org/auth/facebook/callback',
+        'redirect'      => env('FACEBOOK_REDIRECT_URL'),
     ],
     'google' => [
         'client_id'     => '421717671652-on5e9puc5lg0qibghh2dhicnqjbobfrb.apps.googleusercontent.com',
         'client_secret' => 'i4ditSJe5gBdUiWuwQibjaZ4',
-        'redirect'      => 'https://actividades.techo.org/auth/google/callback',
+        'redirect'      => env('GOOGLE_REDIRECT_URL'),
     ],
 ];
