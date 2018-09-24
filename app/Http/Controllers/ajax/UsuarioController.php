@@ -16,6 +16,7 @@ use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Search\MisActividadesSearch;
+use Illuminate\Validation\Rule;
 use Webpatser\Uuid\Uuid;
 
 class UsuarioController extends BaseController
@@ -32,12 +33,13 @@ class UsuarioController extends BaseController
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
-          if($request->has('privacidad')) $rules['privacidad'] = 'required';
+          if($request->has('privacidad')) $rules['privacidad'] = 'accepted';
         break;
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
         if($request->has('sexo')) $rules['sexo'] = 'required';
+        if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
