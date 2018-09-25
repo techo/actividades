@@ -62,6 +62,10 @@ class LoginController extends Controller
                 Cookie::queue(Cookie::make('after_login_url', ''));
             }
 
+            if(url('/registro') == $request->headers->get('referer')) {
+                $afterLoginUrl = '/';
+            }
+
             return response(
                 [
                     'success' => true,
