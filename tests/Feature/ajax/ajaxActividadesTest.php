@@ -34,6 +34,7 @@ class ajaxActividadesTest extends TestCase
         $params = [];
 
         $response = $this->post('/ajax/actividades/provincias/', $params);
+
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -75,6 +76,7 @@ class ajaxActividadesTest extends TestCase
     {
         $actividad = Actividad::first();
         $url = '/ajax/actividades/' . $actividad->idActividad;
+
         $response = $this->get($url);
         $response
             ->assertStatus(200)
@@ -95,7 +97,6 @@ class ajaxActividadesTest extends TestCase
                         "nombreActividad",
                         "descripcion",
                         "compromiso",
-                        "costo",
                         "lugar",
                         "moneda",
                         "puntosEncuentro" => []
@@ -104,4 +105,3 @@ class ajaxActividadesTest extends TestCase
             );
     }
 }
-

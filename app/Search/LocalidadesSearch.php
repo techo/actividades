@@ -11,11 +11,18 @@ class LocalidadesSearch
     public static function apply(Request $filters)
     {
         $query = static::applyDecoratorsFromRequest($filters, LocalidadesSearch::newQuery());
+        //dd($query);
         return static::getResults($query);
     }
     private static function applyDecoratorsFromRequest(Request $request, Builder $query)
     {
-        foreach ($request->all() as $filterName => $value) {
+        $filters = $request->all();
+
+        if (count($filters)==0) {
+          $filters = array('busqueda' => 'punto' );
+        }
+
+        foreach ($filters as $filterName => $value) {
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);
@@ -43,7 +50,7 @@ class LocalidadesSearch
             ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
             ->orderBy('atl_provincias.Provincia', 'asc')
             ->orderBy('atl_localidades.Localidad', 'asc')
-            ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia, 
+            ->selectRaw('distinct atl_provincias.id id_provincia, atl_provincias.Provincia,
                                          atl_localidades.id id_localidad, atl_localidades.Localidad')
             ->where('estadoConstruccion', 'Abierta')
             ->where('inscripcionInterna', 0) //Visibilidad pública
