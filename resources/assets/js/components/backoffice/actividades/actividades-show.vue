@@ -102,7 +102,6 @@
                                 id="tiposDeActividad"
                                 v-model="tipoSeleccionado"
                                 v-bind:disabled="this.readonly"
-                                :onChange=this.actualizarTipoDeActividad()
                         >
                         </v-select>
                     </div>
@@ -488,6 +487,27 @@
             }
         },
         watch: {
+            tipoSeleccionado: function (nuevoTipo, tipoAnterior) {
+                if (nuevoTipo !== null) {
+                    this.dataActividad.idTipo = nuevoTipo.idTipo;
+                    if (this.dataActividad.tipo === undefined) {
+                        this.dataActividad.tipo = {};
+                    }
+                    if (typeof tinymce !== 'undefined'
+                        && tinymce.get('descripcion') !== null
+                        && nuevoTipo.descripcion !== null
+                        && (this.dataActividad.descripcion === null || tinymce.get('descripcion').getContent() == "")) {
+                        tinymce.get('descripcion').setContent(nuevoTipo.descripcion);
+                        this.dataActividad.descripcion = nuevoTipo.descripcion;
+                    }
+
+                    this.dataActividad.tipo.idTipo = nuevoTipo.idTipo;
+                    this.dataActividad.tipo.flujo = nuevoTipo.flujo;
+                    this.dataActividad.tipo.nombre = nuevoTipo.nombre;
+                    this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
+                    store.commit('updateEsConstruccion', this.esConstruccion);
+                }
+            }
         },
         methods: {
             inicializar: function () {
@@ -571,7 +591,6 @@
                                 self.tiposDeActividad = data;
                                 self.tipoSeleccionado = null;
                                 self.dataActividad.idTipo = null;
-                                //self.categoriaSeleccionada.tipos = data;
                             }
                         );
                         this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -580,28 +599,6 @@
                     this.dataActividad.tipo = {
                         'categoria': this.categoriaSeleccionada
                     };
-                }
-            },
-            actualizarTipoDeActividad() {
-                if (this.tipoSeleccionado !== null) {
-                    this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
-                    if (this.dataActividad.tipo === undefined) {
-                        this.dataActividad.tipo = {};
-                    }
-                    if (typeof tinymce !== 'undefined'
-                        && tinymce.get('descripcion') !== null
-                        && this.tipoSeleccionado.descripcion !== null
-                        && (this.dataActividad.descripcion === null || tinymce.get('descripcion').getContent() == "")) {
-                        tinymce.get('descripcion').setContent(this.tipoSeleccionado.descripcion);
-                        this.dataActividad.descripcion = null;
-                    }
-
-                    //this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
-                    this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
-                    this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
-                    this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
-                    this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
-                    store.commit('updateEsConstruccion', this.esConstruccion);
                 }
             },
             getOficinas() {
