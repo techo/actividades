@@ -392,10 +392,10 @@
       },
       methods: {
         registro_facebook: function() {
-          window.location.href = 'https://actividades.techo.org/auth/facebook';
+          window.location.href = '/auth/facebook';
         },
         registro_google: function() {
-          window.location.href = 'https://actividades.techo.org/auth/google';
+          window.location.href = '/auth/google';
         },
         cambiar_paso: function (mod) {
           switch(this.paso_actual) {
