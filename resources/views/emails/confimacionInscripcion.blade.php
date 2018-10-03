@@ -94,7 +94,7 @@
                 {{$inscripcion->punto_encuentro->responsable->nombres}}
                 {{$inscripcion->punto_encuentro->responsable->apellidoPaterno}}
                 <a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
-                    {{ $inscripcion->actividad->coordinador->mail }}
+                    {{ $inscripcion->actividad->responsable->mail }}
                 </a>
 
             </p>
