@@ -176,7 +176,7 @@
 
 @section('footer')
     <crud-footer
-            cancelar-url="/admin/actividades"
+            cancelar-url="/admin/actividades/usuario"
             edicion="{{ $edicion }}"
             compartir="{{ $compartir }}"
             can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
