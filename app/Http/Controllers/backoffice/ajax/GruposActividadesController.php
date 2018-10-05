@@ -30,7 +30,7 @@ class GruposActividadesController extends BaseController
         $personaArray = [];
         try {
             foreach ($request->miembros as $item) {
-                if ($item['tipo'] === 'grupo') {
+                if ($item['tipo'] === 'grupo' && $item['id'] !== $request->idGrupoDestino) {
                     $grupoArray[] = $item['id'];
                 }
 
