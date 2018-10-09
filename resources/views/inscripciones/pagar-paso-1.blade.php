@@ -43,8 +43,13 @@
                 Para realizar tu donación
             </h3>
             <p>
+                @if(!empty($actividad->beca))
                 Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
                 Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
+                @else
+                    Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
+                    Si quieres, puedes realizar tu donativo con el botón de aquí abajo.
+                @endif
             </p>
 
             @if($actividad->tipo->flujo == "CONSTRUCCION")
@@ -71,18 +76,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p class="font-weight-bold"> &nbsp;o también puedes</p>
+                            @if(!empty($actividad->beca))
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p class="font-weight-bold"> &nbsp;o también puedes</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">SOLICITAR UNA BECA</a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">SOLICITAR UNA BECA</a>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
                         </div>
                         <br><br>
                         <div class="row">

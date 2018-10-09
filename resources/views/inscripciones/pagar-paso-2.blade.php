@@ -43,8 +43,13 @@
                 Para realizar tu donación
             </h3>
             <p>
-                Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
-                Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
+                @if(!empty($actividad->beca))
+                    Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
+                    Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
+                @else
+                    Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
+                    Si quieres, puedes realizar tu donativo con el botón de aquí abajo.
+                @endif
             </p>
 
             @if($actividad->tipo->flujo == "CONSTRUCCION")

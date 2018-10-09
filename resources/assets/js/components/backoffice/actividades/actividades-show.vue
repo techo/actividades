@@ -385,6 +385,7 @@
                                v-bind:disabled="readonly"
                                v-model="dataActividad.beca"
                         >
+                        <span class="text-muted">Opcional</span>
                     </div>
                 </div>
             </div>
