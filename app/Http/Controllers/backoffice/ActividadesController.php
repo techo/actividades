@@ -334,9 +334,11 @@ class ActividadesController extends Controller
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
 
-        $v->sometimes('beca', 'url', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
+        if(!empty($request->beca)){
+            $v->sometimes('beca', 'url', function ($request) {
+                return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+            });
+        }
 
         return $v;
     }

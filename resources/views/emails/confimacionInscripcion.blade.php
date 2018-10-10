@@ -52,7 +52,10 @@
             los gastos de traslado, seguro y comida durante la construcción. En el caso que no puedas abonar,
             no queremos que dejes de participar, escríbenos a
             <a href="mailto:problemasdepago.argentina@techo.org" target="_blank">problemasdepago.argentina@techo.org</a>
-            para gestionar una PRÓRROGA o <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
+            para gestionar una PRÓRROGA
+            @if(!empty($inscripcion->actividad->beca))
+                o <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
+            @endif
         </p>
     @endif
 
