@@ -44,14 +44,18 @@
         <p>
             Para confirmar tu participación, inicia sesión con tu cuenta y haz click en el botón
             <strong>Confirmar con tu donación</strong> en el <a
-                    href="{{ url('/inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion/') }}">detalle de la actividad.</a>
+                    href="{{ url('/inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion/') }}"
+            >detalle de la actividad.</a>
         </p>
         <p>
-            Te recordamos que el monto para abonar es de <b>${{$inscripcion->actividad->costo}}</b>, los cuales cubren
-            los gastos de traslado, seguro y comida durante la construcción. En el caso que no puedas abonarlo,
-            no queremos que dejes de participar, escribinos a
+            Te recordamos que el monto mínimo sugerido para abonar es de <b>${{$inscripcion->actividad->montoMin}}</b>, los cuales cubren
+            los gastos de traslado, seguro y comida durante la construcción. En el caso que no puedas abonar,
+            no queremos que dejes de participar, escríbenos a
             <a href="mailto:problemasdepago.argentina@techo.org" target="_blank">problemasdepago.argentina@techo.org</a>
-            para gestionar una PRÓRROGA o <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
+            para gestionar una PRÓRROGA
+            @if(!empty($inscripcion->actividad->beca))
+                o <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
+            @endif
         </p>
     @endif
 
@@ -93,7 +97,7 @@
                 {{$inscripcion->punto_encuentro->responsable->nombres}}
                 {{$inscripcion->punto_encuentro->responsable->apellidoPaterno}}
                 <a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
-                    {{ $inscripcion->actividad->coordinador->mail }}
+                    {{ $inscripcion->punto_encuentro->responsable->mail }}
                 </a>
 
             </p>

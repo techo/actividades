@@ -31,27 +31,26 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
     public function headings(): array
     {
         return [
-            'ID del Voluntario',
-            'DNI',
-            'Nombre',
-            'Apellido',
-            'Teléfono Móvil',
-            'Email',
-            'Fecha de nacimiento',
-            'Genero',
-            'País',
-            'Provincia',
-            'Localidad',
-            'Fecha De Inscripción',
-            'Asistencia A La Actividad',
-//            'Pago',
+            //'ID del Voluntario',
+            'dni',
+            'nombre',
+            'apellido',
+            'teléfono Móvil',
+            'email',
+            'fecha de nacimiento',
+            'genero',
+            'país',
+            'provincia',
+            'localidad',
+            'fecha de inscripción',
+            'cantidad de actividades (según filtro previo)',
+            'presente',
+            'pago',
 //            'Costo De La Actividad',
-            'Estado',
-            'Punto de Encuentro',
-            'País del punto de encuentro',
-            'Localidad del punto de encuentro',
-            'Provincia del Punto de encuentro',
-            'Cantidad de Actividades (según filtro previo)'
+            'estado',
+            'punto de encuentro',
+            'grupo',
+            'rol',
         ];
     }
 
@@ -70,7 +69,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
         }
 
         return [
-            $query->idPersona,
+            //$query->idPersona,
             $query->dni,
             $query->nombres,
             $query->apellidoPaterno,
@@ -82,25 +81,24 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->pProvincia,
             $query->pLocalidad,
             Date::dateTimeToExcel(Carbon::parse($query->fechaInscripcion)),
-            is_null($query->presente) ? 'No' : 'Si',
-/*            is_null($query->pago) ? 'No' : 'Si',
-            $query->costo,*/
+            $query->cantActividades,
+            (is_null($query->presente) || $query->presente == 0) ? 'No' : 'Si',
+            (is_null($query->pago) || $query->pago == 0) ? 'No' : 'Si',
+/*            $query->costo,*/
             $query->estado,
             $query->punto,
-            $query->puntoPais,
-            $query->puntoLocalidad,
-            $query->puntoProvincia,
-            $query->cantActividades
+            $query->nombreGrupo,
+            $query->nombreRol,
         ];
     }
 
     public function columnFormats(): array
     {
         return [
-            'B' => NumberFormat::FORMAT_TEXT,
-            'E' => NumberFormat::FORMAT_TEXT,
-            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
-            'L' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'A' => NumberFormat::FORMAT_TEXT,
+            'D' => NumberFormat::FORMAT_TEXT,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'K' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 

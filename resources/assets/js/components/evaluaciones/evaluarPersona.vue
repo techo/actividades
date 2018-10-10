@@ -27,20 +27,17 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="sliderTecnico">Puntaje Técnico</label>
-                                    <vue-slider
-                                            :min=1
-                                            :max=10
-                                            :interval=1
-                                            :piecewise=true
-                                            ref="sliderTecnico"
-                                            id="sliderTecnico"
-                                            :disabled="noAplicaTecnico || evaluacionPasada"
-                                            v-model="puntajeTecnico"
+                                    <label for="sliderTecnico">Puntaje Técnico <div v-show="!noAplicaTecnico" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
+                                    <input type="range"
+                                           class="form-control-range"
+                                           id="sliderTecnico"
+                                           min="1"
+                                           max="10"
+                                           step="1"
+                                           :disabled="noAplicaTecnico || evaluacionPasada || enviado"
+                                           v-model="puntajeTecnico"
                                     >
-                                    </vue-slider>
                                 </div>
-
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
@@ -51,6 +48,7 @@
                                             type="checkbox"
                                             id="noAplicaTecnico"
                                             :value="1"
+                                            :disabled="evaluacionPasada || enviado"
                                             v-model="noAplicaTecnico"
                                     >
                                 </div>
@@ -60,18 +58,16 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="sliderSocial">Puntaje Social</label>
-                                    <vue-slider
-                                            :min=1
-                                            :max=10
-                                            :interval=1
-                                            :piecewise=true
-                                            ref="sliderSocial"
-                                            id="sliderSocial"
-                                            :disabled="noAplicaSocial || evaluacionPasada"
-                                            v-model="puntajeSocial"
+                                    <label for="sliderSocial">Puntaje Social <div v-show="!noAplicaSocial" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeSocial}">{{ puntajeSocial }}</div></label>
+                                    <input type="range"
+                                           class="form-control-range"
+                                           id="sliderSocial"
+                                           min="1"
+                                           max="10"
+                                           step="1"
+                                           :disabled="noAplicaSocial || evaluacionPasada || enviado"
+                                           v-model="puntajeSocial"
                                     >
-                                    </vue-slider>
                                 </div>
 
                             </div>
@@ -84,6 +80,7 @@
                                             type="checkbox"
                                             id="noAplicaSocial"
                                             :value="1"
+                                            :disabled="evaluacionPasada || enviado"
                                             v-model="noAplicaSocial"
                                     >
                                 </div>
@@ -99,7 +96,7 @@
                                     rows="5"
                                     class="form-control"
                                     v-model="comentario"
-                                    :disabled="evaluacionPasada"
+                                    :disabled="evaluacionPasada || enviado"
                             >{{ comentario }}</textarea>
                         </div>
 
@@ -184,6 +181,24 @@
             }
         },
         computed: {
+            colorPuntajeTecnico: function() {
+                if (this.puntajeTecnico <= 3) {
+                    return '#F7977A';
+                } else if (this.puntajeTecnico <= 6) {
+                    return '#FFF79A';
+                } else if (this.puntajeTecnico <= 10) {
+                    return '#82CA9D';
+                }
+            },
+            colorPuntajeSocial: function() {
+                if (this.puntajeSocial <= 3) {
+                    return '#F7977A';
+                } else if (this.puntajeSocial <= 6) {
+                    return '#FFF79A';
+                } else if (this.puntajeSocial <= 10) {
+                    return '#82CA9D';
+                }
+            },
             nombre: function () {
                 if (this.persona.nombres !== undefined) {
                     return this.persona.nombres + ' ' + this.persona.apellidoPaterno;
@@ -211,6 +226,18 @@
 
     .gris {
         color: #8F8F8F;
+    }
+
+    .infoPuntaje {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        background: gray;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        padding-top: 3px;
+        margin-left: 3px;
     }
 
 </style>

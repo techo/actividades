@@ -72,7 +72,7 @@ class Persona extends Authenticatable
     }
 
     public function noEstaInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count() == 0;
+        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->first();
     }
 
     public function verificacion()
@@ -82,7 +82,7 @@ class Persona extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        Mail::to($this->mail)->send(new ForgotPassword($token));
+        Mail::to($this->mail)->send(new ForgotPassword($token, $this));
     }
 
     public function getEmailForPasswordReset()
@@ -96,5 +96,20 @@ class Persona extends Authenticatable
             ->where('idPersona', auth()->user()->idPersona)
             ->where('estado', '<>', 'Desinscripto')
             ->first();
+    }
+
+    public function pais()
+    {
+        return $this->hasOne(Pais::class, 'id', 'idPais');
+    }
+
+    public function provincia()
+    {
+        return $this->hasOne(Provincia::class, 'id', 'idProvincia');
+    }
+
+    public function localidad()
+    {
+        return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
 }

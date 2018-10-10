@@ -10,10 +10,10 @@ use App\PuntoEncuentro;
 use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\MailConfimacionInscripcion;
 
-class InscripcionesController extends Controller
+class InscripcionesController extends BaseController
 {
     /**
      * Show the form for creating a new resource.
@@ -56,25 +56,32 @@ class InscripcionesController extends Controller
                 $inscripcion->evaluacion = 0;
                 $inscripcion->acompanante = '';
                 $inscripcion->fechaInscripcion = new Carbon();
-                $inscripcion->estado = 'Sin Contactar';
 
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
-                $inscripcion->save();
-                Mail::to(Auth::user()->mail)->send(new MailConfimacionInscripcion($inscripcion));
             }
 
             if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+
+                try {
+                    $config = json_decode($actividad->pais->config_pago);
+                    $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                    $payment = new $paymentClass($inscripcion);
+                } catch (\Exception $e) {
+                    return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+                }
+                $payment->setMonto($request->monto);
                 $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
-                $config = json_decode($actividad->pais->config_pago);
-                $paymentClass = 'App\\Payments\\' . $config->payment_class;
-                $payment = new $paymentClass($inscripcion);
+                $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
 
-                return view('inscripciones.pagar')
+                return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
+            $inscripcion->estado = 'Sin Contactar';
 
+            $inscripcion->save();
+            $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
@@ -110,30 +117,54 @@ class InscripcionesController extends Controller
 
     public function confirmarDonacion($id)
     {
-        $actividad = Actividad::findOrFail($id);
-        $inscripcion = auth()->user()->inscripcionActividad($id);
+        $actividad = Actividad::find($id);
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->where('estado', 'Pre-inscripto')
+            ->firstOrFail();
 
-        $config = json_decode($actividad->pais->config_pago);
-        $paymentClass = 'App\\Payments\\' . $config->payment_class;
-        $payment = new $paymentClass($inscripcion);
+        try {
+            $config = json_decode($actividad->pais->config_pago);
+            $paymentClass = 'App\\Payments\\' . $config->payment_class;
+            $payment = new $paymentClass($inscripcion);
+        } catch (\Exception $e) {
+            return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+        }
 
-        return view('inscripciones.pagar')
+        return view('inscripciones.pagar-paso-1')
             ->with('actividad', $actividad)
             ->with('payment', $payment);
 
     }
 
-/*    public function donar(Request $request, $id)
+    public function donacionCheckout(Request $request, $id)
     {
-        $inscripcion = auth()->user()->InscripcionActividad($id);
-        $actividad = Actividad::findOrFail($id);
-        $paymentClass = 'App\\Payments\\' . $actividad->pais->medio_pago;
-        $payment = new $paymentClass($request, $inscripcion);
-        return view('inscripciones.pagar')
+        if(!$request->has('monto') || !is_numeric($request->monto)){
+            abort(403);
+        }
+
+        $actividad = Actividad::find($id);
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->where('estado', 'Pre-inscripto')
+            ->firstOrFail();
+
+
+        try {
+            $config = json_decode($actividad->pais->config_pago);
+            $paymentClass = 'App\\Payments\\' . $config->payment_class;
+            $payment = new $paymentClass($inscripcion);
+        } catch (\Exception $e) {
+            return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+        }
+        $payment->setMonto($request->monto);
+
+        return view('inscripciones.pagar-paso-2')
             ->with('actividad', $actividad)
             ->with('payment', $payment);
 
-    }*/
+    }
+
     /**
      * @param Actividad $idActividad
      * @param int $idPersona

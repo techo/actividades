@@ -7,6 +7,7 @@
 
 <body>
     <div id="app">
+        @include('partials.cookies-bar')
         @include('partials.header')
         <main role="main">
 

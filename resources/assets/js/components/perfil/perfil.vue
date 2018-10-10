@@ -1,5 +1,6 @@
 <template>
     <div>
+        <simplert ref="confirmar"></simplert>
         <div>
             <div class="row">
                 <div class="col-md-12">
@@ -275,7 +276,27 @@
 
             </div>
 
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.recibirMails" class="form-check-input" type="checkbox" id="recibirMails">
+                        <label class="form-check-label" for="recibirMails">
+                            Recibir notificaciones operativas de la plataforma (necesario para mantenerte informado de las actividades en las que participas)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
+                        <label class="form-check-label" for="acepta_marketing">
+                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br><br>
             <div class="row">
                 <div class="col-md-5">
                     <span v-show='volver'>
@@ -285,7 +306,16 @@
                         </a>
                     </span>
                 </div>
-                <div class="col-md-5"><a class="btn btn-primary" href="#" @click="guardar()">Guardar</a></div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a class="btn btn-primary" href="#" @click="guardar()">Guardar</a>
+                        </div>
+                        <div class="col-md-8">
+                            <a class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <hr>
         </div>
@@ -378,7 +408,7 @@
         methods: {
             cancelar: function () {
                 axios.get('/ajax/usuario/perfil').then(response => {
-                    this.user = response.data
+                    this.user = response.data.data
                     this.limpia_validacion_pass(this.user)
                 })
             },
@@ -495,12 +525,47 @@
             logout: function (e) {
                 e.preventDefault();
                 events.$emit('cerrar-sesion');
+            },
+            eliminar: function () {
+                let self = this;
+                self.$refs.confirmar.openSimplert({
+                    title:'ELIMINAR MI CUENTA',
+                    message:"Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
+                    useConfirmBtn: true,
+                    isShown: true,
+                    disableOverlayClick: true,
+                    customClass: 'confirmar',
+                    customCloseBtnText: 'CANCELAR', //string -- close button text
+                    customCloseBtnClass: 'btn btn-secondary', //string -- custom class for close button
+                    customConfirmBtnText: 'SI, ELIMINAR', //string -- confirm button text
+                    customConfirmBtnClass: 'btn btn-danger', //string -- custom class for confirm button
+                    onConfirm: function() {
+                        axios.delete('/ajax/usuario').then(response => {
+                            window.location.href = '/';
+                        })
+                    }
+                })
             }
+
         },
         computed: {
             loginSocial: function () {
-                return (this.user.facebook_id != '' || this.user.google_id != '');
+                return $.inArray(this.user.facebook_id, ['', null])  === -1 ||
+                    $.inArray(this.user.google_id, ['', null]) === -1;
             }
         }
     }
 </script>
+
+<style scoped>
+    .btn-secondary {
+        text-transform: uppercase !important;
+        font-weight: bold !important;
+    }
+
+    .btn-danger {
+        text-transform: uppercase !important;
+        font-weight: bold !important;
+    }
+
+</style>

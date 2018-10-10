@@ -15,20 +15,20 @@
                                 style="width: 20em"
                         >
                         <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
-                        <button class="btn" @click.prevent="resetFilter">Borrar</button>
+                        <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
                     </div>
                 </form>
             </div>
 
             <div class="col-md-3 pull-right">
-                <button class="btn" @click.prevent="mostrarModalImportar">
+                <button class="btn btn-default" @click.prevent="mostrarModalImportar">
                     <i class="glyphicon glyphicon-upload"></i> Importar desde Excel
                 </button>
                 <inscripciones-importar-modal></inscripciones-importar-modal>
             </div>
 
             <div class="col-md-2 pull-right">
-                <button class="btn" @click.prevent="exportar">
+                <button class="btn btn-default" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
                 </button>
             </div>

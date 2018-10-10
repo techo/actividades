@@ -7,7 +7,7 @@
 @section('main_image')
     <div class="techo-hero">
         <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
-        <h1 class="text-uppercase">Ayudanos a transformar esta realidad</h1>
+        <h1 class="text-uppercase">Transformemos esta realidad</h1>
     </div>
 @endsection
 
@@ -21,7 +21,7 @@
                     <div class="card border-light">
                         <a href="/actividades?categoria={{ $categoria->id }}">
                             <img
-                                    class="card-img-top"
+                                    class="card-img-top img-fluid"
                                     src="{{ $categoria->imagen }}"
                                     alt="{{ $categoria->nombre }}"
                                     width="380"

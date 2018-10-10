@@ -75,11 +75,16 @@ class actividadesController extends Controller
                     &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
 
         if (auth()->check() && auth()->user()->estaPreInscripto($id)) {
-            $config = json_decode($actividad->pais->config_pago);
-            $paymentClass = 'App\\Payments\\' . $config->payment_class;
-            $persona = Persona::find(auth()->user()->idPersona);
-            $inscripcion = $persona->inscripcionActividad($id);
-            $payment = new $paymentClass($inscripcion);
+            try{
+                $config = json_decode($actividad->pais->config_pago);
+                $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                $persona = Persona::find(auth()->user()->idPersona);
+                $inscripcion = $persona->inscripcionActividad($id);
+                $payment = new $paymentClass($inscripcion);
+            } catch (\Exception $e){
+                return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+            }
+
             return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'payment'));
         }
         return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));

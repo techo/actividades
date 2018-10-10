@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
 Route::get('/actividades', 'ActividadesController@index');
-Route::get('/terminos/actividades', function (){
+Route::get('/cookie/close', function(){
+    return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
+});
+Route::get('/carta-voluntariado', function (){
     return view('terminos.actividades.show');
 });
-
+Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
+Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
 // Ajax calls
 Route::prefix('ajax')->group(function () {
@@ -24,7 +28,8 @@ Route::prefix('ajax')->group(function () {
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
-	Route::prefix('usuario')->group(function(){
+	Route::prefix('usuario')->group(
+	    function(){
 		Route::get('', function(){
 			if(Auth::check()) {
 				return Auth::user();
@@ -35,7 +40,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('perfil', 'ajax\UsuarioController@perfil');
         Route::post('', 'ajax\UsuarioController@create');
         Route::put('', 'ajax\UsuarioController@update');
-		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail');
+        Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
+		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail'); //TODO revisar si se está usando
         Route::put('linkear', 'ajax\UsuarioController@linkear');
         Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
         Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
@@ -89,6 +95,7 @@ Route::get('/actividades/{id}', 'ActividadesController@show');
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
     Route::get('', 'InscripcionesController@puntoDeEncuentro');
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
+    Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
     Route::post('/gracias', 'InscripcionesController@create');
     Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
@@ -112,7 +119,11 @@ Route::get('admin/ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usu
 
 Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(function () {
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('permission:ver_usuarios');
+    Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('permission:ver_usuarios');
+    Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('permission:ver_usuarios');
+    Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
+    Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::post('/roles/usuario/{id}', 'backoffice\UsuariosRolesController@update')->middleware('permission:asignar_roles');
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');

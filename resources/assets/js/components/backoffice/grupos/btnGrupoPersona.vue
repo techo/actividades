@@ -243,9 +243,11 @@
                     this.noInscriptoPuntoError = true;
                 }
             },
-            guardarNoInscriptoCerrar: function () {
-                this.guardarInscripto();
-                this.cancelar();
+            guardarNoInscriptoCerrar: function () { debugger;
+                this.guardarNoInscripto();
+                if (!this.noInscriptoNombreError && !this.noInscriptoPuntoError) {
+                    this.cancelar();
+                }
             },
             confirmarGuardado: function () {
                 Event.$emit('vuetable-actualizarTabla');

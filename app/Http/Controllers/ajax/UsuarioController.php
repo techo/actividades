@@ -16,6 +16,8 @@ use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
 use App\Search\MisActividadesSearch;
+use Illuminate\Validation\Rule;
+use Webpatser\Uuid\Uuid;
 
 class UsuarioController extends BaseController
 {
@@ -31,11 +33,13 @@ class UsuarioController extends BaseController
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
+          if($request->has('privacidad')) $rules['privacidad'] = 'accepted';
         break;
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
         if($request->has('sexo')) $rules['sexo'] = 'required';
+        if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/';
@@ -58,6 +62,8 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->idCiudad = 0;
       $persona->verificado = false;
+      $persona->recibirMails = 1;
+      $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
       $verificacion = new VerificacionMailPersona();
       $verificacion->idPersona = $persona->idPersona;
@@ -72,6 +78,7 @@ class UsuarioController extends BaseController
       $this->validar($request,'update');
       $persona = Auth::user();
       $this->cargar_cambios($request, $persona);
+      $persona->recibirMails = (int) $request->recibirMails;
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
       }
@@ -94,6 +101,7 @@ class UsuarioController extends BaseController
       $persona->telefonoMovil = $request->telefono;
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;
+      $persona->acepta_marketing = $request->acepta_marketing;
       return $persona;
   }
 
@@ -161,6 +169,40 @@ class UsuarioController extends BaseController
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;
+    }
+
+    public function delete(Request $request)
+    {
+        // Traer todas las inscripciones de actividades futuras del usuario
+
+        $persona = Persona::find(auth()->user()->idPersona);
+
+        $inscripcionesFuturas = $persona->inscripciones()
+            ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
+            ->whereNotIn('estado',['Desinscripto'])
+            ->whereDate('Actividad.fechaInicio', '>=', Carbon::now())
+            ->get();
+
+        // actualizar las inscripciones como desinscripto
+        foreach ($inscripcionesFuturas as $inscripcion){
+            $inscripcion = Inscripcion::find($inscripcion->idInscripcion);
+            $inscripcion->estado = 'Desinscripto';
+            $inscripcion->save();
+        }
+
+        // ofuscar en tabla persona
+        $persona->nombres = 'Usuario Anónimo';
+        $persona->apellidoPaterno = '';
+        $persona->telefono = str_random(30);
+        $persona->telefonoMovil = str_random(30);
+        $persona->dni = str_random(8);
+        $persona->mail = str_random(40);
+        $persona->recibirMails = 0;
+        $persona->acepta_marketing = 0;
+
+        // grabar
+        $persona->save();
+        return app('App\Http\Controllers\Auth\LoginController')->logout($request); //Todo: Mejorar pasandolo a un servicio
     }
 }
 

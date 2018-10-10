@@ -6,11 +6,13 @@ use App\Actividad;
 use App\CategoriaActividad;
 use App\Grupo;
 use App\GrupoRolPersona;
+use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Rules\FechaFinActividad;
 use Carbon\Carbon;
 use App\Pais;
 use App\PuntoEncuentro;
 use App\UnidadOrganizacional;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -153,7 +155,7 @@ class ActividadesController extends Controller
 
             $datatableConfig = config('datatables.inscripciones');
             $fields = $datatableConfig['fields'];
-            if ($actividad->costo > 0) {
+            if ($actividad->montoMin > 0) {
                 $checkPago = [[
                     'name' => '__component:pago',
                     'title' => 'Pago',
@@ -254,6 +256,7 @@ class ActividadesController extends Controller
         try {
             $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
             $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
+            $this->enviarNotificaciones($actividad);
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -296,8 +299,8 @@ class ActividadesController extends Controller
                 'La actividad debe tener un nombre',
             'pais.*' =>
                 'Debe seleccionar el país de la actividad',
-            'costo.*' =>
-                'Debe especificar el costo de participar en la construcción',
+            'montoMin.*' =>
+                'Debe especificar el monto mínimo de donación',
             'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
                 posterior al final de la actividad',
             'beca.url' => 'El enlace al formulario de solicitud de beca debe ser una URL válida'
@@ -327,17 +330,15 @@ class ActividadesController extends Controller
             ], $messages
         );
 
-        $v->sometimes('costo', 'required|numeric|min:1', function ($request) {
+        $v->sometimes('montoMin', 'required|numeric|min:1', function ($request) {
             return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
         });
 
-        $v->sometimes('beca', 'url', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        });
-
-/*        $v->sometimes('LinkPago', 'url', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
-        }, ['LinkPago.*' => 'el campo link de pago debe tener una URL válida']);*/
+        if(!empty($request->beca)){
+            $v->sometimes('beca', 'url', function ($request) {
+                return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+            });
+        }
 
         return $v;
     }
@@ -431,6 +432,8 @@ class ActividadesController extends Controller
         $actividad->idOficina = $request['oficina']['id'];
         $actividad->fechaInicio = $request->fechaInicio;
         $actividad->fechaFin = $request->fechaFin;
+        $actividad->montoMin = $request->montoMin > 0 ? $request->montoMin : 0;
+        $actividad->montoMax = $request->montoMax > 0 ? $request->montoMax : 0;
         $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
         $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
@@ -523,5 +526,18 @@ class ActividadesController extends Controller
             $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
         }
         return;
+    }
+
+    private function enviarNotificaciones(Actividad $actividad)
+    {
+        try{
+            foreach ($actividad->inscripciones_validas() as $inscripcion) {
+                $job = (new EnviarMailsCancelacionActividad($inscripcion));
+                dispatch($job);
+            };
+        } catch (ModelNotFoundException $e){
+            \Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');
+        }
+
     }
 }

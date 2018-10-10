@@ -20,6 +20,7 @@ import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaci
 import DataTable from './components/datatable/DataTable';
 import BtnMisActividades from './components/perfil/btnMisActividades';
 import TarjetaHorizontal from './components/perfil/tarjeta-horizontal';
+import CookiesBar from './components/cookies-bar';
 
 
 import axios from 'axios';
@@ -46,6 +47,7 @@ Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
 Vue.component('datatable', DataTable);
 Vue.component('btn-mis-actividades', BtnMisActividades);
 Vue.component('tarjeta-horizontal', TarjetaHorizontal);
+Vue.component('cookies-bar', CookiesBar);
 
 window.Event = new Vue();
 

@@ -97,7 +97,7 @@ class InscripcionesController extends BaseController
                 $grupoRol = new GrupoRolPersona();
                 $grupoRol->idPersona = $persona->idPersona;
                 $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = Actividad::find($idActividad)->grupos()->raiz()->idGrupo;
+                $grupoRol->idGrupo = Actividad::find($idActividad)->grupoRaiz->idGrupo;
                 $grupoRol->rol = $request->rol;
                 $grupoRol->save();
             }
@@ -137,7 +137,7 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            Mail::to($inscripcion->persona->mail)->send(new ActualizacionActividad($inscripcion));
+            $this->intentaEnviar(Mail::to($inscripcion->persona->mail), new ActualizacionActividad($inscripcion), $inscripcion->persona);
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
@@ -195,7 +195,8 @@ class InscripcionesController extends BaseController
         $inscripcion = $this->inscribir($request->all());
         $grupo = $this->incluirEnGrupo($request->all());
         if ($inscripcion &&  $grupo) {
-            $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
+            $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
             return response('ok');
         }
 
@@ -222,7 +223,9 @@ class InscripcionesController extends BaseController
             'fechaInscripcion'  => Carbon::now(),
             'idPersonaModificacion' => auth()->user()->idPersona,
             'idPuntoEncuentro'  => $inscripcion['idPuntoEncuentro'],
-            'estado'            => 'Sin Contactar',
+            'estado'            => empty($inscripcion['estado']) ? 'Sin Contactar' : $inscripcion['estado'],
+            'pago'            => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
+            'presente'            => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
             'evaluacion'        => 0,
             'acompanante'       => ''
         ];
@@ -248,8 +251,9 @@ class InscripcionesController extends BaseController
                         ->where('idPersona', auth()->user()->idPersona)
                         ->where('nombreProceso', 'importar_inscripciones')
                         ->delete();
-                    $counter = 0;
+                    $counter = 1;
                     $errores = [];
+                    $actividad = Actividad::find($id);
                     foreach($data as $inscripcion){
                         $errorEnRegistro = false;
                         $counter++;
@@ -261,7 +265,7 @@ class InscripcionesController extends BaseController
                         }
 
                         try {
-                            $punto = PuntoEncuentro::where('punto', $inscripcion['punto'])
+                            $punto = PuntoEncuentro::where('punto', $inscripcion['punto de encuentro'])
                                 ->where('idActividad', $id)
                                 ->firstOrFail();
                         } catch (ModelNotFoundException $e) {
@@ -281,39 +285,93 @@ class InscripcionesController extends BaseController
                                 $errorEnRegistro = true;
                             }
                         }
+
+                        if (!in_array(strtolower($inscripcion['presente']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna presente debe ser 'si' o 'no'.";
+                            $errorEnRegistro = true;
+                        }
+
+                        if (!in_array(strtolower($inscripcion['pago']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna pago debe ser 'si' o 'no'.";
+                            $errorEnRegistro = true;
+                        }
+
+                        $estadosValidos = ['sin contactar', 'sin interés', 'confirmado', 'sin confirmar'];
+                        if ($actividad->tipo->flujo === 'CONSTRUCCION') {
+                            array_push($estadosValidos, 'pre-inscripto');
+                        }
+
+                        if (!in_array(strtolower($inscripcion['estado']), $estadosValidos) ) {
+                            $errores[] = "Error en linea "
+                                . $counter
+                                . ". el valor de la columna estado debe ser "
+                                . implode(', ', $estadosValidos) . ".";
+                            $errorEnRegistro = true;
+                        }
+
                         if(!$errorEnRegistro) {
                             $inscripcionValida = [
                                 'idActividad' => $id,
                                 'idPersona' => $persona->idPersona,
                                 'idPuntoEncuentro' => $punto->idPuntoEncuentro,
-                                'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : 0,
-                                'rol' => $inscripcion['rol']
+                                'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : $actividad->grupoRaiz->idGrupo,
+                                'rol' => $inscripcion['rol'],
+                                'estado' => $inscripcion['estado'],
+                                'pago' => strtolower($inscripcion['pago']) ==='si' ? 1 : 0,
+                                'presente' => strtolower($inscripcion['presente']) ==='si' ? 1 : 0
                             ];
 
-                            if($persona->noEstaInscripto($id)) {
+                            $inscripcion = $persona->noEstaInscripto($id);
+                            if (!$inscripcion) {
 
                                 $inscripto = $this->inscribir($inscripcionValida);
 
                                 if ($inscripto) { //Enviar mail al voluntario
-                                    Mail::to($persona->mail)->send(new MailConfimacionInscripcion($inscripto));
+                                    $this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
                                 } else {
-                                    $errores[] = "Error interno al inscribir a " . $persona->nombreCompleto . "(" . $persona->mail. ")";
+                                    $errores[] = "Error interno al inscribir a "
+                                        . $persona->nombreCompleto
+                                        . "("
+                                        . $persona->mail. ")";
                                 }
 
                                 $incluidoEnGrupo = $this->incluirEnGrupo($inscripcionValida);
 
-                                if(empty($incluidoEnGrupo)){
-                                    $errores[] = "Error interno al incluir a " . $persona->nombreCompleto . "(" . $persona->mail. ") en el grupo " . $inscripcion['grupo'];
-                                }
-                                if($inscripto && $incluidoEnGrupo) {
-                                    $procesados++;
+                                if (empty($incluidoEnGrupo)){
+                                    $errores[] = "Error interno al incluir a "
+                                        . $persona->nombreCompleto
+                                        . "("
+                                        . $persona->mail. ") en el grupo "
+                                        . $inscripcion['grupo'];
                                 }
 
                             } else {
-                                $errores[] = "Error en linea " . $counter . ". Voluntario ya inscripto a la actividad.";
+                                $inscripto = $inscripcion->update(
+                                    [
+                                        'pago'      => $inscripcionValida['pago'],
+                                        'estado'    => $inscripcionValida['estado'],
+                                        'presente'  => $inscripcionValida['presente'],
+                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro']
+                                    ]
+                                );
+
+                                $incluidoEnGrupo = GrupoRolPersona::where('idActividad', $id)
+                                    ->where('idPersona', $persona->idPersona)
+                                    ->update(
+                                        [
+                                            'idGrupo' => $inscripcionValida['idGrupo'],
+                                            'rol' => $inscripcionValida['rol']
+                                        ]
+                                    );
                             }
+
+                            if($inscripto && $incluidoEnGrupo) {
+                                $procesados++;
+                            }
+
                         }
                     } //end foreach
+
                     foreach ($errores as $error){
                         Log::create([
                             'idPersona' => auth()->user()->idPersona,
@@ -323,7 +381,7 @@ class InscripcionesController extends BaseController
                     }
                     return response()->json(
                         [
-                            'mensaje' => "Se procesaron " . $procesados . " registros de " . $counter . " correctamente."
+                            'mensaje' => "Se procesaron " . $procesados . " registros de " . --$counter . " correctamente."
                                            . " Se encontraron " . count($errores) . " errores." ,
                             'log_link' => route('logs', 'importar_inscripciones'),
                             'errores' => count($errores)

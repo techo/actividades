@@ -6,9 +6,8 @@
 
 
 @section('main_image')
-    <div class="techo-hero">
-        <img src="/img/hero-slim.jpg" alt="hero image" height="210">
-        <h2>Inscríbete y acompáñanos con tu voluntariado</h2>
+    <div class="techo-hero actividades">
+        <h2></h2>
     </div>
 @endsection
 

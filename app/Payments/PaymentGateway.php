@@ -43,10 +43,21 @@ interface PaymentGateway
     public function setRequest(Request $request);
 
     /**
+     * Configura el monto a pagar en una transacción específica
+     * @param $monto
+     * @return
+     */
+    public function setMonto($monto);
+
+    /**
      * Actualiza el estatus de la inscripción en la DB
      * @return bool
      */
     public function updateUserStatus();
 
-    public function config();
+    /**
+     * Retorna la configuración establecida en la base de datos
+     * @return mixed
+     */
+    public function getConfig();
 }

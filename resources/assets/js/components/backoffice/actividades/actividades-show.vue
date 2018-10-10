@@ -102,7 +102,6 @@
                                 id="tiposDeActividad"
                                 v-model="tipoSeleccionado"
                                 v-bind:disabled="this.readonly"
-                                :onChange=this.actualizarTipoDeActividad()
                         >
                         </v-select>
                     </div>
@@ -351,16 +350,30 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <div class="form-group">
-                        <label for="costo">Costo (ARS)</label>
-                        <input id="costo" name="costo"
+                        <label for="montoMin">Monto Mínimo (ARS)</label>
+                        <input id="montoMin" name="montoMin"
                                type="number"
                                class="form-control"
                                v-bind:disabled="readonly"
-                               v-model="dataActividad.costo"
+                               v-model="dataActividad.montoMin"
                                min="1"
+                               required
                         >
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="montoMax">Monto máximo </label>
+                        <input id="montoMax" name="montoMax"
+                               type="number"
+                               class="form-control"
+                               v-bind:disabled="readonly"
+                               v-model="dataActividad.montoMax"
+                               min="0"
+                        >
+                        <span class="text-muted">Opcional</span>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -372,6 +385,7 @@
                                v-bind:disabled="readonly"
                                v-model="dataActividad.beca"
                         >
+                        <span class="text-muted">Opcional</span>
                     </div>
                 </div>
             </div>
@@ -457,7 +471,7 @@
             },
             fechasInscripcion: function () {
                 return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
-            }
+            },
         },
         filters: {
             estado: function (value) {
@@ -474,6 +488,27 @@
             }
         },
         watch: {
+            tipoSeleccionado: function (nuevoTipo, tipoAnterior) {
+                if (nuevoTipo !== null) {
+                    this.dataActividad.idTipo = nuevoTipo.idTipo;
+                    if (this.dataActividad.tipo === undefined) {
+                        this.dataActividad.tipo = {};
+                    }
+                    if (typeof tinymce !== 'undefined'
+                        && tinymce.get('descripcion') !== null
+                        && nuevoTipo.descripcion !== null
+                        && (this.dataActividad.descripcion === null || tinymce.get('descripcion').getContent() == "")) {
+                        tinymce.get('descripcion').setContent(nuevoTipo.descripcion);
+                        this.dataActividad.descripcion = nuevoTipo.descripcion;
+                    }
+
+                    this.dataActividad.tipo.idTipo = nuevoTipo.idTipo;
+                    this.dataActividad.tipo.flujo = nuevoTipo.flujo;
+                    this.dataActividad.tipo.nombre = nuevoTipo.nombre;
+                    this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
+                    store.commit('updateEsConstruccion', this.esConstruccion);
+                }
+            }
         },
         methods: {
             inicializar: function () {
@@ -490,6 +525,7 @@
                 this.tipoSeleccionado = this.dataActividad.tipo !== undefined  ? this.dataActividad.tipo : null;
                 this.oficinaSeleccionada = this.dataActividad.oficina !== undefined  ? this.dataActividad.oficina : null;
                 this.esConstruccion = this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION';
+                store.commit('updateEsConstruccion', this.esConstruccion);
                 this.dataActividad.limiteInscripciones = this.dataActividad.limiteInscripciones !== null ?  this.dataActividad.limiteInscripciones : 0;
                 if (this.dataActividad.coordinador !== undefined) {
                     this.coordinadorSeleccionado =  this.dataActividad.coordinador;
@@ -556,7 +592,6 @@
                                 self.tiposDeActividad = data;
                                 self.tipoSeleccionado = null;
                                 self.dataActividad.idTipo = null;
-                                //self.categoriaSeleccionada.tipos = data;
                             }
                         );
                         this.dataActividad.tipo.categoria = this.categoriaSeleccionada;
@@ -565,27 +600,6 @@
                     this.dataActividad.tipo = {
                         'categoria': this.categoriaSeleccionada
                     };
-                }
-            },
-            actualizarTipoDeActividad() {
-                if (this.tipoSeleccionado !== null) {
-                    this.dataActividad.idTipo = this.tipoSeleccionado.idTipo;
-                    if (this.dataActividad.tipo === undefined) {
-                        this.dataActividad.tipo = {};
-                    }
-                    if (typeof tinymce !== 'undefined'
-                        && tinymce.get('descripcion') !== null
-                        && this.tipoSeleccionado.descripcion !== null
-                        && (this.dataActividad.descripcion === null || tinymce.get('descripcion').getContent() == "")) {
-                        tinymce.get('descripcion').setContent(this.tipoSeleccionado.descripcion);
-                        this.dataActividad.descripcion = null;
-                    }
-
-                    //this.dataActividad.descripcion = this.tipoSeleccionado.descripcion;
-                    this.dataActividad.tipo.idTipo = this.tipoSeleccionado.idTipo;
-                    this.dataActividad.tipo.flujo = this.tipoSeleccionado.flujo;
-                    this.dataActividad.tipo.nombre = this.tipoSeleccionado.nombre;
-                    this.esConstruccion = (this.dataActividad.tipo !== undefined && this.dataActividad.tipo.flujo === 'CONSTRUCCION');
                 }
             },
             getOficinas() {
@@ -618,7 +632,7 @@
                 this.axiosPost(url, //endpoint
                     function (data, self) { //handler de success
                         if (self.dataActividad.idActividad === null) {
-                            window.location.replace('/admin/actividades');
+                            window.location.replace('/admin/actividades/usuario');
                         }
                         self.mensajeGuardado = data;
                         self.guardado = true;

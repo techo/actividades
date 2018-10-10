@@ -1,6 +1,6 @@
 <template>
     <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
-            <select class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
+            <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -10,7 +10,7 @@
                     {{ categoria.nombre }}
                 </option>
             </select>
-        <div class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
+        <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
             <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
             </label>
@@ -18,14 +18,14 @@
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </label>
         </div>
-        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
+        <div id="filtro-provincias" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
                     v-bind:provincias="this.dataProvincias"
             >
             </contenedor-check-provincias>
         </div>
-        <div class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
+        <div id="filtro-tipos" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
@@ -136,7 +136,7 @@
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
-
+                
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
                     self.dataProvincias = Object.keys(response).map(i => response[i]);
                             for (let i=0; i< self.$children.length; i++) {
@@ -144,7 +144,7 @@
                             }
                         },formData,
                 function (error) {
-                    console.log('error en getTiposDeActividad. url: ' + url);
+                    console.log('error en getProvinciasYLocalidades. url: ' + url);
                 });
             },
 
@@ -257,5 +257,15 @@
 
     .dropdown-container {
         padding-right: 0;
+    }
+
+    @media (max-width: 768px) {
+        #filtro-categoria,
+        #filtro-lugar,
+        #filtro-provincias,
+        #filtro-tipos,
+        .borrar-filtros {
+            margin: 5px 15px;
+        }
     }
 </style>

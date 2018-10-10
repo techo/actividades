@@ -22,13 +22,7 @@
                     <h5>Crea tu cuenta de voluntario de Techo</h5>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                </div>
-            </div>
+
             <div class="row">
                 <div class="col-md-3">
                     <a class="btn facebook" @click="registro_facebook()">
@@ -259,7 +253,32 @@
 
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.privacidad" class="form-check-input" type="checkbox" id="privacidad" required>
+                        <label class="form-check-label" for="privacidad">
+                            Acepto la <a href="https://www.techo.org/politica-de-privacidad" target="_blank">Política de privacidad</a> *
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <span v-bind:class="{'d-none':!validacion.privacidad.invalido}">
+                        <i class="fas fa-times text-danger"></i>
+                        Debe aceptar las políticas de privacidad para continuar
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
+                        <label class="form-check-label" for="acepta_marketing">
+                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                        </label>
+                    </div>
+                </div>
+            </div>
             <hr>
             <div class="row">
                 <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i
@@ -284,12 +303,15 @@
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
+                    Ya estás registrado/a como voluntario/a ¡Te esperamos en las próximas actividades!
                 </div>
             </div>
             <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="/" class="btn btn-primary btn-lg">VOLVER AL HOME</a>
+                </div>
+            </div>
         </div>
         <div v-show="paso('linkear')">
             <div class="row">
@@ -301,13 +323,7 @@
                 <div class="col-md-6">
                     <h2>Relacionar la cuenta de techo con tu cuenta de red social</h2>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                    </div>
-                </div>
+
                 <div class="row">
                     <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">
                         Volver</a></div>
@@ -338,7 +354,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -376,10 +392,10 @@
       },
       methods: {
         registro_facebook: function() {
-          window.location.href = 'https://actividades.techo.org/auth/facebook';
+          window.location.href = '/auth/facebook';
         },
         registro_google: function() {
-          window.location.href = 'https://actividades.techo.org/auth/google';
+          window.location.href = '/auth/google';
         },
         cambiar_paso: function (mod) {
           switch(this.paso_actual) {
@@ -391,7 +407,7 @@
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.$parent.$refs.login.showValidUser(response.data.user)
-                if(response.data.login_callback) window.location.href = response.data.login_callback;
+                //if(response.data.login_callback) window.location.href = response.data.login_callback;
               }).catch((error) => {
                 this.validar_data()
               });
