@@ -45,7 +45,7 @@ class MisActividadesSearch
         $query = (new Actividad)->newQuery();
 
         $query->join('Inscripcion','Inscripcion.idActividad','=','Actividad.idActividad')
-            ->join('atl_localidades', 'atl_localidades.id', '=', 'Actividad.idLocalidad')
+            ->leftJoin('atl_localidades', 'atl_localidades.id', '=', 'Actividad.idLocalidad')
             ->join('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->where('Inscripcion.idPersona', auth()->user()->idPersona)
