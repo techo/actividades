@@ -27,7 +27,6 @@ class MisActividadesResource extends Resource
             'fechaFinEvaluaciones' => empty($this->fechaFinEvaluaciones) ? '' : $this->fechaFinEvaluaciones->format('d-m-Y H:i'),
             'nombreActividad' => $this->nombreActividad,
             'lugar' => $this->localidad->localidad . ', ' . $this->provincia->provincia,
-            'puntoEncuentro' => $this->puntosEncuentro,
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'img' => $this->imagen,
             'descripcion' => clean_string($this->descripcion)
