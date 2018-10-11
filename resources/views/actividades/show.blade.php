@@ -53,7 +53,7 @@
             <div class="col-md-8">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>
-					@if (!isset($actividad->localidad))
+					@if (!isset($actividad->localidad) || !isset($actividad->provincia))
                         Sin especificar
                     @else
                         {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
