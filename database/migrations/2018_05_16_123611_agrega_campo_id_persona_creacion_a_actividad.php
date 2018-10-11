@@ -27,8 +27,10 @@ class AgregaCampoIdPersonaCreacionAActividad extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('idPersonaCreacion');
-        });
+        if (Schema::hasColumn('Actividad', 'idPersonaCreacion')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->dropColumn('idPersonaCreacion');
+            });
+        }
     }
 }
