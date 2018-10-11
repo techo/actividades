@@ -27,8 +27,10 @@ class IncluyeCampoBecaEnActividades extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('beca');
-        });
+        if (Schema::hasColumn('Actividad', 'beca')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->dropColumn('beca');
+            });
+        }
     }
 }

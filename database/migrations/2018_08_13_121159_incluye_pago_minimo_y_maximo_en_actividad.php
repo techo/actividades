@@ -28,7 +28,7 @@ class IncluyePagoMinimoYMaximoEnActividad extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('Persona', 'montoMin')) {
+        if (Schema::hasColumn('Actividad', 'montoMin')) {
             Schema::table('Actividad', function (Blueprint $table) {
                 $table->dropColumn(['montoMin', 'montoMax']);
             });
