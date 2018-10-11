@@ -31,8 +31,10 @@ class IncluyeUpdatedAtYCreatedAtEnPersona extends Migration
      */
     public function down()
     {
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['created_at', 'updated_at']);
-        });
+        if (Schema::hasColumn('Persona', 'created_at')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['created_at', 'updated_at']);
+            });
+        }
     }
 }

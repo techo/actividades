@@ -29,9 +29,11 @@ class IncluyeIdProvinciaYIdLocalidadEnPersona extends Migration
      */
     public function down()
     {
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['idProvincia', 'idLocalidad']);
-        });
+        if (Schema::hasColumn('Persona', 'idProvincia')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['idProvincia', 'idLocalidad']);
+            });
+        }
 
     }
 }

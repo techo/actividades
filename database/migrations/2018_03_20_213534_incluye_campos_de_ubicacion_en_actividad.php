@@ -30,8 +30,10 @@ class IncluyeCamposDeUbicacionEnActividad extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn(['idPais', 'idProvincia', 'idLocalidad']);
-        });
+        if (Schema::hasColumn('Actividad', 'idPais')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->dropColumn(['idPais', 'idProvincia', 'idLocalidad']);
+            });
+        }
     }
 }

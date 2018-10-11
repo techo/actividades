@@ -25,8 +25,10 @@ class QuitaCampoVisibilidadTablaActividad extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->boolean('visibilidad')->default(true);
-        });
+        if (Schema::hasColumn('Actividad', 'visibilidad')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->boolean('visibilidad')->default(true);
+            });
+        }
     }
 }

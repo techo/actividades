@@ -28,8 +28,10 @@ class IncluyeUpdatedAtYCreatedAtEnInscripciones extends Migration
      */
     public function down()
     {
-        Schema::table('Inscripcion', function (Blueprint $table) {
-            $table->dropColumn(['created_at', 'updated_at']);
-        });
+        if (Schema::hasColumn('Inscripcion', 'created_at')) {
+            Schema::table('Inscripcion', function (Blueprint $table) {
+                $table->dropColumn(['created_at', 'updated_at']);
+            });
+        }
     }
 }

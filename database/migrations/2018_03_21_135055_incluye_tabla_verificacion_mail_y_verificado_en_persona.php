@@ -33,8 +33,10 @@ class IncluyeTablaVerificacionMailYVerificadoEnPersona extends Migration
     public function down()
     {
         Schema::dropIfExists('VerificacionMailPersona');
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['verificado']);
-        });
+        if (Schema::hasColumn('Persona', 'verificado')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['verificado']);
+            });
+        }
     }
 }

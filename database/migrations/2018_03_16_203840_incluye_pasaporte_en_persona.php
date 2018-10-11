@@ -29,8 +29,10 @@ class IncluyePasaporteEnPersona extends Migration
      */
     public function down()
     {
-        Schema::table('Persona', function (Blueprint $table) {
-            $table->dropColumn(['pasaporte']);
-        });
+        if (Schema::hasColumn('Persona', 'pasaporte')) {
+            Schema::table('Persona', function (Blueprint $table) {
+                $table->dropColumn(['pasaporte']);
+            });
+        }
     }
 }

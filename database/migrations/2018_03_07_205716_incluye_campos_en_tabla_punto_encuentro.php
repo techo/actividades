@@ -30,8 +30,10 @@ class IncluyeCamposEnTablaPuntoEncuentro extends Migration
      */
     public function down()
     {
-        Schema::table('PuntoEncuentro', function (Blueprint $table) {
-            $table->dropColumn(['idPais', 'idProvincia', 'idLocalidad']);
-        });
+        if (Schema::hasColumn('PuntoEncuentro', 'idPais')) {
+            Schema::table('PuntoEncuentro', function (Blueprint $table) {
+                $table->dropColumn(['idPais', 'idProvincia', 'idLocalidad']);
+            });
+        }
     }
 }

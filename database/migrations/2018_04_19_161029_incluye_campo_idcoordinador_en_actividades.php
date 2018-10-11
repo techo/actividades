@@ -28,8 +28,10 @@ class IncluyeCampoIdcoordinadorEnActividades extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('idCoordinador');
-        });
+        if (Schema::hasColumn('Actividad', 'idCoordinador')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->dropColumn('idCoordinador');
+            });
+        }
     }
 }

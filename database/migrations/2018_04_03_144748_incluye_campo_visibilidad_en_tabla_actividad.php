@@ -27,8 +27,10 @@ class IncluyeCampoVisibilidadEnTablaActividad extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('visibilidad');
-        });
+        if (Schema::hasColumn('Actividad', 'visibilidad')) {
+            Schema::table('Actividad', function (Blueprint $table) {
+                $table->dropColumn('visibilidad');
+            });
+        }
     }
 }
