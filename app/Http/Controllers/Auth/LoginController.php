@@ -139,7 +139,7 @@ class LoginController extends Controller
             $personaData->email = $user->user['email'];
             $personaData->facebook_id = $user->user['id'];
             $personaData->google_id = '';
-            
+
             if(isset($user->user['gender'])){
                 $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
             } else {
@@ -156,13 +156,15 @@ class LoginController extends Controller
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
-                    return view('registro')->with('persona', $personaData)->with('linkear',true);    
+                    return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }
             if($provider == 'facebook') {
                 if($persona->facebook_id == $personaData->facebook_id) {
                     Auth::login($persona, true);
                     $request->session()->regenerate();
+                } else {
+                    return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }
             if(Auth::check()) {

@@ -42,15 +42,25 @@
                                         <form id="frmLogin">
                                             <div class="form-group">
                                                 <label for="mail">Correo Electrónico</label>
-                                                <input v-bind:class="{ 'is-invalid': hasError }" type="email"
-                                                       v-model="credentials.mail" class="form-control" id="mail"
-                                                       placeholder="Ingresa tu correo electrónico" required>
+                                                <input v-bind:class="{ 'is-invalid': hasError }"
+                                                       type="email"
+                                                       v-model="credentials.mail"
+                                                       v-on:keyup.enter="login"
+                                                       class="form-control"
+                                                       id="mail"
+                                                       placeholder="Ingresa tu correo electrónico"
+                                                       required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="password">Contraseña</label>
-                                                <input type="password" v-bind:class="{ 'is-invalid': hasError }"
-                                                       v-model="credentials.password" class="form-control" id="password"
-                                                       placeholder="Ingresa tu contraseña" required>
+                                                <input type="password"
+                                                       v-bind:class="{ 'is-invalid': hasError }"
+                                                       v-model="credentials.password"
+                                                       v-on:keyup.enter="login"
+                                                       class="form-control"
+                                                       id="password"
+                                                       placeholder="Ingresa tu contraseña"
+                                                       required>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
