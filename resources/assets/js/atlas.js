@@ -1,3 +1,5 @@
+require('./funciones-miscelaneas');
+
 Vue.config.devtools = true;
 import Vue from 'vue';
 // import VueRouter from 'vue-router';
