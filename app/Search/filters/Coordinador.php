@@ -10,7 +10,8 @@ class Coordinador implements Filter
     {
         $builder->where('nombres', 'LIKE', '%' . $value . '%')
             ->orWhere('apellidoPaterno', 'LIKE', '%' . $value . '%')
-            ->orWhere('dni', 'LIKE', '%' . $value . '%');
+            ->orWhere('dni', 'LIKE', '%' . $value . '%')
+            ->orWhere('mail', 'LIKE', '%' . $value . '%');
             return $builder;
     }
 }
