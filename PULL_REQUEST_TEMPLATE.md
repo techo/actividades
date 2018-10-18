@@ -1,12 +1,8 @@
-# Plantilla para Pull Request
-
-
 ## Descripción
 
 Resumen del cambio. 
 
 Si arregla un defecto o incorpora una funcionalidad poné el link al issue:
-
 Arregla # (issue)
 Incopora # (historia)
 
@@ -16,8 +12,8 @@ Incopora # (historia)
 
 Describí que hiciste para verificar los cambios.
 
-- [ ] Test A
-- [ ] Test B
+- [ ] Hice prueba A
+- [ ] Hice prueba B
 
 
 ## Checklist:
