@@ -50,7 +50,7 @@ return [
             'PENDING_AWAITING_PSE_CONFIRMATION' => 'En espera de confirmación de PSE',
             'PENDING_NOTIFYING_ENTITY' => 'Recibo de pago generado. En espera de pago',
         ],
-        'url' => 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/',
+        'url' => env('PAYU_ENDPOINT', 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'),
         'method' => 'POST'
     ]
 
