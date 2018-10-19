@@ -17,7 +17,7 @@ class CoordinadorResource extends Resource
         return [
             'idPersona' => $this->idPersona,
             'dni'       => $this->dni,
-            'nombre'    => $this->nombreCompleto . " (" . $this->dni . ")",
+            'nombre'    => $this->nombreCompleto . " (" . $this->mail . ")",
         ];
     }
 }
