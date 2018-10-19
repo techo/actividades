@@ -23,7 +23,9 @@
     <input name="buyerFullName" type="hidden"  value="{{ auth()->user()->nombreCompleto }}" >
     <input name="buyerEmail"    type="hidden"  value="{{ auth()->user()->mail }}" >
     <input name="telephone"     type="hidden"  value="{{ auth()->user()->telefonoMovil }}" >
-    <input name="test"          type="hidden"  value="1" >
+    @if(env('PAYU_TEST', true))
+        <input name="test"          type="hidden"  value="1" >
+    @endif
     <input name="responseUrl"   type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/response" >
     <input name="confirmationUrl"    type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/confirmation" >
 

@@ -79,8 +79,8 @@ class UserService
         $v = Validator::make(
             $request->all(),
             [
-                'nombre' => 'required|regex:/^[\pL\s]+$/',
-                'apellido' => 'required|regex:/^[\pL\s]+$/',
+                'nombre' => 'required|regex:/^[\pL\s]+$/ui',
+                'apellido' => 'required|regex:/^[\pL\s]+$/ui',
                 'rol' => 'required',
                 'pais' => 'required',
                 'sexo' => 'required',
