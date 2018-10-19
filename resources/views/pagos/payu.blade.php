@@ -1,7 +1,7 @@
 {{--http://developers.payulatam.com/es/web_checkout/integration.html--}}
 @php
     $config = $payment->getConfig();
-
+    $payuTest = env('PAYU_TEST');
 @endphp
 <form method="{{ $payment->method() }}" action="{{ $payment->url() }}">
     <input name="merchantId"    type="hidden"  value="{{ $config->merchant_id }}"   >
@@ -23,8 +23,8 @@
     <input name="buyerFullName" type="hidden"  value="{{ auth()->user()->nombreCompleto }}" >
     <input name="buyerEmail"    type="hidden"  value="{{ auth()->user()->mail }}" >
     <input name="telephone"     type="hidden"  value="{{ auth()->user()->telefonoMovil }}" >
-    @if(env('PAYU_TEST', true))
-        <input name="test"          type="hidden"  value="1" >
+    @if($payuTest)
+        <input name="test" type="hidden"  value="1" >
     @endif
     <input name="responseUrl"   type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/response" >
     <input name="confirmationUrl"    type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/confirmation" >
