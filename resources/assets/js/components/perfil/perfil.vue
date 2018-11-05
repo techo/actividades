@@ -298,23 +298,15 @@
             </div>
             <br><br>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-12">
                     <span v-show='volver'>
                         <a href='#' @click="cancelar()" class="btn btn-secondary">
                             <i class="fa fa-ban"></i>
                             Cancelar
                         </a>
                     </span>
-                </div>
-                <div class="col-md-5">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <a class="btn btn-primary" href="#" @click="guardar()">Guardar</a>
-                        </div>
-                        <div class="col-md-8">
-                            <a class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</a>
-                        </div>
-                    </div>
+                    <a class="btn btn-primary" href="#" @click="guardar()">Guardar</a> 
+                    <a class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</a>
                 </div>
             </div>
             <hr>
