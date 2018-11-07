@@ -127,7 +127,7 @@
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"
-                                placeholder-text="Buscar por cualquier campo"
+                                placeholder-text="Buscar"
                                 actividad="{{$actividad->idActividad}}"
                         ></inscripciones-table>
                     </div>
