@@ -12,7 +12,7 @@ before_script:
   - composer self-update
   - composer install --no-interaction
   - npm install
-  - mysql -u root actividades < db.sql
+  - zcat test_db.sql.gz | mysql -u root actividades
   - php artisan migrate --seed
   - php artisan key:generate
   - php artisan config:clear
