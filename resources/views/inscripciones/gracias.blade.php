@@ -23,7 +23,7 @@
             <h3 class="card-title">
                 <br>
                 Ya estás inscripto a
-                <a href="/actividades/{{$actividad->idActividad}}">
+                <a href="/actividades/{{$actividad->idActividad}}" class="link">
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
