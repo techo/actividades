@@ -8,6 +8,7 @@ use App\Pais;
 
 class DetectarPais
 {
+
     /**
      * Handle an incoming request.
      *
@@ -17,6 +18,10 @@ class DetectarPais
      */
     public function handle($request, Closure $next)
     {
+        if(strpos($request->url(), 'seleccionar-pais')!==false) {
+            return $next($request);
+        }
+
         $dominio = $request->getHttpHost();
 
         $codigo = explode('.', $dominio)[0];
@@ -28,6 +33,10 @@ class DetectarPais
 
             config(['app.url'=>$protocolo . '://' . $dominio]);
             config(['techo.pais'=>$pais->id, 'techo.nombre_pais'=>$pais->nombre]);
+        }
+
+        if(!config('techo.pais')) {
+            return redirect('/seleccionar-pais');
         }
 
         return $next($request);
