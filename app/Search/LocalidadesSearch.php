@@ -50,6 +50,11 @@ class LocalidadesSearch
             ->whereDate('fechaInicioInscripciones', '<=', date('Y-m-d'))
             ->whereDate('fechaFinInscripciones', '>=', date('Y-m-d'))
             ->whereDate('fechaInicio', '>=', date('Y-m-d'));
+
+        if(config('techo.pais')) {
+            $query->where('Actividad.idPais', config('techo.pais'));
+        }
+        
         return $query;
     }
 }

@@ -35,6 +35,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            //comentar esta línea para desactivar la detección de país por dominio
+            \App\Http\Middleware\DetectarPais::class,
         ],
 
         'api' => [

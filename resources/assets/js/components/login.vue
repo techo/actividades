@@ -125,7 +125,7 @@
                 <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link text-uppercase" href="/actividades">Actividades <span class="sr-only">(current)</span></a>
+                            <a class="nav-link text-uppercase" href="/actividades">{{ this.pais ? this.pais : 'Actividades' }}</a>
 
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
@@ -134,7 +134,7 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="perfil">Perfil</a>
                         </li>
-                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.veradmin">
                             <a class="nav-link text-uppercase" v-on:click="admin">Admin</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
@@ -213,7 +213,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin'],
+        props:['usuario', 'veradmin', 'showlogin', 'pais'],
         data () {
             let data = {
                 credentials: {

@@ -13,4 +13,12 @@ class Pais extends Model
     {
         return $this->hasMany(Provincia::class, 'id_pais', 'id');
     }
+
+    public static function porCodigo($codigo)
+    {
+    	if(!$codigo) {
+    		return null;
+    	}
+    	return static::where('codigo', $codigo)->first();
+    }
 }
