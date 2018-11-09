@@ -158,7 +158,7 @@
 
     export default {
         name: "punto-encuentro",
-        props: ['readonly', 'puntos-encuentro', 'paises', 'pais'],
+        props: ['readonly', 'puntos-encuentro', 'paises', 'pais', 'provincias'],
         components: {VueTimepicker},
         data: function () {
             return {
@@ -194,6 +194,9 @@
             if (this.paisSeleccionado === undefined || this.paisSeleccionado === null) {
                 this.paisSeleccionado = {id:1, nombre: "Argentina"}
             }
+            //console.log(this.provincias);
+            this.dataProvincias = this.provincias ? JSON.parse(this.provincias) : [];
+            
 
             Event.$on('cancelar', this.cancelar);
         },

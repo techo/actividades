@@ -25,7 +25,7 @@
                         actividad="{{ $actividad }}"
                         paises="{{ $paises }}"
                         localidades=""
-                        provincias=""
+                        provincias="{{ $provincias ? $provincias : '' }}"
                         tipos=""
                         categorias="{{ $categorias }}"
                         edicion="{{ $edicion }}"

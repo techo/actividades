@@ -273,6 +273,7 @@
                     :puntos-encuentro="dataActividad.puntos_encuentro"
                     :paises="dataPaises"
                     :pais="paisSeleccionado"
+                    :provincias="provincias"
             ></punto-encuentro>
         </div>
         <!-- /.box-body -->

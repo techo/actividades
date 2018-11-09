@@ -64,16 +64,24 @@ class ActividadesController extends Controller
         $columns = array_diff($columns, $excluidas);
         $arrayColumnas = array_fill_keys($columns, null);
 
+        $provincias = null;
+        if(config('techo.pais')) {
+            $arrayColumnas['idPais'] = config('techo.pais');
+            $arrayColumnas['pais'] = Pais::with('provincias')->find(config('techo.pais'));
+            $provincias = $arrayColumnas['pais']->provincias->toJson();
+        }
 
         $actividad = json_encode($arrayColumnas);
         $categorias = CategoriaActividad::with('tipos')->get();
         $tipos = $categorias->first()->tipos; //dd($actividad);
         $categorias = json_encode($categorias);
+
         return view(
             'backoffice.actividades.create',
             compact(
                 'actividad',
                 'paises',
+                'provincias',
                 'edicion',
                 'tipos',
                 'categorias'
