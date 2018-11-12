@@ -103,6 +103,13 @@ nav.bg-techo-blue {
     font-weight: bold !important;
 }
 
+.link {
+    color: $brand-primary;
+    &:hover {
+        color: $brand-primary;
+    }
+}
+
 span.cerrar {
     color: #fff;
 }
