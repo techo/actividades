@@ -300,8 +300,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <span v-show='volver'>
-                        <a href='#' @click="cancelar()" class="btn btn-secondary">
-                            <i class="fa fa-ban"></i>
+                        <a href='#' @click="cancelar()" class="btn btn-link">
                             Cancelar
                         </a>
                     </span>
