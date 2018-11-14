@@ -7,7 +7,7 @@
 @section('main_image')
     <div class="techo-hero">
         <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
-        <h1 class="text-uppercase">Transformemos nuestra realidad</h1>
+        <h1 class="text-uppercase">Transformemos esta realidad</h1>
     </div>
 @endsection
 
