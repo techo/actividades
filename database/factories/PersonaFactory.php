@@ -13,7 +13,6 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'idCiudad'  => 0,
     'password'  => Hash::make('password'),
     'lenguaje'  => '',
-    'pasaporte' => '',
     'statusCTCT'    => '',
     'idRegionLT'    => 0,
     'anoEstudio'    => rand(1,9),

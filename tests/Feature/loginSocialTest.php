@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
-use Mockery;	
+use Mockery;
 use App\Persona;
 use Carbon\Carbon;
 
@@ -78,7 +78,6 @@ class loginSocialTest extends TestCase
 	    	$persona->nombres = 'nombre';
 	    	$persona->idPais = 1;
 	    	$persona->idPaisResidencia = 1;
-	    	$persona->pasaporte = 'pasaporte';
 	    	$persona->password = Hash::make('pass');
 	    	$persona->idProvincia = 1;
 	    	$persona->sexo = 'F';
@@ -122,7 +121,6 @@ class loginSocialTest extends TestCase
             $persona->nombres = 'nombre';
             $persona->idPais = 1;
             $persona->idPaisResidencia = 1;
-            $persona->pasaporte = 'pasaporte';
             $persona->password = Hash::make('pass');
             $persona->idProvincia = 1;
             $persona->sexo = 'F';
@@ -166,7 +164,6 @@ class loginSocialTest extends TestCase
             $persona->nombres = 'nombre';
             $persona->idPais = 1;
             $persona->idPaisResidencia = 1;
-            $persona->pasaporte = 'pasaporte';
             $persona->password = Hash::make('pass');
             $persona->idProvincia = 1;
             $persona->sexo = 'F';
@@ -185,7 +182,7 @@ class loginSocialTest extends TestCase
         $response = $this->put('/ajax/usuario/linkear', ['email' => 'aaaa@aaac.com', 'media' => 'google', 'id' => '1234567890']);
         $response->assertStatus(200);
         $this->assertTrue(Auth::check());
-        $this->assertEquals(Auth::user()->google_id, '1234567890');        
+        $this->assertEquals(Auth::user()->google_id, '1234567890');
     }
 
 }
