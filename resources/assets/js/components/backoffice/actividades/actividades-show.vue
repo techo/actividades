@@ -206,7 +206,7 @@
                     <p class="text-muted">
                         Última modificación: {{ dataActividad.fechaModificacion }}
                         {{ dataActividad.modificado_por ? ' por ' + dataActividad.modificado_por.nombres + ' ' + dataActividad.modificado_por.apellidoPaterno : '' }}
-                        &nbsp;<a href="#" class="btn btn-primary btn-sm" @click="cargarAuditoria(dataActividad.idActividad)">Ver auditoría</a>
+                        &nbsp;<a class="btn btn-primary btn-sm" @click="cargarAuditoria(dataActividad.idActividad)">Ver auditoría</a>
                     </p>
                 </div>
             </div>

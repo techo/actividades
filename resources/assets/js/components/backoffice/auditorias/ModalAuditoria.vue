@@ -22,7 +22,7 @@
                                         <tr>
                                             <td>{{ registro.persona ? registro.persona.nombres + ' ' + registro.persona.apellidoPaterno : 'Anónimo' }}</td>
                                             <td>{{ registro.fecha_creacion }}</td>
-                                            <td><a href="#" @click="mostrar(registro)">Ver info</a></td>
+                                            <td><a class="btn btn-small" @click="mostrar(registro)">Ver info</a></td>
                                         </tr>
                                         <tr v-if="registro.visible">
                                             <td colspan="3">
