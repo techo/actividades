@@ -17,17 +17,19 @@
                                         <th></th>
                                     </tr>
                                 </thead>
-                                <tbody v-for="registro in info.registros">
-                                    <tr>
-                                        <td>{{ registro.persona ? registro.persona.nombres + ' ' + registro.persona.apellidoPaterno : 'Anónimo' }}</td>
-                                        <td>{{ registro.fecha_creacion }}</td>
-                                        <td><a href="#" @click="mostrar(registro)">Ver info</a></td>
-                                    </tr>
-                                    <tr v-if="registro.visible">
-                                        <td colspan="3">
-                                            <pre style="white-space:pre-wrap; overflow-wrap:break-word;">{{ JSON.stringify(JSON.parse(registro.informacion), null, 4).trim() }}</pre>
-                                        </td>
-                                    </tr>
+                                <tbody>
+                                    <template v-for="registro in info.registros">
+                                        <tr>
+                                            <td>{{ registro.persona ? registro.persona.nombres + ' ' + registro.persona.apellidoPaterno : 'Anónimo' }}</td>
+                                            <td>{{ registro.fecha_creacion }}</td>
+                                            <td><a href="#" @click="mostrar(registro)">Ver info</a></td>
+                                        </tr>
+                                        <tr v-if="registro.visible">
+                                            <td colspan="3">
+                                                <pre style="white-space:pre-wrap; overflow-wrap:break-word;">{{ JSON.stringify(JSON.parse(registro.informacion), null, 4).trim() }}</pre>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
