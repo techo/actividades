@@ -25,3 +25,4 @@ web.dockerfile
 composer.lock
 /database/seeds/PayuArgentinaSeeder.php
 worker.log
+/test_db.sql

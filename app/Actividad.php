@@ -198,5 +198,7 @@ class Actividad extends Model
                 throw new \Exception($exception->getMessage());
             }
         });
+
+        static::updating(function ($actividad) { Auditoria::crear($actividad); });
     }
 }

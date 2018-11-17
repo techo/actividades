@@ -54,6 +54,8 @@ class Inscripcion extends Model
             }
         });
 
+        static::updating(function ($inscripcion) { Auditoria::crear($inscripcion); });
+
     }
 
     public function scopeInscripto($query)
