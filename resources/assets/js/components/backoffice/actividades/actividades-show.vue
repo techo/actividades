@@ -1,5 +1,8 @@
 <template>
 <div>
+    
+
+
     <div v-show="guardado" class="callout callout-success">
         <h4>{{ mensajeGuardado }}</h4>
     </div>
@@ -195,6 +198,16 @@
                             {{ dataActividad.descripcion }}
                         </textarea>
                     </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text-muted">
+                        Última modificación: {{ dataActividad.fechaModificacion }}
+                        {{ dataActividad.modificado_por ? ' por ' + dataActividad.modificado_por.nombres + ' ' + dataActividad.modificado_por.apellidoPaterno : '' }}
+                        &nbsp;<a href="#" class="btn btn-primary btn-sm" @click="cargarAuditoria(dataActividad.idActividad)">Ver auditoría</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -398,6 +411,7 @@
 
 <script>
     import PuntoEncuentro from './punto-encuentro';
+
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
     import moment from 'moment';
@@ -440,6 +454,7 @@
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
+            //console.log(this.dataActividad);
             this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
             this.dataPaises = JSON.parse(this.paises);
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
@@ -809,6 +824,9 @@
                 }
                 return null;
             },
+            cargarAuditoria: function(id) {
+                Event.$emit('cargarAuditoria', {tabla: 'actividad', id: id});
+            }
         }
     }
 </script>

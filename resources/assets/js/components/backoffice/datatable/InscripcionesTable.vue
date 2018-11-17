@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <simple-alert ref="loading"></simple-alert>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
     <div class="table-responsive">
@@ -30,6 +31,9 @@
       ></vuetable-pagination>
     </div>
   </div>
+
+
+
 </template>
 
 <script>
@@ -106,7 +110,7 @@ export default {
         // sortOrder: [
         // { field: 'nombreActividad', sortField: 'nombreActividad', direction: 'asc'}
         // ],
-        moreParams: {}
+        moreParams: {},
     }
   },
   methods: {
@@ -280,6 +284,10 @@ export default {
       ocultarLoadingAlert: function () {
           this.$refs.loading.justCloseSimplert();
       },
+
+      cargarAuditoria: function(id) {
+        Event.$emit('cargarAuditoria', {tabla: 'inscripcion', id: id});
+      },
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
@@ -295,6 +303,9 @@ export default {
       Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
       Event.$on('ocultar-Loading-alert', this.ocultarLoadingAlert);
+
+      Event.$on('vuetable-cargarAuditoria', this.cargarAuditoria);
+
       this.moreParams.condiciones = [];
   },
   events: {

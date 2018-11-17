@@ -2,13 +2,6 @@
 
 @section('page_title', $actividad->nombreActividad)
 
-@section('subtitulo')
-    Ultima modificación por
-    {{ $actividad->modificadoPor->nombres OR 'N/A' }}
-    {{ $actividad->modificadoPor->apellidoPaterno OR '' }}
-    el {{ $actividad->fechaModificacion->format('d-m-Y') }}
-@endsection
-
 @section('content')
     @if (Session::has('error'))
         <div class="callout callout-danger">
@@ -18,6 +11,8 @@
             @endphp
         </div>
     @endif
+
+    <modal-auditoria></modal-auditoria>
 
     <form method="POST" id="formDelete"
           action="{{ action('backoffice\ActividadesController@destroy', ['id' => $actividad->idActividad]) }}">

@@ -50,6 +50,8 @@ Route::prefix('ajax')->group(function () {
     Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
     Route::post('actividades', 'ajax\ActividadesController@index');
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
+
+    Route::get('auditorias/{tabla}/{id}', 'ajax\AuditoriasController@show');
 });
 //Fin Ajax calls
 
