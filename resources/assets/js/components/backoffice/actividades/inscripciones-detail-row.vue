@@ -22,6 +22,16 @@
         </div>
         <div class="row">
             <div class="col-md-6">
+                <label>Modificado por: </label>
+                <span>{{rowData.modificado_por}}</span>
+            </div>
+            <div class="col-md-6">
+                <label>Modificado en: </label>
+                <span>{{rowData.modificado_en}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <label>Cantidad de Actividades Anteriores (Según filtro aplicado): </label>
                 <span>{{rowData.cantActividades}}</span>
             </div>

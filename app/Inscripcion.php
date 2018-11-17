@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 
 class Inscripcion extends Model
@@ -32,6 +33,14 @@ class Inscripcion extends Model
     protected static function boot()
     {
         parent::boot();
+
+        self::saving(function($inscripcion){
+            if($usuario = Auth::user()) {
+                $inscripcion->idPersonaModificacion = $usuario->idPersona;
+            }
+
+        });
+
         static::deleted(function ($inscripcion) { // before delete() method call this
             DB::beginTransaction();
             try {

@@ -189,34 +189,7 @@ class Actividad extends Model
         static::deleting(function ($actividad) { // before delete() method call this
             DB::beginTransaction();
             try {
-//                foreach ($actividad->escuelas as $escuela) {
-//                    DB::statement('DELETE FROM Cuadrilla where idEscuela = ' . $escuela->idEscuela);
-//                    $escuela->delete();
-//                }
                 $inscripciones = $actividad->inscripciones();
-
-//                foreach ($inscripciones as $inscripcion) {
-//                    DB::statement('DELETE FROM AsistenciaVoluntario WHERE idInscripcion = ' . $inscripcion->idInscripcion);
-//                    DB::statement('DELETE FROM Asignacion360 WHERE idInscripcion = ' . $inscripcion->idInscripcion
-//                        . ' OR idInscripcionEvaluado =' . $inscripcion->idInscripcion);
-
-//                }
-//                $sesiones = DB::select('SELECT idSesion FROM Sesion WHERE idActividad =  ?', [$actividad->idActividad]);
-//                foreach ($sesiones as $sesion) {
-//                    DB::statement('DELETE FROM AsistenciaPoblador where idSesion = ' . $sesion->idSesion);
-//                    DB::statement('DELETE FROM AsistenciaVoluntario where idSesion = ' . $sesion->idSesion);
-//                }
-
-
-//                DB::statement('DELETE FROM ActividadPresupuesto where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM ActividadResponsable where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM Campana where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM Egreso where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM FamiliaEnActividad where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM ItemCuenta where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM Localidad where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM Sesion where idActividad = ' . $actividad->idActividad);
-//                DB::statement('DELETE FROM _EncuestaRespuestaActividad where idActividad = ' . $actividad->idActividad);
                 $inscripciones->delete();
                 $actividad->puntosEncuentro()->delete();
                 DB::commit();
