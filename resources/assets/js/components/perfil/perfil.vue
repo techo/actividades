@@ -300,12 +300,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <span v-show='volver'>
-                        <a href='#' @click="cancelar()" class="btn btn-link">
+                        <button @click="cancelar()" class="btn btn-link" :disabled="!formDirty">
                             Cancelar
-                        </a>
+                        </button>
                     </span>
-                    <a class="btn btn-primary" href="#" @click="guardar()">Guardar</a> 
-                    <a class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</a>
+                    <button class="btn btn-primary" href="#" @click="guardar()" :disabled="!formDirty">Guardar</button> 
+                    <button class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</button>
                 </div>
             </div>
             <hr>
@@ -328,13 +328,14 @@
                 paises: [],
                 provincias: [],
                 localidades: [],
+                formDirty: false,
                 message: {
                     danger: false,
                     text: ''
                 }
             }
             data.usernombre = data.user.nombre;
-
+        
             var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'sexo', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
             for (var i in campos) {
                 var campo = campos[i]
@@ -360,6 +361,7 @@
             this.traer_paises()
             this.traer_provincias()
             this.traer_localidades()
+            this.formDirty = false
         },
         watch: {
             'user.email': function () {
@@ -390,10 +392,15 @@
                 this.validar_data('pass_confirmacion')
             },
             'user.pais': function () {
-                this.traer_provincias()
+                this.traer_provincias();
+                this.formDirty = true;
             },
             'user.provincia': function () {
-                this.traer_localidades()
+                this.traer_localidades();
+                this.formDirty = true;
+            },
+             'user.localidad': function () {
+                this.formDirty = true;
             }
         },
         methods: {
@@ -415,6 +422,7 @@
                 this.limpia_validacion_pass(data)
                 axios.put('/ajax/usuario', this.user).then(response => {
                     this.guardo = true;
+                    this.formDirty = false;
                     this.$parent.$refs.login.user.nombres = this.user.nombre
                 }).catch((error) => {
                     this.validar_data()
@@ -462,6 +470,7 @@
                 this.guardo = false;
                 var data = {}
                 if (prop) {
+                    this.formDirty = true;
                     data[prop] = this.user[prop]
                     data.id = this.user.id
                     this.validacion[prop].valido = false
