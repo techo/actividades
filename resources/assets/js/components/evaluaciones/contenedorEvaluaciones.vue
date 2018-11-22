@@ -14,7 +14,7 @@
         </p>
 
         <div class="row"  v-if="!evaluacionPasada">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <div class="form-group">
                     <label for="listadoInscriptos">Nombre, apellido o DNI del voluntario</label>
                     <v-select
