@@ -30,9 +30,10 @@ class BaseController extends Controller
         $persona = $persona == null ? Auth::user() : $persona;
 
         if($persona->recibirMails){
+          \Log::info('Mail en cola para '. $persona->mail .' con.');
           return $mail->queue($mailable);
         }
 
-        //\Log::info('Mail a: ' . Auth::user()->mail . ' no enviado por no aceptar notificaciones.');
+        \Log::info('Mail a: ' . Auth::user()->mail . ' no enviado por no aceptar notificaciones.');
     }
 }
