@@ -1,9 +1,9 @@
 <template>
-    <div class="col-md-8">
-        <h4>Evalúa la actividad</h4>
+    <div>
         <p class="text-muted">
             Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.
         </p>
+        <h4 class="subtitle">Evalúa la actividad</h4>
         <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
                 <div class="card-header accordion" id="headingOne">
@@ -16,13 +16,13 @@
                                 @click="cambiarIcono"
                         >
                             Evaluación de {{ actividad.nombreActividad }}
-                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
-                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
+                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
+                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
                     </div>
                 </div>
 
-                <div id="cardEvaluacion" class="collapse" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
+                <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne" :data-parent="'evaluaciones_' + actividad.idActividad">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-7">
@@ -156,6 +156,9 @@
 </script>
 
 <style scoped>
+    .subtitle {
+        margin: 25px 0;
+    }
     .collapse {
         border-bottom: solid thin #d9dde2;
         padding-bottom: 2em;

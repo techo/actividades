@@ -116,3 +116,6 @@ span.cerrar {
 h1.text-primary {
     padding-bottom: 20px;
 }
+div.dropdown-toggle::after {
+    display: none;
+}
