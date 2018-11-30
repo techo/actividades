@@ -36,6 +36,9 @@ class HomeController extends Controller
 
     public function seleccionarPais()
     {
-        return view('seleccionar-pais');
+        $t = explode('//', config('app.url'));
+        $protocolo = $t[0];
+        $url = $t[1];
+        return view('seleccionar-pais', compact('protocolo', 'url'));
     }
 }
