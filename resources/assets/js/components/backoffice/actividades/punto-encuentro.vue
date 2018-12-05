@@ -139,6 +139,8 @@
                                     type="button"
                                     class="btn btn-light"
                                     @click="borrar(punto.idPuntoEncuentro)"
+                                    :disabled="!punto.borrable"
+                                    :title="!punto.borrable ? 'El punto tiene inscriptos' : 'Borrar punto'"
                             >
                                     <i class="fa fa-trash text-danger"></i>
                             </button>

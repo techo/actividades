@@ -179,6 +179,16 @@ class ActividadesController extends Controller
             $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
             $miembros = $actividad->miembros;
 
+            foreach($actividad->puntosEncuentro as &$punto) {
+                if($punto->tieneInscriptos()) {
+                    $punto->borrable = false;
+                } else {
+                    $punto->borrable = true;
+                }
+            }
+
+            //dd($actividad);
+
             return view(
                 'backoffice.actividades.show',
                 compact(
@@ -481,7 +491,7 @@ class ActividadesController extends Controller
 
             foreach ($request->puntosEncuentroBorrados as $borrado) {
                 $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
-                if ($punto) {
+                if ($punto && !$punto->tieneInscriptos()) {
                     $punto->delete();
                 }
             }
