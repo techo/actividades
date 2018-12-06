@@ -179,6 +179,8 @@ return [
         Chencha\Share\ShareServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -230,6 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Share' => Chencha\Share\ShareFacade::class,
         'Socialite' => Laravel\Socialite\SocialiteServiceProvider::class,
+
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

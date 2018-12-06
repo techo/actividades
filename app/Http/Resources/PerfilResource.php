@@ -14,7 +14,7 @@ class PerfilResource extends Resource
      */
     public function toArray($request)
     {
-        return [
+        $usuario = [
             'id'            => $this->idPersona,
             'email'         => $this->mail,
             'nombre'        => $this->nombres,
@@ -30,7 +30,14 @@ class PerfilResource extends Resource
             'facebook_id'   => $this->facebook_id,
             'recibirMails'  => $this->recibirMails,
             'acepta_marketing' => $this->acepta_marketing,
-            'pass'          => ''
+            'pass'          => '',
+            'foto'          => ''
         ];
+
+        if(file_exists(public_path('archivos/fotos-perfil/' . $this->foto))) {
+            $usuario['foto'] = url('archivos/fotos-perfil/' . $this->foto);
+        }
+
+        return $usuario;
     }
 }

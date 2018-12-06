@@ -206,6 +206,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>FOTO</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="foto-perfil" v-show="user.foto">
+                                <img :src="user.foto">
+                            </div>
+                            <label>Subir una foto nueva <input type="file" ref="fotoPerfil" @change="cambioFotoPerfil" accept=".jpg,.jpeg,.png"></label>
+                            <small class="form-text text-danger">{{validacion.foto.texto}}&nbsp;<br></small>
+                        </div>
+                        <div class="col-md-2">
+                            <span v-bind:class="{'d-none':!validacion.foto.invalido}"><i
+                                    class="fas fa-times text-danger"></i></span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-5">
@@ -231,10 +251,10 @@
                         <small class="form-text text-danger">{{validacion.pass_actual.texto}}&nbsp;<br></small>
                     </div>
                     <div class="col-md-2">
-                            <span v-bind:class="{'d-none':!validacion.pass_actual.valido}"><i
-                                    class="fas fa-check text-success"></i></span>
+                        <span v-bind:class="{'d-none':!validacion.pass_actual.valido}"><i
+                                class="fas fa-check text-success"></i></span>
                         <span v-bind:class="{'d-none':!validacion.pass_actual.invalido}"><i
-                                class="fas fa-times text-danger"></i></span>
+                            class="fas fa-times text-danger"></i></span>
                     </div>
                 </div>
                 <div class="row">
@@ -269,7 +289,7 @@
                     <div class="col-md-2">
                             <span v-bind:class="{'d-none':!validacion.pass_confirmacion.valido}"><i
                                     class="fas fa-check text-success"></i></span>
-                        <span v-bind:class="{'d-none':!validacion.pass_confirmacion.invalido}"><i
+                            <span v-bind:class="{'d-none':!validacion.pass_confirmacion.invalido}"><i
                                 class="fas fa-times text-danger"></i></span>
                     </div>
                 </div>
@@ -336,7 +356,7 @@
             }
             data.usernombre = data.user.nombre;
         
-            var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'sexo', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
+            var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'sexo', 'dni', 'pais', 'provincia', 'localidad', 'foto', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
             for (var i in campos) {
                 var campo = campos[i]
                 if (!data.user[campo]) data.user[campo] = ''
@@ -401,6 +421,9 @@
             },
              'user.localidad': function () {
                 this.formDirty = true;
+            },
+             'user.foto': function () {
+                this.formDirty = true;
             }
         },
         methods: {
@@ -420,10 +443,20 @@
                 this.guardo = false;
                 var data = this.user
                 this.limpia_validacion_pass(data)
+
+                if('fotoNueva' in window && window.fotoNueva) {
+                    this.user.fotoNueva = window.fotoNueva;
+                }
+                
                 axios.put('/ajax/usuario', this.user).then(response => {
                     this.guardo = true;
                     this.formDirty = false;
                     this.$parent.$refs.login.user.nombres = this.user.nombre
+
+                    if(response.data.user.foto) {
+                        this.user.foto = response.data.user.foto;
+                    }
+
                 }).catch((error) => {
                     this.validar_data()
                 });
@@ -545,6 +578,27 @@
                         })
                     }
                 })
+            },
+
+            cambioFotoPerfil: function() {
+                var archivos = this.$refs.fotoPerfil.files;
+                if(archivos.length > 0) {
+                    this.formDirty = true;
+
+                    var archivo = archivos[0];
+                    function getBase64(file) {
+                      return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                      });
+                    }
+
+                    getBase64(archivo).then(function(data) {
+                        window.fotoNueva = data;
+                    });
+                }
             }
 
         },
@@ -553,7 +607,7 @@
                 return $.inArray(this.user.facebook_id, ['', null])  === -1 ||
                     $.inArray(this.user.google_id, ['', null]) === -1;
             }
-        }
+        },
     }
 </script>
 

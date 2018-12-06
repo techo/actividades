@@ -449,3 +449,7 @@ footer.inscripcion-bar .text-primary {
         font-size:3rem; /*1rem = 16px*/
     }
 }
+
+
+.foto-perfil { margin-bottom:10px; }
+.foto-perfil img { max-width:100%; }

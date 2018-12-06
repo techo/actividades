@@ -82,6 +82,14 @@ class UsuarioController extends BaseController
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
       }
+      if($request->has('fotoNueva')) {
+        $nombreArchivo = time() . $persona->idPersona . '.jpg';
+        $fotoBase64 = $request->input('fotoNueva');
+
+        \Image::make($fotoBase64)->fit(200,200)->save(public_path('archivos/fotos-perfil/' . $nombreArchivo));
+
+        $persona->foto = $nombreArchivo;
+      }
       $persona->save();
       return ['user' => new PerfilResource($persona)];
   }

@@ -45,6 +45,11 @@
                         <p class="h4">
                             Coordinador:
                         </p>
+                        @if($punto_encuentro->responsable->tieneFoto())
+                        <p class="foto-perfil">
+                            <img style="border-radius:50%;" src="{{ $punto_encuentro->responsable->urlFoto() }}">
+                        </p>
+                        @endif
                         <p>{{ $punto_encuentro->responsable->nombreCompleto }}</p>
                         <p>{{ $punto_encuentro->responsable->telefonoMovil }}</p>
                         <p>{{ $punto_encuentro->responsable->mail }}</p>

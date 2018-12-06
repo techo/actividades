@@ -74,6 +74,11 @@ class actividadesController extends Controller
         $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00'))
                     &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
 
+        $inscripcion = null;
+        if(auth()->check()) {
+            $inscripcion = auth()->user()->inscripcionActividad($id);
+        }
+
         if (auth()->check() && auth()->user()->estaPreInscripto($id)) {
             try{
                 $config = json_decode($actividad->pais->config_pago);
@@ -85,9 +90,9 @@ class actividadesController extends Controller
                 return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
             }
 
-            return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'payment'));
+            return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'payment', 'inscripcion'));
         }
-        return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
+        return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'inscripcion'));
     }
 
     /**

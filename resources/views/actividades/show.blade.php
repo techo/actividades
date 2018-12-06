@@ -80,34 +80,87 @@
 			</div>
 		</div>
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-12" style="font-size:18px;">
                     {{ isset($actividad->coordinador) ? $actividad->coordinador->nombreCompleto : "No definido" }}
+                    @if(isset($actividad->coordinador) && $actividad->coordinador->tieneFoto())
+                        <div class="foto-perfil" style="margin-left:20px; display:inline-block; max-width:80px;">
+                            <img style="border-radius:50%;" src="{{ $actividad->coordinador->urlFoto() }}">
+                        </div>
+                    @endif
 				</div>
 			</div>
-		<hr>
-		<div class="row">
+		
+		<div class="row" style="margin-top:30px;">
 			<div class="col-md-12">
 				<h5>Puntos de encuentro</h5>
 			</div>
 		</div>
-		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
-			<div class="row">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover">
+                    @foreach($actividad->puntosEncuentro as $puntoEncuentro)
+                        <tr class="selected">
+                            <td style="vertical-align:middle;">{{$puntoEncuentro->punto}}</td>
+                            
+                            <td style="vertical-align:middle;">
+                                @php
+                                    echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
+                                    echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . ', ': '';
+                                    echo isset($puntoEncuentro->pais->nombre) ? $puntoEncuentro->pais->nombre : '';
+                                @endphp
+                            </td>
+
+                            <td style="vertical-align:middle;">
+                                {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
+                                @if(isset($puntoEncuentro->responsable) && $puntoEncuentro->responsable->tieneFoto())
+                                    <div class="foto-perfil" style="margin-left:15px; display:inline-block; max-width:60px;">
+                                        <img style="border-radius:50%;" src="{{ $puntoEncuentro->responsable->urlFoto() }}">
+                                    </div>
+                                @endif
+                            </td>
+
+                            <td style="vertical-align:middle;">
+                                @if(isset($inscripcion) && ($inscripcion->punto_encuentro->idPuntoEncuentro == $puntoEncuentro->idPuntoEncuentro))
+                                    * Inscripto acá
+                                @endif
+                            </td>
+                            
+                        </tr>
+                    @endforeach
+                </table>
+            </div>   
+        </div>
+		
+        @if (false && isset($inscripcion))
+            <hr>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>Inscripto en:</h5>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4">
-				{{$puntoEncuentro->punto}}
+                {{$inscripcion->punto_encuentro->punto}}
                 </div>
                 <div class="col-md-4">
                     @php
-                        echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
-                        echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . ', ': '';
-                        echo isset($puntoEncuentro->pais->nombre) ? $puntoEncuentro->pais->nombre : '';
+                        echo isset($inscripcion->punto_encuentro->localidad->localidad) ? $inscripcion->punto_encuentro->localidad->localidad . ', ': '';
+                        echo isset($inscripcion->punto_encuentro->provincia->provincia) ? $inscripcion->punto_encuentro->provincia->provincia . ', ': '';
+                        echo isset($inscripcion->punto_encuentro->pais->nombre) ? $inscripcion->punto_encuentro->pais->nombre : '';
                     @endphp
 
                 </div>
                 <div class="col-md-4">
-                    <strong>Coordinador:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
+                    <strong>Coordinador:</strong> {{isset($inscripcion->punto_encuentro->responsable) ? $inscripcion->punto_encuentro->responsable->nombreCompleto : "No definido"}}
+                    @if(isset($inscripcion->punto_encuentro->responsable) && $inscripcion->punto_encuentro->responsable->tieneFoto())
+                        <div class="foto-perfil" style="display:inline-block; max-width:60px;">
+                            <img style="border-radius:50%;" src="{{ $inscripcion->punto_encuentro->responsable->urlFoto() }}">
+                        </div>
+                    @endif
                 </div>
-			</div>
-		@endforeach
+            </div>
+            
+        @endif
 @endsection
 
 @section('footer')

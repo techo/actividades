@@ -112,4 +112,17 @@ class Persona extends Authenticatable
     {
         return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
+
+    public function tieneFoto()
+    {
+        return is_file(public_path('archivos/fotos-perfil/' . $this->foto));
+    }
+
+    public function urlFoto()
+    {
+        if($this->tieneFoto()) {
+            return url('archivos/fotos-perfil/' . $this->foto);
+        }
+        return '';
+    }
 }
