@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Seleccionar País</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style media="screen">
+
+      body{
+
+        background-image: url("../../public/img/backgroundselectCountry.png");
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-size: cover; /* Resize the background image to cover the entire container */
+      }
+
+       .container{
+      margin-top: 5%;
+
+      }
+
+      .logo-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding-right: 70px;
+
+      }
+      b{
+        color:rgb(0, 146, 221);
+        font-size: 0.9vw;
+        padding-top: 5px;
+      }
+      h3{
+        color:rgb(0, 146, 221);
+        /* display: flex; */
+        font-size: 20px;
+          transition: 0.5s;
+      }
+      li{
+        list-style-type: none;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        margin-right:5px;
+
+      }
+
+      li:hover img{
+        transform: scale(1.25, 1.25);
+
+      }
+
+      li:hover h3{
+        font-size: 25px;
+
+      }
+
+
+      li img{
+        margin-right: 20px;
+          transition: 0.5s;
+
+      }
+      li h3{
+      transition: 0.5s;
+      }
+      .contenedor-paises{
+       display: flex;
+       flex-direction: column;
+       align-content: space-between;
+       height: 80vh;
+      }
+      .footer{
+        height: 10vh;
+        background-color: grey;
+      }
+      .footer img{
+        margin-left: 60px;
+      }
+
+    @media only screen and (max-width: 600px) {
+       .contenedor-paises{height: 100%;}
+
+       b{
+         font-size: 5vw;
+       }
+
+       .logo-container{
+         padding: 30px;
+       }
+
+
+    }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="logo-container col-sm-12 col-md-4 ">
+          <img src="../../public/img/techo_logo_big.png" alt="logo techo" width="100%">
+          <b>PLATAFORMA DE ACTIVIDADES</b>
+        </div>
+        <div class=" col-sm-12 col-md-8">
+
+              <ul class="contenedor-paises row">
+
+                <li ><img src="https://www.countryflags.io/ar/flat/64.png"> <h3>Argentina</h3></li>
+                <li ><img src="https://www.countryflags.io/bo/flat/64.png"> <h3>Bolivia</h3></li>
+                <li ><img src="https://www.countryflags.io/br/flat/64.png"> <h3>Brasil</h3></li>
+                <li ><img src="https://www.countryflags.io/cl/flat/64.png"> <h3>Chile</h3></li>
+                <li ><img src="https://www.countryflags.io/co/flat/64.png"> <h3>Colombia</h3></li>
+                <li ><img src="https://www.countryflags.io/cr/flat/64.png"> <h3>Costa Rica</h3></li>
+                <li ><img src="https://www.countryflags.io/cu/flat/64.png"> <h3>Cuba</h3></li>
+                <li ><img src="https://www.countryflags.io/ec/flat/64.png"> <h3>Ecuador</h3></li>
+                <li ><img src="https://www.countryflags.io/sv/flat/64.png"> <h3>El Salvador</h3></li>
+                <li ><img src="https://www.countryflags.io/gt/flat/64.png"> <h3>Guatemala</h3></li>
+                <li ><img src="https://www.countryflags.io/hn/flat/64.png"> <h3>Honduras</h3></li>
+                <li ><img src="https://www.countryflags.io/ht/flat/64.png"> <h3>Haití</h3></li>
+                <li ><img src="https://www.countryflags.io/mx/flat/64.png"> <h3>Mexico</h3></li>
+                <li ><img src="https://www.countryflags.io/ni/flat/64.png"> <h3>Nicaragua</h3></li>
+                <li ><img src="https://www.countryflags.io/pa/flat/64.png"> <h3>Panamá</h3></li>
+                <li ><img src="https://www.countryflags.io/py/flat/64.png"> <h3>Paraguay</h3></li>
+                <li ><img src="https://www.countryflags.io/pr/flat/64.png"> <h3>Puerto Rico</h3></li>
+                <li ><img src="https://www.countryflags.io/pe/flat/64.png"> <h3>Perú</h3></li>
+                <li ><img src="https://www.countryflags.io/do/flat/64.png"> <h3>Republica Dominicana</h3></li>
+                <li ><img src="https://www.countryflags.io/uy/flat/64.png"> <h3>Uruguay</h3></li>
+                <li ><img src="https://www.countryflags.io/ve/flat/64.png"> <h3>Venezuela</h3></li>
+
+
+
+              </ul>
+
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <img src="../../public/img/logo_transparente_170x57.png" alt="">
+    </div>
+
+
+  </body>
+</html>
