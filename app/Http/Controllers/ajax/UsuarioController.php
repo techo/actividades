@@ -15,6 +15,7 @@ use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\MisActividadesResource;
 use App\Rules\PassExiste;
 use App\Inscripcion;
+use App\GrupoRolPersona;
 use App\Search\MisActividadesSearch;
 use Illuminate\Validation\Rule;
 use Webpatser\Uuid\Uuid;
@@ -160,6 +161,8 @@ class UsuarioController extends BaseController
           $inscripcion->estado = 'Desinscripto';
           $inscripcion->save();
         }
+        $grupo = GrupoRolPersona::where('idPersona', Auth::user()->idPersona)->where('idActividad', '=', $idActividad)->delete();
+
         return ['success' => true];
     }
 
