@@ -28,7 +28,6 @@
         data() {
             return {
                 estado: this.rowData.estado,
-                idInscripcion: this.rowData.id,
                 errorIcon: false,
             }
         },
@@ -40,7 +39,7 @@
         methods: {
             actualizar() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.idInscripcion;
+                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.rowData.id;
                 let params = {
                     'estado': this.estado
                 };
@@ -76,7 +75,7 @@
             estado() {
                 this.actualizar();
             },
-            'rowData.estado': function () {
+            'rowData': function () {
                 this.estado = (this.rowData.estado === null) ? 0 : this.rowData.estado;
             }
         }
