@@ -37,7 +37,7 @@
                     <v-select
                             :options="dataCoordinadores"
                             label="nombre"
-                            placeholder="Escribe el nombre o apellido"
+                            placeholder="Escribe el nombre, apellido o email"
                             name="coordinador"
                             id="coordinador"
                             v-model="coordinador"
@@ -45,6 +45,7 @@
                             :filterable=false
                             @search="onSearch"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
                 </div>
@@ -63,12 +64,13 @@
                     <v-select
                             :options="dataProvincias"
                             label="provincia"
-                            placeholder="Seleccione"
+                            placeholder="Escribe el nombre"
                             name="provincia"
                             id="provincia"
                             v-model="provinciaSeleccionada"
                             v-bind:disabled="this.readonly"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
@@ -79,12 +81,13 @@
                     <v-select
                             :options="dataLocalidades"
                             label="localidad"
-                            placeholder="Seleccione"
+                            placeholder="Escribe el nombre"
                             name="localidad"
                             id="localidad"
                             v-model="localidadSeleccionada"
                             v-bind:disabled="this.readonly"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>

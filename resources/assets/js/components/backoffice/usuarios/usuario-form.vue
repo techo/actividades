@@ -146,13 +146,14 @@
                                     <v-select
                                             :options="dataPaises"
                                             label="nombre"
-                                            placeholder="Seleccione"
+                                            placeholder="Escribe el nombre"
                                             name="pais"
                                             id="pais"
                                             v-model="paisSeleccionado"
                                             v-bind:disabled="this.readonly"
                                             :onChange=this.getProvincias()
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -164,13 +165,14 @@
                                     <v-select
                                             :options="dataProvincias"
                                             label="provincia"
-                                            placeholder="Seleccione"
+                                            placeholder="Escribe el nombre"
                                             name="provincia"
                                             id="provincia"
                                             v-model="provinciaSeleccionada"
                                             v-bind:disabled="this.readonly"
                                             :onChange=this.getLocalidades()
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -182,12 +184,13 @@
                                     <v-select
                                             :options="dataLocalidades"
                                             label="localidad"
-                                            placeholder="Seleccione"
+                                            placeholder="Escribe el nombre"
                                             name="localidad"
                                             id="localidad"
                                             v-model="usuario.localidad"
                                             v-bind:disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>

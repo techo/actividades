@@ -13,13 +13,14 @@
                                 <v-select
                                         :options="dataUsuarios"
                                         label="nombre"
-                                        placeholder="Seleccione"
+                                        placeholder="Escribe nombre, apellido o email"
                                         name="usuario"
                                         id="usuario"
                                         v-model="usuarioSeleccionado"
                                         :filterable=false
                                         @search="onSearchUsuario"
                                 >
+                                <span slot="no-options"></span>
                                 </v-select>
                             </div>
                         </div>
