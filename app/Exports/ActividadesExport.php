@@ -30,8 +30,8 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
 
         $result = DB::table('Actividad')
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
-            ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
-            ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
+            ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+            ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
                 [
                     'Actividad.idActividad AS id',
@@ -55,7 +55,6 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                 $result->orWhere('atl_oficinas.nombre', 'like', '%' . $filter . '%');
             });
         }
-
         $var = $result->get();
         $act = Actividad::hydrate($var->toArray());
         return $act;
