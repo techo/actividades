@@ -4,8 +4,8 @@
                 v-model="presente"
                 theme="bootstrap"
                 color="primary"
-                id="asistencia_"
-                name="asistencia"
+                id="pago_"
+                name="pago"
                 type-bold="true"
                 text-enabled="Presente"
                 text-disabled="Ausente"
@@ -34,6 +34,7 @@
         data() {
             return {
                 presente: this.rowData.presente,
+                idInscripcion: this.rowData.id,
                 errorIcon: false,
             }
         },
@@ -80,7 +81,7 @@
             presente() {
                 this.actualizar();
             },
-            'rowData.presente': function () {
+            'rowData': function () {
                 this.presente = (this.rowData.presente === null) ? 0 : this.rowData.presente;
             }
         }

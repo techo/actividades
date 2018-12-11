@@ -79,7 +79,7 @@
             pago() {
                 this.actualizar();
             },
-            'rowData.pago': function () {
+            'rowData': function () {
                 this.pago = (this.rowData.pago === null) ? 0 : this.rowData.pago;
             }
 
