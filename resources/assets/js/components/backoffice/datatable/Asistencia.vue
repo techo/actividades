@@ -4,8 +4,8 @@
                 v-model="presente"
                 theme="bootstrap"
                 color="primary"
-                id="pago_"
-                name="pago"
+                id="asistencia_"
+                name="asistencia"
                 type-bold="true"
                 text-enabled="Presente"
                 text-disabled="Ausente"
@@ -34,7 +34,6 @@
         data() {
             return {
                 presente: this.rowData.presente,
-                idInscripcion: this.rowData.id,
                 errorIcon: false,
             }
         },
@@ -44,7 +43,7 @@
         methods: {
             actualizar() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.idInscripcion;
+                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.rowData.id;
                 let params = {
                     'presente': this.presente,
                 };
