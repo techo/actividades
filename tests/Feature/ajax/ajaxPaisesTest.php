@@ -45,9 +45,12 @@ class ajaxPaisesTest extends TestCase
     }
     public function test_ver_listado_de_localidades_por_provincia_y_por_pais()
     {
-        $pais = Pais::first();
+        $pais = Pais::where('nombre', 'Argentina')->first();
+        //dd($pais);
         $provincia = $pais->provincias->first();
-        $url = '/ajax/paises/' . $pais->id . '/provincia/'. $provincia->id .'/localidades';
+
+        $url = '/ajax/paises/' . $pais->id . '/provincias/'. $provincia->id .'/localidades';
+        //dd($url);
         $response = $this->get($url);
         $response
             ->assertStatus(200)

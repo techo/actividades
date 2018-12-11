@@ -8,12 +8,11 @@ services:
 
 before_script:
   - cp .env.travis .env
-  - mysql -e 'create database test;'
+  - mysql -e 'create database actividades;'
   - composer self-update
   - composer install --no-interaction
   - npm install
-  - gunzip test_db.sql.gz
-  - mysql -u root test < test_db.sql
+  - zcat test_db.sql.gz | mysql -u root actividades
   - php artisan migrate --seed
   - php artisan key:generate
   - php artisan config:clear

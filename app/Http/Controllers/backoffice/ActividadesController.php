@@ -263,7 +263,7 @@ class ActividadesController extends Controller
             return response($exception->getMessage(), 500);
         }
         Session::flash('mensaje', 'La actividad se eliminó correctamente');
-        return redirect()->to('/admin/actividades');
+        return redirect()->to('/admin/actividades/usuario');
     }
 
     /**
@@ -301,7 +301,7 @@ class ActividadesController extends Controller
                 'Debe seleccionar el país de la actividad',
             'montoMin.*' =>
                 'Debe especificar el monto mínimo de donación',
-            'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o 
+            'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o
                 posterior al final de la actividad',
             'beca.url' => 'El enlace al formulario de solicitud de beca debe ser una URL válida'
         ];

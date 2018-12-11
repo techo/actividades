@@ -47,7 +47,6 @@
                             <tr>
                                 <td class="content-cell">
                                     @yield('content')
-                                    <p> ¡Muchas gracias!</p>
                                 </td>
                             </tr>
                             <tr>

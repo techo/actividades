@@ -103,9 +103,19 @@ nav.bg-techo-blue {
     font-weight: bold !important;
 }
 
+.link {
+    color: $brand-primary;
+    &:hover {
+        color: $brand-primary;
+    }
+}
+
 span.cerrar {
     color: #fff;
 }
 h1.text-primary {
     padding-bottom: 20px;
+}
+div.dropdown-toggle::after {
+    display: none;
 }

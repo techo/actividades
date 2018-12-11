@@ -82,7 +82,7 @@
                                         api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
                                         fields="{{ $fieldsMiembros }}"
                                         sort-order = "{{ $sortOrderMiembros }}"
-                                        placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                                        placeholder-text="Buscar por Nombre, Oficina, Tipo o Estado"
                                         id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
                                         id-actividad = {{ $actividad->idActividad }}
                                         ref="miembrosTabla"
@@ -94,13 +94,13 @@
                 </div>
             </div>
             <div class="tab-pane" id="inscripciones">
-                <div class="box box-primary">
+                <div class="box box-primary collapsed-box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Buscar</h3>
+                        <h3 class="box-title">Búsqueda avanzada</h3>
                         <div class="box-tools pull-right">
                             <!-- Collapse Button -->
                             <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
+                                <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                 api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"
                                 fields="{{ $fields }}"
                                 sort-order="{{ $sortOrder }}"
-                                placeholder-text="Buscar por cualquier campo"
+                                placeholder-text="Buscar por DNI/Pasaporte, Nombre o Apellido"
                                 actividad="{{$actividad->idActividad}}"
                         ></inscripciones-table>
                     </div>

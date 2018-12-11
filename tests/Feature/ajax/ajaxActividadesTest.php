@@ -14,6 +14,8 @@ class ajaxActividadesTest extends TestCase
      */
     public function test_tipos_de_actividad_sin_parametros()
     {
+        $actividad = factory(\App\Actividad::class)->create();
+
         $params = [];
 
         $response = $this->post('/ajax/actividades/tipos', $params);
@@ -27,6 +29,8 @@ class ajaxActividadesTest extends TestCase
                     ]
                 ]
             );
+
+        $actividad->delete();
     }
 
     public function test_provincias_y_localidades_sin_parametros()
@@ -34,6 +38,7 @@ class ajaxActividadesTest extends TestCase
         $params = [];
 
         $response = $this->post('/ajax/actividades/provincias/', $params);
+
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -49,6 +54,7 @@ class ajaxActividadesTest extends TestCase
 
     public function test_actividades_sin_parametros()
     {
+        $actividad = factory(\App\Actividad::class)->create();
         $params = [];
         $response = $this->post('/ajax/actividades', $params);
         $response
@@ -69,12 +75,14 @@ class ajaxActividadesTest extends TestCase
                     "total"
                 ]
             );
+        $actividad->delete();
     }
 
     public function test_ver_detalle_de_actividad()
     {
-        $actividad = Actividad::first();
+        $actividad = factory(\App\Actividad::class)->create();
         $url = '/ajax/actividades/' . $actividad->idActividad;
+
         $response = $this->get($url);
         $response
             ->assertStatus(200)
@@ -95,13 +103,13 @@ class ajaxActividadesTest extends TestCase
                         "nombreActividad",
                         "descripcion",
                         "compromiso",
-                        "costo",
                         "lugar",
                         "moneda",
                         "puntosEncuentro" => []
                     ]
                 ]
             );
+
+        $actividad->delete();
     }
 }
-
