@@ -47,6 +47,7 @@ class InscripcionesSearch
 
         $query = (new Persona)->newQuery();
         $query->join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
+            ->leftJoin('Persona as PersonaModificacion', 'PersonaModificacion.idPersona', '=', 'Inscripcion.idPersonaModificacion')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
             ->leftJoin('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
             ->leftJoin('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
@@ -85,7 +86,9 @@ class InscripcionesSearch
                     'Actividad.costo',
                     'Actividad.idActividad',
                     'Grupo.nombre as nombreGrupo',
-                    'Rol.rol as nombreRol'
+                    'Rol.rol as nombreRol',
+                    'PersonaModificacion.mail as modificado_por',
+                    'Inscripcion.updated_at as modificado_en'
                 ]
             )
             ->where('Inscripcion.estado', '<>', 'Desinscripto');
