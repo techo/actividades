@@ -535,12 +535,12 @@
                 }
 
                 if (this.dataActividad.fechaInicio == null){
-                    this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
-                    this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
-                    this.dataActividad.fechaInicioEvaluaciones = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFinEvaluaciones = moment().format('YYYY-MM-DD 23:59');
+                    this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD 00:00:00');
+                    this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59:00');
+                    this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD 00:00:00');
+                    this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59:00');
+                    this.dataActividad.fechaInicioEvaluaciones = moment().format('YYYY-MM-DD 00:00');
+                    this.dataActividad.fechaFinEvaluaciones = moment().format('YYYY-MM-DD 23:59:00');
                 }
             },
             actualizarOficina() {
