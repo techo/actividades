@@ -38,11 +38,11 @@
         },
         methods: {
             doFilter() {
-                this.$events.fire('filter-set', this.filterText)
+                this.$events.fire('filter-set-miembros', this.filterText)
             },
             resetFilter() {
                 this.filterText = '';
-                this.$events.fire('filter-reset');
+                this.$events.fire('filter-reset-miembros');
             },
             exportar() {
             }

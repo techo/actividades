@@ -309,12 +309,12 @@ export default {
       this.moreParams.condiciones = [];
   },
   events: {
-    'filter-set' (filterText) {
+    'filter-set-inscripciones' (filterText) {
       this.moreParams.filter = filterText;
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },
-    'filter-reset' () {
-      this.moreParams = {};
+    'filter-reset-inscripciones' () {
+      this.moreParams.filter = null;
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     }
   }
