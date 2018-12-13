@@ -119,16 +119,18 @@ class ActividadesController extends Controller
             [
                 'tipo.categoria',
                 'oficina',
-                'modificadoPor',
+                'modificadoPor' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); },
                 'puntosEncuentro.pais',
                 'puntosEncuentro.provincia',
                 'puntosEncuentro.localidad',
+                'puntosEncuentro.responsable' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); },
                 'pais',
                 'provincia',
                 'localidad',
-                'coordinador:idPersona,nombres,apellidoPaterno,dni'
+                'coordinador' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); }
             ]
-        )->where('idActividad', $id)->first();
+        )
+        ->where('idActividad', $id)->first();
 
         if ($actividad) {
             if ($actividad->coordinador) {
@@ -388,6 +390,18 @@ class ActividadesController extends Controller
         return $punto;
     }
 
+    private function editarPunto($punto, $editado)
+    {
+        $punto['punto'] = $editado['punto'];
+        $punto['horario'] = $editado['horario'];
+        $punto['idLocalidad'] = $editado['idLocalidad'];
+        $punto['idPais'] = $editado['idPais'];
+        $punto['idProvincia'] = $editado['idProvincia'];
+        $punto['responsable']['idPersona'] = $editado['responsable']['idPersona'];
+        $punto->save();
+        return $punto;
+    }
+
     /**
      * @param Request $request
      * @param $actividad
@@ -485,6 +499,15 @@ class ActividadesController extends Controller
                     $punto->delete();
                 }
             }
+
+            foreach ($request->puntosEncuentroEditados as $editado) {
+                $punto = PuntoEncuentro::find($editado['idPuntoEncuentro']);
+                //dd($editado);
+                if ($punto) {
+                    $this->editarPunto($punto, $editado, $actividad);
+                }
+            }
+
             return true;
         }
 

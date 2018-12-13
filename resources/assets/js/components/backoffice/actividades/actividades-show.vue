@@ -268,7 +268,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <punto-encuentro
+            <punto-encuentro ref="puntoEncuentro"
                     :readonly="readonly"
                     :puntos-encuentro="dataActividad.puntos_encuentro"
                     :paises="dataPaises"
@@ -455,6 +455,7 @@
             Event.$on('cancelar', this.cancelar);
             Event.$on('guardar', this.guardar);
             Event.$on('borrar-punto', this.borrarPunto);
+            Event.$on('editar-punto', this.editarPunto);
             Event.$on('eliminar', this.eliminar);
             Event.$on('clonar', this.clonar);
         },
@@ -516,6 +517,7 @@
                 this.dataActividad.inscripcionInterna = (this.dataActividad.inscripcionInterna == 1);
                 this.dataActividad.puntos_encuentro = this.dataActividad.puntos_encuentro || [] ;
                 this.dataActividad.puntosEncuentroBorrados = [];
+                this.dataActividad.puntosEncuentroEditados = [];
                 this.categoriaSeleccionada = this.dataActividad.tipo !== undefined ? this.dataActividad.tipo.categoria : null;
                 this.estadoConstruccion = this.dataActividad.estadoConstruccion;
                 this.inscripcionInterna = this.dataActividad.inscripcionInterna;
@@ -666,6 +668,45 @@
             borrarPunto: function (obj) {
                 this.dataActividad.puntosEncuentroBorrados.push(obj.obj);
                 this.dataActividad.puntos_encuentro.splice(obj.index, 1);
+            },
+            editarPunto: function (obj) {
+                //mostrar form
+                this.$refs.puntoEncuentro.verFormulario = true;
+                
+                //llenar con info
+                this.$refs.puntoEncuentro.punto = obj.obj.punto;
+                this.$refs.puntoEncuentro.provinciaSeleccionada = obj.obj.provincia;
+                this.$refs.puntoEncuentro.localidadSeleccionada = obj.obj.localidad;
+
+                //parsing horario
+                var horario_temp = obj.obj.horario.split(":");
+                var objHora_temp = {
+                    'HH' : horario_temp[0],
+                    'mm' : horario_temp[1],
+                    'ss' : horario_temp[2]
+                }
+                this.$refs.puntoEncuentro.objHora = objHora_temp;
+
+                //parsing responsable
+                var responsable = {
+                    apellidoPaterno: obj.obj.responsable.apellidoPaterno,
+                    dni: obj.obj.responsable.dni,
+                    idPersona: obj.obj.responsable.idPersona,
+                    nombre: obj.obj.responsable.nombres + ' ' + obj.obj.responsable.apellidoPaterno,
+                    nombres: obj.obj.responsable.nombres
+                }
+                this.$refs.puntoEncuentro.coordinador = responsable;
+
+
+                //cambiar el boton a editar
+                var botonIncluirEditar = this.$refs.puntoEncuentro.$refs.botonIncluirEditar;
+                botonIncluirEditar.innerHTML="<i class='fa fa-edit'></i>  Editar";
+
+                this.$refs.puntoEncuentro.idPuntoEncuentro = obj.obj.idPuntoEncuentro;
+
+                //guardar el punto como editado
+                this.dataActividad.puntosEncuentroEditados.push(obj.obj);
+
             },
             eliminar: function () {
                 let form = document.getElementById('formDelete');

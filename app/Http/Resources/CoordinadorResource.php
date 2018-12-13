@@ -18,6 +18,8 @@ class CoordinadorResource extends Resource
             'idPersona' => $this->idPersona,
             'dni'       => $this->dni,
             'nombre'    => $this->nombreCompleto . " (" . $this->mail . ")",
+            'nombres'   => $this->nombres,
+            'apellidoPaterno'   => $this->nombres,
         ];
     }
 }
