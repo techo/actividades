@@ -84,7 +84,7 @@
                                         sort-order = "{{ $sortOrderMiembros }}"
                                         placeholder-text="Buscar por Nombre, Oficina, Tipo o Estado"
                                         id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
-                                        id-actividad = {{ $actividad->idActividad }}
+                                        id-actividad = "{{ $actividad->idActividad }}"
                                         ref="miembrosTabla"
                                 ></miembros-tabla>
                             </div>
