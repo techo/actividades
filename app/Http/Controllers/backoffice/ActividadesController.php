@@ -392,12 +392,12 @@ class ActividadesController extends Controller
 
     private function editarPunto($punto, $editado)
     {
-        $punto['punto'] = $editado['punto'];
-        $punto['horario'] = $editado['horario'];
-        $punto['idLocalidad'] = $editado['idLocalidad'];
-        $punto['idPais'] = $editado['idPais'];
-        $punto['idProvincia'] = $editado['idProvincia'];
-        $punto['responsable']['idPersona'] = $editado['responsable']['idPersona'];
+        $punto->punto = $editado['punto'];
+        $punto->horario = $editado['horario'];
+        $punto->idLocalidad = $editado['idLocalidad'];
+        $punto->idPais = $editado['idPais'];
+        $punto->idProvincia = $editado['idProvincia'];
+        $punto->idPersona = $editado['responsable']['idPersona'];
         $punto->save();
         return $punto;
     }
