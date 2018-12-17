@@ -57,16 +57,25 @@ class GruposController extends BaseController
             'idActividad'   => 'required|numeric',
         ]);
 
-        $persona = GrupoRolPersona::where('idPersona', '=', $request->idPersona)
+        $membresia = GrupoRolPersona::where('idPersona', '=', $request->idPersona)
             ->where('idActividad', '=', $request->idActividad)
             ->first();
-        if (!$persona) {
-            $id = DB::table('Grupo_Persona')->insertGetId($request->all());
-            $result = array_merge($request->all(), ['idPersona' => $id, 'tipo' => 'persona']);
-            return json_encode($result);
+
+        if ($membresia) {
+            //si está en el grupo raíz
+            if($membresia->grupo->idPadre == 0) {
+                $membresia->idGrupo = $request->idGrupo;
+                $membresia->save();
+                return json_encode($membresia);
+            }
+            else {
+                $grupo = $membresia->grupo;
+                return response($grupo, 428);
+            }
         }
-        $grupo = Grupo::find($persona->idPadre);
-        return response($grupo, 428);
+
+        //no estaba inscripto, error
+        return response($grupo, 500);
     }
 
     private function queryPersonas(Request $request, $idGrupo, $array)
