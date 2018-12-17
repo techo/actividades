@@ -22,6 +22,17 @@
         </div>
         <div class="row">
             <div class="col-md-6">
+                <label>Modificado por: </label>
+                <span>{{rowData.modificado_por}}</span>
+            </div>
+            <div class="col-md-6">
+                <label>Modificado en: </label>
+                <span>{{rowData.modificado_en}}</span>
+                &nbsp;<a @click="cargarAuditoria(rowData.id)" class="btn btn-primary btn-sm">Ver auditoría</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <label>Cantidad de Actividades Anteriores (Según filtro aplicado): </label>
                 <span>{{rowData.cantActividades}}</span>
             </div>
@@ -54,6 +65,9 @@ export default {
   methods: {
     onClick (event) {
       console.log('my-detail-row: on-click', event.target)
+    },
+    cargarAuditoria: function(id) {
+      Event.$emit('vuetable-cargarAuditoria', id);
     }
   },
 }
