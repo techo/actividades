@@ -91,7 +91,7 @@
                         </v-select>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" >
                     <div class="form-group">
                         <label for="tiposDeActividad">Tipo de Actividad</label>
                         <v-select
@@ -126,6 +126,29 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
+                        <br>
+                        <p v-if="readonly">{{ this.fechasActividad }}</p>
+                        <daterange-picker v-else @applyfechaActividad="cambioFechaActividad"
+                                           :start-date=this.dataActividad.fechaInicio
+                                           :end-date=this.dataActividad.fechaFin
+                                           :max-date="20350101"
+                                           min-date="01-01-2018"
+                                           opens="right"
+                                           drops="down"
+                                           :input="'fechaActividad'"
+                                           name="fechaActividad"
+                                           id="fechaActividad"
+                                           :locale-data="locale"
+                        ></daterange-picker>
+                    </div>
+                    <input type="checkbox" id="fechas-automaticas" v-model="fechasAutomaticas">
+                    <label for="checkbox">Avanzado</label>
+                </div>
+            </div>
+            <div class="row" v-show="!fechasAutomaticas">
+                <div class="col-md-4">
+                    <div class="form-group">
                         <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
                         <br>
                         <p v-if="readonly">{{ this.fechasInscripcion }}</p>
@@ -142,24 +165,7 @@
                         ></daterange-picker>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
-                        <br>
-                        <p v-if="readonly">{{ this.fechasActividad }}</p>
-                        <daterange-picker v-else @applyfechaActividad="cambioFechaActividad"
-                                           :start-date=this.dataActividad.fechaInicio
-                                           :end-date=this.dataActividad.fechaFin
-                                           :max-date="20350101"
-                                           min-date="01-01-2018"
-                                           opens="right"
-                                           drops="down"
-                                           :input="'fechaActividad'"
-                                           name="fechaActividad"
-                                           id="fechaActividad"
-                        ></daterange-picker>
-                    </div>
-                </div>
+                
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaEvaluaciones">Fecha de Inicio y Fin de las Evaluaciones</label>
@@ -436,6 +442,11 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
+                fechasAutomaticas: true,
+                locale: {
+                    format: 'DD-MM-YYYY', //fomart of the dates displayed
+                    separator: ' - '
+                }
             }
         },
         created() {
@@ -463,15 +474,27 @@
                 return (this.validationErrors.length > 0);
             },
             fechasActividad: function () {
-                return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
+                return window.moment(this.dataActividad.fechaInicio).format("YYYY-MM-DD hh:mm:ss") + " - " + window.moment(this.dataActividad.fechaFin).format("YYYY-MM-DD hh:mm:ss")
             },
             fechasEvaluaciones: function () {
-                return window.moment(this.dataActividad.fechaInicioEvaluaciones).locale("es").format("LL LT")
-                    + " - " + window.moment(this.dataActividad.fechaFinEvaluaciones).locale("es").format("LL LT")
+                return window.moment(this.dataActividad.fechaInicioEvaluaciones).format("YYYY-MM-DD hh:mm:ss")
+                    + " - " + window.moment(this.dataActividad.fechaFinEvaluaciones).format("YYYY-MM-DD hh:mm:ss")
             },
             fechasInscripcion: function () {
-                return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
+                return window.moment(this.dataActividad.fechaInicioInscripciones).format("YYYY-MM-DD hh:mm:ss") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).format("YYYY-MM-DD hh:mm:ss")
             },
+            fechaInicioInscripciones: function () {
+                return window.moment(this.dataActividad.fechaInicio).subtract(10, 'days').format('YYYY-MM-DD hh:mm:ss');
+            },
+            fechaFinInscripciones: function () {
+                return window.moment(this.dataActividad.fechaInicio).subtract(1, 'minutes').format('YYYY-MM-DD hh:mm:ss');
+            },
+            fechaInicioEvaluaciones: function () {
+                return window.moment(this.dataActividad.fechaFin).add(1, 'minutes').format('YYYY-MM-DD hh:mm:ss');
+            },
+            fechaFinEvaluaciones: function () {
+                return window.moment(this.dataActividad.fechaFin).add(10, 'days').format('YYYY-MM-DD hh:mm:ss');
+            }
         },
         filters: {
             estado: function (value) {
@@ -619,6 +642,12 @@
             guardar(){
                 let url;
                 this.mostrarLoadingAlert();
+                if(this.fechasAutomaticas) {
+                    this.dataActividad.fechaInicioInscripciones = null;
+                    this.dataActividad.fechaFinInscripciones = null;
+                    this.dataActividad.fechaInicioEvaluaciones = null;
+                    this.dataActividad.fechaFinEvaluaciones = null;
+                }
                 this.validationErrors = [];
                 window.scrollTo(0, 0);
 

@@ -312,10 +312,10 @@ class ActividadesController extends Controller
                 'descripcion'               => 'required',
                 'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
                 'fechaInicio'               => 'required | date',
-                'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
-                'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
-                'fechaInicioEvaluaciones'   => 'required | date | after_or_equal:fechaFin',
-                'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
+                'fechaInicioInscripciones'  => 'nullable | date | before_or_equal:fechaInicio',
+                'fechaFinInscripciones'     => ['nullable','date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
+                'fechaInicioEvaluaciones'   => 'nullable | date | after_or_equal:fechaFin',
+                'fechaFinEvaluaciones'      => ['nullable','date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
                 'idTipo'                    => 'required',
                 'inscripcionInterna'        => 'required',
                 'limiteInscripciones'       => 'numeric',
@@ -434,10 +434,21 @@ class ActividadesController extends Controller
         $actividad->fechaFin = $request->fechaFin;
         $actividad->montoMin = $request->montoMin > 0 ? $request->montoMin : 0;
         $actividad->montoMax = $request->montoMax > 0 ? $request->montoMax : 0;
-        $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
-        $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
-        $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
-        $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
+        
+        //si no se cargaron fechas de inscripciones y evaluaciones: calcular
+        if(!$request->fechaInicioInscripciones && !$request->fechaFinInscripciones && !$request->fechaInicioEvaluaciones && !$request->fechaFinEvaluaciones) {
+            $actividad->fechaInicioInscripciones = Carbon::parse($request->fechaInicio)->subDays(10)->format('Y-m-d H:i:s');
+            $actividad->fechaFinInscripciones = Carbon::parse($request->fechaInicio)->subMinute()->format('Y-m-d H:i:s');
+            $actividad->fechaInicioEvaluaciones = Carbon::parse($request->fechaFin)->addMinute()->format('Y-m-d H:i:s');
+            $actividad->fechaFinEvaluaciones = Carbon::parse($request->fechaFin)->addDays(10)->format('Y-m-d H:i:s');
+        }
+        else {
+            $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
+            $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
+            $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
+            $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
+        }
+        
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
