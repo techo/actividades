@@ -138,15 +138,15 @@ export default {
         Event.$on('vuetable-actualizarTabla', this.actualizarTabla);
     },
     events: {
-        'filter-set' (filterText) {
+        'filter-set-miembros' (filterText) {
           // this.moreParams = {
           //   filter: filterText
           // };
           this.moreParams.filter = filterText;
           Vue.nextTick( () => this.$refs.vuetableMiembros.refresh() )
         },
-        'filter-reset' () {
-          this.moreParams = {};
+        'filter-reset-miembros' () {
+          this.moreParams.filter = null;
           Vue.nextTick( () => this.$refs.vuetableMiembros.refresh() )
         }
     },

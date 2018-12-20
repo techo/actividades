@@ -44,7 +44,7 @@
         methods: {
             actualizar() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.idInscripcion;
+                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.rowData.id;
                 let params = {
                     'presente': this.presente,
                 };
@@ -81,7 +81,7 @@
             presente() {
                 this.actualizar();
             },
-            'rowData.presente': function () {
+            'rowData': function () {
                 this.presente = (this.rowData.presente === null) ? 0 : this.rowData.presente;
             }
         }

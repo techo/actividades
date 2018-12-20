@@ -34,7 +34,6 @@
         data() {
             return {
                 pago: this.rowData.pago,
-                idInscripcion: this.rowData.id,
                 errorIcon: false,
             }
         },
@@ -44,7 +43,7 @@
         methods: {
             actualizar() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.idInscripcion;
+                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.rowData.id;
                 let params = {
                     'pago': this.pago,
                 };
@@ -80,7 +79,7 @@
             pago() {
                 this.actualizar();
             },
-            'rowData.pago': function () {
+            'rowData': function () {
                 this.pago = (this.rowData.pago === null) ? 0 : this.rowData.pago;
             }
 
