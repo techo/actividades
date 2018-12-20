@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <p class="text-danger" v-if="yaInscripto">
-                    <i>Esta persona ya pertenece a otro equipo.</i>
+                    <i>Esta persona ya pertenece al equipo: {{ this.yaInscriptoGrupo }}.</i>
                 </p>
             </div>
         </div>
@@ -179,6 +179,7 @@
                 noInscripto: null,
                 rol: '',
                 yaInscripto: false,
+                yaInscriptoGrupo: false,
                 puntosEncuentro: [],
                 idPuntoSeleccionado: '',
                 nombreGrupoError: false,
@@ -222,7 +223,8 @@
             },
             guardarInscriptoCerrar: function() {
                 this.guardarInscripto();
-                this.cancelar();
+                if(!yaInscripto)
+                    this.cancelar();
             },
             guardarNoInscripto: function () {
                 if (this.noInscripto && this.idPuntoSeleccionado) {
@@ -312,9 +314,10 @@
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
             },
-            voluntarioDuplicado: function () {
+            voluntarioDuplicado: function (error) {
                 this.yaInscripto = true;
-                this.$refs.loading.justCloseSimplert();
+                this.yaInscriptoGrupo = error.nombre;
+                //this.$refs.loading.justCloseSimplert();
             },
             onSearchInscripto: function (text, loading) {
                 loading(true);
