@@ -30,8 +30,8 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
 
         $result = DB::table('Actividad')
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
-            ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
-            ->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
+            ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+            ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->select(
                 [
                     'Actividad.idActividad AS id',
