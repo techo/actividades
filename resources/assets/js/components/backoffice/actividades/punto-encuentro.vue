@@ -293,7 +293,8 @@
                         'nuevo': true,
                         'pais': this.paisSeleccionado,
                         'provincia': this.provinciaSeleccionada,
-                        'localidad': this.localidadSeleccionada
+                        'localidad': this.localidadSeleccionada,
+                        'borrable' : true
                     });
 
                     this.punto = '';
