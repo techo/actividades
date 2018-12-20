@@ -139,6 +139,8 @@
                                     type="button"
                                     class="btn btn-light"
                                     @click="borrar(punto.idPuntoEncuentro)"
+                                    :disabled="!punto.borrable"
+                                    :title="!punto.borrable ? 'El punto tiene inscriptos' : 'Borrar punto'"
                             >
                                     <i class="fa fa-trash text-danger"></i>
                             </button>
@@ -291,7 +293,8 @@
                         'nuevo': true,
                         'pais': this.paisSeleccionado,
                         'provincia': this.provinciaSeleccionada,
-                        'localidad': this.localidadSeleccionada
+                        'localidad': this.localidadSeleccionada,
+                        'borrable' : true
                     });
 
                     this.punto = '';

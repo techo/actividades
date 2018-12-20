@@ -34,4 +34,17 @@ class PuntoEncuentro extends Model
     {
         return $this->belongsTo(Localidad::class, 'idLocalidad', 'id');
     }
+
+    public function inscripciones()
+    {
+        return $this->hasMany(Inscripcion::class, 'idPuntoEncuentro', 'idPuntoEncuentro');
+    }
+
+    public function tieneInscriptos()
+    {
+        if($this->inscripciones()->where('estado', '!=', 'Desinscripto')->count() > 0) {
+            return true;
+        }
+        return false;
+    }
 }
