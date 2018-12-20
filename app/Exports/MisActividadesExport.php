@@ -47,7 +47,6 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             ->orderBy($sortField, $sortOrder);
 
         $result->where(function ($result) {
-            $result->orWhere('idPersonaModificacion', Auth::user()->idPersona);
             $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);
             $result->orWhere('idCoordinador', Auth::user()->idPersona);
         });

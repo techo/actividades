@@ -24,6 +24,6 @@ class InscripcionesPolicy
     {
         $actividad = Actividad::findOrFail($idActividad);
         return $user->hasAnyPermission(['tomar_asistencia', 'control_pagos'])
-            && ($user->idPersona === $actividad->idCoordinador || $user->hasRole('admin'));
+            && ($user->idPersona === $actividad->idPersonaCreacion || $user->idPersona === $actividad->idCoordinador || $user->hasRole('admin'));
     }
 }
