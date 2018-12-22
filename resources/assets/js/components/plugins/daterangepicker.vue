@@ -15,11 +15,11 @@
 
     export default {
         name: "daterangepicker",
-        props: ['startDate', 'endDate', 'minDate', 'opens', 'maxDate', 'input', 'drops'],
+        props: ['fechas', 'minDate', 'opens', 'maxDate', 'input', 'drops','edit'],
         data: function () {
             return {
-                start: this.startDate,
-                end: this.endDate,
+                start: this.fechas.inicio,
+                end: this.fechas.fin,
                 showRanges: false,
                 autoApply: false,
                 eventName: 'apply' + this.input
@@ -27,20 +27,20 @@
         },
         computed: {
             dateRange: function () {
-                var start = moment(this.start);
-                var end = moment(this.end);
+                var start = moment(this.fechas.inicio);
+                var end = moment(this.fechas.fin);
 
                 if (start.format('MM-DD-YYYY') === end.format('MM-DD-YYYY')) {
-                    return start.format('LL LT') + ' - ' + end.format('LT');
+                    return start.format('DD/MM/YYYY (hh:mm') + ' - ' + end.format('hh:mm)');
                 }
 
-                return start.format('LL LT') + ' - ' + end.format('LL LT');
+                return start.format('DD/MM/YYYY hh:mm') + ' - ' + end.format('DD/MM/YYYY hh:mm');
             }
         },
         mounted: function () {
             var vm = this;
-            this.start = moment(this.start);
-            this.end = moment(this.end);
+            this.fechas.inicio = moment(this.fechas.inicio);
+            this.fechas.fin = moment(this.fechas.fin);
             this.$nextTick(function () {
                 var options = {
                     locale: {
@@ -80,10 +80,12 @@
                     timePicker: true,
                     opens: this.opens,
                     drops: this.drops,
-                    startDate: this.start,
-                    endDate: this.end,
+                    startDate: this.fechas.inicio,
+                    endDate: this.fechas.fin,
                     autoApply: this.autoApply,
-                    alwaysShowCalendars: true
+                    alwaysShowCalendars: true,
+                    disabled: this.edit,
+                    editable: !this.edit
                 };
 
                 if (this.minDate) {

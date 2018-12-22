@@ -129,12 +129,12 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaInscripciones">Fecha de Inicio y Fin De La Inscripción</label>
+                        <label for="fechaInscripciones">Fecha de Inicio y Fin Inscripción</label>
                         <br>
-                        <p v-if="readonly">{{ this.fechasInscripcion }}</p>
+                        <p v-if="readonly || fechasAutomaticas">{{ this.fechasInscripcion_etiqueta }}</p>
                         <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
-                                          :start-date=this.dataActividad.fechaInicioInscripciones
-                                          :end-date=this.dataActividad.fechaFinInscripciones
+                                          v-bind:fechas="this.fechasInscripcion"
+                                          v-on:input="this.fechasInscripcion = $event"
                                           :max-date="20350101"
                                           min-date="01-01-2018"
                                           opens="right"
@@ -142,17 +142,18 @@
                                           :input="'fechaInscripciones'"
                                           name="fechaInscripciones"
                                           id="fechaInscripciones"
+                                          ref="fechaInscripciones"
                         ></daterange-picker>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaActividad">Fecha de Inicio y Fin de la actividad</label>
+                        <label for="fechaActividad">Fecha de Inicio y Fin Actividad</label>
                         <br>
-                        <p v-if="readonly">{{ this.fechasActividad }}</p>
+                        <p v-if="readonly">{{ this.fechasActividad_etiqueta }}</p>
                         <daterange-picker v-else @applyfechaActividad="cambioFechaActividad"
-                                           :start-date=this.dataActividad.fechaInicio
-                                           :end-date=this.dataActividad.fechaFin
+                                           v-bind:fechas="this.fechasActividad"
+                                           v-on:input="this.fechasActividad = $event"
                                            :max-date="20350101"
                                            min-date="01-01-2018"
                                            opens="right"
@@ -165,12 +166,12 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="fechaEvaluaciones">Fecha de Inicio y Fin de las Evaluaciones</label>
+                        <label for="fechaEvaluaciones">Fecha de Inicio y Fin Evaluaciones</label>
                         <br>
-                        <p v-if="readonly">{{ this.fechasEvaluaciones }}</p>
+                        <p v-if="readonly || fechasAutomaticas">{{ this.fechasEvaluaciones_etiqueta }}</p>
                         <daterange-picker v-else @applyfechaEvaluaciones="cambioFechaEvaluaciones"
-                                           :start-date=this.dataActividad.fechaInicioEvaluaciones
-                                           :end-date=this.dataActividad.fechaFinEvaluaciones
+                                           v-bind:fechas="this.fechasEvaluacion"
+                                           v-on:input="this.fechasEvaluacion = $event"
                                            :max-date="20350101"
                                            min-date="01-01-2018"
                                            opens="right"
@@ -450,6 +451,19 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
+                fechasAutomaticas: true,
+                fechasActividad: {
+                    'inicio': moment({hour: 0, minute: 0}).format('YYYY-MM-DD hh:mm'),
+                    'fin': moment({hour: 23, minute: 59}).format('YYYY-MM-DD hh:mm')
+                },
+                fechasInscripcion: {
+                    'inicio': moment({hour: 0, minute: 0}).subtract(1,'d').format('YYYY-MM-DD hh:mm'),
+                    'fin': moment({hour: 0, minute: 0}).subtract(1,'m').format('YYYY-MM-DD hh:mm')
+                },
+                fechasEvaluacion: {
+                    'inicio': moment({hour: 23, minute: 59}).add(1,'m').format('YYYY-MM-DD hh:mm'),
+                    'fin': moment({hour: 23, minute: 59}).add(1,'d').format('YYYY-MM-DD hh:mm')
+                }
             }
         },
         created() {
@@ -477,15 +491,14 @@
             tieneErrores:  function () {
                 return (this.validationErrors.length > 0);
             },
-            fechasActividad: function () {
-                return window.moment(this.dataActividad.fechaInicio).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFin).locale("es").format("LL LT")
+            fechasActividad_etiqueta: function () {
+                return this.mostrarFechas(this.fechasActividad.inicio,this.fechasActividad.fin);
             },
-            fechasEvaluaciones: function () {
-                return window.moment(this.dataActividad.fechaInicioEvaluaciones).locale("es").format("LL LT")
-                    + " - " + window.moment(this.dataActividad.fechaFinEvaluaciones).locale("es").format("LL LT")
+            fechasEvaluaciones_etiqueta: function () {
+                return this.mostrarFechas(this.fechasEvaluacion.inicio,this.fechasEvaluacion.fin);
             },
-            fechasInscripcion: function () {
-                return window.moment(this.dataActividad.fechaInicioInscripciones).locale("es").format("LL LT") + " - " + window.moment(this.dataActividad.fechaFinInscripciones).locale("es").format("LL LT")
+            fechasInscripcion_etiqueta: function () {
+                return this.mostrarFechas(this.fechasInscripcion.inicio,this.fechasInscripcion.fin);
             },
         },
         filters: {
@@ -549,13 +562,13 @@
                     this.coordinadorSeleccionado = null;
                 }
 
-                if (this.dataActividad.fechaInicio == null){
-                    this.dataActividad.fechaInicio = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFin = moment().format('YYYY-MM-DD 23:59');
-                    this.dataActividad.fechaInicioInscripciones = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFinInscripciones = moment().format('YYYY-MM-DD 23:59');
-                    this.dataActividad.fechaInicioEvaluaciones = moment().format('YYYY-MM-DD');
-                    this.dataActividad.fechaFinEvaluaciones = moment().format('YYYY-MM-DD 23:59');
+                if (this.dataActividad.fechaInicio != null) {
+                    this.fechasActividad.inicio = moment(this.dataActividad.fechaInicio).format('YYYY-MM-DD hh:mm');
+                    this.fechasActividad.fin = moment(this.dataActividad.fechaFin).format('YYYY-MM-DD hh:mm');
+                    this.fechasInscripcion.inicio = moment(this.dataActividad.fechaInicioInscripciones).format('YYYY-MM-DD hh:mm');
+                    this.fechasInscripcion.fin = moment(this.dataActividad.fechaFinInscripciones).format('YYYY-MM-DD hh:mm');
+                    this.fechasEvaluacion.inicio = moment(this.dataActividad.fechaInicioEvaluaciones).format('YYYY-MM-DD hh:mm');
+                    this.fechasEvaluacion.fin = moment(this.dataActividad.fechaFinEvaluaciones).format('YYYY-MM-DD hh:mm');
                 }
             },
             actualizarOficina() {
@@ -643,6 +656,13 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
+                this.dataActividad.fechaInicio = this.fechasActividad.inicio;
+                this.dataActividad.fechaFin = this.fechasActividad.fin;
+                this.dataActividad.fechaInicioInscripciones = this.fechasInscripcion.inicio;
+                this.dataActividad.fechaFinInscripciones = this.fechasInscripcion.fin;
+                this.dataActividad.fechaInicioEvaluaciones = this.fechasEvaluacion.inicio;
+                this.dataActividad.fechaFinEvaluaciones = this.fechasEvaluacion.fin;
+
                 this.dataActividad.descripcion = tinymce.get('descripcion').getContent();
                 this.axiosPost(url, //endpoint
                     function (data, self) { //handler de success
@@ -700,16 +720,23 @@
                 this.$refs.loading.justCloseSimplert();
             },
             cambioFechaActividad: function (start, end) {
-                this.dataActividad.fechaInicio = start.format("YYYY-MM-DD HH:mm:ss");
-                this.dataActividad.fechaFin = end.format("YYYY-MM-DD HH:mm:ss");
+                this.fechasActividad.inicio = start.format("YYYY-MM-DD HH:mm:ss");
+                this.fechasActividad.fin = end.format("YYYY-MM-DD HH:mm:ss");
+
+                if(this.fechasAutomaticas) {
+                    this.cambioFechaInscripciones(start.clone().subtract(10, 'd'),start.clone().subtract(1, 'm'));
+                    this.cambioFechaEvaluaciones(end.clone().add(1, 'm'),end.clone().add(10, 'd'));
+                }
             },
             cambioFechaEvaluaciones: function (start, end) {
-                this.dataActividad.fechaInicioEvaluaciones = start.format("YYYY-MM-DD HH:mm:ss");
-                this.dataActividad.fechaFinEvaluaciones = end.format("YYYY-MM-DD HH:mm:ss");
+                console.log("Evaluaciones: " + start.format("YYYY-MM-DD HH:mm:ss") + " " + end.format("YYYY-MM-DD HH:mm:ss"));
+                this.fechasEvaluacion.inicio = start.format("YYYY-MM-DD HH:mm:ss");
+                this.fechasEvaluacion.fin = end.format("YYYY-MM-DD HH:mm:ss");
             },
             cambioFechaInscripciones: function (start, end) {
-                this.dataActividad.fechaInicioInscripciones = start.format("YYYY-MM-DD HH:mm:ss");
-                this.dataActividad.fechaFinInscripciones = end.format("YYYY-MM-DD HH:mm:ss");
+                console.log("Inscripciones: " + start.format("YYYY-MM-DD HH:mm:ss") + " " + end.format("YYYY-MM-DD HH:mm:ss"));
+                this.fechasInscripcion.inicio = start.format("YYYY-MM-DD HH:mm:ss");
+                this.fechasInscripcion.fin = end.format("YYYY-MM-DD HH:mm:ss");
             },
             enableTinymce: function () {
                 tinymce.get('descripcion').remove();
@@ -826,6 +853,17 @@
             },
             cargarAuditoria: function(id) {
                 Event.$emit('cargarAuditoria', {tabla: 'actividad', id: id});
+            },
+            mostrarFechas: function(inicio,fin) {
+                var i = moment(inicio);
+                var f = moment(fin);
+                console.log(inicio);
+                console.log(fin);
+
+                if (i.format('MM-DD-YYYY') === f.format('MM-DD-YYYY')) {
+                    return i.format('DD/MM/YYYY (hh:mm') + ' - ' + f.format('hh:mm)');
+                }
+                return i.format("DD/MM/YYYY hh:mm") + " - " + f.format("DD/MM/YYYY hh:mm")
             }
         }
     }
