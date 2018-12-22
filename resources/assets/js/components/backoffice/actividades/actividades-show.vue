@@ -131,7 +131,7 @@
                     <div class="form-group">
                         <label for="fechaInscripciones">Fecha de Inicio y Fin Inscripción</label>
                         <br>
-                        <p v-if="readonly || fechasAutomaticas">{{ this.fechasInscripcion_etiqueta }}</p>
+                        <p v-if="readonly || !fechasManual">{{ this.fechasInscripcion_etiqueta }}</p>
                         <daterange-picker v-else @applyfechaInscripciones="cambioFechaInscripciones"
                                           v-bind:fechas="this.fechasInscripcion"
                                           v-on:input="this.fechasInscripcion = $event"
@@ -162,13 +162,16 @@
                                            name="fechaActividad"
                                            id="fechaActividad"
                         ></daterange-picker>
+                        <p v-show="!readonly" >
+                            <input type="checkbox"  v-model="fechasManual" /> Especificar inscripción/evaluación manualmente
+                        </p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="fechaEvaluaciones">Fecha de Inicio y Fin Evaluaciones</label>
                         <br>
-                        <p v-if="readonly || fechasAutomaticas">{{ this.fechasEvaluaciones_etiqueta }}</p>
+                        <p v-if="readonly || !fechasManual">{{ this.fechasEvaluaciones_etiqueta }}</p>
                         <daterange-picker v-else @applyfechaEvaluaciones="cambioFechaEvaluaciones"
                                            v-bind:fechas="this.fechasEvaluacion"
                                            v-on:input="this.fechasEvaluacion = $event"
@@ -451,7 +454,7 @@
                 oficinaSeleccionada: {},
                 validationErrors: {},
                 esConstruccion: false,
-                fechasAutomaticas: true,
+                fechasManual: false,
                 fechasActividad: {
                     'inicio': moment({hour: 0, minute: 0}).format('YYYY-MM-DD hh:mm'),
                     'fin': moment({hour: 23, minute: 59}).format('YYYY-MM-DD hh:mm')
@@ -468,7 +471,6 @@
         },
         created() {
             this.dataActividad = JSON.parse(this.actividad);
-            //console.log(this.dataActividad);
             this.dataLocalidades = this.localidades === '' ? [] : JSON.parse(this.localidades);
             this.dataPaises = JSON.parse(this.paises);
             this.dataProvincias = this.provincias === '' ? [] : JSON.parse(this.provincias);
@@ -723,18 +725,16 @@
                 this.fechasActividad.inicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.fechasActividad.fin = end.format("YYYY-MM-DD HH:mm:ss");
 
-                if(this.fechasAutomaticas) {
+                if(!this.fechasManual) {
                     this.cambioFechaInscripciones(start.clone().subtract(10, 'd'),start.clone().subtract(1, 'm'));
                     this.cambioFechaEvaluaciones(end.clone().add(1, 'm'),end.clone().add(10, 'd'));
                 }
             },
             cambioFechaEvaluaciones: function (start, end) {
-                console.log("Evaluaciones: " + start.format("YYYY-MM-DD HH:mm:ss") + " " + end.format("YYYY-MM-DD HH:mm:ss"));
                 this.fechasEvaluacion.inicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.fechasEvaluacion.fin = end.format("YYYY-MM-DD HH:mm:ss");
             },
             cambioFechaInscripciones: function (start, end) {
-                console.log("Inscripciones: " + start.format("YYYY-MM-DD HH:mm:ss") + " " + end.format("YYYY-MM-DD HH:mm:ss"));
                 this.fechasInscripcion.inicio = start.format("YYYY-MM-DD HH:mm:ss");
                 this.fechasInscripcion.fin = end.format("YYYY-MM-DD HH:mm:ss");
             },
@@ -857,8 +857,6 @@
             mostrarFechas: function(inicio,fin) {
                 var i = moment(inicio);
                 var f = moment(fin);
-                console.log(inicio);
-                console.log(fin);
 
                 if (i.format('MM-DD-YYYY') === f.format('MM-DD-YYYY')) {
                     return i.format('DD/MM/YYYY (hh:mm') + ' - ' + f.format('hh:mm)');
