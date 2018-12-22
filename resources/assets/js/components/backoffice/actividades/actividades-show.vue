@@ -456,16 +456,16 @@
                 esConstruccion: false,
                 fechasManual: false,
                 fechasActividad: {
-                    'inicio': moment({hour: 0, minute: 0}).format('YYYY-MM-DD hh:mm'),
-                    'fin': moment({hour: 23, minute: 59}).format('YYYY-MM-DD hh:mm')
+                    'inicio': moment({hour: 0, minute: 0}).format('YYYY-MM-DD HH:mm'),
+                    'fin': moment({hour: 23, minute: 59}).format('YYYY-MM-DD HH:mm')
                 },
                 fechasInscripcion: {
-                    'inicio': moment({hour: 0, minute: 0}).subtract(1,'d').format('YYYY-MM-DD hh:mm'),
-                    'fin': moment({hour: 0, minute: 0}).subtract(1,'m').format('YYYY-MM-DD hh:mm')
+                    'inicio': moment({hour: 0, minute: 0}).subtract(1,'d').format('YYYY-MM-DD HH:mm'),
+                    'fin': moment({hour: 0, minute: 0}).subtract(1,'m').format('YYYY-MM-DD HH:mm')
                 },
                 fechasEvaluacion: {
-                    'inicio': moment({hour: 23, minute: 59}).add(1,'m').format('YYYY-MM-DD hh:mm'),
-                    'fin': moment({hour: 23, minute: 59}).add(1,'d').format('YYYY-MM-DD hh:mm')
+                    'inicio': moment({hour: 23, minute: 59}).add(1,'m').format('YYYY-MM-DD HH:mm'),
+                    'fin': moment({hour: 23, minute: 59}).add(1,'d').format('YYYY-MM-DD HH:mm')
                 }
             }
         },
@@ -565,12 +565,12 @@
                 }
 
                 if (this.dataActividad.fechaInicio != null) {
-                    this.fechasActividad.inicio = moment(this.dataActividad.fechaInicio).format('YYYY-MM-DD hh:mm');
-                    this.fechasActividad.fin = moment(this.dataActividad.fechaFin).format('YYYY-MM-DD hh:mm');
-                    this.fechasInscripcion.inicio = moment(this.dataActividad.fechaInicioInscripciones).format('YYYY-MM-DD hh:mm');
-                    this.fechasInscripcion.fin = moment(this.dataActividad.fechaFinInscripciones).format('YYYY-MM-DD hh:mm');
-                    this.fechasEvaluacion.inicio = moment(this.dataActividad.fechaInicioEvaluaciones).format('YYYY-MM-DD hh:mm');
-                    this.fechasEvaluacion.fin = moment(this.dataActividad.fechaFinEvaluaciones).format('YYYY-MM-DD hh:mm');
+                    this.fechasActividad.inicio = moment(this.dataActividad.fechaInicio).format('YYYY-MM-DD HH:mm');
+                    this.fechasActividad.fin = moment(this.dataActividad.fechaFin).format('YYYY-MM-DD HH:mm');
+                    this.fechasInscripcion.inicio = moment(this.dataActividad.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm');
+                    this.fechasInscripcion.fin = moment(this.dataActividad.fechaFinInscripciones).format('YYYY-MM-DD HH:mm');
+                    this.fechasEvaluacion.inicio = moment(this.dataActividad.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm');
+                    this.fechasEvaluacion.fin = moment(this.dataActividad.fechaFinEvaluaciones).format('YYYY-MM-DD HH:mm');
                 }
             },
             actualizarOficina() {
@@ -859,9 +859,9 @@
                 var f = moment(fin);
 
                 if (i.format('MM-DD-YYYY') === f.format('MM-DD-YYYY')) {
-                    return i.format('DD/MM/YYYY (hh:mm') + ' - ' + f.format('hh:mm)');
+                    return i.format('DD/MM/YYYY (HH:mm') + ' - ' + f.format('HH:mm)');
                 }
-                return i.format("DD/MM/YYYY hh:mm") + " - " + f.format("DD/MM/YYYY hh:mm")
+                return i.format("DD/MM/YYYY HH:mm") + " - " + f.format("DD/MM/YYYY HH:mm")
             }
         }
     }

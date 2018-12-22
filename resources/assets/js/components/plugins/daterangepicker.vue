@@ -31,10 +31,10 @@
                 var end = moment(this.fechas.fin);
 
                 if (start.format('MM-DD-YYYY') === end.format('MM-DD-YYYY')) {
-                    return start.format('DD/MM/YYYY (hh:mm') + ' - ' + end.format('hh:mm)');
+                    return start.format('DD/MM/YYYY (HH:mm') + ' - ' + end.format('HH:mm)');
                 }
 
-                return start.format('DD/MM/YYYY hh:mm') + ' - ' + end.format('DD/MM/YYYY hh:mm');
+                return start.format('DD/MM/YYYY HH:mm') + ' - ' + end.format('DD/MM/YYYY HH:mm');
             }
         },
         mounted: function () {
