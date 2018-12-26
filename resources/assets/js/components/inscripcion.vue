@@ -51,12 +51,12 @@
               </div>
             </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 prev" >
             <div class="card d-none d-lg-block">
                 <img :src="imagen" class="img-tarjeta">
                 <div class="row">
                     <div class="col-md-12">
-                        <h6>{{ actividad.tipo ? actividad.tipo.nombre : '' }}</h6>
+                        <h6 v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo ? actividad.tipo.nombre : '' }}</h6>
                     </div>
                 </div>
                 <div class="row">
@@ -160,5 +160,9 @@
 
     .img-tarjeta {
         margin-bottom: 1em;
+    }
+
+    .prev h6 {
+        font-weight: 700 !important;
     }
 </style>
