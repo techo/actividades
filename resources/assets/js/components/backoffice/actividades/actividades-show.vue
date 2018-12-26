@@ -460,12 +460,12 @@
                     'fin': moment({hour: 23, minute: 59}).format('YYYY-MM-DD HH:mm')
                 },
                 fechasInscripcion: {
-                    'inicio': moment({hour: 0, minute: 0}).subtract(1,'d').format('YYYY-MM-DD HH:mm'),
+                    'inicio': moment({hour: 0, minute: 0}).subtract(10,'d').format('YYYY-MM-DD HH:mm'),
                     'fin': moment({hour: 0, minute: 0}).subtract(1,'m').format('YYYY-MM-DD HH:mm')
                 },
                 fechasEvaluacion: {
                     'inicio': moment({hour: 23, minute: 59}).add(1,'m').format('YYYY-MM-DD HH:mm'),
-                    'fin': moment({hour: 23, minute: 59}).add(1,'d').format('YYYY-MM-DD HH:mm')
+                    'fin': moment({hour: 23, minute: 59}).add(10,'d').format('YYYY-MM-DD HH:mm')
                 }
             }
         },
@@ -658,12 +658,12 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
-                this.dataActividad.fechaInicio = this.fechasActividad.inicio;
-                this.dataActividad.fechaFin = this.fechasActividad.fin;
-                this.dataActividad.fechaInicioInscripciones = this.fechasInscripcion.inicio;
-                this.dataActividad.fechaFinInscripciones = this.fechasInscripcion.fin;
-                this.dataActividad.fechaInicioEvaluaciones = this.fechasEvaluacion.inicio;
-                this.dataActividad.fechaFinEvaluaciones = this.fechasEvaluacion.fin;
+                this.dataActividad.fechaInicio = moment(this.fechasActividad.inicio).format('YYYY-MM-DD HH:mm:ss');
+                this.dataActividad.fechaFin = moment(this.fechasActividad.fin).format('YYYY-MM-DD HH:mm:ss');
+                this.dataActividad.fechaInicioInscripciones = moment(this.fechasInscripcion.inicio).format('YYYY-MM-DD HH:mm:ss');
+                this.dataActividad.fechaFinInscripciones = moment(this.fechasInscripcion.fin).format('YYYY-MM-DD HH:mm:ss');
+                this.dataActividad.fechaInicioEvaluaciones = moment(this.fechasEvaluacion.inicio).format('YYYY-MM-DD HH:mm:ss');
+                this.dataActividad.fechaFinEvaluaciones = moment(this.fechasEvaluacion.fin).format('YYYY-MM-DD HH:mm:ss');
 
                 this.dataActividad.descripcion = tinymce.get('descripcion').getContent();
                 this.axiosPost(url, //endpoint
