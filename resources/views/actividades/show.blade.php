@@ -38,7 +38,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				<h6 class="card-subtitle text-uppercase font-weight-bold">{{ $actividad->tipo->nombre }}</h6>
+				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre }}</h6>
 			</div>
 		</div>
 		<div class="row">
