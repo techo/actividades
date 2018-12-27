@@ -1,4 +1,4 @@
-<template>
+<template >
     <div>
         <div class="form-group">
             <button
@@ -45,6 +45,7 @@
                             :filterable=false
                             @search="onSearch"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
                 </div>
@@ -69,6 +70,7 @@
                             v-model="provinciaSeleccionada"
                             v-bind:disabled="this.readonly"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
@@ -85,6 +87,7 @@
                             v-model="localidadSeleccionada"
                             v-bind:disabled="this.readonly"
                     >
+                    <span slot="no-options"></span>
                     </v-select>
                     <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>
@@ -96,11 +99,12 @@
                     <button
                             type="button"
                             class="btn btn-default pull-right"
-                            @click="verFormulario=false"
+                            @click="cancelar"
                     >
                         <i class="fa fa-ban"></i>  Cancelar
                     </button>
                     <button
+                            ref="botonIncluirEditar"
                             type="button"
                             class="btn btn-primary pull-right"
                             @click="incluirPunto"
@@ -115,8 +119,8 @@
                 <th scope="col">Punto</th>
                 <th scope="col">Lugar</th>
                 <th scope="col">Horario</th>
-                <th scope="col">Coordinador</th>
-                <th scope="col"><span v-show="!readonly">Borrar</span></th>
+                <th scope="col">Responsable</th>
+                <th scope="col"><span v-show="!readonly">Acciones</span></th>
             </thead>
             <tbody>
                 <tr v-for="punto in dataPuntos" :key="punto.idPuntoEncuentro">
@@ -144,6 +148,13 @@
                             >
                                     <i class="fa fa-trash text-danger"></i>
                             </button>
+                            <button
+                                    type="button"
+                                    class="btn btn-light"
+                                    @click="editar(punto.idPuntoEncuentro)"
+                            >
+                                    <i class="fa fa-edit"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -165,22 +176,22 @@
         data: function () {
             return {
                 verFormulario: false,
-                coordinador: '',
-                punto: '',
-                horario: '',
+                coordinador: null,
+                punto: null,
+                horario: null,
                 objHora: {
-                    HH: "",
-                    mm: "",
-                    ss: ""
+                    'HH': "",
+                    'mm': "",
+                    'ss': ""
                 },
                 dataCoordinadores: [],
                 puntoSeleccionado: {},
                 dataPaises: this.paises,
                 paisSeleccionado: this.pais,
                 dataProvincias: [],
-                provinciaSeleccionada: '',
+                provinciaSeleccionada: null,
                 dataLocalidades: [],
-                localidadSeleccionada: '',
+                localidadSeleccionada: null,
                 validationErrors: {
                     punto: false,
                     horario: false,
@@ -189,7 +200,8 @@
                     provincia: false,
                     localidad: false,
                 },
-                dataPuntos: this.puntosEncuentro
+                dataPuntos: this.puntosEncuentro,
+                idPuntoEncuentro: false
             }
         },
         created: function () {
@@ -205,11 +217,9 @@
                     this.getProvincias();
                 }
             },
-            provinciaSeleccionada: function () {
-                this.getLocalidades();
-            },
             objHora: function () {
-                this.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss
+                    console.log(this.objHora);
+                    this.horario = this.objHora.HH + ':' + this.objHora.mm + ':' + this.objHora.ss;
             },
             pais: function() {
                 this.paisSeleccionado = this.pais
@@ -221,31 +231,34 @@
             },
             puntosEncuentro: function (nuevo, viejo) {
                 this.dataPuntos = nuevo;
+            },
+            provinciaSeleccionada: function (nuevo, viejo) {
+                this.getLocalidades();
             }
         },
         computed: {
             errorPunto: function () {
-                return (this.validationErrors.punto && this.punto === '')
+                return (this.validationErrors.punto)
             },
 
             errorHorario: function () {
-                return (this.validationErrors.horario || this.horario === '::00')
+                return (this.validationErrors.horario)
             },
 
             errorCoordinador: function () {
-                return (this.validationErrors.coordinador && this.coordinador === '')
+                return (this.validationErrors.coordinador)
             },
 
             errorPais: function () {
-                return (this.validationErrors.pais && this.paisSeleccionado === '')
+                return (this.validationErrors.pais)
             },
 
             errorProvincia: function () {
-                return (this.validationErrors.provincia && this.provinciaSeleccionada === '')
+                return (this.validationErrors.provincia)
             },
 
             errorLocalidad: function () {
-                return (this.validationErrors.localidad && this.localidadSeleccionada === '')
+                return (this.validationErrors.localidad)
             },
             paisValidado: function () {
                 if (this.paisSeleccionado === null) {
@@ -275,14 +288,58 @@
             }, 1000),
             incluirPunto: function (e) {
                 let valid = this.validate();
+
+
                 // genero un id provisional para identificar el punto
                 let id = this.getRandomInt(100000, 1000000);
                 if (valid) {
+                                    //si el punto está entre los existentes: editar
+                    var editar = this.dataPuntos.map(function(e) { return e.idPuntoEncuentro; }).indexOf(this.idPuntoEncuentro);
+
+                    if(editar != -1 && this.validate()) {
+                        console.log("editar punto: "+ this.idPuntoEncuentro);
+                        console.log(this.puntosEncuentro[editar]);
+                        this.dataPuntos[editar].responsable.dni = this.coordinador.dni;
+                        this.dataPuntos[editar].responsable.idPersona = this.coordinador.idPersona;
+                        this.dataPuntos[editar].responsable.nombres = this.coordinador.nombres;
+                        this.dataPuntos[editar].responsable.apellidoPaterno = this.coordinador.apellidoPaterno;
+                        console.log(this.dataPuntos[editar].responsable);
+                        console.log(this.coordinador);
+
+
+                        this.dataPuntos[editar].punto = this.punto;
+                        this.dataPuntos[editar].horario = this.horario;
+                        this.dataPuntos[editar].idPais = this.paisSeleccionado.id;
+                        this.dataPuntos[editar].idProvincia = this.provinciaSeleccionada.id;
+                        this.dataPuntos[editar].idLocalidad = this.localidadSeleccionada.id;
+                        this.dataPuntos[editar].pais = this.paisSeleccionado;
+                        this.dataPuntos[editar].provincia = this.provinciaSeleccionada;
+                        this.dataPuntos[editar].localidad = this.localidadSeleccionada;
+
+                        this.punto = null;
+                        this.coordinador = null;
+                        this.horario = null;
+                        this.provinciaSeleccionada = null;
+                        this.localidadSeleccionada = null;
+                        this.objHora = {
+                            'HH': "",
+                            'mm': "",
+                            'ss': ""
+                        };
+                        this.$refs.botonIncluirEditar.innerHTML="<i class='fa fa-plus'></i>  Incluir";
+                        this.verFormulario = false;
+
+                        return;
+
+                    }
+
+
                     this.puntosEncuentro.push({
                         'responsable': {
                             'dni': this.coordinador.dni,
                             'idPersona': this.coordinador.idPersona,
-                            'nombres': this.coordinador.nombre
+                            'nombres': this.coordinador.nombres,
+                            'apellidoPaterno': this.coordinador.apellidoPaterno,
                         },
                         'horario': this.horario,
                         'punto': this.punto,
@@ -297,24 +354,15 @@
                         'borrable' : true
                     });
 
-                    this.punto = '';
-                    this.coordinador = '';
-                    this.horario = '';
-                    this.provinciaSeleccionada = '';
-                    this.localidadSeleccionada = '';
-
-                    this.validationErrors = {
-                        punto: false,
-                        horario: false,
-                        coordinador: false,
-                        pais: false,
-                        provincia: false,
-                        localidad: false,
-                    };
+                    this.punto = null;
+                    this.coordinador = null;
+                    this.horario = null;
+                    this.provinciaSeleccionada = null;
+                    this.localidadSeleccionada = null;
                     this.objHora = {
-                        HH: "",
-                        mm: "",
-                        ss: ""
+                        'HH': "",
+                        'mm': "",
+                        'ss': ""
                     };
                     this.verFormulario = false;
                 }
@@ -323,54 +371,74 @@
                 let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
                 Event.$emit('borrar-punto', data);
             },
+            editar: function (id) {
+                let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
+                Event.$emit('editar-punto', data);
+            },
             getProvincias() {
                 if (this.paisSeleccionado !== null && this.paisSeleccionado.id !== undefined) {
                     this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
                         function (data, self) {
                             self.dataProvincias = data;
-                            self.provinciaSeleccionada = '';
-                            self.localidadSeleccionada = ''
+                            self.provinciaSeleccionada = null;
+                            self.localidadSeleccionada = null;
                         });
                 }
             },
             getLocalidades() {
-                if (this.paisSeleccionado !== null && this.provinciaSeleccionada.id !== undefined && this.provinciaSeleccionada.id !== null) {
-                    let url = '/ajax/paises/' + this.paisSeleccionado.id +
-                        '/provincias/' + this.provinciaSeleccionada.id + '/localidades';
-                    this.axiosGet(url,
-                        function (data, self) {
-                            self.dataLocalidades = data;
-                            self.localidadSeleccionada = '';
-                        });
+                
+                if (this.paisSeleccionado !== null) {
+                    if (this.provinciaSeleccionada !== null) {
+                        let url = '/ajax/paises/' + this.paisSeleccionado.id +
+                            '/provincias/' + this.provinciaSeleccionada.id + '/localidades';
+                        this.axiosGet(url,
+                            function (data, self) {
+                                self.dataLocalidades = data;
+                            });
+                    }
+                    else {
+                        this.dataLocalidades = [];
+                        this.localidadSeleccionada = null;
+                    }
                 }
             },
             validate() {
+
+                this.validationErrors = {
+                        punto: false,
+                        horario: false,
+                        coordinador: false,
+                        pais: false,
+                        provincia: false,
+                        localidad: false,
+                    };
+
                 let result = true;
-                if (this.punto === '') {
+                if (!this.punto) {
                     this.validationErrors.punto = true;
                     result = false;
                 }
-
-                if (this.objHora.HH === '' || this.objHora.mm === '') {
+                if (this.objHora.HH === "" || this.objHora.mm === "") {
                     this.validationErrors.horario = true;
                     result = false;
                 }
-                if (this.coordinador === '') {
+                if (!this.coordinador) {
                     this.validationErrors.coordinador = true;
                     result = false;
                 }
-                if (this.paisSeleccionado === '') {
+                if (!this.paisSeleccionado) {
                     this.validationErrors.pais = true;
                     result = false;
                 }
-                if (this.provinciaSeleccionada === '') {
+                if (!this.provinciaSeleccionada) {
                     this.validationErrors.provincia = true;
                     result = false;
                 }
-                if (this.localidadSeleccionada === '') {
+                if (!this.localidadSeleccionada) {
                     this.validationErrors.localidad = true;
                     result = false;
                 }
+
                 return result;
             },
             axiosGet(url, fCallback, params = []) {
@@ -439,25 +507,33 @@
                 return null;
             },
             cancelar: function () {
-                this.coordinador = '';
-                this.punto = '';
-                this.horario = '';
+                this.coordinador = null;
+                this.punto = null;
+                this.objHora = {
+                        'HH': "",
+                        'mm': "",
+                        'ss': ""
+                };
                 this.dataCoordinadores = [];
                 this.puntoSeleccionado = {};
-                this.dataPaises = this.paises;
-                this.paisSeleccionado = '';
-                this.dataProvincias = [];
-                this.provinciaSeleccionada = '';
+                //this.dataPaises = this.paises;
+                //this.paisSeleccionado = null;
+                //this.dataProvincias = [];
+                this.provinciaSeleccionada = null;
                 this.dataLocalidades = [];
-                this.localidadSeleccionada = '';
+                this.localidadSeleccionada = null;
+
                 this.validationErrors = {
-                    punto: false,
-                    horario: false,
-                    coordinador: false,
-                    pais: false,
-                    provincia: false,
-                    localidad: false,
-                }
+                        punto: false,
+                        horario: false,
+                        coordinador: false,
+                        pais: false,
+                        provincia: false,
+                        localidad: false,
+                };
+
+                this.verFormulario = false;
+                this.$refs.botonIncluirEditar.innerHTML="<i class='fa fa-plus'></i>  Incluir";
             },
             getRandomInt: function (min, max) {
                 return Math.floor(Math.random() * (max - min + 1)) + min;
