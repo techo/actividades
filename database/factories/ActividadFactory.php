@@ -1,17 +1,22 @@
 <?php
 
 use Faker\Generator as Faker;
+use Carbon\Carbon;
 
 $factory->define(App\Actividad::class, function (Faker $faker) {
+
+      $fecha = Carbon::parse(now())->addDays(5);
+      $fecha_fin = $fecha->copy()->addMinute();
+
     return [
-      'idTipo' => 11,
-      'fechaCreacion' => "2018-11-07 00:00:00",
-      'fechaModificacion' => "2018-11-07 14:08:56",
-      'fechaInicio' => "2018-11-10 00:00:00",
-      'fechaFin' => "2018-11-11 23:59:00",
+      'idTipo' => factory(\App\Tipo::class)->create()->idTipo,
+      'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
+      'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
+      'fechaInicio' => $fecha->format('Y-m-d H:i:s'),
+      'fechaFin' => $fecha_fin->format('Y-m-d H:i:s'),
       'fechaInicioFinFormato' => null,
-      'fechaInicioInscripciones' => "2018-11-07 00:00:00",
-      'fechaFinInscripciones' => "2018-11-08 23:59:00",
+      'fechaInicioInscripciones' => $fecha->copy()->subDays(10)->format('Y-m-d H:i:s'),
+      'fechaFinInscripciones' => $fecha->copy()->subMinute()->format('Y-m-d H:i:s'),
       'limiteInscripciones' => "0",
       'idUnidadOrganizacional' => 1,
       'idOficina' => 1,
@@ -54,8 +59,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'pAcompanantePost' => null,
       'mailBeca' => null,
       'idFormulario' => null,
-      'fechaInicioEvaluaciones' => "2018-11-12 00:00:00",
-      'fechaFinEvaluaciones' => "2018-11-18 23:59:00",
+      'fechaInicioEvaluaciones' => $fecha_fin->copy()->addMinute()->format('Y-m-d H:i:s'),
+      'fechaFinEvaluaciones' => $fecha_fin->copy()->addDays(10)->format('Y-m-d H:i:s'),
       'idAsentamiento' => null,
       'idZona' => null,
       'linkFormularioEvaluacion' => null,
@@ -68,10 +73,10 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'LinkPago' => null,
       'PuntosEnvioUL' => null,
       'CaptacionesUL' => null,
-      'idPais' => 13,
-      'idProvincia' => 2,
-      'idLocalidad' => 2384,
-      'idCoordinador' => 1,
+      'idPais' => factory(\App\Pais::class)->create()->id,
+      'idProvincia' => factory(\App\Provincia::class)->create()->id,
+      'idLocalidad' => factory(\App\Localidad::class)->create()->id,
+      'idCoordinador' => factory(\App\Persona::class)->create()->id,
       'beca' => null,
       'montoMin' => "100.00",
       'montoMax' => "0.00"
