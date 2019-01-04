@@ -187,14 +187,11 @@ class Actividad extends Model
         parent::boot();
 
         static::deleting(function ($actividad) { // before delete() method call this
-            DB::beginTransaction();
             try {
                 $inscripciones = $actividad->inscripciones();
                 $inscripciones->delete();
                 $actividad->puntosEncuentro()->delete();
-                DB::commit();
             } catch (\Exception $exception) {
-                DB::rollBack();
                 throw new \Exception($exception->getMessage());
             }
         });

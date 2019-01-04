@@ -62,9 +62,6 @@ class actividadesController extends BaseController
     public function filtrarProvinciasYLocalidades(Request $request)
     {
 
-        $default = 1; //Actividades en Asentamientos
-        $request->categoria = $request->categoria ?? $default;
-
         $provincias = LocalidadesSearch::apply($request);
 
         $listProvincias = [];
@@ -88,8 +85,6 @@ class actividadesController extends BaseController
      */
     public function filtrarTiposDeActividades(Request $request)
     {
-        $default = 1; //Actividades en Asentamientos
-        $request->categoria = $request->categoria ?? $default;
 
         $tipos = TiposActividadesSearch::apply($request);
 
