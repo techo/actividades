@@ -8,6 +8,7 @@ $factory->define(App\CategoriaActividad::class, function (Faker $faker) {
     return [
         'nombre' => $faker->name,
         'descripcion' => $faker->name,
+        'color' => $faker->hexcolor
     ];
 
 });

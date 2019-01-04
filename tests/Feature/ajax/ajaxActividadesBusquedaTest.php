@@ -10,6 +10,8 @@ class ajaxActividadesBusqueda extends TestCase
 {
     private $actividades;
 
+    use RefreshDatabase;
+
     public function setUp() 
     {
         parent::setUp();
@@ -19,17 +21,11 @@ class ajaxActividadesBusqueda extends TestCase
             ->each(function ($a) {
                 $a->puntosEncuentro()->save(factory(\App\PuntoEncuentro::class)->make());
             });
-
-        //$this->pais = factory(\App\Pais::class)->create();
-
-        //$this->tipos = factory(\App\Tipo::class,2)->create();
     }
 
     public function tearDown() 
     {
         parent::tearDown();
-
-             
     }
 
     /**
@@ -44,7 +40,6 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
         	'busqueda' => "punto",
-			'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
 			'localidades' => [$this->actividades[0]->puntosEncuentro()->first()->idLocalidad],
             'provincias' => null,
 			'tipos' => []
@@ -69,7 +64,6 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "lugar",
-            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
             'localidades' => [$this->actividades[0]->idLocalidad],
             'provincias' => null,
             'tipos' => []
@@ -95,7 +89,6 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "punto",
-            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
             'localidades' => [],
             'provincias' => [$this->actividades[0]->puntosEncuentro()->first()->idProvincia],
             'tipos' => []
@@ -119,10 +112,9 @@ class ajaxActividadesBusqueda extends TestCase
     {
 
         $params = [
-            'busqueda' => "punto",
-            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
+            'busqueda' => "lugar",
             'localidades' => [],
-            'provincias' => [$this->actividades[0]->puntosEncuentro()->first()->idProvincia],
+            'provincias' => [$this->actividades[0]->idProvincia],
             'tipos' => []
         ];
 
@@ -145,7 +137,6 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "punto",
-            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
             'localidades' => [],
             'provincias' => [],
             'tipos' => [$this->actividades[0]->tipo()->first()->idTipo]
@@ -190,12 +181,10 @@ class ajaxActividadesBusqueda extends TestCase
      *
      * @return void
      */
-    public function busquedaSinFiltros()
+    public function busquedaFiltrosVacios()
     {
-
+        //si se pone null en alguno, intenta la query con valor is null
         $params = [
-            'busqueda' => "punto",
-            'categoria' => null,
             'localidades' => [],
             'provincias' => [],
             'tipos' => []
@@ -206,5 +195,7 @@ class ajaxActividadesBusqueda extends TestCase
         $response
             ->assertStatus(200)
             ->assertJsonCount(4, 'data');
+
     }
+
 }

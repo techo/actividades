@@ -76,7 +76,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idPais' => factory(\App\Pais::class)->create()->id,
       'idProvincia' => factory(\App\Provincia::class)->create()->id,
       'idLocalidad' => factory(\App\Localidad::class)->create()->id,
-      'idCoordinador' => factory(\App\Persona::class)->create()->id,
+      'idCoordinador' => factory(\App\Persona::class)->create()->idPersona,
       'beca' => null,
       'montoMin' => "100.00",
       'montoMax' => "0.00"
