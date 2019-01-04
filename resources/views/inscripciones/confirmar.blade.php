@@ -79,12 +79,12 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 prev">
             <div class="card d-none d-lg-block" style="border: none">
                 <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em;">
                 <div class="row">
-                    <div class="col-md-12">
-                        <h6>{{ $actividad->tipo->nombre }}</h6>
+                    <div class="col-md-12" >
+                        <h6 style="color: {{$actividad->tipo->categoria->color}}; font-weight: 700 !important;" >{{ $actividad->tipo->nombre }}</h6>
                     </div>
                 </div>
                 <div class="row">
