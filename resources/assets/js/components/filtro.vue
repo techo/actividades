@@ -21,7 +21,7 @@
         <div id="filtro-provincias" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
-                    v-bind:provincias="this.dataProvincias"
+                    v-bind:provincias="this.lista_provincias"
             >
             </contenedor-check-provincias>
         </div>
@@ -55,19 +55,21 @@
         },
         data () {
              return {
-                 tiposDeActividad:  [],
-                 idCategoria:       (this.categoria_seleccionada)?this.categoria_seleccionada:null,
-                 dataCategorias:    this.categorias,
-                 dataProvincias:    [],
-                 dataLocalidades:   [],
+                 tiposDeActividad: [],
+                 idCategoria: (this.categoria_seleccionada)?this.categoria_seleccionada:null,
+                 dataCategorias: this.categorias,
+                 dataProvincias: [],
+                 dataLocalidades: [],
                  dataTiposActividad: [],
-                 dataBusqueda: 'punto'
+                 dataBusqueda: 'punto',
+                 lista_provincias: []
              }
         },
         methods: {
             cambiarCategoria() {
                 this.dataTiposActividad = [];
                 this.dataLocalidades = [];
+                this.dataProvincias = [];
             },
             actualizarFiltros() {
                 this.getTiposDeActividad();
@@ -77,6 +79,7 @@
 
                 let filtros = {
                     localidades: this.dataLocalidades,
+                    provincias: this.dataProvincias,
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
@@ -92,6 +95,7 @@
                 let url = '/ajax/actividades/tipos';
                 let filtros = {
                     localidades: this.dataLocalidades,
+                    provincias: this.dataProvincias,
                     busqueda: this.dataBusqueda
                 };
 
@@ -150,9 +154,9 @@
                 }
                 
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
-                    self.dataProvincias = Object.keys(response).map(i => response[i]);
+                    self.lista_provincias = Object.keys(response).map(i => response[i]);
                             for (let i=0; i< self.$children.length; i++) {
-                                self.$children[i].listaProvincias = self.dataProvincias;
+                                self.$children[i].listaProvincias = self.lista_provincias;
                             }
                         },formData,
                 function (error) {
@@ -162,6 +166,7 @@
 
             borrarFiltros: function () {
                 this.dataLocalidades = [];
+                this.lista_provincias = [];
                 this.dataTiposActividad = [];
                 for (let i=0; i< this.$children.length; i++) {
                     this.$children[i].borrar();
@@ -169,7 +174,7 @@
             },
         },
         watch: {
-            dataLocalidades: function(viejo, nuevo) {
+            dataProvincias: function(viejo, nuevo) {
                 this.getTiposDeActividad();
                 this.filtrar();
             },
@@ -179,7 +184,6 @@
 
             },
             dataBusqueda: function() {
-                console.log(this.dataBusqueda);
                 this.borrarFiltros();
             }
         },
