@@ -1,6 +1,6 @@
 <template>
     <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
-            <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2"
+            <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mb-md-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -10,14 +10,14 @@
                     {{ categoria.nombre }}
                 </option>
             </select>
-        <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
+        <!-- <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
             <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
             </label>
             <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'lugar'}" >
                <input type="radio" name="busqueda" value="lugar" v-model="dataBusqueda">Lugar de actividad
             </label>
-        </div>
+        </div> -->
         <div id="filtro-provincias" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
@@ -56,7 +56,7 @@
         data () {
              return {
                  tiposDeActividad:  [],
-                 idCategoria:       this.categoria_seleccionada,
+                 idCategoria:       (this.categoria_seleccionada)?this.categoria_seleccionada:null,
                  dataCategorias:    this.categorias,
                  dataProvincias:    [],
                  dataLocalidades:   [],
@@ -74,12 +74,16 @@
                 this.getProvinciasYLocalidades();
             },
             filtrar: function (){
+
                 let filtros = {
-                    categoria: this.idCategoria,
                     localidades: this.dataLocalidades,
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
+
+                if(this.idCategoria) {
+                    filtros.categoria = this.idCategoria;
+                }
 
                 let event = new CustomEvent('cargarTarjetas', {detail: filtros});
                 window.dispatchEvent(event);
@@ -88,9 +92,13 @@
                 let url = '/ajax/actividades/tipos';
                 let filtros = {
                     localidades: this.dataLocalidades,
-                    categoria: this.idCategoria,
                     busqueda: this.dataBusqueda
                 };
+
+                if(this.idCategoria) {
+                    filtros.categoria = this.idCategoria;
+                }
+
                 axios.post(url, filtros)
                     .then(response => {
                         if(response.data.length) {
@@ -131,11 +139,15 @@
 
             getProvinciasYLocalidades: function () {
                 let url = '/ajax/actividades/provincias/';
+
                 let formData = {
-                    categoria: this.idCategoria,
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
+
+                if(this.idCategoria) {
+                    formData.categoria = this.idCategoria;
+                }
                 
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
                     self.dataProvincias = Object.keys(response).map(i => response[i]);
@@ -172,8 +184,9 @@
             }
         },
         created: function() {
-            this.idCategoria        = JSON.parse(this.idCategoria);
+            this.idCategoria        = (this.idCategoria)?JSON.parse(this.idCategoria):null;
             this.dataCategorias     = JSON.parse(this.categorias);
+            this.dataCategorias.unshift({'id': null, 'nombre': 'CATEGORÍAS'})
             this.actualizarFiltros();
         },
         mounted() {
@@ -248,7 +261,8 @@
 
     #filtro {
         padding-bottom: 15px;
-        border-bottom: solid thin #cecece
+        border-bottom: solid thin #cecece;
+        justify-content: center;
     }
 
     input[type="radio"] {
@@ -257,6 +271,15 @@
 
     .dropdown-container {
         padding-right: 0;
+    }
+
+    #filtro-categoria {
+        background-color: #fff;
+        color: #494848
+    }
+
+    #filtro-categoria option {
+        background-color: #fff;
     }
 
     @media (max-width: 768px) {

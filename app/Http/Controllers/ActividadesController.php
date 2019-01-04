@@ -17,8 +17,7 @@ class actividadesController extends Controller
      */
     public function index(Request $request)
     {
-        $default = 1; //Actividades en Asentamientos
-        $idCategoria = $request->categoria ?? $default;
+        $idCategoria = $request->categoria ?? null;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
 

@@ -15,7 +15,7 @@
 @section('main_content')
 
     <filtro
-        categoria_seleccionada = "{{ $categoriaSeleccionada->id }}"
+        categoria_seleccionada = "{{ ($categoriaSeleccionada)? $categoriaSeleccionada->id : null }}"
         categorias="{{ $categorias }}"
     >
     </filtro>
