@@ -106,7 +106,7 @@
 
                 </div>
                 <div class="col-md-4">
-                    <strong>Referente:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
+                    <strong>Responsable:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
                 </div>
 			</div>
 		@endforeach

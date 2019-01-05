@@ -225,7 +225,19 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="pais">Lugar</label>
+                        <input id="lugar"
+                               name="lugar"
+                               type="text"
+                               class="form-control"
+                               v-model="dataActividad.lugar"
+                               :disabled="readonly"
+                        >
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="pais">País</label>
                         <v-select
@@ -241,7 +253,7 @@
                         </v-select>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="provincia">Provincia</label>
                         <v-select
@@ -257,9 +269,9 @@
                         </v-select>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label for="localidad">Localidad</label>
+                        <label for="localidad">Localidad (opcional)</label>
                         <v-select
                                 :options="dataLocalidades"
                                 label="localidad"
@@ -666,6 +678,32 @@
                 this.dataActividad.fechaFinInscripciones = moment(this.fechasInscripcion.fin).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaInicioEvaluaciones = moment(this.fechasEvaluacion.inicio).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaFinEvaluaciones = moment(this.fechasEvaluacion.fin).format('YYYY-MM-DD HH:mm:ss');
+
+                if(this.dataActividad.puntos_encuentro.length == 0) {
+
+                    var p = {
+                    'responsable': {
+                        'dni': this.dataActividad.coordinador.dni,
+                        'idPersona': this.dataActividad.coordinador.idPersona,
+                        'nombres': this.dataActividad.coordinador.nombres,
+                        'apellidoPaterno': this.dataActividad.coordinador.apellidoPaterno,
+                    },
+                    'horario': moment(this.dataActividad.fechaInicio).format('HH:mm'),
+                    'punto': this.dataActividad.lugar,
+                    'idPais': this.paisSeleccionado.id,
+                    'idProvincia': this.provinciaSeleccionada.id,
+                    'idLocalidad': (this.localidadSeleccionada.id)?this.localidadSeleccionada.id:null,
+                    //'idPuntoEncuentro': this.dataActividad.id,
+                    'pais': this.paisSeleccionado,
+                    'provincia': this.provinciaSeleccionada,
+                    'localidad': this.localidadSeleccionada,
+                    'nuevo': true,
+                    'borrable': true
+                    };
+
+                    this.dataActividad.puntos_encuentro.push(p);
+
+                }
 
                 this.dataActividad.descripcion = tinymce.get('descripcion').getContent();
                 this.axiosPost(url, //endpoint

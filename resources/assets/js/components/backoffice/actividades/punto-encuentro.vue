@@ -11,9 +11,9 @@
             </button>
         </div>
         <div class="row" v-show="!readonly && verFormulario">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="punto">Punto de Encuentro</label>
+                    <label for="punto">Lugar</label>
                     <input
                             type="text"
                             id="punto"
@@ -24,41 +24,13 @@
                     <p class="text-danger" v-show="errorPunto"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="horario">Horario</label> <br>
-                    <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
-                    <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="coordinador">Responsable del punto de encuentro</label>
-                    <v-select
-                            :options="dataCoordinadores"
-                            label="nombre"
-                            placeholder="Escribe el nombre o apellido"
-                            name="coordinador"
-                            id="coordinador"
-                            v-model="coordinador"
-                            v-bind:disabled="this.readonly"
-                            :filterable=false
-                            @search="onSearch"
-                    >
-                    <span slot="no-options"></span>
-                    </v-select>
-                    <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
-                </div>
-            </div>
-        </div>
-        <div class="row" v-show="!readonly && verFormulario">
-            <div class="col-md-4">
+            <div class="col-md-3" >
                 <div class="form-group">
                     <label>País</label>
-                    <p style="font-size: larger">{{ paisValidado }}</p>
+                    <input type="text" class="form-control" disabled="disabled" v-bind:value="paisValidado" />
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="provincia">Provincia</label>
                     <v-select
@@ -75,9 +47,9 @@
                     <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
-                    <label for="localidad">Localidad</label>
+                    <label for="localidad">Localidad (opcional)</label>
                     <v-select
                             :options="dataLocalidades"
                             label="localidad"
@@ -91,6 +63,36 @@
                     </v-select>
                 </div>
             </div>
+            
+        </div>
+        <div class="row" v-show="!readonly && verFormulario">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="horario">Horario</label> <br>
+                    <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
+                    <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="coordinador">Responsable</label>
+                    <v-select
+                            :options="dataCoordinadores"
+                            label="nombre"
+                            placeholder="Escribe el nombre o apellido"
+                            name="coordinador"
+                            id="coordinador"
+                            v-model="coordinador"
+                            v-bind:disabled="this.readonly"
+                            :filterable=false
+                            @search="onSearch"
+                    >
+                    <span slot="no-options"></span>
+                    </v-select>
+                    <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
+                </div>
+            </div>
+            
         </div>
         <div class="row" v-show="!readonly && verFormulario">
             <div class="col-md-12">
@@ -160,7 +162,7 @@
             </tbody>
         </table>
 
-        <p v-else class="text-muted text-center">No hay puntos de encuentro en esta actividad</p>
+        <p v-else class="text-muted text-center">No hay puntos de encuentro en esta actividad, se agrega la ubicación como punto.</p>
     </div>
 </template>
 <script>
@@ -291,15 +293,10 @@
                     var editar = this.dataPuntos.map(function(e) { return e.idPuntoEncuentro; }).indexOf(this.idPuntoEncuentro);
 
                     if(editar != -1 && this.validate()) {
-                        console.log("editar punto: "+ this.idPuntoEncuentro);
-                        console.log(this.puntosEncuentro[editar]);
                         this.dataPuntos[editar].responsable.dni = this.coordinador.dni;
                         this.dataPuntos[editar].responsable.idPersona = this.coordinador.idPersona;
                         this.dataPuntos[editar].responsable.nombres = this.coordinador.nombres;
                         this.dataPuntos[editar].responsable.apellidoPaterno = this.coordinador.apellidoPaterno;
-                        console.log(this.dataPuntos[editar].responsable);
-                        console.log(this.coordinador);
-
 
                         this.dataPuntos[editar].punto = this.punto;
                         this.dataPuntos[editar].horario = this.horario;
