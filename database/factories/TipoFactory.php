@@ -6,7 +6,7 @@ use Carbon\Carbon;
 $factory->define(App\Tipo::class, function (Faker $faker) {
 
     return [
-        'nombre' => $faker->name,
+        'nombre' => $faker->company,
 		'hs' => 0,
 		'fyv' => 0,
 		'idCategoria' => factory(\App\CategoriaActividad::class)->create()->id,

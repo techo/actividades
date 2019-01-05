@@ -17,9 +17,6 @@ class ActividadesConPagoSeeder extends Seeder
             'id_pais' => $pais->id
         ]);
 
-        print_r($pais);
-        print_r($provincia);
-
         factory(\App\Actividad::class,5)
             ->create([
                 'idTipo' => factory(\App\Tipo::class)->create(['flujo' => 'CONSTRUCCION'])->idTipo,

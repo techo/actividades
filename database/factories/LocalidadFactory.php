@@ -6,7 +6,7 @@ use Carbon\Carbon;
 $factory->define(App\Localidad::class, function (Faker $faker) {
 
     return [
-        'localidad' => $faker->name,
+        'localidad' => $faker->city,
         'id_provincia' => factory(\App\Provincia::class)->create()->id
     ];
 
