@@ -40,9 +40,7 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
         	'busqueda' => "punto",
-			'localidades' => [$this->actividades[0]->puntosEncuentro()->first()->idLocalidad],
-            'provincias' => null,
-			'tipos' => []
+			'localidades' => [$this->actividades[0]->puntosEncuentro()->first()->idLocalidad]
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -64,9 +62,7 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "lugar",
-            'localidades' => [$this->actividades[0]->idLocalidad],
-            'provincias' => null,
-            'tipos' => []
+            'localidades' => [$this->actividades[0]->idLocalidad]
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -89,9 +85,7 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "punto",
-            'localidades' => [],
-            'provincias' => [$this->actividades[0]->puntosEncuentro()->first()->idProvincia],
-            'tipos' => []
+            'provincias' => [$this->actividades[0]->puntosEncuentro()->first()->idProvincia]
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -113,9 +107,7 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "lugar",
-            'localidades' => [],
-            'provincias' => [$this->actividades[0]->idProvincia],
-            'tipos' => []
+            'provincias' => [$this->actividades[0]->idProvincia]
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -136,9 +128,6 @@ class ajaxActividadesBusqueda extends TestCase
     {
 
         $params = [
-            'busqueda' => "punto",
-            'localidades' => [],
-            'provincias' => [],
             'tipos' => [$this->actividades[0]->tipo()->first()->idTipo]
         ];
 
@@ -160,11 +149,7 @@ class ajaxActividadesBusqueda extends TestCase
     {
 
         $params = [
-            'busqueda' => "punto",
-            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria,
-            'localidades' => [],
-            'provincias' => [],
-            'tipos' => []
+            'categoria' => $this->actividades[0]->tipo()->first()->idCategoria
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -184,11 +169,14 @@ class ajaxActividadesBusqueda extends TestCase
     public function busquedaFiltrosVacios()
     {
         //si se pone null en alguno, intenta la query con valor is null
-        $params = [
+        $params = [];
+
+        /*$params = [
+            'busqueda' => "punto" o "lugar",
             'localidades' => [],
             'provincias' => [],
             'tipos' => []
-        ];
+        ];}*/
 
         $response = $this->post('/ajax/actividades', $params);
 

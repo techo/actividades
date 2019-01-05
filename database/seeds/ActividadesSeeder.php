@@ -11,10 +11,11 @@ class ActividadesSeeder extends Seeder
      */
     public function run()
     {
-        factory(\App\Actividad::class,10)
+        factory(\App\Actividad::class,5)
 	        ->create()
 	        ->each(function ($a) {
 	            $a->puntosEncuentro()->save(factory(\App\PuntoEncuentro::class)->make());
+                $a->puntosEncuentro()->save(factory(\App\PuntoEncuentro::class)->make());
 	        });
     }
 }
