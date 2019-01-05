@@ -70,9 +70,14 @@ class actividadesController extends BaseController
             $idProvincia = (int)$provincias[$i]->id_provincia;
             $listProvincias[$idProvincia]['id_provincia'] = $idProvincia;
             $listProvincias[$idProvincia]['provincia'] = $provincias[$i]->Provincia;
-            $listProvincias[$idProvincia]['localidades'][] =
-                array('id_localidad' => $provincias[$i]->id_localidad,
-                    'localidad' => $provincias[$i]->Localidad);
+            if($provincias[$i]->id_localidad) {
+                $listProvincias[$idProvincia]['localidades'][] =
+                    array('id_localidad' => $provincias[$i]->id_localidad,
+                        'localidad' => $provincias[$i]->Localidad);
+            }
+            else {
+                $listProvincias[$idProvincia]['localidades'] = [];
+            }
         }
         return $listProvincias;
     }

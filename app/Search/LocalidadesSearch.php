@@ -11,7 +11,7 @@ class LocalidadesSearch
     public static function apply(Request $filters)
     {
         $query = static::applyDecoratorsFromRequest($filters, LocalidadesSearch::newQuery());
-        //dd($query);
+        //dd($query->toSql(), $query->getBindings());
         return static::getResults($query);
     }
     private static function applyDecoratorsFromRequest(Request $request, Builder $query)

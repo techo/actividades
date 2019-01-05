@@ -98,6 +98,7 @@
     .acordion a.active {
         background-color: #0092dd;
         color: #fff;
+        border-radius: 5px;
     }
     .acordion a svg {
         color: #494848;

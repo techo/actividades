@@ -14,9 +14,9 @@
             <div class="row">
                 <div class="col-md-12">
                     @if(strtoupper($actividad->tipo->flujo) == 'CONSTRUCCION')
-                        <h2 class="card-title">Confirmar tu pre-inscripcion</h2>
+                        <h2 class="card-title">Confirmar tu pre-inscripción</h2>
                     @else
-                        <h2 class="card-title">Confirmar tu inscripcion</h2>
+                        <h2 class="card-title">Confirmar tu inscripción</h2>
                     @endif
                 </div>
             </div>
@@ -33,7 +33,11 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p>
-                            {{ $punto_encuentro->punto }}{{', '. $punto_encuentro->localidad->localidad . ', ' . $punto_encuentro->provincia->provincia }}
+                            @if ($punto_encuentro->localidad)
+                                {{ $punto_encuentro->punto }}{{', '. $punto_encuentro->localidad->localidad . ', ' . $punto_encuentro->provincia->provincia }}
+                            @else
+                                {{ $punto_encuentro->punto }}{{', ' . $punto_encuentro->provincia->provincia }}
+                            @endif
                         </p>
                         <p>
                             {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:m') }} hs
@@ -98,7 +102,15 @@
                         <span>{{ $actividad->fechaInicio->format('d/m/y') }}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ $actividad->fechaInicio->format('h:m') }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ $actividad->localidad->localidad }}</span>
+                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> 
+                        <span>
+                            @if ($actividad->idLocalidad)
+                                {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
+                            @else
+                                {{ $actividad->provincia->provincia }}
+                            @endif
+
+                        </span>
                     </div>
                 </div>
                 <hr>
