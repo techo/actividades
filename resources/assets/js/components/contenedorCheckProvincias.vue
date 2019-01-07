@@ -2,8 +2,10 @@
     <div class="acordion ">
         <a 
             v-bind:class="{active: $parent.dataLocalidades.length > 0 || $parent.dataProvincias.length > 0}"
-            data-toggle="collapse" href="#provincias" 
-            role="button" aria-expanded="false"
+            data-toggle="collapse" 
+            aria-expanded="false"
+            href="#provincias" 
+            role="button" 
         ><span> Provincias</span> <i class="fas fa-caret-down"></i>
         </a>
         <div id="provincias" class="collapse lista-opciones" >
@@ -36,18 +38,21 @@
         },
         methods: {
             aplicar() {
-               
-               for (let i =0; i < this.$children.length; i++) {
-                   this.provincias_seleccionadas.push(this.$children[i].provincias_selected);
-               }
-               for (let i =0; i < this.$children.length; i++) {
-                   this.localidades_seleccionadas.push(this.$children[i].localidades_selected);
-               }
 
-               this.$parent.dataProvincias = [].concat.apply([], this.provincias_seleccionadas);
-               this.$parent.dataLocalidades = [].concat.apply([], this.localidades_seleccionadas);
+                this.provincias_seleccionadas = [];
+                this.localidades_seleccionadas = [];
 
-               $('#provincias').collapse('hide')
+                for (let i =0; i < this.$children.length; i++) {
+                    this.provincias_seleccionadas.push(this.$children[i].provincias_selected);
+                }
+                for (let i =0; i < this.$children.length; i++) {
+                    this.localidades_seleccionadas.push(this.$children[i].localidades_selected);
+                }
+
+                this.$parent.dataProvincias = [].concat.apply([], this.provincias_seleccionadas);
+                this.$parent.dataLocalidades = [].concat.apply([], this.localidades_seleccionadas);
+
+                $('#provincias').collapse('hide')
             },
 
             borrar() {
@@ -125,7 +130,6 @@
     .acordion .collapsing, .acordion .collapse.show {
         z-index: 20;
         width: 100%;
-        overflow:visible;
         border-bottom-left-radius:5px;
         border-bottom-right-radius:5px;
         padding: 5% 5%;
@@ -137,9 +141,7 @@
         margin-left: 1px;
         position: absolute;
     }
-    .acordion .collapsing.lista-opciones {
-        display: none;
-    }
+
     .dropdown-button {
         width: 100%;
     }
