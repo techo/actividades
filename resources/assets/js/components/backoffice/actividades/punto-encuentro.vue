@@ -7,7 +7,7 @@
                     @click="verFormulario=true"
                     v-show="!readonly && !verFormulario"
             >
-                <i class="fa fa-map-marker"></i>  Agregar Punto de Encuentro
+                <i class="fa fa-map-marker"></i>  Agregar
             </button>
         </div>
         <div class="row" v-show="!readonly && verFormulario">
@@ -117,8 +117,8 @@
         </div>
         <table class="table table-striped table-hover table-condensed" v-if="puntosEncuentro.length > 0">
             <thead class="thead-light">
-                <th scope="col">Punto</th>
                 <th scope="col">Lugar</th>
+                <th scope="col">Ubicación</th>
                 <th scope="col">Horario</th>
                 <th scope="col">Responsable</th>
                 <th scope="col"><span v-show="!readonly">Acciones</span></th>
