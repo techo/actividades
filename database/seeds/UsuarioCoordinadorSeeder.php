@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class adminSeeder extends Seeder
+class UsuarioCoordinadorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,12 +14,12 @@ class adminSeeder extends Seeder
         $request = new \Illuminate\Http\Request();
         $request->setMethod('POST');
         $request->request->add([
-            'email' => 'admin@admin.com',
-            'nombre' => 'admin',
-            'apellido' => 'admin',
-            'dni' => '11111111',
+            'email' => 'coordinador@coordinador.com',
+            'nombre' => 'coordinador',
+            'apellido' => 'coordinador',
+            'dni' => '2222222',
             'pais' => \App\Pais::where('nombre', 'argentina')->first(),
-            'rol' => ['rol' => 'admin'],
+            'rol' => ['rol' => 'coordinador'],
             'nacimiento' => Carbon\Carbon::createFromFormat('d-m-Y', '01-01-1971'),
             'telefono' => '1',
             'sexo' => ['id' => 'M']
@@ -31,12 +31,12 @@ class adminSeeder extends Seeder
 
         if($validator->passes()){
             if($usuario = $userService->crearUsuario($request)){
-                $usuario->password = $userService->setPassword('admin');
+                $usuario->password = $userService->setPassword('coordinador');
                 $usuario->save();
-                echo "Usuario admin creado correctamente. Ingrese con: \n Usuario: admin@admin.com \n Contraseña: admin\n";
+                echo "Usuario coordinador creado correctamente. Ingrese con: \n Usuario: coordinador@coordinador.com \n Contraseña: coordinador\n";
                 return;
             }
-            echo 'Ocurrió un problema al crear usuario admin';
+            echo 'Ocurrió un problema al crear usuario coordinador';
             return;
         }
 

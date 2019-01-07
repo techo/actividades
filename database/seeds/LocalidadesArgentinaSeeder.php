@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
-class IncluyeDatosAtlLocalidades extends Migration
+class LocalidadesArgentinaSeeder extends Seeder
 {
     /**
-     * Run the migrations.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function up()
-    {   
-        if (Schema::hasTable('atl_localidades')) {
-            DB::statement("INSERT IGNORE INTO `atl_localidades` (`id`, `id_provincia`, `localidad`) VALUES
+    public function run()
+    {
+
+        DB::statement("INSERT IGNORE INTO `atl_localidades` (`id`, `id_provincia`, `localidad`) VALUES
                 (1, 1, '25 de Mayo'),
                 (2, 1, '3 de febrero'),
                 (3, 1, 'A. Alsina'),
@@ -2399,17 +2398,6 @@ class IncluyeDatosAtlLocalidades extends Migration
                 (2381, 25, 'Yerba Buena'),
                 (2382, 25, 'Yerba Buena (S)');
             ");
-        }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        DB::table('atl_localidades')->truncate();
-        DB::statement("ALTER TABLE atl_localidades AUTO_INCREMENT = 1;");
+        
     }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class DatabaseTestSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,9 +22,12 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsTableSeeder::class);
         $this->call(RolePermissionsSeeder::class);
 
-        $this->call(PaisesSeeder::class);
-        $this->call(TiposSeeder::class);
-        $this->call(CategoriaActividadesSeeder::class);
+        $this->call(ActividadesSeeder::class);
+        $this->call(ActividadesConPagoSeeder::class);
+        $this->call(ActividadesSinLocalidadSeeder::class);
+
+        $this->call(UsuarioAdminSeeder::class);
+        $this->call(UsuarioCoordinadorSeeder::class);
 
         $this->call(UnsubscribeTokenSeeder::class);
     }
