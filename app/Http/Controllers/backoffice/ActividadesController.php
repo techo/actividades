@@ -334,7 +334,7 @@ class ActividadesController extends Controller
                 'oficina.id'                => 'required',
                 'pais.id'                   => 'required',
                 'provincia.id'              => 'required',
-                'puntos_encuentro'          => [new PuntoEncuentroRule],
+                //'puntos_encuentro'          => [new PuntoEncuentroRule],
                 'tipo.categoria.id'         => 'required',
             ], $messages
         );
@@ -446,6 +446,7 @@ class ActividadesController extends Controller
         }
 
         $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
+        $actividad->lugar = $request['lugar'];
         $actividad->idPais = $request['pais']['id'];
         $actividad->idProvincia = $request['provincia']['id'];
         $actividad->idLocalidad = (isset($request['localidad']['id']))?$request['localidad']['id']:null;
@@ -479,7 +480,6 @@ class ActividadesController extends Controller
         $actividad->comentarios = '';
         $actividad->idEncuestaDinamica = 0;
         $actividad->idListaCTCT = '';
-        $actividad->lugar = '';
         $actividad->mostrarFB = 0;
         $actividad->tipoConstruccion = '';
         $actividad->moneda = 'ARS';
@@ -499,6 +499,17 @@ class ActividadesController extends Controller
                     }
                 }
             }
+            else {
+
+                $punto_por_defecto['punto'] = $actividad->nombreActividad;
+                $punto_por_defecto['horario'] = Carbon::parse($actividad->fechaInicio)->format('H:i');
+                $punto_por_defecto['responsable']['idPersona'] = $actividad->idCoordinador;
+                $punto_por_defecto['idPais'] = $actividad->idPais;
+                $punto_por_defecto['idProvincia'] = $actividad->idProvincia;
+                $punto_por_defecto['idLocalidad'] = $actividad->idLocalidad;
+
+                $this->guardarPunto($punto_por_defecto, $actividad);
+            }
 
             foreach ($request->puntosEncuentroBorrados as $borrado) {
                 $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
@@ -509,7 +520,6 @@ class ActividadesController extends Controller
 
             foreach ($request->puntosEncuentroEditados as $editado) {
                 $punto = PuntoEncuentro::find($editado['idPuntoEncuentro']);
-                //dd($editado);
                 if ($punto) {
                     $this->editarPunto($punto, $editado, $actividad);
                 }

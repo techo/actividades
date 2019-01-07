@@ -1,6 +1,6 @@
 <template>
     <div class="btn-group">
-        <a class="btn btn-default btn-rounded calendar-picker"
+        <a class="btn btn-default btn-rounded calendar-picker corregir-input-fecha"
            data-toggle="collapse"
            aria-expand="true"
         >
@@ -133,5 +133,13 @@
 </script>
 
 <style scoped>
+
+.corregir-input-fecha {
+    height: 44px;
+    color: rgb(51, 51, 51);
+    padding-top: 10px;
+    background-color: #fff;
+    border-color: rgba(60, 60, 60, 0.26);
+}
 
 </style>
