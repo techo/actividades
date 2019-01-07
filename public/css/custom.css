@@ -8,11 +8,11 @@
 
 ul.nav.nav-tabs {
     border-bottom: 3px solid #d2d6de !important;
+    padding-bottom: 2px;
 }
 
 ul.nav.nav-tabs li.active {
     border-bottom-width: 0 !important;
-    padding-bottom: 2px !important;
 }
 
 div[aria-label="Insert link"] .mce-btn.mce-open {
