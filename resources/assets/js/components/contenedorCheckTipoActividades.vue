@@ -112,7 +112,6 @@
     .acordion .collapsing, .acordion .collapse.show {
         z-index: 20;
         width: 100%;
-        overflow:visible;
         border-bottom-left-radius:5px;
         border-bottom-right-radius:5px;
         padding: 5% 5%;
@@ -125,7 +124,6 @@
         position: absolute;
     }
     .acordion .collapsing.lista-opciones {
-        display: none;
     }
     .dropdown-button {
         width: 100%;
