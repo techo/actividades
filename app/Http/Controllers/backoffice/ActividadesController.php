@@ -309,6 +309,8 @@ class ActividadesController extends Controller
                 'La actividad debe tener un nombre',
             'pais.*' =>
                 'Debe seleccionar el país de la actividad',
+            'lugar.*' =>
+                'Debe especificar un lugar para la actividad',
             'montoMin.*' =>
                 'Debe especificar el monto mínimo de donación',
             'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o
@@ -333,6 +335,7 @@ class ActividadesController extends Controller
                 'nombreActividad'           => 'required',
                 'oficina.id'                => 'required',
                 'pais.id'                   => 'required',
+                'lugar'                   => 'required',
                 'provincia.id'              => 'required',
                 //'puntos_encuentro'          => [new PuntoEncuentroRule],
                 'tipo.categoria.id'         => 'required',
