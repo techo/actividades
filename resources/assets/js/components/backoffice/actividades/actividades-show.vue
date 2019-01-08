@@ -689,7 +689,7 @@
                         'apellidoPaterno': this.dataActividad.coordinador.apellidoPaterno,
                     },
                     'horario': moment(this.dataActividad.fechaInicio).format('HH:mm'),
-                    'punto': this.dataActividad.lugar,
+                    'punto': this.dataActividad.lugar,  
                     'idPais': this.paisSeleccionado.id,
                     'idProvincia': this.provinciaSeleccionada.id,
                     'idLocalidad': (this.localidadSeleccionada.id)?this.localidadSeleccionada.id:null,
@@ -700,6 +700,8 @@
                     'nuevo': true,
                     'borrable': true
                     };
+
+                    console.log(p);
 
                     this.dataActividad.puntos_encuentro.push(p);
 
@@ -731,9 +733,14 @@
                     if (error.response) {
                         if (error.response.status === 422) {
                             self.validationErrors = Object.values(error.response.data);
+                            
                             if (self.dataActividad.puntos_encuentro.length === 0) {
                                 self.dataActividad.puntos_encuentro = self.dataActividad.puntosEncuentroBorrados;
                                 self.dataActividad.puntosEncuentroBorrados = [];
+                            }
+                            else {
+                                if(self.validationErrors.includes("Debe especificar un lugar para la actividad"))
+                                    self.dataActividad.puntos_encuentro = [];
                             }
                         }
                     }
