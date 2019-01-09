@@ -130,7 +130,10 @@
                         <div class="form-group" :class="{'has-error': noInscriptoPuntoError}">
                             <label for="puntoEncuentro">Punto de Encuentro </label>
                             <select class="form-control" v-model="idPuntoSeleccionado" id="puntoEncuentro">
-                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.punto }}, {{ punto.localidad}}</option>
+                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{punto.punto}}, 
+                                    <template v-if="punto.localidad">{{punto.localidad}}, </template>
+                                    {{punto.provincia}}
+                                </option>
                             </select>
                             <p class="red" v-show="noInscriptoPuntoError">Este campo es requerido</p>
                         </div>
