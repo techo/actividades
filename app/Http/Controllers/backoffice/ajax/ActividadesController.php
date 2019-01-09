@@ -35,7 +35,7 @@ class ActividadesController extends BaseController
        return $query->join('Persona', 'PuntoEncuentro.idPersona', '=', 'Persona.idPersona')
            ->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
-           ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
+           ->leftjoin('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
            ->where('idActividad', $id)
            ->select(
                'idPuntoEncuentro as id',
