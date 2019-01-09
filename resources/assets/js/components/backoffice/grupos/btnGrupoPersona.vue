@@ -130,9 +130,10 @@
                         <div class="form-group" :class="{'has-error': noInscriptoPuntoError}">
                             <label for="puntoEncuentro">Punto de Encuentro </label>
                             <select class="form-control" v-model="idPuntoSeleccionado" id="puntoEncuentro">
-                                <option v-for="punto in puntosEncuentro" :value="punto.id">{{punto.punto}}, 
-                                    <template v-if="punto.localidad">{{punto.localidad}}, </template>
-                                    {{punto.provincia}}
+                                <option v-for="punto in puntosEncuentro" :value="punto.id">
+                                        {{punto.punto}}, 
+                                        <template v-if="punto.localidad">{{punto.localidad}}, </template>
+                                        {{punto.provincia}}
                                 </option>
                             </select>
                             <p class="red" v-show="noInscriptoPuntoError">Este campo es requerido</p>
@@ -248,7 +249,7 @@
                     this.noInscriptoPuntoError = true;
                 }
             },
-            guardarNoInscriptoCerrar: function () { debugger;
+            guardarNoInscriptoCerrar: function () {
                 this.guardarNoInscripto();
                 if (!this.noInscriptoNombreError && !this.noInscriptoPuntoError) {
                     this.cancelar();
@@ -384,10 +385,10 @@
 </script>
 
 <style scoped>
-.red {
-    color: red;
-    font-size: smaller;
-}
+    .red {
+        color: red;
+        font-size: smaller;
+    }
 
     .btnSeparador {
         margin-left: 5px;

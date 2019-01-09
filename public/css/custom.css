@@ -36,6 +36,12 @@ div[aria-label="Insert link"] .mce-btn.mce-open {
     border-color: rgba(60, 60, 60, 0.26);
 }
 
+.box-body select {
+    height: 44px;
+    border-radius: 4px;
+    color: rgb(51, 51, 51);
+}
+
 /*Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
 @media (max-width: 768px) {
     section.content {
