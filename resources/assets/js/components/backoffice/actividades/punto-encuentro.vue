@@ -206,9 +206,6 @@
             }
         },
         created: function () {
-            /*if (this.paisSeleccionado === undefined || this.paisSeleccionado === null) {
-                this.paisSeleccionado = {id:1, nombre: "Argentina"}
-            }*/
 
             Event.$on('cancelar', this.cancelar);
         },
