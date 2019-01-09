@@ -66,14 +66,14 @@
             
         </div>
         <div class="row" v-show="!readonly && verFormulario">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="horario">Horario</label> <br>
                     <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
                     <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="coordinador">Responsable</label>
                     <v-select
