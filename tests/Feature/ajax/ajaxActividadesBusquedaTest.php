@@ -4,13 +4,13 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ajaxActividadesBusqueda extends TestCase
 {
     private $actividades;
 
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function setUp() 
     {

@@ -4,14 +4,16 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-//use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\PuntoEncuentro;
 use App\Actividad;
 use App\Persona;
 
 class InscripcionesTest extends TestCase
 {
-	//use RefreshDatabase;
+	use DatabaseTransactions;
+    use WithoutMiddleware;
 
 	protected $actividad;
 	protected $punto_encuentro;
@@ -43,7 +45,6 @@ class InscripcionesTest extends TestCase
         $form_data = ['punto_encuentro' => $punto_encuentro->idPuntoEncuentro,
         'aceptar_terminos' => 1 ];
         
-		$this->withoutMiddleware();
         $response = $this->actingAs($persona)->post($url,$form_data);
         $response->assertStatus(200);
 
