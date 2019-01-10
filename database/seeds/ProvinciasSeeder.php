@@ -12,42 +12,24 @@ class ProvinciasSeeder extends Seeder
      */
     public function run()
     {
-        $pais = App\Pais::where('nombre', 'Uruguay')->first();
-
-        $listado_provincias = [
-            'Montevideo',
-            'Artigas',
-            'Canelones',
-            'Cerro Largo',
-            'Colonia',
-            'Durazno',
-            'Flores',
-            'Florida',
-            'Lavalleja',
-            'Maldonado',
-            'Paysandú',
-            'Rio Negro',
-            'Rivera',
-            'Rocha',
-            'Salto',
-            'San José',
-            'Soriano',
-            'Tacuarembó',
-            'Treinta y Tres'
-        ];
-
-        foreach ($listado_provincias as $v) {
-            //dd($v);
-            $p = new App\Provincia;
-            $p->provincia = $v;
-            $p->id_pais = $pais->id;
-            $p->save();
-
-            $l = new App\Localidad;
-            $l->localidad = 'Sin especificar';
-            $l->id_provincia = $p->id;
-            $l->save();
-        }
-
+        $this->call(ProvinciasArgentinaSeeder::class);
+        $this->call(ProvinciasBoliviaSeeder::class);
+        $this->call(ProvinciasBrasilSeeder::class);
+        $this->call(ProvinciasChileSeeder::class);
+        $this->call(ProvinciasColombiaSeeder::class);
+        $this->call(ProvinciasCostaRicaSeeder::class);
+        $this->call(ProvinciasEcuadorSeeder::class);
+        $this->call(ProvinciasElSalvadorSeeder::class);
+        $this->call(ProvinciasGuatemalaSeeder::class);
+        $this->call(ProvinciasHondurasSeeder::class);
+        $this->call(ProvinciasMexicoSeeder::class);
+        $this->call(ProvinciasNicaraguaSeeder::class);
+        $this->call(ProvinciasPanamaSeeder::class);
+        $this->call(ProvinciasParaguaySeeder::class);
+        $this->call(ProvinciasPuertoRicoSeeder::class);
+        $this->call(ProvinciasPeruSeeder::class);
+        $this->call(ProvinciasRepublicaDominicanaSeeder::class);
+        $this->call(ProvinciasUruguaySeeder::class);
+        $this->call(ProvinciasVenezuelaSeeder::class);
     }
 }
