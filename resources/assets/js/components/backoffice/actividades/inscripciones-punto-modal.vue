@@ -15,8 +15,10 @@
                                 <div class="radio">
                                     <label>
                                         <input type="radio" name="punto" v-model="puntoSeleccionado" :value="punto.id" :checked="index == 0">
-                                        {{punto.punto}}, {{punto.localidad}}, {{punto.provincia}}, {{punto.pais}}
-                                        ( {{punto.nombres}} {{punto.apellidoPaterno}})
+                                        {{punto.punto}}, 
+                                        <template v-if="punto.localidad"> {{punto.localidad}}, </template>
+                                        {{punto.provincia}}, {{punto.pais}}
+                                        ({{punto.nombres}} {{punto.apellidoPaterno}})
                                     </label>
                                 </div>
                             </div>
