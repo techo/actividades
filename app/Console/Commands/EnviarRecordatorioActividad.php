@@ -52,6 +52,8 @@ class EnviarRecordatorioActividad extends Command
                                 ->whereDay('fechaInicio', $dia)
                                 ->get();
 
+        echo "Se envían recordatorios a ".$actividades->count()." inscriptos \n";
+
         foreach ($actividades as $actividad) {
             $inscripciones = $actividad->inscripciones()->whereNotIn('estado',['Desinscripto', 'Pre-Inscripto'])->get();
             foreach ($inscripciones as $inscripcion) {

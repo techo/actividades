@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CancelacionActividad extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
 
     public $inscripcion;
     public $persona;
@@ -19,10 +19,11 @@ class CancelacionActividad extends Mailable
      *
      * @return void
      */
-    public function __construct($inscripcion)
+    public function __construct($persona, $actividad, $pais)
     {
-        $this->inscripcion = $inscripcion;
-        $this->persona = $inscripcion->persona;
+        $this->persona = $persona;
+        $this->actividad = $actividad;
+        $this->pais = $pais;
     }
 
     /**
@@ -33,8 +34,8 @@ class CancelacionActividad extends Mailable
     public function build()
     {
         return $this
-            ->subject('TECHO: ' . $this->inscripcion->actividad->nombreActividad . ' fue cancelada')
+            ->subject('TECHO: ' . $this->actividad->nombreActividad . ' fue cancelada')
             ->from('no-reply@techo.org')
-            ->view('emails.cancelacionActividad');
+            ->view('emails.cancelacionActividad',['persona' => $this->persona, 'actividad' => $this->actividad, 'pais' => $this->pais]);
     }
 }
