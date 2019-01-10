@@ -22,7 +22,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idOficina' => factory(\App\Oficina::class)->create()->id,
       'nombreActividad' => $faker->sentence(2,true),
       'descripcion' => $faker->paragraph,
-      'lugar' => "",
+      'lugar' => $faker->city,
       'casasPlanificadas' => "0",
       'casasConstruidas' => "0",
       'comentarios' => "",
