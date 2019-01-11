@@ -8,10 +8,10 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       $fecha = Carbon::parse(now())->addDays(5);
       $fecha_fin = $fecha->copy()->addMinute();
 
-      $persona = factory(\App\Persona::class)->create();
-
     return [
-      'idTipo' => factory(\App\Tipo::class)->create()->idTipo,
+      'idTipo' => function () {
+            return factory(App\Tipo::class)->create()->idTipo;
+        },
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaInicio' => $fecha->format('Y-m-d H:i:s'),
@@ -21,7 +21,9 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'fechaFinInscripciones' => $fecha->copy()->subMinute()->format('Y-m-d H:i:s'),
       'limiteInscripciones' => "0",
       'idUnidadOrganizacional' => 1,
-      'idOficina' => factory(\App\Oficina::class)->create()->id,
+      'idOficina' => function () {
+            return factory(App\Oficina::class)->create()->id;
+        },
       'nombreActividad' => $faker->sentence(2,true),
       'descripcion' => $faker->paragraph,
       'lugar' => $faker->city,
@@ -50,8 +52,12 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'presupuesto' => null,
       'inscripcion' => null,
       'inscripcionInterna' => 0,
-      'idPersonaCreacion' => $persona->idPersona,
-      'idPersonaModificacion' => 1,
+      'idPersonaCreacion' => function () {
+            return factory(App\Persona::class)->create()->idPersona;
+        },
+      'idPersonaModificacion' => function () {
+            return factory(App\Persona::class)->create()->idPersona;
+        },
       'idEmpresa' => null,
       'costo' => null,
       'moneda' => "ARS",
@@ -75,10 +81,18 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'LinkPago' => null,
       'PuntosEnvioUL' => null,
       'CaptacionesUL' => null,
-      'idPais' => factory(\App\Pais::class)->create()->id,
-      'idProvincia' => factory(\App\Provincia::class)->create()->id,
-      'idLocalidad' => factory(\App\Localidad::class)->create()->id,
-      'idCoordinador' => $persona->idPersona,
+      'idPais' => function () {
+            return factory(App\Pais::class)->create()->id;
+        },
+      'idProvincia' => function () {
+            return factory(App\Provincia::class)->create()->id;
+        },
+      'idLocalidad' => function () {
+            return factory(App\Localidad::class)->create()->id;
+        },
+      'idCoordinador' => function () {
+            return factory(App\Persona::class)->create()->idPersona;
+        },
       'beca' => null,
       'montoMin' => "100.00",
       'montoMax' => "0.00"

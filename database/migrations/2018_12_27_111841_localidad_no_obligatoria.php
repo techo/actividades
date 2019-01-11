@@ -13,7 +13,6 @@ class LocalidadNoObligatoria extends Migration
      */
     public function up()
     {
-        //
         Schema::table('Actividad', function (Blueprint $table) {
             $table->string('idLocalidad')->nullable()->change();
         });
@@ -31,13 +30,18 @@ class LocalidadNoObligatoria extends Migration
      */
     public function down()
     {
-        //
+        App\Actividad::where('idLocalidad', null)
+          ->update(['idLocalidad' => 0]);
+
+        App\PuntoEncuentro::where('idLocalidad', null)
+          ->update(['idLocalidad' => 0]);
+
         Schema::table('Actividad', function (Blueprint $table) {
-            $table->string('idLocalidad')->nullable($value = false)->change();
+            $table->string('idLocalidad')->nullable(false)->change();
         });
 
         Schema::table('PuntoEncuentro', function (Blueprint $table) {
-            $table->string('idLocalidad')->nullable($value = false)->change();
+            $table->string('idLocalidad')->nullable(false)->change();
         });
     }
 }
