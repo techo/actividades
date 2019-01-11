@@ -4,17 +4,17 @@ namespace Tests\Feature\ajax;
 
 use App\CategoriaActividad;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ajaxCategoriasTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    use DatabaseTransactions;
+
+    public function test_categorias_por_id()
     {
-        $categoria = CategoriaActividad::first();
+        
+        $categoria = factory(\App\CategoriaActividad::class)->create();
+
         $response = $this->get('/ajax/categorias/'.$categoria->id);
 
         $response
@@ -36,5 +36,15 @@ class ajaxCategoriasTest extends TestCase
                     ]
                 ]
             );
+    }
+
+    public function test_categorias()
+    {
+        
+        $categoria = factory(\App\CategoriaActividad::class,2)->create();
+
+        $response = $this->get('/ajax/categorias/');
+
+        $response->assertStatus(200)->assertJsonCount(2);
     }
 }

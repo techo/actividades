@@ -10,6 +10,7 @@ use Faker\Factory;
 
 class backofficeActividadesTest extends TestCase
 {
+    use DatabaseTransactions;
 
     public function test_listar_todas_las_actividades()
     {
@@ -32,7 +33,7 @@ class backofficeActividadesTest extends TestCase
 
         $userService = new \App\Http\Services\UserService();
 
-        $validator = $userService->createValidator($request);
+        $validator = $userService->createValidator($request); 
 
         if($validator->passes()){
             if($usuario = $userService->crearUsuario($request)){

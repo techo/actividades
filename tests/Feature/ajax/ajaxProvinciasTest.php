@@ -4,17 +4,18 @@ namespace Tests\Feature\ajax;
 
 use App\Provincia;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ajaxProvinciasTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+
+    use DatabaseTransactions;
+
     public function test_ver_detalle_de_provincia()
     {
-        $provincia = Provincia::first();
+        
+        $provincia = factory(\App\Provincia::class)->create();
+
         $response = $this->get('/ajax/provincias/'.$provincia->id);
 
         $response

@@ -8,6 +8,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       $fecha = Carbon::parse(now())->addDays(5);
       $fecha_fin = $fecha->copy()->addMinute();
 
+      $persona = factory(\App\Persona::class)->create();
+
     return [
       'idTipo' => factory(\App\Tipo::class)->create()->idTipo,
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
@@ -48,7 +50,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'presupuesto' => null,
       'inscripcion' => null,
       'inscripcionInterna' => 0,
-      'idPersonaCreacion' => 1,
+      'idPersonaCreacion' => $persona->idPersona,
       'idPersonaModificacion' => 1,
       'idEmpresa' => null,
       'costo' => null,
@@ -76,7 +78,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idPais' => factory(\App\Pais::class)->create()->id,
       'idProvincia' => factory(\App\Provincia::class)->create()->id,
       'idLocalidad' => factory(\App\Localidad::class)->create()->id,
-      'idCoordinador' => factory(\App\Persona::class)->create()->idPersona,
+      'idCoordinador' => $persona->idPersona,
       'beca' => null,
       'montoMin' => "100.00",
       'montoMax' => "0.00"

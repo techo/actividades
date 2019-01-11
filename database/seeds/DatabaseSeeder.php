@@ -22,10 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsTableSeeder::class);
         $this->call(RolePermissionsSeeder::class);
 
-        $this->call(PaisesSeeder::class);
-        $this->call(CategoriaActividadesSeeder::class);
-        $this->call(TiposSeeder::class);
-
         $this->call(UnsubscribeTokenSeeder::class);
     }
 }

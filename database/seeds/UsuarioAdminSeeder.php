@@ -18,7 +18,7 @@ class UsuarioAdminSeeder extends Seeder
             'nombre' => 'admin',
             'apellido' => 'admin',
             'dni' => '11111111',
-            'pais' => \App\Pais::where('nombre', 'argentina')->first(),
+            'pais' => factory(\App\Pais::class)->create(),
             'rol' => ['rol' => 'admin'],
             'nacimiento' => Carbon\Carbon::createFromFormat('d-m-Y', '01-01-1971'),
             'telefono' => '1',

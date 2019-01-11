@@ -18,7 +18,7 @@ class UsuarioCoordinadorSeeder extends Seeder
             'nombre' => 'coordinador',
             'apellido' => 'coordinador',
             'dni' => '2222222',
-            'pais' => \App\Pais::where('nombre', 'argentina')->first(),
+            'pais' => factory(\App\Pais::class)->create(),
             'rol' => ['rol' => 'coordinador'],
             'nacimiento' => Carbon\Carbon::createFromFormat('d-m-Y', '01-01-1971'),
             'telefono' => '1',

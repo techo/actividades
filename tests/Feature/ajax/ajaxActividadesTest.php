@@ -4,21 +4,21 @@ namespace Tests\Feature\ajax;
 
 use App\Actividad;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ajaxActividadesTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
+
+    use DatabaseTransactions;
+
     public function test_tipos_de_actividad_sin_parametros()
     {
-        $actividad = factory(\App\Actividad::class)->create();
+        factory(\App\Actividad::class)->create();
 
         $params = [];
 
         $response = $this->post('/ajax/actividades/tipos', $params);
+
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -29,12 +29,12 @@ class ajaxActividadesTest extends TestCase
                     ]
                 ]
             );
-
-        $actividad->delete();
     }
 
     public function test_provincias_y_localidades_sin_parametros()
     {
+        factory(\App\Provincia::class)->create();
+
         $params = [];
 
         $response = $this->post('/ajax/actividades/provincias/', $params);
@@ -54,9 +54,12 @@ class ajaxActividadesTest extends TestCase
 
     public function test_actividades_sin_parametros()
     {
-        $actividad = factory(\App\Actividad::class)->create();
+        factory(\App\Actividad::class)->create();
+
         $params = [];
+
         $response = $this->post('/ajax/actividades', $params);
+
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -75,15 +78,16 @@ class ajaxActividadesTest extends TestCase
                     "total"
                 ]
             );
-        $actividad->delete();
     }
 
     public function test_ver_detalle_de_actividad()
     {
         $actividad = factory(\App\Actividad::class)->create();
+
         $url = '/ajax/actividades/' . $actividad->idActividad;
 
         $response = $this->get($url);
+
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -109,7 +113,18 @@ class ajaxActividadesTest extends TestCase
                     ]
                 ]
             );
+    }
 
-        $actividad->delete();
+    public function test_ajax_coordinadores()
+    {
+        factory(\App\Actividad::class)->create([ 'idCoordinador' => factory(\App\Persona::class)->create([ 'nombres' => 'prueba', 'apellidoPaterno' => 'prueba'])->idPersona ]);
+
+        $url = '/ajax/coordinadores/?coordinador=prueba';
+
+        $response = $this->get($url);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
     }
 }
