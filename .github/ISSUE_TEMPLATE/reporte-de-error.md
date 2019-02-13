@@ -1,6 +1,9 @@
 ---
 name: Reporte de error
 about: Creá un reporte para ayudarnos a mejorar
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
