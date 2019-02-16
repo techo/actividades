@@ -26,5 +26,18 @@
     @yield('aditional_html')
     @include('partials.scripts')
     @stack('additional_scripts')
+
+    @if(config('app.env') == 'production' && !empty(config('app.userreport_token')))
+        <script type="text/javascript">
+            window._urq = window._urq || [];
+            _urq.push(['initSite', '{{ config('app.userreport_token') }}']);
+            (function() {
+            var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true;
+            ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js');
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s);
+            })();
+        </script>
+    @endif
+
 </body>
 </html>
