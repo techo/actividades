@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
+
+    @if(config('app.env') == 'production' && !empty(config('app.google_analytics_token')))
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('app.google_analytics_token') }}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '{{ config('app.google_analytics_token') }}');
+        </script>
+    @endif
+
     @include('partials.meta')
     @include('partials.css')
 </head>
