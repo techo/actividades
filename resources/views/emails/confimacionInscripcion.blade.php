@@ -21,7 +21,7 @@
         </p>
         <p>
             Para confirmar tu participación, haz click en el botón
-            <strong>Confirmar con tu donación</strong> en la <a href="{{ url('/inscripciones/actividad/' . $inscripcion->actividad->idActividad ) }}" >actividad.</a>
+            <strong>Confirmar con tu donación</strong> en la <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" >actividad.</a>
         </p>
         <p>
             Te recordamos que el monto mínimo sugerido para abonar es de <b>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</b>, los cuales cubren
