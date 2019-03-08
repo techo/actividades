@@ -94,11 +94,14 @@ Route::get('/admin/actividades/{id}/exportar-evaluaciones', 'backoffice\ReportCo
 
 Route::get('/actividades/{id}', 'ActividadesController@show');
 
-Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
-    Route::get('', 'InscripcionesController@puntoDeEncuentro');
+Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
     Route::post('/confirmar', 'InscripcionesController@confirmar');
+});
+
+Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
+    Route::get('', 'InscripcionesController@puntoDeEncuentro');
     Route::post('/gracias', 'InscripcionesController@create');
     Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
 });

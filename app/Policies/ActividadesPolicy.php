@@ -50,6 +50,16 @@ class ActividadesPolicy
         return $hayCupos && $inscripcionAbierta && $ActividadAbierta;
     }
 
+    public function confirmar(Persona $user, $id)
+    {
+
+        $actividad = Actividad::where('estadoConstruccion', 'Abierta')->findOrFail($id);
+
+        $ActividadAbierta = $actividad->estadoConstruccion === "Abierta";
+
+        return $ActividadAbierta;
+    }
+
     public function showActividadCoordinador(Persona $user, Actividad $actividad)
     {
         return $user->idPersona == $actividad->idCoordinador && $user->hasPermissionTo('ver_mis_actividades');
