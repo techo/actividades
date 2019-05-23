@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
       //$schedule->command('actividad:recordatorio')->cron('* * * * * *');
-      $schedule->command('actividad:recordatorio')->dailyAt('08:00');
+      //$schedule->command('actividad:recordatorio')->dailyAt('08:00');
     }
 
     /**
