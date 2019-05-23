@@ -4,14 +4,14 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-//use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\PuntoEncuentro;
 use App\Actividad;
 use App\Persona;
 
 class InscripcionesTest extends TestCase
 {
-	//use RefreshDatabase;
+	use RefreshDatabase;
 
 	protected $actividad;
 	protected $punto_encuentro;
