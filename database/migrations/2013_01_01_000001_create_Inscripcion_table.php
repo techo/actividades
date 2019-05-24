@@ -35,7 +35,7 @@ class CreateInscripcionTable extends Migration {
 			$table->string('estado', 200);
 			$table->boolean('evaluacion');
 			$table->boolean('aceptarCompromiso')->default(0);
-			$table->string('acompanante', 200);
+			$table->string('acompanante', 200)->nullable();
 			$table->text('comentarios', 65535)->nullable();
 			$table->dateTime('fechaCreacion')->nullable();
 			$table->dateTime('fechaModificacion')->nullable();

@@ -2,18 +2,19 @@
 
 namespace Tests\Feature\ajax;
 
-use App\Pais;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ajaxPaisesTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_ver_listado_de_paises()
+    use RefreshDatabase;
+
+    /** @test */
+    public function ver_listado_de_paises()
     {
+        factory('App\Pais')->create();
+
         $response = $this->get('/ajax/paises/');
         $response
             ->assertStatus(200)
@@ -26,9 +27,11 @@ class ajaxPaisesTest extends TestCase
                 ]
             );
     }
-    public function test_ver_listado_de_provincias_por_pais()
+
+    /** @test */
+    public function ver_listado_de_provincias_por_pais()
     {
-        $pais = Pais::first();
+        $pais = factory('App\Pais')->create();
         $url = '/ajax/paises/' . $pais->id . '/provincias';
         $response = $this->get($url);
         $response
@@ -45,14 +48,11 @@ class ajaxPaisesTest extends TestCase
     }
     public function test_ver_listado_de_localidades_por_provincia_y_por_pais()
     {
-        $pais = Pais::where('nombre', 'Argentina')->first();
-        //dd($pais);
-        $provincia = $pais->provincias->first();
+        $provincia = factory('App\Provincia')->create();
 
-        $url = '/ajax/paises/' . $pais->id . '/provincias/'. $provincia->id .'/localidades';
-        //dd($url);
-        $response = $this->get($url);
-        $response
+        $pais = $provincia->pais;
+
+        $this->get('/ajax/paises/' . $pais->id . '/provincias/'. $provincia->id .'/localidades')
             ->assertStatus(200)
             ->assertJsonStructure(
                 [

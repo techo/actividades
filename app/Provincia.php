@@ -8,6 +8,7 @@ class Provincia extends Model
 {
     protected $table = 'atl_provincias';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
     public function localidades()
     {
