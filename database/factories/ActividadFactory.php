@@ -9,7 +9,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       $fecha_fin = $fecha->copy()->addMinute();
 
     return [
-      'idTipo' => factory(\App\Tipo::class)->create()->idTipo,
+      'idTipo' => factory(\App\Tipo::class)->create(),
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaInicio' => $fecha->format('Y-m-d H:i:s'),

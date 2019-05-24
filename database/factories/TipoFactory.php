@@ -1,7 +1,6 @@
 <?php
 
 use Faker\Generator as Faker;
-use Carbon\Carbon;
 
 $factory->define(App\Tipo::class, function (Faker $faker) {
 
