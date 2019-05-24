@@ -31,6 +31,7 @@ class HomeController extends Controller
         }
 
         $categoriaActividad = CategoriaActividad::with('tipos')->get();
+
         return view('home', compact('categoriaActividad', 'showLogin'));
     }
 }

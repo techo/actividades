@@ -53,7 +53,7 @@ class InscripcionesTest extends TestCase
         $persona = $i->persona->givePermissionTo(Permission::create(['name' => 'ver_backoffice']));
 
         $this->actingAs($persona)
-            ->delete('/ajax/usuario/inscripciones/' . $i->idInscripcion)
+            ->delete('/ajax/usuario/inscripciones/' . $i->actividad->idActividad)
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
