@@ -1,6 +1,34 @@
 # voluntariado-eventual
 
-## Requisitos previos del servidor
+# Instalación para desarrollo
+
+##Requisitos:
+- PHP 7.2
+- Composer
+- Mysql 5.7
+- Nodejs 10 y npm
+
+##Pasos
+- Clonar repositorio y hacer cd a la carpeta
+- cp .env.example .env
+- Modificar datos de conexión, mail y app en archivo .env
+- composer install
+- php artisan key:generate
+- php artisan migrate --seed
+- npm install
+- npm run dev
+- php artisan serve
+
+##Usuarios de prueba
+administrador@administrador.com
+administrador
+
+coordinador@coordinador.com
+coordinador
+
+# Instalación para producción
+
+## Requisitos previos del servidor en Ubuntu 18.04
 - sudo apt-get install python-software-properties
 - sudo add-apt-repository ppa:ondrej/php
 - sudo apt-get update
@@ -30,7 +58,7 @@
 - $ php artisan key:generate
 - $ php artisan migrate --seed
 - $ npm install
-- $ npm run dev
+- $ npm run prod
 - $ chmod -R 775 storage
 - $ mkdir photos
 - $ mkdir photos/shares
