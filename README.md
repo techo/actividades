@@ -20,11 +20,11 @@
 - php artisan serve
 
 ##Usuarios de prueba
-administrador@administrador.com
-administrador
+- administrador@administrador.com
+- administrador
 
-coordinador@coordinador.com
-coordinador
+- coordinador@coordinador.com
+- coordinador
 
 # Instalación para producción
 
