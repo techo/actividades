@@ -7,9 +7,9 @@ before_script:
   - cp .env.travis .env
   - composer self-update
   - composer install --no-interaction
-  - php artisan key:generate
-  - php artisan config:clear
-  - php artisan migrate
+# - php artisan key:generate
+# - php artisan config:clear
+# - php artisan migrate
 # - npm install
 # - npm run dev
   - composer require --dev phpcq/all-tasks
