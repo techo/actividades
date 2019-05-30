@@ -14,9 +14,9 @@
             <div class="row">
                 <div class="col-md-12">
                     @if(strtoupper($actividad->tipo->flujo) == 'CONSTRUCCION')
-                        <h2 class="card-title">Confirmar tu pre-inscripcion</h2>
+                        <h2 class="card-title">Confirmar tu pre-inscripción</h2>
                     @else
-                        <h2 class="card-title">Confirmar tu inscripcion</h2>
+                        <h2 class="card-title">Confirmar tu inscripción</h2>
                     @endif
                 </div>
             </div>
@@ -36,7 +36,7 @@
                             {{ $punto_encuentro->punto }}{{', '. $punto_encuentro->localidad->localidad . ', ' . $punto_encuentro->provincia->provincia }}
                         </p>
                         <p>
-                            {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:m') }} hs
+                            {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:i') }} hs
                         </p>
                     </div>
                 </div>
@@ -46,8 +46,6 @@
                             Coordinador:
                         </p>
                         <p>{{ $punto_encuentro->responsable->nombreCompleto }}</p>
-                        <p>{{ $punto_encuentro->responsable->telefonoMovil }}</p>
-                        <p>{{ $punto_encuentro->responsable->mail }}</p>
                     </div>
                 </div>
                 <hr>
