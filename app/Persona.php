@@ -13,6 +13,7 @@ class Persona extends Authenticatable
     use Notifiable, HasRoles;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
+    protected $hidden = ['password', 'remember_token'];
 
     public function puntosEncuentro()
     {

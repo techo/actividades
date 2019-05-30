@@ -2,11 +2,16 @@
 
 namespace Tests\Feature\ajax;
 
-use App\Provincia;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class ajaxProvinciasTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /**
      * A basic test example.
      *
@@ -14,7 +19,7 @@ class ajaxProvinciasTest extends TestCase
      */
     public function test_ver_detalle_de_provincia()
     {
-        $provincia = Provincia::first();
+        $provincia = factory('App\Provincia')->create();
         $response = $this->get('/ajax/provincias/'.$provincia->id);
 
         $response

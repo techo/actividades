@@ -2,19 +2,18 @@
 
 namespace Tests\Feature\ajax;
 
-use App\Actividad;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ajaxActividadesTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function test_tipos_de_actividad_sin_parametros()
+    use RefreshDatabase;
+    
+    /** @test */
+    public function tipos_de_actividad_sin_parametros()
     {
-        $actividad = factory(\App\Actividad::class)->create();
+        $actividad = factory('App\Actividad')->create();
 
         $params = [];
 
@@ -33,7 +32,8 @@ class ajaxActividadesTest extends TestCase
         $actividad->delete();
     }
 
-    public function test_provincias_y_localidades_sin_parametros()
+    /** @test */
+    public function provincias_y_localidades_sin_parametros()
     {
         $params = [];
 
@@ -52,9 +52,10 @@ class ajaxActividadesTest extends TestCase
             );
     }
 
-    public function test_actividades_sin_parametros()
+    /** @test */
+    public function actividades_sin_parametros()
     {
-        $actividad = factory(\App\Actividad::class)->create();
+        $actividad = factory('App\Actividad')->create();
         $params = [];
         $response = $this->post('/ajax/actividades', $params);
         $response
@@ -78,9 +79,10 @@ class ajaxActividadesTest extends TestCase
         $actividad->delete();
     }
 
-    public function test_ver_detalle_de_actividad()
+    /** @test */
+    public function ver_detalle_de_actividad()
     {
-        $actividad = factory(\App\Actividad::class)->create();
+        $actividad = factory('App\Actividad')->create();
         $url = '/ajax/actividades/' . $actividad->idActividad;
 
         $response = $this->get($url);

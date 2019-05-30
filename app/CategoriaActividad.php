@@ -8,6 +8,7 @@ class CategoriaActividad extends Model
 {
     protected $table = 'atl_CategoriaActividad';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
     public function tipos()
     {

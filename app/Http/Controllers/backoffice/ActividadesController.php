@@ -494,6 +494,8 @@ class ActividadesController extends Controller
                 $grupoRaiz->nombre = $actividad->nombreActividad;
                 $grupoRaiz->save();
             }
+            //dd($request->puntos_encuentro);
+
             if (!empty($request->puntos_encuentro)) {
                 $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
                 foreach ($request->puntos_encuentro as $punto) {

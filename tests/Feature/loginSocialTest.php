@@ -14,6 +14,8 @@ use Carbon\Carbon;
 
 class loginSocialTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /**
      * A basic test example.
      *

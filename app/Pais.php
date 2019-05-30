@@ -8,6 +8,7 @@ class Pais extends Model
 {
     protected $table = 'atl_pais';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
     public function provincias()
     {
