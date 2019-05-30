@@ -12,7 +12,7 @@ use Mail;
 
 class EnviarMailsCancelacionActividad implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
     public $inscripcion;
 
@@ -21,9 +21,12 @@ class EnviarMailsCancelacionActividad implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($inscripcion)
+    public function __construct(array $persona, array $actividad, array $pais)
     {
-        $this->inscripcion = $inscripcion;
+
+        $this->persona = \App\Persona::make($persona);
+        $this->actividad = \App\Actividad::make($actividad);
+        $this->pais = \App\Pais::make($pais);
     }
 
     /**
@@ -33,8 +36,8 @@ class EnviarMailsCancelacionActividad implements ShouldQueue
      */
     public function handle()
     {
-        if($this->inscripcion->persona->recibirMails){
-            Mail::to($this->inscripcion->persona->mail)->send(new CancelacionActividad($this->inscripcion));
+        if($this->persona->recibirMails){
+            Mail::to($this->persona->mail)->send(new CancelacionActividad($this->persona, $this->actividad, $this->pais));
         }
         //sleep(3);
     }

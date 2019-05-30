@@ -14,6 +14,7 @@ class Persona extends Authenticatable
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token'];
+    protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail'];
 
     public function puntosEncuentro()
     {

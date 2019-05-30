@@ -46,7 +46,7 @@ class ActividadesController extends Controller
     public function create()
     {
         $edicion = true;
-        $paises = Pais::all();
+        $paises = Pais::has("provincias")->get();
         $columns = Schema::getColumnListing('Actividad');
         $excluidas =
             [
@@ -67,8 +67,9 @@ class ActividadesController extends Controller
 
         $actividad = json_encode($arrayColumnas);
         $categorias = CategoriaActividad::with('tipos')->get();
-        $tipos = $categorias->first()->tipos; //dd($actividad);
+        $tipos = $categorias->first()->tipos;
         $categorias = json_encode($categorias);
+
         return view(
             'backoffice.actividades.create',
             compact(
@@ -114,7 +115,8 @@ class ActividadesController extends Controller
     {
         $edicion = false;
         $compartir = true;
-        $paises = Pais::all();
+        $paises = Pais::has("provincias")->get();
+
         $actividad = Actividad::with(
             [
                 'tipo.categoria',
@@ -188,8 +190,6 @@ class ActividadesController extends Controller
                     $punto->borrable = true;
                 }
             }
-
-            //dd($actividad);
 
             return view(
                 'backoffice.actividades.show',
@@ -514,7 +514,6 @@ class ActividadesController extends Controller
 
             foreach ($request->puntosEncuentroEditados as $editado) {
                 $punto = PuntoEncuentro::find($editado['idPuntoEncuentro']);
-                //dd($editado);
                 if ($punto) {
                     $this->editarPunto($punto, $editado, $actividad);
                 }
@@ -567,7 +566,11 @@ class ActividadesController extends Controller
     {
         try{
             foreach ($actividad->inscripciones_validas() as $inscripcion) {
-                $job = (new EnviarMailsCancelacionActividad($inscripcion));
+                //visto como hacer acá https://medium.com/@DarkGhostHunter/laravel-3-ways-of-processing-a-job-for-a-deleted-model-56413a512688
+                $persona = $inscripcion->persona->toArray();
+                $actividad = $inscripcion->actividad->toArray();
+                $pais = $inscripcion->actividad->pais->toArray();
+                $job = (new EnviarMailsCancelacionActividad($persona, $actividad, $pais));
                 dispatch($job);
             };
         } catch (ModelNotFoundException $e){
