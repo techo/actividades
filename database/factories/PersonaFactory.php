@@ -7,7 +7,7 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'dni'   => rand(1000000, 99999999),
     'mail'  => $faker->email,
     'sexo'  => array_rand(['M', 'F']),
-    'idPais'    => 1,
+    'idPais'    => factory('App\Pais')->create(),
     'nombres'   => $faker->firstName,
     'carrera'   => $faker->words(3, true),
     'idCiudad'  => 0,

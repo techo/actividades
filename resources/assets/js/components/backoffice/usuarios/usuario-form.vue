@@ -253,17 +253,25 @@
             this.getPaises();
             this.getRoles();
             if(this.propUsuario){
-              this.usuario = JSON.parse(this.propUsuario);
-                data = this.findObjectByKey(this.dataGeneros, 'id', this.usuario.sexo);
-                this.usuario.sexo = data.obj;
+                this.usuario = JSON.parse(this.propUsuario);
+
+                for (var i in Object.keys(this.dataGeneros)) 
+                {
+                    if(this.dataGeneros[i].id == this.usuario.sexo) 
+                        this.usuario.sexo = this.dataGeneros[i];
+                }
             }
 
             this.paisSeleccionado = this.usuario.pais;
             this.provinciaSeleccionada = this.usuario.provincia;
 
             Event.$on('guardar', this.guardar);
+            Event.$on('editar', this.editar);
         },
         methods: {
+            editar(){
+                this.readonly = false;
+            },
             getPaises: function () {
                 let url = "/ajax/paises";
                 this.axiosGet(
