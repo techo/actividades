@@ -1,6 +1,6 @@
 import Simplert from "vue2-simplert";
 
-Vue.config.devtools = true;
+Vue.config.devtools = false;
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
