@@ -127,7 +127,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('permission:ver_usuarios');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('permission:ver_usuarios');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
-    Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update');
+    Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('permission:editar_usuarios') ;
     //Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('permission:editar_usuarios');
 
 

@@ -30,6 +30,7 @@ class AdministrarUsuariosTest extends TestCase
 		$jose->nombres = "Modificado";
 
 		$datos = [
+            'idUsuario' => $jose->idPersona,
             'nombre' => $jose->nombres,
             'apellido' => $jose->apellidoPaterno,
             'rol' => $jose->rol,
