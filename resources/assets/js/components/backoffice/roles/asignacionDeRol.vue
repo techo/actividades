@@ -20,6 +20,7 @@
                                         :filterable=false
                                         @search="onSearchUsuario"
                                 >
+                                <span slot="no-options"></span>
                                 </v-select>
                             </div>
                         </div>
@@ -78,8 +79,10 @@
         },
         methods: {
             onSearchUsuario: function (text, loading) {
-                loading(true);
-                this.searchUsuario(loading, text, this);
+                if(text.length>=4) {
+                    loading(true);
+                    this.searchUsuario(loading, text, this);
+                }
             },
             searchUsuario: _.debounce((loading, search, vm) => {
                 let fetchData = {

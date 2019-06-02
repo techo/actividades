@@ -40,7 +40,7 @@
                         <v-select
                                 :options="dataCoordinadores"
                                 label="nombre"
-                                placeholder="Escribe el nombre o apellido"
+                                placeholder="Escribe el apellido, nombre o email"
                                 name="coordinador"
                                 id="coordinador"
                                 v-model="coordinadorSeleccionado"
@@ -49,6 +49,7 @@
                                 @search="onSearch"
                                 :onChange=this.actualizarCoordinador()
                         >
+                        <span slot="no-options"></span>
                         </v-select>
                     </div>
                 </div>
@@ -579,8 +580,10 @@
                 this.dataActividad.oficina = this.oficinaSeleccionada;
             },
             onSearch: function (text, loading) {
-                loading(true);
-                this.search(loading, text, this);
+                if(text.length>=4) {
+                    loading(true);
+                    this.search(loading, text, this);
+                }
             },
             search: _.debounce((loading, search, vm) => {
                 fetch(

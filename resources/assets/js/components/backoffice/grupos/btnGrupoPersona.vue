@@ -70,6 +70,7 @@
                                     :filterable=true
                                     @search="onSearchInscripto"
                             >
+                            <span slot="no-options"></span>
                             </v-select>
                             <p class="red" v-show="inscriptoNombreError">Este campo es requerido</p>
                         </div>
@@ -116,6 +117,7 @@
                                     :filterable=true
                                     @search="onSearchNoInscripto"
                             >
+                            <span slot="no-options"></span>
                             </v-select>
                             <p class="red" v-show="noInscriptoNombreError">Este campo es requerido</p>
                         </div>
@@ -320,8 +322,10 @@
                 //this.$refs.loading.justCloseSimplert();
             },
             onSearchInscripto: function (text, loading) {
-                loading(true);
-                this.searchInscripto(loading, text, this);
+                if(text.length>=4) {
+                    loading(true);
+                    this.searchInscripto(loading, text, this);
+                }
             },
             searchInscripto: function(loading, text) {
                 if (text.length > 2) {
@@ -345,8 +349,10 @@
                 }
             },
             onSearchNoInscripto: function (text, loading) {
-                loading(true);
-                this.searchNoInscripto(loading, text, this);
+                if(text.length>=4) {
+                    loading(true);
+                    this.searchNoInscripto(loading, text, this);
+                }
             },
             searchNoInscripto: function(loading, text, vm) {
                 if (text.length > 2) {
