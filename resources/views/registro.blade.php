@@ -19,6 +19,11 @@
                 linkear={{isset($linkear)?$linkear:''}}
         ></registro>
 	@else
+        @if(isset($mensaje))
+            <div class="alert alert-danger">
+                <strong>{{$mensaje}}</strong>
+            </div>
+        @endif
 		<registro></registro>
 	@endif
 @endsection

@@ -136,7 +136,7 @@ class LoginController extends Controller
            ])->user();
             $personaData->nombre = $user->user['first_name'];
             $personaData->apellido = $user->user['last_name'];
-            $personaData->email = $user->user['email'];
+            $personaData->email = ($user->user['email'])?$user->user['email']:null;
             $personaData->facebook_id = $user->user['id'];
             $personaData->google_id = '';
 
@@ -149,6 +149,8 @@ class LoginController extends Controller
 //        $personaData->password = bcrypt(str_random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
         if(!$persona) {
+            if($personaData->email == null)
+                return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");
             return view('registro')->with('persona', $personaData);
         } else {
             if($provider == 'google') {
