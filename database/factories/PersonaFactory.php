@@ -23,6 +23,8 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'apellidoPaterno'   => $faker->lastName,
     'fechaNacimiento'   => $faker->date('Y-m-d', '2000-2-31'),
     'idPaisResidencia'  => 1,
-    'idUnidadOrganizacional' => 0
+    'idUnidadOrganizacional' => 0,
+    'google_id' => '',
+    'facebook_id' => ''
     ];
 });
