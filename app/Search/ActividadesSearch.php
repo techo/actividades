@@ -43,7 +43,7 @@ class ActividadesSearch
         $query->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
             ->leftJoin('PuntoEncuentro', 'Actividad.idActividad', '=', 'PuntoEncuentro.idActividad')
             ->selectRaw('distinct Actividad.*')
-            ->orderBy('fechaInicio', 'desc')
+            ->orderBy('fechaInicio', 'asc')
             ->where('estadoConstruccion', 'Abierta')
             ->where('inscripcionInterna', 0) //Visibilidad pública
             ->where('fechaInicioInscripciones', '<=', date('Y-m-d H:i'))
