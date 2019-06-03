@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use \Spatie\Permission\Models\Permission as Permission;
+use \Spatie\Permission\Models\Role as Role;
 
 class CrearPermisoEditarUsuariosSeeder extends Seeder
 {
@@ -12,6 +13,10 @@ class CrearPermisoEditarUsuariosSeeder extends Seeder
      */
     public function run()
     {
-        Permission::create(['name' => 'editar_usuarios']);
+        $permission = Permission::create(['name' => 'editar_usuarios']);
+
+        $admin = Role::findByName('admin');
+
+        $admin->givePermissionTo($permission);
     }
 }
