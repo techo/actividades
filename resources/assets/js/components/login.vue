@@ -7,37 +7,37 @@
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
-                                    style="opacity: 1; margin-top: -1em">
+                            <button type="button" class="close button-modal-close" data-dismiss="modal" aria-label="Cerrar"
+                                    >
                                 <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
                             </button>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-sm-1 pl-md-4 m-3">
                                     <div class="col-md-12">
                                         <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo"
                                              height="25" width="95">
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-sm-1 pl-md-4 m-3">
                                     <div class="col-md-12">
                                         <h2>Ingresar a tu perfil</h2>
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-sm-1 pl-md-4 m-3">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary facebook" @click="registro_facebook()"><i
                                                 class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-sm-1 pl-md-4 m-3">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary google" @click="registro_google()"><i
                                                 class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-sm-1 pl-md-4 m-3">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
                                             <div class="form-group">
@@ -78,7 +78,7 @@
                                                         Ingresar
                                                     </button>
                                                 </div>
-                                                <div class="col-8 text-right">
+                                                <div class="col-8 text-right ">
                                                     <a href="/password/reset">Olvidé mi contraseña</a>
                                                 </div>
                                             </div>
@@ -89,7 +89,7 @@
                             <div class="col-md-6 registro">
                                 <div class="row h-100 justify-content-center align-items-center">
                                     <div class="col">
-                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                        <h1 class="question-voluntary">¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
                                         <br>
                                         <a
                                                 href="/registro"
@@ -364,12 +364,21 @@
         color: #ffffff;
     }
 
+    .button-modal-close {
+        opacity: 1; 
+        margin-top: -1em;
+    }
+
     @media (max-width: 768px) {
         .registro {
             margin-left: 15px;
             margin-right: 15px;
             padding-top: 10%;
             padding-bottom: 10%;
+        }
+
+        .question-voluntary {
+            font-size: 1.5em;
         }
     }
 
@@ -416,6 +425,10 @@
     }
     a.facebook {
         border:none;
+    }
+
+    .button-modal-close {
+        display: none;
     }
 
 </style>
