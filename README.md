@@ -65,6 +65,16 @@
 - $ mkdir photos/shares/thumbs 
 - $ chmod -R 777 photos/  
 
+## Docker
+
+```console
+docker run --rm -it --volume $(pwd):/app composer install -o --prefer-dist --ignore-platform-reqs
+docker run --rm -it --volume $(pwd):/app node:10-alpine sh -c "cd /app && npm install"
+docker-compose up -d
+docker exec -it voluntariado-eventual_php_1 php artisan key:generate
+docker exec -it voluntariado-eventual_php_1 php artisan migrate --seed
+```
+
 ## Stack
 La plataforma está creada con Laravel 5.5 + VueJS 2,
 PHP 7.2+,

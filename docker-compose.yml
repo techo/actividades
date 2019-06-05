@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: techo
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - "3306:3306"
+  php:
+    build: ./docker/php
+    depends_on:
+      - mysql
+    volumes:
+      - .:/var/www/techo
+  nginx:
+    build: ./docker/nginx
+    depends_on:
+      - php
+    volumes:
+      - .:/var/www/techo
+    ports:
+      - "80:80"
