@@ -449,3 +449,10 @@ footer.inscripcion-bar .text-primary {
         font-size:3rem; /*1rem = 16px*/
     }
 }
+@media screen and (max-width: 1024px) {
+    .techo-hero.actividades {
+        background-size: center;
+        height: 30vh;
+        padding-top: 0;
+    }
+}
