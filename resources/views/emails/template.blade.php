@@ -7,7 +7,7 @@
 </head>
 <body>
 <style>
-    @import url('https://fonts.googleapis.com/css?family=Montserrat');
+    @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
     @media only screen and (max-width: 600px) {
         .inner-body {
