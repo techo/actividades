@@ -6,7 +6,10 @@
 
 @section('main_image')
     <div class="techo-hero">
-        <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
+        <picture>
+          <source srcset="{{ asset('/img/hero-mobile.jpg') }}" media="(max-width: 720px)">
+          <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
+        </picture>
         <h1 class="text-uppercase">Transformemos esta realidad</h1>
     </div>
 @endsection
