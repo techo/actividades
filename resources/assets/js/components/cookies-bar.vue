@@ -1,10 +1,12 @@
 <template>
     <div id="cookies-bar">
-        Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las
-        <a href="https://www.techo.org/politica-de-privacidad#cookies" target="_blank">Politicas de Cookies</a>
-        <button class="pull-right" @click="cerrar">
-           <i class="fas fa-times"></i>
-       </button>
+        <div class="cookies-bar-content">
+            Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las
+            <a href="https://www.techo.org/politica-de-privacidad#cookies" target="_blank">Politicas de Cookies</a>
+            <button class="pull-right" @click="cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+       </div>
     </div>
 </template>
 
@@ -54,6 +56,10 @@
         background-color: black;
         color: #eeeeee;
         padding: 10px 5px;
+    }
+    .cookies-bar-content {
+        max-width: fit-content;
+        margin: 0 auto;
     }
     button.pull-right {
         background: transparent;
