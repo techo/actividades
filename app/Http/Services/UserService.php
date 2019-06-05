@@ -84,6 +84,8 @@ class UserService
             "pais.required" => "El campo País es requerido",
             "dni.regex" => "El campo DNI/Pasaporte tiene un formato inválido",
             "email.unique" => "El email ya existe en el sistema",
+            "telefono.required" => "El teléfono es requerido",
+            "telefono.regex" => "El teléfono debe ser numérico, simbolos permitidos +()",
             "password.min" => "La contraseña debe tener un mínimo de 8 caracteres"
         ];
         $v = Validator::make(
@@ -95,7 +97,7 @@ class UserService
                 'pais' => 'required',
                 'sexo' => 'required',
                 'nacimiento' => 'required|date|before:' . date('Y-m-d'),
-                'telefono' => 'required',
+                'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)])+$/ui'],
                 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
                 'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email',
                 'password' => 'sometimes|required|min:8|confirmed'

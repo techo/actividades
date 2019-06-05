@@ -151,7 +151,6 @@
                                             id="pais"
                                             v-model="paisSeleccionado"
                                             v-bind:disabled="this.readonly"
-                                            :onChange=this.getProvincias()
                                     >
                                     </v-select>
                                 </div>
@@ -169,7 +168,6 @@
                                             id="provincia"
                                             v-model="provinciaSeleccionada"
                                             v-bind:disabled="this.readonly"
-                                            :onChange=this.getLocalidades()
                                     >
                                     </v-select>
                                 </div>
@@ -185,7 +183,7 @@
                                             placeholder="Seleccione"
                                             name="localidad"
                                             id="localidad"
-                                            v-model="usuario.localidad"
+                                            v-model="localidadSeleccionada"
                                             v-bind:disabled="this.readonly"
                                     >
                                     </v-select>
@@ -234,6 +232,7 @@
                 dataLocalidades: [],
                 paisSeleccionado: null,
                 provinciaSeleccionada: null,
+                localidadSeleccionada: null,
                 readonly: !this.edicion,
                 guardado: false,
                 mensajeGuardado: '',
@@ -248,12 +247,39 @@
                 return moment(this.usuario.nacimiento).locale("es").format("LL");
             }
         },
+        watch: {
+            paisSeleccionado: function (pais) {
+                if (pais !== null) {
+                    this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
+                        function (data, self) {
+                            console.log(data);
+                            self.dataProvincias = data;
+                        });
+                } else {
+                    this.provinciaSeleccionada = null;
+                    this.dataProvincias = [];
+                }
+            },
+            provinciaSeleccionada: function (provincia) {
+                if (provincia !== null) {
+                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + provincia.id + '/localidades',
+                        function (data, self) {
+                            self.dataLocalidades = data;
+                        });
+                } else {
+                    this.localidadSeleccionada = null;
+                    this.dataLocalidades = [];
+                }
+            }
+        }
+        ,
         created(){
             let data = {};
-            this.getPaises();
-            this.getRoles();
+
             if(this.propUsuario){
                 this.usuario = JSON.parse(this.propUsuario);
+
+                this.getPaises();
 
                 for (var i in Object.keys(this.dataGeneros)) 
                 {
@@ -262,8 +288,8 @@
                 }
             }
 
-            this.paisSeleccionado = this.usuario.pais;
-            this.provinciaSeleccionada = this.usuario.provincia;
+            this.getRoles();
+            
 
             Event.$on('guardar', this.guardar);
             Event.$on('editar', this.editar);
@@ -290,32 +316,6 @@
                   }
               );
             },
-            getProvincias() {
-                if (this.paisSeleccionado !== undefined && this.paisSeleccionado !== this.usuario.pais && this.paisSeleccionado !== null){
-                    this.usuario.pais = this.paisSeleccionado;
-                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
-                        function (data, self) {
-                            self.dataProvincias = data;
-                            self.provinciaSeleccionada = '';
-                            self.localidadSeleccionada = '';
-                            self.usuario.provincia = null;
-                            self.usuario.localidad = null;
-                        });
-                }
-
-            },
-            getLocalidades() {
-                if (this.provinciaSeleccionada !== null && this.provinciaSeleccionada !== '' && this.usuario.provincia !== this.provinciaSeleccionada) {
-                    this.usuario.provincia = this.provinciaSeleccionada;
-                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + this.provinciaSeleccionada.id + '/localidades',
-                        function (data, self) {
-                            self.dataLocalidades = data;
-                            self.localidadSeleccionada = '';
-                        });
-
-                }
-
-            },
             mostrarLoadingAlert() {
                 this.$refs.loading.openSimplert({
                     title: 'Espera...',
@@ -328,17 +328,6 @@
             },
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
-            },
-            findObjectByKey(array, key, value) {
-                for (let i = 0; i < array.length; i++) {
-                    if (array[i][key] === value) {
-                        return {
-                            'obj': array[i],
-                            'index': i
-                        };
-                    }
-                }
-                return null;
             },
             guardar(){
                 let url;
