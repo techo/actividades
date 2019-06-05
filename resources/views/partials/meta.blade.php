@@ -4,5 +4,6 @@
 <meta name="author" content="Techo">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="icon" href="/favicon.ico">
+<link rel="manifest" href="/manifest.json">
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 <title>@yield('page_title', 'Techo.org')</title>
