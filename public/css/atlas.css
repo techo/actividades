@@ -1,4 +1,4 @@
-@charset "UTF-8";@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700,800');
+@charset "UTF-8";@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700,800&display=swap');
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -17,7 +17,7 @@ body {
 /* Not required for template or sticky footer method. */
 
 label {
-  font-family: Montserrat;
+  font-family: Montserrat, sans-serif;
   font-size: 12px;
   font-weight: bold;
   font-style: normal;

@@ -1,6 +1,6 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600&display=swap");
 
 // Variables
 @import "variables";
@@ -19,7 +19,7 @@ html, body {
 }
 
 body * {
-    font-family: Montserrat;
+    font-family: Montserrat, sans-serif;
 }
 
 main {
