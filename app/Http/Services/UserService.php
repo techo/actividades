@@ -97,7 +97,7 @@ class UserService
                 'pais' => 'required',
                 'sexo' => 'required',
                 'nacimiento' => 'required|date|before:' . date('Y-m-d'),
-                'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\x\.])+$/ui'],
+                'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
                 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
                 'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email',
                 'password' => 'sometimes|required|min:8|confirmed'
