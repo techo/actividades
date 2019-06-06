@@ -102,6 +102,7 @@
                                             v-bind:disabled="readonly"
                                             :filterable=false
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -135,6 +136,7 @@
                                             v-model="usuario.rol"
                                             :disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -152,6 +154,7 @@
                                             v-model="paisSeleccionado"
                                             v-bind:disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -169,6 +172,7 @@
                                             v-model="provinciaSeleccionada"
                                             v-bind:disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -186,6 +190,7 @@
                                             v-model="localidadSeleccionada"
                                             v-bind:disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -239,6 +244,31 @@
                 validationErrors: {}
             }
         },
+        created(){
+            let data = {};
+
+            this.getPaises();
+            this.getRoles();
+
+            if(this.propUsuario){
+                this.usuario = JSON.parse(this.propUsuario);
+
+                for (var i in Object.keys(this.dataGeneros)) 
+                {
+                    if(this.dataGeneros[i].id == this.usuario.sexo) 
+                        this.usuario.sexo = this.dataGeneros[i];
+                }
+
+                this.paisSeleccionado = this.usuario.pais;
+                this.provinciaSeleccionada = this.usuario.provincia;
+                this.localidadSeleccionada = this.usuario.localidad;
+            }
+
+
+
+            Event.$on('guardar', this.guardar);
+            Event.$on('editar', this.editar);
+        },
         computed: {
             tieneErrores: function () {
                 return (this.validationErrors.length > 0);
@@ -252,9 +282,9 @@
                 if (pais !== null) {
                     this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
                         function (data, self) {
-                            console.log(data);
                             self.dataProvincias = data;
                         });
+                    this.usuario.pais = this.paisSeleccionado;
                 } else {
                     this.provinciaSeleccionada = null;
                     this.dataProvincias = [];
@@ -266,33 +296,17 @@
                         function (data, self) {
                             self.dataLocalidades = data;
                         });
+                    this.usuario.provincia = this.provinciaSeleccionada;
                 } else {
                     this.localidadSeleccionada = null;
                     this.dataLocalidades = [];
                 }
-            }
-        }
-        ,
-        created(){
-            let data = {};
-
-            if(this.propUsuario){
-                this.usuario = JSON.parse(this.propUsuario);
-
-                this.getPaises();
-
-                for (var i in Object.keys(this.dataGeneros)) 
-                {
-                    if(this.dataGeneros[i].id == this.usuario.sexo) 
-                        this.usuario.sexo = this.dataGeneros[i];
+            },
+            localidadSeleccionada: function (localidad) {
+                if (localidad !== null) {
+                    this.usuario.localidad = this.localidadSeleccionada;
                 }
             }
-
-            this.getRoles();
-            
-
-            Event.$on('guardar', this.guardar);
-            Event.$on('editar', this.editar);
         },
         methods: {
             editar(){

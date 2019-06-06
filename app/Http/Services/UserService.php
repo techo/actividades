@@ -78,14 +78,14 @@ class UserService
     public function createValidator(Request $request)
     {
         $messages = [
-            "sexo.required" => "El campo Género es requerido",
-            "nacimiento.required" => "El campo Fecha de nacimiento es requerido",
-            "dni.required" => "El campo DNI/Pasaporte es requerido",
-            "pais.required" => "El campo País es requerido",
-            "dni.regex" => "El campo DNI/Pasaporte tiene un formato inválido",
+            "sexo.required" => "El género es requerido",
+            "nacimiento.required" => "El fecha de nacimiento es requerido",
+            "dni.required" => "El DNI/Pasaporte es requerido",
+            "pais.required" => "El país es requerido",
+            "dni.regex" => "El DNI/Pasaporte tiene un formato inválido",
             "email.unique" => "El email ya existe en el sistema",
             "telefono.required" => "El teléfono es requerido",
-            "telefono.regex" => "El teléfono debe ser numérico, simbolos permitidos +()",
+            "telefono.regex" => "El teléfono debe ser numérico, simbolos permitidos: espacios + ( ) - o x .",
             "password.min" => "La contraseña debe tener un mínimo de 8 caracteres"
         ];
         $v = Validator::make(
@@ -97,7 +97,7 @@ class UserService
                 'pais' => 'required',
                 'sexo' => 'required',
                 'nacimiento' => 'required|date|before:' . date('Y-m-d'),
-                'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)])+$/ui'],
+                'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\x\.])+$/ui'],
                 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
                 'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email',
                 'password' => 'sometimes|required|min:8|confirmed'

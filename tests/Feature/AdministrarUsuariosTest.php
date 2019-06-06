@@ -44,8 +44,6 @@ class AdministrarUsuariosTest extends TestCase
             'password' => 'contraseña',
             'password_confirmation' => 'contraseña'
             ];
-
-		//dd($datos);
 		
 		$this->actingAs($admin)
         	->post('/admin/usuarios/' . $jose->idPersona . '/editar', $datos)
