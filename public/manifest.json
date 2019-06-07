@@ -1,11 +1,12 @@
 {
-  "name": "Techo",
-  "short_name": "Techo",
+  "name": "TECHO actividades",
+  "short_name": "Actividades",
   "theme_color": "#009de0",
   "background_color": "#009de0",
   "display": "browser",
   "Scope": "/",
   "start_url": "/?utm_source=homescreen",
+  "display": "minimal-ui",
   "icons": [
     {
       "src": "img/icons/icon-72x72.png",
