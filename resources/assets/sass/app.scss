@@ -87,7 +87,7 @@ nav.bg-techo-blue {
 }
 
 .card-deck.home .card-text {
-    height: 161px;
+    height: auto;
 }
 
 .btn-primary {
@@ -118,4 +118,10 @@ h1.text-primary {
 }
 div.dropdown-toggle::after {
     display: none;
+}
+
+@media screen and (max-width: 768) {
+    .card-deck.home .card-text {
+        height: auto;
+    }
 }
