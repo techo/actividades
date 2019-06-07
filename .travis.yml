@@ -7,15 +7,15 @@ before_script:
   - cp .env.travis .env
   - composer self-update
   - composer install --no-interaction
-# - php artisan key:generate
+  - php artisan key:generate
 # - php artisan config:clear
 # - php artisan migrate
 # - npm install
 # - npm run dev
-  - composer require --dev phpcq/all-tasks
+# - composer require --dev phpcq/all-tasks
 
-script:
-    - vendor/bin/phpunit
-
-after_script:
-  - vendor/bin/phpcpd ./app
+cache:
+  directories:
+    - vendor
+# after_script:
+#  - vendor/bin/phpcpd ./app
