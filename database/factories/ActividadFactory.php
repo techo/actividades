@@ -5,18 +5,32 @@ use Carbon\Carbon;
 
 $factory->define(App\Actividad::class, function (Faker $faker) {
 
-      $fecha = Carbon::parse(now())->addDays(5);
-      $fecha_fin = $fecha->copy()->addMinute();
+      $fecha = Carbon::now()->addMinutes(10);
 
     return [
       'idTipo' => factory(\App\Tipo::class)->create(),
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
+
       'fechaInicio' => $fecha->format('Y-m-d H:i:s'),
-      'fechaFin' => $fecha_fin->format('Y-m-d H:i:s'),
-      'fechaInicioFinFormato' => null,
-      'fechaInicioInscripciones' => $fecha->copy()->subDays(10)->format('Y-m-d H:i:s'),
-      'fechaFinInscripciones' => $fecha->copy()->subMinute()->format('Y-m-d H:i:s'),
+      'fechaFin' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->addMinute()->format('Y-m-d H:i:s');
+      },
+
+      'fechaInicioInscripciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->subDays(10)->format('Y-m-d H:i:s');
+      },
+      'fechaFinInscripciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->subMinute()->format('Y-m-d H:i:s');
+      },
+
+      'fechaInicioEvaluaciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaFin'])->addMinute()->format('Y-m-d H:i:s');
+      },
+      'fechaFinEvaluaciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaFin'])->addDays(10)->format('Y-m-d H:i:s');
+      },
+
       'limiteInscripciones' => "0",
       'idUnidadOrganizacional' => 1,
       'idOficina' => 1,
@@ -59,8 +73,6 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'pAcompanantePost' => null,
       'mailBeca' => null,
       'idFormulario' => null,
-      'fechaInicioEvaluaciones' => $fecha_fin->copy()->addMinute()->format('Y-m-d H:i:s'),
-      'fechaFinEvaluaciones' => $fecha_fin->copy()->addDays(10)->format('Y-m-d H:i:s'),
       'idAsentamiento' => null,
       'idZona' => null,
       'linkFormularioEvaluacion' => null,
@@ -73,6 +85,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'LinkPago' => null,
       'PuntosEnvioUL' => null,
       'CaptacionesUL' => null,
+      'fechaInicioFinFormato' => null,
       'idPais' => factory(App\Pais::class)->create(),
       'idProvincia' => factory(App\Provincia::class)->create(),
       'idLocalidad' => factory(App\Localidad::class)->create(),
@@ -83,3 +96,11 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
         //
     ];
 });
+
+$factory->state(App\Actividad::class, 'futura', [
+    'fechaInicio' => Carbon::now()->addDays(5)->format('Y-m-d H:i:s')
+]);
+
+$factory->state(App\Actividad::class, 'pasada', [
+    'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
+]);

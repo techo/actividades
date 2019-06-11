@@ -14,7 +14,8 @@ class Actividad extends Model
     protected $fillable = ['nombreActividad', 'fechaInicio'];
     protected $dates =
         [
-            'fechaCreacion', 'fechaModificacion',
+            'fechaCreacion', 
+            'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
             'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'
@@ -32,6 +33,11 @@ class Actividad extends Model
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idActividad');
+    }
+
+    public function membresias()
+    {
+       return GrupoRolPersona::where('idActividad', '=', $this->idActividad)->get();
     }
 
     public function evaluaciones()
@@ -107,7 +113,7 @@ class Actividad extends Model
     }
     public function inscripciones_validas()
     {
-        return $this->inscripciones()->whereNotIn('estado',['Desinscripto'])->get();
+        return $this->inscripciones()->get();
     }
 
     public function puntosEncuentro()
@@ -172,7 +178,6 @@ class Actividad extends Model
        $query->join('Inscripcion', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
            ->join('Persona', 'Inscripcion.idPersona', '=', 'Persona.idPersona')
            ->where('Actividad.idActividad', '=', $idActividad)
-           ->where('Inscripcion.estado', '<>', 'Desinscripto' )
            ->select(['Persona.idPersona', 'Inscripcion.estado']);
 
        return $query->get()->toArray();

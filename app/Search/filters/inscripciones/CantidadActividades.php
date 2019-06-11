@@ -31,8 +31,7 @@ class CantidadActividades
             $builder->whereRaw("(select count(*) from Inscripcion insAnt, Actividad ActAnt, Tipo TipoAnt
                    where insAnt.idPersona = Persona.idPersona
                    and insAnt.idActividad = ActAnt.idActividad
-                   and ActAnt.idTipo = TipoAnt.idTipo
-                   and insAnt.estado <> 'Desinscripto'" .
+                   and ActAnt.idTipo = TipoAnt.idTipo" .
                     $condicionTipoActividad .
                    " and insAnt.idActividad <> Actividad.idActividad) " .
                 $condicion['comparacion'] . " ? ", $condicion['valor']);
@@ -43,8 +42,7 @@ class CantidadActividades
            $builder->whereRaw("(select count(*) from Inscripcion insAnt, Actividad ActAnt, Tipo TipoAnt
                    where insAnt.idPersona = Persona.idPersona
                    and insAnt.idActividad = ActAnt.idActividad
-                   and ActAnt.idTipo = TipoAnt.idTipo
-                   and insAnt.estado <> 'Desinscripto'" .
+                   and ActAnt.idTipo = TipoAnt.idTipo" .
                    $condicionTipoActividad .
                    isset($condicionTipoActividad) ? $condicionTipoActividad : "" .
                    " and insAnt.idActividad <> Actividad.idActividad) in (" . implode(",",$condicion['valor']) . ")");

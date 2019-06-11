@@ -27,8 +27,7 @@ class IdActividad
        $builder->selectRaw('(select count(*) from Inscripcion insAnt, Actividad ActAnt, Tipo TipoAnt
                    where insAnt.idPersona = Persona.idPersona
                    and insAnt.idActividad = ActAnt.idActividad
-                   and ActAnt.idTipo = TipoAnt.idTipo
-                   and insAnt.`estado` <> \'Desinscripto\' ' .
+                   and ActAnt.idTipo = TipoAnt.idTipo' .
                    $condicionTipoActividad .
                    ' and insAnt.`idActividad` <> \''. $value .'\' ) as cantActividades');
        return $builder;

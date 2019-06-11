@@ -53,7 +53,7 @@ class EnviarRecordatorioActividad extends Command
                                 ->get();
 
         foreach ($actividades as $actividad) {
-            $inscripciones = $actividad->inscripciones()->whereNotIn('estado',['Desinscripto', 'Pre-Inscripto'])->get();
+            $inscripciones = $actividad->inscripciones()->whereNotIn('estado',['Pre-Inscripto'])->get();
             foreach ($inscripciones as $inscripcion) {
                 $job = (new EnviarMailsRecordatorioActividad($inscripcion))->delay(5);
                 dispatch($job);

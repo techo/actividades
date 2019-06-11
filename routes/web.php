@@ -28,6 +28,7 @@ Route::prefix('ajax')->group(function () {
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
 	});
+
 	Route::prefix('usuario')->group(
 	    function(){
 		Route::get('', function(){
@@ -46,6 +47,7 @@ Route::prefix('ajax')->group(function () {
         Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
         Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
     });
+    
     Route::post('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
     Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
     Route::post('actividades', 'ajax\ActividadesController@index');

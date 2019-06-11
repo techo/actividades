@@ -91,7 +91,7 @@ class InscripcionesSearch
                     'Inscripcion.updated_at as modificado_en'
                 ]
             )
-            ->where('Inscripcion.estado', '<>', 'Desinscripto');
+            ->whereNull('Inscripcion.deleted_at');
         return $query;
     }
 }

@@ -156,12 +156,9 @@ class UsuarioController extends BaseController
   }
 
     public function desinscribir(Request $request, $idActividad) {
-        $inscripciones = Inscripcion::where('idPersona', Auth::user()->idPersona)->where('idActividad', $idActividad)->get();
-        foreach ($inscripciones as $inscripcion) {
-          $inscripcion->estado = 'Desinscripto';
-          $inscripcion->save();
-        }
-        $grupo = GrupoRolPersona::where('idPersona', Auth::user()->idPersona)->where('idActividad', '=', $idActividad)->delete();
+        Inscripcion::where('idPersona', Auth::user()->idPersona)
+          ->where('idActividad', $idActividad)
+          ->delete();
 
         return ['success' => true];
     }
@@ -180,21 +177,16 @@ class UsuarioController extends BaseController
 
         $persona = Persona::find(auth()->user()->idPersona);
 
-        $inscripcionesFuturas = $persona->inscripciones()
-            ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-            ->whereNotIn('estado',['Desinscripto'])
-            ->whereDate('Actividad.fechaInicio', '>=', Carbon::now())
-            ->get();
+        $inscripcionesFuturas = \App\Inscripcion::whereHas('Actividad', function ($query) {
+            $query->whereDate('fechaInicio', '>=', Carbon::now());
+        })->get();
 
-        // actualizar las inscripciones como desinscripto
-        foreach ($inscripcionesFuturas as $inscripcion){
-            $inscripcion = Inscripcion::find($inscripcion->idInscripcion);
-            $inscripcion->estado = 'Desinscripto';
-            $inscripcion->save();
+        foreach ($inscripcionesFuturas as $inscripcion) {
+          $inscripcion->delete();
         }
 
         // ofuscar en tabla persona
-        $persona->nombres = 'Usuario Anónimo';
+        $persona->nombres = 'Usuario eliminado';
         $persona->apellidoPaterno = '';
         $persona->telefono = str_random(30);
         $persona->telefonoMovil = str_random(30);

@@ -35,8 +35,8 @@ class ActividadResource extends Resource
             'inscriptos'    => $this->datosInscriptos($this->idActividad),
 //            'inscriptos'    => $this->idPersonaInscriptos($this->idActividad),
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
-            'cantInscriptos' => $this->inscripciones()->inscripto()->count(),
-            'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->inscripto()->count(),
+            'cantInscriptos' => $this->inscripciones()->count(),
+            'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0
         ];
     }

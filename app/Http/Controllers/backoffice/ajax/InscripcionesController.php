@@ -87,8 +87,7 @@ class InscripcionesController extends BaseController
         $inscripcion = Inscripcion::findOrFail($inscripcion);
 
         if ($inscripcion){
-            $inscripcion->estado = 'Desinscripto';
-            $inscripcion->save();
+            $inscripcion->delete();
             return response()->json('Ok', 200);
         }
 
@@ -97,14 +96,11 @@ class InscripcionesController extends BaseController
 
     public function desinscribir(Request $request)
     {
-        //dd($request->inscripciones);
         foreach ($request->inscripciones as $idInscripcion)
         {
-            $inscripcion = Inscripcion::findOrFail($idInscripcion);
-            //$inscripcion->delete();
-            $inscripcion->estado = 'Desinscripto';
-            $inscripcion->save();
+            Inscripcion::findOrFail($idInscripcion)->delete();
         }
+
         return response()
             ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
     }
@@ -211,16 +207,27 @@ class InscripcionesController extends BaseController
 
     public function store($id, Request $request)
     {
-        $user = Persona::findOrFail($request->idPersona);
-        $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
+
+        $inscripto = Inscripcion::withTrashed()
+            ->where('idPersona', '=', $request->idPersona)
             ->where('idActividad', '=', $id)
             ->first();
-        if ($yaInscripto) {
-            return response('Voluntario ya inscripto', 428);
+
+        if ($inscripto) {
+            if ($inscripto->trashed()) {
+                $inscripto->restore();
+                $grupo = $this->incluirEnGrupo($request->all());
+                //$this->intentaEnviar(Mail::to($inscripto->persona->mail), //new MailConfimacionInscripcion($inscripto), $inscripto->persona);
+                return response('ok');
+            }
+            else {
+                return response('Voluntario ya inscripto', 428);
+            }
         }
 
         $inscripcion = $this->inscribir($request->all());
         $grupo = $this->incluirEnGrupo($request->all());
+
         if ($inscripcion &&  $grupo) {
             // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
             // $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);

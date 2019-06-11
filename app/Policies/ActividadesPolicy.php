@@ -39,7 +39,7 @@ class ActividadesPolicy
         //estadoConstruccion es EstadoActividad (nombre legacy)
         $actividad = Actividad::where('estadoConstruccion', 'Abierta')->findOrFail($id);
 
-        $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
+        $cantInscriptos = $actividad->inscripciones()->count();
 
         $hayCupos = (($actividad->limiteInscripciones - $cantInscriptos) > 0 || $actividad->limiteInscripciones == 0);
 

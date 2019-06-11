@@ -224,7 +224,7 @@ export default {
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
-                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('inscripciones-actualizar-tabla');
                   Event.$emit('mensaje-success', data);
                   Event.$emit('vuetable-actualizarTabla');
               },
@@ -280,7 +280,10 @@ export default {
               });
       },
       actualizarInscripcionesTable: function () {
-          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+          Vue.nextTick( () => {
+            this.$refs.inscripcionesVuetable.refresh();
+            this.$refs.inscripcionesVuetable.selectedTo = [];
+          });
       },
       mostrarLoadingAlert() {
           this.$refs.loading.openSimplert({

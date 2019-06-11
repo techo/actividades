@@ -42,7 +42,7 @@ class PuntoEncuentro extends Model
 
     public function tieneInscriptos()
     {
-        if($this->inscripciones()->where('estado', '!=', 'Desinscripto')->count() > 0) {
+        if($this->inscripciones()->count() > 0) {
             return true;
         }
         return false;

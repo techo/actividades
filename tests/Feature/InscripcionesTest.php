@@ -19,7 +19,9 @@ class InscripcionesTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $persona = factory('App\Persona')->create();
+        Mail::fake();
+
+        $persona = factory('App\Persona')->create(['recibirMails' => 1 ]);
         $persona->givePermissionTo(Permission::create(['name' => 'ver_backoffice']));
 
         $actividad = factory('App\Actividad')->create();
@@ -35,15 +37,17 @@ class InscripcionesTest extends TestCase
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
-        'idPuntoEncuentro' => $p->idPuntoEncuentro,
-        'idActividad' => $actividad->idActividad,
-        'idPersona' => $persona->idPersona
+            'idPuntoEncuentro' => $p->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $persona->idPersona
         ]);	
 
         $this->assertDatabaseHas('Grupo_Persona', [
-        'idActividad' => $actividad->idActividad,
-        'idPersona' => $persona->idPersona
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $persona->idPersona
         ]);
+
+        Mail::assertQueued(MailConfimacionInscripcion::class, 1);
     }
 
     /** @test */
@@ -59,15 +63,13 @@ class InscripcionesTest extends TestCase
             ->delete('/ajax/usuario/inscripciones/' . $i->actividad->idActividad)
             ->assertStatus(200);
 
-        $this->assertDatabaseHas('Inscripcion', [
-        'idPuntoEncuentro' => $i->idPuntoEncuentro,
-        'idActividad' => $i->idActividad,
-        'idPersona' => $i->idPersona,
-        'estado' => 'Desinscripto'
+        $this->assertSoftDeleted('Inscripcion', [
+            'idPuntoEncuentro' => $i->idPuntoEncuentro,
+            'idActividad' => $i->idActividad,
+            'idPersona' => $i->idPersona,
         ]);
 
         $this->assertDatabaseMissing('Grupo_Persona', [
-
             'idActividad' => $i->idActividad,
             'idPersona' => $i->idPersona
         ]);
@@ -102,7 +104,6 @@ class InscripcionesTest extends TestCase
             'rol' => '',
         ];
 
-
         $this->actingAs($admin)
             ->post('/admin/ajax/actividades/'. $actividad->idActividad .'/inscripciones', $datos)
             ->assertStatus(200);
@@ -111,6 +112,11 @@ class InscripcionesTest extends TestCase
             'idPuntoEncuentro' => $actividad->inscripciones->first()->idPuntoEncuentro,
             'idActividad' => $actividad->inscripciones->first()->idActividad,
             'idPersona' => $actividad->inscripciones->first()->idPersona
+        ]);
+
+        $this->assertDatabaseHas('Grupo_Persona', [
+            'idActividad' => $actividad->inscripciones->first()->idActividad,
+            'idPersona' => $actividad->inscripciones->first()->idPersona,
         ]);
 
         Mail::assertQueued(MailConfimacionInscripcion::class, 0);
@@ -141,7 +147,7 @@ class InscripcionesTest extends TestCase
             'rol' => ''
         ];
 
-        $inscripcion_eliminada = factory('App\Inscripcion')->create([
+        factory('App\Inscripcion')->create([
             'idActividad' => $actividad->idActividad,
             'idPersona' => $maria->idPersona,
             'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
@@ -156,6 +162,76 @@ class InscripcionesTest extends TestCase
             'idActividad' => $actividad->inscripciones->first()->idActividad,
             'idPersona' => $actividad->inscripciones->first()->idPersona
         ]);
+
+        $this->assertTrue($actividad->membresias()->count() == 1);
+
+    }
+
+    /** @test */
+    public function administrador_puede_desinscribir_usuario()
+    {
+        $this->withoutExceptionHandling(); 
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($admin)
+            ->agregarPuntoConInscriptos(1)
+            ->create();
+
+        $datos = [
+            'idPersona' => $actividad->inscripciones->first()->idPersona,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+        ];
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/'. $actividad->idActividad 
+                .'/inscripciones/'. $actividad->inscripciones->first()->idInscripcion 
+                .'/eliminar', $datos)
+            ->assertStatus(200);
+
+        $this->assertSoftDeleted('Inscripcion', [
+            'idPuntoEncuentro' => $actividad->inscripciones->first()->idPuntoEncuentro,
+            'idActividad' => $actividad->inscripciones->first()->idActividad,
+            'idPersona' => $actividad->inscripciones->first()->idPersona,
+        ]);
+
+        $this->assertDatabaseMissing('Grupo_Persona', [
+            'idActividad' => $actividad->inscripciones->first()->idActividad,
+            'idPersona' => $actividad->inscripciones->first()->idPersona
+        ]);
+    }
+
+    /** @test */
+    public function administrador_puede_desinscribir_usuarios_masivamente()
+    {
+        $this->withoutExceptionHandling(); 
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($admin)
+            ->agregarPuntoConInscriptos(5)
+            ->create();
+
+        $datos = [
+            'inscripciones' => $actividad->inscripciones->pluck('idInscripcion')->toArray()
+        ];
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/'. $actividad->idActividad .'/inscripciones/desinscribir', $datos)
+            ->assertStatus(200);
+
+        $this->assertTrue($actividad->inscripciones()->withTrashed()->count() == 5);
+
+        $this->assertTrue($actividad->membresias()->count() == 0);
+
     }
 
     /** @test */
@@ -214,76 +290,6 @@ class InscripcionesTest extends TestCase
             ->assertStatus(200);
 
         $this->assertTrue(count(json_decode($response->getContent())->data) == 4);
-
     }
 
-    /** @test */
-    public function administrador_puede_desinscribir_usuario()
-    {
-        $this->withoutExceptionHandling(); 
-
-        $this->seed('RolesTableSeeder');
-        $this->seed('PermissionsTableSeeder');
-        $this->seed('RolePermissionsSeeder');
-
-        $admin = factory('App\Persona')->create();
-        $admin->assignRole('admin');
-
-        $actividad = app(ActividadFactory::class)
-            ->creadaPor($admin)
-            ->agregarPuntoConInscriptos(1)
-            ->create();
-
-        $datos = [
-            'idPersona' => $actividad->inscripciones->first()->idPersona,
-            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-        ];
-
-        $this->actingAs($admin)
-            ->post('/admin/ajax/actividades/'. $actividad->idActividad 
-                .'/inscripciones/'. $actividad->inscripciones->first()->idInscripcion 
-                .'/eliminar', $datos)
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('Inscripcion', [
-            'idPuntoEncuentro' => $actividad->inscripciones->first()->idPuntoEncuentro,
-            'idActividad' => $actividad->inscripciones->first()->idActividad,
-            'idPersona' => $actividad->inscripciones->first()->idPersona,
-            'estado' => 'Desinscripto'
-        ]);
-
-        $this->assertDatabaseMissing('Grupo_Persona', [
-            'idActividad' => $actividad->inscripciones->first()->idActividad,
-            'idPersona' => $actividad->inscripciones->first()->idPersona
-        ]);
-    }
-
-    /** @test */
-    public function administrador_puede_desinscribir_usuarios_masivamente()
-    {
-        $this->withoutExceptionHandling(); 
-
-        $this->seed('RolesTableSeeder');
-        $this->seed('PermissionsTableSeeder');
-        $this->seed('RolePermissionsSeeder');
-
-        $admin = factory('App\Persona')->create();
-        $admin->assignRole('admin');
-
-        $actividad = app(ActividadFactory::class)
-            ->creadaPor($admin)
-            ->agregarPuntoConInscriptos(5)
-            ->create();
-
-        $datos = [
-            'inscripciones' => $actividad->inscripciones->pluck('idInscripcion')->toArray()
-        ];
-
-        $this->actingAs($admin)
-            ->post('/admin/ajax/actividades/'. $actividad->idActividad .'/inscripciones/desinscribir', $datos)
-            ->assertStatus(200);
-
-        $this->assertTrue($actividad->inscripciones()->where(['estado' => 'Desinscripto'])->count() == 5);
-
-    }
 }

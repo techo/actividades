@@ -66,7 +66,7 @@ class Persona extends Authenticatable
     }
 
     public function estaInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->count();
+        return $this->inscripciones->where('idActividad',$idActividad)->count();
     }
 
     public function estaPreInscripto($idActividad) {
@@ -74,7 +74,7 @@ class Persona extends Authenticatable
     }
 
     public function noEstaInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->whereNotIn('estado',['Desinscripto'])->first();
+        return $this->inscripciones->where('idActividad',$idActividad)->first();
     }
 
     public function verificacion()
@@ -96,7 +96,6 @@ class Persona extends Authenticatable
     {
         return Inscripcion::where('idActividad', $idActividad)
             ->where('idPersona', auth()->user()->idPersona)
-            ->where('estado', '<>', 'Desinscripto')
             ->first();
     }
 

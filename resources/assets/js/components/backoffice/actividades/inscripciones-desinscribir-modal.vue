@@ -8,11 +8,11 @@
                     <h4 class="modal-title">Desinscribir</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Se van a eliminar las inscripciones seleccionadas de esta actividad ¿está seguro?</p>
+                    <p>Se van a eliminar las inscripciones seleccionadas de esta actividad ¿está SEGURO?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Desinscribir</button>
+                    <button type="button" class="btn btn-danger" @click="this.confirmar">Desinscribir</button>
                 </div>
             </div>
             <!-- /.modal-content -->
