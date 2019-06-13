@@ -278,12 +278,15 @@
             }
         },
         watch: {
-            paisSeleccionado: function (pais) {
+            paisSeleccionado: function (pais, paisAnterior) {
+                console.log(pais, paisAnterior);
                 if (pais !== null) {
                     this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
                         function (data, self) {
                             self.dataProvincias = data;
                         });
+                    if(paisAnterior != null)
+                        this.provinciaSeleccionada = null;
                     this.usuario.pais = this.paisSeleccionado;
                 } else {
                     this.provinciaSeleccionada = null;
@@ -298,6 +301,7 @@
                         });
                     this.usuario.provincia = this.provinciaSeleccionada;
                 } else {
+                    this.usuario.provincia = null;
                     this.localidadSeleccionada = null;
                     this.dataLocalidades = [];
                 }
@@ -306,6 +310,8 @@
                 if (localidad !== null) {
                     this.usuario.localidad = this.localidadSeleccionada;
                 }
+                else
+                    this.usuario.localidad = null;
             }
         },
         methods: {
