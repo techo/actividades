@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="this.datos.provincias">
         <input type="checkbox" v-model="selectAll">
         <strong>{{ this.datos.provincia }}</strong>
 
