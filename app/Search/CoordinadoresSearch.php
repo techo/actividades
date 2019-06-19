@@ -38,7 +38,9 @@ class CoordinadoresSearch
 
     private static function newQuery(){
         $query = (new Persona)->newQuery();
-        $query->orderBy('apellidoPaterno', 'asc')->orderBy('nombres');
+        $query->take(25)
+            ->orderBy('apellidoPaterno', 'asc')
+            ->orderBy('nombres');
 
         return $query;
     }

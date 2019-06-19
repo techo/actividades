@@ -8,10 +8,18 @@ class Coordinador implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-        $builder->where('nombres', 'LIKE', '%' . $value . '%')
-            ->orWhere('apellidoPaterno', 'LIKE', '%' . $value . '%')
-            ->orWhere('dni', 'LIKE', '%' . $value . '%')
-            ->orWhere('mail', 'LIKE', '%' . $value . '%');
-            return $builder;
+    	$palabras = explode(' ', $value);
+
+    	foreach ($palabras as $palabra) {
+    		$builder->orWhere('nombres', 'LIKE', '%'. $palabra .'%');
+		}
+		foreach ($palabras as $palabra) {
+    		$builder->orWhere('apellidoPaterno', 'LIKE', '%'. $palabra .'%');
+		}
+		foreach ($palabras as $palabra) {
+    		$builder->orWhere('mail', 'LIKE', '%'. $palabra .'%');
+		}
+
+        return $builder;
     }
 }
