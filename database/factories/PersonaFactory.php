@@ -25,6 +25,7 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'idPaisResidencia'  => 1,
     'idUnidadOrganizacional' => 0,
     'google_id' => '',
-    'facebook_id' => ''
+    'facebook_id' => '',
+    'recibirMails' => 0,
     ];
 });
