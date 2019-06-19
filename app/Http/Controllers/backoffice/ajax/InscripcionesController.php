@@ -82,6 +82,33 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al actualizar el estado', 500);
     }
 
+    public function destroy(Request $request, $id, $inscripcion)
+    {
+        $inscripcion = Inscripcion::findOrFail($inscripcion);
+
+        if ($inscripcion){
+            $inscripcion->estado = 'Desinscripto';
+            $inscripcion->save();
+            return response()->json('Ok', 200);
+        }
+
+        return response('Ocurrió un error al eliminar la inscripción', 500);
+    }
+
+    public function desinscribir(Request $request)
+    {
+        //dd($request->inscripciones);
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            //$inscripcion->delete();
+            $inscripcion->estado = 'Desinscripto';
+            $inscripcion->save();
+        }
+        return response()
+            ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
+    }
+
     public function asignarRol(Request $request)
     {
         $idActividad = $request->actividad;
@@ -187,7 +214,6 @@ class InscripcionesController extends BaseController
         $user = Persona::findOrFail($request->idPersona);
         $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
             ->where('idActividad', '=', $id)
-            ->where('estado', '!=', 'Desinscripto')
             ->first();
         if ($yaInscripto) {
             return response('Voluntario ya inscripto', 428);

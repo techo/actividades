@@ -28,9 +28,11 @@
                         <li><a @click="cambiarEstado('Sin Contactar', $event)">Sin Contactar</a></li>
                     </ul>
                 </div>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="mostrarDesinscribirModal($event)">Desinscribir</button>
                 <inscripciones-rol-modal></inscripciones-rol-modal>
                 <inscripciones-grupo-modal></inscripciones-grupo-modal>
                 <inscripciones-punto-modal></inscripciones-punto-modal>
+                <inscripciones-desinscribir-modal></inscripciones-desinscribir-modal>
             </div>
         </div>
     </div>
@@ -59,6 +61,10 @@
             mostrarPuntoModal: function () {
                 if(this.disabled) return;
                 Event.$emit('show-punto-modal');
+            },
+            mostrarDesinscribirModal: function (event) {
+                if(this.disabled) return;
+                Event.$emit('show-desinscribir-modal');
             },
             cambiarEstado: function (estado, event) {
                 Event.$emit('cambiar-estado', estado);
