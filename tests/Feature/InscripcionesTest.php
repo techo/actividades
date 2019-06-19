@@ -67,7 +67,6 @@ class InscripcionesTest extends TestCase
         ]);
 
         $this->assertDatabaseMissing('Grupo_Persona', [
-
             'idActividad' => $i->idActividad,
             'idPersona' => $i->idPersona
         ]);
@@ -128,10 +127,14 @@ class InscripcionesTest extends TestCase
 
         $actividad = app(ActividadFactory::class)
             ->creadaPor($admin)
-            ->agregarPuntoConInscriptos(0)
+            ->agregarPuntoConInscriptos(1)
             ->create();
 
-        $maria = factory('App\Persona')->create();
+        $maria = $actividad->inscripciones->first()->persona;
+
+        $this->actingAs($maria)
+            ->delete('/ajax/usuario/inscripciones/' . $actividad->idActividad)
+            ->assertStatus(200);
 
         $datos = [
             'idActividad' => $actividad->idActividad,
@@ -140,12 +143,6 @@ class InscripcionesTest extends TestCase
             'idGrupo' => 0,
             'rol' => ''
         ];
-
-        $inscripcion_eliminada = factory('App\Inscripcion')->create([
-            'idActividad' => $actividad->idActividad,
-            'idPersona' => $maria->idPersona,
-            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-        ])->delete();
 
         $this->actingAs($admin)
             ->post('/admin/ajax/actividades/'. $actividad->idActividad .'/inscripciones', $datos)

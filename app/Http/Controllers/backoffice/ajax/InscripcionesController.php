@@ -187,6 +187,7 @@ class InscripcionesController extends BaseController
         $user = Persona::findOrFail($request->idPersona);
         $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
             ->where('idActividad', '=', $id)
+            ->where('estado', '!=', 'Desinscripto')
             ->first();
         if ($yaInscripto) {
             return response('Voluntario ya inscripto', 428);
