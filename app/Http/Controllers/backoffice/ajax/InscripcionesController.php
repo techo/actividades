@@ -196,7 +196,7 @@ class InscripcionesController extends BaseController
         $grupo = $this->incluirEnGrupo($request->all());
         if ($inscripcion &&  $grupo) {
             // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
-            $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
+            // $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
             return response('ok');
         }
 

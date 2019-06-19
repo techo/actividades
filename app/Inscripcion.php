@@ -42,16 +42,6 @@ class Inscripcion extends Model
         });
 
         static::deleted(function ($inscripcion) { // before delete() method call this
-            DB::beginTransaction();
-            try {
-                DB::statement('DELETE FROM AsistenciaVoluntario WHERE idInscripcion = ' . $inscripcion->idInscripcion);
-                DB::statement('DELETE FROM Asignacion360 WHERE idInscripcion = ' . $inscripcion->idInscripcion
-                    . ' OR idInscripcionEvaluado =' . $inscripcion->idInscripcion);
-                DB::commit();
-            } catch (\Exception $exception) {
-                DB::rollBack();
-                throw new \Exception($exception->getMessage());
-            }
         });
 
         static::updating(function ($inscripcion) { Auditoria::crear($inscripcion); });
