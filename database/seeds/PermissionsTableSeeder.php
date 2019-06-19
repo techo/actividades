@@ -22,5 +22,6 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'asignar_roles']);
         Permission::create(['name' => 'administrar_imagenes']);
         Permission::create(['name' => 'ver_usuarios']);
+        Permission::create(['name' => 'editar_usuarios']);
     }
 }

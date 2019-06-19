@@ -57,4 +57,16 @@ class UsuariosController extends Controller
         }
         return response($validator->errors()->all(), 422);
     }
+
+    public function update(Request $request) {
+        $validator = $this->userService->createValidator($request);
+
+        if ($validator->passes()) {
+              if ($this->userService->editarUsuario($request)) {
+                  return response()->json(['Usuario editado correctamente'], 200);
+              }
+            return response()->json('Error desconocido', 500);
+        }
+        return response($validator->errors()->all(), 422);
+    }
 }

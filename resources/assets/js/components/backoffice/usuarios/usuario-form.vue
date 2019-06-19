@@ -102,6 +102,7 @@
                                             v-bind:disabled="readonly"
                                             :filterable=false
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -135,6 +136,7 @@
                                             v-model="usuario.rol"
                                             :disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -151,8 +153,8 @@
                                             id="pais"
                                             v-model="paisSeleccionado"
                                             v-bind:disabled="this.readonly"
-                                            :onChange=this.getProvincias()
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -169,8 +171,8 @@
                                             id="provincia"
                                             v-model="provinciaSeleccionada"
                                             v-bind:disabled="this.readonly"
-                                            :onChange=this.getLocalidades()
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -185,9 +187,10 @@
                                             placeholder="Seleccione"
                                             name="localidad"
                                             id="localidad"
-                                            v-model="usuario.localidad"
+                                            v-model="localidadSeleccionada"
                                             v-bind:disabled="this.readonly"
                                     >
+                                    <span slot="no-options"></span>
                                     </v-select>
                                 </div>
                             </div>
@@ -234,11 +237,37 @@
                 dataLocalidades: [],
                 paisSeleccionado: null,
                 provinciaSeleccionada: null,
+                localidadSeleccionada: null,
                 readonly: !this.edicion,
                 guardado: false,
                 mensajeGuardado: '',
                 validationErrors: {}
             }
+        },
+        created(){
+            let data = {};
+
+            this.getPaises();
+            this.getRoles();
+
+            if(this.propUsuario){
+                this.usuario = JSON.parse(this.propUsuario);
+
+                for (var i in Object.keys(this.dataGeneros)) 
+                {
+                    if(this.dataGeneros[i].id == this.usuario.sexo) 
+                        this.usuario.sexo = this.dataGeneros[i];
+                }
+
+                this.paisSeleccionado = this.usuario.pais;
+                this.provinciaSeleccionada = this.usuario.provincia;
+                this.localidadSeleccionada = this.usuario.localidad;
+            }
+
+
+
+            Event.$on('guardar', this.guardar);
+            Event.$on('editar', this.editar);
         },
         computed: {
             tieneErrores: function () {
@@ -248,22 +277,47 @@
                 return moment(this.usuario.nacimiento).locale("es").format("LL");
             }
         },
-        created(){
-            let data = {};
-            this.getPaises();
-            this.getRoles();
-            if(this.propUsuario){
-              this.usuario = JSON.parse(this.propUsuario);
-                data = this.findObjectByKey(this.dataGeneros, 'id', this.usuario.sexo);
-                this.usuario.sexo = data.obj;
+        watch: {
+            paisSeleccionado: function (pais, paisAnterior) {
+                console.log(pais, paisAnterior);
+                if (pais !== null) {
+                    this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
+                        function (data, self) {
+                            self.dataProvincias = data;
+                        });
+                    if(paisAnterior != null)
+                        this.provinciaSeleccionada = null;
+                    this.usuario.pais = this.paisSeleccionado;
+                } else {
+                    this.provinciaSeleccionada = null;
+                    this.dataProvincias = [];
+                }
+            },
+            provinciaSeleccionada: function (provincia) {
+                if (provincia !== null) {
+                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + provincia.id + '/localidades',
+                        function (data, self) {
+                            self.dataLocalidades = data;
+                        });
+                    this.usuario.provincia = this.provinciaSeleccionada;
+                } else {
+                    this.usuario.provincia = null;
+                    this.localidadSeleccionada = null;
+                    this.dataLocalidades = [];
+                }
+            },
+            localidadSeleccionada: function (localidad) {
+                if (localidad !== null) {
+                    this.usuario.localidad = this.localidadSeleccionada;
+                }
+                else
+                    this.usuario.localidad = null;
             }
-
-            this.paisSeleccionado = this.usuario.pais;
-            this.provinciaSeleccionada = this.usuario.provincia;
-
-            Event.$on('guardar', this.guardar);
         },
         methods: {
+            editar(){
+                this.readonly = false;
+            },
             getPaises: function () {
                 let url = "/ajax/paises";
                 this.axiosGet(
@@ -282,32 +336,6 @@
                   }
               );
             },
-            getProvincias() {
-                if (this.paisSeleccionado !== undefined && this.paisSeleccionado !== this.usuario.pais && this.paisSeleccionado !== null){
-                    this.usuario.pais = this.paisSeleccionado;
-                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias',
-                        function (data, self) {
-                            self.dataProvincias = data;
-                            self.provinciaSeleccionada = '';
-                            self.localidadSeleccionada = '';
-                            self.usuario.provincia = null;
-                            self.usuario.localidad = null;
-                        });
-                }
-
-            },
-            getLocalidades() {
-                if (this.provinciaSeleccionada !== null && this.provinciaSeleccionada !== '' && this.usuario.provincia !== this.provinciaSeleccionada) {
-                    this.usuario.provincia = this.provinciaSeleccionada;
-                    this.axiosGet('/ajax/paises/' + this.paisSeleccionado.id + '/provincias/' + this.provinciaSeleccionada.id + '/localidades',
-                        function (data, self) {
-                            self.dataLocalidades = data;
-                            self.localidadSeleccionada = '';
-                        });
-
-                }
-
-            },
             mostrarLoadingAlert() {
                 this.$refs.loading.openSimplert({
                     title: 'Espera...',
@@ -320,17 +348,6 @@
             },
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
-            },
-            findObjectByKey(array, key, value) {
-                for (let i = 0; i < array.length; i++) {
-                    if (array[i][key] === value) {
-                        return {
-                            'obj': array[i],
-                            'index': i
-                        };
-                    }
-                }
-                return null;
             },
             guardar(){
                 let url;
