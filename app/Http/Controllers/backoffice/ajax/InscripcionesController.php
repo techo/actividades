@@ -361,7 +361,7 @@ class InscripcionesController extends BaseController
                                 $inscripto = $this->inscribir($inscripcionValida);
 
                                 if ($inscripto) { //Enviar mail al voluntario
-                                    $this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
+                                    //$this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
                                 } else {
                                     $errores[] = "Error interno al inscribir a "
                                         . $persona->nombreCompleto
