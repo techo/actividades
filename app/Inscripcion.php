@@ -43,9 +43,9 @@ class Inscripcion extends Model
 
         });
 
-        static::deleted(function ($inscripcion) {
+        static::deleting(function ($inscripcion) {
             //borrar registros de grupos
-            GrupoRolPersona::where('idPersona', $inscripcion->persona->idPersona)
+            GrupoRolPersona::where('idPersona', '=', $inscripcion->persona->idPersona)
                 ->where('idActividad', '=', $inscripcion->actividad->idActividad)
                 ->delete();
         });

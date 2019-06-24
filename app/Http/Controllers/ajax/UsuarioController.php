@@ -156,9 +156,13 @@ class UsuarioController extends BaseController
   }
 
     public function desinscribir(Request $request, $idActividad) {
+        
         Inscripcion::where('idPersona', Auth::user()->idPersona)
           ->where('idActividad', $idActividad)
-          ->delete();
+          ->get()
+          ->each(function($inscripcion) {
+            $inscripcion->delete();
+          });
 
         return ['success' => true];
     }
