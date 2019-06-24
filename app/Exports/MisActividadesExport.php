@@ -44,6 +44,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                 ]
             )
+            ->whereNull('deleted_at')
             ->orderBy($sortField, $sortOrder);
 
         $result->where(function ($result) {

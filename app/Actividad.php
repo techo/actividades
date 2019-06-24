@@ -4,10 +4,12 @@ namespace App;
 
 use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Actividad extends Model
 {
+    use SoftDeletes;
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
     protected $guarded = ['idActividad', 'pDNI'];
@@ -191,18 +193,7 @@ class Actividad extends Model
     {
         parent::boot();
 
-        static::deleting(function ($actividad) { // before delete() method call this
-            DB::beginTransaction();
-            try {
-                $inscripciones = $actividad->inscripciones();
-                $inscripciones->delete();
-                $actividad->puntosEncuentro()->delete();
-                DB::commit();
-            } catch (\Exception $exception) {
-                DB::rollBack();
-                throw new \Exception($exception->getMessage());
-            }
-        });
+        static::deleting(function ($actividad) {});
 
         static::updating(function ($actividad) { Auditoria::crear($actividad); });
     }
