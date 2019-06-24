@@ -173,14 +173,13 @@ class Actividad extends Model
 
     public function datosInscriptos($idActividad)
     {
-       $query = Actividad::newQuery();
 
-       $query->join('Inscripcion', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-           ->join('Persona', 'Inscripcion.idPersona', '=', 'Persona.idPersona')
-           ->where('Actividad.idActividad', '=', $idActividad)
-           ->select(['Persona.idPersona', 'Inscripcion.estado']);
+       return Actividad::findOrFail($idActividad)
+        ->inscripciones()
+        ->select(['idPersona', 'estado'])
+        ->get()
+        ->toArray();
 
-       return $query->get()->toArray();
     }
 
     public function setFechaFinInscripcionesAttribute($value)
