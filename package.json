@@ -7,7 +7,9 @@
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/Vue/bootstrap.js tests/Vue/**/*.spec.js",
+        "test-watch": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --watch --require tests/Vue/bootstrap.js tests/Vue/**/*.spec.js"
     },
     "devDependencies": {
         "accounting": "^0.4.1",
@@ -17,12 +19,18 @@
         "babel-preset-stage-2": "^6.24.1",
         "bootstrap-sass": "^3.3.7",
         "cross-env": "^5.1.6",
+        "expect": "^24.8.0",
         "jquery": "^3.2",
+        "jsdom": "^15.1.1",
+        "jsdom-global": "^3.0.2",
         "laravel-mix": "^1.0",
         "lodash": "^4.17.5",
+        "mocha": "^6.1.4",
+        "mocha-webpack": "^1.1.0",
         "moment": "^2.17.1",
         "vue": "^2.5.16",
         "vue-events": "^3.0.0",
+        "vue-test-utils": "^1.0.0-beta.11",
         "vuetable-2": "^1.2.0"
     },
     "dependencies": {
