@@ -42,7 +42,7 @@ class MailingTest extends TestCase
         	->delete('/admin/actividades/' . $actividad->idActividad)
         	->assertRedirect('/admin/actividades/usuario');
 
-        $this->assertDatabaseMissing('Actividad', [ 'nombreActividad' => $actividad->nombreActividad]);
+        $this->assertSoftDeleted('Actividad', [ 'nombreActividad' => $actividad->nombreActividad]);
 
         Mail::assertSent(CancelacionActividad::class, function ($mail) use ($actividad) {
             return $mail->actividad->nombreActividad === $actividad->nombreActividad;
