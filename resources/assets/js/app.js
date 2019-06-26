@@ -1,6 +1,6 @@
 import Simplert from "vue2-simplert";
 
-//Vue.config.devtools = false;
+
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
@@ -12,6 +12,7 @@ import InscripcionesMensajes from './components/backoffice/actividades/inscripci
 import InscripcionesGrupoModal from './components/backoffice/actividades/inscripciones-grupo-modal'
 import InscripcionesRolModal from './components/backoffice/actividades/inscripciones-rol-modal'
 import InscripcionesPuntoModal from './components/backoffice/actividades/inscripciones-punto-modal'
+import InscripcionesDesinscribirModal from './components/backoffice/actividades/inscripciones-desinscribir-modal'
 import InscripcionesImportarModal from './components/backoffice/actividades/inscripciones-importar-modal'
 import asignacionDeRol from './components/backoffice/roles/asignacionDeRol'
 import CrudFooter from './components/backoffice/crudFooter';
@@ -43,6 +44,7 @@ Vue.component('inscripciones-mensajes', InscripcionesMensajes);
 Vue.component('inscripciones-rol-modal', InscripcionesRolModal);
 Vue.component('inscripciones-grupo-modal', InscripcionesGrupoModal);
 Vue.component('inscripciones-punto-modal', InscripcionesPuntoModal);
+Vue.component('inscripciones-desinscribir-modal', InscripcionesDesinscribirModal);
 Vue.component('inscripciones-importar-modal', InscripcionesImportarModal);
 Vue.component('asignacion-de-rol', asignacionDeRol);
 Vue.component('crud-footer', CrudFooter);

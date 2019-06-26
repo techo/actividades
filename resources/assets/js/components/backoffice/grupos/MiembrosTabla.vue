@@ -127,7 +127,10 @@ export default {
         },
         actualizarTabla (grupo) {
             if (grupo !== undefined) { this.idGrupoActual = grupo.id; }
-            Vue.nextTick( () => this.$refs.vuetableMiembros.refresh());
+            Vue.nextTick( () => {
+              this.$refs.vuetableMiembros.refresh();
+              this.$refs.vuetableMiembros.selectedTo = [];
+            });
         }
     },
     created()  {

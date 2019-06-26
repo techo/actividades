@@ -44,6 +44,7 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                 ]
             )
+            ->whereNull('deleted_at')
             ->orderBy($sortField, $sortOrder);
 
         if ($this->filter) {

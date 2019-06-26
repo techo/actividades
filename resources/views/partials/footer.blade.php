@@ -40,6 +40,14 @@
                 &copy; 2018 TECHO
             </p>
         </div>
+        @if(config('app.env') == 'local' || config('app.env') == 'development' )
+        <div>
+            @php
+                $head = explode('/',file_get_contents('../.git/HEAD'));
+                echo $head[count($head)-1];
+            @endphp              
+        </div>
+        @endif
     </div>
 
 </div>

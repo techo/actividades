@@ -122,8 +122,8 @@ class EvaluacionesController extends BaseController
     public function getGeneralStats($id)
     {
         $actividad = Actividad::find($id);
-        $presentes = $actividad->inscripciones()->inscripto()->presente()->count();
-        $inscriptos = $actividad->inscripciones()->inscripto()->count();
+        $presentes = $actividad->inscripciones()->presente()->count();
+        $inscriptos = $actividad->inscripciones()->count();
 
         return response()->json(
             [

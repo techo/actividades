@@ -49,7 +49,7 @@ class MisActividadesSearch
             ->leftJoin('PuntoEncuentro', 'PuntoEncuentro.idPuntoEncuentro', '=', 'Inscripcion.idPuntoEncuentro')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->where('Inscripcion.idPersona', auth()->user()->idPersona)
-            ->whereNotIn('estado',['Desinscripto'])
+            ->whereNull('Inscripcion.deleted_at')
             ->select(['Actividad.*', 'Inscripcion.presente', 'Tipo.*']);
         return $query;
     }

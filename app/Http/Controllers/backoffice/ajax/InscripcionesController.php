@@ -82,6 +82,29 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al actualizar el estado', 500);
     }
 
+    public function destroy(Request $request, $id, $inscripcion)
+    {
+        $inscripcion = Inscripcion::findOrFail($inscripcion);
+
+        if ($inscripcion){
+            $inscripcion->delete();
+            return response()->json('Ok', 200);
+        }
+
+        return response('Ocurrió un error al eliminar la inscripción', 500);
+    }
+
+    public function desinscribir(Request $request)
+    {
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            Inscripcion::findOrFail($idInscripcion)->delete();
+        }
+
+        return response()
+            ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
+    }
+
     public function asignarRol(Request $request)
     {
         $idActividad = $request->actividad;
@@ -184,16 +207,27 @@ class InscripcionesController extends BaseController
 
     public function store($id, Request $request)
     {
-        $user = Persona::findOrFail($request->idPersona);
-        $yaInscripto = Inscripcion::where('idPersona', '=', $request->idPersona)
+
+        $inscripto = Inscripcion::withTrashed()
+            ->where('idPersona', '=', $request->idPersona)
             ->where('idActividad', '=', $id)
             ->first();
-        if ($yaInscripto) {
-            return response('Voluntario ya inscripto', 428);
+
+        if ($inscripto) {
+            if ($inscripto->trashed()) {
+                $inscripto->restore();
+                $grupo = $this->incluirEnGrupo($request->all());
+                //$this->intentaEnviar(Mail::to($inscripto->persona->mail), //new MailConfimacionInscripcion($inscripto), $inscripto->persona);
+                return response('ok');
+            }
+            else {
+                return response('Voluntario ya inscripto', 428);
+            }
         }
 
         $inscripcion = $this->inscribir($request->all());
         $grupo = $this->incluirEnGrupo($request->all());
+
         if ($inscripcion &&  $grupo) {
             // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
             // $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
@@ -327,7 +361,7 @@ class InscripcionesController extends BaseController
                                 $inscripto = $this->inscribir($inscripcionValida);
 
                                 if ($inscripto) { //Enviar mail al voluntario
-                                    $this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
+                                    //$this->intentaEnviar(Mail::to($persona->mail), new MailConfimacionInscripcion($inscripto), $persona);
                                 } else {
                                     $errores[] = "Error interno al inscribir a "
                                         . $persona->nombreCompleto

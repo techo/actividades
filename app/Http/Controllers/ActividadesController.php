@@ -64,7 +64,7 @@ class actividadesController extends Controller
             ->where('estadoConstruccion', 'Abierta')
             ->findOrFail($id);
 
-        $cantInscriptos = $actividad->inscripciones()->inscripto()->count();
+        $cantInscriptos = $actividad->inscripciones()->count();
 
         $limiteInscriptos = (empty($actividad->limiteInscripciones)) ? 0 : $actividad->limiteInscripciones;
 

@@ -218,7 +218,18 @@ export default {
               },
               params);
       },
-
+      desinscribir: function (punto) {
+          let url = this.apiUrl + 'desinscribir';
+          let params = {
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Event.$emit('inscripciones-actualizar-tabla');
+                  Event.$emit('mensaje-success', data);
+                  Event.$emit('vuetable-actualizarTabla');
+              },
+              params);
+      },
       cambiarEstado: function (estado) {
           let url = this.apiUrl + 'cambiar/estado';
           let params = {
@@ -269,7 +280,10 @@ export default {
               });
       },
       actualizarInscripcionesTable: function () {
-          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+          Vue.nextTick( () => {
+            this.$refs.inscripcionesVuetable.refresh();
+            this.$refs.inscripcionesVuetable.selectedTo = [];
+          });
       },
       mostrarLoadingAlert() {
           this.$refs.loading.openSimplert({
@@ -300,6 +314,7 @@ export default {
       Event.$on('punto-asignado', this.asignarPunto);
       Event.$on('cambiar-estado', this.cambiarEstado);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
+      Event.$on('desinscripto', this.desinscribir);
       Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
       Event.$on('ocultar-Loading-alert', this.ocultarLoadingAlert);

@@ -47,7 +47,7 @@ class InscripcionesController extends BaseController
         $punto_encuentro->load('pais','provincia','localidad');
         $persona = Auth::user();
         if (($request->has('aceptar_terminos') && $request->aceptar_terminos == 1)) {
-            $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->whereNotIn('estado',['Desinscripto'])->get()->first();
+            $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->get()->first();
             if (!$inscripcion) {
                 $inscripcion = new Inscripcion();
                 $inscripcion->idActividad = $id;
@@ -56,7 +56,6 @@ class InscripcionesController extends BaseController
                 $inscripcion->evaluacion = 0;
                 $inscripcion->acompanante = '';
                 $inscripcion->fechaInscripcion = new Carbon();
-
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 

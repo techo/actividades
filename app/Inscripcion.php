@@ -5,13 +5,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inscripcion extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'Inscripcion';
     protected $primaryKey = 'idInscripcion';
-    protected $dates = ['fechaInscripcion'];
+    protected $dates = ['fechaInscripcion', 'deleted_at'];
     protected $guarded = ['idInscripcion'];
 
     public function actividad()
@@ -41,16 +43,15 @@ class Inscripcion extends Model
 
         });
 
-        static::deleted(function ($inscripcion) { // before delete() method call this
+        static::deleting(function ($inscripcion) {
+            //borrar registros de grupos
+            GrupoRolPersona::where('idPersona', '=', $inscripcion->persona->idPersona)
+                ->where('idActividad', '=', $inscripcion->actividad->idActividad)
+                ->delete();
         });
 
         static::updating(function ($inscripcion) { Auditoria::crear($inscripcion); });
 
-    }
-
-    public function scopeInscripto($query)
-    {
-        return $query->where('estado', '<>', 'Desinscripto' );
     }
 
     public function scopePresente($query)

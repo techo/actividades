@@ -4,17 +4,20 @@ namespace App;
 
 use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Actividad extends Model
 {
+    use SoftDeletes;
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
     protected $guarded = ['idActividad', 'pDNI'];
     protected $fillable = ['nombreActividad', 'fechaInicio'];
     protected $dates =
         [
-            'fechaCreacion', 'fechaModificacion',
+            'fechaCreacion', 
+            'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
             'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'
@@ -32,6 +35,11 @@ class Actividad extends Model
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idActividad');
+    }
+
+    public function membresias()
+    {
+       return GrupoRolPersona::where('idActividad', '=', $this->idActividad)->get();
     }
 
     public function evaluaciones()
@@ -107,7 +115,7 @@ class Actividad extends Model
     }
     public function inscripciones_validas()
     {
-        return $this->inscripciones()->whereNotIn('estado',['Desinscripto'])->get();
+        return $this->inscripciones()->get();
     }
 
     public function puntosEncuentro()
@@ -167,15 +175,13 @@ class Actividad extends Model
 
     public function datosInscriptos($idActividad)
     {
-       $query = Actividad::newQuery();
 
-       $query->join('Inscripcion', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-           ->join('Persona', 'Inscripcion.idPersona', '=', 'Persona.idPersona')
-           ->where('Actividad.idActividad', '=', $idActividad)
-           ->where('Inscripcion.estado', '<>', 'Desinscripto' )
-           ->select(['Persona.idPersona', 'Inscripcion.estado']);
+       return Actividad::findOrFail($idActividad)
+        ->inscripciones()
+        ->select(['idPersona', 'estado'])
+        ->get()
+        ->toArray();
 
-       return $query->get()->toArray();
     }
 
     public function setFechaFinInscripcionesAttribute($value)
@@ -187,18 +193,7 @@ class Actividad extends Model
     {
         parent::boot();
 
-        static::deleting(function ($actividad) { // before delete() method call this
-            DB::beginTransaction();
-            try {
-                $inscripciones = $actividad->inscripciones();
-                $inscripciones->delete();
-                $actividad->puntosEncuentro()->delete();
-                DB::commit();
-            } catch (\Exception $exception) {
-                DB::rollBack();
-                throw new \Exception($exception->getMessage());
-            }
-        });
+        static::deleting(function ($actividad) {});
 
         static::updating(function ($actividad) { Auditoria::crear($actividad); });
     }
