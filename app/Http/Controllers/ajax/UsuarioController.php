@@ -182,7 +182,8 @@ class UsuarioController extends BaseController
         $persona = Persona::find(auth()->user()->idPersona);
 
         $inscripcionesFuturas = \App\Inscripcion::whereHas('Actividad', function ($query) {
-            $query->whereDate('fechaInicio', '>=', Carbon::now());
+            $query->whereDate('fechaInicio', '>=', Carbon::now())
+              ->where('idPersona', '=', auth()->user()->idPersona);
         })->get();
 
         foreach ($inscripcionesFuturas as $inscripcion) {

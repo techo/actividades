@@ -28,6 +28,11 @@ class UsuariosTest extends TestCase
             ->agregarInscripto($maria)
             ->create();
 
+        $otra_actividad_mas = app(ActividadFactory::class)
+            ->conEstado('futura')
+            ->agregarPuntoConInscriptos(4)
+            ->create();
+
         $response = $this->actingAs($maria)
             ->delete('/ajax/usuario')
             ->assertStatus(302);
@@ -38,6 +43,9 @@ class UsuariosTest extends TestCase
         ]);
 
         $this->assertTrue($maria->inscripciones()->count() == 1);
+
+        //no borra otras inscripciones futuras ;)
+        $this->assertTrue($otra_actividad_mas->inscripciones()->count() == 4);
 		
 	}
 
