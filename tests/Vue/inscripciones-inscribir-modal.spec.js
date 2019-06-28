@@ -1,110 +1,49 @@
-import { shallowMount, mount } from 'vue-test-utils';
+import { mount } from 'vue-test-utils';
 import expect from 'expect';
 import Vue from 'vue';
 import axios from 'axios';
 import moxios from 'moxios';
-import vSelect from 'vue-select'
-//import Test from '../../resources/assets/js/components/backoffice/actividades/inscripciones-inscribir-modal.vue';
-
-let Test = Vue.component('inscripciones-inscribir-modal', {
-	template: `
-		<div>
-			<div :class="{ 'form-group': true, 'has-error': errors.idPersona }" >
-				<v-select @search="onSearch" label="nombre" v-model="personaSeleccionada">
-				</v-select>
-				<span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block" ></span>
-			</div>
-
-			<div :class="{ 'form-group': true, 'has-error': errors.idPuntoEncuentro }" >
-				<select v-model="form.idPuntoEncuentro">
-					<option v-for="punto in puntos" :value="punto.id" >{{ punto.punto }}</option>
-				</select>
-				<span v-if="errors.idPuntoEncuentro" v-text="errors.idPuntoEncuentro[0]" class="help-block" ></span>
-			</div>
-
-			<button ref="inscribir" class="btn btn-primary" @click="submit" >Inscribir</button>
-			<button ref="cancelar" class="btn" @click="reset" >Cancelar</button>
-		</div>
-	`,
-	components: { 'v-select': vSelect },
-	props: [ 'idActividad' ],
-	data: function () {
-		return {
-			puntos: null,
-			personas: null,
-			personaSeleccionada: null,
-			form: {
-				idPersona: null,
-				idPuntoEncuentro: null,
-				//idActividad: 18029
-				//idGrupo: 266
-				//rol: ''
-			},
-			errors: {}
-		}
-	},
-	mounted() {
-		axios.get('/admin/ajax/actividades/' + this.idActividad + '/grupos')
-			.then((datos) => { this.puntos = datos.data; })
-			.catch((error) => { console.log(error) });
-	},
-	watch: {
-		personaSeleccionada: function (v) {
-			if(v) this.form.idPersona = v.idPersona;
-		}
-	},
-	methods: {
-		onSearch: function (text, loading) {
-			axios.get('/ajax/coordinadores?coordinador=' + text)
-				.then((datos) => { this.personas = datos.data; })
-				.catch((error) => { console.log(error) });
-			loading(false);
-		},
-		submit: function () {
-			//console.log("submit!")
-			axios.post('/admin/ajax/actividades/' + this.idActividad + '/inscripciones')
-				.then((datos) => { this.$emit("mensaje:ok"); })
-				.catch((error) => { this.errors = error.response.data.errors; });
-		},
-		reset: function () {
-	    	for (let field in this.form) {
-	    		this.form[field] = null;
-	    	}
-	    	this.reset_errors();
-		},
-		reset_errors: function () {
-			for (let field in this.errors) {
-	    		delete this.errors[field];
-	    	}
-		}
-	}
-});
-
+import vSelect from 'vue-select';
+window.Event = new Vue();
+import Test from '../../resources/assets/js/components/backoffice/actividades/inscripciones-inscribir-modal.vue';
 
 describe ('Se puede inscribir un usuario a una actividad', () => {
+
+	let wrapper = {};
 
 	beforeEach(function () {
       // import and pass your custom axios instance to this method
       moxios.install()
+
+      wrapper = mount(Test, { propsData: { idActividad: 1 }, });
     });
 
     afterEach(function () {
       // import and pass your custom axios instance to this method
       moxios.uninstall()
     });
+
+    it ('Muestra el modal', () => {
+
+		window.Event.$emit('inscripciones:inscribir-button-clicked')
+
+		expect(wrapper.vm.display).toBe(true);
+	});
+
+	it ('Esconde el modal', () => {
+
+		wrapper.find('button.close').trigger('click')
+
+		expect(wrapper.vm.display).toBe(false);
+	});
 	
 	it ('Carga puntos de encuentro', (done) => {
-		let wrapper = mount(Test, {
-			propsData: {
-				idActividad: 1
-			}
-		});
 
-		moxios.stubRequest('/admin/ajax/actividades/' + wrapper.props().idActividad + '/grupos', {
+		moxios.stubRequest('/admin/ajax/actividades/' + wrapper.props().idActividad + '/puntos', {
 	        status: 200,
 	        response: [
-	        	{"id":5513,"punto":"Palermo","pais":"Argentina","provincia":"Capital Federal","localidad":"Palermo","nombres":"Ornella","apellidoPaterno":"Morbelli"},
-	        	{"id":5514,"punto":"Estaci\u00f3n Once","pais":"Argentina","provincia":"Capital Federal","localidad":"Balvanera","nombres":"Renata","apellidoPaterno":"Barriopedro"},
+	        	{"id":5513,"punto":"Palermo","pais":"Argentina"},
+	        	{"id":5514,"punto":"Estaci\u00f3n Once"},
 	        ]
       	});
 
@@ -117,22 +56,24 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	});
 
 	it ('Carga personas al escribir', (done) => {
-		let wrapper = mount(Test);
 		let select = wrapper.find(vSelect);
 
 		moxios.stubRequest('/ajax/coordinadores?coordinador=arturo', {
 	        status: 200,
-	        response: [
-	        	{"idPersona":141032,"dni":"","nombre":"Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)","nombres":"Adrian Arturo Visbal Burgos","apellidoPaterno":""},
-				{"idPersona":464078,"dni":"1-1690-0775","nombre":"Arturo  (arturomarvez@hotmail.com)","nombres":"Arturo","apellidoPaterno":""},
-	        ]
+	        response: { data: [
+	        		{"idPersona":141032,"nombre":"Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)"},
+					{"idPersona":464078,"nombre":"Arturo  (arturomarvez@hotmail.com)"},
+	        	]
+	    	}
       	});
 
+		select.vm.onSearchFocus();
       	select.vm.search = 'arturo';
 
 		moxios.wait(function () {
 			expect(wrapper.vm.personas.length).toBe(2);
 			expect(wrapper.vm.personas[0].idPersona).toBe(141032);
+			expect(wrapper.html()).toContain("Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)");
 			done();
 		})
 		
@@ -174,7 +115,6 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 		
 		// assert request enviado
 		moxios.wait(function () {
-			//console.log(moxios.requests.mostRecent());
 
 			expect(wrapper.vm.form.idPersona).toBe(464078);
 			expect(wrapper.vm.form.idPuntoEncuentro).toBe(5513);
