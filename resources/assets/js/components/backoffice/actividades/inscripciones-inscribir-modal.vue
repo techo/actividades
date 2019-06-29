@@ -79,7 +79,10 @@ export default {
 	},
 	watch: {
 		personaSeleccionada: function (v) {
-			if(v) this.form.idPersona = v.idPersona;
+			if(v) 
+				this.form.idPersona = v.idPersona;
+			else 
+				this.form.idPersona = null;
 		}
 	},
 	methods: {

@@ -218,7 +218,7 @@ class InscripcionesController extends BaseController
                     ->where(function ($query) use ($id, $idPuntoEncuentro) {
                         return $query->where('idActividad', $id)->whereNull('deleted_at');
                 })],
-            'notificar' => 'sometimes|boolean',
+            'notificar' => 'sometimes|nullable',
         ]);
 
         $request['idActividad'] = $id;
