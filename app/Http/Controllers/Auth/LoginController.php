@@ -136,7 +136,7 @@ class LoginController extends Controller
            ])->user();
             $personaData->nombre = $user->user['first_name'];
             $personaData->apellido = $user->user['last_name'];
-            $personaData->email = ($user->user['email'])?$user->user['email']:null;
+            $personaData->email = (array_key_exists('email', $user->user)) ? $user->user['email'] : null;
             $personaData->facebook_id = $user->user['id'];
             $personaData->google_id = '';
 
