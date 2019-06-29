@@ -13,7 +13,7 @@ describe ('Modal de inscripción', () => {
 
 	beforeEach(function () {
       moxios.install()
-      wrapper = mount(Test, { propsData: { idActividad: 1 }, });
+      //wrapper = mount(Test, { propsData: { idActividad: 1 }, });
     });
 
     afterEach(function () {
