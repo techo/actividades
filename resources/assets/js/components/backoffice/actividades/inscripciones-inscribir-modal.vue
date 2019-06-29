@@ -100,23 +100,25 @@ export default {
 			this.display = false; 
 		},
 		onSearch: _.debounce( function (text, loading) {
-			loading(true);
-			axios.get('/ajax/coordinadores?coordinador=' + text)
-				.then((datos) => { 
-					this.personas = datos.data.data; 
-					loading(false);
-				})
-				.catch((error) => { 
-					console.log(error);
-					loading(false);
-				});
+			if(text.length > 3) {
+				loading(true);
+				axios.get('/ajax/coordinadores?coordinador=' + text)
+					.then((datos) => { 
+						this.personas = datos.data.data; 
+						loading(false);
+					})
+					.catch((error) => { 
+						console.log(error);
+						loading(false);
+					});
+			}
 		}, 400),
 		submit: function () {
 
 			axios.post('/admin/ajax/actividades/' + this.idActividad + '/inscripciones', this.form)
 				.then((datos) => { 
 					window.Event.$emit('inscripciones-actualizar-tabla');
-					window.Event.$emit('mensaje-success', 'Usuario inscripto');
+					window.Event.$emit('mensaje-success', 'Persona inscripta');
 					window.Event.$emit('vuetable-actualizarTabla');
 
 					this.reset();
