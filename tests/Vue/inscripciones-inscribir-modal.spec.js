@@ -12,34 +12,17 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	let wrapper = {};
 
 	beforeEach(function () {
-      // import and pass your custom axios instance to this method
       moxios.install()
-
       wrapper = mount(Test, { propsData: { idActividad: 1 }, });
     });
 
     afterEach(function () {
-      // import and pass your custom axios instance to this method
       moxios.uninstall()
     });
 
-    it ('Muestra el modal', () => {
+    it ('Muestra el modal con los puntos de encuentro', (done) => {
 
-		window.Event.$emit('inscripciones:inscribir-button-clicked')
-
-		expect(wrapper.vm.display).toBe(true);
-	});
-
-	it ('Esconde el modal', () => {
-
-		wrapper.find('button.close').trigger('click')
-
-		expect(wrapper.vm.display).toBe(false);
-	});
-	
-	it ('Carga puntos de encuentro', (done) => {
-
-		moxios.stubRequest('/admin/ajax/actividades/' + wrapper.props().idActividad + '/puntos', {
+    	moxios.stubRequest('/admin/ajax/actividades/' + wrapper.props().idActividad + '/puntos', {
 	        status: 200,
 	        response: [
 	        	{"id":5513,"punto":"Palermo","pais":"Argentina"},
@@ -47,12 +30,14 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	        ]
       	});
 
+		window.Event.$emit('inscripciones:inscribir-button-clicked')
+
 		moxios.wait(function () {
+			expect(wrapper.vm.display).toBe(true);
 			expect(wrapper.vm.puntos.length).toBe(2);
 			expect(wrapper.vm.puntos[0].punto).toBe('Palermo');
 			done();
 		})
-		
 	});
 
 	it ('Carga personas al escribir', (done) => {
@@ -71,20 +56,19 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
       	select.vm.search = 'arturo';
 
 		moxios.wait(function () {
-			expect(wrapper.vm.personas.length).toBe(2);
-			expect(wrapper.vm.personas[0].idPersona).toBe(141032);
-			expect(wrapper.html()).toContain("Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)");
-			done();
+			setTimeout(function () {
+				expect(wrapper.vm.personas.length).toBe(2);
+				expect(wrapper.vm.personas[0].idPersona).toBe(141032);
+				expect(wrapper.html()).toContain("Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)");
+				done();
+			}, 400)
 		})
 		
 	});
 
-	it ('Elije opciones y envia', (done) => {
-		let wrapper = mount(Test, {
-			propsData: {
-				idActividad: 1
-			},
-			data: () => ({
+	it ('Inscribir envia datos, emite evento, limpia el form y cierra el modal', (done) => {
+		wrapper.setData({
+				display: true,
 				personaSeleccionada: null, 
 				personas: [
       				{"idPersona":141032,"nombre":"Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)"},
@@ -94,13 +78,7 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 					{"id":5513,"punto":"Palermo"},
 	        		{"id":5514,"punto":"Estaci\u00f3n Once"},
 				] 
-			}),
-		});
-
-		moxios.stubRequest('POST', '/admin/ajax/actividades/' + wrapper.props().idActividad + '/inscripciones', {
-	        status: 200,
-	        response: [ { mensaje: 'ok' }]
-      	});
+			});
 
       	//elegir opciones
       	//para un html select
@@ -116,16 +94,17 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 		// assert request enviado
 		moxios.wait(function () {
 
-			expect(wrapper.vm.form.idPersona).toBe(464078);
-			expect(wrapper.vm.form.idPuntoEncuentro).toBe(5513);
-
 			let request = moxios.requests.mostRecent()
 	        
 	        request.respondWith({
 				status: 200,
 				response: 'ok'
 	        }).then(function () {
-	        	expect(wrapper.emitted()["mensaje:ok"]).toBeTruthy();
+	        	expect(request.config.data).toContain(464078);
+	        	expect(request.config.data).toContain(5513);
+	        	expect(wrapper.vm.display).toBe(false);
+	        	expect(wrapper.vm.errors).toStrictEqual({});
+	        	//debería chequear que emita los eventos a el dispatcher window.Event
 				done();
 	        })
 		})
@@ -133,10 +112,6 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	})
 
 	it ('Muestra error para punto de encuentro', (done) => {
-		let wrapper = mount(Test, {
-			propsData: { idActividad: 1 },
-			data: () => ({ form: { idPersona: 141032, } }),
-		});
 
 		wrapper.find('button.btn-primary').trigger('click');
 		
@@ -157,10 +132,6 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	})
 
 	it ('Muestra error para persona', (done) => {
-		let wrapper = mount(Test, {
-			propsData: { idActividad: 1 },
-			data: () => ({ form: { idPuntoEncuentro: 5514, } }),
-		});
 
 		wrapper.find('button.btn-primary').trigger('click');
 		
@@ -181,10 +152,6 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 	})
 
 	it ('Muestra todos los errores', (done) => {
-		let wrapper = mount(Test, {
-			propsData: { idActividad: 1 },
-			data: () => ({ form: {} }),
-		});
 
 		wrapper.find('button.btn-primary').trigger('click');
 		
@@ -207,27 +174,47 @@ describe ('Se puede inscribir un usuario a una actividad', () => {
 
 	})
 
+	it ('Foco en un campo limpia errores', () => {
+		wrapper.setData({
+			personaSeleccionada: 1,
+			form: {
+				idPuntoEncuentro: 1,
+			},
+			errors: { 
+				idPersona: ['El campo idPersona es requerido.'],
+				idPuntoEncuentro: ['El campo idPuntoEncuentro es requerido.']
+			}
+		})
+
+		wrapper.find(vSelect).vm.onSearchFocus();
+		wrapper.find('select').trigger('focus');
+
+		//console.log(wrapper.vm.errors)
+
+		expect(wrapper.findAll('span.help-block').length).toBe(0);
+		expect(wrapper.findAll('div.has-error').length).toBe(0);
+
+	})
+
 	it ('Botón cancelar limpia el formulario y los errores', () => {
-		let wrapper = mount(Test, {
-			propsData: { idActividad: 1 },
-			data: () => ({ 
-				form: {
-					idPuntoEncuentro: 1,
-					idPersona: 1,
-				},
-				errors: { 
-					idPersona: ['El campo idPersona es requerido.'],
-					idPuntoEncuentro: ['El campo idPuntoEncuentro es requerido.']
-				}
-			}),
-		});
+
+		wrapper.setData({
+			personaSeleccionada: 1,
+			form: {
+				idPuntoEncuentro: 1,
+			},
+			errors: { 
+				idPersona: ['El campo idPersona es requerido.'],
+				idPuntoEncuentro: ['El campo idPuntoEncuentro es requerido.']
+			}
+		})
 
 		//click en cancelar
 		wrapper.find({ref: 'cancelar'}).trigger('click');
 
 		//limpia formulario
-		expect(wrapper.find(vSelect).vm.value).toBe(null);
-		expect(wrapper.find('select').element.value).toBe("");
+		expect(wrapper.vm.personaSeleccionada).toBe(null);
+		expect(wrapper.vm.form.idPuntoEncuentro).toBe(null);
 
 		//limpia errores
 		expect(wrapper.findAll('span.help-block').length).toBe(0);

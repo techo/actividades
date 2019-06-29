@@ -10,22 +10,42 @@
 				<div class="modal-body">
 					<div :class="{ 'form-group': true, 'has-error': errors.idPersona }" >
 						<label>Persona</label>
-						<v-select :options="personas" @search="onSearch" label="nombre" v-model="personaSeleccionada">
+						<v-select 
+							:options="personas" 
+							@search="onSearch" 
+							label="nombre" 
+							v-model="personaSeleccionada" 
+							@search:focus="clear_error('idPersona')"
+						>
+							<template slot="no-options">Escribe el nombre, apellido o DNI</template>
 						</v-select>
 						<span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block" ></span>
 					</div>
 
 					<div :class="{ 'form-group': true, 'has-error': errors.idPuntoEncuentro }" >
 						<label>Punto</label>
-						<select v-model="form.idPuntoEncuentro" class="form-control">
+						<select 
+							v-model="form.idPuntoEncuentro" 
+							class="form-control" 
+							@focus="clear_error('idPuntoEncuentro')"
+						>
 							<option v-for="punto in puntos" :value="punto.id" >{{ punto.punto }}</option>
 						</select>
 						<span v-if="errors.idPuntoEncuentro" v-text="errors.idPuntoEncuentro[0]" class="help-block" ></span>
 					</div>
 
+					<div class="form-group" >
+						<div class="checkbox">
+                            <label for="notificar">
+                                <input type="checkbox" name="notificar" v-model="form.notificar">
+                                Notificar a la persona
+                            </label>
+                        </div> 
+					</div>
+
 				</div>
 				<div class="modal-footer">
-					<button ref="cancelar" class="btn" @click="reset" >Cancelar</button>
+					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;" >Cancelar</button>
 					<button ref="inscribir" class="btn btn-primary" @click="submit" >Inscribir</button>
 				</div>
 			</div>
@@ -35,6 +55,7 @@
 <script>
 import vSelect from 'vue-select';
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 export default {
 	components: { 'v-select': vSelect },
@@ -48,17 +69,12 @@ export default {
 			form: {
 				idPersona: null,
 				idPuntoEncuentro: null,
-				//idActividad: 18029
-				//idGrupo: 266
-				//rol: ''
+				notificar: false
 			},
 			errors: {}
 		}
 	},
 	mounted() {
-		axios.get('/admin/ajax/actividades/' + this.idActividad + '/puntos')
-			.then((datos) => { this.puntos = datos.data; })
-			.catch((error) => { console.log(error) });
 		window.Event.$on('inscripciones:inscribir-button-clicked', this.show);
 	},
 	watch: {
@@ -67,18 +83,43 @@ export default {
 		}
 	},
 	methods: {
-		show: function () { this.display = true; },
-		hide: function () { this.display = false; },
-		onSearch: function (text, loading) {
-			axios.get('/ajax/coordinadores?coordinador=' + text)
-				.then((datos) => { this.personas = datos.data.data; })
+		show: function () {  
+			axios.get('/admin/ajax/actividades/' + this.idActividad + '/puntos')
+				.then((datos) => { 
+					this.puntos = datos.data;
+					this.display = true;
+				})
 				.catch((error) => { console.log(error) });
-			loading(false);
 		},
+		hide: function () { 
+			this.reset();
+			this.personaSeleccionada=null; //para v-select
+			this.display = false; 
+		},
+		onSearch: _.debounce( function (text, loading) {
+			loading(true);
+			axios.get('/ajax/coordinadores?coordinador=' + text)
+				.then((datos) => { 
+					this.personas = datos.data.data; 
+					loading(false);
+				})
+				.catch((error) => { 
+					console.log(error);
+					loading(false);
+				});
+		}, 400),
 		submit: function () {
-			//console.log("submit!")
-			axios.post('/admin/ajax/actividades/' + this.idActividad + '/inscripciones')
-				.then((datos) => { this.$emit("mensaje:ok"); })
+
+			axios.post('/admin/ajax/actividades/' + this.idActividad + '/inscripciones', this.form)
+				.then((datos) => { 
+					window.Event.$emit('inscripciones-actualizar-tabla');
+					window.Event.$emit('mensaje-success', 'Usuario inscripto');
+					window.Event.$emit('vuetable-actualizarTabla');
+
+					this.reset();
+					this.personaSeleccionada=null; //para v-select
+					this.hide(); 
+				})
 				.catch((error) => { this.errors = error.response.data.errors; });
 		},
 		reset: function () {
@@ -89,7 +130,14 @@ export default {
 		},
 		reset_errors: function () {
 			for (let field in this.errors) {
+				this.errors[field] = null;
 	    		delete this.errors[field];
+	    	}
+		},
+		clear_error: function (field) {
+	    	if (field) {
+            	this.errors[field] = null;
+            	delete this.errors[field];
 	    	}
 		}
 	}
