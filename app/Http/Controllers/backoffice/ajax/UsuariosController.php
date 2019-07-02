@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\RolResource;
 use App\Http\Resources\UsuariosResource;
@@ -9,7 +10,6 @@ use App\Http\Services\UserService;
 use App\Persona;
 use App\Search\UsuariosSearch;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class UsuariosController extends Controller
 {
@@ -68,5 +68,56 @@ class UsuariosController extends Controller
             return response()->json('Error desconocido', 500);
         }
         return response($validator->errors()->all(), 422);
+    }
+
+    public function inscripciones($persona, Request $request)
+    {
+        $sort = 'fechaInscripcion desc';
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|"))
+                $sort = join(" ",explode("|", $request->sort));
+            else
+                $sort = $request->sort;
+        }
+
+        return \App\Inscripcion::where('idPersona', '=', $persona)
+            ->join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
+            ->select([
+                'Actividad.nombreActividad',
+                'Tipo.nombre',
+                'fechaInscripcion', 
+                'rol',
+                'estado',
+                'presente',
+            ])
+            ->orderByRaw($sort)
+            ->paginate();
+    }
+
+    public function evaluaciones($persona, Request $request)
+    {
+        //orden de la consulta
+        $sort = 'Actividad.fechaInicio desc';
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|"))
+                $sort = join(" ",explode("|", $request->sort));
+            else
+                $sort = $request->sort;
+        }
+
+        return \App\EvaluacionPersona::where('idEvaluado', '=', $persona)
+            ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
+            ->join('Tipo', 'Actividad.idTipo', '=', 'Tipo.idTipo')
+            ->select([
+                "Actividad.nombreActividad",
+                "Tipo.nombre",
+                "Actividad.fechaInicio",
+                "puntajeSocial",
+                "puntajeTecnico",
+                "comentario",
+            ])
+            ->orderByRaw($sort)
+            ->paginate();
     }
 }

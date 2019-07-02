@@ -130,7 +130,14 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('permission:ver_usuarios');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
     Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('permission:editar_usuarios') ;
-    //Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('permission:editar_usuarios');
+
+    //panel de usuario
+    Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')
+        ->middleware('permission:editar_usuarios');
+    Route::get('/ajax/usuarios/{id}/evaluaciones', 'backoffice\ajax\UsuariosController@evaluaciones')
+        ->middleware('permission:editar_usuarios');
+    Route::get('/usuarios/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesUsuario')
+    ->middleware('requiere.auth');
 
 
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta

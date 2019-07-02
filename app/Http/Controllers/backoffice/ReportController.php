@@ -5,12 +5,13 @@ namespace App\Http\Controllers\backoffice;
 use App\Actividad;
 use App\Exports\ActividadesExport;
 use App\Exports\EvaluacionesActividadExport;
+use App\Exports\EvaluacionesPersonasExport;
+use App\Exports\EvaluacionesUsuarioExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\MisActividadesExport;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\EvaluacionesPersonasExport;
 
 class ReportController extends Controller
 {
@@ -69,6 +70,12 @@ class ReportController extends Controller
         //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
         $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
         return Excel::download($evaluaciones,'Evaluaciones de '. $nombreActividad . '.xlsx');
+    }
+
+    public function exportarEvaluacionesUsuario($id)
+    {
+        $evaluaciones = new EvaluacionesUsuarioExport($id);
+        return Excel::download($evaluaciones,'Evaluaciones de ' . $id . '.xlsx');
     }
 
 }
