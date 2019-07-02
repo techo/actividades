@@ -12,6 +12,7 @@ class ActividadFactory
 	public $creador = null;
 	public $tipo = null;
     public $estado = null;
+    public $grupo = null;
 	public $cantidad_inscriptos_por_punto_encuentro = [];
     public $inscriptos = [];
 
@@ -50,6 +51,14 @@ class ActividadFactory
             ]);
         }
 
+        if($this->grupo) 
+        {
+            factory(Grupo::class)->create([
+                'idActividad' => $actividad->idActividad,
+                'nombre' => $actividad->nombreActividad,
+            ]);
+        }
+
         return $actividad;
 
     }
@@ -85,6 +94,13 @@ class ActividadFactory
     public function conEstado($estado)
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    public function conGrupoRaiz()
+    {
+        $this->grupo = true;
 
         return $this;
     }

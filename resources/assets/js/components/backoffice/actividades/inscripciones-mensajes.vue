@@ -1,20 +1,16 @@
 <template>
-    <div>
-        <div v-show="success" class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4><i class="icon fa fa-check"></i>{{ mensaje }}</h4>
-        </div>
-        <!--<simplert ref="loading"></simplert>-->
-        <div v-show="error" class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4><i class="icon fa fa-warning"></i>{{ mensaje }}</h4>
-        </div>
-        <div v-show="warning" class="alert alert-warning alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4><i class="icon fa fa-warning"></i>{{ mensaje }}</h4>
+        <div v-show="display" :class="{ 
+            'alert': true, 
+            'alert-dismissible': true, 
+            'alert-danger': danger, 
+            'alert-success': success, 
+            'alert-warning': warning
+        }">
+            <button type="button" class="close" @click="display = false" aria-hidden="true">×</button>
+            <h4><i class="icon fa fa-warning"></i>{{ titulo }}</h4>
+            {{ mensaje }}
             <p v-show="link !== ''"><a :href="link">Descargar el registro de errores</a></p>
         </div>
-    </div>
 </template>
 
 <script>
@@ -27,39 +23,36 @@
         },
         data(){
           return {
-              error: false,
+              display: false,
+              danger: false,
               success: false,
               warning: false,
               mensaje: '',
+              titulo: '',
               link: ""
           }
         },
         methods:{
-            mostrarError: function (mensaje) {
+            mostrar: function (mensaje) {
+                this.display = true;
                 this.mensaje = (mensaje.mensaje) ? mensaje.mensaje : mensaje; //6x la palabra "mensaje", algo no está bien
-                this.error = true;
-                this.success = false;
-                this.warning = false;
-                this.link = '';
+                setTimeout(() => this.display = false, 2000);
+            },
+            mostrarError: function (mensaje) {
+                this.danger = true;
+                this.titulo = 'Error';
+                this.mostrar(mensaje);
             },
             mostrarSuccess: function (mensaje) {
-                this.mensaje = (mensaje.mensaje) ? mensaje.mensaje : mensaje;
                 this.success = true;
-                this.error = false;
-                this.warning = false;
-                this.link = '';
+                this.titulo = 'Éxito';
+                this.mostrar(mensaje);
             },
             mostrarWarning: function (data) {
-                this.mensaje = data.mensaje;
-                this.link = data.log_link;
-                this.success = false;
-                this.error = false;
                 this.warning = true;
+                this.titulo = 'Advertencia';
+                this.mostrar(mensaje);
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

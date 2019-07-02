@@ -90,6 +90,7 @@ class InscripcionesTest extends TestCase
         $actividad = app(ActividadFactory::class)
             ->creadaPor($admin)
             ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
             ->create();
 
         $maria = factory('App\Persona')->create([
@@ -97,11 +98,11 @@ class InscripcionesTest extends TestCase
         ]);
 
         $datos = [
-            'idActividad' => $actividad->idActividad,
             'idPersona' => $maria->idPersona,
             'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-            'idGrupo' => 0,
-            'rol' => '',
+            'notificar' => 0,
+            //'idGrupo' => 0,
+            //'rol' => '',
         ];
 
         $this->actingAs($admin)
@@ -125,7 +126,9 @@ class InscripcionesTest extends TestCase
     /** @test */
     public function administrador_puede_re_inscribir_usuario()
     {
-        $this->withoutExceptionHandling(); 
+        //$this->withoutExceptionHandling();
+
+        Mail::fake();
 
         $this->seed('PermisosSeeder');
 
@@ -135,16 +138,17 @@ class InscripcionesTest extends TestCase
         $actividad = app(ActividadFactory::class)
             ->creadaPor($admin)
             ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
             ->create();
 
-        $maria = factory('App\Persona')->create();
+        $maria = factory('App\Persona')->create([
+            'recibirMails' => 1
+        ]);
 
         $datos = [
-            'idActividad' => $actividad->idActividad,
             'idPersona' => $maria->idPersona,
             'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-            'idGrupo' => 0,
-            'rol' => ''
+            'notificar' => 0,
         ];
 
         factory('App\Inscripcion')->create([
@@ -164,6 +168,8 @@ class InscripcionesTest extends TestCase
         ]);
 
         $this->assertTrue($actividad->membresias()->count() == 1);
+
+        Mail::assertQueued(MailConfimacionInscripcion::class, 0);
 
     }
 

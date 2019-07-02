@@ -1,7 +1,7 @@
 <template>
     <div class="filter-bar">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-6">
 
                 <form class="form-inline">
                     <div class="form-group">
@@ -20,14 +20,15 @@
                 </form>
             </div>
 
-            <div class="col-md-3 pull-right">
+            <inscripciones-importar-modal ></inscripciones-importar-modal>
+            <inscripciones-inscribir-modal :idActividad="idActividad" ></inscripciones-inscribir-modal>
+            <div class="col-md-6" style="text-align: right">
+                <button class="btn btn-primary" @click.prevent="mostrarModalInscribir">
+                    <i class="fa fa-plus"></i> inscribir
+                </button>
                 <button class="btn btn-default" @click.prevent="mostrarModalImportar">
                     <i class="glyphicon glyphicon-upload"></i> Importar desde Excel
                 </button>
-                <inscripciones-importar-modal></inscripciones-importar-modal>
-            </div>
-
-            <div class="col-md-2 pull-right">
                 <button class="btn btn-default" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
                 </button>
@@ -43,8 +44,11 @@
 </template>
 
 <script>
+    import InscripcionesInscribirModal from '../actividades/inscripciones-inscribir-modal.vue';
+
     export default {
-        props: ['placeholderText'],
+        props: ['placeholderText', 'idActividad'],
+        components: { 'inscripciones-inscribir-modal': InscripcionesInscribirModal },
         data() {
             return {
                 filterText: '',
@@ -67,6 +71,9 @@
             },
             mostrarModalImportar() {
                 Event.$emit('inscripciones:importar-button-clicked');
+            },
+            mostrarModalInscribir() {
+                Event.$emit('inscripciones:inscribir-button-clicked');
             }
         }
     }

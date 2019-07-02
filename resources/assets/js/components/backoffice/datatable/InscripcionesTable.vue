@@ -2,7 +2,7 @@
   <div>
 
     <simple-alert ref="loading"></simple-alert>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText" :idActividad="actividad" ></filter-bar>
     <div class="table-responsive">
       <vuetable
               class="vuetable"

@@ -6,19 +6,20 @@ use App\Actividad;
 use App\Exports\InscripcionesExport;
 use App\Grupo;
 use App\GrupoRolPersona;
+use App\Http\Controllers\BaseController;
 use App\Inscripcion;
 use App\Log;
 use App\Mail\ActualizacionActividad;
+use App\Mail\MailConfimacionInscripcion;
 use App\Persona;
 use App\PuntoEncuentro;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use App\Http\Controllers\BaseController;
-use App\Mail\MailConfimacionInscripcion;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class InscripcionesController extends BaseController
@@ -207,6 +208,20 @@ class InscripcionesController extends BaseController
 
     public function store($id, Request $request)
     {
+        $idPuntoEncuentro = $request->idPuntoEncuentro;
+
+        $request->validate([
+            'idPuntoEncuentro' => 'required',
+            'idPersona' => [
+                'required', 
+                Rule::unique('Inscripcion')
+                    ->where(function ($query) use ($id, $idPuntoEncuentro) {
+                        return $query->where('idActividad', $id)->whereNull('deleted_at');
+                })],
+            'notificar' => 'sometimes|nullable',
+        ]);
+
+        $request['idActividad'] = $id;
 
         $inscripto = Inscripcion::withTrashed()
             ->where('idPersona', '=', $request->idPersona)
@@ -217,20 +232,33 @@ class InscripcionesController extends BaseController
             if ($inscripto->trashed()) {
                 $inscripto->restore();
                 $grupo = $this->incluirEnGrupo($request->all());
-                //$this->intentaEnviar(Mail::to($inscripto->persona->mail), //new MailConfimacionInscripcion($inscripto), $inscripto->persona);
+
+                if($request->notificar) {
+                    $this->intentaEnviar(
+                        Mail::to($inscripto->persona->mail), 
+                        new MailConfimacionInscripcion($inscripto), 
+                        $inscripto->persona
+                    );
+                }
+
                 return response('ok');
-            }
-            else {
-                return response('Voluntario ya inscripto', 428);
             }
         }
 
-        $inscripcion = $this->inscribir($request->all());
+        //refactorizar a métodos de modelo
+        $inscripto = $this->inscribir($request->all());
         $grupo = $this->incluirEnGrupo($request->all());
 
-        if ($inscripcion &&  $grupo) {
-            // $mail = Mail::to($user->mail)->send(new MailConfimacionInscripcion($inscripcion));
-            // $this->intentaEnviar(Mail::to($user->mail), new MailConfimacionInscripcion($inscripcion), $user);
+        if ($inscripto &&  $grupo) {
+
+            if($request->notificar) {
+                $this->intentaEnviar(
+                    Mail::to($inscripto->persona->mail), 
+                    new MailConfimacionInscripcion($inscripto), 
+                    $inscripto->persona
+                );
+            }
+
             return response('ok');
         }
 
@@ -239,11 +267,16 @@ class InscripcionesController extends BaseController
 
     private function incluirEnGrupo($request)
     {
+        if(!array_key_exists('idGrupo', $request)) {
+            $request['idGrupo'] = Grupo::where('idActividad', '=', (int)$request['idActividad'])
+                ->orderBy('idGrupo')
+                ->first()->idGrupo;
+        }
+
         $arr = [
             'idPersona' => (int)$request['idPersona'],
             'idGrupo' => (int)$request['idGrupo'],
             'idActividad' => (int)$request['idActividad'],
-            'rol' => $request['rol']
         ];
 
         return GrupoRolPersona::create($arr);

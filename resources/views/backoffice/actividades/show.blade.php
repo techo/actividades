@@ -26,10 +26,10 @@
                 <a href="#general" data-toggle="tab" aria-expanded="true">General</a>
             </li>
             <li>
-                <a href="#grupos" data-toggle="tab" aria-expanded="true">Grupos</a>
+                <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
             </li>
             <li>
-                <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
+                <a href="#grupos" data-toggle="tab" aria-expanded="true">Grupos</a>
             </li>
             <li>
                 <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>

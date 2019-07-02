@@ -4,8 +4,8 @@
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
             <a class="btn btn-primary btn-sm" @click="verFormGrupo">Grupo</a>
-            <a class="btn btn-primary btn-sm" @click="verFormInscripto">Voluntario Inscripto</a>
-            <a class="btn btn-primary btn-sm" @click="verFormNoInscripto">Voluntario No Inscripto</a>
+            <a class="btn btn-primary btn-sm" @click="verFormInscripto">Voluntario</a>
+            
         </div>
         <div  v-if="formGrupo" class="panel panel-info">
             <div class="panel-heading">Agregar Nuevo Grupo</div>
