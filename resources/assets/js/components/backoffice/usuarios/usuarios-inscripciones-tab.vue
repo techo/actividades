@@ -1,5 +1,17 @@
 <template>
 	<div class="box" >
+		<div class="box-header" >
+			<div class="row">
+				<div class="col-md-2" style="text-align: center;">
+					<h1>{{ inscripciones }}</h1>
+					<h4>Inscripciones</h4>
+				</div>
+				<div class="col-md-2" style="text-align: center;">
+					<h1>{{ presente }}</h1>
+					<h4>Presente</h4>
+				</div>
+			</div>
+		</div>
 		<div class="box-body" >
 
 			<vuetable
@@ -37,6 +49,8 @@
 		data: function () {
 			return {
 				url: "",
+				inscripciones: 0,
+				presente: 0,
 				fields: [
 					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
 					{ title: 'Tipo', name: 'nombre', sortField: 'nombre', },
@@ -104,7 +118,14 @@
 			onChangePage (page) {
 				this.$refs.vuetable.changePage(page)
 			}
-
+		},
+		mounted () {
+			axios.get("/admin/ajax/usuarios/" + this.persona + "/inscripciones-stats")
+				.then(data => {
+					this.inscripciones = data.data.inscripciones;
+					this.presente = data.data.presente;
+				})
+				.catch(error => console.log(error));
 		}
 	}
 </script>

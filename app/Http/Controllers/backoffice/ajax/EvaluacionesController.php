@@ -133,6 +133,20 @@ class EvaluacionesController extends BaseController
         );
     }
 
+    public function getStatsPorUsuario($id)
+    {
+        $persona = Persona::findOrFail($id);
+        $presente = $persona->inscripciones()->presente()->count();
+        $inscripciones = $persona->inscripciones()->count();
+
+        return response()->json(
+            [
+                'presente' => $presente,
+                'inscripciones' => $inscripciones
+            ]
+        );
+    }
+
     public function getVoluntariosChartDataPorUsuario($id)
     {
         $dataSocial = \App\EvaluacionPersona::where('idEvaluado', $id)

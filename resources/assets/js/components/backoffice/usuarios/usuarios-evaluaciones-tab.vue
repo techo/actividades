@@ -25,7 +25,6 @@
 				data-path="data"
 				:http-fetch="myFetch"
 				@vuetable:pagination-data="onPaginationData"
-				style="min-height: 450px"
 				:css="css.table"
 			></vuetable>
 

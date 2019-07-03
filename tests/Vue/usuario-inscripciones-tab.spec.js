@@ -27,7 +27,7 @@ describe ('Pestaña de inscripciones de usuario', () => {
 
 		moxios.wait(function () {
 
-			let request = moxios.requests.mostRecent();
+			let request = moxios.requests.first();
 
 			request.respondWith({
 				status: 200,
