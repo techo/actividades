@@ -10,6 +10,7 @@ use App\Http\Services\UserService;
 use App\Persona;
 use App\Search\UsuariosSearch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UsuariosController extends Controller
 {
@@ -113,10 +114,10 @@ class UsuariosController extends Controller
                 "Actividad.nombreActividad",
                 "Tipo.nombre",
                 "Actividad.fechaInicio",
-                "puntajeSocial",
-                "puntajeTecnico",
-                "comentario",
+                DB::raw("avg(puntajeSocial) puntajeSocial"),
+                DB::raw("avg(puntajeTecnico) puntajeTecnico"),
             ])
+            ->groupBy('Actividad.nombreActividad', 'Tipo.nombre', 'Actividad.fechaInicio')
             ->orderByRaw($sort)
             ->paginate();
     }

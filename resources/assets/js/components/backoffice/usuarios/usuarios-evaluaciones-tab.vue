@@ -6,10 +6,16 @@
 				<div class="col-md-12" style="text-align: right">
 					<a :href="urlDescarga" class="btn btn-default">
 						<i class="fa fa-download" ></i>
-						Descargar
+						Descargar detalle
 					</a>
 				</div>
 			</div>
+
+			<div style="justify-content: center;  display: flex;">
+				<bar-chart :chart-data="chart.data" :options="options" :width="500" :height="250"></bar-chart>
+			</div>
+
+			<br>
 
 			<vuetable
 				ref="vuetable"
@@ -23,13 +29,14 @@
 				:css="css.table"
 			></vuetable>
 
-			<br/>
-
 			<vuetable-pagination 
 				ref="pagination"
 				@vuetable-pagination:change-page="onChangePage"
 				:css="css.pagination"
 			></vuetable-pagination>
+
+			<br/>
+			<br/>
 
 		</div>
 	</div>
@@ -39,14 +46,49 @@
 
 	import Vuetable from 'vuetable-2/src/components/Vuetable'
 	import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+	import BarChart from '../../plugins/BarChart'
 
 	export default {
-		components: { Vuetable, VuetablePagination },
+		components: { Vuetable, VuetablePagination, BarChart },
 		props: [ 'persona' ],
 		data: function () {
 			return {
 				url: "",
 				urlDescarga: "",
+				chart: {
+					data: null,
+				},
+				options: {
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Cantidad evaluaciones"
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                userCallback: function(label, index, labels) {
+                                    // Si el entero del label es igual al label, mostrar
+                                    if (Math.floor(label) === label) {
+                                        return label;
+                                    }
+
+                                },
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Puntaje"
+                            }
+                        }]
+                    },
+                    responsive: false,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: true
+                    }
+                },
 				fields: [
 					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
 					{ title: 'Tipo',  name: 'nombre', sortField: 'nombre', },
@@ -58,9 +100,8 @@
 						},
 						sortField: 'fechaInicio',
 					},
-					{ title: 'Puntaje Técnico', name: 'puntajeTecnico', sortField: 'puntajeTecnico', },
-					{ title: 'Puntaje Social', name: 'puntajeSocial', sortField: 'puntajeSocial',  },
-					{ title: 'Comentario', name: 'comentario', sortField: 'Comentario',  },
+					{ title: 'Promedio técnico', name: 'puntajeTecnico', sortField: 'puntajeTecnico', },
+					{ title: 'Promedio social', name: 'puntajeSocial', sortField: 'puntajeSocial',  },
 				],
 				css: {
 					table: {
@@ -105,6 +146,27 @@
 		created () {
 			this.url = "/admin/ajax/usuarios/" + this.persona + "/evaluaciones";
 			this.urlDescarga = "/admin/usuarios/" + this.persona + "/exportar-evaluaciones";
+		},
+		mounted () {
+			axios.get("/admin/ajax/usuarios/" + this.persona + "/evaluaciones-chartdata")
+				.then(data => {
+					this.chart.data = {
+	                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+	                        datasets: [
+	                            {
+	                                label: 'Técnico',
+	                                backgroundColor: '#82CFE8',
+	                                data: data.data.cantidadesTecnico
+	                            },
+	                            {
+	                                label: 'Social',
+	                                backgroundColor: '#d3d3d3',
+	                                data: data.data.cantidadesSocial
+	                            }
+	                        ]
+                    };
+				})
+				.catch(error => console.log(error));
 		}
 	}
 </script>

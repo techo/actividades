@@ -137,8 +137,9 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/ajax/usuarios/{id}/evaluaciones', 'backoffice\ajax\UsuariosController@evaluaciones')
         ->middleware('permission:editar_usuarios');
     Route::get('/usuarios/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesUsuario')
-    ->middleware('requiere.auth');
-
+        ->middleware('permission:editar_usuarios');
+    Route::get('/ajax/usuarios/{id}/evaluaciones-chartdata', 'backoffice\ajax\EvaluacionesController@getVoluntariosChartDataPorUsuario')
+        ->middleware('permission:editar_usuarios');
 
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta

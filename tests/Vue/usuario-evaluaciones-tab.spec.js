@@ -11,6 +11,7 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
 window.Event = new Vue();
 import Test from '../../resources/assets/js/components/backoffice/usuarios/usuarios-evaluaciones-tab.vue';
+import BarChart from '../../resources/assets/js/components/plugins/BarChart.vue';
 
 describe ('Pestaña de evaluaciones de usuario', () => {
 
@@ -29,7 +30,7 @@ describe ('Pestaña de evaluaciones de usuario', () => {
 
 		moxios.wait(function () {
 
-			let request = moxios.requests.mostRecent();
+			let request = moxios.requests.first();
 
 			request.respondWith({
 				status: 200,
@@ -57,7 +58,27 @@ describe ('Pestaña de evaluaciones de usuario', () => {
 			}).then(function () {
 				expect(wrapper.html()).toContain("Construcción MAYO- Sede La Plata");
 	        	done();
-	        })
+	        }) 
+		})
+
+	});
+
+	it ('carga datos histogramas', (done) => {
+
+		moxios.wait(function () {
+
+			let request = moxios.requests.mostRecent();
+
+			request.respondWith({
+				status: 200,
+				response: {
+					"cantidadesSocial":[0,0,0,0,2,0,9,3,2,37],
+					"cantidadesTecnico":[0,0,0,0,4,0,7,1,3,14,4,20]
+				},
+			}).then(function () {
+				expect(wrapper.find(BarChart)).not.toBe(false);
+	        	done();
+	        }) 
 		})
 
 	});
