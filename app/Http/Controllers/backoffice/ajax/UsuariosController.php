@@ -116,6 +116,7 @@ class UsuariosController extends Controller
                 "Actividad.fechaInicio",
                 DB::raw("avg(puntajeSocial) puntajeSocial"),
                 DB::raw("avg(puntajeTecnico) puntajeTecnico"),
+                DB::raw("count(comentario) comentario"),
             ])
             ->groupBy('Actividad.nombreActividad', 'Tipo.nombre', 'Actividad.fechaInicio')
             ->orderByRaw($sort)

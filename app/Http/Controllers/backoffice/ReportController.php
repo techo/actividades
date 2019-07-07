@@ -7,6 +7,7 @@ use App\Exports\ActividadesExport;
 use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
+use App\Exports\InscripcionesUsuarioExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\MisActividadesExport;
 use App\Http\Controllers\Controller;
@@ -76,6 +77,12 @@ class ReportController extends Controller
     {
         $evaluaciones = new EvaluacionesUsuarioExport($id);
         return Excel::download($evaluaciones,'Evaluaciones de ' . $id . '.xlsx');
+    }
+
+    public function exportarInscripcionesUsuario($id)
+    {
+        $inscripciones = new InscripcionesUsuarioExport($id);
+        return Excel::download($inscripciones,'Inscripciones de ' . $id . '.xlsx');
     }
 
 }

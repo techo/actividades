@@ -1,39 +1,78 @@
 <template>
-	<div class="box" >
-		<div class="box-header" >
-			<div class="row">
-				<div class="col-md-2" style="text-align: center;">
-					<h1>{{ inscripciones }}</h1>
-					<h4>Inscripciones</h4>
+	<div>
+		<div class="row">
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-aqua">
+						<i class="fa fa-users"></i>
+					</span>
+					<div class="info-box-content text-center">
+						<span class="info-box-number"><h3>{{ inscripciones }}</h3></span>
+						<span class="info-box-text">Inscripciones</span>
+					</div>
 				</div>
-				<div class="col-md-2" style="text-align: center;">
-					<h1>{{ presente }}</h1>
-					<h4>Presente</h4>
+			</div>
+
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-green">
+						<i class="fa fa-check-circle"></i>
+					</span>
+					<div class="info-box-content text-center">
+						<span class="info-box-number"><h3>{{ presentes }}</h3></span>
+						<span class="info-box-text">Presentes</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<div class="info-box">
+					<span class="info-box-icon bg-red">
+						<i class="fa fa-times-circle"></i>
+					</span>
+					<div class="info-box-content text-center">
+						<span class="info-box-number"><h3>{{ ausentes }}</h3></span>
+						<span class="info-box-text">Ausentes</span>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="box-body" >
+		<div class="box" >
+			<div class="box-header" >
+				<h2 class="box-title">
+					<strong>Inscripciones del usuario</strong>
+				</h2>
+				<span class="pull-right">
+				<a :href="urlDescarga" class="btn btn-primary">
+					<i class="fa fa-download" ></i>
+					Descargar
+				</a>
+			</span>
+			</div>
+			<div class="box-body" >
 
-			<vuetable
-				ref="vuetable"
-				:api-url="url"
-				:fields="fields"
-				pagination-path=""
-				data-path="data"
-				:http-fetch="myFetch"
-				@vuetable:pagination-data="onPaginationData"
-				style="min-height: 450px"
-				:css="css.table"
-			></vuetable>
+				<div class="table-responsive" style="min-height: 450px">
+					<vuetable
+						ref="vuetable"
+						:api-url="url"
+						:fields="fields"
+						pagination-path=""
+						data-path="data"
+						:http-fetch="myFetch"
+						@vuetable:pagination-data="onPaginationData"
+						:css="css.table"
+					></vuetable>
 
-			<br/>
+					<br/>
 
-			<vuetable-pagination 
-				ref="pagination"
-				@vuetable-pagination:change-page="onChangePage"
-				:css="css.pagination"
-			></vuetable-pagination>
+					<vuetable-pagination 
+						ref="pagination"
+						@vuetable-pagination:change-page="onChangePage"
+						:css="css.pagination"
+					></vuetable-pagination>
+				</div>
 
+			</div>
 		</div>
 	</div>
 </template>
@@ -50,7 +89,8 @@
 			return {
 				url: "",
 				inscripciones: 0,
-				presente: 0,
+				presentes: 0,
+				ausentes: 0,
 				fields: [
 					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
 					{ title: 'Tipo', name: 'nombre', sortField: 'nombre', },
@@ -103,6 +143,7 @@
 		},
 		created () {
 			this.url = "/admin/ajax/usuarios/" + this.persona + "/inscripciones";
+			this.urlDescarga = "/admin/usuarios/" + this.persona + "/exportar-inscripciones";
 		},
 		computed: {
 		},
@@ -123,7 +164,8 @@
 			axios.get("/admin/ajax/usuarios/" + this.persona + "/inscripciones-stats")
 				.then(data => {
 					this.inscripciones = data.data.inscripciones;
-					this.presente = data.data.presente;
+					this.presentes = data.data.presentes;
+					this.ausentes = data.data.ausentes;
 				})
 				.catch(error => console.log(error));
 		}

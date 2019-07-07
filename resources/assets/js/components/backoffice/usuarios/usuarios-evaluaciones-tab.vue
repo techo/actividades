@@ -1,38 +1,46 @@
 <template>
 	<div class="box" >
-		<div class="box-body" >
-
+		<div class="box-header" >
+			<h2 class="box-title">
+				<strong>Promedios de evaluaciones recibidas</strong>
+			</h2>
+			<span class="pull-right">
+				<a :href="urlDescarga" class="btn btn-primary">
+					<i class="fa fa-download" ></i>
+					Descargar detalle
+				</a>
+			</span>
 			<div class="row">
-				<div class="col-md-12" style="text-align: right">
-					<a :href="urlDescarga" class="btn btn-default">
-						<i class="fa fa-download" ></i>
-						Descargar detalle
-					</a>
+				<div class="col-md-12">
+					<p>
+						<b>Puntaje técnico</b>: conocimientos sobre la tarea a desarrollar.
+					</p>
+					<p>
+						<b>Puntaje social</b>: habilidades para comuncicarse y empatizar con otros.
+					</p>
 				</div>
 			</div>
+		</div>
+		<div class="box-body" >
 
-			<div style="justify-content: center;  display: flex;">
-				<bar-chart :chart-data="chart.data" :options="options" :width="500" :height="250"></bar-chart>
+			<div class="table-responsive" style="min-height: 450px" >
+				<vuetable
+					ref="vuetable"
+					:api-url="url"
+					:fields="fields"
+					pagination-path=""
+					data-path="data"
+					:http-fetch="myFetch"
+					@vuetable:pagination-data="onPaginationData"
+					:css="css.table"
+				></vuetable>
+
+				<vuetable-pagination 
+					ref="pagination"
+					@vuetable-pagination:change-page="onChangePage"
+					:css="css.pagination"
+				></vuetable-pagination>
 			</div>
-
-			<br>
-
-			<vuetable
-				ref="vuetable"
-				:api-url="url"
-				:fields="fields"
-				pagination-path=""
-				data-path="data"
-				:http-fetch="myFetch"
-				@vuetable:pagination-data="onPaginationData"
-				:css="css.table"
-			></vuetable>
-
-			<vuetable-pagination 
-				ref="pagination"
-				@vuetable-pagination:change-page="onChangePage"
-				:css="css.pagination"
-			></vuetable-pagination>
 
 			<br/>
 			<br/>
@@ -45,49 +53,14 @@
 
 	import Vuetable from 'vuetable-2/src/components/Vuetable'
 	import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-	import BarChart from '../../plugins/BarChart'
 
 	export default {
-		components: { Vuetable, VuetablePagination, BarChart },
+		components: { Vuetable, VuetablePagination },
 		props: [ 'persona' ],
 		data: function () {
 			return {
 				url: "",
 				urlDescarga: "",
-				chart: {
-					data: null,
-				},
-				options: {
-                    scales: {
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: "Cantidad evaluaciones"
-                            },
-                            ticks: {
-                                beginAtZero: true,
-                                userCallback: function(label, index, labels) {
-                                    // Si el entero del label es igual al label, mostrar
-                                    if (Math.floor(label) === label) {
-                                        return label;
-                                    }
-
-                                },
-                            }
-                        }],
-                        xAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: "Puntaje"
-                            }
-                        }]
-                    },
-                    responsive: false,
-                    maintainAspectRatio: false,
-                    legend: {
-                        display: true
-                    }
-                },
 				fields: [
 					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
 					{ title: 'Tipo',  name: 'nombre', sortField: 'nombre', },
@@ -101,6 +74,7 @@
 					},
 					{ title: 'Promedio técnico', name: 'puntajeTecnico', sortField: 'puntajeTecnico', },
 					{ title: 'Promedio social', name: 'puntajeSocial', sortField: 'puntajeSocial',  },
+					{ title: 'Comentario', name: 'comentario', sortField: 'comentario', },
 				],
 				css: {
 					table: {
@@ -147,25 +121,6 @@
 			this.urlDescarga = "/admin/usuarios/" + this.persona + "/exportar-evaluaciones";
 		},
 		mounted () {
-			axios.get("/admin/ajax/usuarios/" + this.persona + "/evaluaciones-chartdata")
-				.then(data => {
-					this.chart.data = {
-	                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-	                        datasets: [
-	                            {
-	                                label: 'Técnico',
-	                                backgroundColor: '#82CFE8',
-	                                data: data.data.cantidadesTecnico
-	                            },
-	                            {
-	                                label: 'Social',
-	                                backgroundColor: '#d3d3d3',
-	                                data: data.data.cantidadesSocial
-	                            }
-	                        ]
-                    };
-				})
-				.catch(error => console.log(error));
 		}
 	}
 </script>

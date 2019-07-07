@@ -136,49 +136,16 @@ class EvaluacionesController extends BaseController
     public function getStatsPorUsuario($id)
     {
         $persona = Persona::findOrFail($id);
-        $presente = $persona->inscripciones()->presente()->count();
         $inscripciones = $persona->inscripciones()->count();
+        $presentes = $persona->inscripciones()->presente()->count();
+        $ausentes = $persona->inscripciones()->ausente()->count();
 
         return response()->json(
             [
-                'presente' => $presente,
-                'inscripciones' => $inscripciones
+                'inscripciones' => $inscripciones,
+                'presentes' => $presentes,
+                'ausentes' => $ausentes,
             ]
-        );
-    }
-
-    public function getVoluntariosChartDataPorUsuario($id)
-    {
-        $dataSocial = \App\EvaluacionPersona::where('idEvaluado', $id)
-            ->groupBy('puntajeSocial')
-            ->selectRaw('puntajeSocial, count(*) as cantidad')
-            ->get();
-
-        $dataTecnico = \App\EvaluacionPersona::where('idEvaluado', $id)
-            ->groupBy('puntajeTecnico')
-            ->selectRaw('puntajeTecnico, count(*) as cantidad')
-            ->get();
-
-        $dataSocial = $dataSocial->toArray();
-        $dataTecnico = $dataTecnico->toArray();
-        $puntajesKeys = [1,2,3,4,5,6,7,8,9,10];
-        $puntajesSocial = array_fill_keys($puntajesKeys, 0);
-        $puntajesTecnico = array_fill_keys($puntajesKeys, 0);
-
-        foreach ($dataSocial as $item){
-            $puntajesSocial[$item['puntajeSocial']] = $item['cantidad'];
-        }
-
-        foreach ($dataTecnico as $item){
-            $puntajesTecnico[$item['puntajeTecnico']] = $item['cantidad'];
-        }
-
-        return response()->json(
-            [
-                'cantidadesSocial' => array_values($puntajesSocial),
-                'cantidadesTecnico' => array_values($puntajesTecnico)
-            ],
-            200
         );
     }
 }
