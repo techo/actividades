@@ -32,11 +32,11 @@ class UsuariosController extends Controller
 
     public function index(Request $request)
     {
-        $filtro = $request->all();
-        if($request->has('filter')){
-            $filtro['usuario'] = $request->filter;
+        $filtros = [];
+        if($request->has('usuario')){
+            $filtros['usuario'] = $request->usuario;
         }
-        $result = UsuariosSearch::apply($filtro);
+        $result = UsuariosSearch::apply($filtros);
         $usuarios = UsuariosResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }

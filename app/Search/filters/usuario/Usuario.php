@@ -9,10 +9,11 @@ class Usuario implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-        $builder->where('nombres', 'LIKE', '%' . $value . '%')
-            ->orWhere('apellidoPaterno', 'LIKE', '%' . $value . '%')
-            ->orWhere('dni', 'LIKE', '%' . $value . '%')
-            ->orWhere('mail', 'LIKE', '%' . $value . '%');
+    	$values = explode(' ', $value);
+
+    	foreach ($values as $v)
+        	$builder->whereRaw("concat(' ', nombres, apellidoPaterno, mail) like '%" . $v . "%'");
+
         return $builder;
     }
 }
