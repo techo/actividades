@@ -22,11 +22,11 @@ class ajaxActividadesBusqueda extends TestCase
             });
 
         $params = [
-        	'busqueda' => "punto",
-			'categoria' => $actividades[0]->tipo()->first()->idCategoria,
+        	 'busqueda' => "punto",
+			// 'categoria' => $actividades[0]->tipo()->first()->idCategoria,
 			'localidades' => [$actividades[0]->puntosEncuentro()->first()->idLocalidad],
-            'provincias' => null,
-			'tipos' => []
+            // 'provincias' => null,
+			// 'tipos' => []
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -49,10 +49,10 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "lugar",
-            'categoria' => $actividades[0]->tipo()->first()->idCategoria,
+            // 'categoria' => $actividades[0]->tipo()->first()->idCategoria,
             'localidades' => [$actividades[0]->idLocalidad],
-            'provincias' => null,
-            'tipos' => []
+            // 'provincias' => null,
+            // 'tipos' => []
         ];
 
         $this->post('/ajax/actividades', $params)
@@ -74,10 +74,10 @@ class ajaxActividadesBusqueda extends TestCase
 
         $params = [
             'busqueda' => "punto",
-            'categoria' => $actividades[0]->tipo()->first()->idCategoria,
-            'localidades' => [],
+            //'categoria' => $actividades[0]->tipo()->first()->idCategoria,
+            // 'localidades' => [],
             'provincias' => [$actividades[0]->puntosEncuentro()->first()->idProvincia],
-            'tipos' => []
+            // 'tipos' => []
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -99,11 +99,11 @@ class ajaxActividadesBusqueda extends TestCase
             });
 
         $params = [
-            'busqueda' => "punto",
-            'categoria' => $actividades[0]->tipo()->first()->idCategoria,
-            'localidades' => [],
-            'provincias' => [$actividades[0]->puntosEncuentro()->first()->idProvincia],
-            'tipos' => []
+            'busqueda' => "lugar",
+            //'categoria' => $actividades[0]->tipo()->first()->idCategoria,
+            // 'localidades' => [],
+            'provincias' => [$actividades[0]->idProvincia],
+            // 'tipos' => []
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -118,17 +118,17 @@ class ajaxActividadesBusqueda extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $actividades = factory('App\Actividad', 4)
+            $actividades = factory('App\Actividad', 4)
             ->create()
             ->each(function ($a) {
                 $a->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
             });
 
         $params = [
-            'busqueda' => "punto",
-            'categoria' => $actividades[0]->tipo()->first()->idCategoria,
-            'localidades' => [],
-            'provincias' => [],
+            // 'busqueda' => "punto",
+            // 'categoria' => $actividades[0]->tipo()->first()->idCategoria,
+            // 'localidades' => [],
+            // 'provincias' => [],
             'tipos' => [$actividades[0]->tipo()->first()->idTipo]
         ];
 
@@ -151,11 +151,11 @@ class ajaxActividadesBusqueda extends TestCase
             });
 
         $params = [
-            'busqueda' => "punto",
+            // 'busqueda' => "punto",
             'categoria' => $actividades[0]->tipo()->first()->idCategoria,
-            'localidades' => [],
-            'provincias' => [],
-            'tipos' => []
+            // 'localidades' => [],
+            // 'provincias' => [],
+            // 'tipos' => []
         ];
 
         $response = $this->post('/ajax/actividades', $params);
@@ -165,6 +165,7 @@ class ajaxActividadesBusqueda extends TestCase
             ->assertJsonCount(1, 'data');
     }
 
+    /** @test */
     public function invitado_puede_buscar_sin_filtros()
     {
         $this->withoutExceptionHandling();
@@ -176,9 +177,36 @@ class ajaxActividadesBusqueda extends TestCase
             });
 
         $params = [
-            'busqueda' => "punto",
-            'categoria' => null,
-            'localidades' => [],
+            // 'busqueda' => "punto",
+            // 'categoria' => null,
+            'localidades' => null,
+            'provincias' => [],
+            'tipos' => []
+        ];
+
+        $response = $this->post('/ajax/actividades', $params);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(4, 'data');
+    }
+
+    public function invitado_puede_buscar_actividades_sin_localidad()
+    {
+        $this->withoutExceptionHandling();
+
+        $actividades = factory('App\Actividad', 4)
+            ->create([
+                'idLocalidad' => null
+            ])
+            ->each(function ($a) {
+                $a->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+            });
+
+        $params = [
+            // 'busqueda' => "punto",
+            // 'categoria' => null,
+            'localidades' => null,
             'provincias' => [],
             'tipos' => []
         ];

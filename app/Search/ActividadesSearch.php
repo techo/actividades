@@ -16,7 +16,13 @@ class ActividadesSearch
     }
     private static function applyDecoratorsFromRequest(Request $request, Builder $query)
     {
-        foreach ($request->all() as $filterName => $value) {
+        $filters = $request->all();
+
+        if (!array_key_exists('busqueda', $filters)) {
+            $filters['busqueda'] = 'punto';
+        }
+
+        foreach ($filters as $filterName => $value) {
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);
@@ -34,6 +40,7 @@ class ActividadesSearch
     }
     private static function getResults(Builder $query)
     {
+        //dd($query);
         return $query->get();
     }
 
