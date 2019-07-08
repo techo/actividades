@@ -269,7 +269,7 @@ class InscripcionesTest extends TestCase
     }
 
     /** @test */
-    public function administrador_no_puede_ver_iscriptos_eliminados()
+    public function administrador_no_puede_ver_inscriptos_eliminados()
     {
         $this->withoutExceptionHandling(); 
 
@@ -291,11 +291,40 @@ class InscripcionesTest extends TestCase
         $actividad->inscripciones->first()->delete();   
 
         $response = $this->actingAs($admin)
-            ->get('/admin/ajax/actividades/'. $actividad->idActividad 
-                .'/inscripciones')
+            ->get('/admin/ajax/actividades/'. $actividad->idActividad .'/inscripciones')
             ->assertStatus(200);
 
         $this->assertTrue(count(json_decode($response->getContent())->data) == 4);
+    }
+
+    /** @test */
+    public function solo_administrador_puede_ver_inscripciones_de_usuario()
+    {
+        //$this->withoutExceptionHandling(); 
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('coordinador');
+
+        $nestor = factory('App\Persona')->create();
+
+        app(ActividadFactory::class)->agregarInscripto($nestor)->create();
+        app(ActividadFactory::class)->agregarInscripto($nestor)->create();
+        app(ActividadFactory::class)->agregarInscripto($nestor)->create();
+
+        $response = $this->actingAs($admin)
+            ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/inscripciones')
+            ->assertStatus(200);
+
+        $this->assertTrue(count(json_decode($response->getContent())->data) == 3);
+
+        $response = $this->actingAs($coordinador)
+            ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/inscripciones')
+            ->assertStatus(403);
     }
 
 }

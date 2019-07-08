@@ -132,4 +132,20 @@ class EvaluacionesController extends BaseController
             ]
         );
     }
+
+    public function getStatsPorUsuario($id)
+    {
+        $persona = Persona::findOrFail($id);
+        $inscripciones = $persona->inscripciones()->count();
+        $presentes = $persona->inscripciones()->presente()->count();
+        $ausentes = $persona->inscripciones()->ausente()->count();
+
+        return response()->json(
+            [
+                'inscripciones' => $inscripciones,
+                'presentes' => $presentes,
+                'ausentes' => $ausentes,
+            ]
+        );
+    }
 }

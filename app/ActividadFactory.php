@@ -15,6 +15,7 @@ class ActividadFactory
     public $grupo = null;
 	public $cantidad_inscriptos_por_punto_encuentro = [];
     public $inscriptos = [];
+    public $evaluaciones = [];
 
     public function create()
     {
@@ -59,6 +60,11 @@ class ActividadFactory
             ]);
         }
 
+        foreach ($this->evaluaciones as $persona) 
+        {
+            factory('App\EvaluacionPersona')->create([ 'idEvaluado' => $persona ]);
+        }
+
         return $actividad;
 
     }
@@ -101,6 +107,13 @@ class ActividadFactory
     public function conGrupoRaiz()
     {
         $this->grupo = true;
+
+        return $this;
+    }
+
+    public function agregarEvaluacionDePersona($persona)
+    {
+        array_push($this->evaluaciones, $persona->idPersona);
 
         return $this;
     }

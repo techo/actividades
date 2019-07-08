@@ -36,6 +36,12 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 
+import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
+Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
+
+import UsuariosEvaluacionesTab from './components/backoffice/usuarios/usuarios-evaluaciones-tab';
+Vue.component('usuarios-evaluaciones-tab', UsuariosEvaluacionesTab);
+
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);

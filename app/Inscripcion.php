@@ -59,4 +59,9 @@ class Inscripcion extends Model
         return $query->where('presente', '=', '1' );
     }
 
+    public function scopeAusente($query)
+    {
+        return $query->where('presente', '=', '0' );
+    }
+
 }
