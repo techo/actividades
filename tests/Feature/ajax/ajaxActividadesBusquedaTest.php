@@ -191,24 +191,46 @@ class ajaxActividadesBusqueda extends TestCase
             ->assertJsonCount(4, 'data');
     }
 
-    public function invitado_puede_buscar_actividades_sin_localidad()
+    /** @test */
+    public function invitado_puede_buscar_actividades_sin_localidad_lugar()
     {
         $this->withoutExceptionHandling();
 
         $actividades = factory('App\Actividad', 4)
-            ->create([
-                'idLocalidad' => null
-            ])
+            ->create([ 'idLocalidad' => null ])
             ->each(function ($a) {
                 $a->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
             });
 
         $params = [
-            // 'busqueda' => "punto",
+            'busqueda' => "lugar",
             // 'categoria' => null,
             'localidades' => null,
             'provincias' => [],
             'tipos' => []
+        ];
+
+        $response = $this->post('/ajax/actividades', $params);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount(4, 'data');
+    }
+
+    /** @test */
+    public function invitado_puede_buscar_actividades_sin_localidad_punto()
+    {
+        $this->withoutExceptionHandling();
+
+        $actividades = factory('App\Actividad', 4)
+            ->create()
+            ->each(function ($a) {
+                $a->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make([ 'idLocalidad' => null ]));
+            });
+
+        $params = [
+            'busqueda' => "punto",
+            'localidades' => null,
         ];
 
         $response = $this->post('/ajax/actividades', $params);

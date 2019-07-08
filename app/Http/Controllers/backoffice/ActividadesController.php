@@ -301,8 +301,6 @@ class ActividadesController extends Controller
                 'Debe seleccionar una categoría y un tipo de actividad',
             'tipo.*' =>
                 'Debe seleccionar una categoría y un tipo de actividad',
-            'localidad.*' =>
-                'El campo localidad debe tener un valor válido',
             'oficina.*' =>
                 'El campo Oficina es requerido',
             'provincia.*' =>
@@ -331,7 +329,6 @@ class ActividadesController extends Controller
                 'idTipo'                    => 'required',
                 'inscripcionInterna'        => 'required',
                 'limiteInscripciones'       => 'numeric',
-                'localidad.id'              => 'required',
                 'mensajeInscripcion'        => 'required',
                 'nombreActividad'           => 'required',
                 'oficina.id'                => 'required',
@@ -451,7 +448,7 @@ class ActividadesController extends Controller
         $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
         $actividad->idPais = $request['pais']['id'];
         $actividad->idProvincia = $request['provincia']['id'];
-        $actividad->idLocalidad = $request['localidad']['id'];
+        $actividad->idLocalidad = (isset($request['localidad']['id']))?$request['localidad']['id']:null;
         $actividad->idCoordinador = $request['coordinador']['idPersona'];
         $actividad->idOficina = $request['oficina']['id'];
         $actividad->fechaInicio = $request->fechaInicio;
