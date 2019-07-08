@@ -14,6 +14,8 @@ class backofficeUsuarioCaracterInternacionalTest extends TestCase
     /** @test */
      public function crear_usuario_caracter_internacinoal()
      {
+        $this->withoutExceptionHandling();
+        
         $actividades = factory('App\Actividad', 4)->create();
 
         $persona = factory('App\Persona')->create(['nombres' => 'ñombré']);
