@@ -9,11 +9,11 @@ class Usuario implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-
     	$values = explode(' ', $value);
 
     	foreach ($values as $v)
-        	$builder->whereRaw("nombres || ' ' || apellidoPaterno || ' ' || mail like '%" . $v . "%'");
+        	$builder->whereRaw("concat(' ', nombres, apellidoPaterno, mail) like '%" . $v . "%'");
+
         return $builder;
     }
 }
