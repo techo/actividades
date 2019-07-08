@@ -15,10 +15,6 @@
        - {{$inscripcion->actividad->pais->nombre}},
        
         que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} en
-       
-        @if($inscripcion->actividad->idLocalidad)
-            {{$inscripcion->actividad->localidad->localidad}}, 
-        @endif
 
         {{$inscripcion->actividad->provincia->provincia}}.
     </p>
@@ -48,11 +44,13 @@
         </p>
         <p>
             {{$inscripcion->punto_encuentro->punto}}, 
-            @if($inscripcion->actividad->idLocalidad)
-                {{$inscripcion->actividad->localidad->localidad}}, 
+            @if($inscripcion->punto_encuentro->idLocalidad)
+                {{$inscripcion->punto_encuentro->localidad->localidad}}, 
             @endif
             {{$inscripcion->punto_encuentro->provincia->provincia}},
-            {{$inscripcion->punto_encuentro->pais->nombre}} - {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
+            {{$inscripcion->punto_encuentro->pais->nombre}} 
+            - 
+            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
 
         @if($inscripcion->punto_encuentro->responsable)
             (Responsable del punto: 
