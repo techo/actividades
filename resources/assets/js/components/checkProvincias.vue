@@ -4,7 +4,7 @@
         <strong>{{ propdatos.provincia }}</strong>
 
         <div v-for="l in propdatos.localidades">
-            <input type="checkbox" :value="l.id_localidad" v-model="localidades_selected">
+            <input type="checkbox" v-if="l.id_localidad" :value="l.id_localidad" v-model="localidades_selected">
             {{ l.localidad }}
         </div>
         <hr>

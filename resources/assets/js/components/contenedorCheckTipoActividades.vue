@@ -84,6 +84,7 @@
         text-decoration: none;
         vertical-align: middle;
         width: 100%;
+        border-radius: 5px;
     }
     .acordion a span {
         margin: auto 15px;
@@ -111,7 +112,6 @@
     .acordion .collapsing, .acordion .collapse.show {
         z-index: 20;
         width: 100%;
-        overflow:visible;
         border-bottom-left-radius:5px;
         border-bottom-right-radius:5px;
         padding: 5% 5%;
@@ -122,9 +122,6 @@
         border-top: 1px solid #a9a9a9;
         margin-left: 1px;
         position: absolute;
-    }
-    .acordion .collapsing.lista-opciones {
-        display: none;
     }
     .dropdown-button {
         width: 100%;
