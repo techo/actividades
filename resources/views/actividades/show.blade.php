@@ -47,13 +47,15 @@
 			</div>
 		</div>
 		<div class="row justify-content-start">
-			<div class="col-md-2"><i class="far fa-calendar"></i> <span>{{ $actividad->fechaInicio->format('d-m-Y')}}</span></div>
-			<div class="col-md-2"><i class="far fa-clock"></i> <span>{{ $actividad->fechaInicio->format('H:i')}}</span></div>
+			<div class="col-md-2"><i class="far fa-calendar"></i> <span>{{ $actividad->fechaInicio->format('d/m/Y')}}</span></div>
+			<div class="col-md-2"><i class="far fa-clock"></i> <span>{{ $actividad->fechaInicio->format('H:i')}}hs</span></div>
 
             <div class="col-md-8">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>
-					@if (!isset($actividad->localidad) || !isset($actividad->provincia))
+					@if (!isset($actividad->localidad) || $actividad->localidad->localidad == "No definida")
+                        {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
+                    @elseif (!isset($actividad->provincia))
                         Sin especificar
                     @else
                         {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
@@ -64,7 +66,7 @@
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-				<h5>Descripcion</h5>
+				<h5>Descripción</h5>
 			</div>
 		</div>
 		<div class="row">
@@ -104,7 +106,7 @@
 
                 </div>
                 <div class="col-md-4">
-                    <strong>Coordinador:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
+                    <strong>Referente:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
                 </div>
 			</div>
 		@endforeach

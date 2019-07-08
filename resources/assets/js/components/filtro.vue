@@ -76,8 +76,6 @@
             },
             filtrar: function (){
 
-                console.log('me re ejecuté')
-
                 let filtros = {
                     provincias: this.dataProvincias,
                     localidades: this.dataLocalidades,
@@ -175,7 +173,6 @@
         },
         watch: {
             dataProvincias: function(viejo, nuevo) {
-                console.log('me ejecuté')
                 this.getTiposDeActividad();
                 this.filtrar();
             },

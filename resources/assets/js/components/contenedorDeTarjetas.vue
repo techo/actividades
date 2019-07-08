@@ -44,7 +44,6 @@
                 this.bottom = this.bottomVisible()
             });
             window.addEventListener('cargarTarjetas', (event) => {
-                console.log('me recontra ejecuté')
                 this.filtros = event.detail;
                 this.actividades = [];
                 this.agregarTarjetas(this.url, this.filtros, true);
