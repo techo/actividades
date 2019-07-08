@@ -1,7 +1,7 @@
 <template>
     <div class="acordion ">
         <a 
-            v-bind:class="{active: $parent.dataLocalidades.length > 0}"
+            v-bind:class="{active: $parent.dataLocalidades.length > 0 || $parent.dataProvincias.length > 0}"
             data-toggle="collapse" href="#provincias" 
             role="button" aria-expanded="false"
         ><span> Provincias</span> <i class="fas fa-caret-down"></i>
@@ -31,25 +31,37 @@
         components: {'check-provincias': CheckProvincias},
         data () {
             return {
-                selected: [],
-                selectAll: false
+                provincias_seleccionadas: [],
+                localidades_seleccionadas: [],
             }
         },
         methods: {
             aplicar() {
-               let seleccionados = [];
+
+                this.provincias_seleccionadas = [];
+                this.localidades_seleccionadas = [];
+               
                for (let i =0; i < this.$children.length; i++) {
-                   seleccionados.push(this.$children[i].selected);
+                   this.provincias_seleccionadas.push(this.$children[i].provincias_selected);
                }
-               this.$parent.dataLocalidades = [].concat.apply([], seleccionados);
+               for (let i =0; i < this.$children.length; i++) {
+                   this.localidades_seleccionadas.push(this.$children[i].localidades_selected);
+               }
+               this.$parent.dataProvincias = [].concat.apply([], this.provincias_seleccionadas);
+               this.$parent.dataLocalidades = [].concat.apply([], this.localidades_seleccionadas);
                $('#provincias').collapse('hide')
             },
 
             borrar() {
                 for (let i =0; i < this.$children.length; i++) {
-                    this.$children[i].selected = [];
+                    this.$children[i].provincias_selected = [];
                 }
+                for (let i =0; i < this.$children.length; i++) {
+                    this.$children[i].localidades_selected = [];
+                }
+                
                 this.$parent.dataLocalidades = [];
+                this.$parent.dataProvincias = [];
                 $('#provincias').collapse('hide')
             },
             // seleccionarTodos() {
