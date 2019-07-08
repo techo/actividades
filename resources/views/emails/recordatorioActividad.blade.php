@@ -10,8 +10,12 @@
         Te recordamos que te has inscrito para participar en
         <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO
         - {{$inscripcion->actividad->pais->nombre}}
-        que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} en
-        {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.
+        que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} en
+        {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.           @if($inscripcion->actividad->idLocalidad)
+            {{$inscripcion->actividad->localidad->localidad}}, 
+        @endif
+        {{$inscripcion->actividad->provincia->provincia}}, 
+        {{$inscripcion->actividad->pais->nombre}}.
     </p>
 
     @if($inscripcion->actividad->coordinador)
@@ -38,9 +42,11 @@
             </strong>
         </p>
         <p>
-            {{$inscripcion->punto_encuentro->punto}},
-            {{$inscripcion->punto_encuentro->localidad->localidad}},
-            {{$inscripcion->punto_encuentro->provincia->provincia}},
+            {{$inscripcion->punto_encuentro->punto}}, 
+            @if($inscripcion->punto_encuentro->idLocalidad)
+                {{$inscripcion->punto_encuentro->localidad->localidad}}, 
+            @endif
+            {{$inscripcion->punto_encuentro->provincia->provincia}}, 
             {{$inscripcion->punto_encuentro->pais->nombre}}
         </p>
         <p>

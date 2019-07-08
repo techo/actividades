@@ -11,9 +11,16 @@
     </p>
     <p>
         <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO
-        - {{$inscripcion->actividad->pais->nombre}}
+       
+       - {{$inscripcion->actividad->pais->nombre}},
+       
         que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} en
-        {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.
+       
+        @if($inscripcion->actividad->idLocalidad)
+            {{$inscripcion->actividad->localidad->localidad}}, 
+        @endif
+
+        {{$inscripcion->actividad->provincia->provincia}}.
     </p>
 
     @if($inscripcion->actividad->coordinador)
@@ -40,35 +47,22 @@
             </strong>
         </p>
         <p>
-            {{$inscripcion->punto_encuentro->punto}}
-            {{$inscripcion->punto_encuentro->localidad->localidad}},
+            {{$inscripcion->punto_encuentro->punto}}, 
+            @if($inscripcion->actividad->idLocalidad)
+                {{$inscripcion->actividad->localidad->localidad}}, 
+            @endif
             {{$inscripcion->punto_encuentro->provincia->provincia}},
-            {{$inscripcion->punto_encuentro->pais->nombre}}
-        </p>
-        <p>
-            <strong>
-                Horario:
-            </strong>
-        </p>
-        <p>
-            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}
-        </p>
+            {{$inscripcion->punto_encuentro->pais->nombre}} - {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
 
         @if($inscripcion->punto_encuentro->responsable)
-            <p>
-                <strong>
-                    Coordinador del punto de encuentro:
-                </strong>
-            </p>
-            <p>
+            (Responsable del punto: 
                 {{$inscripcion->punto_encuentro->responsable->nombres}}
                 {{$inscripcion->punto_encuentro->responsable->apellidoPaterno}}
                 <a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
                     {{ $inscripcion->actividad->coordinador->mail }}
-                </a>
-
-            </p>
+                </a>)
         @endif
+        </p>
     @endif
 
 @endsection
