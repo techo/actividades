@@ -1,5 +1,6 @@
 <template>
   <div>
+    <simple-alert ref="loading"></simple-alert>
     <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
     <vuetable
       class="vuetable"
@@ -13,6 +14,8 @@
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
+      @vuetable:loading="mostrarLoadingAlert"
+      @vuetable:loaded="ocultarLoadingAlert"
     ></vuetable>
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
@@ -42,6 +45,7 @@
   import Asistencia from './Asistencia';
   import ActualizarInscripcion from './actualizarInscripcion';
   import EstadoInscripcion from './estadoInscripcion';
+  import Simplert from 'vue2-simplert';
 
 
   Vue.use(VueEvents);
@@ -55,6 +59,7 @@
 
 export default {
   components: {
+    Simplert,
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
@@ -126,6 +131,19 @@ export default {
             window.location.href = this.detailUrl + data.id;
         }
       this.$refs.vuetable.toggleDetailRow(data.id)
+    },
+    mostrarLoadingAlert () {
+      this.$refs.loading.openSimplert({
+          title: 'Espera...',
+          message: "<i class=\"fa fa-spinner fa-spin fa-4x\"></i>",
+          hideAllButton: true,
+          isShown: true,
+          disableOverlayClick: true,
+          type: ''
+      });
+    },
+    ocultarLoadingAlert () {
+        this.$refs.loading.justCloseSimplert();
     },
   },
   created()  {

@@ -28,11 +28,7 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
         $sort = explode('|', $this->sort);
         list($sortField, $sortOrder) = $sort;
 
-        $result = DB::table('Actividad')
-            ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
-            ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
-            ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
-            ->select(
+        $result = \App\Actividad::select(
                 [
                     'Actividad.idActividad AS id',
                     'nombreActividad',
@@ -44,17 +40,15 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                 ]
             )
-            ->whereNull('deleted_at')
+            ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
+            ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+            ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->orderBy($sortField, $sortOrder);
 
         if ($this->filter) {
-            $filter = $this->filter;
-            $result->orWhere(function ($result) use ($filter) {
-                $result->orWhere('nombreActividad', 'like', '%' . $filter . '%');
-                $result->orWhere('estadoConstruccion', 'like', '%' . $filter . '%');
-                $result->orWhere('Tipo.nombre', 'like', '%' . $filter . '%');
-                $result->orWhere('atl_oficinas.nombre', 'like', '%' . $filter . '%');
-            });
+            $palabras = explode(' ',$this->filter);
+            foreach ($palabras as $palabra)
+                $result->whereRaw("concat( COALESCE(nombreActividad,''), ' ', COALESCE(Tipo.nombre,''), ' ', COALESCE(atl_oficinas.nombre,'')) like '%". $palabra ."%' ");
         }
         $var = $result->get();
         $act = Actividad::hydrate($var->toArray());
