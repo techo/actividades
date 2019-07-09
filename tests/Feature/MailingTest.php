@@ -2,15 +2,19 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Mail;
+use App\ActividadFactory;
 use App\Jobs\EnviarMailsCancelacionActividad;
+use App\Mail\ActualizacionActividad;
 use App\Mail\CancelacionActividad;
+use App\Mail\InvitacionEvaluacion;
+use App\Mail\MailRegistroUsuario;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class MailingTest extends TestCase
 {
@@ -47,5 +51,110 @@ class MailingTest extends TestCase
         Mail::assertSent(CancelacionActividad::class, function ($mail) use ($actividad) {
             return $mail->actividad->nombreActividad === $actividad->nombreActividad;
         });
+    }
+
+    /** @test */
+    public function administrador_asigna_punto()
+    {
+        $this->withoutExceptionHandling();
+
+        Mail::fake();
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $persona_que_quiere_recibir_mail = factory('App\Persona')->create(['recibirMails' => true ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($admin)
+            ->agregarPuntoConInscriptos(0)
+            ->agregarInscripto($persona_que_quiere_recibir_mail)
+            ->create();
+
+        $datos = [
+            'inscripciones' => [ $actividad->inscripciones[0]->idInscripcion ],
+            'punto' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+        ];
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/asignar/punto', $datos)
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', [ 
+            'idInscripcion' => $actividad->inscripciones[0]->idInscripcion, 
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro
+        ]);
+
+        Mail::assertQueued(ActualizacionActividad::class, 1);
+
+    }
+
+    /** @test */
+    public function administrador_envia_evaluaciones()
+    {
+        $this->withoutExceptionHandling();
+
+        Mail::fake();
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $maria = factory('App\Persona')->create(['recibirMails' => true ]);
+        $esteban = factory('App\Persona')->create(['recibirMails' => true ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($admin)
+            ->agregarPuntoConInscriptos(0)
+            ->agregarInscripto($maria, 'presente')
+            ->agregarInscripto($esteban)
+            ->create();
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/enviar-evaluaciones')
+            ->assertStatus(200);
+
+        Mail::assertQueued(InvitacionEvaluacion::class, 1);
+
+    }
+
+    /** @test */
+    public function registrar_usuario()
+    {
+        $this->withoutExceptionHandling();
+
+        Mail::fake();
+
+        $pais = factory('App\Pais')->create();
+
+        $datos = [
+            'user' => '',
+            'email' => 'email@email.com',
+            'pass' => 'ochominimo',
+            'nombre' => 'nombre de usuario',
+            'apellido' => 'pass',
+            'nacimiento' => '1950-02-15T03:00:00.000Z',
+            'sexo' => 'M',
+            'dni' => '30303030',
+            'pais' => $pais->id,
+            'provincia' => '',
+            'localidad' => '',
+            'telefono' => '345345435345',
+            'facebook_id' => '',
+            'google_id' => '',
+            'privacidad' => 'true',
+            'acepta_marketing' => 'true',
+        ];
+
+        $this->post('/ajax/usuario', $datos)
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('Persona', [ 'mail' => 'email@email.com' ]);
+
+        Mail::assertSent(MailRegistroUsuario::class, 1);
+
     }
 }

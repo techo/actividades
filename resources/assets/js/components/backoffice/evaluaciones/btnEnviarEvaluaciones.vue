@@ -15,7 +15,9 @@
                     <div class="modal-body">
                         <span v-if="!error && !success">
                             <p>Al hacer click en <strong>Enviar</strong> se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}.</p>
-                            <br>
+                            <p>
+                                <b>El mail solo le llega a los inscriptos que están marcados como *PRESENTE*.</b>
+                            </p>
                             <p>También podés <strong>Copiar el link</strong> a las evaluaciones para enviar por otros medios.</p>
                             <input type="text" id="data-url-evaluaciones" tabindex="-1" aria-hidden="true" :value="urlEvaluaciones">
                         </span>
