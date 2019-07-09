@@ -22,7 +22,3 @@
 
     <contenedor-de-tarjetas ref="contenedor"></contenedor-de-tarjetas>
 @endsection
-
-@section('additional_scripts')
-
-@endsection

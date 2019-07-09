@@ -200,6 +200,11 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/grupos/{idGrupo}/inscriptos', 'backoffice\ajax\GruposController@incluirInscripto');
     Route::get('/ajax/personas/{id}', 'ajax\PersonasController@show');
     Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
+
+    Route::get('/estadisticas', 'backoffice\EstadisticasController@index');
+    Route::get('/estadisticas/actividades', 'backoffice\EstadisticasController@actividades');
+    Route::get('/estadisticas/personas', 'backoffice\EstadisticasController@personas');
+
 });
 
 Route::prefix('/pagos/')->group(function() {
