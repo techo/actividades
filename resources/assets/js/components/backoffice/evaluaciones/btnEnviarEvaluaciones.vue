@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import store from '../stores/store';
 
 export default {
