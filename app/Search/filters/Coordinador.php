@@ -11,13 +11,7 @@ class Coordinador implements Filter
     	$palabras = explode(' ', $value);
 
     	foreach ($palabras as $palabra) {
-    		$builder->orWhere('nombres', 'LIKE', '%'. $palabra .'%');
-		}
-		foreach ($palabras as $palabra) {
-    		$builder->orWhere('apellidoPaterno', 'LIKE', '%'. $palabra .'%');
-		}
-		foreach ($palabras as $palabra) {
-    		$builder->orWhere('mail', 'LIKE', '%'. $palabra .'%');
+    		$builder->whereRaw("concat(' ', nombres, apellidoPaterno, mail) like '%" . $palabra . "%'");
 		}
 
         return $builder;

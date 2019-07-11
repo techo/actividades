@@ -11,13 +11,13 @@ class Busqueda implements Filter
         if($value == 'punto'){
             return $builder->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
                 ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
-                ->join('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id');
+                ->leftJoin('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id');
         }
 
         //por lugar de actividad
         return $builder->join('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
                 ->join('atl_provincias', 'Actividad.idProvincia', '=', 'atl_provincias.id')
-                ->join('atl_localidades', 'Actividad.idLocalidad', '=', 'atl_localidades.id');
+                ->leftJoin('atl_localidades', 'Actividad.idLocalidad', '=', 'atl_localidades.id');
 
     }
 }

@@ -28,8 +28,6 @@ class ajaxActividadesTest extends TestCase
                     ]
                 ]
             );
-
-        $actividad->delete();
     }
 
     /** @test */
@@ -55,7 +53,12 @@ class ajaxActividadesTest extends TestCase
     /** @test */
     public function actividades_sin_parametros()
     {
-        $actividad = factory('App\Actividad')->create();
+        $actividad = factory('App\Actividad', 4)
+            ->create()
+            ->each(function ($a) {
+                $a->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+            });
+
         $params = [];
         $response = $this->post('/ajax/actividades', $params);
         $response
@@ -76,7 +79,6 @@ class ajaxActividadesTest extends TestCase
                     "total"
                 ]
             );
-        $actividad->delete();
     }
 
     /** @test */
@@ -111,7 +113,5 @@ class ajaxActividadesTest extends TestCase
                     ]
                 ]
             );
-
-        $actividad->delete();
     }
 }

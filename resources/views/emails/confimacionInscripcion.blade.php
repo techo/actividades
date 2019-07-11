@@ -6,8 +6,16 @@
         Hola {{$inscripcion->persona->nombres}}
     </p>
     <p>Te has inscripto para participar: <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-        Inicia el <strong>{{$inscripcion->actividad->fechaInicio->format('d/m/Y')}}</strong> en
-            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>
+        Inicia el 
+            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
+                {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
+            </strong> en
+            <strong>
+                @if($inscripcion->actividad->idLocalidad)
+                    {{$inscripcion->actividad->localidad->localidad}}, 
+                @endif
+                {{$inscripcion->actividad->provincia->provincia}}
+            </strong>
     </p>
 
     @if(strtoupper($inscripcion->actividad->tipo->flujo) == "CONSTRUCCION")
@@ -64,8 +72,8 @@
               Punto de encuentro:
           </strong>
             {{$inscripcion->punto_encuentro->punto}} ({{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
-            @if(!empty($inscripcion->punto_encuentro->localidad))
-            {{$inscripcion->punto_encuentro->localidad->localidad}},
+            @if($inscripcion->punto_encuentro->idLocalidad)
+                {{$inscripcion->punto_encuentro->localidad->localidad}},
             @endif
             {{$inscripcion->punto_encuentro->provincia->provincia}}, {{$inscripcion->punto_encuentro->pais->nombre}}
         </p>

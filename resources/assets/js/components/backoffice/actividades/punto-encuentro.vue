@@ -77,7 +77,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="localidad">Localidad</label>
+                    <label for="localidad">Localidad (opcional)</label>
                     <v-select
                             :options="dataLocalidades"
                             label="localidad"
@@ -89,7 +89,6 @@
                     >
                     <span slot="no-options"></span>
                     </v-select>
-                    <p class="text-danger" v-show="errorLocalidad"><small>Este campo es requerido</small></p>
                 </div>
             </div>
         </div>
@@ -129,7 +128,7 @@
                     </td>
                     <td>
                         <p v-if="punto.localidad">{{ punto.localidad.localidad }}, {{ punto.provincia.provincia }}, {{ punto.pais.nombre}}</p>
-                        <p v-else>No definido</p>
+                        <p v-else>{{ punto.provincia.provincia }}, {{ punto.pais.nombre}}</p>
                     </td>
                     <td>
                         <p v-html="$options.filters.hora(punto.horario)"></p>
@@ -257,9 +256,6 @@
                 return (this.validationErrors.provincia)
             },
 
-            errorLocalidad: function () {
-                return (this.validationErrors.localidad)
-            },
             paisValidado: function () {
                 if (this.paisSeleccionado === null) {
                     return '';
@@ -313,7 +309,7 @@
                         this.dataPuntos[editar].horario = this.horario;
                         this.dataPuntos[editar].idPais = this.paisSeleccionado.id;
                         this.dataPuntos[editar].idProvincia = this.provinciaSeleccionada.id;
-                        this.dataPuntos[editar].idLocalidad = this.localidadSeleccionada.id;
+                        this.dataPuntos[editar].idLocalidad = (this.localidadSeleccionada)?this.localidadSeleccionada.id:null;
                         this.dataPuntos[editar].pais = this.paisSeleccionado;
                         this.dataPuntos[editar].provincia = this.provinciaSeleccionada;
                         this.dataPuntos[editar].localidad = this.localidadSeleccionada;
@@ -347,7 +343,7 @@
                         'punto': this.punto,
                         'idPais': this.paisSeleccionado.id,
                         'idProvincia': this.provinciaSeleccionada.id,
-                        'idLocalidad': this.localidadSeleccionada.id,
+                        'idLocalidad': (this.localidadSeleccionada)?this.localidadSeleccionada.id:null,
                         'idPuntoEncuentro': id,
                         'nuevo': true,
                         'pais': this.paisSeleccionado,
@@ -412,7 +408,6 @@
                         coordinador: false,
                         pais: false,
                         provincia: false,
-                        localidad: false,
                     };
 
                 let result = true;
@@ -434,10 +429,6 @@
                 }
                 if (!this.provinciaSeleccionada) {
                     this.validationErrors.provincia = true;
-                    result = false;
-                }
-                if (!this.localidadSeleccionada) {
-                    this.validationErrors.localidad = true;
                     result = false;
                 }
 
@@ -531,7 +522,6 @@
                         coordinador: false,
                         pais: false,
                         provincia: false,
-                        localidad: false,
                 };
 
                 this.verFormulario = false;

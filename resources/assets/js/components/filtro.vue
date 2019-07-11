@@ -21,7 +21,7 @@
         <div id="filtro-provincias" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
 
             <contenedor-check-provincias
-                    v-bind:provincias="this.dataProvincias"
+                    v-bind:provincias="this.lista_provincias"
             >
             </contenedor-check-provincias>
         </div>
@@ -61,7 +61,8 @@
                  dataProvincias:    [],
                  dataLocalidades:   [],
                  dataTiposActividad: [],
-                 dataBusqueda: 'punto'
+                 dataBusqueda: 'punto',
+                 lista_provincias: [],
              }
         },
         methods: {
@@ -76,6 +77,7 @@
             filtrar: function (){
 
                 let filtros = {
+                    provincias: this.dataProvincias,
                     localidades: this.dataLocalidades,
                     tipos: this.dataTiposActividad,
                     busqueda: this.dataBusqueda
@@ -91,6 +93,7 @@
             getTiposDeActividad: function () {
                 let url = '/ajax/actividades/tipos';
                 let filtros = {
+                    provincias: this.dataProvincias,
                     localidades: this.dataLocalidades,
                     busqueda: this.dataBusqueda
                 };
@@ -150,9 +153,9 @@
                 }
                 
                 this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
-                    self.dataProvincias = Object.keys(response).map(i => response[i]);
+                    self.lista_provincias = Object.keys(response).map(i => response[i]);
                             for (let i=0; i< self.$children.length; i++) {
-                                self.$children[i].listaProvincias = self.dataProvincias;
+                                self.$children[i].listaProvincias = self.lista_provincias;
                             }
                         },formData,
                 function (error) {
@@ -169,7 +172,7 @@
             },
         },
         watch: {
-            dataLocalidades: function(viejo, nuevo) {
+            dataProvincias: function(viejo, nuevo) {
                 this.getTiposDeActividad();
                 this.filtrar();
             },

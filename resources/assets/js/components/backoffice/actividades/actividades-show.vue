@@ -260,7 +260,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="localidad">Localidad</label>
+                        <label for="localidad">Localidad (opcional)</label>
                         <v-select
                                 :options="dataLocalidades"
                                 label="localidad"

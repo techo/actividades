@@ -35,7 +35,7 @@
                       <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''">
                   </div>
                   <div class="col-md-11">
-                    {{item.punto}} - {{item.horario | format_time}}
+                    {{item.punto}}, {{ actividad.ubicacion }} - {{item.horario | format_time}}hs
                   </div>
               </div>
                 <hr>
@@ -70,7 +70,7 @@
                         <span>{{ actividad.fecha}}</span></div>
                     <div class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ actividad.hora }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ localidad }}</span>
+                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
                     </div>
                 </div>
                 <hr>
@@ -93,7 +93,7 @@
             actividad: {
                 idActividad: '',
                 nombreActividad: '',
-                localidad: '',
+                ubicacion: '',
                 fecha: '',
                 hora: '',
                 puntosEncuentro: [],
@@ -112,7 +112,7 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
-            self.localidad = self.actividad.localidad.localidad;
+            self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
           })

@@ -1,10 +1,10 @@
 <template>
     <div >
-        <input type="checkbox" v-model="selectAll">
-        <strong>{{ this.datos.provincia }}</strong>
+        <input type="checkbox" :value="propdatos.id_provincia" v-model="provincias_selected">
+        <strong>{{ propdatos.provincia }}</strong>
 
-        <div v-for="l in this.datos.localidades">
-            <input type="checkbox" :value="l.id_localidad" v-model="selected">
+        <div v-for="l in propdatos.localidades">
+            <input type="checkbox" v-if="l.id_localidad" :value="l.id_localidad" v-model="localidades_selected">
             {{ l.localidad }}
         </div>
         <hr>
@@ -17,28 +17,8 @@
         props: ['propdatos'],
         data() {
             return {
-                selected: [],
-            }
-        },
-        computed: {
-            datos: function() {
-                return this.propdatos;
-            },
-            selectAll: {
-                get: function () {
-                    return this.datos.localidades ? this.selected.length === this.datos.localidades.length : false;
-                },
-                set: function (value) {
-                    let selected = [];
-
-                    if (value) {
-                        this.datos.localidades.forEach(function (localidad) {
-                            selected.push(localidad.id_localidad);
-                        });
-                    }
-
-                    this.selected = selected;
-                }
+                localidades_selected: [],
+                provincias_selected: [],
             }
         }
     }

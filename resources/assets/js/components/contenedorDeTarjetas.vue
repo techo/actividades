@@ -59,6 +59,10 @@
                 return bottomOfPage || pageHeight < visible;
             },
             agregarTarjetas(url, filtros, refresh) {
+
+                //forma cabeza de evitar concurrencia
+                if(this.loading) {return;};
+
                 let self = this;
                 this.loading = true;
                 this.vacio = false;
@@ -80,9 +84,7 @@
                         this.ultimaTarjeta = response.data.to;
                         this.totalTarjetas = response.data.total;
 
-                        if (this.ultimaTarjeta === this.totalTarjetas){
-                            this.loading = false;
-                        }
+                        this.loading = false;
 
                     })
                     .catch((error) => {
@@ -111,7 +113,7 @@
 
         watch: {
             bottom(bottom) {
-                if (bottom) {
+                if (bottom && this.ultimaTarjeta && this.totalTarjetas) {
                     if (this.ultimaTarjeta < this.totalTarjetas ) {
                         this.agregarTarjetas(this.next_page, this.filtros, false);
                     }
