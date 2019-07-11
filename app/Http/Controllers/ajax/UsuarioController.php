@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\ajax;
 
-use App\Http\Resources\PerfilResource;
-use App\Search\CoordinadoresSearch;
-use Illuminate\Http\Request;
+use App\Events\RegistroUsuario;
+use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
-use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use App\Persona;
-use App\VerificacionMailPersona;
 use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\MisActividadesResource;
-use App\Rules\PassExiste;
+use App\Http\Resources\PerfilResource;
 use App\Inscripcion;
-use App\GrupoRolPersona;
+use App\Persona;
+use App\Rules\PassExiste;
+use App\Search\CoordinadoresSearch;
 use App\Search\MisActividadesSearch;
+use App\VerificacionMailPersona;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Webpatser\Uuid\Uuid;
 
@@ -72,6 +73,7 @@ class UsuarioController extends BaseController
       $verificacion->save();
       Auth::login($persona, true);
       $request->session()->regenerate();
+      event(new RegistroUsuario($persona));
       return ['login_callback' =>  $url, 'user' => $persona];
   }
 

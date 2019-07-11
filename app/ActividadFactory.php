@@ -46,9 +46,9 @@ class ActividadFactory
 
         foreach ($this->inscriptos as $inscripto) 
         {
-            factory('App\Inscripcion')->create([
+            factory('App\Inscripcion')->states($inscripto['state'])->create([
                 'idActividad' => $actividad->idActividad,
-                'idPersona' => $inscripto->idPersona,
+                'idPersona' => $inscripto['persona']->idPersona,
             ]);
         }
 
@@ -90,9 +90,9 @@ class ActividadFactory
         return $this;
     }
 
-    public function agregarInscripto($persona)
+    public function agregarInscripto($persona, $state = [])
     {
-        array_push($this->inscriptos, $persona);
+        array_push($this->inscriptos, [ 'persona' => $persona, 'state' => $state ] );
 
         return $this;
     }

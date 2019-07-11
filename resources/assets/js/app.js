@@ -1,3 +1,5 @@
+require('./bootstrap.js');
+
 import Simplert from "vue2-simplert";
 
 

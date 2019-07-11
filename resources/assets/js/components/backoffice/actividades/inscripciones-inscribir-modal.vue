@@ -45,7 +45,7 @@
 
 				</div>
 				<div class="modal-footer">
-					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;" >Cancelar</button>
+					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;hide();personas=[];" >Cancelar</button>
 					<button ref="inscribir" class="btn btn-primary" @click="submit" >Inscribir</button>
 				</div>
 			</div>
