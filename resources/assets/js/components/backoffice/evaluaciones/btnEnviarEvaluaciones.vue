@@ -8,7 +8,8 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            @click="success = false; error= false;">
                             <span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Confirmar Envío de Evaluaciones</h4>
                     </div>
@@ -23,7 +24,7 @@
                         </span>
                         <span v-if="success">
                             <strong>
-                                ¡Felicidades! Los correos ya van en camino.
+                                Se enviaron notificaciones a {{ notificados }} inscriptos.
                             </strong>
                         </span>
                         <span v-if="error">
@@ -32,7 +33,8 @@
                         </span>
                     </div>
                   <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal"
+                            @click="success = false; error= false;">
                             <i class="fa fa-ban"></i>
                             Cerrar
                         </button>
@@ -73,7 +75,8 @@ export default {
             actividad: {},
             mensajeCopiar: "Copiar link",
             copiarClicked: false,
-            urlEvaluaciones: window.location.origin + '/actividades/' + store.state.idActividad + '/evaluaciones'
+            urlEvaluaciones: window.location.origin + '/actividades/' + store.state.idActividad + '/evaluaciones',
+            notificados: 0,
         }
     },
     created: function () {
@@ -87,11 +90,18 @@ export default {
             let payload = {
                 actividad: this.actividad
             };
-            this.axiosPost(url, function (response, self) {
-                self.loading = false;
-                self.error = false;
-                self.success = true;
-            }, payload);
+            axios.post(url, payload)
+                .then(response => {
+                    this.loading = false;
+                    this.error = false;
+                    this.success = true;
+                    this.notificados = response.data;
+                    this.readonly = true;
+                })
+                .catch((error) => {
+                    this.loading = false;
+                    this.error = true;
+                });
         },
         getClass: function (clicked) {
             let btnClass = clicked ? 'btn-success' : 'btn-primary';
@@ -106,40 +116,7 @@ export default {
             document.execCommand("copy");
             this.copiarClicked = true;
             this.mensajeCopiar = "Copiado!";
-        },
-        axiosPost(url, fCallback, params = []) {
-            axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            axios.post(url, params)
-                .then(response => {
-                    fCallback(response.data, this);
-                    //Event.$emit('success');
-                    this.readonly = true;
-                })
-                .catch((error) => {
-                    this.loading = false;
-                    this.error = true;
-                    //Event.$emit('error');
-                    // Error
-                    console.info('Error en: ' + url);
-                    console.error(error.response.status);
-                    if (error.response) {
-                        if (error.response.status === 422) {
-                            // debugger;
-                            this.validationErrors = Object.values(error.response.data);
-                        }
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.error(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.error('Error', error.message);
-                    }
-                    console.error(error.config);
-                });
-
-        },
+        }
     }
 }
 </script>

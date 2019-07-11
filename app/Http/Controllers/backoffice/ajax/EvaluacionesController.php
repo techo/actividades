@@ -27,7 +27,7 @@ class EvaluacionesController extends BaseController
             //Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
             $this->intentaEnviar(Mail::to($persona->mail), new InvitacionEvaluacion($persona, $actividad), $persona);
         }
-        return 'ok';
+        return $personas->count();
     }
 
     public function getActividadStats($id)
