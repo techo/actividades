@@ -59,7 +59,9 @@ export default {
           return moment(this.rowData.fechaInscripcion).format("DD MMMM YYYY");
       },
       puntoEncuentro: function () {
-          return this.rowData.punto + ", " + this.rowData.puntoLocalidad + ", " + this.rowData.puntoProvincia + ", " + this.rowData.puntoPais
+        console.log(this.rowData)
+          let localidad = (this.rowData.puntoLocalidad == null) ? "" : this.rowData.puntoLocalidad + ", ";
+          return this.rowData.punto + ", " + localidad + this.rowData.puntoProvincia + ", " + this.rowData.puntoPais
       }
   },
   methods: {

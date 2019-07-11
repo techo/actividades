@@ -12,12 +12,6 @@
             <li class="active">
                 <a href="#general" data-toggle="tab" aria-expanded="true">General</a>
             </li>
-            <li class="disabled">
-                <a href="#" data-toggle="" aria-expanded="true">Grupos</a>
-            </li>
-            <li class="disabled">
-                <a href="#" data-toggle="" aria-expanded="true">Inscripciones</a>
-            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
