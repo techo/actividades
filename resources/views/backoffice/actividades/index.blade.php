@@ -28,7 +28,7 @@
                         api-url="/admin/ajax/actividades"
                         fields="{{ $fields }}"
                         sort-order="{{ $sortOrder }}"
-                        placeholder-text="Buscar por nombre, oficina, tipo o estado"
+                        placeholder-text="Buscar por nombre, oficina o tipo"
                         detail-url="/admin/actividades/"
                 ></datatable>
             </div>

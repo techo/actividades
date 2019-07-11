@@ -308,6 +308,11 @@ return [
                 'sortField' => 'mail',
                 'title' => 'Email'
             ],
+            [
+                'name' => 'created_at',
+                'sortField' => 'created_at',
+                'title' => 'Fecha Creación'
+            ],
         ],
         'sortOrder' => [
             [

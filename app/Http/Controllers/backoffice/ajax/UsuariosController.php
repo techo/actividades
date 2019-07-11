@@ -36,7 +36,16 @@ class UsuariosController extends Controller
         if($request->has('usuario')){
             $filtros['usuario'] = $request->usuario;
         }
-        $result = UsuariosSearch::apply($filtros);
+        
+        //orden de la consulta
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|"))
+                $sort = join(" ",explode("|", $request->sort));
+            else
+                $sort = $request->sort;
+        }
+
+        $result = UsuariosSearch::apply($filtros, $sort);
         $usuarios = UsuariosResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }
