@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UsuariosSearch
 {
-    public static function apply($filters, $sort = 'idPersona desc')
+    public static function apply($filters, $sort = 'idPersona desc', $per_page = 25)
     {
         $query = static::applyDecoratorsFromRequest($filters, UsuariosSearch::newQuery());
-        return static::getResults($query, $sort);
+        return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
     {
@@ -31,11 +31,11 @@ class UsuariosSearch
     {
         return class_exists($decorator);
     }
-    private static function getResults(Builder $query, $sort)
+    private static function getResults(Builder $query, $sort, $per_page)
     {
         // return $query->get();
         $query->orderByRaw($sort);
-        return $query->paginate(10);
+        return $query->paginate($per_page);
     }
 
     private static function newQuery(){

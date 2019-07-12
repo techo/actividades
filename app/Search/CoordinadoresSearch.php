@@ -36,11 +36,12 @@ class CoordinadoresSearch
         return $query->get();
     }
 
-    private static function newQuery(){
+    private static function newQuery()
+    {
         $query = (new Persona)->newQuery();
+
         $query->take(25)
-            ->orderBy('apellidoPaterno', 'asc')
-            ->orderBy('nombres');
+            ->orderBy('nombres', 'asc');
 
         return $query;
     }

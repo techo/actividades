@@ -9,10 +9,11 @@ class Usuario implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-    	$values = explode(' ', $value);
+    	$palabras = explode(' ', $value);
 
-    	foreach ($values as $v)
-        	$builder->whereRaw("concat(' ', nombres, apellidoPaterno, mail) like '%" . $v . "%'");
+    	foreach ($palabras as $palabra) {
+    		$builder->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like '%" . $palabra . "%'");
+		}
 
         return $builder;
     }

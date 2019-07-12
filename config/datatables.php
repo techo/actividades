@@ -316,9 +316,9 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'idPersona',
-                'sortField' => 'idPersona',
-                'direction' => 'desc'
+                'field' => 'nombres',
+                'sortField' => 'nombres',
+                'direction' => 'asc'
             ],
         ]
     ]
