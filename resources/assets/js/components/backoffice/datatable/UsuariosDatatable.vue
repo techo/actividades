@@ -21,6 +21,8 @@
     <div class="vuetable-pagination">
       <vuetable-pagination-info ref="paginationInfo"
         info-class="pagination-info"
+        infoTemplate="Ítem {from} a {to} de {total}"
+        noDataTemplate="No hay ítems para mostrar"
       ></vuetable-pagination-info>
       <vuetable-pagination ref="pagination"
         :css="css.pagination"
