@@ -11,6 +11,7 @@
       :css="css.table"
       :sort-order="dataSortOrder"
       :multi-sort="true"
+      :perPage="25"
       :append-params="moreParams"
       @vuetable:cell-clicked="onCellClicked"
       @vuetable:pagination-data="onPaginationData"
