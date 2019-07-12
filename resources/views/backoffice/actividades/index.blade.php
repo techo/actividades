@@ -6,7 +6,7 @@
 
     <span class="pull-right">
         <a href="/admin/actividades/crear" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Nueva Actividad
+            <i class="fa fa-plus"></i> Crear Actividad
         </a>
     </span>
 @endsection

@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Nueva Persona')
+@section('page_title', 'Crear Persona')
 
 
 @section('content')

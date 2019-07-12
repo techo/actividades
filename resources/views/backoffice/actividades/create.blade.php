@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Nueva Actividad')
+@section('page_title', 'Crear Actividad')
 
 @section('subtitulo')
 
