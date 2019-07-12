@@ -14,6 +14,8 @@ class backofficeActividadesTest extends TestCase
     /** @test */
     public function listar_todas_las_actividades()
     {
+        $this->withoutExceptionHandling();
+        
         $actividades = factory('App\Actividad', 4)->create();
 
         $persona = factory('App\Persona')->create();
