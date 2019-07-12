@@ -19,7 +19,7 @@ class ActividadesController extends BaseController
     {
         $export = new ActividadesExport($request->filter, $request->sort);
         $collection = $export->collection();
-        $result = $this->paginate($collection, 10);
+        $result = $this->paginate($collection, $request->per_page);
         return $result;
     }
 

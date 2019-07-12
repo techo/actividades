@@ -1,12 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Usuarios')
+@section('page_title', 'Personas')
 
 @section('add-new')
 
     <span class="pull-right">
         <a href="/admin/usuarios/registrar" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Registrar Usuario
+            <i class="fa fa-plus"></i> Registrar Persona
         </a>
     </span>
 @endsection
