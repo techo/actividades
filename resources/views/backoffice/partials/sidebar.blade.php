@@ -43,10 +43,12 @@
                     @if (Auth::user()->hasRole('admin'))
                         <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">Ver Todas</a></li>
                     @endif
-                    <li class="{{request()->is('admin/actividades/crear') ? 'active' : ''}}"><a href="/admin/actividades/crear">Crear Actividad</a></li>
                     @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
                         <li class="{{request()->is('admin/actividades/usuario') ? 'active' : ''}}"><a href="/admin/actividades/usuario">Mis Actividades</a></li>
                     @endif
+                    <li class="{{request()->is('admin/actividades/crear') ? 'active' : ''}}">
+                        <a href="/admin/actividades/crear"><i class="fa fa-plus"></i>Crear Actividad</a>
+                    </li>
                 </ul>
             </li>
             @if(Auth::user()->hasPermissionTo('ver_usuarios'))
@@ -58,33 +60,12 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver todas</a></li>
-                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">Crear Persona</a></li>
+                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}">
+                            <a href="/admin/usuarios/registrar"><i class="fa fa-plus"></i>Crear Persona</a>
+                        </li>
                     </ul>
                 </li>
             @endif
-            @if(Auth::user()->hasPermissionTo('asignar_roles'))
-                <li class="treeview {{ request()->is('admin/roles') ? 'active menu-open' : ''}}">
-                    <a href="#"><i class="fa fa-shield"></i> <span>Roles</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                    </a>
-                    <ul class="treeview-menu">
-                            <li class="{{request()->is('admin/roles') ? 'active' : ''}}"><a href="/admin/roles">Asignar roles</a></li>
-                    </ul>
-                </li>
-            @endif
-            <li class="treeview">
-                <a href="#"><i class="fa fa-globe"></i> <span>Portal de Actividades</span>
-                    <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/actividades">Ver filtros</a></li>
-                </ul>
-            </li>
         </ul>
         <!-- /.sidebar-menu -->
     </section>
