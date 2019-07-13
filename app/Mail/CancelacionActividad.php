@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CancelacionActividad extends Mailable
+class CancelacionActividad extends Mailable implements ShouldQueue
 {
     use Queueable;
 

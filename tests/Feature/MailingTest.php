@@ -48,7 +48,7 @@ class MailingTest extends TestCase
 
         $this->assertSoftDeleted('Actividad', [ 'nombreActividad' => $actividad->nombreActividad]);
 
-        Mail::assertSent(CancelacionActividad::class, function ($mail) use ($actividad) {
+        Mail::assertQueued(CancelacionActividad::class, function ($mail) use ($actividad) {
             return $mail->actividad->nombreActividad === $actividad->nombreActividad;
         });
     }
