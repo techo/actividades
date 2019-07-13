@@ -5,7 +5,7 @@ import axios from 'axios';
 import moxios from 'moxios';
 import vSelect from 'vue-select';
 window.Event = new Vue();
-import Test from '../../resources/assets/js/components/backoffice/actividades/inscripciones-inscribir-modal.vue';
+import Test from '../../resources/js/components/backoffice/actividades/inscripciones-inscribir-modal.vue';
 
 describe ('Modal de inscripción', () => {
 
