@@ -225,7 +225,7 @@
             },
             guardarInscriptoCerrar: function() {
                 this.guardarInscripto();
-                if(!yaInscripto)
+                if(!this.yaInscripto)
                     this.cancelar();
             },
             guardarNoInscripto: function () {

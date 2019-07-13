@@ -27,7 +27,8 @@ class loginSocialTest extends TestCase
     	$socialite->shouldReceive('user')->andReturn($socialite);
     	$socialite->email = 'aaaa@aaaa.com';
     	$socialite->user = array(
-    		'name' => ['givenName' => 'nombre', 'familyName' => 'apellido'],
+    		'given_name' => 'nombre', 
+            'family_name' => 'apellido',
     		'id' => 'id',
     	);
     	\Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);
@@ -50,7 +51,8 @@ class loginSocialTest extends TestCase
         $socialite->shouldReceive('user')->andReturn($socialite);
         $socialite->email = 'aaaa@aaaa.com';
         $socialite->user = array(
-            'name' => ['givenName' => 'nombre', 'familyName' => 'apellido'],
+            'given_name' => 'nombre', 
+            'family_name' => 'apellido',
             'id' => 'id',
         );
         \Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);

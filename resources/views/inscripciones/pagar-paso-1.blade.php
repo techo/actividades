@@ -61,7 +61,7 @@
                         y {{$actividad->montoMax}} ({{$actividad->moneda}}$)</h5>
                 @endif
                     <form action="{{ action('InscripcionesController@donacionCheckout', ['id' => $actividad->idActividad]) }}" method="POST">
-                        {{ csrf_field() }}
+                        @csrf
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
