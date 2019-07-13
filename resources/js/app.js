@@ -21,6 +21,7 @@ import CrudFooter from './components/backoffice/crudFooter';
 import BtnGrupoPersona from './components/backoffice/grupos/btnGrupoPersona';
 import Datepicker from 'vuejs-datepicker'; // https://github.com/charliekassel/vuejs-datepicker
 import vSelect2 from 'vue-select';
+import 'vue-select/dist/vue-select.css';
 import vSwitch from 'vue-switches';
 import axios from 'axios';
 import Miembros from './components/backoffice/grupos/Miembros';

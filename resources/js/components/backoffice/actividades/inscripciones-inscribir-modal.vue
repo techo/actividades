@@ -15,6 +15,8 @@
 							@search="onSearch" 
 							label="nombre" 
 							v-model="personaSeleccionada" 
+							:filterable="false"
+							:selectOnTab="true"
 							@search:focus="clear_error('idPersona')"
 						>
 							<template slot="no-options">Escribe el nombre, apellido o DNI</template>
