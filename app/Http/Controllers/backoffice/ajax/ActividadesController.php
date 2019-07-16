@@ -17,9 +17,14 @@ class ActividadesController extends BaseController
      */
     public function index(Request $request)
     {
+        $per_page = 25;
+        if($request->filled('per_page')) {
+            $per_page = $request->per_page;
+        }
+
         $export = new ActividadesExport($request->filter, $request->sort);
         $collection = $export->collection();
-        $result = $this->paginate($collection, 10);
+        $result = $this->paginate($collection, $per_page);
         return $result;
     }
 

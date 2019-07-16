@@ -37,7 +37,6 @@ class UsuariosController extends Controller
             $filtros['usuario'] = $request->usuario;
         }
         
-        //orden de la consulta
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
                 $sort = join(" ",explode("|", $request->sort));
@@ -45,7 +44,12 @@ class UsuariosController extends Controller
                 $sort = $request->sort;
         }
 
-        $result = UsuariosSearch::apply($filtros, $sort);
+        $per_page = 25;
+        if($request->filled('per_page')) {
+            $per_page = $request->per_page;
+        }
+
+        $result = UsuariosSearch::apply($filtros, $sort, $per_page);
         $usuarios = UsuariosResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }
