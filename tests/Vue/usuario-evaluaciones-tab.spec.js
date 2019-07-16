@@ -10,8 +10,8 @@ import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
 window.Event = new Vue();
-import Test from '../../resources/assets/js/components/backoffice/usuarios/usuarios-evaluaciones-tab.vue';
-import BarChart from '../../resources/assets/js/components/plugins/BarChart.vue';
+import Test from '../../resources/js/components/backoffice/usuarios/usuarios-evaluaciones-tab.vue';
+import BarChart from '../../resources/js/components/plugins/BarChart.vue';
 
 describe ('Pestaña de evaluaciones de usuario', () => {
 

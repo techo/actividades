@@ -124,8 +124,8 @@ class LoginController extends Controller
         $personaData = new \stdClass();
         if($provider == 'google') {
             $user = Socialite::driver($provider)->stateless()->user();
-            $personaData->nombre = $user->user['name']['givenName'];
-            $personaData->apellido = $user->user['name']['familyName'];
+            $personaData->nombre = $user->user['given_name'];
+            $personaData->apellido = $user->user['family_name'];
             $personaData->email = $user->email;
             $personaData->google_id = $user->user['id'];
             $personaData->facebook_id = '';

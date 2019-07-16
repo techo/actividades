@@ -68,8 +68,8 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
         return [
             $actividad->id,
             $actividad->nombreActividad,
-            Date::dateTimeToExcel($actividad->fechaInicio),
-            Date::dateTimeToExcel($actividad->fechaFin),
+            ($actividad->fechaInicio)?Date::dateTimeToExcel($actividad->fechaInicio):null,
+            ($actividad->fechaFin)?Date::dateTimeToExcel($actividad->fechaFin):null,
             $actividad->estadoConstruccion,
             $actividad->oficina,
             $actividad->tipoActividad,

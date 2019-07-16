@@ -4,13 +4,13 @@
     $payuTest = env('PAYU_TEST');
 @endphp
 <form method="{{ $payment->method() }}" action="{{ $payment->url() }}">
+    @csrf
     <input name="merchantId"    type="hidden"  value="{{ $config->merchant_id }}"   >
     <input name="referenceCode" type="hidden"  value="{{ $payment->referenceCode()}}" >
     <input name="description"   type="hidden"
            value="{{ $actividad->tipo->nombre . ', '
                     . $actividad->idActividad . ', '
                     . $actividad->nombreActividad . ', '
-                    . $actividad->localidad->localidad . ', '
                     . $actividad->provincia->provincia . ', '
                     . $actividad->fechaInicio->format('d/m/Y')
                     }}"  >

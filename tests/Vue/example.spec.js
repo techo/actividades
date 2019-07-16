@@ -1,6 +1,6 @@
 import { mount } from 'vue-test-utils';
 import expect from 'expect';
-import Test from '../../resources/assets/js/components/test.vue';
+import Test from '../../resources/js/components/test.vue';
 
 describe ('Test', () => {
 	it ('Testea los tests', () => {

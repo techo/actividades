@@ -48,9 +48,10 @@ class LoginSocialTest extends TestCase
     	$socialite->shouldReceive('user')->andReturn($socialite);
     	$socialite->email = 'email';
     	$socialite->user = array(
-    		'name' => ['givenName' => 'nombre', 'familyName' => 'apellido'],
-    		'id' => 'id',
-    	);
+            'given_name' => 'nombre', 
+            'family_name' => 'apellido',
+            'id' => 'id',
+        );
     	\Socialite::shouldReceive('driver')->once()->with('google')->andReturn($socialite);
         
         $response = $this->get('/auth/google/callback')->assertStatus(200);

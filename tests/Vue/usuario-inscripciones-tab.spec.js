@@ -8,7 +8,7 @@ import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
 window.Event = new Vue();
-import Test from '../../resources/assets/js/components/backoffice/usuarios/usuarios-inscripciones-tab.vue';
+import Test from '../../resources/js/components/backoffice/usuarios/usuarios-inscripciones-tab.vue';
 
 describe ('Pestaña de inscripciones de usuario', () => {
 
