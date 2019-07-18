@@ -12,10 +12,10 @@ class EstadisticasController extends Controller
 
     public function index()
     {
-        /*$estadisticas['inscripciones_ciclo'] = 
+        $estadisticas['inscripciones_ciclo'] = 
         \App\Inscripcion::whereYear('created_at', Carbon::now()->format('Y')) 
             ->where('presente', 1)
-            ->count();*/
+            ->count();
 
         $estadisticas['inscripciones'] = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->select(DB::raw('MONTH(created_at) mes, count(*) as inscripciones, sum(if(presente = 1, 1, 0)) as presentes'))
