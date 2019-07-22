@@ -17,25 +17,46 @@ class EstadisticasController extends Controller
             ->where('presente', 1)
             ->count();
 
-        $estadisticas['inscripciones'] = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->select(DB::raw('MONTH(created_at) mes, count(*) as inscripciones, sum(if(presente = 1, 1, 0)) as presentes'))
+
+        return view('backoffice.estadisticas.index', $estadisticas);
+    }
+
+    public function grafico_inscripciones()
+    {
+        
+        $inscripciones = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+            ->select(DB::raw('MONTH(created_at) mes, count(*) as inscriptos, sum(if(presente = 1, 1, 0)) as presentes'))
             ->whereYear('created_at', Carbon::now()->format('Y')) 
             ->groupBy('mes') 
             ->get();
 
-        $estadisticas['actividades'] = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
-            ->select(DB::raw('MONTH(fechaCreacion) mes, 
-                count(*) as total, 
-                sum(if(idCategoria = 1, 1, 0)) as territorio, 
-                sum(if(idCategoria = 2, 1, 0)) as oficinas,
-                sum(if(idCategoria = 3, 1, 0)) as eventos'))
+        $respuesta = [];
+        foreach ($inscripciones as $i) {
+            $respuesta['meses'][] = $i->mes;
+            $respuesta['inscriptos'][] = $i->inscriptos;
+            $respuesta['presentes'][] = $i->presentes;
+        }
+
+        return $respuesta;
+    }
+
+    public function grafico_actividades()
+    {
+        $actividades = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+            ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
+            ->select(DB::raw('MONTH(fechaCreacion) mes, atl_CategoriaActividad.nombre, color, count(*) cantidad'))
             ->whereYear('fechaCreacion', Carbon::now()->format('Y')) 
-            ->groupBy('mes') 
+            ->groupBy('mes', 'atl_CategoriaActividad.color', 'atl_CategoriaActividad.nombre') 
             ->get();
 
-        //dd($estadisticas);
+        $respuesta = [];
+        foreach ($actividades as $m) {
+            $respuesta[$m->nombre]['data'][] = [ "x" => $m->mes, "y" => $m->cantidad];
+            $respuesta[$m->nombre]['color'][] = $m->color;
+            $respuesta[$m->nombre]['labels'][] = $m->mes;
+        }
 
-        return view('backoffice.estadisticas.index', $estadisticas);
+        return $respuesta;
     }
 
     public function actividades()

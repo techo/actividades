@@ -45,6 +45,9 @@ Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
 import UsuariosEvaluacionesTab from './components/backoffice/usuarios/usuarios-evaluaciones-tab';
 Vue.component('usuarios-evaluaciones-tab', UsuariosEvaluacionesTab);
 
+import EstadisticasGenerales from './components/backoffice/estadisticas/estadisticas-generales';
+Vue.component('estadisticas-generales', EstadisticasGenerales);
+
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);

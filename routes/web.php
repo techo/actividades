@@ -202,6 +202,8 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
 
     Route::get('/estadisticas', 'backoffice\EstadisticasController@index');
+    Route::get('/ajax/estadisticas/inscripciones', 'backoffice\EstadisticasController@grafico_inscripciones');
+    Route::get('/ajax/estadisticas/actividades', 'backoffice\EstadisticasController@grafico_actividades');
     Route::get('/estadisticas/actividades', 'backoffice\EstadisticasController@actividades');
     Route::get('/estadisticas/personas', 'backoffice\EstadisticasController@personas');
 
