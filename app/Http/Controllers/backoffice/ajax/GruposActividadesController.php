@@ -99,6 +99,9 @@ class GruposActividadesController extends BaseController
             $strResult = $this->buscarRecursivo($grupos);
             $arrayResult = array_merge(explode('|', $strResult), $idsGrupo);
             $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
+            $grupoRaiz = Grupo::where([['idActividad','=', $id],['idPadre','=', 0]])->first();
+            GrupoRolPersona::whereIn('idGrupo', $arrayResult)
+                ->update(['idGrupo' => $grupoRaiz->idGrupo]);
         }
 
         if (count($idsPersona) > 0) {
