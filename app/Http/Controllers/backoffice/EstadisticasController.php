@@ -17,18 +17,25 @@ class EstadisticasController extends Controller
             ->where('presente', 1)
             ->count();
 
-
         return view('backoffice.estadisticas.index', $estadisticas);
     }
 
-    public function grafico_inscripciones()
+    public function grafico_inscripciones(Request $request)
     {
-        
-        $inscripciones = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+
+        $consulta = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->select(DB::raw('MONTH(created_at) mes, count(*) as inscriptos, sum(if(presente = 1, 1, 0)) as presentes'))
-            ->whereYear('created_at', Carbon::now()->format('Y')) 
-            ->groupBy('mes') 
-            ->get();
+            ->whereYear('created_at', $año) 
+            ->groupBy('mes');
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $inscripciones = $consulta->get();
 
         $respuesta = [];
         foreach ($inscripciones as $i) {
@@ -40,14 +47,22 @@ class EstadisticasController extends Controller
         return $respuesta;
     }
 
-    public function grafico_actividades()
+    public function grafico_actividades(Request $request)
     {
-        $actividades = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
             ->select(DB::raw('MONTH(fechaCreacion) mes, atl_CategoriaActividad.nombre, color, count(*) cantidad'))
-            ->whereYear('fechaCreacion', Carbon::now()->format('Y')) 
-            ->groupBy('mes', 'atl_CategoriaActividad.color', 'atl_CategoriaActividad.nombre') 
-            ->get();
+            ->whereYear('fechaCreacion', $año) 
+            ->groupBy('mes', 'atl_CategoriaActividad.color', 'atl_CategoriaActividad.nombre');
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $actividades = $consulta->get();
 
         $respuesta = [];
         foreach ($actividades as $m) {

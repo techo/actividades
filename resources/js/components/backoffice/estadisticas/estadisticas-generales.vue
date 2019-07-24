@@ -1,5 +1,27 @@
 <template>
 <div class="box">
+	<div class="box-header">
+		<form>
+			<div class="col-md-2">
+				<select class="form-control" v-model="pais_seleccionado" >
+					 <option :value="null" selected >Todos</option>
+					<option v-for="p in paises" :value="p.id">{{ p.nombre }}</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<select class="form-control" v-model="oficina_seleccionada" >
+					<option :value="null" selected >Todas</option>
+					<option v-for="p in oficinas" :value="p.id">{{ p.nombre }}</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<input class="form-control" placeholder="año" v-model="año_seleccionado" >
+			</div>
+			<div class="col-md-2">
+				<button class="form-control btn-primary" @click.prevent="filtrar()">Filtrar</button>
+			</div>
+		</form>
+	</div>
 	<div class="box-body" >
 		<simple-alert ref="loading"></simple-alert>
 		<div class="nav-tabs-custom">
@@ -12,12 +34,12 @@
 		<div class="tab-content" style="min-height: 500px">
 			<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
 				<div style="height: 200px" >
-					<line-chart v-if="loaded.inscriptos" :chartData="dataInscriptos" :options="options"></line-chart>
+					<line-chart ref="graficoinscriptos" v-if="loaded.inscriptos" :chartData="dataInscriptos" :options="options"></line-chart>
 				</div>
 			</div>
 			<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
 				<div style="height: 200px" >
-					<line-chart v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
+					<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
 				</div>
 			</div>
 		</div>
@@ -35,6 +57,12 @@ export default {
 	components: { 'line-chart': LineChart, 'simplert': Simplert },
 	data() {
 		return {
+			paises: [],
+			oficinas: [],
+			pais_seleccionado: null,
+			oficina_seleccionada: null,
+			año_seleccionado: null,
+			filtros: {},
 			display: {
 				inscriptos: false,
 				actividades: true,
@@ -67,6 +95,8 @@ export default {
 		};
 	},
 	mounted () {
+		axios.get('/admin/ajax/paises').then((data) => { this.paises = data.data; });
+		axios.get('/admin/ajax/oficinas').then((data) => { this.oficinas = data.data; });
 		this.datos_actividades();
 	},
 	computed: {
@@ -78,23 +108,29 @@ export default {
 		inscriptos (v) {
 			if(v == true && this.loaded.inscriptos == false)
 				this.datos_inscripciones();
-		}
+		},
+		pais_seleccionado (v) { this.filtros.pais = v; },
+		oficina_seleccionada (v) { this.filtros.oficina = v; },
+		año_seleccionado (v) { this.filtros.año = v; },
 	},
 	methods: {
+		filtrar () {
+			if(this.display.actividades)
+				this.datos_actividades();
+			else
+				this.datos_inscripciones();
+		},
 		datos_actividades: function () {
 			this.mostrarLoadingAlert();
-			axios.get('/admin/ajax/estadisticas/actividades')
+			this.dataActividades.labels = [];
+			this.dataActividades.datasets = [];
+			axios.get('/admin/ajax/estadisticas/actividades', { params: this.filtros } )
 			.then((data) => {
 				let i = 0;
-				let labels = 0;
+				let labels = [];
 				for (const key of Object.keys(data.data)) 
 				{
-					//la cantidad de ticks de la serie más larga
-					if(data.data[key].labels.length > labels)
-					{
-						labels = data.data[key].labels.length;
-						this.dataActividades.labels = data.data[key].labels;
-					}
+					labels = _.union(labels, data.data[key].labels);
 
 					this.dataActividades.datasets[i] = {
 			            label: key,
@@ -105,19 +141,21 @@ export default {
 			            borderColor: data.data[key].color[0],
 			            borderWidth: 6,
 			        }
-
 			        i++;
 				};
-				//debugger;
+				this.dataActividades.labels = _.sortBy(labels);
 				this.loaded.actividades = true;
 				this.$refs.loading.justCloseSimplert();
-				
+				if(this.$refs.graficoactividades != undefined)
+					this.$refs.graficoactividades.$data._chart.update()
 			})
 			.catch((error) => { debugger; })
 		},
 		datos_inscripciones: function () {
 			this.mostrarLoadingAlert();
-			axios.get('/admin/ajax/estadisticas/inscripciones')
+			this.dataInscriptos.labels = [];
+			this.dataInscriptos.datasets = [];
+			axios.get('/admin/ajax/estadisticas/inscripciones', { params: this.filtros } )
 			.then((data) => { 
 				this.dataInscriptos.labels = data.data.meses;
 
@@ -140,6 +178,8 @@ export default {
 			    }
 				this.loaded.inscriptos = true;
 				this.$refs.loading.justCloseSimplert();
+				if(this.$refs.graficoinscriptos != undefined)
+					this.$refs.graficoinscriptos.$data._chart.update()
 			})
 			.catch((error) => { debugger; });
 		},

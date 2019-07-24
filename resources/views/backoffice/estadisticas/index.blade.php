@@ -4,8 +4,6 @@
 
 @section('content')
 
-@include('backoffice.estadisticas.filtros')
-
 <estadisticas-generales></estadisticas-generales>
 
 @endsection
