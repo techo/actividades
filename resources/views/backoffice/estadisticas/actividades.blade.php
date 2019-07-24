@@ -4,8 +4,6 @@
 
 @section('content')
 
-@include('backoffice.estadisticas.filtros')
-
 <div class="box">
 	<div class="box-body">
 

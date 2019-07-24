@@ -1,67 +1,47 @@
 <template>
-<div class="box">
-	<div class="box-header">
-		<form>
-			<div class="col-md-2">
-				<select class="form-control" v-model="pais_seleccionado" >
-					 <option :value="null" selected >Todos</option>
-					<option v-for="p in paises" :value="p.id">{{ p.nombre }}</option>
-				</select>
-			</div>
-			<div class="col-md-2">
-				<select class="form-control" v-model="oficina_seleccionada" >
-					<option :value="null" selected >Todas</option>
-					<option v-for="p in oficinas" :value="p.id">{{ p.nombre }}</option>
-				</select>
-			</div>
-			<div class="col-md-2">
-				<input class="form-control" placeholder="año" v-model="año_seleccionado" >
-			</div>
-			<div class="col-md-2">
-				<button class="form-control btn-primary" @click.prevent="filtrar()">Filtrar</button>
-			</div>
-		</form>
-	</div>
-	<div class="box-body" >
+	<div class="box">
 		<simple-alert ref="loading"></simple-alert>
-		<div class="nav-tabs-custom">
-			<ul class="nav nav-tabs">
-				<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true;">Actividades</a></li>
-				<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;">Inscriptos</a></li>
-			</ul>
+		<div class="box-header">
+			<estadisticas-filtros :value="filtros" @input="filtros = arguments[0]; filtrar()" ></estadisticas-filtros>
 		</div>
+		<div class="box-body" >
 
-		<div class="tab-content" style="min-height: 500px">
-			<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
-				<div style="height: 200px" >
-					<line-chart ref="graficoinscriptos" v-if="loaded.inscriptos" :chartData="dataInscriptos" :options="options"></line-chart>
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs">
+					<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true;">Actividades</a></li>
+					<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;">Inscriptos</a></li>
+				</ul>
+			</div>
+
+			<div class="tab-content" style="min-height: 500px">
+				<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
+					<div style="height: 200px" >
+						<line-chart ref="graficoinscriptos" v-if="loaded.inscriptos" :chartData="dataInscriptos" :options="options"></line-chart>
+					</div>
+				</div>
+				<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
+					<div style="height: 200px" >
+						<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
+					</div>
 				</div>
 			</div>
-			<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
-				<div style="height: 200px" >
-					<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
-				</div>
-			</div>
-		</div>
 
+		</div>
 	</div>
-</div>
-
 </template>
 
 <script>
 import LineChart from '../../plugins/LineChart';
+import EstadisticasFiltros from './estadisticas-filtros';
 import Simplert from 'vue2-simplert';
 
 export default {
-	components: { 'line-chart': LineChart, 'simplert': Simplert },
+	components: { 
+		'estadisticas-filtros': EstadisticasFiltros, 
+		'line-chart': LineChart, 
+		'simplert': Simplert },
 	data() {
 		return {
-			paises: [],
-			oficinas: [],
-			pais_seleccionado: null,
-			oficina_seleccionada: null,
-			año_seleccionado: null,
 			filtros: {},
 			display: {
 				inscriptos: false,
@@ -71,14 +51,8 @@ export default {
 				inscriptos: false,
 				actividades: false,
 			},
-			dataActividades: {
-				labels: [],
-		        datasets: []
-		    },
-			dataInscriptos: {
-		        labels: [],
-		        datasets: []
-		    },
+			dataActividades: { labels: [], datasets: [] },
+			dataInscriptos: { labels: [], datasets: [] },
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -95,8 +69,6 @@ export default {
 		};
 	},
 	mounted () {
-		axios.get('/admin/ajax/paises').then((data) => { this.paises = data.data; });
-		axios.get('/admin/ajax/oficinas').then((data) => { this.oficinas = data.data; });
 		this.datos_actividades();
 	},
 	computed: {
@@ -109,9 +81,6 @@ export default {
 			if(v == true && this.loaded.inscriptos == false)
 				this.datos_inscripciones();
 		},
-		pais_seleccionado (v) { this.filtros.pais = v; },
-		oficina_seleccionada (v) { this.filtros.oficina = v; },
-		año_seleccionado (v) { this.filtros.año = v; },
 	},
 	methods: {
 		filtrar () {
@@ -162,19 +131,13 @@ export default {
 				this.dataInscriptos.datasets[0] = {
 		            label: 'Inscriptos',
 		            data: data.data.inscriptos,
-		            borderWidth: 1,
-		            lineTension: 0,
-		            fill: false,
-		            borderWidth: 6
+		            borderWidth: 1, lineTension: 0, fill: false, borderWidth: 6
 			    };
 			    this.dataInscriptos.datasets[1] = {
 		            label: 'Presentes',
 		            data: data.data.presentes,
-		            borderWidth: 1,
-		            lineTension: 0,
-		            fill: false,
 		            borderColor: '#4ac0c1',
-		            borderWidth: 6
+		            borderWidth: 1, lineTension: 0, fill: false, borderWidth: 6
 			    }
 				this.loaded.inscriptos = true;
 				this.$refs.loading.justCloseSimplert();
