@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<simple-alert ref="loading"></simple-alert>
+		<alert :mostrar="loading"></alert>
 		<vuetable
 		class="vuetable"
 		ref="vuetable"
@@ -15,8 +15,8 @@
 		no-data-template="No hay ítems para mostrar"
 		@vuetable:cell-clicked="onCellClicked"
 		@vuetable:pagination-data="onPaginationData"
-		@vuetable:loading="mostrarLoadingAlert"
-		@vuetable:loaded="ocultarLoadingAlert"
+		@vuetable:loading="loading = true"
+		@vuetable:loaded="loading = false"
 		></vuetable>
 		<div class="vuetable-pagination">
 			<vuetable-pagination-info ref="paginationInfo"
@@ -33,14 +33,14 @@
 </template>
 
 <script>
-	import Simplert from 'vue2-simplert';
+	import Alert from './Alert';
 	import Vuetable from 'vuetable-2/src/components/Vuetable'
 	import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 	import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 
 	export default {
 		components: {
-			Simplert,
+			Alert,
 			Vuetable,
 			VuetablePagination,
 			VuetablePaginationInfo,
@@ -48,6 +48,7 @@
 		props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'moreParams'],
 		data () {
 			return {
+				loading: false,
 				dataPlaceholderText: this.placeholderText,
 				css: {
 					table: {
@@ -79,22 +80,6 @@
 			}
 		},
 		methods: {
-			allcap (value) {
-				return value.toUpperCase()
-			},
-			estadoBadge (value) {
-				return value === 'M'
-				? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
-				: '<span class="label label-danger"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-			},
-			formatNumber (value) {
-				return accounting.formatNumber(value, 2)
-			},
-			formatDate (value, fmt = 'D MMM YYYY') {
-				return (value == null)
-				? ''
-				: moment(value, 'YYYY-MM-DD').format(fmt)
-			},
 			onPaginationData (paginationData) {
 				this.$refs.pagination.setPaginationData(paginationData);
 				this.$refs.paginationInfo.setPaginationData(paginationData);
@@ -107,22 +92,8 @@
 					window.location.href = this.detailUrl + data.id;
 				}
 				this.$refs.vuetable.toggleDetailRow(data.id)
-			},
-			mostrarLoadingAlert () {
-				this.$refs.loading.openSimplert({
-					title: 'Espera...',
-					message: "<i class=\"fa fa-spinner fa-spin fa-4x\"></i>",
-					hideAllButton: true,
-					isShown: true,
-					disableOverlayClick: true,
-					type: ''
-				});
-			},
-			ocultarLoadingAlert () {
-				this.$refs.loading.justCloseSimplert();
-			},
+			}
 		},
-		created()  {},
 		events: {
 			'filter-set' (filterText) {
 				this.moreParams = {

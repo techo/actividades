@@ -209,6 +209,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/ajax/estadisticas/inscripciones', 'backoffice\EstadisticasController@grafico_inscripciones');
     Route::get('/ajax/estadisticas/actividades', 'backoffice\EstadisticasController@grafico_actividades');
     Route::get('/ajax/estadisticas/inscripciones-por-actividad', 'backoffice\EstadisticasController@inscripciones_por_actividad');
+    Route::get('/ajax/estadisticas/evaluaciones-por-actividad', 'backoffice\EstadisticasController@evaluaciones_por_actividad');
     
 
 });

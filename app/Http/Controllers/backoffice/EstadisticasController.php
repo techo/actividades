@@ -103,15 +103,32 @@ class EstadisticasController extends Controller
         return $estadisticas;
     }
 
-    public function evaluaciones_por_actividad()
+    public function evaluaciones_por_actividad(Request $request)
     {
-        $estadisticas = \App\Actividad::join('EvaluacionActividad', 'Actividad.idActividad', '=', 'EvaluacionActividad.idActividad')
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
+
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
+
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\Actividad::join('EvaluacionActividad', 'Actividad.idActividad', '=', 'EvaluacionActividad.idActividad')
             ->select(DB::raw('nombreActividad, avg(puntaje) as puntaje, count(puntaje) as cantidad'))
-            ->whereYear('created_at', Carbon::now()->format('Y')) 
+            ->whereYear('created_at', $año) 
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad') 
-            ->orderByRaw('avg(puntaje) desc') 
-            ->limit(10)
-            ->get();
+            ->orderByRaw($sort);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
+
         return $estadisticas;
     }
 
