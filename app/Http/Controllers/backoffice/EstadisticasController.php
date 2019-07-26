@@ -132,50 +132,126 @@ class EstadisticasController extends Controller
         return $estadisticas;
     }
 
-    public function personas()
+    public function coordinadores(Request $request)
     {
-        $estadisticas['top_personas_con_peores_evaluaciones_sociales'] = \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
-            ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
-            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
-            ->whereYear('EvaluacionPersona.created_at', Carbon::now()->format('Y')) 
-            ->whereNotNull('EvaluacionPersona.puntajeSocial')
-            ->where('Actividad.idOficina', '=', 6)
-            ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
-            ->orderByRaw('avg(puntajeSocial) asc, count(puntajeSocial) desc') 
-            ->limit(10)
-            ->get();
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
 
-        $estadisticas['top_personas_con_peores_evaluaciones_tecnicas'] = \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
-            ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
-            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeTecnico) as puntaje, count(puntajeTecnico) as cantidad'))
-            ->whereYear('EvaluacionPersona.created_at', Carbon::now()->format('Y')) 
-            ->whereNotNull('EvaluacionPersona.puntajeTecnico')
-            ->where('Actividad.idOficina', '=', 6)
-            ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
-            ->orderByRaw('avg(puntajeTecnico) asc, count(puntajeTecnico) desc') 
-            ->limit(10)
-            ->get();
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
 
-        $estadisticas['top_personas_mas_motivadas'] = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
-            ->select(DB::raw('nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
-            ->whereYear('Persona.created_at', Carbon::now()->format('Y')) 
-            ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
-            ->orderByRaw('count(*) desc') 
-            ->limit(10)
-            ->get();
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
 
-        $estadisticas['top_coordinadores_mas_convocantes'] = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+        $consulta = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->join('Persona', 'Persona.idPersona', '=', 'Actividad.idCoordinador')
             ->select(DB::raw('nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
-            ->whereYear('Inscripcion.created_at', '>=', Carbon::now()->format('Y')) 
+            ->whereYear('Inscripcion.created_at', $año) 
             ->groupBy(['Actividad.idCoordinador', 'nombres', 'apellidoPaterno']) 
-            ->orderByRaw('count(*) desc') 
-            ->limit(10)
-            ->get();
+            ->orderByRaw($sort);
 
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
 
-        //dd($estadisticas);
-        return view('backoffice.estadisticas.personas', $estadisticas);
+        return $estadisticas;
+    }
+
+    public function inscripciones(Request $request)
+    {
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
+
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
+
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
+            ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
+            ->select(DB::raw('nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->whereYear('Persona.created_at', $año) 
+            ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
+            ->orderByRaw($sort);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
+
+        return $estadisticas;
+    }
+
+    public function evaluaciones_sociales(Request $request)
+    {
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
+
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
+
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta= \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
+            ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
+            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
+            ->whereYear('EvaluacionPersona.created_at', $año) 
+            ->whereNotNull('EvaluacionPersona.puntajeSocial')
+            ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
+            ->orderByRaw($sort);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
+
+        return $estadisticas;
+    }
+
+    public function evaluaciones_tecnicas(Request $request)
+    {
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
+
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
+
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
+            ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
+            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
+            ->whereYear('EvaluacionPersona.created_at', $año) 
+            ->whereNotNull('EvaluacionPersona.puntajeSocial')
+            ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
+            ->orderByRaw($sort);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
+
+        return $estadisticas;
     }
 
 }

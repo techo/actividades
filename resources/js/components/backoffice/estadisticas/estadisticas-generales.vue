@@ -94,7 +94,7 @@ export default {
 			this.loading = true;
 			this.dataActividades.labels = [];
 			this.dataActividades.datasets = [];
-			axios.get('/admin/ajax/estadisticas/actividades', { params: this.filtros } )
+			axios.get('/admin/ajax/estadisticas/grafico-actividades', { params: this.filtros } )
 			.then((data) => {
 				let i = 0;
 				let labels = [];
@@ -133,7 +133,7 @@ export default {
 			this.loading = true;
 			this.dataInscriptos.labels = [];
 			this.dataInscriptos.datasets = [];
-			axios.get('/admin/ajax/estadisticas/inscripciones', { params: this.filtros } )
+			axios.get('/admin/ajax/estadisticas/grafico-inscripciones', { params: this.filtros } )
 			.then((data) => {
 				if(data.data.length == 0) {
 					this.dataInscriptos.datasets = [];
