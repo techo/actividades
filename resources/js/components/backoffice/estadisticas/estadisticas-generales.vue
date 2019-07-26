@@ -1,6 +1,6 @@
 <template>
 	<div class="box">
-		<simple-alert ref="loading"></simple-alert>
+		<alert :mostrar="loading"></alert>
 		<div class="box-header">
 			<estadisticas-filtros :value="filtros" @input="filtros = arguments[0]; filtrar()" ></estadisticas-filtros>
 		</div>
@@ -32,14 +32,14 @@
 
 <script>
 import LineChart from '../../plugins/LineChart';
+import Alert from '../../plugins/Alert';
 import EstadisticasFiltros from './estadisticas-filtros';
-import Simplert from 'vue2-simplert';
 
 export default {
 	components: { 
 		'estadisticas-filtros': EstadisticasFiltros, 
 		'line-chart': LineChart, 
-		'simplert': Simplert },
+		'alert': Alert },
 	data() {
 		return {
 			filtros: {},
@@ -51,6 +51,7 @@ export default {
 				inscriptos: false,
 				actividades: false,
 			},
+			loading: false,
 			dataActividades: { labels: [], datasets: [] },
 			dataInscriptos: { labels: [], datasets: [] },
 			options: {
@@ -90,7 +91,7 @@ export default {
 				this.datos_inscripciones();
 		},
 		datos_actividades: function () {
-			this.mostrarLoadingAlert();
+			this.loading = true;
 			this.dataActividades.labels = [];
 			this.dataActividades.datasets = [];
 			axios.get('/admin/ajax/estadisticas/actividades', { params: this.filtros } )
@@ -99,6 +100,14 @@ export default {
 				let labels = [];
 				for (const key of Object.keys(data.data)) 
 				{
+					if(data.data.length == 0) {
+						this.dataActividades.datasets = [];
+						this.dataActividades.labels = [];
+						this.loaded.actividades = true;
+						this.loading = false;
+						return;
+					}
+
 					labels = _.union(labels, data.data[key].labels);
 
 					this.dataActividades.datasets[i] = {
@@ -114,18 +123,25 @@ export default {
 				};
 				this.dataActividades.labels = _.sortBy(labels);
 				this.loaded.actividades = true;
-				this.$refs.loading.justCloseSimplert();
+				this.loading = false;
 				if(this.$refs.graficoactividades != undefined)
 					this.$refs.graficoactividades.$data._chart.update()
 			})
 			.catch((error) => { debugger; })
 		},
 		datos_inscripciones: function () {
-			this.mostrarLoadingAlert();
+			this.loading = true;
 			this.dataInscriptos.labels = [];
 			this.dataInscriptos.datasets = [];
 			axios.get('/admin/ajax/estadisticas/inscripciones', { params: this.filtros } )
-			.then((data) => { 
+			.then((data) => {
+				if(data.data.length == 0) {
+					this.dataInscriptos.datasets = [];
+					this.dataInscriptos.labels = [];
+					this.loaded.inscriptos = true;
+					this.loading = false;
+				}
+
 				this.dataInscriptos.labels = data.data.meses;
 
 				this.dataInscriptos.datasets[0] = {
@@ -140,22 +156,12 @@ export default {
 		            borderWidth: 1, lineTension: 0, fill: false, borderWidth: 6
 			    }
 				this.loaded.inscriptos = true;
-				this.$refs.loading.justCloseSimplert();
+				this.loading = false;
 				if(this.$refs.graficoinscriptos != undefined)
 					this.$refs.graficoinscriptos.$data._chart.update()
 			})
 			.catch((error) => { debugger; });
 		},
-		mostrarLoadingAlert() {
-			this.$refs.loading.openSimplert({
-				title: 'Espera...',
-				message: "<i class=\"fa fa-spinner fa-spin fa-4x\"></i>",
-				hideAllButton: true,
-				isShown: true,
-				disableOverlayClick: true,
-				type: ''
-			})
-		}
 	},
 }
 </script>

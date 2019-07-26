@@ -74,25 +74,45 @@ class EstadisticasController extends Controller
         return $respuesta;
     }
 
-    public function actividades()
+    public function inscripciones_por_actividad(Request $request)
     {
-        $estadisticas['top_actividades_mas_convocantes'] = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->select(DB::raw('nombreActividad, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
-            ->whereYear('created_at', Carbon::now()->format('Y')) 
-            ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad') 
-            ->orderByRaw('count(*) desc') 
-            ->limit(10)
-            ->get();
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|")) $sort = join(" ",explode("|", $request->sort));
+            else $sort = $request->sort;
+        }
 
-        $estadisticas['top_actividades_con_mejores_evaluaciones'] = \App\Actividad::join('EvaluacionActividad', 'Actividad.idActividad', '=', 'EvaluacionActividad.idActividad')
+        $per_page = 25;
+        if($request->filled('per_page')) { $per_page = $request->per_page; }
+
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+            ->select(DB::raw('nombreActividad, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->whereYear('created_at', $año)
+            ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad')
+            ->orderByRaw($sort);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $estadisticas = $consulta->paginate($per_page);
+
+        return $estadisticas;
+    }
+
+    public function evaluaciones_por_actividad()
+    {
+        $estadisticas = \App\Actividad::join('EvaluacionActividad', 'Actividad.idActividad', '=', 'EvaluacionActividad.idActividad')
             ->select(DB::raw('nombreActividad, avg(puntaje) as puntaje, count(puntaje) as cantidad'))
             ->whereYear('created_at', Carbon::now()->format('Y')) 
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad') 
             ->orderByRaw('avg(puntaje) desc') 
             ->limit(10)
             ->get();
-
-        return view('backoffice.estadisticas.actividades', $estadisticas);
+        return $estadisticas;
     }
 
     public function personas()
