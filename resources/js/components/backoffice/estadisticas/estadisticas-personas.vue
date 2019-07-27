@@ -6,16 +6,7 @@
 		<div class="box-body" >
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
-					<li :class="{'active': display.coordinadores}" >
-						<a 
-							href="#coordinadores" 
-							data-toggle="tab" 
-							@click.prevent="tab('coordinadores')"
-						>
-						Coordinadores
-						</a>
-					</li>
-					<li :class="{'active': display.inscripciones} " >
+					<li :class="{'active': tabs.inscripciones} " >
 						<a 
 							href="#inscripciones" 
 							data-toggle="tab" 
@@ -24,7 +15,7 @@
 						Inscripciones
 						</a>
 					</li>
-					<li :class="{'active': display.evaluaciones_sociales} " >
+					<li :class="{'active': tabs.evaluaciones_sociales} " >
 						<a 
 							href="#evaluaciones-sociales" 
 							data-toggle="tab" 
@@ -33,7 +24,7 @@
 						Evaluaciones Sociales
 						</a>
 					</li>
-					<li :class="{'active': display.evaluaciones_tecnicas} " >
+					<li :class="{'active': tabs.evaluaciones_tecnicas} " >
 						<a 
 							href="#evaluaciones-tecnicas" 
 							data-toggle="tab" 
@@ -46,24 +37,10 @@
 			</div>
 
 			<div class="tab-content" style="min-height: 500px">
-				<div id="coordinadores" class="tab-pane" :class="{'active': display.coordinadores}" >
+				<div id="inscripciones" class="tab-pane" :class="{'active': tabs.inscripciones}">
 					<div style="height: 200px" >
-						<tabla-paginada ref="coordinadores" 
-							apiUrl="/admin/ajax/estadisticas/coordinadores"
-							:fields="[
-								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
-				            	{'name': 'apellidoPaterno', 'sortField': 'apellidoPaterno', 'title': 'Apellido'},
-				            	{'name': 'inscripciones', 'sortField': 'inscripciones', 'title': 'Inscripciones'},
-				            	{'name': 'presentes', 'sortField': 'presentes', 'title': 'Presentes'},
-				            ]"
-				            :sortOrder="[{field: 'inscripciones', direction: 'desc'}]"
-				            :moreParams="filtros"
-				        ></tabla-paginada>
-					</div>
-				</div>
-				<div id="inscripciones" class="tab-pane" :class="{'active': display.inscripciones}">
-					<div style="height: 200px" >
-						<tabla-paginada ref="inscripciones" 
+						<tabla-paginada ref="inscripciones"
+							v-if="tabs.inscripciones"
 							apiUrl="/admin/ajax/estadisticas/inscripciones"
 							:fields="[
 								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
@@ -73,12 +50,14 @@
 				            ]"
 				            :sortOrder="[{field: 'inscripciones', direction: 'desc'}]"
 				            :moreParams="filtros"
+				            detailUrl="/admin/usuarios/"
 				        ></tabla-paginada>
 					</div>
 				</div>
-				<div id="evaluaciones-sociales" class="tab-pane" :class="{'active': display.evaluaciones_sociales}">
+				<div id="evaluaciones-sociales" class="tab-pane" :class="{'active': tabs.evaluaciones_sociales}">
 					<div style="height: 200px" >
 						<tabla-paginada ref="evaluaciones_sociales" 
+							v-if="tabs.evaluaciones_sociales"
 							apiUrl="/admin/ajax/estadisticas/evaluaciones-sociales"
 							:fields="[
 								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
@@ -88,12 +67,14 @@
 				            ]"
 				            :sortOrder="[{field: 'puntaje', direction: 'asc'}]"
 				            :moreParams="filtros"
+				            detailUrl="/admin/usuarios/"
 				        ></tabla-paginada>
 					</div>
 				</div>
-				<div id="evaluaciones-tecnicas" class="tab-pane" :class="{'active': display.evaluaciones_tecnicas}">
+				<div id="evaluaciones-tecnicas" class="tab-pane" :class="{'active': tabs.evaluaciones_tecnicas}">
 					<div style="height: 200px" >
 						<tabla-paginada ref="evaluaciones_tecnicas" 
+							v-if="tabs.evaluaciones_tecnicas"
 							apiUrl="/admin/ajax/estadisticas/evaluaciones-tecnicas"
 							:fields="[
 								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
@@ -103,6 +84,7 @@
 				            ]"
 				            :sortOrder="[{field: 'puntaje', direction: 'asc'}]"
 				            :moreParams="filtros"
+				            detailUrl="/admin/usuarios/"
 				        ></tabla-paginada>
 					</div>
 				</div>
@@ -125,27 +107,30 @@ export default {
 		return {
 			loading: false,
 			filtros: {},
-			display: {
-				coordinadores: true,
+			tabs: {
 				inscripciones: false,
-				evaluaciones_sociales: false,
+				evaluaciones_sociales: true,
 				evaluaciones_tecnicas: false,
 			},
 		};
 	},
 	methods: {
 		filtrar () {
-			this.$nextTick( () => { this.$refs.coordinadores.$refs.vuetable.refresh(); } )
-			this.$nextTick( () => { this.$refs.inscripciones.$refs.vuetable.refresh(); } )
-			this.$nextTick( () => { this.$refs.evaluaciones_sociales.$refs.vuetable.refresh(); } )
-			this.$nextTick( () => { this.$refs.evaluaciones_tecnicas.$refs.vuetable.refresh(); } )
+			let t = Object.keys(this.tabs)
+			for (let i in t) {
+				if(this.tabs[t[i]] == true) {
+					this.$nextTick( () => { this.$refs[t[i]].$refs.vuetable.refresh(); } )
+				}
+			}
 		},
 		tab (nombre) {
-			for (let t in Object.keys(this.display)) {
-				if(t == nombre)
-					this.display[t] = true;
+			let t = Object.keys(this.tabs)
+			for (let i in t) {
+				if(t[i] == nombre) 
+					this.tabs[t[i]] = true;
 				else
-					this.display[t] = false;
+					this.tabs[t[i]] = false;
+
 			}
 		},
 	},

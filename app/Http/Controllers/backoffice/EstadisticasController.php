@@ -90,7 +90,7 @@ class EstadisticasController extends Controller
         $oficina = ($request->filled('oficina'))?$request->oficina:null;
 
         $consulta = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->select(DB::raw('nombreActividad, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->select(DB::raw('Actividad.idActividad as id, nombreActividad, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
             ->whereYear('created_at', $año)
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad')
             ->orderByRaw($sort);
@@ -119,7 +119,7 @@ class EstadisticasController extends Controller
         $oficina = ($request->filled('oficina'))?$request->oficina:null;
 
         $consulta = \App\Actividad::join('EvaluacionActividad', 'Actividad.idActividad', '=', 'EvaluacionActividad.idActividad')
-            ->select(DB::raw('nombreActividad, avg(puntaje) as puntaje, count(puntaje) as cantidad'))
+            ->select(DB::raw('Actividad.idActividad as id, nombreActividad, avg(puntaje) as puntaje, count(puntaje) as cantidad'))
             ->whereYear('created_at', $año) 
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad') 
             ->orderByRaw($sort);
@@ -149,7 +149,7 @@ class EstadisticasController extends Controller
 
         $consulta = \App\Actividad::join('Inscripcion', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->join('Persona', 'Persona.idPersona', '=', 'Actividad.idCoordinador')
-            ->select(DB::raw('nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
             ->whereYear('Inscripcion.created_at', $año) 
             ->groupBy(['Actividad.idCoordinador', 'nombres', 'apellidoPaterno']) 
             ->orderByRaw($sort);
@@ -179,7 +179,7 @@ class EstadisticasController extends Controller
 
         $consulta = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-            ->select(DB::raw('nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
             ->whereYear('Persona.created_at', $año) 
             ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
             ->orderByRaw($sort);
@@ -209,7 +209,7 @@ class EstadisticasController extends Controller
 
         $consulta= \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
             ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
-            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
+            ->select(DB::raw('Persona.idPersona as id, Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
             ->whereYear('EvaluacionPersona.created_at', $año) 
             ->whereNotNull('EvaluacionPersona.puntajeSocial')
             ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
@@ -240,7 +240,7 @@ class EstadisticasController extends Controller
 
         $consulta = \App\Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
             ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
-            ->select(DB::raw('Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
+            ->select(DB::raw('Persona.idPersona as id, Persona.nombres, Persona.apellidoPaterno, avg(puntajeSocial) as puntaje, count(puntajeSocial) as cantidad'))
             ->whereYear('EvaluacionPersona.created_at', $año) 
             ->whereNotNull('EvaluacionPersona.puntajeSocial')
             ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 

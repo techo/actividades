@@ -204,6 +204,7 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::get('/estadisticas', 'backoffice\EstadisticasController@index');
     Route::get('/estadisticas/actividades', function () { return view('backoffice.estadisticas.actividades'); });
     Route::get('/estadisticas/personas', function () { return view('backoffice.estadisticas.personas'); });
+    Route::get('/estadisticas/coordinadores', function () { return view('backoffice.estadisticas.coordinadores'); });
 
     Route::get('/ajax/paises', 'ajax\PaisesController@paises');
     Route::get('/ajax/estadisticas/grafico-inscripciones', 'backoffice\EstadisticasController@grafico_inscripciones');

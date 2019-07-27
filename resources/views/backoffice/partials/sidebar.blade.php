@@ -90,6 +90,9 @@
                     <li class="{{request()->is('admin/estadisticas/personas') ? 'active' : ''}}">
                         <a href="/admin/estadisticas/personas">Personas</a>
                     </li>
+                    <li class="{{request()->is('admin/estadisticas/coordinadores') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas/coordinadores">Coordinadores</a>
+                    </li>
                 </ul>
             </li>
             @endif

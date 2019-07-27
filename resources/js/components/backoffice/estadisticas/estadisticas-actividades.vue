@@ -6,19 +6,20 @@
 		<div class="box-body" >
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
-					<li :class="{'active': display.inscripciones}" >
-						<a href="#inscripciones" data-toggle="tab" @click.prevent="display.inscripciones = true; display.evaluaciones = false;">Inscripciones</a>
+					<li :class="{'active': tabs.inscripciones}" >
+						<a href="#inscripciones" data-toggle="tab" @click.prevent="tab('inscripciones')">Inscripciones</a>
 					</li>
-					<li :class="{'active': display.evaluaciones} " >
-						<a href="#evaluaciones" data-toggle="tab" @click.prevent="display.inscripciones = false; display.evaluaciones = true;">Evaluaciones</a>
+					<li :class="{'active': tabs.evaluaciones} " >
+						<a href="#evaluaciones" data-toggle="tab" @click.prevent="tab('evaluaciones')">Evaluaciones</a>
 					</li>
 				</ul>
 			</div>
 
 			<div class="tab-content" style="min-height: 500px">
-				<div id="inscripciones" class="tab-pane" :class="{'active': display.inscripciones}" >
+				<div id="inscripciones" class="tab-pane" :class="{'active': tabs.inscripciones}" >
 					<div style="height: 200px" >
 						<tabla-paginada ref="inscripciones" 
+							v-if="tabs.inscripciones"
 							apiUrl="/admin/ajax/estadisticas/inscripciones-por-actividad"
 							:fields="[
 								{'name': 'nombreActividad', 'sortField': 'nombreActividad', 'title': 'Actividad'},
@@ -27,12 +28,14 @@
 				            ]"
 				            :sortOrder="[{field: 'inscripciones', direction: 'desc'}]"
 				            :moreParams="filtros"
+				            detailUrl="/admin/actividades/"
 				        ></tabla-paginada>
 					</div>
 				</div>
-				<div id="evaluaciones" class="tab-pane" :class="{'active': display.evaluaciones}">
+				<div id="evaluaciones" class="tab-pane" :class="{'active': tabs.evaluaciones}">
 					<div style="height: 200px" >
 						<tabla-paginada ref="evaluaciones" 
+							v-if="tabs.evaluaciones"
 							apiUrl="/admin/ajax/estadisticas/evaluaciones-por-actividad"
 							:fields="[
 								{'name': 'nombreActividad', 'sortField': 'nombreActividad', 'title': 'Actividad'},
@@ -41,6 +44,7 @@
 				            ]"
 				            :sortOrder="[{field: 'puntaje', direction: 'asc'}]"
 				            :moreParams="filtros"
+				            detailUrl="/admin/actividades/"
 				        ></tabla-paginada>
 					</div>
 				</div>
@@ -63,7 +67,7 @@ export default {
 		return {
 			loading: false,
 			filtros: {},
-			display: {
+			tabs: {
 				inscripciones: true,
 				evaluaciones: false,
 			},
@@ -74,14 +78,28 @@ export default {
 	},
 	computed: {
 		inscripciones() {
-			return this.display.inscripciones;
+			return this.tabs.inscripciones;
 		}
 	},
 	methods: {
 		filtrar () {
-			this.$nextTick( () => { this.$refs.inscripciones.$refs.vuetable.refresh(); } )
-			this.$nextTick( () => { this.$refs.evaluaciones.$refs.vuetable.refresh(); } )
-		}
+			let t = Object.keys(this.tabs)
+			for (let i in t) {
+				if(this.tabs[t[i]] == true) {
+					this.$nextTick( () => { this.$refs[t[i]].$refs.vuetable.refresh(); } )
+				}
+			}
+		},
+		tab (nombre) {
+			let t = Object.keys(this.tabs)
+			for (let i in t) {
+				if(t[i] == nombre) 
+					this.tabs[t[i]] = true;
+				else
+					this.tabs[t[i]] = false;
+
+			}
+		},
 	},
 }
 </script>

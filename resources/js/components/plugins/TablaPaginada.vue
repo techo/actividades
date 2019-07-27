@@ -45,11 +45,10 @@
 			VuetablePagination,
 			VuetablePaginationInfo,
 		},
-		props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'moreParams'],
+		props: ['apiUrl', 'fields', 'sortOrder', 'detailUrl', 'moreParams'],
 		data () {
 			return {
 				loading: false,
-				dataPlaceholderText: this.placeholderText,
 				css: {
 					table: {
 						tableClass: 'table table-hover table-condensed',
@@ -89,7 +88,7 @@
 			},
 			onCellClicked (data, field, event) {
 				if (this.detailUrl !== undefined) {
-					window.location.href = this.detailUrl + data.id;
+					window.open(this.detailUrl + data.id);
 				}
 				this.$refs.vuetable.toggleDetailRow(data.id)
 			}

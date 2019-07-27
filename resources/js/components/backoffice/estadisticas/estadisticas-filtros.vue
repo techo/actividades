@@ -16,7 +16,7 @@
 			<input class="form-control" placeholder="año" v-model="año_seleccionado" >
 		</div>
 		<div class="col-md-2">
-			<button class="form-control btn-primary" @click.prevent="filtrar()">Filtrar</button>
+			<button class="btn btn-primary" @click.prevent="filtrar()">Filtrar</button>
 		</div>
 	</form>
 </template>
@@ -33,7 +33,7 @@ export default {
 			oficinas: [],
 			pais_seleccionado: null,
 			oficina_seleccionada: null,
-			año_seleccionado: null,
+			año_seleccionado: moment().format('YYYY'),
 		};
 	},
 	mounted () {
