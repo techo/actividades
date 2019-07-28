@@ -29,7 +29,13 @@ class InscripcionesConPagoTest extends TestCase
             //pago = 1
             ->create();
 
+        $datos = [
+            'punto_encuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro, 
+            'aceptar_terminos' => 1 
+        ];
+
         $this->actingAs($jose)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
             //post a preinscribirse
             //va a pantalla "solo falta un paso"
             ->assertStatus(200);
@@ -61,18 +67,22 @@ class InscripcionesConPagoTest extends TestCase
             ->create();
 
         //finaliza la inscripción
+        $this->actingAs($coordinador)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias')
+            //post a preinscribirse
+            //va a pantalla "solo falta un paso"
+            ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
             'idPuntoEncuentro' => $actividad->inscripciones[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
-            'idPersona' => $persona->idPersona,
+            'idPersona' => $actividad->inscripciones[0]->idPersona,
             'confirma' => 1,
         ]); 
 
         Mail::assertQueued(MailFinalizaInscripcion::class, 1);
     }
 
-    /** @test */
     public function coordinador_puede_marcar_pago()
     {
         //$this->withoutExceptionHandling();
@@ -80,7 +90,6 @@ class InscripcionesConPagoTest extends TestCase
         //mail de "recibimos tu pago"
     }
 
-    /** @test */
     public function sistema_puede_marcar_pago()
     {
         //$this->withoutExceptionHandling();
@@ -104,7 +113,13 @@ class InscripcionesConPagoTest extends TestCase
             //pago = 1
             ->create();
 
+        $datos = [
+            'punto_encuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro, 
+            'aceptar_terminos' => 1 
+        ];
+
         $this->actingAs($jose)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
             //post a preinscribirse
             //va a pantalla "solo falta un paso"
             ->assertStatus(200);
