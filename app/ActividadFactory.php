@@ -10,6 +10,7 @@ use App\Tipo;
 class ActividadFactory
 {
 	public $creador = null;
+    public $pais = null;
 	public $tipo = null;
     public $estado = null;
     public $grupo = null;
@@ -22,13 +23,15 @@ class ActividadFactory
         if($this->estado) {
             $actividad = factory(Actividad::class)->states($this->estado)->create([
                 'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
-                'idTipo' => $this->tipo ?? factory(Tipo::class)->create()
+                'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
+                'idPais' => $this->idPais ?? factory(Pais::class)->create(),
             ]);
         }
         else {
             $actividad = factory(Actividad::class)->create([
                 'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
-                'idTipo' => $this->tipo ?? factory(Tipo::class)->create()
+                'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
+                'idPais' => $this->pais ?? factory(Pais::class)->create(),
             ]);
         }
 		
@@ -76,7 +79,7 @@ class ActividadFactory
         return $this;
     }
 
-    public function deTipo(Tipo $tipo)
+    public function deTipo($tipo)
     {
         $this->tipo = $tipo;
 
@@ -114,6 +117,13 @@ class ActividadFactory
     public function agregarEvaluacionDePersona($persona)
     {
         array_push($this->evaluaciones, $persona->idPersona);
+
+        return $this;
+    }
+
+    public function conPais($pais)
+    {
+        $this->pais = $pais;
 
         return $this;
     }
