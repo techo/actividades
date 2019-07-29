@@ -52,7 +52,7 @@
                 @endif
             </p>
 
-            @if($actividad->tipo->flujo == "CONSTRUCCION")
+            @if($actividad->pago == 1)
 
                 @if ($actividad->montoMax === '0.00')
                     <h5>Donación sugerida: {{$actividad->montoMin}} ({{$actividad->moneda}}$)</h5>

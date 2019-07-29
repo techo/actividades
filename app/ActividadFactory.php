@@ -24,7 +24,7 @@ class ActividadFactory
             $actividad = factory(Actividad::class)->states($this->estado)->create([
                 'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
                 'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
-                'idPais' => $this->idPais ?? factory(Pais::class)->create(),
+                'idPais' => $this->pais ?? factory(Pais::class)->create(),
             ]);
         }
         else {

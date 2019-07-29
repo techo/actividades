@@ -9,6 +9,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
 
     return [
       'idTipo' => factory(\App\Tipo::class)->create(),
+      'confirmacion' => 0,
+      'pago' => 0,
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
 
@@ -103,4 +105,12 @@ $factory->state(App\Actividad::class, 'futura', [
 
 $factory->state(App\Actividad::class, 'pasada', [
     'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
+]);
+
+$factory->state(App\Actividad::class, 'con confirmacion', [
+    'confirmacion' => 1,
+]);
+
+$factory->state(App\Actividad::class, 'con pago', [
+    'pago' => 1,
 ]);

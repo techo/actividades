@@ -52,7 +52,7 @@
                 @endif
             </p>
 
-            @if($actividad->tipo->flujo == "CONSTRUCCION")
+            @if($actividad->pago == 1)
 
                 <p><strong>Donarás ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
                 <div class="row justify-content-start">

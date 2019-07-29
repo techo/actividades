@@ -33,8 +33,8 @@ class InscripcionesConPagoTest extends TestCase
         ]);
 
         $actividad = app(ActividadFactory::class)
+            ->conEstado('con pago')
             ->conPais($pais_con_config_de_pago->id)
-            ->deTipo(factory('App\Tipo')->create([ 'flujo' => 'CONSTRUCCION']))
             ->agregarPuntoConInscriptos(0)
             ->create();
 
@@ -52,7 +52,7 @@ class InscripcionesConPagoTest extends TestCase
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
             'idPersona' => $jose->idPersona,
-            'estado' => "Pre-Inscripto"
+            'pago' => null
         ]); 
 
         Mail::assertQueued(MailConfimacionInscripcion::class, 1);
@@ -79,11 +79,11 @@ class InscripcionesConPagoTest extends TestCase
 
         $actividad = app(ActividadFactory::class)
             ->conPais($pais_con_config_de_pago->id)
-            ->deTipo(factory('App\Tipo')->create([ 'flujo' => 'CONSTRUCCION']))
+            ->conEstado('con pago')
             ->agregarPuntoConInscriptos(0)
             ->create();
 
-        factory('App\Inscripcion')->state('preinscripto')->create([
+        factory('App\Inscripcion')->create([
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
             'idPersona' => $jose->idPersona
@@ -107,26 +107,45 @@ class InscripcionesConPagoTest extends TestCase
         $coordinador = factory('App\Persona')->create();
         $coordinador->assignRole('coordinador');
 
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
         $actividad = app(ActividadFactory::class)
             ->creadaPor($coordinador)
-            ->agregarPuntoConInscriptos(1)
+            ->conPais($pais_con_config_de_pago->id)
+            ->conEstado('con pago')
             ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+            'pago' => 1,
+        ]);
 
         //finaliza la inscripción
         $this->actingAs($coordinador)
-            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias')
-            //post a preinscribirse
-            //va a pantalla "solo falta un paso"
+            ->post('admin/inscripciones/actividad/' . $i->idInscripcion . '/confirmar')
+            //posta a confirmar participación
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
             'idPuntoEncuentro' => $actividad->inscripciones[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
-            'idPersona' => $actividad->inscripciones[0]->idPersona,
+            'idPersona' => $jose->idPersona,
             'confirma' => 1,
+            'pago' => 1,
         ]); 
 
-        Mail::assertQueued(MailFinalizaInscripcion::class, 1);
+        Mail::assertQueued(MailInscripcionConfirmada::class, 1);
     }
 
     public function coordinador_puede_marcar_pago()

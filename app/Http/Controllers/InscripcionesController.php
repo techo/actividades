@@ -59,7 +59,7 @@ class InscripcionesController extends BaseController
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 
-            if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+            if (strtoupper($actividad->pago) == 1) {
 
                 try {
                     $config = json_decode($actividad->pais->config_pago);
@@ -145,7 +145,6 @@ class InscripcionesController extends BaseController
         $actividad = Actividad::find($id);
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
             ->where('idActividad', $actividad->idActividad)
-            ->where('estado', 'Pre-inscripto')
             ->firstOrFail();
 
 
