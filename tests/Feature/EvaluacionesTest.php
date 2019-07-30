@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+
 use \App\ActividadFactory;
 
 class EvaluacionesTest extends TestCase
@@ -40,5 +42,54 @@ class EvaluacionesTest extends TestCase
             ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/evaluaciones')
             ->assertStatus(403);
     }
+
+    /** @test */
+    public function solo_persona_presente_puede_evaluar()
+    {
+      
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
+            ->conEstado('evaluable')
+            ->create();
+
+        $maria = factory('App\Persona')->create();
+
+        $datos = [
+            'idPersona' => $maria->idPersona,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'notificar' => 0,
+        ];
+
+        $inscripcion = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $maria->idPersona,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+        ]);
+
+        $maria = $maria->givePermissionTo(Permission::create(['name' => 'ver_backoffice']));
+        // puntuar actividad incripto pero sin presente (esperar error)
+        $this->actingAs($maria)
+            ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+            ->assertStatus(403);
+
+        $inscripcion = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $maria->idPersona,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'presente' => true,
+        ]);
+
+        $this->actingAs($maria)
+            ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+            ->assertStatus(200);
+
+        // dar presente a usuario
+
+        // puntuar actividad (esperar ok)
+        // $this->actingAs($maria)
+        //     ->get('/actividades/'.$actividad->idActividad.'/evaluaciones')
+        //     ->assertStatus(200);
+    }   
 
 }
