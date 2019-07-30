@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                Las personas seleccionadas permanecerán inscriptas y sin asignar a ningun grupo
+                                Las personas integrantes del grupo van a ser re-asignadas al grupo raíz
                             </p>
                         </div>
                     </div>
