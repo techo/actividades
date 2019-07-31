@@ -18,7 +18,6 @@
             </strong>
     </p>
 
-    @if(strtoupper($inscripcion->actividad->tipo->flujo) == "CONSTRUCCION")
         <p>
             <strong>
                 <span style="color:rgb(255,153,0)">SOLO FALTA CONFIRMAR CON TU DONACIÓN</span>
@@ -43,7 +42,6 @@
                 ponete en contacto con el coodinador de la actividad para gestionar una BECA
             @endif
         </p>
-    @endif
 
     @if($inscripcion->actividad->coordinador)
         <p>

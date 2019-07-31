@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1 class="card-subtitle">¡Quedás a la espera de que te confirmemos!</h1>
-
+            <br>
             <p>
                 En breve nos contactaremos con vos por mail para comunicarte si se aprueba tu inscripción.
             </p>
@@ -30,9 +30,6 @@
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
-            <blockquote class="blockquote">
-                {{ $actividad->mensajeInscripcion }}
-            </blockquote>
         </div>
     </div>
     <div class="row justify-content-start">

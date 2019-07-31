@@ -13,7 +13,8 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12">
-                    @if(strtoupper($actividad->tipo->flujo) == 'CONSTRUCCION')
+                    @if( $actividad->confirmar == 1 ||
+                    $actividad->pago == 1 )
                         <h2 class="card-title">Confirmar tu pre-inscripción</h2>
                     @else
                         <h2 class="card-title">Confirmar tu inscripción</h2>

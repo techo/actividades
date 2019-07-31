@@ -196,16 +196,6 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
-//            [
-//                'name' => 'mail',
-//                'sortField' => 'mail',
-//                'title' => 'Email'
-//            ],
-//            [
-//                'name' => 'telefonoMovil',
-//                'sortField' => 'telefonoMovil',
-//                'title' => 'Teléfono Móvil'
-//            ],
             [
                 'name' => 'nombreGrupo',
                 'sortField' => 'nombreGrupo',
@@ -217,12 +207,20 @@ return [
                 'title' => 'Rol'
             ],
             [
+                'name' => '__component:confirma',
+                'title' => 'Confirma',
+                'titleClass' => 'text-center',
+                'sortField' => 'confirma',
+                'dataClass' => 'text-center'
+            ],
+            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',
                 'sortField' => 'presente',
                 'dataClass' => 'text-center'
             ],
+
             [
                 'name' => '__component:estado-inscripcion',
                 'title' => 'Estado',

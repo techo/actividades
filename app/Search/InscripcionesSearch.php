@@ -79,6 +79,7 @@ class InscripcionesSearch
                     'Inscripcion.presente',
                     'Inscripcion.pago',
                     'Inscripcion.estado',
+                    'Inscripcion.confirma',
                     'PuntoEncuentro.punto',
                     'atl_pais.nombre as puntoPais',
                     'atl_provincias.provincia as puntoProvincia',

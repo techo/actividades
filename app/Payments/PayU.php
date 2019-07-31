@@ -3,9 +3,11 @@ namespace App\Payments;
 
 
 use App\Inscripcion;
+use App\Mail\MailInscripcionConfirmada;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PayU implements PaymentGateway
 {
@@ -137,6 +139,7 @@ class PayU implements PaymentGateway
             $this->inscripcion->estado = "Confirmado";
             $this->inscripcion->moneda = $this->request->currency;
             $this->inscripcion->fechaPago = Carbon::now();
+            Mail::to($this->inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($this->inscripcion));
             return $this->inscripcion->save();
         }
         return false;

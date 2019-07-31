@@ -46,7 +46,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'cantidad de actividades (según filtro previo)',
             'presente',
             'pago',
-//            'Costo De La Actividad',
+            'confirma',
             'estado',
             'punto de encuentro',
             'grupo',
@@ -84,7 +84,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->cantActividades,
             (is_null($query->presente) || $query->presente == 0) ? 'No' : 'Si',
             (is_null($query->pago) || $query->pago == 0) ? 'No' : 'Si',
-/*            $query->costo,*/
+            (is_null($query->confirma) || $query->confirma == 0) ? 'No' : 'Si',
             $query->estado,
             $query->punto,
             $query->nombreGrupo,

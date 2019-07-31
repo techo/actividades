@@ -51,6 +51,7 @@ import InscripcionesFilterBar from './InscripcionesFilterBar'
 import InscripcionesToolbar from '../actividades/inscripciones-toolbar'
 import Pago from './Pago';
 import Asistencia from './Asistencia';
+import Confirma from './Confirma';
 import ActualizarInscripcion from './actualizarInscripcion';
 import EstadoInscripcion from './estadoInscripcion';
 import axios from 'axios';
@@ -64,6 +65,7 @@ Vue.use(VueEvents);
   Vue.component('inscripciones-toolbar', InscripcionesToolbar);
   Vue.component('asistencia', Asistencia);
   Vue.component('pago', Pago);
+  Vue.component('confirma', Confirma);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
   Vue.component('simple-alert', Simplert);

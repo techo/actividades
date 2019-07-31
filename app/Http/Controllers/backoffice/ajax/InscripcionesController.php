@@ -72,8 +72,9 @@ class InscripcionesController extends BaseController
         }
 
         if($request->has('confirma')){
-            if($request->confirma == 1) {
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0)
+
+            if($request->confirma == true) {
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) 
                     $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
 
                 if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1)
