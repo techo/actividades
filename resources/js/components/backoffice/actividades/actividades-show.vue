@@ -676,6 +676,8 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
+                this.dataActividad.confirmacion = (!this.dataActividad.confirmacion)?0:1;
+                this.dataActividad.pago = (!this.dataActividad.pago)?0:1;
                 this.dataActividad.fechaInicio = moment(this.fechasActividad.inicio).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaFin = moment(this.fechasActividad.fin).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaInicioInscripciones = moment(this.fechasInscripcion.inicio).format('YYYY-MM-DD HH:mm:ss');
