@@ -351,12 +351,12 @@ class ActividadesController extends Controller
         );
 
         $v->sometimes('montoMin', 'required|numeric|min:1', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+            return $request->filled('pago') && $request->pago == 1;
         });
 
-        if(!empty($request->beca)){
+        if($request->filled('pago')){
             $v->sometimes('beca', 'url', function ($request) {
-                return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+                return $request->filled('pago') && $request->pago == 1;
             });
         }
 
