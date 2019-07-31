@@ -28,9 +28,6 @@
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
-            <blockquote class="blockquote">
-                {{ $actividad->mensajeInscripcion }}
-            </blockquote>
         </div>
     </div>
     <div class="row justify-content-start">

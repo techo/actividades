@@ -30,15 +30,6 @@
         </p>
     @endif
 
-    <p>
-      <strong>
-          Mensaje del coordinador:
-      </strong>
-        {{$inscripcion->actividad->mensajeInscripcion}}
-    </p>
-
-
-
     @if($inscripcion->punto_encuentro)
         <p>
           <strong>
