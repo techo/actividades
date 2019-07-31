@@ -40,6 +40,11 @@ class InscripcionesConConfirmacionTest extends TestCase
             ->assertSee('espera')
             ->assertStatus(200);
 
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('ESPERAR')
+            ->assertStatus(200);
+
         $this->assertDatabaseHas('Inscripcion', [
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
@@ -79,6 +84,11 @@ class InscripcionesConConfirmacionTest extends TestCase
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/' . $i->idInscripcion, [ 'confirma' => 1 ])
             ->assertStatus(200);
 
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('CONFIRMADO')
+            ->assertStatus(200);
+
         $this->assertDatabaseHas('Inscripcion', [
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
@@ -93,6 +103,7 @@ class InscripcionesConConfirmacionTest extends TestCase
     public function usuario_puede_preinscribirse_con_confirmacion_y_pago()
     {    
         $this->withoutExceptionHandling();
+
         Mail::fake();
         $this->seed('PermisosSeeder');
 
@@ -109,8 +120,13 @@ class InscripcionesConConfirmacionTest extends TestCase
         ];
         
         $this->actingAs($jose)
-            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', $datos)
             ->assertSee('espera')
+            ->assertStatus(200);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('ESPERAR')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -135,9 +151,19 @@ class InscripcionesConConfirmacionTest extends TestCase
         $coordinador = factory('App\Persona')->create();
         $coordinador->assignRole('admin');
 
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
         $actividad = app(ActividadFactory::class)
             ->creadaPor($coordinador)
             ->conEstado('con confirmacion y pago')
+            ->conPais($pais_con_config_de_pago->id)
             ->agregarPuntoConInscriptos(0)
             ->create();
 
@@ -151,6 +177,11 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($coordinador)
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/' . $i->idInscripcion, [ 'confirma' => 1 ])
+            ->assertStatus(200);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('CONFIRMAR')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [

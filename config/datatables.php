@@ -207,13 +207,6 @@ return [
                 'title' => 'Rol'
             ],
             [
-                'name' => '__component:confirma',
-                'title' => 'Confirma',
-                'titleClass' => 'text-center',
-                'sortField' => 'confirma',
-                'dataClass' => 'text-center'
-            ],
-            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',

@@ -305,6 +305,17 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
+                        <div class="btn-group" role="group" aria-label="Confirmación manual">
+                        <label>Confirmación manual</label><br>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.confirmacion" > </v-switch>
+                        <label>Confirmación por pago</label><br>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.pago"> </v-switch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                
+                <div class="form-group">
                     <label for="limiteInscripciones">Límite de voluntarios (0 = Sin Límite)</label>
                     <input id="limiteInscripciones"
                            type="number"
@@ -318,6 +329,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
+                    
                     <label>Estado de las inscripciones</label><br>
                     <div class="btn-group" role="group" aria-label="Estado de la Inscripción">
                         <button
@@ -339,7 +351,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label for="mensajeInscripcion">Mensaje De Inscripción</label>
                     <span class="text-muted pull-right">Este texto se incluirá en el correo de bienvenida a la actividad.</span>
@@ -416,6 +428,7 @@
 
 <script>
     import PuntoEncuentro from './punto-encuentro';
+    import vSwitch from 'vue-switches';
 
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
@@ -430,7 +443,7 @@
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker},
+        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker, vSwitch},
         data() {
             return {
                 dataCategorias: [],

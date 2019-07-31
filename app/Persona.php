@@ -73,6 +73,29 @@ class Persona extends Authenticatable
         return $this->inscripciones->where('idActividad',$idActividad)->where('estado','Pre-Inscripto')->count();
     }
 
+    public function estadoInscripcion($idActividad) {
+        $inscripcion = $this->inscripciones->where('idActividad',$idActividad)->first();
+
+        if(!$inscripcion) return false;
+
+        if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1) {
+            if ($inscripcion->confirma && $inscripcion->pago) return 'CONFIRMADO';
+            elseif ($inscripcion->confirma == 0) return 'ESPERAR CONFIRMACION';
+            else return "CONFIRMAR PARTICIPACION"; //pago
+        }
+
+        if($inscripcion->actividad->confirmacion == 1) {
+            if ($inscripcion->confirma) return 'CONFIRMADO';
+            else return 'ESPERAR CONFIRMACION';
+        }
+
+        if($inscripcion->actividad->pago == 1) {
+            if ($inscripcion->pago) return 'CONFIRMADO';
+            else return 'CONFIRMAR PARTICIPACION'; //pago
+        }
+
+    }
+
     public function noEstaInscripto($idActividad) {
         return $this->inscripciones->where('idActividad',$idActividad)->first();
     }

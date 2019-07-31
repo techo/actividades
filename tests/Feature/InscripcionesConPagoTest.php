@@ -49,6 +49,12 @@ class InscripcionesConPagoTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertSee('Sólo queda un paso');
 
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('CONFIRMAR')
+            ->assertStatus(200);
+
         $this->assertDatabaseHas('Inscripcion', [
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
             'idActividad' => $actividad->idActividad,
@@ -94,9 +100,13 @@ class InscripcionesConPagoTest extends TestCase
             'idPersona' => $jose->idPersona,
         ]);
 
-        //finaliza la inscripción
         $this->actingAs($coordinador)
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/' . $i->idInscripcion, [ 'pago' => 1 ])
+            ->assertStatus(200);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('CONFIRMADO')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [

@@ -14,27 +14,6 @@
 
 @section('main_content')
 		<div class="row">
-        @if (Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-            <div class="alert alert-warning" id="alertYaInscripto">
-                <i class="fas fa-exclamation-triangle"></i>
-                <strong>Estás pre-inscripto a esta actividad</strong>
-            </div>
-        @elseif (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-            <div class="alert alert-success" id="alertYaInscripto">
-                <i class="fas fa-check-circle"></i>
-                <strong>Ya estas inscripto a esta actividad</strong>
-        </div>
-		@elseif(!$hayCupos)
-			<div class="alert alert-danger" id="alertYaInscripto">
-                <i class="fas fa-times-circle"></i>
-				<strong>La actividad no tiene más cupos</strong>
-			</div>
-		@elseif(!$inscripcionAbierta)
-			<div class="alert alert-danger" id="alertYaInscripto">
-                <i class="fas fa-times-circle"></i>
-				<strong>El período de inscripción está cerrado</strong>
-			</div>
-		@endif
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -125,30 +104,46 @@
                 </button>
             </div>
             <div class="col-md-3">
-                @if (Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-                    <div>
-                        <a
-                            href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}"
-                            class="btn btn-primary"
-                        >
-                            Confirmar participación
-                        </a>
-                    </div>
-                @elseif (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-                    <div><span class="btn btn-success w-100"><strong>¡YA TE INSCRIBISTE!</strong></span></div>
-                @elseif($hayCupos && $inscripcionAbierta)
-                    <div>
-                        <a class="btn btn-primary inscripcion-btn w-100"
-                           href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                            <strong>INSCRIBIRME<strong>
-                        </a>
-                    </div>
-                @elseif(!$hayCupos)
-                    <div class="alert alert-danger" id="alertYaInscripto">
-                        <i class="fas fa-times-circle"></i>
-                        <strong>La actividad no tiene más cupos</strong>
-                    </div>
-                @elseif(!$inscripcionAbierta)
+                @if($inscripcionAbierta)
+                   
+                    @if (Auth::check() && Auth::user()->estadoInscripcion($actividad->idActividad) != false)
+                        @if(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMADO')
+                            <div><span class="btn btn-success w-100"><strong>¡ESTÁS CONFIRMADO!</strong></span></div>
+                        @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMAR PARTICIPACION')
+                            <div>
+                                <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-primary" > CONFIRMAR PARTICIPACIÓN  </a>
+                            </div>
+                        @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'ESPERAR CONFIRMACION')
+                            <div><span class="btn btn-warning w-100"><strong>ESPERAR CONFIRMACION...</strong></span></div>
+                        @endif
+                    @else
+                        
+                        @if($hayCupos)
+                            
+                            @if ($actividad->confirmacion == 0 && $actividad->pago == 0)
+                                <div>
+                                    <a class="btn btn-primary inscripcion-btn w-100"
+                                       href="/inscripciones/actividad/{{$actividad->idActividad}}">
+                                        <strong>INSCRIBIRME<strong>
+                                    </a>
+                                </div>
+                            @else
+                                <div>
+                                    <a class="btn btn-primary inscripcion-btn w-100"
+                                       href="/inscripciones/actividad/{{$actividad->idActividad}}">
+                                        <strong>PREINSCRIBIRME<strong>
+                                    </a>
+                                </div>
+                            @endif
+
+                        @else
+                            <div class="alert alert-danger" id="alertYaInscripto">
+                                <i class="fas fa-times-circle"></i>
+                                <strong>La actividad no tiene más cupos</strong>
+                            </div>
+                        @endif
+                    @endif
+                @else
                     <div class="alert alert-danger" id="alertYaInscripto">
                         <i class="fas fa-times-circle"></i>
                         <strong>El período de inscripción está cerrado</strong>

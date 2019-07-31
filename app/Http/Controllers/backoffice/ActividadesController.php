@@ -159,7 +159,18 @@ class ActividadesController extends Controller
 
             $datatableConfig = config('datatables.inscripciones');
             $fields = $datatableConfig['fields'];
-            if ($actividad->montoMin > 0) {
+
+            if ($actividad->confirmacion == 1) {
+                $checkConfirma = [[
+                    'name' => '__component:confirma',
+                    'title' => 'Confirma',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ]];
+                array_splice($fields, count($fields) - 2, 0, $checkConfirma);
+
+            }
+            if ($actividad->pago == 1) {
                 $checkPago = [[
                     'name' => '__component:pago',
                     'title' => 'Pago',

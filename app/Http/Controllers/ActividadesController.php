@@ -73,7 +73,7 @@ class actividadesController extends Controller
         $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00'))
                     &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
 
-        if (auth()->check() && auth()->user()->estaPreInscripto($id)) {
+        if (auth()->check() && auth()->user()->estadoInscripcion($id) == 'CONFIRMAR PARTICIPACION') {
             try{
                 $config = json_decode($actividad->pais->config_pago);
                 $paymentClass = 'App\\Payments\\' . $config->payment_class;
