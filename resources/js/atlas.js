@@ -26,6 +26,7 @@ import CookiesBar from './components/cookies-bar';
 import axios from 'axios';
 
 window.Vue = require('vue');
+window.moment = require('moment');
 window.events = new Vue();
 window.axios = axios;
 
