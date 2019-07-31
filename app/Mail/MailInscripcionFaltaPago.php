@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MailConfimacionInscripcion extends Mailable implements ShouldQueue
+class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -35,6 +35,6 @@ class MailConfimacionInscripcion extends Mailable implements ShouldQueue
         return $this
             ->subject('TECHO: Te inscribiste a ' . $this->inscripcion->actividad->nombreActividad)
             ->from('no-reply@techo.org')
-            ->view('emails.confimacionInscripcion');
+            ->view('emails.InscripcionFaltaPago');
     }
 }

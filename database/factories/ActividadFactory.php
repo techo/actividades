@@ -114,3 +114,8 @@ $factory->state(App\Actividad::class, 'con confirmacion', [
 $factory->state(App\Actividad::class, 'con pago', [
     'pago' => 1,
 ]);
+
+$factory->state(App\Actividad::class, 'con confirmacion y pago', [
+    'confirmacion' => 1,
+    'pago' => 1,
+]);

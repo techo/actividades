@@ -9,8 +9,6 @@ use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
 use App\Inscripcion;
 use App\Log;
-use App\Mail\ActualizacionActividad;
-use App\Mail\MailConfimacionInscripcion;
 use App\Persona;
 use App\PuntoEncuentro;
 use Carbon\Carbon;
@@ -21,6 +19,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Rap2hpoutre\FastExcel\FastExcel;
+
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionFaltaPago;
+use App\Mail\ActualizacionActividad;
 
 class InscripcionesController extends BaseController
 {
@@ -69,13 +71,30 @@ class InscripcionesController extends BaseController
             $inscripcion->presente = $request->presente;
         }
 
+        if($request->has('confirma')){
+            if($request->confirma == 1) {
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0)
+                    $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1)
+                    $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
+            }
+
+            $inscripcion->confirma = $request->confirma;
+        }
+
         if($request->has('pago')){
+            if($inscripcion->actividad->pago == 1 && $request->pago == 1) {
+                $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+            }
+
             $inscripcion->pago = $request->pago;
         }
 
         if (!empty($request->estado)){
             $inscripcion->estado = $request->estado;
         }
+
         if ($inscripcion->save()) {
             return response()->json('Ok', 200);
         }
@@ -161,7 +180,7 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            $this->intentaEnviar(Mail::to($inscripcion->persona->mail), new ActualizacionActividad($inscripcion), $inscripcion->persona);
+            $this->intentaEnviar(new ActualizacionActividad($inscripcion), $inscripcion->persona);
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
@@ -235,8 +254,7 @@ class InscripcionesController extends BaseController
 
                 if($request->notificar) {
                     $this->intentaEnviar(
-                        Mail::to($inscripto->persona->mail), 
-                        new MailConfimacionInscripcion($inscripto), 
+                        new MailInscripcionConfirmada($inscripto), 
                         $inscripto->persona
                     );
                 }
@@ -253,8 +271,7 @@ class InscripcionesController extends BaseController
 
             if($request->notificar) {
                 $this->intentaEnviar(
-                    Mail::to($inscripto->persona->mail), 
-                    new MailConfimacionInscripcion($inscripto), 
+                    new MailInscripcionConfirmada($inscripto), 
                     $inscripto->persona
                 );
             }

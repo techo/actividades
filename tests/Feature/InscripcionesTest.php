@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\MailConfimacionInscripcion;
+use App\Mail\MailInscripcionConfirmada;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +47,7 @@ class InscripcionesTest extends TestCase
             'idPersona' => $persona->idPersona
         ]);
 
-        Mail::assertQueued(MailConfimacionInscripcion::class, 1);
+        Mail::assertQueued(MailInscripcionConfirmada::class, 1);
     }
 
     /** @test */
