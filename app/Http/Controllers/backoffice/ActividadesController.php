@@ -354,7 +354,7 @@ class ActividadesController extends Controller
             return $request->filled('pago') && $request->pago == 1;
         });
 
-        if($request->filled('pago')){
+        if($request->filled('beca')){
             $v->sometimes('beca', 'url', function ($request) {
                 return $request->filled('pago') && $request->pago == 1;
             });
