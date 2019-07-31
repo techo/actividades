@@ -214,19 +214,6 @@ return [
                 'dataClass' => 'text-center'
             ],
 
-            [
-                'name' => '__component:estado-inscripcion',
-                'title' => 'Estado',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ],
-//            [
-//                'name' => '__component:actualizar-inscripcion',
-//                'title' => 'Actualizar',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ],
-
         ],
         'sortOrder' => [
             [

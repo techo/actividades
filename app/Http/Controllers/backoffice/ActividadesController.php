@@ -167,7 +167,7 @@ class ActividadesController extends Controller
                     'titleClass' => 'text-center',
                     'dataClass' => 'text-center'
                 ]];
-                array_splice($fields, count($fields) - 2, 0, $checkConfirma);
+                array_splice($fields, count($fields) - 1, 0, $checkConfirma);
 
             }
             if ($actividad->pago == 1) {
@@ -177,7 +177,7 @@ class ActividadesController extends Controller
                     'titleClass' => 'text-center',
                     'dataClass' => 'text-center'
                 ]];
-                array_splice($fields, count($fields) - 2, 0, $checkPago);
+                array_splice($fields, count($fields) - 1, 0, $checkPago);
 
             }
             $fields = json_encode($fields);

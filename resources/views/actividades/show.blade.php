@@ -108,13 +108,13 @@
                    
                     @if (Auth::check() && Auth::user()->estadoInscripcion($actividad->idActividad) != false)
                         @if(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMADO')
-                            <div><span class="btn btn-success w-100"><strong>¡ESTÁS CONFIRMADO!</strong></span></div>
+                            <div><span class="btn btn-success w-100 disabled"><strong>¡ESTÁS CONFIRMADO!</strong></span></div>
                         @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMAR PARTICIPACION')
                             <div>
                                 <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-primary" > CONFIRMAR PARTICIPACIÓN  </a>
                             </div>
                         @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'ESPERAR CONFIRMACION')
-                            <div><span class="btn btn-warning w-100"><strong>ESPERAR CONFIRMACION...</strong></span></div>
+                            <div><span class="btn btn-warning w-100 disabled"><strong>ESPERAR CONFIRMACION...</strong></span></div>
                         @endif
                     @else
                         

@@ -353,8 +353,8 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="mensajeInscripcion">Mensaje De Inscripción</label>
-                    <span class="text-muted pull-right">Este texto se incluirá en el correo de bienvenida a la actividad.</span>
+                    <label for="mensajeInscripcion">Mensaje De Confirmación</label>
+                    <span class="text-muted pull-right">Este texto se incluirá en el correo de confirmación de la actividad.</span>
                     <textarea
                             name="mensajeInscripcion"
                             id="mensajeInscripcion"
@@ -373,9 +373,9 @@
         </div><!-- /.box-body -->
     </div>
 
-    <div class="box" v-if="esConstruccion">
+    <div class="box" v-if="dataActividad.pago">
         <div class="box-header with-border">
-            <h3 class="box-title">Construcción</h3>
+            <h3 class="box-title">Configuració de pago</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
