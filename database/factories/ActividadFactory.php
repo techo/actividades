@@ -104,8 +104,3 @@ $factory->state(App\Actividad::class, 'futura', [
 $factory->state(App\Actividad::class, 'pasada', [
     'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
 ]);
-
-$factory->state(App\Actividad::class, 'evaluable', [
-    'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s'),
-    'fechaInicioEvaluaciones' => Carbon::now()->subDays(3)->format('Y-m-d H:i:s')
-]);

@@ -46,20 +46,15 @@ class EvaluacionesTest extends TestCase
     /** @test */
     public function solo_persona_presente_puede_evaluar()
     {
+        $this->seed('PermisosSeeder');
       
         $actividad = app(ActividadFactory::class)
             ->agregarPuntoConInscriptos(0)
             ->conGrupoRaiz()
-            ->conEstado('evaluable')
+            ->conEstado('pasada')
             ->create();
 
         $maria = factory('App\Persona')->create();
-
-        $datos = [
-            'idPersona' => $maria->idPersona,
-            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-            'notificar' => 0,
-        ];
 
         $inscripcion = factory('App\Inscripcion')->create([
             'idActividad' => $actividad->idActividad,
@@ -67,29 +62,16 @@ class EvaluacionesTest extends TestCase
             'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
         ]);
 
-        $maria = $maria->givePermissionTo(Permission::create(['name' => 'ver_backoffice']));
         // puntuar actividad incripto pero sin presente (esperar error)
         $this->actingAs($maria)
             ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
             ->assertStatus(403);
 
-        $inscripcion = factory('App\Inscripcion')->create([
-            'idActividad' => $actividad->idActividad,
-            'idPersona' => $maria->idPersona,
-            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
-            'presente' => true,
-        ]);
+        $inscripcion->presente = 1;
+        $inscripcion->save();
 
-        $this->actingAs($maria)
-            ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+        $this->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
             ->assertStatus(200);
-
-        // dar presente a usuario
-
-        // puntuar actividad (esperar ok)
-        // $this->actingAs($maria)
-        //     ->get('/actividades/'.$actividad->idActividad.'/evaluaciones')
-        //     ->assertStatus(200);
     }   
 
 }
