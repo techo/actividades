@@ -401,7 +401,14 @@
             },
              'user.localidad': function () {
                 this.formDirty = true;
+            },
+             'user.recibirMails': function () {
+                this.formDirty = true;
+            },
+             'user.acepta_marketing': function () {
+                this.formDirty = true;
             }
+
         },
         methods: {
             cancelar: function () {
