@@ -4,6 +4,7 @@ namespace App\Payments;
 
 use App\Inscripcion;
 use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionPagoFueraDeFecha;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -132,17 +133,23 @@ class PayU implements PaymentGateway
      */
     public function updateUserStatus()
     {
-        if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
-            // Log::info('Confirmación: \n' . json_encode($this->request->all()));
-            $this->inscripcion->pago = 1;
-            $this->inscripcion->montoPago = (float)$this->request->value;
-            $this->inscripcion->estado = "Confirmado";
-            $this->inscripcion->moneda = $this->request->currency;
-            $this->inscripcion->fechaPago = Carbon::now();
-            Mail::to($this->inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($this->inscripcion));
-            return $this->inscripcion->save();
+        $fecha_transaccion = Carbon::parse($this->request->transaction_date);
+        if($this->inscripcion->actividad->fechaLimitePago && 
+            $fecha_transaccion->lessThanOrEqualTo($this->inscripcion->actividad->fechaLimitePago)) {
+            if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
+                $this->inscripcion->pago = 1;
+                $this->inscripcion->montoPago = (float)$this->request->value;
+                $this->inscripcion->estado = "Confirmado";
+                $this->inscripcion->moneda = $this->request->currency;
+                $this->inscripcion->fechaPago = Carbon::now();
+                Mail::to($this->inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($this->inscripcion));
+                return $this->inscripcion->save();
+            }
         }
-        return false;
+        else {
+            Mail::to($this->inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($this->inscripcion));
+            return false;
+        }
     }
 
     public function getConfig()

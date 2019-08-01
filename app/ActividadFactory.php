@@ -18,22 +18,20 @@ class ActividadFactory
     public $inscriptos = [];
     public $evaluaciones = [];
 
-    public function create()
+    public function create($atributos_extra = [])
     {
-        if($this->estado) {
-            $actividad = factory(Actividad::class)->states($this->estado)->create([
-                'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
-                'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
-                'idPais' => $this->pais ?? factory(Pais::class)->create(),
-            ]);
-        }
-        else {
-            $actividad = factory(Actividad::class)->create([
-                'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
-                'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
-                'idPais' => $this->pais ?? factory(Pais::class)->create(),
-            ]);
-        }
+        $atributos = [
+            'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
+            'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
+            'idPais' => $this->pais ?? factory(Pais::class)->create(),
+        ];
+
+        $atributos = array_merge($atributos, $atributos_extra);
+
+        if($this->estado)
+            $actividad = factory(Actividad::class)->states($this->estado)->create($atributos);
+        else 
+            $actividad = factory(Actividad::class)->create($atributos);
 		
 		foreach ($this->cantidad_inscriptos_por_punto_encuentro as $cantidad_inscriptos) 
 		{

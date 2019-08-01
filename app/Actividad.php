@@ -20,7 +20,8 @@ class Actividad extends Model
             'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
-            'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'
+            'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
+            'fechaLimitePago',
 
         ];
 

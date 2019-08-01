@@ -94,8 +94,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idCoordinador' => factory(App\Persona::class)->create(),
       'beca' => null,
       'montoMin' => "100.00",
-      'montoMax' => "0.00"
-        //
+      'montoMax' => "0.00",
+      'fechaLimitePago' => null
     ];
 });
 
