@@ -27,6 +27,7 @@ class ActividadesPolicy
         $actividad = Actividad::findOrFail($id);
         $inscripto = Inscripcion::where('idActividad', '=', $actividad->idActividad)
             ->where('idPersona', '=', $user->idPersona)
+            ->where('presente', '=', true)
             ->first();
         $inicioEvaluaciones = ($actividad->fechaInicioEvaluaciones <= Carbon::now());
         $finEvaluaciones = ($actividad->fechaFinEvaluaciones >= Carbon::now());

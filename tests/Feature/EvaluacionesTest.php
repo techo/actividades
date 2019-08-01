@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+
 use \App\ActividadFactory;
 
 class EvaluacionesTest extends TestCase
@@ -40,5 +42,36 @@ class EvaluacionesTest extends TestCase
             ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/evaluaciones')
             ->assertStatus(403);
     }
+
+    /** @test */
+    public function solo_persona_presente_puede_evaluar()
+    {
+        $this->seed('PermisosSeeder');
+      
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
+            ->conEstado('pasada')
+            ->create();
+
+        $maria = factory('App\Persona')->create();
+
+        $inscripcion = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $maria->idPersona,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+        ]);
+
+        // puntuar actividad incripto pero sin presente (esperar error)
+        $this->actingAs($maria)
+            ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+            ->assertStatus(403);
+
+        $inscripcion->presente = 1;
+        $inscripcion->save();
+
+        $this->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+            ->assertStatus(200);
+    }   
 
 }
