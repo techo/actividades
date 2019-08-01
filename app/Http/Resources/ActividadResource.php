@@ -12,8 +12,10 @@ class ActividadResource extends Resource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request)
-    {
+    public function toArray($request) {
+        
+        $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
+
         return [
             'idActividad'   => $this->idActividad,
             'tipo'          => new TipoResource($this->tipo),
@@ -32,8 +34,7 @@ class ActividadResource extends Resource
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'ubicacion'     => $this->provincia->provincia,
-            'inscriptos'    => $this->datosInscriptos($this->idActividad),
-//            'inscriptos'    => $this->idPersonaInscriptos($this->idActividad),
+            'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
             'cantInscriptos' => $this->inscripciones()->count(),
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),

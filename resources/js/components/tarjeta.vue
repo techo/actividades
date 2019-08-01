@@ -2,10 +2,11 @@
   <div class="col-md-4">
     <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
         <div class="img-tarjeta">
-            <span v-show="inscripto" class="inscripto badge badge-pill badge-success">¡Ya estás inscripto!</span>
-            <span v-show="preinscripto" class="inscripto badge badge-pill badge-primary">¡Confirma con tu donación!</span>
-            <span v-show="!inscripto && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
-            <span v-show="!inscripto && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
+            <span v-show="actividad.estadoInscripcion == 'CONFIRMADO'" class="inscripto badge badge-pill badge-success">¡Ya estás confirmado!</span>
+            <span v-show="actividad.estadoInscripcion == 'CONFIRMAR'" class="inscripto badge badge-pill badge-primary">¡Confirma con tu donación!</span>
+            <span v-show="actividad.estadoInscripcion == 'ESPERAR'" class="inscripto badge badge-pill badge-warning">¡Esperá el mail de confirmación!</span>
+            <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
+            <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
         </div>
       <div class="card-body px-0">
@@ -33,26 +34,6 @@
             }
         },
         computed: {
-          inscripto: function () {
-              let userId = this.$parent.$parent.$refs.login.user.id;
-              if(userId != ""){
-                  let obj = this.findObjectByKey(this.actividad.inscriptos, 'idPersona', userId);
-                  if (obj !== null && obj.item.estado !== 'Pre-Inscripto') {
-                      return true;
-                  }
-              }
-              return false;
-          },
-          preinscripto: function () {
-              let userId = this.$parent.$parent.$refs.login.user.id;
-              if(userId != ""){
-                  let obj = this.findObjectByKey(this.actividad.inscriptos, 'idPersona', userId);
-                  if (obj !== null && obj.item.estado === 'Pre-Inscripto') {
-                      return true;
-                  }
-              }
-              return false;
-          },
           pocosCupos: function(){
               let umbral = 0.9;
               let porcentajeActual;
@@ -80,18 +61,6 @@
             ir_a_actividad: function () {
                 window.location.href = '/actividades/' + this.actividad.idActividad
             },
-            findObjectByKey(array, key, value) {
-                for (let i = 0; i < array.length; i++) {
-                    if (array[i][key] === value) {
-                        return {
-                            'item': array[i],
-                            'index': i
-                        };
-                    }
-                }
-                return null;
-            },
-
         }
     }
 </script>

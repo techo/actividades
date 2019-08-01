@@ -185,6 +185,28 @@ class Actividad extends Model
 
     }
 
+    public function estadoInscripcion($idPersona = null)
+    {
+        if(!$idPersona) return false;
+
+        $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
+
+        if(!$inscripcion) return false;
+
+        if($this->confirmacion == $inscripcion->confirma && $this->pago == $inscripcion->pago) {
+            return "CONFIRMADO";
+        }
+
+        if($this->confirmacion == $inscripcion->confirma && $this->pago != $inscripcion->pago) {
+            return "CONFIRMAR";
+        }
+
+        if($this->confirmacion != $inscripcion->confirma) {
+            return "ESPERAR";
+        }
+
+    }
+
     public function setFechaFinInscripcionesAttribute($value)
     {
         $this->attributes['fechaFinInscripciones'] = \Carbon\Carbon::parse($value);
