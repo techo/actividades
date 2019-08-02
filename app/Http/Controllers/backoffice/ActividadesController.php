@@ -440,7 +440,8 @@ class ActividadesController extends Controller
             'fechaInicioInscripciones',
             'fechaFinInscripciones',
             'fechaInicioEvaluaciones',
-            'fechaFinEvaluaciones'
+            'fechaFinEvaluaciones',
+            'fechaLimitePago'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -470,6 +471,8 @@ class ActividadesController extends Controller
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
         $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
         $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
+        
+        $actividad->fechaLimitePago = $request->fechaLimitePago;
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')

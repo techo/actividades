@@ -375,7 +375,7 @@
 
     <div class="box" v-if="dataActividad.pago">
         <div class="box-header with-border">
-            <h3 class="box-title">Configuració de pago</h3>
+            <h3 class="box-title">Configuración de pago</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -402,6 +402,19 @@
                                v-bind:disabled="readonly"
                                v-model="dataActividad.montoMax"
                                min="0"
+                        >
+                        <span class="text-muted">Opcional</span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="fechaLimitePago">Fecha límite </label>
+                        <input id="fechaLimitePago" name="fechaLimitePago"
+                               type="date"
+                               class="form-control"
+                               v-bind:disabled="readonly"
+                               v-bind:value="fechaLimitePago"
+                               @input="dataActividad.fechaLimitePago = $event.target.value"
                         >
                         <span class="text-muted">Opcional</span>
                     </div>
@@ -517,6 +530,9 @@
             fechasInscripcion_etiqueta: function () {
                 return this.mostrarFechas(this.fechasInscripcion.inicio,this.fechasInscripcion.fin);
             },
+            fechaLimitePago: function () {
+                return moment(this.dataActividad.fechaLimitePago).format('YYYY-MM-DD');
+            }
         },
         filters: {
             estado: function (value) {

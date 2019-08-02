@@ -134,6 +134,9 @@ class PayU implements PaymentGateway
     public function updateUserStatus()
     {
         $fecha_transaccion = Carbon::parse($this->request->transaction_date);
+
+        \Log::info('Confirmación recibida desde PAYU: ' . $this->request);
+
         if($this->inscripcion->actividad->fechaLimitePago && 
             $fecha_transaccion->lessThanOrEqualTo($this->inscripcion->actividad->fechaLimitePago)) {
             if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {

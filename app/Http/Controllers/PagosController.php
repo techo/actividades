@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Inscripcion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PagosController extends Controller
@@ -18,8 +19,14 @@ class PagosController extends Controller
         $payment = new $paymentClass($inscripcion);
         $payment->setRequest($request);
 
-        if ($payment->success()) {
+        if($request->filled('processingDate'))
+            $fecha_transaccion = Carbon::parse($request->processingDate);
+
+        if ($payment->success() && $fecha_transaccion->lessThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
             return view('inscripciones.pagada', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);
+        }
+        elseif ($payment->success() && $fecha_transaccion->greaterThan($inscripcion->actividad->fechaLimitePago)) {
+            return view('pagos.fuera_de_fecha', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);   
         }
 
         return view('pagos.response')->with('payment', $payment);
