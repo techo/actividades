@@ -414,7 +414,7 @@
                                class="form-control"
                                v-bind:disabled="readonly"
                                v-bind:value="fechaLimitePago"
-                               @input="dataActividad.fechaLimitePago = $event.target.value"
+                               @input="dataActividad.fechaLimitePago = $event.target.value;"
                         >
                         <span class="text-muted">Opcional</span>
                     </div>
@@ -531,6 +531,7 @@
                 return this.mostrarFechas(this.fechasInscripcion.inicio,this.fechasInscripcion.fin);
             },
             fechaLimitePago: function () {
+                if(this.dataActividad.fechaLimitePago=="") return null;
                 return moment(this.dataActividad.fechaLimitePago).format('YYYY-MM-DD');
             }
         },
