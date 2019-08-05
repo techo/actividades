@@ -98,57 +98,21 @@
             <div class="col-md-7">
                 <p class="h5">{{ $actividad->nombreActividad }}</p>
             </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
-                    <i class="fas fa-share-alt"></i>  COMPARTIR
-                </button>
-            </div>
-            <div class="col-md-3">
-                @if($inscripcionAbierta)
-                   
-                    @if (Auth::check() && Auth::user()->estadoInscripcion($actividad->idActividad) != false)
-                        @if(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMADO')
-                            <div><span class="btn btn-success w-100 disabled"><strong>¡ESTÁS CONFIRMADO!</strong></span></div>
-                        @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'CONFIRMAR PARTICIPACION')
-                            <div>
-                                <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-primary" > CONFIRMAR PARTICIPACIÓN  </a>
-                            </div>
-                        @elseif(Auth::user()->estadoInscripcion($actividad->idActividad) == 'ESPERAR CONFIRMACION')
-                            <div><span class="btn btn-warning w-100 disabled"><strong>ESPERAR CONFIRMACION...</strong></span></div>
+            <div class="col-md-5">
+                <div>
+                    <a class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
+                        <i class="fas fa-share-alt"></i>COMPARTIR
+                    </a>
+                    <a 
+                        class="btn {{ $clase }}"
+                        href="{{ $accion }}"
+                        @if (!$habilitado) 
+                            disabled
                         @endif
-                    @else
-                        
-                        @if($hayCupos)
-                            
-                            @if ($actividad->confirmacion == 0 && $actividad->pago == 0)
-                                <div>
-                                    <a class="btn btn-primary inscripcion-btn w-100"
-                                       href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                                        <strong>INSCRIBIRME<strong>
-                                    </a>
-                                </div>
-                            @else
-                                <div>
-                                    <a class="btn btn-primary inscripcion-btn w-100"
-                                       href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                                        <strong>PREINSCRIBIRME<strong>
-                                    </a>
-                                </div>
-                            @endif
-
-                        @else
-                            <div class="alert alert-danger" id="alertYaInscripto">
-                                <i class="fas fa-times-circle"></i>
-                                <strong>La actividad no tiene más cupos</strong>
-                            </div>
-                        @endif
-                    @endif
-                @else
-                    <div class="alert alert-danger" id="alertYaInscripto">
-                        <i class="fas fa-times-circle"></i>
-                        <strong>El período de inscripción está cerrado</strong>
-                    </div>
-                @endif
+                        >
+                        <strong>{{ $mensaje }}<strong>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

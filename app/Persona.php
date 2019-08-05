@@ -3,8 +3,9 @@
 namespace App;
 
 use App\Mail\ForgotPassword;
-use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -75,23 +76,45 @@ class Persona extends Authenticatable
 
     public function estadoInscripcion($idActividad) {
         $inscripcion = $this->inscripciones->where('idActividad',$idActividad)->first();
+        $actividad = Actividad::findOrFail($idActividad);
 
-        if(!$inscripcion) return false;
+        if(!$inscripcion) { 
+            if($actividad->confirmacion == 1 || $actividad->pago == 1)
+                return 'PREINSCRIBIRME';
+            else
+                return 'INSCRIBIRME';
+        }
 
-        if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1) {
+        if($actividad->confirmacion == 1 && $actividad->pago == 1) {
             if ($inscripcion->confirma && $inscripcion->pago) return 'CONFIRMADO';
-            elseif ($inscripcion->confirma == 0) return 'ESPERAR CONFIRMACION';
-            else return "CONFIRMAR PARTICIPACION"; //pago
+            elseif ($inscripcion->confirma == 0) return 'ESPERAR CONFIRMACIÓN';
+            else {
+                if(!$actividad->fechaLimitePago || 
+                    $actividad->fechaLimitePago && $actividad->fechaLimitePago->greaterThan(Carbon::now()))
+                    return 'CONFIRMAR PARTICIPACIÓN';
+                else
+                    return 'FECHA DE CONFIRMACIÓN VENCIDA';
+            }
         }
 
-        if($inscripcion->actividad->confirmacion == 1) {
+        if($actividad->confirmacion == 1) {
             if ($inscripcion->confirma) return 'CONFIRMADO';
-            else return 'ESPERAR CONFIRMACION';
+            else return 'ESPERAR CONFIRMACIÓN';
         }
 
-        if($inscripcion->actividad->pago == 1) {
+        if($actividad->pago == 1) {
             if ($inscripcion->pago) return 'CONFIRMADO';
-            else return 'CONFIRMAR PARTICIPACION'; //pago
+            else {
+                if(!$actividad->fechaLimitePago || 
+                    $actividad->fechaLimitePago && $actividad->fechaLimitePago->greaterThan(Carbon::now()))
+                    return 'CONFIRMAR PARTICIPACIÓN';
+                else
+                    return 'FECHA DE CONFIRMACIÓN VENCIDA';
+            }
+        }
+
+        if($actividad->confirmacion == 0 && $actividad->pago == 0) {
+            return "CONFIRMADO";
         }
 
     }

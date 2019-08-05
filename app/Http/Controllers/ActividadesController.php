@@ -60,33 +60,63 @@ class actividadesController extends Controller
     public function show($id)
     {
 
-        $actividad = Actividad::with('localidad')
-            ->where('estadoConstruccion', 'Abierta')
-            ->findOrFail($id);
+        $actividad = Actividad::with('localidad')->where('estadoConstruccion', 'Abierta')->findOrFail($id);
 
         $cantInscriptos = $actividad->inscripciones()->count();
 
         $limiteInscriptos = (empty($actividad->limiteInscripciones)) ? 0 : $actividad->limiteInscripciones;
 
-        $hayCupos = (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0);
-
-        $inscripcionAbierta = $actividad->fechaInicioInscripciones->lte(Carbon::now()->format('Y-m-d H:i:00'))
-                    &&  $actividad->fechaFinInscripciones->gte(Carbon::now()->format('Y-m-d H:i:00'));
-
-        if (auth()->check() && auth()->user()->estadoInscripcion($id) == 'CONFIRMAR PARTICIPACION') {
-            try{
-                $config = json_decode($actividad->pais->config_pago);
-                $paymentClass = 'App\\Payments\\' . $config->payment_class;
-                $persona = Persona::find(auth()->user()->idPersona);
-                $inscripcion = $persona->inscripcionActividad($id);
-                $payment = new $paymentClass($inscripcion);
-            } catch (\Exception $e){
-                return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
-            }
-
-            return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta', 'payment'));
+        if( (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0) ) {
+            $mensaje = "La actividad no tiene más cupos";
+            $clase = "btn-warning disabled";
+            $habilitado = false;
         }
-        return view('actividades.show', compact('actividad', 'hayCupos', 'inscripcionAbierta'));
+
+        if($actividad->fechaInicioInscripciones->lte(Carbon::now())
+            &&  $actividad->fechaFinInscripciones->gte(Carbon::now())) {
+            $mensaje = "El período de inscripción está cerrado";
+            $clase = "disabled";
+            $habilitado = true;
+        }
+
+        if (auth()->check()) {
+            $estado_inscripcion = auth()->user()->estadoInscripcion($id);
+
+            $clase = 'btn-primary';
+            $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
+            $mensaje = $estado_inscripcion;
+            $habilitado = true;
+
+            switch ($estado_inscripcion) {
+                case 'CONFIRMAR PARTICIPACIÓN':
+                    try{
+                        $config = json_decode($actividad->pais->config_pago);
+                        $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                        $persona = Persona::find(auth()->user()->idPersona);
+                        $inscripcion = $persona->inscripcionActividad($id);
+                        $payment = new $paymentClass($inscripcion);
+                    } catch (\Exception $e){
+                        return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+                    }
+                    $habilitado = true;
+                    $accion = action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]);
+                    break;
+                case 'FECHA DE CONFIRMACIÓN VENCIDA':
+                    $clase = 'btn-default disabled';
+                    $habilitado = false;
+                    break;               
+                case 'ESPERAR CONFIRMACIÓN':
+                    $clase = 'btn-warning disabled';
+                    $habilitado = false;
+                    break;
+
+                case 'CONFIRMADO':
+                    $clase = 'btn-success disabled';
+                    $habilitado = false;
+                    break;
+            }
+        }
+        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
     }
 
     /**

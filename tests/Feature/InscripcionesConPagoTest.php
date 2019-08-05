@@ -68,6 +68,77 @@ class InscripcionesConPagoTest extends TestCase
     }
 
     /** @test */
+    public function usuario_no_puede_confirmar_con_pago_si_paso_fecha_limite()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('con pago')
+            ->conPais($pais_con_config_de_pago->id)
+            ->agregarPuntoConInscriptos(0)
+            ->create([ 'fechaLimitePago' => Carbon::now()->subDay() ]);
+
+        factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+        ]);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('FECHA DE CONFIRMACIÓN VENCIDA')
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function usuario_no_puede_confirmar_con_pago_si_paso_fecha_limite_con_confirmación()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('con confirmacion y pago')
+            ->conPais($pais_con_config_de_pago->id)
+            ->agregarPuntoConInscriptos(0)
+            ->create([ 'fechaLimitePago' => Carbon::now()->subDay() ]);
+
+        factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+            'confirma' => 1,
+        ]);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('FECHA DE CONFIRMACIÓN VENCIDA')
+            ->assertStatus(200);
+    }
+
+    /** @test */
     public function coordinador_puede_marcar_preinscripcion_como_paga()
     {
         $this->withoutExceptionHandling();

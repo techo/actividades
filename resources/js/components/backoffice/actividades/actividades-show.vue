@@ -531,7 +531,7 @@
                 return this.mostrarFechas(this.fechasInscripcion.inicio,this.fechasInscripcion.fin);
             },
             fechaLimitePago: function () {
-                if(this.dataActividad.fechaLimitePago=="") return null;
+                if(!this.dataActividad.fechaLimitePago) return null;
                 return moment(this.dataActividad.fechaLimitePago).format('YYYY-MM-DD');
             }
         },
