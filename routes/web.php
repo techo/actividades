@@ -200,6 +200,22 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/grupos/{idGrupo}/inscriptos', 'backoffice\ajax\GruposController@incluirInscripto');
     Route::get('/ajax/personas/{id}', 'ajax\PersonasController@show');
     Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
+
+    Route::get('/estadisticas', 'backoffice\EstadisticasController@index');
+    Route::get('/estadisticas/actividades', function () { return view('backoffice.estadisticas.actividades'); });
+    Route::get('/estadisticas/personas', function () { return view('backoffice.estadisticas.personas'); });
+    Route::get('/estadisticas/coordinadores', function () { return view('backoffice.estadisticas.coordinadores'); });
+
+    Route::get('/ajax/paises', 'ajax\PaisesController@paises');
+    Route::get('/ajax/estadisticas/grafico-inscripciones', 'backoffice\EstadisticasController@grafico_inscripciones');
+    Route::get('/ajax/estadisticas/grafico-actividades', 'backoffice\EstadisticasController@grafico_actividades');
+    Route::get('/ajax/estadisticas/inscripciones-por-actividad', 'backoffice\EstadisticasController@inscripciones_por_actividad');
+    Route::get('/ajax/estadisticas/evaluaciones-por-actividad', 'backoffice\EstadisticasController@evaluaciones_por_actividad');
+    Route::get('/ajax/estadisticas/coordinadores', 'backoffice\EstadisticasController@coordinadores');
+    Route::get('/ajax/estadisticas/inscripciones', 'backoffice\EstadisticasController@inscripciones');
+    Route::get('/ajax/estadisticas/evaluaciones-sociales', 'backoffice\EstadisticasController@evaluaciones_sociales');
+    Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
+    
 });
 
 Route::prefix('/pagos/')->group(function() {

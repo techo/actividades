@@ -10,9 +10,15 @@ class Pais extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['nombre'];
     public $timestamps = false;
+    protected $hidden = ['config_pago'];
 
     public function provincias()
     {
         return $this->hasMany(Provincia::class, 'id_pais', 'id');
+    }
+
+    public function actividades()
+    {
+        return $this->hasMany(Actividad::class, 'idPais', 'id');
     }
 }

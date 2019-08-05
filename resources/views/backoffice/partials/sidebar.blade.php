@@ -65,7 +65,38 @@
                         </li>
                     </ul>
                 </li>
+                    <ul class="treeview-menu">
+                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver listado</a></li>
+                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">Registrar Usuario</a></li>
+                    </ul>
+                </li>
             @endif
+
+            @if (Auth::user()->hasRole('admin'))
+
+            <li class="treeview {{ request()->is('admin/estadisticas*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-bar-chart"></i> <span>Estadísticas</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/estadisticas') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas">Generales</a>
+                    </li>
+                    <li class="{{request()->is('admin/estadisticas/actividades') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas/actividades">Actividades</a>
+                    </li>
+                    <li class="{{request()->is('admin/estadisticas/personas') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas/personas">Personas</a>
+                    </li>
+                    <li class="{{request()->is('admin/estadisticas/coordinadores') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas/coordinadores">Coordinadores</a>
+                    </li>
+                </ul>
+            </li>
+            @endif
+
         </ul>
         <!-- /.sidebar-menu -->
     </section>

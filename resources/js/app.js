@@ -45,6 +45,18 @@ Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
 import UsuariosEvaluacionesTab from './components/backoffice/usuarios/usuarios-evaluaciones-tab';
 Vue.component('usuarios-evaluaciones-tab', UsuariosEvaluacionesTab);
 
+import EstadisticasGenerales from './components/backoffice/estadisticas/estadisticas-generales';
+Vue.component('estadisticas-generales', EstadisticasGenerales);
+
+import EstadisticasActividades from './components/backoffice/estadisticas/estadisticas-actividades';
+Vue.component('estadisticas-actividades', EstadisticasActividades);
+
+import EstadisticasPersonas from './components/backoffice/estadisticas/estadisticas-personas';
+Vue.component('estadisticas-personas', EstadisticasPersonas);
+
+import EstadisticasCoordinadores from './components/backoffice/estadisticas/estadisticas-coordinadores';
+Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
+
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);

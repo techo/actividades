@@ -14,6 +14,11 @@ class PaisesController extends Controller
         return Pais::orderBy('nombre')->get();
     }
 
+    public function paises(Request $request)
+    {
+        return Pais::has('actividades')->orderBy('nombre')->get();
+    }
+
     public function provincias($id_pais) {
     	return Pais::find($id_pais)->provincias;
     }
