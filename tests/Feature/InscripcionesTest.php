@@ -64,8 +64,7 @@ class InscripcionesTest extends TestCase
                 'limiteInscripciones' => 1
             ]);
 
-        $this->actingAs($jose)
-            ->get('/actividades/' . $actividad->idActividad)
+        $this->get('/actividades/' . $actividad->idActividad)
             ->assertSee('cupos')
             ->assertStatus(200);
 
@@ -104,8 +103,7 @@ class InscripcionesTest extends TestCase
             'aceptar_terminos' => 1 
         ];
         
-        $this->actingAs($jose)
-            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
+        $this->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
             ->assertStatus(403);
 
         $this->actingAs($jose)
