@@ -147,7 +147,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>PROVINCIA*</label>
+                            <label>PROVINCIA</label>
                         </div>
                     </div>
                     <div class="row">
@@ -168,7 +168,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>LOCALIDAD*</label>
+                            <label>LOCALIDAD</label>
                         </div>
                     </div>
                     <div class="row">
