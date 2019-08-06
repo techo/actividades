@@ -66,56 +66,83 @@ class actividadesController extends Controller
 
         $limiteInscriptos = (empty($actividad->limiteInscripciones)) ? 0 : $actividad->limiteInscripciones;
 
-        if( (($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0) ) {
-            $mensaje = "La actividad no tiene más cupos";
-            $clase = "btn-warning disabled";
-            $habilitado = false;
-        }
+        $hay_cupos = ($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0;
 
-        if($actividad->fechaInicioInscripciones->lte(Carbon::now())
-            &&  $actividad->fechaFinInscripciones->gte(Carbon::now())) {
-            $mensaje = "El período de inscripción está cerrado";
-            $clase = "disabled";
-            $habilitado = true;
-        }
+        $inscripciones_abiertas = $actividad->fechaInicioInscripciones->lte(Carbon::now()) &&  $actividad->fechaFinInscripciones->gte(Carbon::now());
+
+        $mensaje = "ERROR";
+        $clase = 'btn-danger';
+        $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
+        $habilitado = false;
 
         if (auth()->check()) {
             $estado_inscripcion = auth()->user()->estadoInscripcion($id);
-
-            $clase = 'btn-primary';
-            $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
             $mensaje = $estado_inscripcion;
-            $habilitado = true;
+            
+            if($estado_inscripcion) //si está inscripto
+            {
+                switch ($estado_inscripcion) {
+                    case 'CONFIRMAR PARTICIPACIÓN':
+                        try{
+                            $config = json_decode($actividad->pais->config_pago);
+                            $paymentClass = 'App\\Payments\\' . $config->payment_class;
+                            $persona = Persona::find(auth()->user()->idPersona);
+                            $inscripcion = $persona->inscripcionActividad($id);
+                            $payment = new $paymentClass($inscripcion);
+                        } catch (\Exception $e){
+                            return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+                        }
+                        $habilitado = true;
+                        $accion = action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]);
+                        $clase = 'btn-primary';
+                        break;
 
-            switch ($estado_inscripcion) {
-                case 'CONFIRMAR PARTICIPACIÓN':
-                    try{
-                        $config = json_decode($actividad->pais->config_pago);
-                        $paymentClass = 'App\\Payments\\' . $config->payment_class;
-                        $persona = Persona::find(auth()->user()->idPersona);
-                        $inscripcion = $persona->inscripcionActividad($id);
-                        $payment = new $paymentClass($inscripcion);
-                    } catch (\Exception $e){
-                        return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
-                    }
+                    case 'FECHA DE CONFIRMACIÓN VENCIDA':
+                        $clase = 'btn-default disabled';
+                        $habilitado = false;
+                        break;
+
+                    case 'ESPERAR CONFIRMACIÓN':
+                        $clase = 'btn-warning disabled';
+                        $habilitado = false;
+                        break;
+
+                    case 'CONFIRMADO':
+                        $clase = 'btn-success disabled';
+                        $habilitado = false;
+                        break;
+                }
+            }
+            else {
+
+                if(!$inscripciones_abiertas) {
+                    $mensaje = "El período de inscripción está cerrado";
+                    $clase = "disabled";
                     $habilitado = true;
-                    $accion = action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]);
-                    break;
-                case 'FECHA DE CONFIRMACIÓN VENCIDA':
-                    $clase = 'btn-default disabled';
+                    return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                }
+                if(!$hay_cupos) {
+                    $mensaje = "La actividad no tiene más cupos";
+                    $clase = "disabled";
                     $habilitado = false;
-                    break;               
-                case 'ESPERAR CONFIRMACIÓN':
-                    $clase = 'btn-warning disabled';
-                    $habilitado = false;
-                    break;
+                    return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                }
 
-                case 'CONFIRMADO':
-                    $clase = 'btn-success disabled';
-                    $habilitado = false;
-                    break;
+                if($actividad->confirmacion == 1 || $actividad->pago == 1) {
+                    $mensaje = "PREINSCRIBIRME";
+                    $clase = 'btn-primary';
+                    $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
+                    $habilitado = true;
+                }
+                else {
+                    $mensaje = "INSCRIBIRME";
+                    $clase = 'btn-primary';
+                    $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
+                    $habilitado = true;
+                }
             }
         }
+
         return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
     }
 

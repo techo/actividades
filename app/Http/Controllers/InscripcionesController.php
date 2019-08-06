@@ -70,7 +70,6 @@ class InscripcionesController extends BaseController
             }
 
             if ($actividad->pago == 1) {
-
                 try {
                     $config = json_decode($actividad->pais->config_pago);
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;

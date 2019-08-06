@@ -79,10 +79,7 @@ class Persona extends Authenticatable
         $actividad = Actividad::findOrFail($idActividad);
 
         if(!$inscripcion) { 
-            if($actividad->confirmacion == 1 || $actividad->pago == 1)
-                return 'PREINSCRIBIRME';
-            else
-                return 'INSCRIBIRME';
+            return false;
         }
 
         if($actividad->confirmacion == 1 && $actividad->pago == 1) {

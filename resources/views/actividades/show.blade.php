@@ -95,11 +95,11 @@
 <footer class="footer inscripcion-bar fixed-bottom">
     <div class="container">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <p class="h5">{{ $actividad->nombreActividad }}</p>
             </div>
-            <div class="col-md-5">
-                <div>
+            <div class="col-md-6">
+                <div style="text-align: right">
                     <a class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
                         <i class="fas fa-share-alt"></i>COMPARTIR
                     </a>

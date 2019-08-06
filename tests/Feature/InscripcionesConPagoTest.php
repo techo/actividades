@@ -51,7 +51,6 @@ class InscripcionesConPagoTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertSee('Sólo queda un paso');
 
-
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
             ->assertSee('CONFIRMAR')
