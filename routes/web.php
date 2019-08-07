@@ -102,11 +102,9 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
 
-Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
-    Route::get('', 'InscripcionesController@puntoDeEncuentro');
-    Route::post('/gracias', 'InscripcionesController@create');
-    Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
-});
+Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
+Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 
 //Fin Flujo de inscripciones
 
