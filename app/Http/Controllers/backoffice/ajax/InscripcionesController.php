@@ -381,16 +381,8 @@ class InscripcionesController extends BaseController
                             $errorEnRegistro = true;
                         }
 
-                        $estadosValidos = ['sin contactar', 'sin interés', 'confirmado', 'sin confirmar'];
-                        if ($actividad->tipo->flujo === 'CONSTRUCCION') {
-                            array_push($estadosValidos, 'pre-inscripto');
-                        }
-
-                        if (!in_array(strtolower($inscripcion['estado']), $estadosValidos) ) {
-                            $errores[] = "Error en linea "
-                                . $counter
-                                . ". el valor de la columna estado debe ser "
-                                . implode(', ', $estadosValidos) . ".";
+                        if (!in_array(strtolower($inscripcion['confirma']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna confirma debe ser 'si' o 'no'.";
                             $errorEnRegistro = true;
                         }
 
@@ -401,7 +393,7 @@ class InscripcionesController extends BaseController
                                 'idPuntoEncuentro' => $punto->idPuntoEncuentro,
                                 'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : $actividad->grupoRaiz->idGrupo,
                                 'rol' => $inscripcion['rol'],
-                                'estado' => $inscripcion['estado'],
+                                'confirma' => strtolower($inscripcion['confirma']) ==='si' ? 1 : 0,
                                 'pago' => strtolower($inscripcion['pago']) ==='si' ? 1 : 0,
                                 'presente' => strtolower($inscripcion['presente']) ==='si' ? 1 : 0
                             ];
@@ -434,7 +426,7 @@ class InscripcionesController extends BaseController
                                 $inscripto = $inscripcion->update(
                                     [
                                         'pago'      => $inscripcionValida['pago'],
-                                        'estado'    => $inscripcionValida['estado'],
+                                        'confirma'    => $inscripcionValida['confirma'],
                                         'presente'  => $inscripcionValida['presente'],
                                         'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro']
                                     ]

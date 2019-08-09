@@ -36,7 +36,10 @@
             mostrar: function (mensaje) {
                 this.display = true;
                 this.mensaje = (mensaje.mensaje) ? mensaje.mensaje : mensaje; //6x la palabra "mensaje", algo no está bien
-                setTimeout(() => this.display = false, 2000);
+                if (this.warning == true || this.danger == true)
+                    return;
+                else 
+                    setTimeout(() => this.display = false, 2000);
             },
             mostrarError: function (mensaje) {
                 this.danger = true;
@@ -48,7 +51,7 @@
                 this.titulo = 'Éxito';
                 this.mostrar(mensaje);
             },
-            mostrarWarning: function (data) {
+            mostrarWarning: function (mensaje) {
                 this.warning = true;
                 this.titulo = 'Advertencia';
                 this.mostrar(mensaje);
