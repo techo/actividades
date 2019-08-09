@@ -15,16 +15,16 @@
                 <div class="col-md-12">
                     @if( $actividad->confirmar == 1 ||
                     $actividad->pago == 1 )
-                        <h2 class="card-title">Confirmar tu pre-inscripción</h2>
+                        <h2 class="card-title">Finalizar tu pre-inscripción</h2>
                     @else
-                        <h2 class="card-title">Confirmar tu inscripción</h2>
+                        <h2 class="card-title">Finalizar tu inscripción</h2>
                     @endif
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <h4>Te esperamos en el siguiente lugar:</h4>
+                    <h4>Elegiste el punto de encuentro:</h4>
                 </div>
             </div>
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
@@ -40,17 +40,11 @@
                                 {{ $punto_encuentro->punto }}{{', ' . $punto_encuentro->provincia->provincia }}
                             @endif
                         </p>
+                            
                         <p>
+                            <h4>A las:</h4>
                             {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:i') }} hs
                         </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="h4">
-                            Coordinador:
-                        </p>
-                        <p>{{ $punto_encuentro->responsable->nombreCompleto }}</p>
                     </div>
                 </div>
                 <hr>
@@ -77,7 +71,7 @@
                         <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link"> Volver</a>
                     </div>
                     <div class="col-md-3">
-                        <input type="submit" value="CONFIRMAR" class="btn btn-primary">
+                        <input type="submit" value="FINALIZAR" class="btn btn-primary">
                     </div>
                 </div>
             </form>

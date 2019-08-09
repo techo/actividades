@@ -13,30 +13,36 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Quedás a la espera de que te confirmemos!</h1>
             <br>
-            <p>
-                En breve nos contactaremos con vos por mail para comunicarte si se aprueba tu inscripción.
-            </p>
-        </div>
-        <hr>
-    </div>
-    <div class="row">
-        <div class="col-md-9">
-            <h3 class="card-title">
-                <br>
+            <h3 class="card-subtitle">
                 Estás pre-inscripto a
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
+            <br>
+            <p>
+                <h4>
+                ¡Quedás a la espera de que te confirmemos!
+                </h4>
+            </p>
+            <p>
+                En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.
+            </p>
+            <p>
+                <h5>Coordinador</h5>
+                <p>{{ $actividad->coordinador->nombres  }} {{ $actividad->coordinador->apellidoPaterno }}</p>
+                <p>{{ $actividad->coordinador->mail  }}</p>
+            </p>
+            
         </div>
+        <hr>
     </div>
     <div class="row justify-content-start">
         <div class="col-md-9">
             <div class="row">
                 <div class="col-md-4">
-                    <br><br>
+                    <br>
                     <p>
                         @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
                             <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>

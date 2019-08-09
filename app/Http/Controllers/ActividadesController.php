@@ -99,7 +99,7 @@ class actividadesController extends Controller
                     break;
 
                 case 'FECHA DE CONFIRMACIÓN VENCIDA':
-                    $clase = 'btn-default disabled';
+                    $clase = 'btn-danger disabled';
                     $habilitado = false;
                     break;
 

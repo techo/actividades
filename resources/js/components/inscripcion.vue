@@ -7,15 +7,9 @@
                 </div>
             </div>
             <hr>
-
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="card-title">¿Qué es un punto de encuentro?</h5>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <p>Antes de cualquier actividad, nos encontramos en un punto/s intermedio.
+                    <p>Una actividad, puede tener uno o más puntos de encuentro.
                         ¡Elegí el que encuentres más cómodo y nos vemos ahí!</p>
                 </div>
             </div>
@@ -31,10 +25,8 @@
                     v-on:submit="validateForm"
             >
               <div class="row" v-for="(item, index) in actividad.puntosEncuentro">
-                  <div class="col-md-1">
-                      <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''">
-                  </div>
-                  <div class="col-md-11">
+                  <div class="col-md-12">
+                      <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
                     {{item.punto}}, {{ actividad.ubicacion }} - {{item.horario | format_time}}hs
                   </div>
               </div>

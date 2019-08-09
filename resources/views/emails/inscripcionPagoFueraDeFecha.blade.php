@@ -6,14 +6,17 @@
         Hola {{$inscripcion->persona->nombres}}
     </p>
     <p>
-        Recibimos tu donación pero está fuera de la fecha límite para confirmar.
+        Recibimos tu donación pero está fuera de la fecha límite para confirmar:
         
         @if($inscripcion->actividad->fechaLimitePago)
-            {{ $inscripcion->actividad->fechaLimitePago->format('Y-m-d') }}
+            {{ $inscripcion->actividad->fechaLimitePago->format('Y-m-d') }}.
         @endif
-
+    </p>
+    <p>
         Es por esto que <b>no quedaste confirmado para participar</b>.
-        Lamentamos mucho esto. Si te interesa recuperar esa donación, podés contactarte con el coodinador de la actividad y solicitarle que tramite la devolución:
+    </p>
+    <p>
+        Si te interesa recuperar esa donación, podés contactarte con el coodinador de la actividad y solicitarle que tramite la devolución.
     </p>
 
     @if($inscripcion->actividad->coordinador)

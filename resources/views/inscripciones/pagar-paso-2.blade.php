@@ -59,7 +59,7 @@
                             $form = strtolower($config->payment_class)
                         @endphp
                         @include('pagos.' . $form)
-                        <span class="text-muted techo-small-text" style="margin-top: -0.5em">Al hacer clic se te redirigirá a la plataforma de pago</span>
+                        <span class="text-muted techo-small-text" style="margin-top: -0.5em">Al hacer click se te redirigirá a la plataforma de pago</span>
                     </div>
                 </div>
             @endif
