@@ -3,7 +3,6 @@
     $config = $payment->getConfig();
     $payuTest = config('payments.payu.test');
 @endphp
-->{{ config('payments.payu.test') }}<-
 <form method="{{ $payment->method() }}" action="{{ $payment->url() }}">
     @csrf
     <input name="merchantId"    type="hidden"  value="{{ $config->merchant_id }}"   >
