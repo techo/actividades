@@ -51,6 +51,7 @@ return [
             'PENDING_NOTIFYING_ENTITY' => 'Recibo de pago generado. En espera de pago',
         ],
         'url' => env('PAYU_ENDPOINT', 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'),
+        'test' => env('PAYU_TEST', 'true'),
         'method' => 'POST'
     ]
 
