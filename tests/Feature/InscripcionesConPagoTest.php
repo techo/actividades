@@ -229,7 +229,7 @@ class InscripcionesConPagoTest extends TestCase
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/confirmar/donacion/checkout', $datos)
             ->assertSessionHasNoErrors()
             ->assertOk()
-            ->assertSee('Donarás $ARS 100');
+            ->assertSee('$ARS 100');
     }
 
     /** @test */
