@@ -8,16 +8,6 @@
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">Asignar Punto</button>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Cambiar Asistencia
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a @click="cambiarAsistencia(1, $event)">Presente</a></li>
-                        <li><a @click="cambiarAsistencia(0, $event)">Ausente</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Cambiar Estado
                         <span class="caret"></span>
                     </button>
@@ -26,6 +16,36 @@
                         <li><a @click="cambiarEstado('Sin Confirmar', $event)">Sin Confirmar</a></li>
                         <li><a @click="cambiarEstado('Sin Interés', $event)">Sin Interés</a></li>
                         <li><a @click="cambiarEstado('Sin Contactar', $event)">Sin Contactar</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambiar Confirmación
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a @click="cambiarConfirmacion(1, $event)">Confirmado</a></li>
+                        <li><a @click="cambiarConfirmacion(0, $event)">Sin Confirmar</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambiar Pago
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a @click="cambiarPago(1, $event)">Pagado</a></li>
+                        <li><a @click="cambiarPago(0, $event)">Sin Pagar</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambiar Asistencia
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a @click="cambiarAsistencia(1, $event)">Presente</a></li>
+                        <li><a @click="cambiarAsistencia(0, $event)">Ausente</a></li>
                     </ul>
                 </div>
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="mostrarDesinscribirModal($event)">Desinscribir</button>
@@ -68,6 +88,12 @@
             },
             cambiarEstado: function (estado, event) {
                 Event.$emit('cambiar-estado', estado);
+            },
+            cambiarConfirmacion: function (confirmacion, event) {
+                Event.$emit('cambiar-confirmacion', confirmacion);
+            },
+            cambiarPago: function (pago, event) {
+                Event.$emit('cambiar-pago', pago);
             },
             cambiarAsistencia: function (asistencia, event) {
                 Event.$emit('cambiar-asistencia', asistencia);

@@ -245,6 +245,34 @@ export default {
               },
               params);
       },
+      cambiarConfirmacion: function (confirmacion) {
+          let url = this.apiUrl + 'cambiar/confirmacion';
+          let params = {
+              confirmacion: confirmacion,
+              actividad: this.actividad,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('confirmacion:cambio');
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
+      cambiarPago: function (pago) {
+          let url = this.apiUrl + 'cambiar/pago';
+          let params = {
+              pago: pago,
+              actividad: this.actividad,
+              inscripciones: this.$refs.inscripcionesVuetable.selectedTo
+          };
+          this.axiosPost(url, function (data, self) {
+                  Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
+                  Event.$emit('pago:cambio');
+                  Event.$emit('mensaje-success', data);
+              },
+              params);
+      },
       cambiarAsistencia: function (asistencia) {
           let url = this.apiUrl + 'cambiar/asistencia';
           let params = {
@@ -315,6 +343,8 @@ export default {
       Event.$on('grupo-asignado', this.asignarGrupo);
       Event.$on('punto-asignado', this.asignarPunto);
       Event.$on('cambiar-estado', this.cambiarEstado);
+      Event.$on('cambiar-pago', this.cambiarPago);
+      Event.$on('cambiar-confirmacion', this.cambiarConfirmacion);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
       Event.$on('desinscripto', this.desinscribir);
       Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);

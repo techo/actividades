@@ -199,6 +199,34 @@ class InscripcionesController extends BaseController
             ->json("Estado actualizado a " . $request->estado . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
+    public function cambiarConfirmacion(Request $request, $id)
+    {
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->confirma = $request->confirmacion;
+            $inscripcion->save();
+        }
+
+        $msg = $request->confirma === 1 ? "Confirmado" : "Sin Confirmar";
+        return response()
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function cambiarPago(Request $request, $id)
+    {
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->pago = $request->pago;
+            $inscripcion->save();
+        }
+
+        $msg = $request->pago === 1 ? "Pagado" : "Sin Pagar";
+        return response()
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
     public function cambiarAsistencia(Request $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
@@ -428,7 +456,8 @@ class InscripcionesController extends BaseController
                                         'pago'      => $inscripcionValida['pago'],
                                         'confirma'    => $inscripcionValida['confirma'],
                                         'presente'  => $inscripcionValida['presente'],
-                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro']
+                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro'],
+                                        'rol' => $inscripcionValida['rol'],
                                     ]
                                 );
 
@@ -437,7 +466,6 @@ class InscripcionesController extends BaseController
                                     ->update(
                                         [
                                             'idGrupo' => $inscripcionValida['idGrupo'],
-                                            'rol' => $inscripcionValida['rol']
                                         ]
                                     );
                             }
