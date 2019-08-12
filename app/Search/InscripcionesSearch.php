@@ -87,7 +87,7 @@ class InscripcionesSearch
                     'Actividad.costo',
                     'Actividad.idActividad',
                     'Grupo.nombre as nombreGrupo',
-                    'Rol.rol as nombreRol',
+                    'Inscripcion.rol as nombreRol',
                     'PersonaModificacion.mail as modificado_por',
                     'Inscripcion.updated_at as modificado_en'
                 ]
