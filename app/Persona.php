@@ -63,7 +63,7 @@ class Persona extends Authenticatable
 
     public function grupoAsignadoEnActividad($idActividad)
     {
-        return $this->gruposRoles()->where('idActividad', $idActividad)->first();
+        return $this->inscripciones()->where('idActividad', $idActividad)->first()->rol;
     }
 
     public function estaInscripto($idActividad) {
@@ -71,7 +71,7 @@ class Persona extends Authenticatable
     }
 
     public function estaPreInscripto($idActividad) {
-        return $this->inscripciones->where('idActividad',$idActividad)->where('estado','Pre-Inscripto')->count();
+        return $this->inscripciones->where('idActividad',$idActividad)->count();
     }
 
     public function estadoInscripcion($idActividad) {

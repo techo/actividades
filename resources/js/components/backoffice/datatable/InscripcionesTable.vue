@@ -53,7 +53,6 @@ import Pago from './Pago';
 import Asistencia from './Asistencia';
 import Confirma from './Confirma';
 import ActualizarInscripcion from './actualizarInscripcion';
-import EstadoInscripcion from './estadoInscripcion';
 import axios from 'axios';
 import Simplert from 'vue2-simplert';
 
@@ -67,7 +66,6 @@ Vue.use(VueEvents);
   Vue.component('pago', Pago);
   Vue.component('confirma', Confirma);
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
-  Vue.component('estado-inscripcion', EstadoInscripcion);
   Vue.component('simple-alert', Simplert);
 
 export default {

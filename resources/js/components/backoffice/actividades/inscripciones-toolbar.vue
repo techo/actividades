@@ -8,18 +8,6 @@
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">Asignar Punto</button>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Cambiar Estado
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a @click="cambiarEstado('Confirmado', $event)">Confirmado</a></li>
-                        <li><a @click="cambiarEstado('Sin Confirmar', $event)">Sin Confirmar</a></li>
-                        <li><a @click="cambiarEstado('Sin Interés', $event)">Sin Interés</a></li>
-                        <li><a @click="cambiarEstado('Sin Contactar', $event)">Sin Contactar</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Cambiar Confirmación
                         <span class="caret"></span>
                     </button>
@@ -85,9 +73,6 @@
             mostrarDesinscribirModal: function (event) {
                 if(this.disabled) return;
                 Event.$emit('show-desinscribir-modal');
-            },
-            cambiarEstado: function (estado, event) {
-                Event.$emit('cambiar-estado', estado);
             },
             cambiarConfirmacion: function (confirmacion, event) {
                 Event.$emit('cambiar-confirmacion', confirmacion);

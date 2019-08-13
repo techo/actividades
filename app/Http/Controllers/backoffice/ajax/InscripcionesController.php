@@ -131,20 +131,9 @@ class InscripcionesController extends BaseController
         $idActividad = $request->actividad;
         foreach ($request->inscripciones as $idInscripcion)
         {
-            $persona = Inscripcion::findOrFail($idInscripcion)->persona;
-            if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
-            {
-                $grupoRol->rol = $request->rol;
-                $grupoRol->save();
-            } else {
-                //Nuevo
-                $grupoRol = new GrupoRolPersona();
-                $grupoRol->idPersona = $persona->idPersona;
-                $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = Actividad::find($idActividad)->grupoRaiz->idGrupo;
-                $grupoRol->rol = $request->rol;
-                $grupoRol->save();
-            }
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->rol = $request->rol;
+            $inscripcion->save();
         }
         return response()
             ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
@@ -185,18 +174,6 @@ class InscripcionesController extends BaseController
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
-    }
-
-    public function cambiarEstado(Request $request, $id)
-    {
-        foreach ($request->inscripciones as $idInscripcion)
-        {
-            $inscripcion = Inscripcion::findOrFail($idInscripcion);
-            $inscripcion->estado = $request->estado;
-            $inscripcion->save();
-        }
-        return response()
-            ->json("Estado actualizado a " . $request->estado . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
     public function cambiarConfirmacion(Request $request, $id)
@@ -336,7 +313,6 @@ class InscripcionesController extends BaseController
             'fechaInscripcion'  => Carbon::now(),
             'idPersonaModificacion' => auth()->user()->idPersona,
             'idPuntoEncuentro'  => $inscripcion['idPuntoEncuentro'],
-            'estado'            => empty($inscripcion['estado']) ? 'Sin Contactar' : $inscripcion['estado'],
             'pago'            => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
             'presente'            => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
             'evaluacion'        => 0,

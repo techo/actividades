@@ -71,7 +71,7 @@ class ActividadesTest extends TestCase
 
         $this->actingAs($mati)
             ->post('/ajax/actividades')
-            ->assertSeeText("ESPERAR");
+            ->assertSeeText("Esperar");
 
     }
 
@@ -99,7 +99,7 @@ class ActividadesTest extends TestCase
 
         $this->actingAs($mati)
             ->post('/ajax/actividades')
-            ->assertSeeText("CONFIRMADO");
+            ->assertSeeText("Confirmado");
     }
 
     /** @test */
@@ -125,7 +125,7 @@ class ActividadesTest extends TestCase
 
         $this->actingAs($mati)
             ->post('/ajax/actividades')
-            ->assertSeeText("CONFIRMAR");
+            ->assertSeeText("Confirmar");
     }
 
 }

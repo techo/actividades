@@ -10,9 +10,9 @@ $factory->define(App\Inscripcion::class, function (Faker $faker) {
 
 			'rol' => $faker->word,
 
-			'estado' => 'Sin Contactar',
-			'presente' => 0,
+			'confirma' => 0,
 			'pago' => 0,
+			'presente' => 0,
 
 			'evaluacion' => true,
 			'aceptarCompromiso' => true,

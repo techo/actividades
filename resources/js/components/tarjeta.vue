@@ -2,9 +2,19 @@
   <div class="col-md-4">
     <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
         <div class="img-tarjeta">
-            <span v-show="actividad.estadoInscripcion == 'CONFIRMADO'" class="inscripto badge badge-pill badge-success">¡Ya estás confirmado!</span>
-            <span v-show="actividad.estadoInscripcion == 'CONFIRMAR'" class="inscripto badge badge-pill badge-primary">¡Confirma con tu donación!</span>
-            <span v-show="actividad.estadoInscripcion == 'ESPERAR'" class="inscripto badge badge-pill badge-warning">¡Esperá el mail de confirmación!</span>
+            <span
+                v-show="actividad.estadoInscripcion"
+                :class="{ 
+                    'inscripto': true, 
+                    'badge': true, 
+                    'badge-pill': true, 
+                    'badge-danger': actividad.estadoInscripcion == 'Fecha de confirmación vencida', 
+                    'badge-primary': actividad.estadoInscripcion == 'Confirmar con tu donación', 
+                    'badge-warning': actividad.estadoInscripcion == 'Esperar confirmación',
+                    'badge-success': actividad.estadoInscripcion == 'Confirmado',
+                }" >
+                {{ actividad.estadoInscripcion }}
+            </span>
             <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
             <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
