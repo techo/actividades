@@ -64,7 +64,6 @@
                 <p><a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
                     {{ $inscripcion->punto_encuentro->responsable->mail }}
                 </a></p>
-                <p>{{ $inscripcion->punto_encuentro->responsable->telefonoMovil }}</p>
             </p>
         @endif
     @endif

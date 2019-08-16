@@ -18,6 +18,11 @@
             </strong>
     </p>
 
+    <p>
+        <strong>¡Quedás a la espera de que te confirmemos!</strong>
+        En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.
+    </p>
+
     @if($inscripcion->actividad->coordinador)
         <p>
             <strong>Coordinador de la actividad:</strong>
@@ -54,7 +59,6 @@
                 <p><a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
                     {{ $inscripcion->punto_encuentro->responsable->mail }}
                 </a></p>
-                <p>{{ $inscripcion->punto_encuentro->responsable->telefonoMovil }}</p>
             </p>
         @endif
     @endif
