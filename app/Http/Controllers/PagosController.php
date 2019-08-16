@@ -26,10 +26,10 @@ class PagosController extends Controller
             $fecha_transaccion = Carbon::parse($request->processingDate);
 
         if ($payment->success() && !$inscripcion->actividad->fechaLimitePago ||
-            $payment->success() && $fecha_transaccion->lessThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
+            $payment->success() && $fecha_transaccion->lessThan($inscripcion->actividad->fechaLimitePago)) {
             return view('inscripciones.pagada', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);
         }
-        elseif ($payment->success() && $fecha_transaccion->greaterThan($inscripcion->actividad->fechaLimitePago)) {
+        elseif ($payment->success() && $fecha_transaccion->greaterThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
             return view('pagos.fuera_de_fecha', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);   
         }
 

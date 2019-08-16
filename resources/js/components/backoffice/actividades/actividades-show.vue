@@ -305,29 +305,36 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
-                        <div class="btn-group" role="group" aria-label="Confirmación manual">
-                        <label>Confirmación manual</label><br>
-                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.confirmacion" > </v-switch>
-                        <label>Confirmación por pago</label><br>
-                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.pago"> </v-switch>
+                    <div style="display: flex; flex-direction: column; align-items: center;"> <label>Confirmación manual</label>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.confirmacion" > 
+                    </v-switch>
                     </div>
                 </div>
             </div>
             <div class="col-md-2">
-                
                 <div class="form-group">
-                    <label for="limiteInscripciones">Límite de voluntarios (0 = Sin Límite)</label>
-                    <input id="limiteInscripciones"
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <label>Confirmación por pago</label>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.pago"> </v-switch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="limiteInscripciones">Límite de voluntarios</label>
+                    <input style="width: 100px" id="limiteInscripciones"
                            type="number"
                            min="0"
                            class="form-control"
                            v-bind:disabled="readonly"
                            v-model="dataActividad.limiteInscripciones"
                     >
-
+                    <div class="text-muted">(0 = Sin Límite)</div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
                 <div class="form-group">
                     
                     <label>Estado de las inscripciones</label><br>
@@ -351,10 +358,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="mensajeInscripcion">Mensaje De Confirmación</label>
-                    <span class="text-muted pull-right">Este texto se incluirá en el correo de confirmación de la actividad.</span>
                     <textarea
                             name="mensajeInscripcion"
                             id="mensajeInscripcion"
@@ -366,6 +375,7 @@
                     >
                         {{ dataActividad.mensajeInscripcion }}
                     </textarea>
+                    <div class="text-muted">Este texto se incluirá en el correo de confirmación de la actividad.</div>
                 </div>
             </div>
         </div>

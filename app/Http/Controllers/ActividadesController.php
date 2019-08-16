@@ -142,6 +142,14 @@ class actividadesController extends Controller
                 $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
                 $habilitado = true;
             }
+
+            $fecha_hoy = Carbon::parse(Carbon::now()->format('Y-m-d'));
+
+            if($actividad->pago == 1 && $actividad->fechaLimitePago && $actividad->fechaLimitePago->lessThanOrEqualTo($fecha_hoy) ) {
+                $mensaje = "FECHA DE CONFIRMACIÓN VENCIDA";
+                $clase = 'btn-danger disabled';
+                $habilitado = false;
+            }
         }
 
         return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));

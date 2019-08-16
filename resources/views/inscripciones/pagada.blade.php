@@ -40,8 +40,8 @@
             </p>
             <p>Este punto está coordinado por {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
                 (<a href="mailto:{{$inscripcion->punto_encuentro->responsable->mail}}">
-                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), puedes
-                comunicarte si tienes alguna duda o pregunta sobre el sitio de reunión.
+                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), podés
+                comunicarte si tenés alguna duda o pregunta sobre el punto de encuentro.
             </p>
             <p>La actividad se realizará en {{ $actividad->localidad->localidad }},
                 {{ $actividad->provincia->provincia }},

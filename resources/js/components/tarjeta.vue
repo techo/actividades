@@ -17,6 +17,7 @@
             </span>
             <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
             <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
+            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="sin-cupos badge badge-pill badge-danger">¡Fecha de confirmación vencida!</span>
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
         </div>
       <div class="card-body px-0">
@@ -55,6 +56,11 @@
           },
           cuposLlenos: function () {
               return this.actividad.cuposRestantes <= 0 && this.actividad.limiteInscripciones !== 0;
+          },
+          fechaLimitePagoVencida: function () {
+            let hoy = moment(moment().format("MM-DD-YYYY"),"MM-DD-YYYY");
+            let fecha_limite = moment(this.actividad.fechaLimitePago, "DD-MM-YYYY");
+            return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite <= hoy;
           }
         },
         filters: {

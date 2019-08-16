@@ -19,6 +19,7 @@ class ActividadResource extends Resource
         return [
             'idActividad'   => $this->idActividad,
             'tipo'          => new TipoResource($this->tipo),
+            'pago'          => $this->pago,
             'fecha'         => $this->fechaInicio->format('d/m'),
             'hora'          => $this->fechaInicio->format('H:i'),
             'fechaInicio'   => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y'),
@@ -36,6 +37,7 @@ class ActividadResource extends Resource
             'ubicacion'     => $this->provincia->provincia,
             'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
+            'fechaLimitePago'      => empty($this->fechaLimitePago) ? '' : $this->fechaLimitePago->format('d-m-Y'),
             'cantInscriptos' => $this->inscripciones()->count(),
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0

@@ -427,7 +427,7 @@ class InscripcionesConPagoTest extends TestCase
             }',
         ]);
 
-        $fecha_limite = Carbon::now();
+        $fecha_limite = Carbon::parse(Carbon::now()->format('Y-m-d'));
 
         $actividad = app(ActividadFactory::class)
             ->conPais($pais_con_config_de_pago->id)
@@ -486,4 +486,46 @@ class InscripcionesConPagoTest extends TestCase
             ->assertOk();
 
     }
+
+    /** @test */
+    public function plataforma_reenvia_a_pagina_fecha_limite_vencida()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $fecha_limite = Carbon::parse(Carbon::now()->format('Y-m-d'));
+
+        $actividad = app(ActividadFactory::class)
+            ->conPais($pais_con_config_de_pago->id)
+            ->conEstado('con pago')
+            ->agregarPuntoConInscriptos(0)
+            ->create([ 'fechaLimitePago' => $fecha_limite ]);
+
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona
+        ]);
+
+        $fecha_transaccion = $fecha_limite->format('Y-m-d');
+
+        $this->actingAs($jose)
+            ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)
+            ->assertSeeText('¡Pago fuera de fecha!')
+            ->assertOk();
+
+    }
+
 }
