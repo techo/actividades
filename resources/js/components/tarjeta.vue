@@ -17,7 +17,7 @@
             </span>
             <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
             <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
-            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="sin-cupos badge badge-pill badge-danger">¡Fecha de confirmación vencida!</span>
+            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">Fecha de confirmación vencida</span>
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
         </div>
       <div class="card-body px-0">
