@@ -9,7 +9,7 @@
         Recibimos tu donación pero está fuera de la fecha límite para confirmar:
         
         @if($inscripcion->actividad->fechaLimitePago)
-            {{ $inscripcion->actividad->fechaLimitePago->format('Y-m-d') }}.
+            {{ $inscripcion->actividad->fechaLimitePago }}.
         @endif
     </p>
     <p>
