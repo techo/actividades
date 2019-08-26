@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Actividad;
 use App\Grupo;
 use App\GrupoRolPersona;
-use Illuminate\Http\Request;
-use App\Actividad;
-use App\PuntoEncuentro;
 use App\Inscripcion;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionEsperarConfirmacion;
+use App\Mail\MailInscripcionFaltaPago;
+use App\PuntoEncuentro;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MailConfimacionInscripcion;
 
 class InscripcionesController extends BaseController
 {
@@ -59,8 +61,14 @@ class InscripcionesController extends BaseController
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 
-            if (strtoupper($actividad->tipo->flujo) === 'CONSTRUCCION') {
+            if ($actividad->confirmacion == 1) {
+                $inscripcion->save();
+                $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
+                return view('inscripciones.confirmar-paso-1')
+                    ->with('actividad', $actividad);
+            }
 
+            if ($actividad->pago == 1) {
                 try {
                     $config = json_decode($actividad->pais->config_pago);
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -69,18 +77,16 @@ class InscripcionesController extends BaseController
                     return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
                 }
                 $payment->setMonto($request->monto);
-                $inscripcion->estado = 'Pre-Inscripto';
                 $inscripcion->save();
-                $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
+                $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
 
                 return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
                     ->with('payment', $payment);
             }
-            $inscripcion->estado = 'Sin Contactar';
 
             $inscripcion->save();
-            $this->intentaEnviar(Mail::to(Auth::user()->mail), new MailConfimacionInscripcion($inscripcion), Auth::user());
+            $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
@@ -119,7 +125,6 @@ class InscripcionesController extends BaseController
         $actividad = Actividad::find($id);
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
             ->where('idActividad', $actividad->idActividad)
-            ->where('estado', 'Pre-inscripto')
             ->firstOrFail();
 
         try {
@@ -145,7 +150,6 @@ class InscripcionesController extends BaseController
         $actividad = Actividad::find($id);
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
             ->where('idActividad', $actividad->idActividad)
-            ->where('estado', 'Pre-inscripto')
             ->firstOrFail();
 
 

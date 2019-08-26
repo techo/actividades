@@ -196,16 +196,6 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
-//            [
-//                'name' => 'mail',
-//                'sortField' => 'mail',
-//                'title' => 'Email'
-//            ],
-//            [
-//                'name' => 'telefonoMovil',
-//                'sortField' => 'telefonoMovil',
-//                'title' => 'Teléfono Móvil'
-//            ],
             [
                 'name' => 'nombreGrupo',
                 'sortField' => 'nombreGrupo',
@@ -223,18 +213,6 @@ return [
                 'sortField' => 'presente',
                 'dataClass' => 'text-center'
             ],
-            [
-                'name' => '__component:estado-inscripcion',
-                'title' => 'Estado',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center'
-            ],
-//            [
-//                'name' => '__component:actualizar-inscripcion',
-//                'title' => 'Actualizar',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ],
 
         ],
         'sortOrder' => [

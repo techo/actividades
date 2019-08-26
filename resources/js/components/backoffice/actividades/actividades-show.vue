@@ -305,19 +305,38 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="limiteInscripciones">Límite de voluntarios (0 = Sin Límite)</label>
-                    <input id="limiteInscripciones"
+                    <div style="display: flex; flex-direction: column; align-items: center;"> <label>Confirmación manual</label>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.confirmacion" > 
+                    </v-switch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <label>Confirmación por pago</label>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" v-model="dataActividad.pago"> </v-switch>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="limiteInscripciones">Límite de voluntarios</label>
+                    <input style="width: 100px" id="limiteInscripciones"
                            type="number"
                            min="0"
                            class="form-control"
                            v-bind:disabled="readonly"
                            v-model="dataActividad.limiteInscripciones"
                     >
-
+                    <div class="text-muted">(0 = Sin Límite)</div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
                 <div class="form-group">
+                    
                     <label>Estado de las inscripciones</label><br>
                     <div class="btn-group" role="group" aria-label="Estado de la Inscripción">
                         <button
@@ -339,10 +358,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
                 <div class="form-group">
-                    <label for="mensajeInscripcion">Mensaje De Inscripción</label>
-                    <span class="text-muted pull-right">Este texto se incluirá en el correo de bienvenida a la actividad.</span>
+                    <label for="mensajeInscripcion">Mensaje De Confirmación</label>
                     <textarea
                             name="mensajeInscripcion"
                             id="mensajeInscripcion"
@@ -354,6 +375,7 @@
                     >
                         {{ dataActividad.mensajeInscripcion }}
                     </textarea>
+                    <div class="text-muted">Este texto se incluirá en el correo de confirmación de la actividad.</div>
                 </div>
             </div>
         </div>
@@ -361,9 +383,9 @@
         </div><!-- /.box-body -->
     </div>
 
-    <div class="box" v-if="esConstruccion">
+    <div class="box" v-if="dataActividad.pago">
         <div class="box-header with-border">
-            <h3 class="box-title">Construcción</h3>
+            <h3 class="box-title">Configuración de pago</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -394,6 +416,19 @@
                         <span class="text-muted">Opcional</span>
                     </div>
                 </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="fechaLimitePago">Fecha límite </label>
+                        <input id="fechaLimitePago" name="fechaLimitePago"
+                               type="date"
+                               class="form-control"
+                               v-bind:disabled="readonly"
+                               v-bind:value="fechaLimitePago"
+                               @input="dataActividad.fechaLimitePago = $event.target.value;"
+                        >
+                        <span class="text-muted">Opcional</span>
+                    </div>
+                </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="beca">Formulario de solicitud de beca</label>
@@ -416,6 +451,7 @@
 
 <script>
     import PuntoEncuentro from './punto-encuentro';
+    import vSwitch from 'vue-switches';
 
     import _ from 'lodash';
     import VueTimepicker from 'vue2-timepicker'; // https://github.com/phoenixwong/vue2-timepicker
@@ -430,7 +466,7 @@
     export default {
         name: "actividades-show",
         props: ['actividad', 'tipos', 'categorias', 'paises', 'provincias', 'localidades', 'edicion'],
-        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker},
+        components: {'punto-encuentro': PuntoEncuentro, VueTimepicker, 'daterange-picker': daterangepicker, vSwitch},
         data() {
             return {
                 dataCategorias: [],
@@ -504,6 +540,10 @@
             fechasInscripcion_etiqueta: function () {
                 return this.mostrarFechas(this.fechasInscripcion.inicio,this.fechasInscripcion.fin);
             },
+            fechaLimitePago: function () {
+                if(!this.dataActividad.fechaLimitePago) return null;
+                return moment(this.dataActividad.fechaLimitePago).format('YYYY-MM-DD');
+            }
         },
         filters: {
             estado: function (value) {
@@ -663,6 +703,8 @@
                     url = `/admin/actividades/${encodeURI(this.dataActividad.idActividad)}/editar`;
                 }
 
+                this.dataActividad.confirmacion = (!this.dataActividad.confirmacion)?0:1;
+                this.dataActividad.pago = (!this.dataActividad.pago)?0:1;
                 this.dataActividad.fechaInicio = moment(this.fechasActividad.inicio).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaFin = moment(this.fechasActividad.fin).format('YYYY-MM-DD HH:mm:ss');
                 this.dataActividad.fechaInicioInscripciones = moment(this.fechasInscripcion.inicio).format('YYYY-MM-DD HH:mm:ss');

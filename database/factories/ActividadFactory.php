@@ -9,6 +9,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
 
     return [
       'idTipo' => factory(\App\Tipo::class)->create(),
+      'confirmacion' => 0,
+      'pago' => 0,
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
 
@@ -92,8 +94,8 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idCoordinador' => factory(App\Persona::class)->create(),
       'beca' => null,
       'montoMin' => "100.00",
-      'montoMax' => "0.00"
-        //
+      'montoMax' => "0.00",
+      'fechaLimitePago' => null
     ];
 });
 
@@ -103,4 +105,17 @@ $factory->state(App\Actividad::class, 'futura', [
 
 $factory->state(App\Actividad::class, 'pasada', [
     'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
+]);
+
+$factory->state(App\Actividad::class, 'con confirmacion', [
+    'confirmacion' => 1,
+]);
+
+$factory->state(App\Actividad::class, 'con pago', [
+    'pago' => 1,
+]);
+
+$factory->state(App\Actividad::class, 'con confirmacion y pago', [
+    'confirmacion' => 1,
+    'pago' => 1,
 ]);

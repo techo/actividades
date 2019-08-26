@@ -20,7 +20,8 @@ class Actividad extends Model
             'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
-            'fechaInicioEvaluaciones', 'fechaFinEvaluaciones'
+            'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
+            'fechaLimitePago',
 
         ];
 
@@ -181,6 +182,31 @@ class Actividad extends Model
         ->select(['idPersona', 'estado'])
         ->get()
         ->toArray();
+
+    }
+
+    public function estadoInscripcion($idPersona = null)
+    {
+        if(!$idPersona) return false;
+
+        $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
+
+        if(!$inscripcion) return false;
+
+        if($this->confirmacion == $inscripcion->confirma && $this->pago == $inscripcion->pago) {
+            return "Confirmado";
+        }
+
+        if($this->confirmacion == $inscripcion->confirma && $this->pago != $inscripcion->pago) {
+            if( !$this->fechaLimitePago || $this->fechaLimitePago && $this->fechaLimitePago > \Carbon\Carbon::now() )
+                return "Confirmar con tu donación";
+            else 
+                return "Fecha de confirmación vencida";
+        }
+
+        if($this->confirmacion != $inscripcion->confirma) {
+            return "Esperar confirmación";
+        }
 
     }
 

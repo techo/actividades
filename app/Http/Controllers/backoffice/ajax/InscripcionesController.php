@@ -9,8 +9,6 @@ use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
 use App\Inscripcion;
 use App\Log;
-use App\Mail\ActualizacionActividad;
-use App\Mail\MailConfimacionInscripcion;
 use App\Persona;
 use App\PuntoEncuentro;
 use Carbon\Carbon;
@@ -21,6 +19,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Rap2hpoutre\FastExcel\FastExcel;
+
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionFaltaPago;
+use App\Mail\ActualizacionActividad;
 
 class InscripcionesController extends BaseController
 {
@@ -69,13 +71,31 @@ class InscripcionesController extends BaseController
             $inscripcion->presente = $request->presente;
         }
 
+        if($request->has('confirma')){
+
+            if($request->confirma == true) {
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) 
+                    $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1)
+                    $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
+            }
+
+            $inscripcion->confirma = $request->confirma;
+        }
+
         if($request->has('pago')){
+            if($inscripcion->actividad->pago == 1 && $request->pago == 1) {
+                $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+            }
+
             $inscripcion->pago = $request->pago;
         }
 
         if (!empty($request->estado)){
             $inscripcion->estado = $request->estado;
         }
+
         if ($inscripcion->save()) {
             return response()->json('Ok', 200);
         }
@@ -111,20 +131,9 @@ class InscripcionesController extends BaseController
         $idActividad = $request->actividad;
         foreach ($request->inscripciones as $idInscripcion)
         {
-            $persona = Inscripcion::findOrFail($idInscripcion)->persona;
-            if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
-            {
-                $grupoRol->rol = $request->rol;
-                $grupoRol->save();
-            } else {
-                //Nuevo
-                $grupoRol = new GrupoRolPersona();
-                $grupoRol->idPersona = $persona->idPersona;
-                $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = Actividad::find($idActividad)->grupoRaiz->idGrupo;
-                $grupoRol->rol = $request->rol;
-                $grupoRol->save();
-            }
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->rol = $request->rol;
+            $inscripcion->save();
         }
         return response()
             ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
@@ -161,22 +170,38 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            $this->intentaEnviar(Mail::to($inscripcion->persona->mail), new ActualizacionActividad($inscripcion), $inscripcion->persona);
+            $this->intentaEnviar(new ActualizacionActividad($inscripcion), $inscripcion->persona);
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function cambiarEstado(Request $request, $id)
+    public function cambiarConfirmacion(Request $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
         {
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
-            $inscripcion->estado = $request->estado;
+            $inscripcion->confirma = $request->confirmacion;
             $inscripcion->save();
         }
+
+        $msg = $request->confirma === 1 ? "Confirmado" : "Sin Confirmar";
         return response()
-            ->json("Estado actualizado a " . $request->estado . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function cambiarPago(Request $request, $id)
+    {
+        foreach ($request->inscripciones as $idInscripcion)
+        {
+            $inscripcion = Inscripcion::findOrFail($idInscripcion);
+            $inscripcion->pago = $request->pago;
+            $inscripcion->save();
+        }
+
+        $msg = $request->pago === 1 ? "Pagado" : "Sin Pagar";
+        return response()
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
     public function cambiarAsistencia(Request $request, $id)
@@ -235,8 +260,7 @@ class InscripcionesController extends BaseController
 
                 if($request->notificar) {
                     $this->intentaEnviar(
-                        Mail::to($inscripto->persona->mail), 
-                        new MailConfimacionInscripcion($inscripto), 
+                        new MailInscripcionConfirmada($inscripto), 
                         $inscripto->persona
                     );
                 }
@@ -253,8 +277,7 @@ class InscripcionesController extends BaseController
 
             if($request->notificar) {
                 $this->intentaEnviar(
-                    Mail::to($inscripto->persona->mail), 
-                    new MailConfimacionInscripcion($inscripto), 
+                    new MailInscripcionConfirmada($inscripto), 
                     $inscripto->persona
                 );
             }
@@ -290,7 +313,6 @@ class InscripcionesController extends BaseController
             'fechaInscripcion'  => Carbon::now(),
             'idPersonaModificacion' => auth()->user()->idPersona,
             'idPuntoEncuentro'  => $inscripcion['idPuntoEncuentro'],
-            'estado'            => empty($inscripcion['estado']) ? 'Sin Contactar' : $inscripcion['estado'],
             'pago'            => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
             'presente'            => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
             'evaluacion'        => 0,
@@ -363,16 +385,8 @@ class InscripcionesController extends BaseController
                             $errorEnRegistro = true;
                         }
 
-                        $estadosValidos = ['sin contactar', 'sin interés', 'confirmado', 'sin confirmar'];
-                        if ($actividad->tipo->flujo === 'CONSTRUCCION') {
-                            array_push($estadosValidos, 'pre-inscripto');
-                        }
-
-                        if (!in_array(strtolower($inscripcion['estado']), $estadosValidos) ) {
-                            $errores[] = "Error en linea "
-                                . $counter
-                                . ". el valor de la columna estado debe ser "
-                                . implode(', ', $estadosValidos) . ".";
+                        if (!in_array(strtolower($inscripcion['confirma']), ['no', 'si']) ) {
+                            $errores[] = "Error en linea " . $counter . ". el valor de la columna confirma debe ser 'si' o 'no'.";
                             $errorEnRegistro = true;
                         }
 
@@ -383,7 +397,7 @@ class InscripcionesController extends BaseController
                                 'idPuntoEncuentro' => $punto->idPuntoEncuentro,
                                 'idGrupo' => ($grupo instanceof Grupo) ? $grupo->idGrupo : $actividad->grupoRaiz->idGrupo,
                                 'rol' => $inscripcion['rol'],
-                                'estado' => $inscripcion['estado'],
+                                'confirma' => strtolower($inscripcion['confirma']) ==='si' ? 1 : 0,
                                 'pago' => strtolower($inscripcion['pago']) ==='si' ? 1 : 0,
                                 'presente' => strtolower($inscripcion['presente']) ==='si' ? 1 : 0
                             ];
@@ -416,9 +430,10 @@ class InscripcionesController extends BaseController
                                 $inscripto = $inscripcion->update(
                                     [
                                         'pago'      => $inscripcionValida['pago'],
-                                        'estado'    => $inscripcionValida['estado'],
+                                        'confirma'    => $inscripcionValida['confirma'],
                                         'presente'  => $inscripcionValida['presente'],
-                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro']
+                                        'idPuntoEncuentro' => $inscripcionValida['idPuntoEncuentro'],
+                                        'rol' => $inscripcionValida['rol'],
                                     ]
                                 );
 
@@ -427,7 +442,6 @@ class InscripcionesController extends BaseController
                                     ->update(
                                         [
                                             'idGrupo' => $inscripcionValida['idGrupo'],
-                                            'rol' => $inscripcionValida['rol']
                                         ]
                                     );
                             }

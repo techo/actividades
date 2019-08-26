@@ -159,14 +159,25 @@ class ActividadesController extends Controller
 
             $datatableConfig = config('datatables.inscripciones');
             $fields = $datatableConfig['fields'];
-            if ($actividad->montoMin > 0) {
+
+            if ($actividad->confirmacion == 1) {
+                $checkConfirma = [[
+                    'name' => '__component:confirma',
+                    'title' => 'Confirma',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ]];
+                array_splice($fields, count($fields) - 1, 0, $checkConfirma);
+
+            }
+            if ($actividad->pago == 1) {
                 $checkPago = [[
                     'name' => '__component:pago',
                     'title' => 'Pago',
                     'titleClass' => 'text-center',
                     'dataClass' => 'text-center'
                 ]];
-                array_splice($fields, count($fields) - 2, 0, $checkPago);
+                array_splice($fields, count($fields) - 1, 0, $checkPago);
 
             }
             $fields = json_encode($fields);
@@ -340,12 +351,12 @@ class ActividadesController extends Controller
         );
 
         $v->sometimes('montoMin', 'required|numeric|min:1', function ($request) {
-            return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+            return $request->filled('pago') && $request->pago == 1;
         });
 
-        if(!empty($request->beca)){
+        if($request->filled('beca')){
             $v->sometimes('beca', 'url', function ($request) {
-                return isset($request['tipo']['flujo']) && $request['tipo']['flujo'] == 'CONSTRUCCION';
+                return $request->filled('pago') && $request->pago == 1;
             });
         }
 
@@ -429,7 +440,8 @@ class ActividadesController extends Controller
             'fechaInicioInscripciones',
             'fechaFinInscripciones',
             'fechaInicioEvaluaciones',
-            'fechaFinEvaluaciones'
+            'fechaFinEvaluaciones',
+            'fechaLimitePago'
         ) as $field => $value) {
 
             $esFecha = in_array($field, $actividad->getDates());
@@ -459,6 +471,8 @@ class ActividadesController extends Controller
         $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
         $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
         $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
+        
+        $actividad->fechaLimitePago = $request->fechaLimitePago;
 
         if (empty($request['idUnidadOrganizacional'])) {
             $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')

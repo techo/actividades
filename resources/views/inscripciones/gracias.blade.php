@@ -14,7 +14,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Inscripción confirmada!</h1>
+            <h2 class="card-subtitle">¡Inscripción confirmada!</h2>
         </div>
         <hr>
     </div>
@@ -33,7 +33,7 @@
         <div class="col-md-8">
             <p>
                 Te enviamos un mail con más información sobre esta actividad.
-                Entra al panel de usuario para ver las actividades a las que estás inscripto y modificarlas.
+                Para ver las actividades a las que estás inscripto y modificarlas ingresá a <a href="/perfil/actividades">Mis actividades</a>.
             </p>
         </div>
     </div>

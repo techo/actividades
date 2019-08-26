@@ -3,9 +3,10 @@ namespace App\Payments;
 
 
 use App\Inscripcion;
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionPagoFueraDeFecha;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class PayU implements PaymentGateway
 {
@@ -14,6 +15,10 @@ class PayU implements PaymentGateway
     public $persona;
     public $inscripcion;
     public $monto;
+
+    /* Transacción de confirmación de ejemplo
+    response_code_pol=1&phone=1155233214&additional_value=0.00&test=0&transaction_date=2019-08-02+15%3A12%3A04&cc_number=************6661&cc_holder=APPROVED&error_code_bank=0&billing_country=AR&bank_referenced_name=&description=Encuestamientos%2C+18311%2C+281%2C+Buenos+Aires-GBA%2C+08%2F08%2F2019&administrative_fee_tax=0.00&value=200.00&administrative_fee=0.00&payment_method_type=2&office_phone=&account_id=512322&email_buyer=marcos.wolff%40techo.org&response_message_pol=APPROVED&error_message_bank=&shipping_city=&transaction_id=52f5e22d-5f2f-4547-ab26-c566ccbb6763&sign=198653c1d714c7f27b64ea01d81008fa&operation_date=2019-08-02+15%3A12%3A04&tax=0.00&transaction_bank_id=NPS-011111&payment_method=257&billing_address=&payment_method_name=VISA&pseCycle=null&pse_bank=&state_pol=4&date=2019.08.02+03%3A12%3A04&nickname_buyer=&reference_pol=846116081&currency=ARS&risk=0.0&shipping_address=&bank_id=257&payment_request_state=A&customer_number=&administrative_fee_base=0.00&attempts=1&merchant_id=508029&exchange_rate=1.00&shipping_country=AR&installments_number=1&franchise=VISA&payment_method_id=2&extra1=&extra2=&antifraudMerchantId=&extra3=&commision_pol_currency=&nickname_seller=&ip=172.18.49.47&commision_pol=0.00&airline_code=&billing_city=&pse_reference1=&cus=52f5e22d-5f2f-4547-ab26-c566ccbb6763&reference_sale=Encuestamientos-Voluntario-31925539-18311-1269367&authorization_code=NPS-011111&pse_reference3=&pse_reference2=
+    */
 
     /**
      * PayU constructor.
@@ -131,15 +136,12 @@ class PayU implements PaymentGateway
     public function updateUserStatus()
     {
         if ($this->request->polTransactionState === '4' || $this->request->state_pol === '4') {
-            // Log::info('Confirmación: \n' . json_encode($this->request->all()));
             $this->inscripcion->pago = 1;
             $this->inscripcion->montoPago = (float)$this->request->value;
-            $this->inscripcion->estado = "Confirmado";
             $this->inscripcion->moneda = $this->request->currency;
             $this->inscripcion->fechaPago = Carbon::now();
             return $this->inscripcion->save();
         }
-        return false;
     }
 
     public function getConfig()

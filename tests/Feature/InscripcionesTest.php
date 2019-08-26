@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Mail\MailConfimacionInscripcion;
+use App\Mail\MailInscripcionConfirmada;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
@@ -47,7 +47,76 @@ class InscripcionesTest extends TestCase
             'idPersona' => $persona->idPersona
         ]);
 
-        Mail::assertQueued(MailConfimacionInscripcion::class, 1);
+        Mail::assertQueued(MailInscripcionConfirmada::class, 1);
+    }
+
+    /** @test */
+    public function usuario_no_se_puede_inscribir_si_no_hay_cupos()
+    {
+        //$this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(1)
+            ->create([
+                'limiteInscripciones' => 1
+            ]);
+
+        $this->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('cupos')
+            ->assertStatus(200);
+
+        $datos = [
+            'punto_encuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro, 
+            'aceptar_terminos' => 1 
+        ];
+        
+        $this->actingAs($jose)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('Inscripcion', [
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona
+        ]);
+
+    }
+
+    /** @test */
+    public function usuario_no_se_puede_inscribir_si_no_esta_en_periodo_de_inscripcion()
+    {
+        //$this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('pasada')
+            ->agregarPuntoConInscriptos(1)
+            ->create();
+
+        $datos = [
+            'punto_encuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro, 
+            'aceptar_terminos' => 1 
+        ];
+        
+        $this->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
+            ->assertStatus(403);
+
+        $this->actingAs($jose)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertSee('período')
+            ->assertStatus(200);
+
+        $this->assertDatabaseMissing('Inscripcion', [
+            'idPuntoEncuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona
+        ]);
+
     }
 
     /** @test */

@@ -14,8 +14,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Sólo queda un paso! Confirmar <br>
-                la participación con tu donación</h1>
+            <h2 class="card-subtitle">¡Sólo queda un paso! Confirmar la participación con tu donación.</h2>
         </div>
         <hr>
     </div>
@@ -28,38 +27,24 @@
                     {{ $actividad->nombreActividad }}
                 </a>
             </h3>
-            <blockquote class="blockquote">
-                {{ $actividad->mensajeInscripcion }}
-            </blockquote>
         </div>
     </div>
     <div class="row justify-content-start">
         <div class="col-md-9">
             <p>
-                Te hemos enviado por mail toda la información pertinente para la actividad.  Puedes ingresar al panel de
-                usuario para visualizar o modificar tu presencia.
+                Te enviamos por mail toda la información de la actividad.</a>
             </p>
             <h3>
-                Para realizar tu donación
+                Podés realizar tu donación:
             </h3>
             <p>
-                @if(!empty($actividad->beca))
-                Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
-                Si quieres, puedes realizar tu donativo con el botón de aquí abajo, o puedes solicitar una beca.
-                @else
-                    Vas a estar recibiendo por mail un link con instrucciones para que puedas donar con la plataforma de pagos en otro momento.
-                    Si quieres, puedes realizar tu donativo con el botón de aquí abajo.
-                @endif
+                <ul>
+                    <li>Completando el monto a donar en esta misma página.</li>
+                    <li>Siguiendo las instrucciones del mail que recibiste.</li>
+                </ul>
             </p>
-
-            @if($actividad->tipo->flujo == "CONSTRUCCION")
-
-                @if ($actividad->montoMax === '0.00')
-                    <h5>Donación sugerida: {{$actividad->montoMin}} ({{$actividad->moneda}}$)</h5>
-                @else
-                    <h5>Donación sugerida: Entre {{$actividad->montoMin}}
-                        y {{$actividad->montoMax}} ({{$actividad->moneda}}$)</h5>
-                @endif
+            <br>
+            @if($actividad->pago == 1)
                     <form action="{{ action('InscripcionesController@donacionCheckout', ['id' => $actividad->idActividad]) }}" method="POST">
                         @csrf
                         <div class="row">
@@ -73,6 +58,12 @@
                                     <div class="col-md-12">
                                         <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto"
                                                min="1" required step="0.1">
+                                        @if ($actividad->montoMax === '0.00')
+                                            <p>Donación sugerida: {{$actividad->montoMin}} ({{$actividad->moneda}}$)</p>
+                                        @else
+                                            <p>Donación sugerida: Entre {{$actividad->montoMin}}
+                                                y {{$actividad->montoMax}} ({{$actividad->moneda}}$)</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +71,7 @@
                                 <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p class="font-weight-bold"> &nbsp;o también puedes</p>
+                                            <p class="font-weight-bold"> &nbsp;o también podés</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -91,26 +82,22 @@
                                 </div>
                             @endif
                         </div>
-                        <br><br>
+                        <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <button type="submit" class="btn btn-primary">SIGUIENTE</button>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <br><br>
-                                <p>
                                     @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
                                         <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
                                     @else
                                         <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
                                     @endif
-                                </p>
+                                
+                                <button type="submit" class="btn btn-primary" style="margin: 0 16px;">SIGUIENTE</button>
                             </div>
                         </div>
+
                     </form>
             @endif
+            <br>
         </div>
     </div>
 @endsection

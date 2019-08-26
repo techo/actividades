@@ -2,18 +2,18 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\ActividadFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class ActividadesTest extends TestCase
 {
 	use RefreshDatabase;
 
 	/** @test */
-
     public function usuario_puede_crear_actividad()
     {
     	$this->withoutExceptionHandling();
@@ -48,4 +48,84 @@ class ActividadesTest extends TestCase
         $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
         	->assertDatabaseHas('PuntoEncuentro', [ 'punto' => $punto->punto ]);
     }
+
+    /** @test */
+    public function usuario_puede_listar_actividades_con_badge_esperar()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $mati = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->conEstado('con confirmacion')
+            ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idPersona' => $mati->idPersona,
+        ]);
+
+        $this->actingAs($mati)
+            ->post('/ajax/actividades')
+            ->assertSeeText("Esperar");
+
+    }
+
+    /** @test */
+    public function usuario_puede_listar_actividades_con_badge_confirmado()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $mati = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->conEstado('con confirmacion y pago')
+            ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idPersona' => $mati->idPersona,
+            'confirma' => 1,
+            'pago' => 1,
+        ]);
+
+        $this->actingAs($mati)
+            ->post('/ajax/actividades')
+            ->assertSeeText("Confirmado");
+    }
+
+    /** @test */
+    public function usuario_puede_listar_actividades_con_badge_confirmar()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $mati = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->conEstado('con pago')
+            ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idActividad' => $actividad->idActividad,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idPersona' => $mati->idPersona,
+            'pago' => 0,
+        ]);
+
+        $this->actingAs($mati)
+            ->post('/ajax/actividades')
+            ->assertSeeText("Confirmar");
+    }
+
 }

@@ -294,6 +294,9 @@
                         if(response.data.after_login !== ''){
                             window.location = response.data.after_login; //redirect
                         }
+                        else {
+                            window.location.reload();   
+                        }
                     })
                     .catch((error) => {
                         this.hasError = true;

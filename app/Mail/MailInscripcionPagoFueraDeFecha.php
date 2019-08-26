@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MailConfimacionInscripcion extends Mailable implements ShouldQueue
+class MailInscripcionPagoFueraDeFecha extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -33,8 +33,8 @@ class MailConfimacionInscripcion extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Te inscribiste a ' . $this->inscripcion->actividad->nombreActividad)
+            ->subject('TECHO: Pago recibido fuera de la fecha límite para: ' . $this->inscripcion->actividad->nombreActividad)
             ->from('no-reply@techo.org')
-            ->view('emails.confimacionInscripcion');
+            ->view('emails.inscripcionPagoFueraDeFecha');
     }
 }

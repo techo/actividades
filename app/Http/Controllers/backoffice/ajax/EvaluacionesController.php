@@ -25,7 +25,7 @@ class EvaluacionesController extends BaseController
 
         foreach ($personas as $persona) {
             //Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
-            $this->intentaEnviar(Mail::to($persona->mail), new InvitacionEvaluacion($persona, $actividad), $persona);
+            $this->intentaEnviar(new InvitacionEvaluacion($persona, $actividad), $persona);
         }
         return $personas->count();
     }

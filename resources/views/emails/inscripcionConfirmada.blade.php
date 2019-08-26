@@ -5,7 +5,8 @@
     <p style="font-size: larger">
         Hola {{$inscripcion->persona->nombres}}
     </p>
-    <p>Te has inscripto para participar: <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
+    <p>Ya estás confirmado para participar en
+        <h3>{{$inscripcion->actividad->nombreActividad}}</h3>
         Inicia el 
             <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
                 {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
@@ -17,33 +18,6 @@
                 {{$inscripcion->actividad->provincia->provincia}}
             </strong>
     </p>
-
-    @if(strtoupper($inscripcion->actividad->tipo->flujo) == "CONSTRUCCION")
-        <p>
-            <strong>
-                <span style="color:rgb(255,153,0)">SOLO FALTA CONFIRMAR CON TU DONACIÓN</span>
-            </strong>
-        </p>
-        <p>
-            ¡Tenés tiempo hasta el <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b>!
-        </p>
-        <p>
-            Para confirmar tu participación, haz click en el botón
-            <strong>Confirmar con tu donación</strong> en la <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" >actividad.</a>
-        </p>
-        <p>
-            Te recordamos que el monto mínimo sugerido para abonar es de <b>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</b>, los cuales cubren
-            los gastos de traslado, seguro y comida durante la construcción.
-        </p>
-        <p>
-            En el caso que no puedas abonar, no queremos que dejes de participar,
-            @if(!empty($inscripcion->actividad->beca))
-                solicitá una <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
-            @else
-                ponete en contacto con el coodinador de la actividad para gestionar una BECA
-            @endif
-        </p>
-    @endif
 
     @if($inscripcion->actividad->coordinador)
         <p>
@@ -90,7 +64,6 @@
                 <p><a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">
                     {{ $inscripcion->punto_encuentro->responsable->mail }}
                 </a></p>
-                <p>{{ $inscripcion->punto_encuentro->responsable->telefonoMovil }}</p>
             </p>
         @endif
     @endif

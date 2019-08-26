@@ -14,27 +14,6 @@
 
 @section('main_content')
 		<div class="row">
-        @if (Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-            <div class="alert alert-warning" id="alertYaInscripto">
-                <i class="fas fa-exclamation-triangle"></i>
-                <strong>Estás pre-inscripto a esta actividad</strong>
-            </div>
-        @elseif (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-            <div class="alert alert-success" id="alertYaInscripto">
-                <i class="fas fa-check-circle"></i>
-                <strong>Ya estas inscripto a esta actividad</strong>
-        </div>
-		@elseif(!$hayCupos)
-			<div class="alert alert-danger" id="alertYaInscripto">
-                <i class="fas fa-times-circle"></i>
-				<strong>La actividad no tiene más cupos</strong>
-			</div>
-		@elseif(!$inscripcionAbierta)
-			<div class="alert alert-danger" id="alertYaInscripto">
-                <i class="fas fa-times-circle"></i>
-				<strong>El período de inscripción está cerrado</strong>
-			</div>
-		@endif
 		</div>
 		<div class="row">
 			<div class="col-md-12">
@@ -116,44 +95,24 @@
 <footer class="footer inscripcion-bar fixed-bottom">
     <div class="container">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <p class="h5">{{ $actividad->nombreActividad }}</p>
             </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
-                    <i class="fas fa-share-alt"></i>  COMPARTIR
-                </button>
-            </div>
-            <div class="col-md-3">
-                @if (Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-                    <div>
-                        <a
-                            href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}"
-                            class="btn btn-primary"
+            <div class="col-md-6">
+                <div style="text-align: right">
+                    <a class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
+                        <i class="fas fa-share-alt"></i>COMPARTIR
+                    </a>
+                    <a 
+                        class="btn {{ $clase }}"
+                        href="{{ $accion }}"
+                        @if (!$habilitado) 
+                            disabled
+                        @endif
                         >
-                            Confirmar participación
-                        </a>
-                    </div>
-                @elseif (Auth::check() && Auth::user()->estaInscripto($actividad->idActividad))
-                    <div><span class="btn btn-success w-100"><strong>¡YA TE INSCRIBISTE!</strong></span></div>
-                @elseif($hayCupos && $inscripcionAbierta)
-                    <div>
-                        <a class="btn btn-primary inscripcion-btn w-100"
-                           href="/inscripciones/actividad/{{$actividad->idActividad}}">
-                            <strong>INSCRIBIRME<strong>
-                        </a>
-                    </div>
-                @elseif(!$hayCupos)
-                    <div class="alert alert-danger" id="alertYaInscripto">
-                        <i class="fas fa-times-circle"></i>
-                        <strong>La actividad no tiene más cupos</strong>
-                    </div>
-                @elseif(!$inscripcionAbierta)
-                    <div class="alert alert-danger" id="alertYaInscripto">
-                        <i class="fas fa-times-circle"></i>
-                        <strong>El período de inscripción está cerrado</strong>
-                    </div>
-                @endif
+                        <strong>{{ $mensaje }}<strong>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

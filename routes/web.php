@@ -102,11 +102,9 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
 
-Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id')->group(function (){
-    Route::get('', 'InscripcionesController@puntoDeEncuentro');
-    Route::post('/gracias', 'InscripcionesController@create');
-    Route::get('/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
-});
+Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
+Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 
 //Fin Flujo de inscripciones
 
@@ -179,7 +177,11 @@ Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(fun
     Route::post('/ajax/actividades/{id}/inscripciones/asignar/rol', 'backoffice\ajax\InscripcionesController@asignarRol')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/asignar/grupo', 'backoffice\ajax\InscripcionesController@asignarGrupo')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/asignar/punto', 'backoffice\ajax\InscripcionesController@asignarPunto')->middleware('can:verInscripciones,App\Inscripcion,id');
-    Route::post('/ajax/actividades/{id}/inscripciones/cambiar/estado', 'backoffice\ajax\InscripcionesController@cambiarEstado')->middleware('can:verInscripciones,App\Inscripcion,id');
+
+    Route::post('/ajax/actividades/{id}/inscripciones/cambiar/confirmacion', 'backoffice\ajax\InscripcionesController@cambiarConfirmacion')->middleware('can:verInscripciones,App\Inscripcion,id');
+
+    Route::post('/ajax/actividades/{id}/inscripciones/cambiar/pago', 'backoffice\ajax\InscripcionesController@cambiarPago')->middleware('can:verInscripciones,App\Inscripcion,id');
+
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/asistencia', 'backoffice\ajax\InscripcionesController@cambiarAsistencia')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');

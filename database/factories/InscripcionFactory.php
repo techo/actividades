@@ -10,17 +10,17 @@ $factory->define(App\Inscripcion::class, function (Faker $faker) {
 
 			'rol' => $faker->word,
 
-			'estado' => 'Sin Contactar',
-			'presente' => false,
-			'pago' => false,
+			'confirma' => 0,
+			'pago' => 0,
+			'presente' => 0,
 
 			'evaluacion' => true,
 			'aceptarCompromiso' => true,
     ];
 });
 
-$factory->state(App\Inscripcion::class, 'presente', [ 'presente' => true, ]);
+$factory->state(App\Inscripcion::class, 'presente', [ 'presente' => 1, ]);
 
 $factory->state(App\Inscripcion::class, 'preinscripto', [ 'estado' => 'Pre-inscripto', ]);
 
-$factory->state(App\Inscripcion::class, 'pago', [ 'pago' => true, ]);
+$factory->state(App\Inscripcion::class, 'pago', [ 'pago' => 1, ]);

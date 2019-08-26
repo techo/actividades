@@ -78,7 +78,7 @@ class InscripcionesSearch
                     'Inscripcion.idInscripcion AS id',
                     'Inscripcion.presente',
                     'Inscripcion.pago',
-                    'Inscripcion.estado',
+                    'Inscripcion.confirma',
                     'PuntoEncuentro.punto',
                     'atl_pais.nombre as puntoPais',
                     'atl_provincias.provincia as puntoProvincia',
@@ -86,7 +86,7 @@ class InscripcionesSearch
                     'Actividad.costo',
                     'Actividad.idActividad',
                     'Grupo.nombre as nombreGrupo',
-                    'Rol.rol as nombreRol',
+                    'Inscripcion.rol as nombreRol',
                     'PersonaModificacion.mail as modificado_por',
                     'Inscripcion.updated_at as modificado_en'
                 ]
