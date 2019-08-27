@@ -1120,18 +1120,21 @@ export default {
     gotoPreviousPage () {
       if (this.currentPage > 1) {
         this.currentPage--
+        this.resetData();
         this.loadData()
       }
     },
     gotoNextPage () {
       if (this.currentPage < this.tablePagination.last_page) {
         this.currentPage++
+        this.resetData();
         this.loadData()
       }
     },
     gotoPage (page) {
       if (page != this.currentPage && (page > 0 && page <= this.tablePagination.last_page)) {
         this.currentPage = page
+        this.resetData();
         this.loadData()
       }
     },

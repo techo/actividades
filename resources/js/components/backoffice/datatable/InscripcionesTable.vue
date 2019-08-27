@@ -40,7 +40,7 @@
     //https://github.com/ratiw/vuetable-2-tutorial/wiki
 import accounting from 'accounting'
 import moment from 'moment'
-import Vuetable from 'vuetable-2/src/components/Vuetable'
+import Vuetable from './Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
@@ -164,10 +164,12 @@ export default {
       },
       agregarCondicion(condicion){
           this.moreParams.condiciones.push({campo: condicion.campo, condicion: condicion.condicion, valor: condicion.valor});
+          this.$refs.inscripcionesVuetable.resetData();
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
       removerCondicion(condicion){
           this.moreParams.condiciones.splice(condicion.index, 1);
+          this.$refs.inscripcionesVuetable.resetData();
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
       checkboxToggledEmitter: function (status) {
@@ -185,6 +187,7 @@ export default {
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
+              this.$refs.inscripcionesVuetable.resetData();
               Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
               Event.$emit('mensaje-success', data);
               Event.$emit('vuetable-actualizarTabla');
@@ -356,10 +359,12 @@ export default {
   events: {
     'filter-set-inscripciones' (filterText) {
       this.moreParams.filter = filterText;
+      this.$refs.inscripcionesVuetable.resetData();
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },
     'filter-reset-inscripciones' () {
       this.moreParams.filter = null;
+      this.$refs.inscripcionesVuetable.resetData();
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     }
   }
