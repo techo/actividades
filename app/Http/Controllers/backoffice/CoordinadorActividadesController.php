@@ -17,7 +17,7 @@ class CoordinadorActividadesController extends Controller
         $datatableConfig = config('datatables.mis-actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.actividades.mis_actividades.index', compact('fields', 'sortOrder', 'mensaje'));
+        return view('backoffice.actividades.mis_actividades.index', compact('fields', 'sortOrder'));
     }
 
 
