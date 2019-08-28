@@ -18,16 +18,14 @@ class EvaluacionesController extends BaseController
     public function enviar($id, Request $request)
     {
         $actividad = Actividad::findOrFail($id);
-        $personas = Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
-            ->where('Inscripcion.idActividad', '=', $id)
+        $inscripciones = Inscripcion::where('Inscripcion.idActividad', '=', $id)
             ->where('Inscripcion.presente', '=', '1')
             ->get();
 
-        foreach ($personas as $persona) {
-            //Mail::to($persona->mail)->queue(new InvitacionEvaluacion($persona, $actividad));
-            $this->intentaEnviar(new InvitacionEvaluacion($persona, $actividad), $persona);
+        foreach ($inscripciones as $i) {
+            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad), $i->persona);
         }
-        return $personas->count();
+        return $inscripciones->count();
     }
 
     public function getActividadStats($id)
