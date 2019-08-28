@@ -51,7 +51,7 @@
                     </li>
                 </ul>
             </li>
-            @if(Auth::user()->hasPermissionTo('ver_usuarios'))
+            @if (Auth::user()->hasRole('admin'))
                 <li class="treeview {{ request()->is('admin/usuarios*') ? 'active menu-open' : ''}}">
                     <a href="#"><i class="fa fa-user"></i> <span>Personas</span>
                         <span class="pull-right-container">
