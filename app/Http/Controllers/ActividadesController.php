@@ -74,6 +74,7 @@ class actividadesController extends Controller
         $clase = 'btn-danger';
         $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
         $habilitado = false;
+        $payment = '';
 
         if (auth()->check() && auth()->user()->estadoInscripcion($id)) {
             
