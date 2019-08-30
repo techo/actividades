@@ -8,10 +8,6 @@
         >
             Ver Evaluaciones
         </button>
-        <span v-if="actividadPasada && !periodoDeEvaluacionYaComenzo" class="small-caps">
-            El período de evaluaciones comienza el <br>
-            {{ this.rowData.fechaInicioEvaluaciones }}
-        </span>
     </div>
 </template>
 
@@ -39,18 +35,13 @@
         },
         computed: {
             actividadPasada: function () {
-                let fechaFin = new Date(this.rowData.fechaFin.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")).getTime();
-
-                return (fechaFin < Date.now());
+                let aver = moment().isAfter(moment(this.rowData.fechaFin, "DD/MM/YYYY mm:ss"));
+                //debugger;
+                return moment().isAfter(moment(this.rowData.fechaFin, "DD/MM/YYYY mm:ss"));
             },
             periodoDeEvaluacionYaComenzo: function () {
-                let fechaInicioEvaluaciones = new Date(
-                    this.rowData.fechaInicioEvaluaciones.replace( /(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3")
-                ).getTime();
-
-                let ahora = new Date().getTime();
-
-                return (ahora > fechaInicioEvaluaciones)
+                return moment().isAfter(moment(this.rowData.fechaInicioEvaluaciones, "DD/MM/YYYY mm:ss")) &&
+                    moment().isBefore(moment(this.rowData.fechaFinEvaluaciones, "DD/MM/YYYY mm:ss"))
             }
         },
         watch: {
