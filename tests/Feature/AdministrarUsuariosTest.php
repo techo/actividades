@@ -17,13 +17,10 @@ class AdministrarUsuariosTest extends TestCase
     {
     	$this->withoutExceptionHandling();
 
-		$admin = factory('App\Persona')->create();
-    	$permission = Permission::create(['name' => 'accesoBackoffice']);
-		$admin->givePermissionTo($permission);
-		$permission = Permission::create(['name' => 'editar_usuarios']);
-		$admin->givePermissionTo($permission);
+        $this->seed('PermisosSeeder');
 
-		Role::create(['name' => 'usuario_autenticado']);
+		$admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
 
 		$jose = factory('App\Persona')->create();
 
