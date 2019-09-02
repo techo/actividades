@@ -8,14 +8,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class Persona extends Authenticatable
+class Persona extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable, HasRoles;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token'];
     protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail'];
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->mail;
+    }
 
     public function puntosEncuentro()
     {

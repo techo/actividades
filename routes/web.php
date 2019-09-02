@@ -83,7 +83,7 @@ Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvid
 Route::get('autenticado', function () {
     return (Auth::check()) ? 'si' : 'no';
 });
-Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
+//Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
 
 // Evaluaciones
 Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
@@ -108,10 +108,12 @@ Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@cr
 
 //Fin Flujo de inscripciones
 
+//verificacion de email
+Auth::routes(['verify' => true]);
 
 // Perfil y mis inscripciones
 Route::prefix('/perfil')->middleware('auth')->group(function (){
-    Route::get('/', 'PerfilController@show');
+    Route::get('/', 'PerfilController@show')->middleware('verified');
     Route::get('/actividades', 'PerfilController@actividades');
 });
 
