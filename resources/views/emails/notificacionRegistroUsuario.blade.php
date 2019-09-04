@@ -9,7 +9,13 @@
     </p>
 
     <p>
-        Ya estás registrado en nuestra plataforma, enterate de toda la oferta de voluntariado visitando <a href="{{ url('/actividades') }}">el sitio</a>.
+        Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email haciendo click en el botón.
+    </p>
+
+    <a href="{{ $url_verificacion }}" class="button" target="_blank">Verificar email</a>
+
+    <p>
+        Enterate de toda la oferta de voluntariado visitando <a href="{{ url('/actividades') }}">el sitio</a>.
     </p>
 
     <p>

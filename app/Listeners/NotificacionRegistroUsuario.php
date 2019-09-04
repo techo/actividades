@@ -3,10 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\RegistroUsuario;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Mail;
-use App\Mail\MailRegistroUsuario;
+use Illuminate\Queue\InteractsWithQueue;
 
 class NotificacionRegistroUsuario
 {
@@ -29,7 +27,7 @@ class NotificacionRegistroUsuario
     public function handle(RegistroUsuario $event)
     {
       $persona = $event->usuario;
-      Mail::to($persona->mail)->send(new MailRegistroUsuario($persona));
+      $persona->notify(new \App\Notifications\RegistroUsuario($persona));
 
     }
 }

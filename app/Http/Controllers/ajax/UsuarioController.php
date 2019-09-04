@@ -68,14 +68,14 @@ class UsuarioController extends BaseController
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
-      $verificacion = new VerificacionMailPersona();
-      $verificacion->idPersona = $persona->idPersona;
-      $verificacion->token = str_random(40);
-      $verificacion->save();
-      Auth::login($persona, true);
-      $request->session()->regenerate();
+
+      
+      $persona->notify(new \App\Notifications\VerifyEmail);
       event(new RegistroUsuario($persona));
-      return ['login_callback' =>  $url, 'user' => $persona];
+
+      $request->session()->regenerate();
+
+      return ['login_callback' =>  '/', 'user' => null];
   }
 
   public function update(Request $request) {

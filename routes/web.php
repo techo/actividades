@@ -104,7 +104,7 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
-Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('verified', 'requiere.auth', 'can:inscribir,App\Actividad,id');
 
 //Fin Flujo de inscripciones
 
@@ -114,7 +114,7 @@ Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('ver
 Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 // Perfil y mis inscripciones
-Route::prefix('/perfil')->middleware('auth')->group(function (){
+Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
     Route::get('/', 'PerfilController@show')->middleware('verified');
     Route::get('/actividades', 'PerfilController@actividades');
     Route::get('/cambiar_email', 'PerfilController@cambiar_email');
@@ -128,7 +128,7 @@ Route::prefix('/perfil')->middleware('auth')->group(function (){
 //TODO: Agrupar rutas
 Route::get('admin/ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
-Route::prefix('/admin')->middleware(['auth', 'can:accesoBackoffice'])->group(function () {
+Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
 
     
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
