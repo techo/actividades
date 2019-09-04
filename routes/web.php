@@ -108,13 +108,17 @@ Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@cr
 
 //Fin Flujo de inscripciones
 
-//verificacion de email
-Auth::routes(['verify' => true]);
+//Verificacion de email
+Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
+Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 // Perfil y mis inscripciones
 Route::prefix('/perfil')->middleware('auth')->group(function (){
     Route::get('/', 'PerfilController@show')->middleware('verified');
     Route::get('/actividades', 'PerfilController@actividades');
+    Route::get('/cambiar_email', 'PerfilController@cambiar_email');
+    Route::post('/actualizar_email', 'PerfilController@actualizar_email');
 });
 
 

@@ -23,6 +23,11 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->mail;
     }
 
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmail);
+    }
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idPersona');
