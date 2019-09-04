@@ -108,7 +108,7 @@ class UsuariosTest extends TestCase
 
         $this->seed('PermisosSeeder');
 
-        //Notification::fake();
+        Notification::fake();
 
         $pais = factory('App\Pais')->create();
 
@@ -140,7 +140,8 @@ class UsuariosTest extends TestCase
 
         $this->assertTrue($camilo->email_verified_at == null);
 
-        //Notification::assertSentTo([$camilo], RegistroUsuario::class);
+        Notification::assertSentTo([$camilo], RegistroUsuario::class);
+        Notification::assertNotSentTo([$camilo], VerifyEmail::class);
     }
 
     /** @test */

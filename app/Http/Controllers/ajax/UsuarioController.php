@@ -69,8 +69,6 @@ class UsuarioController extends BaseController
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
 
-      
-      $persona->notify(new \App\Notifications\VerifyEmail);
       event(new RegistroUsuario($persona));
 
       $request->session()->regenerate();
