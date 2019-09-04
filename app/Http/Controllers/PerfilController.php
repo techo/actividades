@@ -42,6 +42,11 @@ class PerfilController extends Controller
 		
 		$persona->mail = $request->email;
 		$persona->email_verified_at = null;
+
+		//desvincular redes sociales
+		$persona->facebook_id = null;		
+		$persona->google_id = null;		
+
 		$persona->save();
 
 		$persona->notify(new \App\Notifications\VerifyEmail);

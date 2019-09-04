@@ -79,7 +79,6 @@ class UsuariosTest extends TestCase
     }
 
     /** @test */
-    
     public function puede_cambiar_su_email()
     {
         $this->withoutExceptionHandling();
@@ -97,6 +96,8 @@ class UsuariosTest extends TestCase
         $this->assertDatabaseHas('Persona', ['mail' => 'nuevo@email.com' ]);
 
         $this->assertTrue($maria->email_verified_at == null);
+        $this->assertTrue($maria->facebook_id == null);
+        $this->assertTrue($maria->google_id == null);
 
         Notification::assertSentTo([$maria], VerifyEmail::class);
     }
