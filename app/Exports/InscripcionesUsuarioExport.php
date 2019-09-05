@@ -25,7 +25,6 @@ class InscripcionesUsuarioExport implements FromCollection, WithHeadings, Should
                 'Tipo.nombre',
                 'fechaInscripcion', 
                 'rol',
-                'estado',
                 'presente',
             ])
             ->get();
@@ -38,7 +37,6 @@ class InscripcionesUsuarioExport implements FromCollection, WithHeadings, Should
             'Tipo',
             'Fecha',
             'Rol',
-            'Estado',
             'Presente'
         ];
     }

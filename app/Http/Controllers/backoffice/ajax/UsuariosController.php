@@ -102,7 +102,6 @@ class UsuariosController extends Controller
                 'Tipo.nombre',
                 'fechaInscripcion', 
                 'rol',
-                'estado',
                 'presente',
             ])
             ->orderByRaw($sort)

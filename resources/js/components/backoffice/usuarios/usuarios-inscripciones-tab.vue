@@ -103,7 +103,6 @@
 						sortField: 'fechaInscripcion',
 					},
 					{ title: 'Rol', name: 'rol', sortField: 'rol', },
-					{ title: 'Estado', name: 'estado', sortField: 'estado', },
 					{
 						title: 'Presente',
 						name: 'presente',
