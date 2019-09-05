@@ -12,29 +12,22 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label>Teléfono: </label>
-                <span>{{rowData.telefonoMovil}}</span>
-            </div>
-            <div class="col-md-6">
-                <label>E-mail: </label>
-                <span>{{rowData.mail}}</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
                 <label>Modificado por: </label>
                 <span>{{rowData.modificado_por}}</span>
             </div>
             <div class="col-md-6">
                 <label>Modificado en: </label>
                 <span>{{rowData.modificado_en}}</span>
-                &nbsp;<a @click="cargarAuditoria(rowData.id)" class="btn btn-primary btn-sm">Ver auditoría</a>
+                &nbsp;
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col-md-6">
-                <label>Cantidad de Actividades Anteriores (Según filtro aplicado): </label>
-                <span>{{rowData.cantActividades}}</span>
+                <a :href="'/admin/usuarios/'+rowData.idPersona" class="btn btn-primary btn-xs" target="_blank" >
+                  <i class="fa fa-user" ></i> &nbsp; Ver perfil
+                </a>
+                <a @click="cargarAuditoria(rowData.id)" class="btn btn-default btn-xs" ><i class="fa fa-history" ></i> &nbsp; Ver auditoría</a>
             </div>
         </div>
     </div>
