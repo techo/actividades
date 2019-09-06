@@ -72,6 +72,7 @@ class UsuarioController extends BaseController
       event(new RegistroUsuario($persona));
 
       $request->session()->regenerate();
+      $request->session()->flash('mensaje', 'La cuenta fue creada con éxito ¡Verificá tu casilla de email para activarla!');
 
       return ['login_callback' =>  '/', 'user' => null];
   }

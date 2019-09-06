@@ -5,6 +5,12 @@
 @endsection
 
 @section('main_image')
+    @if ($mensaje = Session::get('mensaje'))
+    <div class="alert alert-success alert-block" style="margin-top: 1rem;">
+        <button type="button" class="close" data-dismiss="alert">×</button> 
+            <strong>{{ $mensaje }}</strong>
+    </div>
+    @endif
     <div class="techo-hero">
         <picture>
           <source srcset="{{ asset('/img/hero-mobile.jpg') }}" media="(max-width: 720px)">

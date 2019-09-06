@@ -2,20 +2,20 @@
 
 @section('content')
 
-	<h1>Bienvenido a la plataforma de actividadesde de TECHO</h1>
+	<h1>Bienvenido a la plataforma de actividades de TECHO</h1>
 
     <p style="font-size: larger">
         Hola {{$persona->nombres}},
     </p>
 
     <p>
-        Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email haciendo click en el botón.
+        Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email haciendo click en el enlace:
     </p>
 
-    <a href="{{ $url_verificacion }}" class="button" target="_blank">Verificar email</a>
+    <a href="{{ $url_verificacion }}" style="font-family: Montserrat, sans-serif;text-decoration: none; display: inline-block; font-weight: 700; text-align: center; vertical-align: middle; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; color: #fff; background-color: #0092DD; border-color: #0092DD;" target="_blank">VERIFICAR EMAIL</a>
 
     <p>
-        Enterate de toda la oferta de voluntariado visitando <a href="{{ url('/actividades') }}">el sitio</a>.
+        Una vez verificada tu cuenta enterate de toda la oferta de voluntariado visitando <a href="{{ url('/actividades') }}">la web</a>.
     </p>
 
     <p>

@@ -11,19 +11,24 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Verificar dirección de email') }}</div>
+            <h3>{{ __('Verificar dirección de email') }}</h3>
 
-                <div class="card-body">
-                    @if (session('resent'))
-                        <div class="alert alert-success" role="alert">
-                            {{ __('Se envió un enlace de verificación a tu casilla de email.') }}
-                        </div>
-                    @endif
-
-                    {{ __('Antes de seguir, verificá tu email por un enlace de verificación.') }}
-                    {{ __('Si no recibiste el mail') }}, <a href="{{ route('verification.resend') }}">{{ __('hacé click para solicitar otro') }}</a>.
-                </div>
+            <div>
+                @if (session('resent'))
+                    <div class="alert alert-success" role="alert">
+                        {{ __('Se envió un enlace de verificación a tu casilla de email.') }}
+                    </div>
+                @endif
+                <br>
+                <p>
+                    {{ __('Para poder seguir, verificá tu casilla de email y hacé click en el enlace de verificación que te enviamos.') }}
+                </p>
+                <p>
+                    {{ __('Si no recibiste el mail') }} 
+                    <br>
+                    <br>
+                    <a href="{{ route('verification.resend') }}" class="btn btn-primary">{{ __('hacé click para solicitar otro') }} </a>
+                </p>
             </div>
         </div>
     </div>

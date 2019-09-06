@@ -6,14 +6,11 @@
     </p>
 
     <p>
-        Clickeá en el botón abajo para verificar tu dirección de email.
+        Clickeá en el enlace para verificar tu dirección de email:
     </p>
 
     <p>
-        <a href="{{ $url_verificacion }}" class="button" target="_blank"> Verificar dirección de email </a>
+        <a href="{{ $url_verificacion }}" style="font-family: Montserrat, sans-serif;text-decoration: none; display: inline-block; font-weight: 700; text-align: center; vertical-align: middle; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; color: #fff; background-color: #0092DD; border-color: #0092DD;" target="_blank"> VERIFICAR EMAIL </a>
     </p>
 
-    <p>
-    	Si no creaste una cuenta, o modificaste tu dirección de email. Podés ignorar este mensaje.
-    </p>
 @endsection
