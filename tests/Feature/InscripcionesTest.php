@@ -104,7 +104,7 @@ class InscripcionesTest extends TestCase
         ];
         
         $this->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
-            ->assertRedirect('/email/verify');
+            ->assertForbidden();
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
