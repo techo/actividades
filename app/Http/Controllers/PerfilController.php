@@ -33,12 +33,15 @@ class PerfilController extends Controller
     {
     	$persona = Auth::user();
 
-    	$request->validate(['email' => 'required|unique:Persona,mail,'. $persona->idPersona .',idPersona|email']);
-
-    	if($persona->mail == $request->email) {
-    		$usuario = new PerfilResource($persona);
-    		return view('perfil.cambiar_email', compact('usuario'));
-    	}
+    	$request->validate([
+    		'email' => [
+    			'required',
+    			'email',
+    			'confirmed',
+    			'unique:Persona,mail,'. $persona->idPersona .',idPersona',
+    			'not_in:'. $persona->mail,
+    		]
+    	]);
 		
 		$persona->mail = $request->email;
 		$persona->email_verified_at = null;
@@ -52,6 +55,8 @@ class PerfilController extends Controller
 		$persona->notify(new \App\Notifications\VerifyEmail);
 
 		Auth::logout();
+		$request->session()->flash('mensaje', 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!');
+
 		return redirect('/');
     }
 }

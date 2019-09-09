@@ -29,13 +29,29 @@
             	<li>Se pierden las asociaciones a redes sociales.</li>  
             	<li>Tenés que volver a iniciar sesión.</li>
             </ul>
-            <p>¿Estás seguro?</p>
+            
         	<form method="POST" action="/perfil/actualizar_email" >
         		@csrf
-            	<input type="text" class="form-control" name="email" value="{{ $usuario->mail }}">
+
+                <label>Nueva casilla</label>
+            	<input type="text" class="form-control" name="email" value="{{ old('email') }}">
+                <br>
+                <label>Volvé a ingresar la casilla para confirmar</label>
+                <input type="text" class="form-control" name="email_confirmation" value="{{ old('email_confirmation') }}">
             	<br>
-            	<input type="submit" class="btn btn-primary" name="enviar" value="Si, cambiar" >
+                <p>¿Estás seguro?</p>
+            	<input type="submit" class="btn btn-primary" name="enviar" value="Si, cambiar" > 
             </form>
+            <br>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
     </div>
     <br>
