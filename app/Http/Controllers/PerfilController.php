@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PerfilResource;
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class PerfilController extends Controller
 {
@@ -53,6 +54,8 @@ class PerfilController extends Controller
 		$persona->save();
 
 		$persona->notify(new \App\Notifications\VerifyEmail);
+
+		Redirect::setIntendedUrl("/");
 
 		Auth::logout();
 		$request->session()->flash('mensaje', 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!');
