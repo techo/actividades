@@ -90,8 +90,12 @@ class UsuariosTest extends TestCase
         $maria = factory('App\Persona')->create([ 'email_verified_at' => Carbon::now() ]);
 
         $response = $this->actingAs($maria)
-            ->post('/perfil/actualizar_email', [ 'email' => 'nuevo@email.com'])
-            ->assertRedirect('/');
+            ->post('/perfil/actualizar_email', [ 
+                'email' => 'nuevo@email.com',
+                'email_confirmation' => 'nuevo@email.com',
+            ])
+            ->assertRedirect('/')
+            ->assertSessionHas('mensaje', 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!');
 
         $this->assertDatabaseHas('Persona', ['mail' => 'nuevo@email.com' ]);
 
