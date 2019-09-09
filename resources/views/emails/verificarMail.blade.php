@@ -6,7 +6,7 @@
     </p>
 
     <p>
-        Clickeá en el enlace para verificar tu dirección de email:
+        Este email es para verificar tu dirección de email:
     </p>
 
     <p>
