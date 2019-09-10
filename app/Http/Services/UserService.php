@@ -128,7 +128,7 @@ class UserService
 
         $persona->save();
 
-        if (!empty($persona->idPersona) && $persona->assignRole($request->rol['rol'])) {
+        if (!empty($persona->idPersona) && $persona->syncRoles($request->rol['rol'])) {
             return $persona;
         }
 
