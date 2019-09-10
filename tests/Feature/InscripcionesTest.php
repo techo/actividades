@@ -104,7 +104,7 @@ class InscripcionesTest extends TestCase
         ];
         
         $this->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
-            ->assertStatus(403);
+            ->assertForbidden();
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)

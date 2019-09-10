@@ -27,5 +27,6 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'google_id' => '',
     'facebook_id' => '',
     'recibirMails' => 0,
+    'email_verified_at' => $faker->date('Y-m-d', '2000-2-31'),
     ];
 });

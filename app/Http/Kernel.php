@@ -57,7 +57,9 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         //Custom middlewares para Techo
+        'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'requiere.auth' => \App\Http\Middleware\RequiereAuth::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,

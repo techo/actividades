@@ -12,7 +12,8 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña, datos personales, etc.
+                    <p>Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña y datos personales.</p>
+                    <p>También podés <a href="/perfil/cambiar_email">cambiar tu dirección de email</a>.</p>
                 </div>
             </div>
             <hr>
@@ -296,6 +297,7 @@
                     </div>
                 </div>
             </div>
+            
             <br><br>
             <div class="row">
                 <div class="col-md-12">

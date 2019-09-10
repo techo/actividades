@@ -24,7 +24,7 @@
                             name="listadoInscriptos"
                             id="listadoInscriptos"
                             v-model="personaSeleccionada"
-                            :filterable=true
+                            :filterable="true"
                     >
                         <span slot="no-options">Empezá a escribir para buscar.</span>
                     </v-select>
@@ -42,6 +42,7 @@
 <script>
     import EvaluarPersona from './evaluarPersona';
     import vSelect2 from 'vue-select';
+    import 'vue-select/dist/vue-select.css';
     export default {
         components: {'evaluar-persona': EvaluarPersona, 'v-select': vSelect2 },
         name: "contenedor-evaluaciones",
@@ -76,6 +77,7 @@
             this.miGrupo = JSON.parse(this.propMiGrupo);
             this.gruposSubordinados = JSON.parse(this.propGruposSubordinados);
             this.personasNoEvaluadas = this.listadoInscriptos.slice(0);
+            debugger;
             this.excluirUsuario(this.personasNoEvaluadas, this.user);
             //
             for (let i = 0; i < this.evaluados.length; i++) {

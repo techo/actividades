@@ -31,6 +31,7 @@ class UsuarioController extends BaseController
           if($request->has('pass_actual')) $rules['pass_actual'] = ['required_with_all:pass,pass_confirmacion','min:8',new PassExiste()];
           if($request->has('pass')) $rules['pass'] = 'required_with_all:pass_actual,pass_confirmacion|min:8';
           if($request->has('pass_confirmacion')) $rules['pass_confirmacion'] = 'required_with_all:pass,pass_actual|same:pass';
+          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
         break;
         case 'create':
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
@@ -67,14 +68,13 @@ class UsuarioController extends BaseController
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
-      $verificacion = new VerificacionMailPersona();
-      $verificacion->idPersona = $persona->idPersona;
-      $verificacion->token = str_random(40);
-      $verificacion->save();
-      Auth::login($persona, true);
-      $request->session()->regenerate();
+
       event(new RegistroUsuario($persona));
-      return ['login_callback' =>  $url, 'user' => $persona];
+
+      $request->session()->regenerate();
+      $request->session()->flash('mensaje', 'La cuenta fue creada con éxito ¡Verificá tu casilla de email para activarla!');
+
+      return ['login_callback' =>  '/', 'user' => null];
   }
 
   public function update(Request $request) {

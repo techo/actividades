@@ -120,41 +120,4 @@ class MailingTest extends TestCase
         Mail::assertQueued(InvitacionEvaluacion::class, 1);
 
     }
-
-    /** @test */
-    public function registrar_usuario()
-    {
-        $this->withoutExceptionHandling();
-
-        Mail::fake();
-
-        $pais = factory('App\Pais')->create();
-
-        $datos = [
-            'user' => '',
-            'email' => 'email@email.com',
-            'pass' => 'ochominimo',
-            'nombre' => 'nombre de usuario',
-            'apellido' => 'pass',
-            'nacimiento' => '1950-02-15T03:00:00.000Z',
-            'sexo' => 'M',
-            'dni' => '30303030',
-            'pais' => $pais->id,
-            'provincia' => '',
-            'localidad' => '',
-            'telefono' => '345345435345',
-            'facebook_id' => '',
-            'google_id' => '',
-            'privacidad' => 'true',
-            'acepta_marketing' => 'true',
-        ];
-
-        $this->post('/ajax/usuario', $datos)
-            ->assertStatus(200);
-
-        $this->assertDatabaseHas('Persona', [ 'mail' => 'email@email.com' ]);
-
-        Mail::assertSent(MailRegistroUsuario::class, 1);
-
-    }
 }
