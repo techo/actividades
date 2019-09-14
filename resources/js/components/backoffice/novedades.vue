@@ -1,9 +1,10 @@
 <template>
-    <div ref="alerta" class="alert alert-info alert-dismissible" style="border-radius: 0px; margin-bottom: 0px">
+    <div ref="alerta" class="alert alert-info alert-dismissible" style="border-radius: 0px; margin-bottom: 0px;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true" @click.prevent="cerrar" >×</button>
-        <i class="icon fa fa-info"></i>
+        <i class="icon fa fa-info-circle"></i>
         {{ texto }}
-        <a :href="link">{{ accion }}</a>
+        &nbsp;
+        <a class="" v-if="link" style="font-weight: bold;" :href="link" target="_blank" >Más info</a>
     </div>
 </template>
 
@@ -22,7 +23,6 @@
             axios.get('/admin/novedades')
             .then((data) => {
                 this.texto = data.data.texto;
-                this.accion = data.data.accion;
                 this.link = data.data.link;
             })
             .catch((error) => { debugger; });

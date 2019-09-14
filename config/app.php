@@ -36,6 +36,7 @@ return [
     'editor' => 'phpstorm',
     'userreport_token' => env('USERREPORT_TOKEN'),
     'google_analytics_token' => env('GOOGLE_ANALYTICS_TOKEN'),
+    'docs' => env('APP_DOCS', false),
 
 
     /*

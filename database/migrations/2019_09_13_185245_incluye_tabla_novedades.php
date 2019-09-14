@@ -16,7 +16,6 @@ class IncluyeTablaNovedades extends Migration
         Schema::create('novedades', function (Blueprint $table) {
             $table->increments('id');
             $table->string('texto');
-            $table->string('accion')->nullable();
             $table->string('link')->nullable();
             $table->timestamps();
         });
