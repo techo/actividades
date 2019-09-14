@@ -130,7 +130,19 @@ Route::get('admin/ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usu
 
 Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
 
-    
+    Route::get('/novedades', function(){
+        $n = \App\Novedad::latest('created_at')->first();
+        return response()->json($n,200);
+    });
+
+    Route::get('/novedades/visto', function(){
+        $n = \App\Novedad::latest('created_at')->first();
+        if($n)
+            return response()->json([$n->id],200)->cookie('cookie-novedades', $n->id, 10080);
+        
+        return response()->json(['no hay novedades'],200);
+    });
+
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');

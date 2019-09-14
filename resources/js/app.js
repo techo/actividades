@@ -57,6 +57,9 @@ Vue.component('estadisticas-personas', EstadisticasPersonas);
 import EstadisticasCoordinadores from './components/backoffice/estadisticas/estadisticas-coordinadores';
 Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 
+import Novedades from './components/backoffice/novedades';
+Vue.component('novedades', Novedades);
+
 Vue.component('actividades-show', ActividadesShow);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);

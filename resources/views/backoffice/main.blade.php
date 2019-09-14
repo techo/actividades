@@ -33,6 +33,10 @@ desired effect
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+
+        <!-- Content news bar -->
+        @include('backoffice.partials.novedades')
+        
         <!-- Content Header (Page header) -->
         @include('backoffice.partials.content-header')
 
