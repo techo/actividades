@@ -18,9 +18,10 @@ class ActividadesTest extends TestCase
     {
     	$this->withoutExceptionHandling();
 
+        $this->seed('PermisosSeeder');
+
     	$persona = factory('App\Persona')->create();
-    	$permission = Permission::create(['name' => 'ver_backoffice']);
-		$persona->givePermissionTo($permission);
+		$persona->assignRole('coordinador');
 
     	$actividad = factory('App\Actividad')->make();
 
@@ -43,7 +44,20 @@ class ActividadesTest extends TestCase
 
         $this->actingAs($persona)
         	->post('/admin/actividades/crear', $actividad_t)
-        	->assertSeeText("Actividad guardada correctamente.");
+        	->assertSeeText('Actividad creada correctamente')
+            ->assertSessionHas('mensaje', 'Actividad creada correctamente');
+
+        //funciona hacer un flash
+        $this->actingAs($persona)
+            ->get('/admin/actividades/usuario')
+            ->assertSeeText('Actividad creada correctamente')
+            ->assertSessionMissing('mensaje');
+
+        //no se debería ver más el mensaje
+        $this->actingAs($persona)
+            ->get('/admin/actividades/usuario')
+            ->assertDontSeeText('Actividad creada correctamente')
+            ->assertSessionMissing('mensaje');
 
         $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
         	->assertDatabaseHas('PuntoEncuentro', [ 'punto' => $punto->punto ]);

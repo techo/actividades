@@ -34,8 +34,7 @@ class ActividadesController extends Controller
         $datatableConfig = config('datatables.actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        isset($request->msg) ? Session::flash('mensaje', 'La actividad se eliminó correctamente') : false;
-        return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'mensaje'));
+        return view('backoffice.actividades.index', compact('fields', 'sortOrder'));
     }
 
     /**
@@ -94,10 +93,10 @@ class ActividadesController extends Controller
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
             if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
-                $request->session()->put('mensaje', 'La actividad se creó correctamente');
-                return response('Actividad guardada correctamente.', 200);
+                $request->session()->flash('mensaje', 'Actividad creada correctamente');
+                return response('Actividad creada correctamente', 200);
             } else {
-                return response('No se pudo guardar la actividad', 500);
+                return response('No se pudo crear la actividad', 500);
             }
         }
 
@@ -251,7 +250,6 @@ class ActividadesController extends Controller
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
             if ($this->guardarActividad($request, $actividad)) {
-                $request->session()->put('mensaje', 'La actividad se creó correctamente');
                 return response('Actividad guardada correctamente.', 200);
             } else {
                 return response('No se pudo guardar la actividad', 500);
