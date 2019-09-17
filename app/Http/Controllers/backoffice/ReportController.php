@@ -9,6 +9,7 @@ use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
 use App\Exports\InscripcionesUsuarioExport;
 use App\Exports\InscripcionesExport;
+use App\Exports\InscripcionesGeneralExport;
 use App\Exports\MisActividadesExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class ReportController extends Controller
         return Excel::download($actividades, 'mis-actividades.xlsx');
     }
 
-    public function exportarInscripciones($id, Request $request)
+    public function exportarInscripcionesActividad($id, Request $request)
     {
         $filtros['idActividad'] = $id;
 
@@ -50,7 +51,13 @@ class ReportController extends Controller
             }
         }
         $inscripciones = (new InscripcionesExport($filtros));
-        return Excel::download($inscripciones, 'inscripciones_' . $id . '.xlsx');
+        return Excel::download($inscripciones, 'inscripciones_actividad_' . $id . '.xlsx');
+    }
+
+    public function exportarInscripciones(Request $request)
+    {
+        $inscripciones = new InscripcionesGeneralExport($request);
+        return Excel::download($inscripciones, 'inscripciones.xlsx');
     }
 
     public function exportarEvaluacionesPersonas($id)

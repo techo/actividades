@@ -15,6 +15,10 @@
 
 			<div class="tab-content" style="min-height: 500px">
 				<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
+					<div style="text-align: right">
+						<button class="btn btn-default" @click="exportar()" >Descargar datos <i class="fa fa-download"></i></button>
+					</div>
+
 					<div style="height: 200px" >
 						<line-chart ref="graficoinscriptos" v-if="loaded.inscriptos" :chartData="dataInscriptos" :options="options"></line-chart>
 					</div>
@@ -162,6 +166,29 @@ export default {
 			})
 			.catch((error) => { debugger; });
 		},
+		exportar: function() {
+			this.loading = true;
+			//https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743
+			axios({
+				url: '/admin/ajax/estadisticas/inscripciones/exportar', 
+				params: this.filtros,
+				responseType: 'blob',
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+				}
+			})
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'file.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				this.loading = false;
+			})
+			.catch((error) => { debugger; });
+		}
 	},
 }
 </script>
