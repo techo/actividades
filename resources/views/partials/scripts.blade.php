@@ -9,5 +9,5 @@
 <script>
 	new ClipboardJS('#copiar_url');
 </script>
-<script src="/js/atlas.js"></script>
+<script src="{{ asset(mix('/js/atlas.js')) }}"></script>
 
