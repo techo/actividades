@@ -1,5 +1,5 @@
 <template>
-    <div ref="alerta" class="alert alert-info alert-dismissible" style="border-radius: 0px; margin-bottom: 0px;">
+    <div  v-if="link" ref="alerta" class="alert alert-info alert-dismissible" style="border-radius: 0px; margin-bottom: 0px;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true" @click.prevent="cerrar" >×</button>
         <i class="icon fa fa-info-circle"></i>
         {{ texto }}
