@@ -43,7 +43,7 @@ class ActividadesTest extends TestCase
 
         $this->actingAs($persona)
         	->post('/admin/actividades/crear', $actividad_t)
-        	->assertSeeText("Actividad guardada correctamente.");
+        	->assertSeeText("Actividad creada correctamente.");
 
         $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
         	->assertDatabaseHas('PuntoEncuentro', [ 'punto' => $punto->punto ]);
