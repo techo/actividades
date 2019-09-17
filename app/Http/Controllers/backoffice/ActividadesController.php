@@ -93,8 +93,8 @@ class ActividadesController extends Controller
         $validator = $this->createValidator($request);
         if ($validator->passes()) {
             if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
-                $request->session()->put('mensaje', 'La actividad se creó correctamente');
-                return response('Actividad creada correctamente.', 200);
+                $request->session()->flash('mensaje', 'Actividad creada correctamente');
+                return response('Actividad creada correctamente', 200);
             } else {
                 return response('No se pudo crear la actividad', 500);
             }
