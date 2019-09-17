@@ -97,6 +97,23 @@
             </li>
             @endif
 
+            @if(config('app.docs'))
+
+            <li class="treeview {{ request()->is('admin/ayuda*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-question-circle"></i> <span>Ayuda</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
+                        <a href="{{ config('app.docs') }}" target="_blank">Wiki</a>
+                    </li>
+                </ul>
+            </li>
+
+            @endif
+
         </ul>
         <!-- /.sidebar-menu -->
     </section>
