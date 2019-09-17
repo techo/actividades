@@ -12,6 +12,15 @@
 @endsection
 
 @section('content')
+    @if (Session::has('mensaje'))
+        <div class="callout callout-success">
+            <h4>{{ Session::get('mensaje') }}</h4>
+            @php
+                \Illuminate\Support\Facades\Session::remove('mensaje');
+            @endphp
+        </div>
+    @endif
+    
     <div class="box">
         <div class="box-body  with-border">
             <div class="table-responsive">

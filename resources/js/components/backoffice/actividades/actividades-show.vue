@@ -782,7 +782,8 @@
 
                 //cambiar el boton a editar
                 var botonIncluirEditar = this.$refs.puntoEncuentro.$refs.botonIncluirEditar;
-                botonIncluirEditar.innerHTML="<i class='fa fa-edit'></i>  Editar";
+                botonIncluirEditar.className="btn btn-success pull-right";
+                botonIncluirEditar.innerHTML="<i class='fa fa-save'></i>  Guardar";
 
                 this.$refs.puntoEncuentro.idPuntoEncuentro = obj.obj.idPuntoEncuentro;
 
