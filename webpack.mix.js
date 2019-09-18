@@ -14,5 +14,8 @@ let mix = require('laravel-mix');
 mix.js('resources/js/atlas.js', 'public/js')
 	.js('resources/js/app.js', 'public/js')
 	.sass('resources/sass/app.scss', 'public/css')
-	.copy('resources/js/app.js', 'public/bundle.js')
-	.version();
+	.copy('resources/js/app.js', 'public/bundle.js');
+
+if (mix.inProduction()) {
+    mix.version();
+}
