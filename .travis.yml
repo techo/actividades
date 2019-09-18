@@ -9,6 +9,7 @@ before_script:
   - composer install --no-interaction
   - php artisan key:generate
   - npm install
+  - npm run dev
   - npm run test
 # - php artisan config:clear
 # - php artisan migrate
