@@ -38,11 +38,13 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                     'atl_oficinas.nombre AS oficina',
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
+                    'atl_pais.nombre AS pais',
                 ]
             )
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
             ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
+            ->leftJoin('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
             ->orderBy($sortField, $sortOrder);
 
         if ($this->filter) {
@@ -89,6 +91,7 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
             'Oficina',
             'Tipo de Actividad',
             'Categoría de la Actividad',
+            'País',
         ];
     }
 }

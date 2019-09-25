@@ -77,7 +77,7 @@
                                         api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
                                         fields="{{ $fieldsMiembros }}"
                                         sort-order = "{{ $sortOrderMiembros }}"
-                                        placeholder-text="Buscar por Nombre, Oficina, Tipo o Estado"
+                                        placeholder-text="Buscar por Nombre o Rol"
                                         id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
                                         id-actividad = "{{ $actividad->idActividad }}"
                                         ref="miembrosTabla"

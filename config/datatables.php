@@ -55,6 +55,13 @@ return [
                 'dataClass' => 'text-center',
                 'title' => 'Estado',
             ],
+            [
+               'name' => 'pais',
+                'sortField' => 'pais',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+                'title' => 'Pais',
+            ],
 //            [
 //                'name' => '__component:mis-actividades',
 //                'title' => 'Acciones',
@@ -148,6 +155,13 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Estado',
+            ],
+            [
+               'name' => 'pais',
+                'sortField' => 'pais',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+                'title' => 'Pais',
             ],
             // [
             //   name' => 'nickname',
