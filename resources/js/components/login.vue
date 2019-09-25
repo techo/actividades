@@ -137,6 +137,9 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
                             <a class="nav-link text-uppercase" v-on:click="admin">Admin</a>
                         </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.docs">
+                            <a class="nav-link text-uppercase" v-on:click="ayuda">Ayuda</a>
+                        </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="logout">Salir</a>
                         </li>
@@ -183,6 +186,15 @@
                                 Admin
                             </button>
                             <button
+                                    v-if="authenticated && this.docs"
+                                    class="dropdown-item"
+                                    id="btnLogout"
+                                    type="button"
+                                    v-on:click="ayuda"
+                            >
+                                Ayuda
+                            </button>
+                            <button
                                     class="dropdown-item"
                                     id="btnLogout"
                                     type="button"
@@ -213,7 +225,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin'],
+        props:['usuario', 'veradmin', 'showlogin', 'docs' ],
         data () {
             let data = {
                 credentials: {
@@ -259,6 +271,9 @@
             },
             admin: function() {
               window.location.href = '/admin/actividades/usuario';
+            },
+            ayuda: function() {
+              window.location.href = this.docs;  
             },
             misactividades: function() {
               window.location.href = '/perfil/actividades';
