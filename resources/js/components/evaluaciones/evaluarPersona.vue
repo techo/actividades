@@ -107,7 +107,7 @@
                         >
                             Enviar Evaluación
                         </button>
-                        <p class="pull-right" v-if="enviado"><strong>¡Gracias por tu opinión!</strong></p>
+                        <p class="pull-right" v-if="enviado"><strong>Enviado</strong></p>
                         <p class="pull-right" v-if="evaluacionPasada & !enviado">La fecha de fin de las evaluaciones ya pasó &#9785;</p>
                         <p class="red" v-if="error">
                             <i class="fas fa-exclamation"></i> &nbsp;
