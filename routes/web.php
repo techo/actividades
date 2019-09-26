@@ -148,6 +148,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('role:admin');
     Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('role:admin');
+    Route::delete('/usuarios/{id}', 'backoffice\UsuariosController@delete')->middleware('role:admin');
 
     //panel de usuario
     Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')

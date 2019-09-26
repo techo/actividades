@@ -115,7 +115,7 @@
             eliminar: function () {
                 let self = this;
                 self.$refs.confirmar.openSimplert({
-                    title: 'Borrar Actividad',
+                    title: 'Eliminar Registro',
                     message: "Estás por eliminar este registro, se borrará permanentemente y no podrá recuperarse. ¿Deseas continuar?",
                     useConfirmBtn: true,
                     isShown: true,

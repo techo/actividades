@@ -50,6 +50,26 @@ class AdministrarUsuariosTest extends TestCase
         $this->assertDatabaseHas('Persona', [ 'nombres' => 'Modificado' ]);
     }
 
+
+    /** @test */
+    public function administrador_puede_eliminar_usuario()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $jose = factory('App\Persona')->create();
+
+        $this->actingAs($admin)
+            ->delete('/admin/usuarios/' . $jose->idPersona)
+            ->assertStatus(302);
+
+        $this->assertSoftDeleted('Persona', [ 'idPersona' => $jose->idPersona ]);
+    }
+
     public function crear_usuario_caracter_internacional()
      {
         $this->withoutExceptionHandling();

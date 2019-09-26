@@ -5,6 +5,8 @@ namespace App\Http\Controllers\backoffice;
 use App\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
+
 
 class UsuariosController extends Controller
 {
@@ -49,5 +51,15 @@ class UsuariosController extends Controller
 
         $edicion = false;
         return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario'));
+    }
+
+    public function delete(Persona $id)
+    {
+        if ($id->delete()){
+            Session::flash('mensaje', 'Persona eliminada correctamente');
+        } else {
+            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a la Persona');
+        }
+        return redirect()->to('/admin/usuarios');
     }
 }

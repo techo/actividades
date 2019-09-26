@@ -267,6 +267,7 @@
 
 
             Event.$on('guardar', this.guardar);
+            Event.$on('eliminar', this.eliminar);
             Event.$on('editar', this.editar);
         },
         computed: {
@@ -382,6 +383,10 @@
                         }
                     });
 
+            },
+            eliminar(){
+                let form = document.getElementById('formDelete');
+                form.submit();
             }
         }
     }

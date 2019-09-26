@@ -31,7 +31,8 @@ class RolePermissionsSeeder extends Seeder
                 'ver_mis_actividades',
                 'ver_backoffice',
                 'administrar_imagenes',
-                'ver_usuarios'
+                'ver_usuarios',
+                'borrar_usuarios'
             ])->get();
 
         $coordinador->givePermissionTo($permissions);
