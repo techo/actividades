@@ -17,7 +17,7 @@ class PersonaEvaluadaResource extends Resource
         return [
             'idPersona'     => $this->idPersona,
             'dni'           => $this->dni,
-            'nombre'        => $this->nombreCompleto,
+            'nombre'        => $this->nombres . ' ' . $this->apellidoPaterno,
             'rol'           => $this->rol,
             'idGrupo'       => $this->idGrupo
         ];

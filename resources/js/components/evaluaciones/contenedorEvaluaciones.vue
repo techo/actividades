@@ -77,7 +77,6 @@
             this.miGrupo = JSON.parse(this.propMiGrupo);
             this.gruposSubordinados = JSON.parse(this.propGruposSubordinados);
             this.personasNoEvaluadas = this.listadoInscriptos.slice(0);
-            debugger;
             this.excluirUsuario(this.personasNoEvaluadas, this.user);
             //
             for (let i = 0; i < this.evaluados.length; i++) {
