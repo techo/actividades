@@ -32,6 +32,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
             ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
+            ->leftJoin('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
             ->select(
                 [
                     'Actividad.idActividad AS id',
@@ -42,6 +43,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
                     'atl_oficinas.nombre AS oficina',
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
+                    'atl_pais.nombre AS pais', 
                 ]
             )
             ->whereNull('deleted_at')
