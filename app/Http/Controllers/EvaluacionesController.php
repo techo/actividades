@@ -7,6 +7,7 @@ use App\EvaluacionActividad;
 use App\EvaluacionPersona;
 use App\Grupo;
 use App\Http\Resources\PersonaEvaluadaResource;
+use App\Inscripcion;
 use App\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -103,7 +104,7 @@ class EvaluacionesController extends Controller
 
     private function getInscriptos(Actividad $actividad)
     {
-        $inscriptosCollection = Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
+        $inscriptosCollection = Inscripcion::join('Persona', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Grupo_Persona', 'Grupo_Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->select(
                 [
