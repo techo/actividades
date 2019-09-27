@@ -21,7 +21,7 @@ class GruposController extends BaseController
                 'persona' => 'Persona.nombres',
             ],
             'rol' => [
-                'persona' => 'Grupo_Persona.rol'
+                'persona' => 'Inscripcion.rol'
             ]
         ];
 
@@ -83,6 +83,10 @@ class GruposController extends BaseController
         list($sort, $orderBy) = explode('|', $request->sort);
 
         $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
+            ->join('Inscripcion', function ($join) {
+                $join->on('Inscripcion.idPersona', '=', 'Grupo_Persona.idPersona');
+                $join->on('Inscripcion.idActividad', '=', 'Grupo_Persona.idActividad');
+            })
             ->where('Grupo_Persona.idActividad', '=', $request->idActividad)
             ->where('Grupo_Persona.idGrupo', '=', $idGrupo);
 
@@ -91,7 +95,7 @@ class GruposController extends BaseController
             $personas->where(function ($query) use ($filter) {
                 $query->orWhere('Persona.nombres', 'like', '%' . $filter . '%');
                 $query->orWhere('Persona.apellidoPaterno', 'like', '%' . $filter . '%');
-                $query->orWhere('Grupo_Persona.rol', 'like', '%' . $filter . '%');
+                $query->orWhere('Inscripcion.rol', 'like', '%' . $filter . '%');
             });
         }
 

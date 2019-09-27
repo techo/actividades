@@ -7,6 +7,7 @@ use App\Exports\ActividadesExport;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
+use App\Inscripcion;
 use App\Persona;
 use Illuminate\Http\Request;
 
@@ -68,7 +69,7 @@ class GruposActividadesController extends BaseController
             }
 
             if (count($personaArray) > 0) {
-                $personas = GrupoRolPersona::whereIn('idPersona', $personaArray)
+                $personas = Inscripcion::whereIn('idPersona', $personaArray)
                     ->where('idActividad', '=', (int)$id)
                     ->update(['rol' => $request->rol]);
             }

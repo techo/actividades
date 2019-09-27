@@ -12,7 +12,7 @@
                                 class="form-control input"
                                 @keyup.enter="doFilter"
                                 :placeholder="dataPlaceholderText"
-                                style="width: 20em"
+                                style="width: 18em"
                         >
                         <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
                         <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
