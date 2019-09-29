@@ -74,4 +74,27 @@ class EvaluacionesTest extends TestCase
             ->assertStatus(200);
     }   
 
+    /** @test */
+    public function no_se_muestran_usuarios_desinscriptos()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $maria = factory('App\Persona')->create([ 'nombres' => 'maria']);
+        $jose = factory('App\Persona')->create([ 'nombres' => 'jose']);
+      
+        $actividad = app(ActividadFactory::class)
+            ->conGrupoRaiz()
+            ->conEstado('pasada')
+            ->agregarInscripto($maria , ['presente'])
+            ->agregarInscripto($jose , ['presente'])
+            ->create();
+
+        \App\Inscripcion::where(['idPersona', '=', $jose->idPersona ])->delete();
+
+        $this->actingAs($maria)
+            ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')
+            ->assertDontSee('jose');
+    }
+
 }
