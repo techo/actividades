@@ -74,7 +74,7 @@ class Persona extends Authenticatable implements MustVerifyEmail
 
     public function grupoAsignadoEnActividad($idActividad)
     {
-        return $this->inscripciones()->where('idActividad', $idActividad)->first()->rol;
+        return $this->gruposRoles()->where('idActividad', $idActividad)->first();
     }
 
     public function estaInscripto($idActividad) {

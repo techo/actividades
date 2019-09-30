@@ -187,7 +187,7 @@ export default {
               inscripciones: this.$refs.inscripcionesVuetable.selectedTo
           };
           this.axiosPost(url, function (data, self) {
-              this.$refs.inscripcionesVuetable.resetData();
+              self.$refs.inscripcionesVuetable.resetData();
               Vue.nextTick( () => self.$refs.inscripcionesVuetable.refresh());
               Event.$emit('mensaje-success', data);
               Event.$emit('vuetable-actualizarTabla');
