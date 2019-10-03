@@ -23,6 +23,5 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'administrar_imagenes']);
         Permission::create(['name' => 'ver_usuarios']);
         Permission::create(['name' => 'editar_usuarios']);
-        Permission::create(['name' => 'borrar_usuarios']);
     }
 }

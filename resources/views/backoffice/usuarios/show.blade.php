@@ -53,6 +53,6 @@
             cancelar-url="/admin/usuarios"
             edicion="{{ $edicion }}"
             can-editar="true"
-            can-borrar="{{Auth::user()->hasPermissionTo('borrar_actividad')}}"
+            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
     ></crud-footer>
 @endsection
