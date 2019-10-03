@@ -195,6 +195,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="localidad">Verificación</label>
+                                    <br>
+                                    <v-switch
+                                        theme="bootstrap" 
+                                        color="primary"
+                                        v-bind:disabled="readonly"
+                                        v-model="usuario.email_verified_at"
+                                    ></v-switch>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -205,11 +219,12 @@
 <script>
     import DatePicker from 'vue2-datepicker';
     import moment from 'moment';
+    import vSwitch from 'vue-switches';
 
     export default {
         name: "usuario-form",
         props: ['propUsuario', 'edicion'],
-        components: {'date-picker': DatePicker},
+        components: {'date-picker': DatePicker, 'v-switch': vSwitch},
         data(){
             return {
                 usuario: {
@@ -225,6 +240,7 @@
                     localidad: null,
                     dni: "",
                     rol: null,
+                    email_verified_at: null,
                 },
                 dataGeneros: [
                     {id: "M", genero: "Masculino"},
