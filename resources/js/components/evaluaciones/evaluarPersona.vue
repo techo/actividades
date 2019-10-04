@@ -28,6 +28,7 @@
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="sliderTecnico">Puntaje Técnico <div v-show="!noAplicaTecnico" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
+                                    <p style="font-size: 12px; color: #6d6d6c" >Conocimientos sobre la tarea a desarrollar</p>
                                     <input type="range"
                                            class="form-control-range"
                                            id="sliderTecnico"
@@ -59,6 +60,7 @@
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="sliderSocial">Puntaje Social <div v-show="!noAplicaSocial" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeSocial}">{{ puntajeSocial }}</div></label>
+                                    <p style="font-size: 12px; color: #6d6d6c;" >Habilidades para comuncicarse y empatizar con otros.</p>
                                     <input type="range"
                                            class="form-control-range"
                                            id="sliderSocial"
