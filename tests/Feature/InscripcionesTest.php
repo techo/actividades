@@ -367,14 +367,11 @@ class InscripcionesTest extends TestCase
     }
 
     /** @test */
-    public function solo_administrador_puede_ver_inscripciones_de_usuario()
+    public function coordinador_puede_ver_inscripciones_de_usuario()
     {
         //$this->withoutExceptionHandling(); 
 
         $this->seed('PermisosSeeder');
-
-        $admin = factory('App\Persona')->create();
-        $admin->assignRole('admin');
 
         $coordinador = factory('App\Persona')->create();
         $coordinador->assignRole('coordinador');
@@ -385,15 +382,11 @@ class InscripcionesTest extends TestCase
         app(ActividadFactory::class)->agregarInscripto($nestor)->create();
         app(ActividadFactory::class)->agregarInscripto($nestor)->create();
 
-        $response = $this->actingAs($admin)
+        $response = $this->actingAs($coordinador)
             ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/inscripciones')
             ->assertStatus(200);
 
         $this->assertTrue(count(json_decode($response->getContent())->data) == 3);
-
-        $response = $this->actingAs($coordinador)
-            ->get('/admin/ajax/usuarios/'. $nestor->idPersona .'/inscripciones')
-            ->assertStatus(403);
     }
 
 }
