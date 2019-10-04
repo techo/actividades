@@ -146,23 +146,23 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
-    Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('role:admin');
+    Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
     Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('role:admin');
 
     //panel de usuario
     Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')
-        ->middleware('role:admin');
+        ->middleware('permission:ver_usuarios');
     Route::get('/usuarios/{id}/exportar-inscripciones', 'backoffice\ReportController@exportarInscripcionesUsuario')
-        ->middleware('role:admin');
+        ->middleware('permission:ver_usuarios');
     Route::get('/ajax/usuarios/{id}/inscripciones-stats', 'backoffice\ajax\EvaluacionesController@getStatsPorUsuario')
-        ->middleware('role:admin');
+        ->middleware('permission:ver_usuarios');
     Route::get('/ajax/usuarios/{id}/evaluaciones', 'backoffice\ajax\UsuariosController@evaluaciones')
         ->middleware('role:admin');
     Route::get('/usuarios/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesUsuario')
         ->middleware('role:admin');
 
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
-    Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
+    Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:ver_usuarios'); //TODO: Mejorar la nomenclatura de la ruta
     Route::post('/roles/usuario/{id}', 'backoffice\UsuariosRolesController@update')->middleware('permission:asignar_roles');
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
