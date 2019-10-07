@@ -45,6 +45,7 @@ class UsuariosController extends Controller
             'localidad' => $usuario->localidad,
             'dni' => $usuario->dni,
             'rol' => $rol,
+            'email_verified_at' => $usuario->email_verified_at,
         ];
 
         $edicion = false;

@@ -64,6 +64,14 @@ class UserService
         }
         $persona->sexo = $request->sexo['id'];
         $persona->telefonoMovil = $request->telefono;
+        
+        if($request->has('email_verified_at') && $request->email_verified_at == 0) {
+            $persona->email_verified_at = null;
+        }
+        else{
+            $persona->email_verified_at = Carbon::now();   
+        }
+        
         if(!empty($request->password)) {
             $persona->password = Hash::make($request->password);
         }
