@@ -24,7 +24,12 @@
             </strong>
         </p>
         <p>
-            ¡Tenés tiempo hasta el <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b>!
+            ¡Tenés tiempo hasta el 
+            @if($inscripcion->actividad->fechaLimitePago)
+                <b>{{$inscripcion->actividad->fechaLimitePago->format('d/m/Y')}}</b>!
+            @else
+                <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b>!
+            @endif
         </p>
         <p>
             Para confirmar tu participación, haz click en el botón
