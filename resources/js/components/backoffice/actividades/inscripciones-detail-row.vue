@@ -1,33 +1,28 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label>Fecha de Inscripción: </label>
                 <span>{{ fechaInscripcion }}</span>
-            </div>
-            <div class="col-md-6">
-                <label>Punto de Encuentro Seleccionado: </label>
+                <br>
+                <label>Punto de Encuentro: </label>
                 <span>{{ puntoEncuentro }}</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label>Modificado por: </label>
-                <span>{{rowData.modificado_por}}</span>
-            </div>
-            <div class="col-md-6">
-                <label>Modificado en: </label>
-                <span>{{rowData.modificado_en}}</span>
-                &nbsp;
+                <br>
+                <label>Móvil: </label>
+                <span>{{ rowData.telefonoMovil }}</span>
+                <br>
+                <label>Email: </label>
+                <span>{{ rowData.mail }}</span>
             </div>
         </div>
         <hr>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <a :href="'/admin/usuarios/'+rowData.idPersona" class="btn btn-primary btn-xs" target="_blank" >
                   <i class="fa fa-user" ></i> &nbsp; Ver perfil
                 </a>
                 <a @click="cargarAuditoria(rowData.id)" class="btn btn-default btn-xs" ><i class="fa fa-history" ></i> &nbsp; Ver auditoría</a>
+                <span style="color: #6d6d6d">Modificado por {{rowData.modificado_por}} @ {{rowData.modificado_en}}</span>
             </div>
         </div>
     </div>
@@ -49,7 +44,7 @@ export default {
   },
   computed: {
       fechaInscripcion: function () {
-          return moment(this.rowData.fechaInscripcion).format("DD MMMM YYYY");
+          return moment(this.rowData.fechaInscripcion).format("DD/MM/YYYY hh:mm");
       },
       puntoEncuentro: function () {
         console.log(this.rowData)
