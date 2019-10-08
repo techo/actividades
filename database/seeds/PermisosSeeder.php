@@ -14,5 +14,6 @@ class PermisosSeeder extends Seeder
         $this->call(RolesTableSeeder::class);
         $this->call(PermissionsTableSeeder::class);
         $this->call(RolePermissionsSeeder::class);
+        $this->call(BorrarPersonasSeeder::class);
     }
 }
