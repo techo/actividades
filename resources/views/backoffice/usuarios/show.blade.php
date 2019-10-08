@@ -1,9 +1,17 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Usuario: ' . $usuario->nombreCompleto)
+@section('page_title', 'Persona: ' . $usuario->nombreCompleto)
 
 
 @section('content')
+
+ <form method="POST" id="formDelete"
+          action="{{ action('backoffice\UsuariosController@delete', ['id' => $usuario->idPersona]) }}">
+
+        <input type="hidden" value="DELETE" name="_method">
+        {{ csrf_field() }}
+</form>
+
 <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" style="border-bottom: 3px solid #d2d6de; padding-bottom: 2px;">
             <li class="active">
@@ -45,5 +53,6 @@
             cancelar-url="/admin/usuarios"
             edicion="{{ $edicion }}"
             can-editar="true"
+            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
     ></crud-footer>
 @endsection

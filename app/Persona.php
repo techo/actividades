@@ -9,14 +9,17 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Persona extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, SoftDeletes;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token'];
     protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail'];
+    protected $dates = ['deleted_at'];
 
     public function routeNotificationForMail($notification)
     {
