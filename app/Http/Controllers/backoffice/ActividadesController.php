@@ -327,24 +327,24 @@ class ActividadesController extends Controller
         $v = Validator::make(
             $request->all(),
             [
+                'nombreActividad'           => 'required',
                 'coordinador.idPersona'     => 'required | numeric',
-                'descripcion'               => 'required',
-                'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)],
+                'tipo.categoria.id'         => 'required',
+                'idTipo'                    => 'required',
+                'oficina.id'                => 'required',
                 'fechaInicio'               => 'required | date',
+                'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)], 
                 'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
                 'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
                 'fechaInicioEvaluaciones'   => 'required | date | after_or_equal:fechaFin',
                 'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
-                'idTipo'                    => 'required',
-                'inscripcionInterna'        => 'required',
-                'limiteInscripciones'       => 'numeric',
-                'mensajeInscripcion'        => 'required',
-                'nombreActividad'           => 'required',
-                'oficina.id'                => 'required',
+                'descripcion'               => 'required',
                 'pais.id'                   => 'required',
                 'provincia.id'              => 'required',
                 'puntos_encuentro'          => [new PuntoEncuentroRule],
-                'tipo.categoria.id'         => 'required',
+                'limiteInscripciones'       => 'numeric',                
+                'inscripcionInterna'        => 'required',
+                'mensajeInscripcion'        => 'required',
             ], $messages
         );
 
