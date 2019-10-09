@@ -33,7 +33,7 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
             ->join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
-            ->select(DB::raw('dni, nombres, apellidoPaterno, telefonoMovil, mail, fechaNacimiento, sexo, Inscripcion.fechaInscripcion, presente, rol, Actividad.nombreActividad, atl_CategoriaActividad.nombre as categoria, Tipo.nombre as tipo'))
+            ->select(DB::raw('dni, nombres, apellidoPaterno, telefonoMovil, mail, fechaNacimiento, sexo, Inscripcion.fechaInscripcion, presente, rol, Actividad.nombreActividad, atl_CategoriaActividad.nombre as categoria, Tipo.nombre as tipo, Actividad.fechaInicio'))
             ->whereYear('Inscripcion.created_at', $año);
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
@@ -58,7 +58,8 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
             'rol',
             'actividad',
             'categoría',
-            'tipo'
+            'tipo',
+            'fecha de la actividad'
         ];
     }
 
@@ -70,6 +71,9 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
                 break;
             case 'F':
                 $genero = 'Femenino';
+                break;
+            case 'X':
+                $genero = 'Otro';
                 break;
             default:
                 $genero = 'Sin Especificar';
@@ -91,6 +95,7 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
             $query->nombreActividad,
             $query->categoria,
             $query->tipo,
+            Date::dateTimeToExcel(Carbon::parse($query->fechaInicio))
         ];
     }
 
@@ -99,6 +104,7 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
         return [
             'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'N' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
