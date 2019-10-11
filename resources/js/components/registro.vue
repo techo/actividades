@@ -147,6 +147,7 @@
                             <b-form-radio-group id="radios2" v-model="user.sexo">
                                 <b-form-radio value="F">Femenino</b-form-radio>
                                 <b-form-radio value="M">Masculino</b-form-radio>
+                                <b-form-radio value="X">Otro</b-form-radio>
                                 <b-form-radio value="O">Prefiero no decirlo</b-form-radio>
                             </b-form-radio-group>
                         </b-form-group>
@@ -387,7 +388,10 @@
         'user.sexo': function() { this.validar_data('sexo') },
         'user.dni': function() { this.validar_data('dni') },
         'user.telefono': function() { this.validar_data('telefono') },
-        'user.pais': function() { this.traer_provincias() },
+        'user.pais': function() { 
+            this.validar_data('pais') 
+            this.traer_provincias() 
+        },
         'user.provincia': function() { this.traer_localidades() }
       },
       methods: {
