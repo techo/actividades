@@ -26,8 +26,8 @@
     @if($payuTest)
         <input name="test" type="hidden"  value="1" >
     @endif
-    <input name="responseUrl"   type="hidden"  value="https://sandbox.actividades.techo.org/pagos/{{ $payment->inscripcion->idInscripcion }}/response" >
-    <input name="confirmationUrl"    type="hidden"  value="https://sandbox.actividades.techo.org/pagos/{{ $payment->inscripcion->idInscripcion }}/confirmation" >
+    <input name="responseUrl"   type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/response" >
+    <input name="confirmationUrl"    type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/confirmation" >
 
     <button name="btnPago"        type="submit"  class="btn btn-primary">
         <i class="fas fa-external-link-alt"></i> Confirmar con tu donación
