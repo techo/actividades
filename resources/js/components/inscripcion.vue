@@ -9,7 +9,7 @@
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <p>Una actividad, puede tener uno o más puntos de encuentro.
+                    <p>Una actividad puede tener uno o más puntos de encuentro.
                         ¡Elegí el que encuentres más cómodo y nos vemos ahí!</p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
               <div class="row" v-for="(item, index) in actividad.puntosEncuentro">
                   <div class="col-md-12">
                       <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
-                    {{item.punto}}, {{ actividad.ubicacion }} - {{item.horario | format_time}}hs
+                    {{item.punto}}, {{ item.localidad.localidad }}, {{ item.provincia.provincia }} - {{item.horario | format_time}}hs
                   </div>
               </div>
                 <hr>
