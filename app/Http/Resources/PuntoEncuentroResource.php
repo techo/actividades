@@ -18,6 +18,8 @@ class PuntoEncuentroResource extends Resource
             'idPuntoEncuentro' => $this->idPuntoEncuentro,
             'punto' => $this->punto,
             'horario' => $this->horario,
+            'provincia' => $this->provincia,
+            'localidad' => $this->localidad,
             'responsable' => new PersonaResource($this->responsable),
             'borrable' => true,
         ];
