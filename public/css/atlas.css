@@ -179,6 +179,7 @@ code {
     position: relative;
     color: #ffffff;
     font-family: Montserrat, sans-serif;
+    flex-flow: column;
 }
 
 a {
@@ -274,13 +275,40 @@ a {
 .techo-hero h1 {
     font-size: 5vw;
     margin: auto;
-    position: absolute;
+    /*position: absolute;*/
     z-index: 1;
     font-weight: bold;
     vertical-align: middle;
     line-height: normal;
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
     text-shadow: 0 0 16px #60676a;
+}
+
+.techo-hero h1.mobile {
+    display: none;
+}
+
+.techo-hero-text {
+    width: 100%;
+    flex-flow: column;
+    display: flex;
+    position: absolute;
+}
+
+.estadisticas-publicas {
+    flex-flow: row;
+    display: flex;
+    justify-content: space-around;
+    background-color: #8481816b;
+    font-weight: 500;
+    font-size: 1.25rem;
+    text-shadow: 0 0 16px #60676a;
+    padding: 2vw 0;
+}
+
+.estadisticas-publicas h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
 }
 
 .techo-hero h2 {
@@ -390,49 +418,60 @@ footer.inscripcion-bar .text-primary {
 
 /* Media queries */
 
-@media (max-width: 543px) {
+@media (max-width: 678px) {
     h1.text-primary {
-        font-size:1.5rem; /*1rem = 16px*/
+        font-size: 1.5rem; /*1rem = 16px*/
     }
 
     main {
         margin-bottom: 175px;
     }
-}
-@media (min-width: 544px) {
-    .techo-hero h1, .techo-hero h2 {
-        font-size:2.5rem; /*1rem = 16px*/
+
+    .techo-hero h1.mobile {
+        position: absolute;
+        top: 2rem;
+        font-size: 7vw;
     }
 
-    h1 {
-        font-size:2.5rem; /*1rem = 16px*/
+    .techo-hero h1.desktop {
+        display: none;
     }
 
-    main {
-        margin-bottom: 175px;
-    }
-}
-
-/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
-@media (min-width: 768px) {
-    .techo-hero h1, .techo-hero h2 {
-        font-size:2.5rem; /*1rem = 16px*/
-        padding-bottom: 5rem;
+    .techo-hero h1.mobile {
+        display: block;
     }
 
-    h1 {
-        font-size:2.5rem; /*1rem = 16px*/
+    .techo-hero-text {
+        position: initial;
+        background-color: #0192ddff;
     }
 
-    main {
-        margin-bottom: 175px;
+    .estadisticas-publicas {
+        flex-direction: column;
     }
+
+    .estadisticas-publicas h3 {
+        font-size: 1.5rem;
+    }
+
+    .estadisticas-publicas span {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    .estadisticas-publicas div {
+        flex-direction: column;
+        display: flex;
+        margin: 12px 0;
+    }
+
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .techo-hero h1, .techo-hero h2 {
-        font-size:4rem; /*1rem = 16px*/
+        font-size: 3rem;
+        padding: 2rem 0;
     }
 
     h1 {
@@ -443,7 +482,8 @@ footer.inscripcion-bar .text-primary {
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .techo-hero h1, .techo-hero h2 {
-        font-size:5rem; /*1rem = 16px*/
+        font-size: 4rem; /*1rem = 16px*/
+        padding: 3rem 0;
     }
 
     h1 {
@@ -459,7 +499,8 @@ footer.inscripcion-bar .text-primary {
 }
 
 
-.flex-container {
+
+/*.flex-container {
     display: flex;
     position: absolute;
     margin-top: 1.1em;
@@ -529,7 +570,6 @@ footer.inscripcion-bar .text-primary {
     }
 }
 
-/* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
     .flex-container {
         margin-top: 5.5em;
@@ -569,4 +609,4 @@ footer.inscripcion-bar .text-primary {
     .flex-container > div {
         width: 32em;
     }
-  }
+  }*/

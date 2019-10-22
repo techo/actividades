@@ -27,8 +27,9 @@ class EstadisticasController extends Controller
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
             ->select(DB::raw('atl_CategoriaActividad.nombre, count(*) cantidad'))
             ->whereYear('fechaCreacion', now()->year) 
-            ->whereIn('atl_CategoriaActividad.id', ['1', '2'])
-            ->groupBy('atl_CategoriaActividad.nombre');
+            ->whereIn('atl_CategoriaActividad.id', ['2', '1'])
+            ->groupBy('atl_CategoriaActividad.nombre')
+            ->orderBy('cantidad', 'DESC');
 
         
         return $actividades->get();

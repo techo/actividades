@@ -1,10 +1,19 @@
 <template>
-	<div id="estadisticas_publicas" class="flex-container">
-			<div> <h3>  {{ personas_movilizadas.length }} </h3> Personas Movilizadas </div>
-			<div> <h3>  {{ voluntades_movilizadas }} </h3>  Voluntades Movilizadas  </div>
+	<div class="estadisticas-publicas">
+			<div> 
+				<h3>  {{ voluntades_movilizadas }} </h3>  
+				<span>Voluntades Movilizadas</span>
+			</div>
+			
+			<div> 
+				<h3>  {{ personas_movilizadas.length }} </h3> 
+				<span>Personas Movilizadas</span>
+			</div>
+
 			<template v-for="actividadtotal in actividadestotales">
 				<div> 
-					<h3> {{ actividadtotal.cantidad }} </h3> {{ actividadtotal.nombre }} 
+					<h3> {{ actividadtotal.cantidad }} </h3> 
+					<span> {{ actividadtotal.nombre }} </span>
 				</div>
 			</template>
 	</div>
