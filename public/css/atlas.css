@@ -273,7 +273,7 @@ a {
 }
 
 .techo-hero h1 {
-    font-size: 5vw;
+    font-size: 6vw;
     margin: auto;
     /*position: absolute;*/
     z-index: 1;
@@ -469,11 +469,6 @@ footer.inscripcion-bar .text-primary {
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    .techo-hero h1, .techo-hero h2 {
-        font-size: 3rem;
-        padding: 2rem 0;
-    }
-
     h1 {
         font-size:2rem; /*1rem = 16px*/
     }
@@ -481,11 +476,6 @@ footer.inscripcion-bar .text-primary {
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    .techo-hero h1, .techo-hero h2 {
-        font-size: 4rem; /*1rem = 16px*/
-        padding: 3rem 0;
-    }
-
     h1 {
         font-size:3rem; /*1rem = 16px*/
     }

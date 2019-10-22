@@ -19,7 +19,9 @@
         <h1 class="text-uppercase mobile">Transformemos esta realidad</h1>
         <div class="techo-hero-text" >
             <h1 class="text-uppercase desktop">Transformemos esta realidad</h1>
-            <estadisticas-publicas>   </estadisticas-publicas>
+            @if(config('app.estadisticas'))
+            <estadisticas-publicas></estadisticas-publicas>
+            @endif
         </div>
     </div>
 
