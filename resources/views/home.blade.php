@@ -17,7 +17,11 @@
           <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
         </picture>
         <h1 class="text-uppercase">Transformemos esta realidad</h1>
+        <estadisticas-publicas>   </estadisticas-publicas>
     </div>
+
+    
+
 @endsection
 
 @section('main_content')

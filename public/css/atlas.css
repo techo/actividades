@@ -416,7 +416,8 @@ footer.inscripcion-bar .text-primary {
 /* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
 @media (min-width: 768px) {
     .techo-hero h1, .techo-hero h2 {
-        font-size:3.5rem; /*1rem = 16px*/
+        font-size:2.5rem; /*1rem = 16px*/
+        padding-bottom: 5rem;
     }
 
     h1 {
@@ -456,3 +457,116 @@ footer.inscripcion-bar .text-primary {
         padding-top: 0;
     }
 }
+
+
+.flex-container {
+    display: flex;
+    position: absolute;
+    margin-top: 1.1em;
+    opacity: 0.9;
+    background-color: lightgrey;
+    text-shadow: 0 0 16px #60676a
+}
+  
+.flex-container > div {
+    background-color: lightgrey;
+    width: 10em;
+    font-size: 0.4rem;
+    padding: 0.5em;
+    }
+
+.flex-container > div > h3{
+    font-size: 0.6rem;
+    }
+
+@media (min-width: 375px) {
+    .flex-container {
+        margin-top: 1.5em;
+    }
+    .flex-container > div {
+        width: 12em;
+    }
+    .flex-container > div > h3{
+        font-size: 0.6rem;
+    }
+}
+
+@media (min-width: 425px) {
+    .flex-container > div {
+        width: 11em;
+        font-size: 0.5rem;
+    }
+    .flex-container > div > h3{
+        font-size: 0.7rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .flex-container {
+        margin-top: 4em;
+    }
+    .flex-container > div {
+        width: 12em;
+        font-size: 0.8rem;
+        padding: 0.2em;
+    }
+    .flex-container > div > h3{
+        font-size: 1.3rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .flex-container {
+        margin-top: 4em;
+    }
+    .flex-container > div {
+        width: 12em;
+        font-size: 0.8rem;
+        padding: 0.2em;
+    }
+    .flex-container > div > h3{
+        font-size: 1.3rem;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .flex-container {
+        margin-top: 5.5em;
+        font-size: 1rem;  
+    }
+    .flex-container > div {
+        width: 16em;
+    }
+    .flex-container > div > h3{
+        font-size: 2rem;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .flex-container > div {
+        width: 20em;
+        padding: 0.5em;
+    }
+  }
+
+@media (min-width: 1440px) {
+    .flex-container {
+        margin-top: 6em;
+        font-size: 1.4rem;  
+    }
+    .flex-container > div {
+        width: 23em;
+    }
+  }
+
+@media (min-width: 1900px) {
+    .flex-container {
+        margin-top: 8em;
+        font-size: 1.4rem;  
+    }
+    .flex-container > div {
+        width: 32em;
+    }
+  }
