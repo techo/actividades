@@ -117,10 +117,10 @@ class AdministrarUsuariosTest extends TestCase
              );
      }
 
-     /** @test */
+    /** @test */
     public function administrador_puede_fusionar_cuentas()
     {
-        $this->withoutExceptionHandling();
+        //$this->withoutExceptionHandling();
         $this->seed('PermisosSeeder');
 
         $admin = factory('App\Persona')->create();
@@ -130,30 +130,43 @@ class AdministrarUsuariosTest extends TestCase
         $agus_segunda_cuenta = factory('App\Persona')->create();
 
         $actividad_1 = app(ActividadFactory::class)
+            ->creadaPor($agus)
             ->coordinadaPor($agus)
             ->agregarInscripto($agus)
             ->agregarEvaluacionDePersona($agus)
+            ->agregarEvaluacion($agus)
+            ->conGrupoRaiz([ $agus ])
             ->create();
 
         $actividad_2 = app(ActividadFactory::class)
+            ->creadaPor($agus_segunda_cuenta)
             ->coordinadaPor($agus_segunda_cuenta)
             ->agregarInscripto($agus_segunda_cuenta)
             ->agregarEvaluacionDePersona($agus_segunda_cuenta)
+            ->agregarEvaluacion($agus_segunda_cuenta)
+            ->conGrupoRaiz([ $agus_segunda_cuenta, $agus ])
             ->create();
 
+        $datos = [ 'idPersona' => $agus_segunda_cuenta->idPersona ];
         $this->actingAs($admin)
-            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar/' . $agus_segunda_cuenta->idPersona)
-            ->assertOk();
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar', $datos) ->assertOk();
 
         $this->assertTrue($agus->inscripciones()->count() == 2);
         $this->assertTrue($agus->evaluacionesRecibidas()->count() == 2);
         $this->assertTrue($agus->actividades()->count() == 2);
+        $this->assertTrue($agus->actividadesCreadas()->count() == 2);
+        $this->assertTrue($agus->evaluacionesActividadRealizadas()->count() == 2);
+        $this->assertTrue($agus->gruposRoles()->count() == 3);
 
         $this->assertSoftDeleted('Persona', [
             'idPersona' => $agus_segunda_cuenta->idPersona,
         ]);
 
         //test no se puede fusionar un usuario consigo mismo
+        $datos = [ 'idPersona' => $agus->idPersona ];
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar', $datos)
+            ->assertSessionHasErrors();
     }
 
 }

@@ -20,7 +20,7 @@
                 </button>
             </div>
             <div class="col-sm-12 col-md-4">
-                <button class="btn btn-primary" v-show="readonly && canEditar" @click="fusionar">
+                <button class="btn btn-primary" v-show="readonly && canFusionar" @click="fusionar">
                     <i class="fa fa-random"></i>
                     Fusionar
                 </button>
@@ -90,7 +90,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar', 'canFusionar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")

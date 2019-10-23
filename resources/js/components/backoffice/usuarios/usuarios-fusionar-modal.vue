@@ -100,7 +100,8 @@ export default {
                 customConfirmBtnText: 'Si, fusionar',
                 customConfirmBtnClass: 'btn btn-primary',
                 onConfirm: function () {
-                    axios.post('/admin/usuarios/' + this.$parent.$props.persona + '/fusionar/' + this.$parent.form.idPersona)
+                    axios.post('/admin/usuarios/' + this.$parent.$props.persona + '/fusionar', 
+                    	{ 'idPersona': this.$parent.form.idPersona })
 						.then((datos) => {
 							this.$parent.reset();
 							this.$parent.personaSeleccionada=null; //para v-select
