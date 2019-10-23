@@ -115,4 +115,42 @@ class AdministrarUsuariosTest extends TestCase
                  ]
              );
      }
+
+     /** @test */
+    public function administrador_puede_fundir_cuentas()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $agus = factory('App\Persona')->create();
+        $agus_segunda_cuenta = factory('App\Persona')->create();
+
+        $actividad_1 = app(ActividadFactory::class)
+            ->coordinadaPor($agus)
+            ->agregarInscripto($agus)
+            ->agregarEvaluacionDePersona($agus)
+            ->create();
+
+        $actividad_2 = app(ActividadFactory::class)
+            ->coordinadaPor($agus_segunda_cuenta)
+            ->agregarInscripto($agus_segunda_cuenta)
+            ->agregarEvaluacionDePersona($agus_segunda_cuenta)
+            ->create();
+
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fundir/' . $agus_segunda_cuenta->idPersona)
+            ->assertOk();
+
+        $this->assertTrue($agus->inscripciones()->count() == 2);
+        $this->assertTrue($agus->evaluacionesRecibidas()->count() == 2);
+        $this->assertTrue($agus->actividades()->count() == 2);
+
+        $this->assertSoftDeleted('Persona', [
+            'idPersona' => $agus_segunda_cuenta->idPersona,
+        ]);
+    }
+
 }

@@ -84,6 +84,12 @@ class UsuariosController extends Controller
         return response($validator->errors()->all(), 422);
     }
 
+    public function fundir(Persona $persona, Persona $target) {
+
+        $persona->fundir($target);
+        return response('ok', 200);
+    }
+
     public function inscripciones($persona, Request $request)
     {
         $sort = 'fechaInscripcion desc';

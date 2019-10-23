@@ -10,6 +10,7 @@ use App\Tipo;
 class ActividadFactory
 {
 	public $creador = null;
+    public $coordinador = null;
     public $pais = null;
 	public $tipo = null;
     public $estado = null;
@@ -22,6 +23,7 @@ class ActividadFactory
     {
         $atributos = [
             'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
+            'idCoordinador' => $this->coordinador ?? factory(Persona::class)->create(),
             'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
             'idPais' => $this->pais ?? factory(Pais::class)->create(),
         ];
@@ -73,6 +75,13 @@ class ActividadFactory
     public function creadaPor(Persona $persona)
     {
         $this->creador = $persona;
+
+        return $this;
+    }
+
+    public function coordinadaPor(Persona $persona)
+    {
+        $this->coordinador = $persona;
 
         return $this;
     }

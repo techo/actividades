@@ -170,4 +170,31 @@ class Persona extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
+
+    public function fundir($target)
+    {
+        Inscripcion::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        GrupoRolPersona::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        Actividad::where('idCoordinador', $target->idPersona)
+            ->update(['idCoordinador' => $this->idPersona]);
+
+        PuntoEncuentro::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        EvaluacionActividad::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        EvaluacionPersona::where('idEvaluado', $target->idPersona)
+            ->update(['idEvaluado' => $this->idPersona]);
+
+        EvaluacionPersona::where('idEvaluador', $target->idPersona)
+            ->update(['idEvaluador' => $this->idPersona]);
+
+        $target->delete();
+
+    }
 }
