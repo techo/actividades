@@ -9,7 +9,7 @@
 				</div>
 				<div class="modal-body">
 					<div :class="{ 'form-group': true, 'has-error': errors.idPersona }" >
-						<label>Cuenta de donde traer los datos</label>
+						<label>Cuenta de donde se quieren tomar los datos</label>
 						<v-select 
 							:options="personas" 
 							@search="onSearch" 
@@ -90,7 +90,7 @@ export default {
 		submit: function () {
             this.$refs.confirmar.openSimplert({
                 title: 'Fusionar cuentas',
-                message: "Estás por fusionar esta cuenta de usuario con otra, si lo hacés, esta cuenta va a ser eliminada y todos sus datos reasignados a la cuenta elegida ¿Desea continuar?",
+                message: "Estás por fusionar esta cuenta de usuario con otra, si lo hacés, la cuenta que seleccionaste va a ser eliminada y todos sus datos reasignados a la cuenta de origen ¿continuar?",
                 useConfirmBtn: true,
                 isShown: true,
                 disableOverlayClick: true,
