@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\ActividadFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class AdministrarUsuariosTest extends TestCase
 {
@@ -117,7 +118,7 @@ class AdministrarUsuariosTest extends TestCase
      }
 
      /** @test */
-    public function administrador_puede_fundir_cuentas()
+    public function administrador_puede_fusionar_cuentas()
     {
         $this->withoutExceptionHandling();
         $this->seed('PermisosSeeder');
@@ -141,7 +142,7 @@ class AdministrarUsuariosTest extends TestCase
             ->create();
 
         $this->actingAs($admin)
-            ->post('/admin/usuarios/' . $agus->idPersona . '/fundir/' . $agus_segunda_cuenta->idPersona)
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar/' . $agus_segunda_cuenta->idPersona)
             ->assertOk();
 
         $this->assertTrue($agus->inscripciones()->count() == 2);
@@ -151,6 +152,8 @@ class AdministrarUsuariosTest extends TestCase
         $this->assertSoftDeleted('Persona', [
             'idPersona' => $agus_segunda_cuenta->idPersona,
         ]);
+
+        //test no se puede fusionar un usuario consigo mismo
     }
 
 }

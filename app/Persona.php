@@ -171,7 +171,7 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
     }
 
-    public function fundir($target)
+    public function fusionar($target)
     {
         Inscripcion::where('idPersona', $target->idPersona)
             ->update(['idPersona' => $this->idPersona]);

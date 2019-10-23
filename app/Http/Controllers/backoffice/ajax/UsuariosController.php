@@ -84,9 +84,9 @@ class UsuariosController extends Controller
         return response($validator->errors()->all(), 422);
     }
 
-    public function fundir(Persona $persona, Persona $target) {
+    public function fusionar(Persona $persona, Persona $target) {
 
-        $persona->fundir($target);
+        $persona->fusionar($target);
         return response('ok', 200);
     }
 

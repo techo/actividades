@@ -4,6 +4,7 @@
             <h4>{{ mensajeGuardado }}</h4>
         </div>
         <simplert ref="loading"></simplert>
+        <fusionar-modal ref="fusionar" :persona="usuario.idUsuario"></fusionar-modal>
 
         <div v-show="tieneErrores" class="callout callout-danger">
             <h4>Errores:</h4>
@@ -220,11 +221,12 @@
     import DatePicker from 'vue2-datepicker';
     import moment from 'moment';
     import vSwitch from 'vue-switches';
+    import fusionarModal from '../../../components/backoffice/usuarios/usuarios-fusionar-modal';
 
     export default {
         name: "usuario-form",
         props: ['propUsuario', 'edicion'],
-        components: {'date-picker': DatePicker, 'v-switch': vSwitch},
+        components: {'date-picker': DatePicker, 'v-switch': vSwitch, 'fusionar-modal': fusionarModal},
         data(){
             return {
                 usuario: {
@@ -284,6 +286,7 @@
 
             Event.$on('guardar', this.guardar);
             Event.$on('eliminar', this.eliminar);
+            Event.$on('fusionar', this.fusionar);
             Event.$on('editar', this.editar);
         },
         computed: {
@@ -403,6 +406,10 @@
             eliminar(){
                 let form = document.getElementById('formDelete');
                 form.submit();
+            },
+            fusionar(){
+                console.log("fusionar");
+                this.$refs.fusionar.show();
             }
         }
     }

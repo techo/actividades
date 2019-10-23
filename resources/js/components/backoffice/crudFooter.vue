@@ -20,6 +20,10 @@
                 </button>
             </div>
             <div class="col-sm-12 col-md-4">
+                <button class="btn btn-primary" v-show="readonly && canEditar" @click="fusionar">
+                    <i class="fa fa-random"></i>
+                    Fusionar
+                </button>
                 <button class="btn btn-primary" v-show="readonly && canEditar" @click="editar">
                     <i class="fa fa-edit"></i>
                     Editar
@@ -28,7 +32,6 @@
                     <i class="fa fa-trash"></i>
                     Borrar
                 </button>
-
                 <button class="btn btn-success" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
                     Guardar
@@ -148,6 +151,10 @@
                         Event.$emit('clonar');
                     }
                 })
+            },
+
+            fusionar: function () {
+                Event.$emit('fusionar');
             },
 
             guardar: function () {
