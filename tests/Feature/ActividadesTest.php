@@ -38,10 +38,10 @@ class ActividadesTest extends TestCase
 
         $punto = factory('App\PuntoEncuentro')->make();
         $punto->nuevo = true;
+        $punto->estado = true;
         $punto->responsable = $punto->idPersona;
 
         $actividad_t['puntos_encuentro'] = [ $punto->toArray() ];
-
         $this->actingAs($persona)
         	->post('/admin/actividades/crear', $actividad_t)
         	->assertSeeText('Actividad creada correctamente')

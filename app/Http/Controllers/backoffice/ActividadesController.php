@@ -402,7 +402,7 @@ class ActividadesController extends Controller
         $p->idPais = $punto['idPais'];
         $p->idProvincia = $punto['idProvincia'];
         $p->idPersona = $punto['responsable']['idPersona'];
-        $p->estado =  ($punto['estado']) ? 1 : 0;
+        $p->estado = $punto['estado'];
         $p->save();
         return $punto;
     }
