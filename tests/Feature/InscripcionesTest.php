@@ -119,6 +119,37 @@ class InscripcionesTest extends TestCase
 
     }
 
+    /** @test **/
+    public function usuario_no_puede_ver_ni_inscribirse_a_punto_cerrado()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $usuario = factory('App\Persona')->create();
+
+        $actividad = app(ActividadFactory::class)
+            ->create();
+
+        $punto_encuentro = factory('App\PuntoEncuentro')->create([
+                'idActividad' => $actividad->idActividad,
+                'estado' => 0
+            ]);
+
+        $datos = [
+            'punto_encuentro' => $actividad->puntosEncuentro->first()->idPuntoEncuentro, 
+            'aceptar_terminos' => 1 
+        ];
+
+        $this->actingAs($usuario)
+            ->get('/actividades/' . $actividad->idActividad)
+            ->assertDontSee($actividad->puntosEncuentro->first()->punto);
+
+        $this->actingAs($usuario)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
+            ->assertStatus(500);   
+    }
+
+
     /** @test */
     public function usuario_se_puede_desinscribir()
     {
