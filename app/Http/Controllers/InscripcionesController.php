@@ -48,6 +48,8 @@ class InscripcionesController extends BaseController
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
         $persona = Auth::user();
+        if ($punto_encuentro->estado)
+        {
         if (($request->has('aceptar_terminos') && $request->aceptar_terminos == 1)) {
             $inscripcion = Inscripcion::where([['idActividad', $id], ['idPersona', Auth::user()->idPersona]])->get()->first();
             if (!$inscripcion) {
@@ -95,6 +97,8 @@ class InscripcionesController extends BaseController
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $punto_encuentro)
             ->with('tipo', $actividad->tipo);
+        }
+        return response('El punto de encuentro se encuentra cerrado', 500);
     }
 
     /**
