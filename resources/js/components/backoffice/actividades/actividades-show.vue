@@ -524,6 +524,7 @@
             Event.$on('guardar', this.guardar);
             Event.$on('borrar-punto', this.borrarPunto);
             Event.$on('editar-punto', this.editarPunto);
+            Event.$on('cambiar-estado-punto', this.cambiarEstadoPunto);
             Event.$on('eliminar', this.eliminar);
             Event.$on('clonar', this.clonar);
         },
@@ -750,6 +751,10 @@
             borrarPunto: function (obj) {
                 this.dataActividad.puntosEncuentroBorrados.push(obj.obj);
                 this.dataActividad.puntos_encuentro.splice(obj.index, 1);
+            },
+            cambiarEstadoPunto: function (obj) {
+                this.dataActividad.puntosEncuentroEditados.push(obj.obj);
+
             },
             editarPunto: function (obj) {
                 //mostrar form
