@@ -195,7 +195,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>País de residencia</label>
+                        <label>País de residencia *</label>
                         <select id="pais" v-model="user.pais" class="form-control">
                             <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
                         </select>
@@ -392,7 +392,8 @@
             this.validar_data('pais') 
             this.traer_provincias() 
         },
-        'user.provincia': function() { this.traer_localidades() }
+        'user.provincia': function() { this.traer_localidades() },
+        'user.privacidad': function() { this.validar_data('privacidad')}
       },
       methods: {
         registro_facebook: function() {
