@@ -90,7 +90,7 @@ export default {
 		submit: function () {
             this.$refs.confirmar.openSimplert({
                 title: 'Fusionar cuentas',
-                message: "Estás por fusionar esta cuenta de usuario con otra, si lo hacés, la cuenta que seleccionaste va a ser eliminada y todos sus datos reasignados a la cuenta de origen ¿continuar?",
+                message: "Estás por fusionar dos cuentas: <br> <b>"+this.personaSeleccionada.mail+"</b> <br> va a ser <b><i>eliminada</i></b> y todos sus datos migrados a: <br> <b>"+this.persona.email+"</b> <br> ¿continuar?",
                 useConfirmBtn: true,
                 isShown: true,
                 disableOverlayClick: true,
@@ -100,7 +100,7 @@ export default {
                 customConfirmBtnText: 'Si, fusionar',
                 customConfirmBtnClass: 'btn btn-primary',
                 onConfirm: function () {
-                    axios.post('/admin/usuarios/' + this.$parent.$props.persona + '/fusionar', 
+                    axios.post('/admin/usuarios/' + this.$parent.$props.persona.idUsuario + '/fusionar', 
                     	{ 'idPersona': this.$parent.form.idPersona })
 						.then((datos) => {
 							this.$parent.reset();

@@ -4,7 +4,7 @@
             <h4>{{ mensajeGuardado }}</h4>
         </div>
         <simplert ref="loading"></simplert>
-        <fusionar-modal ref="fusionar" :persona="usuario.idUsuario"></fusionar-modal>
+        <fusionar-modal ref="fusionar" :persona="usuario"></fusionar-modal>
 
         <div v-show="tieneErrores" class="callout callout-danger">
             <h4>Errores:</h4>
