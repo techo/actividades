@@ -1,21 +1,24 @@
 <template>
-	<div class="estadisticas-publicas">
-			<div> 
-				<h3>  {{ voluntades_movilizadas }} </h3>  
-				<span>Voluntades Movilizadas</span>
-			</div>
-			
-			<div> 
-				<h3>  {{ personas_movilizadas.length }} </h3> 
-				<span>Personas Movilizadas</span>
-			</div>
-
-			<template v-for="actividadtotal in actividadestotales">
+	<div>
+		<div class="estadisticas-publicas-label" >En el {{ciclo}} llevamos</div>
+		<div class="estadisticas-publicas">
 				<div> 
-					<h3> {{ actividadtotal.cantidad }} </h3> 
-					<span> {{ actividadtotal.nombre }} </span>
+					<h3>  {{ voluntades_movilizadas }} </h3>  
+					<span>Voluntades Movilizadas</span>
 				</div>
-			</template>
+				
+				<div> 
+					<h3>  {{ personas_movilizadas.length }} </h3> 
+					<span>Personas Movilizadas</span>
+				</div>
+
+				<template v-for="actividadtotal in actividadestotales">
+					<div> 
+						<h3> {{ actividadtotal.cantidad }} </h3> 
+						<span> {{ actividadtotal.nombre }} </span>
+					</div>
+				</template>
+		</div>
 	</div>
 </template>
 
@@ -26,12 +29,14 @@ export default {
 			personas_movilizadas: 0,
 			voluntades_movilizadas: 0,
 			actividadestotales: 0,
+			ciclo: 0,
 		};
 	},
 	mounted () {
 		this.get_voluntades_movilizadas();
 		this.get_actividades();
 		this.get_personas_movilizadas();
+		this.ciclo = moment().format("YYYY");
 	},
 	methods: {
 		get_personas_movilizadas: function () {
