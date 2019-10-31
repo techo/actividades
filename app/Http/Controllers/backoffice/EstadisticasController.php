@@ -74,6 +74,32 @@ class EstadisticasController extends Controller
         return $respuesta;
     }
 
+    public function grafico_evaluaciones(Request $request)
+    {
+        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
+        $pais = ($request->filled('pais'))?$request->pais:null;
+        $oficina = ($request->filled('oficina'))?$request->oficina:null;
+
+        $consulta = \App\EvaluacionPersona::join('Actividad', 'Actividad.idActividad', '=', DB::raw('EvaluacionPersona.idActividad'))
+            ->select(DB::raw('MONTH(Actividad.fechaCreacion) as mes, AVG(EvaluacionPersona.puntajeSocial) as puntajeSocial, AVG(EvaluacionPersona.puntajeTecnico) as puntajeTecnico'))
+            ->groupBy('mes')
+            ->whereYear('Actividad.fechaCreacion', $año);
+
+        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($oficina) $consulta->where('Actividad.idOficina', $oficina);
+        
+        $evaluaciones = $consulta->get();
+
+        $respuesta = [];
+        foreach ($evaluaciones as $e) {
+            $respuesta['meses'][] = $e->mes;
+            $respuesta['puntajeSocial'][] = $e->puntajeSocial;
+            $respuesta['puntajeTecnico'][] = $e->puntajeTecnico;
+        }
+
+        return $respuesta;
+    }
+
     public function inscripciones_por_actividad(Request $request)
     {
         
