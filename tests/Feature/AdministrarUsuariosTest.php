@@ -53,7 +53,7 @@ class AdministrarUsuariosTest extends TestCase
 
 
     /** @test */
-    public function administrador_puede_eliminar_usuario()
+    public function administrador_puede_eliminar_usuario_y_volver_a_crear_con_mismo_email()
     {
         $this->withoutExceptionHandling();
 
@@ -69,6 +69,10 @@ class AdministrarUsuariosTest extends TestCase
             ->assertStatus(302);
 
         $this->assertSoftDeleted('Persona', [ 'idPersona' => $jose->idPersona ]);
+
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/registrar' , $jose->toArray())
+            ->assertSessionHasNoErrors();
     }
 
     /** @test */
