@@ -21,6 +21,7 @@ import DataTable from './components/datatable/DataTable';
 import BtnMisActividades from './components/perfil/btnMisActividades';
 import TarjetaHorizontal from './components/perfil/tarjeta-horizontal';
 import CookiesBar from './components/cookies-bar';
+import EstadisticasPublicas from './components/estadisticas-publicas';
 
 
 import axios from 'axios';
@@ -57,6 +58,7 @@ Vue.component('datatable', DataTable);
 Vue.component('btn-mis-actividades', BtnMisActividades);
 Vue.component('tarjeta-horizontal', TarjetaHorizontal);
 Vue.component('cookies-bar', CookiesBar);
+Vue.component('estadisticas-publicas', EstadisticasPublicas);
 
 window.Event = new Vue();
 

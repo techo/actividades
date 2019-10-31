@@ -54,6 +54,11 @@ Route::prefix('ajax')->group(function () {
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
 
     Route::get('auditorias/{tabla}/{id}', 'ajax\AuditoriasController@show');
+
+    Route::get('estadisticas/voluntades_movilizadas', 'EstadisticasController@voluntades_movilizadas');
+    Route::get('estadisticas/actividades', 'EstadisticasController@actividades');
+    Route::get('estadisticas/personas_movilizadas', 'EstadisticasController@personas_movilizadas');
+
 });
 //Fin Ajax calls
 
