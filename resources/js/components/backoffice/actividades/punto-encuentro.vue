@@ -119,6 +119,7 @@
                 <th scope="col">Lugar</th>
                 <th scope="col">Horario</th>
                 <th scope="col">Responsable</th>
+                <th scope="col">Estado</th>
                 <th scope="col"><span v-show="!readonly">Acciones</span></th>
             </thead>
             <tbody>
@@ -135,6 +136,9 @@
                     </td>
                     <td>
                         <p>{{ punto.responsable.nombres }} {{ punto.responsable.apellidoPaterno}}</p>
+                    </td>
+                    <td>
+                        <v-switch theme="bootstrap" color="primary" v-bind:disabled="readonly" @input="cambiarEstadoPunto(punto.idPuntoEncuentro)" v-model="punto.estado"> </v-switch>
                     </td>
                     <td>
                         <div class="form-group" v-if="!readonly">
@@ -372,6 +376,10 @@
             editar: function (id) {
                 let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
                 Event.$emit('editar-punto', data);
+            },
+            cambiarEstadoPunto: function (id) {
+                let data = this.findObjectByKey(this.puntosEncuentro, 'idPuntoEncuentro', id);
+                Event.$emit('cambiar-estado-punto', data);
             },
             getProvincias() {
                 if (this.paisSeleccionado !== null && this.paisSeleccionado.id !== undefined) {

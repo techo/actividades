@@ -24,7 +24,7 @@
                     method="POST"
                     v-on:submit="validateForm"
             >
-              <div class="row" v-for="(item, index) in actividad.puntosEncuentro">
+              <div class="row" v-for="(item, index) in puntosActivos">
                   <div class="col-md-12">
                       <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
                     {{item.punto}}, 
@@ -124,6 +124,11 @@
           }
         },
         computed: {
+            puntosActivos: function () {
+                return this.actividad.puntosEncuentro.filter(function (punto) {
+                    return punto.estado
+                })
+            },
             esConstruccion() {
                 return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
             },
