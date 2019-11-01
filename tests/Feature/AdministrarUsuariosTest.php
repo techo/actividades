@@ -70,9 +70,21 @@ class AdministrarUsuariosTest extends TestCase
 
         $this->assertSoftDeleted('Persona', [ 'idPersona' => $jose->idPersona ]);
 
+        $datos = [
+            "email" => $jose->mail,
+            "dni" => $jose->dni,
+            "nombre" => $jose->nombres,
+            "apellido" => $jose->apellidoPaterno,
+            "rol" => 0,
+            "pais" => [ "id" => $jose->idPais ],
+            "sexo" => $jose->sexo,
+            "nacimiento" => $jose->fechaNacimiento,
+            "telefono" => $jose->telefonoMovil,
+        ];
+
         $this->actingAs($admin)
-            ->post('/admin/usuarios/registrar' , $jose->toArray())
-            ->assertSessionHasNoErrors();
+            ->post('/admin/usuarios/registrar' , $datos)
+            ->assertStatus(200);
     }
 
     /** @test */
