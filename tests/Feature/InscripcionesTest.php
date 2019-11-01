@@ -130,9 +130,8 @@ class InscripcionesTest extends TestCase
         $actividad = app(ActividadFactory::class)
             ->create();
 
-        $punto_encuentro = factory('App\PuntoEncuentro')->create([
+        $punto_encuentro = factory('App\PuntoEncuentro')->states('cerrado')->create([
                 'idActividad' => $actividad->idActividad,
-                'estado' => 0
             ]);
 
         $datos = [
