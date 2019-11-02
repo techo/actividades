@@ -25,9 +25,7 @@ class CreatePuntoEncuentroTable extends Migration {
 			$table->integer('idPais')->unsigned();
             $table->integer('idProvincia')->unsigned();
             $table->integer('idLocalidad')->unsigned();
-			
 
-            /*$table->integer('idZona')->nullable()->index('fk_PuntoEncuentro_1_idx');*/
 		});
 	}
 

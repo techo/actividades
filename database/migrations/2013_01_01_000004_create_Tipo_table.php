@@ -19,10 +19,6 @@ class CreateTipoTable extends Migration {
 			$table->string('nombre', 300);
 
 			$table->integer('idCategoria')->unsigned()->nullable();
-
-			/*$table->boolean('hs');
-			$table->boolean('fyv');
-			$table->string('alias', 10)->nullable();*/
 			
 		});
 	}
