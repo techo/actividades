@@ -12,17 +12,15 @@ class Actividad extends Model
     use SoftDeletes;
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
-    protected $guarded = ['idActividad', 'pDNI'];
+    protected $guarded = ['idActividad'];
     protected $fillable = ['nombreActividad', 'fechaInicio'];
     protected $dates =
         [
-            'fechaCreacion', 
-            'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
             'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
             'fechaLimitePago',
-
+            'fechaCreacion', 'fechaModificacion',
         ];
 
     const CREATED_AT = 'fechaCreacion';
