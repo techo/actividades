@@ -14,15 +14,11 @@ class CreatePersonaTable extends Migration {
 	{
 		Schema::create('Persona', function(Blueprint $table)
 		{
-			$table->engine = 'InnoDB';
-			$table->charset = 'utf8';
-			$table->collation = 'utf8_spanish_ci';
-
 			$table->integer('idPersona', true);
+
 			$table->integer('idPais')->index('idPais');
-			$table->integer('idPaisResidencia')->index('idPaisResidencia');
-			$table->integer('idCiudad')->index('idCiudad');
 			$table->integer('idUnidadOrganizacional');
+
 			$table->string('nombres', 300);
 			$table->string('apellidoPaterno', 300);
 			$table->string('apellidoMaterno', 300)->nullable();
@@ -33,6 +29,14 @@ class CreatePersonaTable extends Migration {
 			$table->string('dni', 50);
 			$table->string('mail', 300)->index('mail');
 			$table->string('password', 400);
+
+			$table->integer('recibirMails')->nullable();
+			$table->string('remember_token', 100)->nullable();
+			$table->index(['apellidoPaterno','apellidoMaterno','nombres'], 'idx_Persona_1');
+
+			/*
+			$table->integer('idPaisResidencia')->index('idPaisResidencia');
+			$table->integer('idCiudad')->index('idCiudad');
 			$table->integer('idUniversidad')->nullable()->index('fk_Persona_Universidad');
 			$table->integer('idColegio')->nullable()->index('fk_Persona_Colegio');
 			$table->string('universidad_string', 300)->nullable();
@@ -58,14 +62,12 @@ class CreatePersonaTable extends Migration {
 			$table->dateTime('ultimaEntrada')->nullable();
 			$table->dateTime('ultimaActualizacion')->nullable();
 			$table->string('dispHoraria', 400)->nullable();
-			$table->integer('recibirMails')->nullable();
 			$table->integer('idCarrera')->nullable()->index('fk_Persona_Carrera_idx');
 			$table->integer('idAreaEstudio')->nullable()->index('Persona_ibfk_5_idx');
 			$table->char('Vecino_Voluntario', 1)->nullable();
 			$table->string('Barrio_Vecino', 40)->nullable();
-			$table->string('remember_token', 100)->nullable();
 			$table->index(['idPaisResidencia','dni'], 'ix_Persona_DniPais');
-			$table->index(['apellidoPaterno','apellidoMaterno','nombres'], 'idx_Persona_1');
+			*/
 		});
 	}
 

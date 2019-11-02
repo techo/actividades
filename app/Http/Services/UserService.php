@@ -49,7 +49,6 @@ class UserService
         $persona->fechaNacimiento = $fechaNacimiento;
         $persona->nombres = $request->nombre;
         $persona->idPais = $request->pais['id'];
-        $persona->idPaisResidencia = $request->pais['id'];
         if($request->has('provincia') && $request->provincia != null)   {
             $persona->idProvincia = $request->provincia['id'];
         }
@@ -125,14 +124,7 @@ class UserService
 
         $persona = $this->cargar_cambios($request, $persona);
 
-        $persona->carrera = '';
-        $persona->anoEstudio = '';
-        $persona->idContactoCTCT = '';
-        $persona->statusCTCT = '';
-        $persona->lenguaje = '';
-        $persona->idRegionLT = 0;
         $persona->idUnidadOrganizacional = 0;
-        $persona->idCiudad = 0;
 
         $persona->save();
 
