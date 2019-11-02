@@ -47,19 +47,6 @@ class ActividadesController extends Controller
         $edicion = true;
         $paises = Pais::has("provincias")->get();
         $columns = Schema::getColumnListing('Actividad');
-        $excluidas =
-            [
-                'pApMat',
-                'pDNI',
-                'pFonoMovil',
-                'pUniversidad',
-                'pCarrera',
-                'pAnoEstudio',
-                'pAcompanante',
-                'tPortugues',
-                'enviarMail',
-                'compromiso'
-            ];
         $columns = array_diff($columns, $excluidas);
         $arrayColumnas = array_fill_keys($columns, null);
 
