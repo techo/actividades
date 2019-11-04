@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <h2>Ingresar a tu perfil</h2>
+                                        <h2>{{ $t('frontend.login') }}</h2>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
@@ -79,7 +79,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="col-8 text-right">
-                                                    <a href="/password/reset">Olvidé mi contraseña</a>
+                                                    <a href="/password/reset">{{ $t('frontend.forget_password') }}</a>
                                                 </div>
                                             </div>
                                         </form>

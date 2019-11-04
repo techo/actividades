@@ -45,6 +45,7 @@
         "minimist": "^1.2.0",
         "vue-axios": "^2.1.1",
         "vue-chartjs": "^3.3.2",
+        "vue-i18n": "^8.15.0",
         "vue-loader": "^14.2.2",
         "vue-router": "^3.0.1",
         "vue-select": "^3.1.0",
