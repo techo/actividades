@@ -363,7 +363,7 @@ export default {
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     },
     'filter-reset-inscripciones' () {
-      this.moreParams.filter = null;
+      this.moreParams.filter = [];
       this.$refs.inscripcionesVuetable.resetData();
       Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh() )
     }
