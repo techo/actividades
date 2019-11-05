@@ -13,6 +13,20 @@
                             </button>
                         </div>
                         <div class="row">
+                            <div class="col-md-6 registro">
+                                <div class="row h-100 justify-content-center align-items-center">
+                                    <div class="col">
+                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                        <br>
+                                        <a
+                                                href="/registro"
+                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
+                                        >
+                                            ¡Quiero ser voluntario!
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
@@ -23,18 +37,6 @@
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
                                         <h2>Ingresar a tu perfil</h2>
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i
-                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary google" @click="registro_google()"><i
-                                                class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
@@ -68,7 +70,7 @@
                                                 </div>
                                             </div>
                                             <div class="row h-100 align-items-center">
-                                                <div class="col-4">
+                                                <div class="col-6">
                                                     <button
                                                             id="btnLogin"
                                                             v-on:click="login"
@@ -78,25 +80,23 @@
                                                         Ingresar
                                                     </button>
                                                 </div>
-                                                <div class="col-8 text-right">
+                                                <div class="col-6 text-left">
                                                     <a href="/password/reset">Olvidé mi contraseña</a>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 registro">
-                                <div class="row h-100 justify-content-center align-items-center">
-                                    <div class="col">
-                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
-                                        <br>
-                                        <a
-                                                href="/registro"
-                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
-                                        >
-                                            ¡Quiero ser voluntario!
-                                        </a>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
+                                    </div>
+                                </div>
+                                <div class="row pl-4 m-3">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary google" @click="registro_google()"><i
+                                                class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
                             </div>
