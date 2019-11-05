@@ -57,7 +57,6 @@ class UsuarioController extends BaseController
       $this->cargar_cambios($request, $persona);
       $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
       $persona->idUnidadOrganizacional = 0;
-      $persona->verificado = false;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
