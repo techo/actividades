@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\ActividadFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class AdministrarUsuariosTest extends TestCase
 {
@@ -52,7 +53,7 @@ class AdministrarUsuariosTest extends TestCase
 
 
     /** @test */
-    public function administrador_puede_eliminar_usuario()
+    public function administrador_puede_eliminar_usuario_y_volver_a_crear_con_mismo_email()
     {
         $this->withoutExceptionHandling();
 
@@ -68,6 +69,22 @@ class AdministrarUsuariosTest extends TestCase
             ->assertStatus(302);
 
         $this->assertSoftDeleted('Persona', [ 'idPersona' => $jose->idPersona ]);
+
+        $datos = [
+            "email" => $jose->mail,
+            "dni" => $jose->dni,
+            "nombre" => $jose->nombres,
+            "apellido" => $jose->apellidoPaterno,
+            "rol" => 0,
+            "pais" => [ "id" => $jose->idPais ],
+            "sexo" => $jose->sexo,
+            "nacimiento" => $jose->fechaNacimiento,
+            "telefono" => $jose->telefonoMovil,
+        ];
+
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/registrar' , $datos)
+            ->assertStatus(200);
     }
 
     /** @test */
@@ -115,4 +132,57 @@ class AdministrarUsuariosTest extends TestCase
                  ]
              );
      }
+
+    /** @test */
+    public function administrador_puede_fusionar_cuentas()
+    {
+        //$this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $agus = factory('App\Persona')->create();
+        $agus_segunda_cuenta = factory('App\Persona')->create();
+
+        $actividad_1 = app(ActividadFactory::class)
+            ->creadaPor($agus)
+            ->coordinadaPor($agus)
+            ->agregarInscripto($agus)
+            ->agregarEvaluacionDePersona($agus)
+            ->agregarEvaluacion($agus)
+            ->conGrupoRaiz([ $agus ])
+            ->create();
+
+        $actividad_2 = app(ActividadFactory::class)
+            ->creadaPor($agus_segunda_cuenta)
+            ->coordinadaPor($agus_segunda_cuenta)
+            ->agregarInscripto($agus_segunda_cuenta)
+            ->agregarEvaluacionDePersona($agus_segunda_cuenta)
+            ->agregarEvaluacion($agus_segunda_cuenta)
+            ->conGrupoRaiz([ $agus_segunda_cuenta, $agus ])
+            ->create();
+
+        $datos = [ 'idPersona' => $agus_segunda_cuenta->idPersona ];
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar', $datos) ->assertOk();
+
+        $this->assertTrue($agus->inscripciones()->count() == 2);
+        $this->assertTrue($agus->evaluacionesRecibidas()->count() == 2);
+        $this->assertTrue($agus->actividades()->count() == 2);
+        $this->assertTrue($agus->actividadesCreadas()->count() == 2);
+        $this->assertTrue($agus->evaluacionesActividadRealizadas()->count() == 2);
+        $this->assertTrue($agus->gruposRoles()->count() == 3);
+
+        $this->assertSoftDeleted('Persona', [
+            'idPersona' => $agus_segunda_cuenta->idPersona,
+        ]);
+
+        //test no se puede fusionar un usuario consigo mismo
+        $datos = [ 'idPersona' => $agus->idPersona ];
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/' . $agus->idPersona . '/fusionar', $datos)
+            ->assertSessionHasErrors();
+    }
+
 }

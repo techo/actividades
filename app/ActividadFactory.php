@@ -10,18 +10,22 @@ use App\Tipo;
 class ActividadFactory
 {
 	public $creador = null;
+    public $coordinador = null;
     public $pais = null;
 	public $tipo = null;
     public $estado = null;
     public $grupo = null;
 	public $cantidad_inscriptos_por_punto_encuentro = [];
     public $inscriptos = [];
+    public $evaluados = [];
     public $evaluaciones = [];
+    public $miembros = [];
 
     public function create($atributos_extra = [])
     {
         $atributos = [
             'idPersonaCreacion' => $this->creador ?? factory(Persona::class)->create(),
+            'idCoordinador' => $this->coordinador ?? factory(Persona::class)->create(),
             'idTipo' => $this->tipo ?? factory(Tipo::class)->create(),
             'idPais' => $this->pais ?? factory(Pais::class)->create(),
         ];
@@ -59,11 +63,24 @@ class ActividadFactory
                 'idActividad' => $actividad->idActividad,
                 'nombre' => $actividad->nombreActividad,
             ]);
+
+            foreach ($this->miembros as $persona) 
+            {
+                factory('App\GrupoRolPersona')->create([
+                    'idActividad' => $actividad->idActividad,
+                    'idPersona' => $persona->idPersona,
+                ]);
+            }
         }
 
-        foreach ($this->evaluaciones as $persona) 
+        foreach ($this->evaluados as $persona) 
         {
             factory('App\EvaluacionPersona')->create([ 'idEvaluado' => $persona ]);
+        }
+
+        foreach ($this->evaluaciones as $evaluacion) 
+        {
+            factory('App\EvaluacionActividad')->create([ 'idPersona' => $persona ]);
         }
 
         return $actividad;
@@ -73,6 +90,13 @@ class ActividadFactory
     public function creadaPor(Persona $persona)
     {
         $this->creador = $persona;
+
+        return $this;
+    }
+
+    public function coordinadaPor(Persona $persona)
+    {
+        $this->coordinador = $persona;
 
         return $this;
     }
@@ -105,14 +129,23 @@ class ActividadFactory
         return $this;
     }
 
-    public function conGrupoRaiz()
+    public function conGrupoRaiz($miembros = [])
     {
         $this->grupo = true;
+
+        $this->miembros = $miembros;
 
         return $this;
     }
 
     public function agregarEvaluacionDePersona($persona)
+    {
+        array_push($this->evaluados, $persona->idPersona);
+
+        return $this;
+    }
+
+    public function agregarEvaluacion($persona)
     {
         array_push($this->evaluaciones, $persona->idPersona);
 

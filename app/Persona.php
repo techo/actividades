@@ -46,6 +46,11 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Actividad::class, 'idCoordinador');
     }
 
+    public function actividadesCreadas()
+    {
+        return $this->hasMany(Actividad::class, 'idPersonaCreacion');
+    }
+
     public function gruposRoles()
     {
         return $this->hasMany(GrupoRolPersona::class, 'idPersona', 'idPersona');
@@ -59,6 +64,11 @@ class Persona extends Authenticatable implements MustVerifyEmail
     public function evaluacionesRealizadas()
     {
         return $this->hasMany(EvaluacionPersona::class, 'idEvaluador', 'idPersona');
+    }
+
+    public function evaluacionesActividadRealizadas()
+    {
+        return $this->hasMany(EvaluacionActividad::class, 'idPersona', 'idPersona');
     }
 
     public function getPromedioSocialAttribute()
@@ -169,5 +179,38 @@ class Persona extends Authenticatable implements MustVerifyEmail
     public function localidad()
     {
         return $this->hasOne(Localidad::class, 'id', 'idLocalidad');
+    }
+
+    public function fusionar($target)
+    {
+        Inscripcion::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        GrupoRolPersona::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        Actividad::where('idCoordinador', $target->idPersona)
+            ->update(['idCoordinador' => $this->idPersona]);
+
+        Actividad::where('idPersonaCreacion', $target->idPersona)
+            ->update(['idPersonaCreacion' => $this->idPersona]);
+
+        Actividad::where('idPersonaModificacion', $target->idPersona)
+            ->update(['idPersonaModificacion' => $this->idPersona]);
+
+        PuntoEncuentro::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        EvaluacionActividad::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
+        EvaluacionPersona::where('idEvaluado', $target->idPersona)
+            ->update(['idEvaluado' => $this->idPersona]);
+
+        EvaluacionPersona::where('idEvaluador', $target->idPersona)
+            ->update(['idEvaluador' => $this->idPersona]);
+
+        $target->delete();
+
     }
 }
