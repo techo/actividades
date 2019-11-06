@@ -21,7 +21,7 @@
                             class="btn btn-danger text-light font-weight-bold pull-right"
                             @click="desincribir(inscripcion.idActividad)"
                         >
-                            Desinscribirme
+                            {{ $t('frontend.unapply') }}
                         </a>
                     </span>
                     <span v-else> <!-- la actividad ya terminó -->
@@ -31,14 +31,14 @@
                                     v-show="inscripcion.presente === 1"
                                     @click="ir_a_evaluar"
                             >
-                                Ver Evaluaciones
+                            {{ $t('frontend.view_evaluations') }}
                             </a>
                             <p v-show="inscripcion.presente === 0">
-                                <strong>No asististe a esta actividad</strong>
+                                <strong> {{ $t('frontend.absent') }}</strong>
                             </p>
                         </span>
                         <span v-else>  <!-- Actividad terminó pero no esta en el periodo de evaluación -->
-                            <p><strong>Las evaluaciones comienzan el <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
+                            <p><strong> {{ $t('frontend.evaluations_start_on') }} <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
                         </span>
                     </span>
                 </div>

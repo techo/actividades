@@ -45,7 +45,7 @@
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-				<h5>Descripción</h5>
+				<h5> {{ __('frontend.description') }}</h5>
 			</div>
 		</div>
 		<div class="row">
@@ -57,18 +57,18 @@
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-                <h5>Coordinador de la Actividad</h5>
+                <h5>{{ __('frontend.coordinator') }}</h5>
 			</div>
 		</div>
 			<div class="row">
 				<div class="col-md-12">
-                    {{ isset($actividad->coordinador) ? $actividad->coordinador->nombreCompleto : "No definido" }}
+                    {{ isset($actividad->coordinador) ? $actividad->coordinador->nombreCompleto :  __('frontend.not_defined') }}
 				</div>
 			</div>
 		<hr>
 		<div class="row">
 			<div class="col-md-12">
-				<h5>Puntos de encuentro</h5>
+				<h5>{{ __('frontend.meeting_points') }}</h5>
 			</div>
 		</div>
 		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
@@ -86,7 +86,7 @@
 
                 </div>
                 <div class="col-md-4">
-                    <strong>Referente:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
+                    <strong>{{ __('frontend.referring') }}:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto :  __('frontend.not_defined') }}
                 </div>
 		      </div>
             @endif
@@ -103,7 +103,7 @@
             <div class="col-md-6">
                 <div style="text-align: right">
                     <a class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
-                        <i class="fas fa-share-alt"></i>COMPARTIR
+                        <i class="fas fa-share-alt"></i>{{ __('frontend.share') }}
                     </a>
                     <a 
                         class="btn {{ $clase }}"

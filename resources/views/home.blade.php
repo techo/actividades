@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    TECHO: Bienvenido
+    TECHO: {{ __('frontend.welcome') }}
 @endsection
 
 @section('main_image')
@@ -16,6 +16,7 @@
           <source srcset="{{ asset('/img/hero-mobile.jpg') }}" media="(max-width: 720px)">
           <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
         </picture>
+        <h1 class="text-uppercase">{{ __('frontend.title') }}</h1>
         <h1 class="text-uppercase mobile">Transformemos esta realidad</h1>
         <div class="techo-hero-text" >
             <h1 class="text-uppercase desktop">Transformemos esta realidad</h1>
@@ -30,7 +31,8 @@
 @endsection
 
 @section('main_content')
-    <h1 class="text-primary font-weight-bold">¿En qué actividad quieres participar?</h1>
+    <h1 class="text-primary font-weight-bold text-center">{{ __('frontend.which_type_of_activity') }}</h1>
+    
     <div class="card-deck home">
         @while($categoriaActividad->count() > 0)
             @php($i = 0)
@@ -41,7 +43,7 @@
                             <img
                                     class="card-img-top img-fluid"
                                     src="{{ $categoria->imagen }}"
-                                    alt="{{ $categoria->nombre }}"
+                                    alt="{{ __('frontend.'.$categoria->nombre) }}"
                                     width="380"
                             >
                         </a>
@@ -50,7 +52,7 @@
                             <p class="card-text">{{ $categoria->descripcion }}</p>
                             <p>
                                 <a class="techo-h6 techo-blue" data-toggle="collapse" href="#collapse_{{ $categoria->id }}" role="button">
-                                    Actividades a Realizar <i class="fas fa-chevron-down"></i>
+                                    {{  __('frontend.activities_types') }} <i class="fas fa-chevron-down"></i>
 
                                 </a>
                             </p>
@@ -61,7 +63,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <a href="/actividades?categoria={{ $categoria->id }}" class="btn btn-primary">{{ $categoria->nombre == "Eventos Especiales" ? "Ver eventos" : "Quiero saber más"}}</a>
+                            <a href="/actividades?categoria={{ $categoria->id }}" class="btn btn-primary">{{ __('frontend.view_activities')}}</a>
                         </div>
                     </div>
                 @php($i++)

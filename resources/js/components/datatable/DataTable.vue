@@ -7,7 +7,7 @@
       v-bind:api-url="apiUrl"
       :fields="dataFields"
       pagination-path=""
-      noDataTemplate="No hay registros para mostrar"
+      v-bind:noDataTemplate="$t('frontend.empty_records')"
       :css="css.table"
       :sort-order="dataSortOrder"
       :multi-sort="true"
@@ -19,9 +19,9 @@
     <div class="vuetable-pagination">
       <vuetable-pagination-info
               ref="paginationInfo"
-              infoTemplate="Mostrando {from} de {to} de un total de {total} actividades"
+              v-bind:infoTemplate="$t('frontend.pagination_detail', { of: 10, total: 'millon' })"
               info-class="pagination-info"
-              noDataTemplate="No hay registros para mostrar"
+              v-bind:noDataTemplate="$t('frontend.empty_records')"
       ></vuetable-pagination-info>
       <vuetable-pagination ref="pagination"
         :css="css.pagination"

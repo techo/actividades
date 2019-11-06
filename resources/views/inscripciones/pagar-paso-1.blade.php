@@ -14,7 +14,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h2 class="card-subtitle">¡Sólo queda un paso! Confirmar la participación con tu donación.</h2>
+            <h2 class="card-subtitle"> {{ __('frontend.last_step_confirm_by_donation') }}</h2>
         </div>
         <hr>
     </div>
@@ -22,7 +22,7 @@
         <div class="col-md-9">
             <h3 class="card-title">
                 <br>
-                Estás pre-inscripto a
+                {{ __('frontend.you_are_pre_registered') }}
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
@@ -32,17 +32,17 @@
     <div class="row justify-content-start">
         <div class="col-md-9">
             <p>
-                Te enviamos por mail toda la información de la actividad.</a>
+                {{ __('frontend.mail_sended') }}</a>
             </p>
             <h3>
-                Podés realizar tu donación:
+                {{ __('frontend.complete_registration') }}
             </h3>
-            <p>
+         {{--    <p>
                 <ul>
                     <li>Completando el monto a donar en esta misma página.</li>
                     <li>Siguiendo las instrucciones del mail que recibiste.</li>
                 </ul>
-            </p>
+            </p> --}}
             <br>
             @if($actividad->pago == 1)
                     <form action="{{ action('InscripcionesController@donacionCheckout', ['id' => $actividad->idActividad]) }}" method="POST">
@@ -51,7 +51,7 @@
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <p class="font-weight-bold">MONTO A DONAR</p>
+                                        <p class="font-weight-bold">{{ __('frontend.donation_ammount') }}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -59,10 +59,9 @@
                                         <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto"
                                                min="1" required step="0.1">
                                         @if ($actividad->montoMax === '0.00')
-                                            <p>Donación sugerida: {{$actividad->montoMin}} ({{$actividad->moneda}}$)</p>
+                                            <p>{{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}$)</p>
                                         @else
-                                            <p>Donación sugerida: Entre {{$actividad->montoMin}}
-                                                y {{$actividad->montoMax}} ({{$actividad->moneda}}$)</p>
+                                            <p> {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}$)</p>
                                         @endif
                                     </div>
                                 </div>
@@ -71,12 +70,12 @@
                                 <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p class="font-weight-bold"> &nbsp;o también podés</p>
+                                            <p class="font-weight-bold"> &nbsp;{{__('frontend.also_you_can') }}</p>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">SOLICITAR UNA BECA</a>
+                                            <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">{{ __('frontend.ask_for_grant') }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -86,12 +85,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                     @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-                                        <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
+                                        <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                                     @else
-                                        <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
+                                        <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                                     @endif
                                 
-                                <button type="submit" class="btn btn-primary" style="margin: 0 16px;">SIGUIENTE</button>
+                                <button type="submit" class="btn btn-primary" style="margin: 0 16px;">{{ __('frontend.continue') }}</button>
                             </div>
                         </div>
 

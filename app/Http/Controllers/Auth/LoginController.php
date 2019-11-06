@@ -80,7 +80,7 @@ class LoginController extends Controller
         return response(
             [
                 'success' => false,
-                'message' => 'El correo electrónico y/o la contraseña es incorrecta'
+                'message' => __('frontend.login_error')
             ], 403
         );
     }
