@@ -52,7 +52,7 @@
                                                        required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="password">Contraseña</label>
+                                                <label for="password">{{ $t('frontend.password') }}</label>
                                                 <input type="password"
                                                        v-bind:class="{ 'is-invalid': hasError }"
                                                        v-model="credentials.password"
@@ -284,7 +284,11 @@
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 if(this.credentials.mail === "" || this.credentials.password === ""){
                     this.hasError = true;
+<<<<<<< HEAD
                     this.mensajeError = this._i18n.t('frontend.login_error');
+=======
+                    this.mensajeError = "Usuario y contraseña son requeridos";
+>>>>>>> traduccion al ingles
 
                     return
                 }

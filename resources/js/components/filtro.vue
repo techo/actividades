@@ -35,7 +35,7 @@
         <div class="borrar-filtros col-xs-12 col-md-2 col-lg-1 mr-md-3 pl-lg-0">
             <span class="btn btn-default boton-filtro text-center" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
-                Borra Filtros
+                {{ $t('frontend.delete_filter') }}
             </span>
         </div>
     </div>

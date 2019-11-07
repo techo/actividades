@@ -21,6 +21,7 @@ return [
     'login_google' => 'Ingresá con Google',
     'mail' => 'Mail',
 	'mail_placeholder' => 'Ingresá tu Mail',
+	'password' => 'Contraseña',
 	'password_placeholder' => 'Ingresá tu contraseña',
 	'not_a_volunteer' => '¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?',
 	'volunteer_me' => '¡Quiero ser voluntario!',
@@ -44,6 +45,33 @@ return [
 	'activities_types' => 'Tipos de Actividad',
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
+
+
+	// perfil/perfil.vue
+	'changes_success'  =>  'Los cambios fueron guardados con éxito.',
+	'profile_text_1'  =>  'Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña y datos personales.',
+    'profile_text_2'  =>  'También podés',
+    'profile_text_3'  =>  'cambiar tu dirección de email',
+    'personal_data'  =>  'Datos personales',
+    'name'  =>  'NOMBRE*',
+    'surname'  =>  'APELLIDO*',
+    'born_date'  =>  'NACIMIENTO*',
+    'gender'  =>  'GENERO*',
+    'gender_m'  =>  'Masculino',
+    'gender_x'  =>  'Other</b-form-radio>',
+    'gender_o'  =>  'Prefiero no decirlo',
+    'passport'  =>  'NRO. DE DNI / PASAPORTE*',
+    'country'  =>  'PAIS*',
+	'state'  =>  'PROVINCIA',
+	'city'  =>  'LOCALIDAD',
+	'telphone'  =>  'TELEFONO*',
+	'actual_password'  =>  'CONTRASEÑA ACTUAL*',
+	'new_password'  =>  'NUEVA CONTRASEÑA*',
+    'confirm_new_password'  =>  'CONFIRMAR CONTRASEÑA*',
+    'platform_notifications_agreement'  =>  'Recibir notificaciones operativas de la plataforma (necesario para mantenerte informado de las actividades en las que participas)',
+    'techo_notifications_agreement'  =>  'Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas',
+	'save'  =>  'Guardar', 
+    'delete_account'  =>  'Eliminar mi cuenta',
 
 
 	// perfil/actividades
@@ -125,7 +153,10 @@ return [
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscripto y modificarlas ingresá a ',
 
 
-
+	// actividades/index.blade.php
+	'index_actividades_text' =>  'Si te da lo mismo, estás haciendo mal las cuentas',
+	'index_actividades_text_2' => 'Anotate y participá',
+	'delete_filter' => 'Borrar Filtros',
 
 
 

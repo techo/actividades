@@ -4,29 +4,31 @@
         <div>
             <div class="row">
                 <div class="col-md-12">
-                    <h2>Bienvenido, {{usernombre}} ({{ user.email }})</h2>
+                    <h2>{{ $t('frontend.welcome') }}, {{usernombre}} ({{ user.email }})</h2>
                 </div>
             </div>
             <div class="alert alert-success" v-show='guardo'>
-                <strong>Los cambios fueron guardados con éxito.</strong>
+                <strong>{{ $t('frontend.changes_success') }}</strong>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <p>Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña y datos personales.</p>
-                    <p>También podés <a href="/perfil/cambiar_email">cambiar tu dirección de email</a>.</p>
+                    <p>{{ $t('frontend.profile_text_1') }}</p>
+                    <p>{{ $t('frontend.profile_text_2') }} 
+                        <a href="/perfil/cambiar_email">
+                        {{ $t('frontend.profile_text_3') }}</a>.</p>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-5">
-                    <h5>Datos personales</h5>
+                    <h5>{{ $t('frontend.personal_data') }}</h5>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>NOMBRE*</label>
+                            <label>{{ $t('frontend.name') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -44,7 +46,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>APELLIDO*</label>
+                            <label>{{ $t('frontend.surname') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -64,7 +66,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>NACIMIENTO*</label>
+                            <label>{{ $t('frontend.born_date') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -82,16 +84,17 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>GENERO*</label>
+                            <label>{{ $t('frontend.gender') }}</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-10">
                             <b-form-group>
                                 <b-form-radio-group id="radios2" v-model="user.sexo">
-                                    <b-form-radio value="F">Femenino</b-form-radio>
-                                    <b-form-radio value="M">Masculino</b-form-radio>
-                                    <b-form-radio value="O">Prefiero no decirlo</b-form-radio>
+                                    <b-form-radio value="F">{{ $t('frontend.gender_f') }}</b-form-radio>
+                                    <b-form-radio value="M">{{ $t('frontend.gender_m') }}</b-form-radio>
+                                    <b-form-radio value="X">{{ $t('frontend.gender_x') }}</b-form-radio>
+                                    <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio>
                                 </b-form-radio-group>
                             </b-form-group>
                         </div>
@@ -110,7 +113,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>NRO. DE DNI / PASAPORTE*</label>
+                            <label>{{ $t('frontend.passport') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -127,7 +130,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>PAIS*</label>
+                            <label>{{ $t('frontend.country') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -148,7 +151,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>PROVINCIA</label>
+                            <label>{{ $t('frontend.state') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -169,7 +172,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>LOCALIDAD</label>
+                            <label>{{ $t('frontend.city') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -192,7 +195,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>TELEFONO*</label>
+                            <label>{{ $t('frontend.telphone') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -210,18 +213,19 @@
             </div>
             <div class="row">
                 <div class="col-md-5">
-                    <h5>Contraseña</h5>
+                    <h5>{{ $t('frontend.password') }}</h5>
                 </div>
             </div>
             <p v-if="loginSocial" class="text-muted">
-                Tu cuenta está vinculada a una red social, para cambiar tu contraseña debes
-                <a href="#" @click="this.logout">cerrar la sesión</a>
-                y hacer click en "<em>Olvidé mi contraseña</em>".
+                {{ $t('frontend.account_rrss_text_1') }}
+                <a href="#" @click="this.logout">{{ $t('frontend.logout') }}</a>
+                {{ $t('frontend.account_rrss_text_2') }}
+                <em>{{ $t('frontend.forget_password') }}</em>
             </p>
             <div class="col-md-5" v-else>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>CONTRASEÑA ACTUAL*</label>
+                        <label>{{ $t('frontend.actual_password') }}</label>
                     </div>
                 </div>
 
@@ -240,7 +244,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>NUEVA CONTRASEÑA*</label>
+                        <label>{{ $t('frontend.new_password') }}</label>
                     </div>
                 </div>
                 <div class="row">
@@ -257,7 +261,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>CONFIRMAR CONTRASEÑA*</label>
+                        <label>{{ $t('frontend.confirm_new_password') }}</label>
                     </div>
                 </div>
                 <div class="row">
@@ -282,7 +286,7 @@
                     <div class="form-check">
                         <input v-model="user.recibirMails" class="form-check-input" type="checkbox" id="recibirMails">
                         <label class="form-check-label" for="recibirMails">
-                            Recibir notificaciones operativas de la plataforma (necesario para mantenerte informado de las actividades en las que participas)
+                            {{ $t('frontend.platform_notifications_agreement') }}
                         </label>
                     </div>
                 </div>
@@ -292,7 +296,7 @@
                     <div class="form-check">
                         <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
                         <label class="form-check-label" for="acepta_marketing">
-                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                            {{ $t('frontend.techo_notifications_agreement') }}
                         </label>
                     </div>
                 </div>
@@ -303,11 +307,11 @@
                 <div class="col-md-12">
                     <span v-show='volver'>
                         <button @click="cancelar()" class="btn btn-link" :disabled="!formDirty">
-                            Cancelar
+                            {{ $t('frontend.cancel') }}Cancelar
                         </button>
                     </span>
-                    <button class="btn btn-primary" href="#" @click="guardar()" :disabled="!formDirty">Guardar</button> 
-                    <button class="btn btn-danger" href="#" @click="eliminar()">Eliminar mi cuenta</button>
+                    <button class="btn btn-primary" href="#" @click="guardar()" :disabled="!formDirty">{{ $t('frontend.save') }}</button> 
+                    <button class="btn btn-danger" href="#" @click="eliminar()">{{ $t('frontend.delete_account') }}</button>
                 </div>
             </div>
             <hr>
