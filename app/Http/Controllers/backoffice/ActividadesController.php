@@ -47,7 +47,6 @@ class ActividadesController extends Controller
         $edicion = true;
         $paises = Pais::has("provincias")->get();
         $columns = Schema::getColumnListing('Actividad');
-        $columns = array_diff($columns);
         $arrayColumnas = array_fill_keys($columns, null);
 
 
