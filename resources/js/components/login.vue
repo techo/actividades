@@ -284,7 +284,7 @@
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 if(this.credentials.mail === "" || this.credentials.password === ""){
                     this.hasError = true;
-                    this.mensajeError = this.i18n.t('frontend.error_login');
+                    this.mensajeError = this._i18n.t('frontend.login_error');
 
                     return
                 }
