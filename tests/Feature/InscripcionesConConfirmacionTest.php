@@ -181,7 +181,7 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMAR')
+            ->assertSee('CONFIRMÁ')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
