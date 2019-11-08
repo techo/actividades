@@ -22,6 +22,7 @@ class PuntoEncuentroResource extends Resource
             'localidad' => $this->localidad,
             'responsable' => new PersonaResource($this->responsable),
             'borrable' => true,
+            'estado' => $this->estado,
         ];
     }
 }

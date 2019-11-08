@@ -402,6 +402,7 @@ class ActividadesController extends Controller
         $p->idPais = $punto['idPais'];
         $p->idProvincia = $punto['idProvincia'];
         $p->idPersona = $punto['responsable']['idPersona'];
+        $p->estado = $punto['estado'];
         $p->save();
         return $punto;
     }
@@ -414,6 +415,7 @@ class ActividadesController extends Controller
         $punto->idPais = $editado['idPais'];
         $punto->idProvincia = $editado['idProvincia'];
         $punto->idPersona = $editado['responsable']['idPersona'];
+        $punto->estado = $editado['estado'];
         $punto->save();
         return $punto;
     }

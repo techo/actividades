@@ -7,6 +7,7 @@ use App\Exports\ActividadesExport;
 use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
+use App\Exports\EvaluacionesGeneralesExport;
 use App\Exports\InscripcionesUsuarioExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\InscripcionesGeneralExport;
@@ -33,7 +34,7 @@ class ReportController extends Controller
     {
         $filtros['idActividad'] = $id;
 
-        if(!empty($request->filter)){
+        if($request->filter){
             $filtros['HotFilter'] = $request->filter;
             unset($filtros['filter']);
         }
@@ -60,6 +61,12 @@ class ReportController extends Controller
         return Excel::download($inscripciones, 'inscripciones.xlsx');
     }
 
+    public function exportarEvaluacionesGenerales(Request $request)
+    {
+        $evaluaciones = new EvaluacionesGeneralesExport($request);
+        return Excel::download($evaluaciones, 'evaluaciones.xlsx');
+    }
+    
     public function exportarEvaluacionesPersonas($id)
     {
         $actividad = Actividad::find($id);

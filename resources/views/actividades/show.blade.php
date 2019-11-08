@@ -72,9 +72,10 @@
 			</div>
 		</div>
 		@foreach($actividad->puntosEncuentro as $puntoEncuentro)
-			<div class="row">
+            @if($puntoEncuentro->estado)
+		      <div class="row">
                 <div class="col-md-4">
-				{{$puntoEncuentro->punto}}
+				    {{$puntoEncuentro->punto}}
                 </div>
                 <div class="col-md-4">
                     @php
@@ -87,7 +88,8 @@
                 <div class="col-md-4">
                     <strong>Referente:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto : "No definido"}}
                 </div>
-			</div>
+		      </div>
+            @endif
 		@endforeach
 @endsection
 

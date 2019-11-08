@@ -8,15 +8,16 @@
 
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
-					<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true;">Actividades</a></li>
-					<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;">Inscriptos</a></li>
+					<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true; display.evaluaciones = false;">Actividades</a></li>
+					<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;display.evaluaciones = false;">Inscriptos</a></li>
+					<li :class="{'active': display.evaluaciones}"><a href="#evaluaciones" data-toggle="tab" @click.prevent="display.inscriptos = false; display.evaluaciones = true; display.actividades = false;">Evaluaciones</a></li>
 				</ul>
 			</div>
 
 			<div class="tab-content" style="min-height: 500px">
 				<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportar()" >Descargar datos <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarInscriptos()" >Descargar datos <i class="fa fa-download"></i></button>
 					</div>
 
 					<div style="height: 200px" >
@@ -26,6 +27,15 @@
 				<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
 					<div style="height: 200px" >
 						<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
+					</div>
+				</div>
+				<div id="evaluaciones" class="tab-pane" :class="{'active': display.evaluaciones}" >
+					<div style="text-align: right">
+						<button class="btn btn-default" @click="exportarEvaluaciones()" >Descargar datos <i class="fa fa-download"></i></button>
+					</div>
+
+					<div style="height: 200px" >
+						<line-chart ref="graficoevaluaciones" v-if="loaded.evaluaciones" :chartData="dataEvaluaciones" :options="options"></line-chart>
 					</div>
 				</div>
 			</div>
@@ -50,14 +60,17 @@ export default {
 			display: {
 				inscriptos: false,
 				actividades: true,
+				evaluaciones: false,
 			},
 			loaded: {
 				inscriptos: false,
 				actividades: false,
+				evaluaciones: false,
 			},
 			loading: false,
 			dataActividades: { labels: [], datasets: [] },
 			dataInscriptos: { labels: [], datasets: [] },
+			dataEvaluaciones: { labels: [], datasets: [] },
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
@@ -79,20 +92,35 @@ export default {
 	computed: {
 		inscriptos() {
 			return this.display.inscriptos;
+		},
+		evaluaciones() {
+			return this.display.evaluaciones;
 		}
 	},
 	watch: {
 		inscriptos (v) {
-			if(v == true && this.loaded.inscriptos == false)
-				this.datos_inscripciones();
+			if(v == true && this.loaded.inscriptos == false){
+				this.display.evaluaciones = false;
+				this.display.actividades = false;	
+				this.datos_inscripciones();		
+			}
+		},
+		evaluaciones (v) {
+			if(v == true && this.loaded.evaluaciones == false){
+				this.display.inscriptos = false;
+				this.display.actividades = false;
+				this.datos_evaluaciones();
+			}
 		},
 	},
 	methods: {
 		filtrar () {
 			if(this.display.actividades)
 				this.datos_actividades();
-			else
+			else if (this.display.inscriptos)
 				this.datos_inscripciones();
+			else
+				this.datos_evaluaciones();
 		},
 		datos_actividades: function () {
 			this.loading = true;
@@ -166,7 +194,39 @@ export default {
 			})
 			.catch((error) => { debugger; });
 		},
-		exportar: function() {
+		datos_evaluaciones: function () {
+			this.loading = true;
+			this.dataEvaluaciones.labels = [];
+			this.dataEvaluaciones.datasets = [];
+			axios.get('/admin/ajax/estadisticas/grafico-evaluaciones', { params: this.filtros } )
+			.then((data) => {
+				if(data.data.length == 0) {
+					this.dataEvaluaciones.datasets = [];
+					this.dataEvaluaciones.labels = [];
+					this.loaded.evaluaciones = true;
+					this.loading = false;
+				}
+				this.dataEvaluaciones.labels = data.data.meses;
+
+				this.dataEvaluaciones.datasets[0] = {
+		            label: 'Sociales',
+		            data: data.data.puntajeSocial,
+		            borderWidth: 1, lineTension: 0, fill: false, borderWidth: 6
+			    };
+			    this.dataEvaluaciones.datasets[1] = {
+		            label: 'Técnicas',
+		            data: data.data.puntajeTecnico,
+		            borderColor: '#4ac0c1',
+		            borderWidth: 1, lineTension: 0, fill: false, borderWidth: 6
+			    }
+				this.loaded.evaluaciones = true;
+				this.loading = false;
+				if(this.$refs.graficoevaluaciones != undefined)
+					this.$refs.graficoevaluaciones.$data._chart.update()
+			})
+			.catch((error) => { debugger; });
+		},
+		exportarInscriptos: function() {
 			this.loading = true;
 			//https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743
 			axios({
@@ -182,13 +242,36 @@ export default {
 				const url = window.URL.createObjectURL(new Blob([response.data]));
 				const link = document.createElement('a');
 				link.href = url;
-				link.setAttribute('download', 'file.xlsx');
+				link.setAttribute('download', 'Insciptos.xlsx');
 				document.body.appendChild(link);
 				link.click();
 				this.loading = false;
 			})
 			.catch((error) => { debugger; });
-		}
+		},
+		exportarEvaluaciones: function() {
+			this.loading = true;
+			//https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743
+			axios({
+				url: '/admin/ajax/estadisticas/evaluaciones/exportar', 
+				params: this.filtros,
+				responseType: 'blob',
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+				}
+			})
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'evaluacionesGenerales.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				this.loading = false;
+			})
+			.catch((error) => { debugger; });
+		},
 	},
 }
 </script>

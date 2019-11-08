@@ -37,6 +37,7 @@ class EstadisticasController extends Controller
 
     public function personas_movilizadas()
     {
+
         $personas = \App\Inscripcion::whereYear('Inscripcion.fechaInscripcion', now()->year)
             ->where('Inscripcion.presente', 1)
             ->select(DB::raw('count(distinct Inscripcion.idPersona) as cantidad'))

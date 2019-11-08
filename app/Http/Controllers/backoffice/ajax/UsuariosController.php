@@ -84,6 +84,23 @@ class UsuariosController extends Controller
         return response($validator->errors()->all(), 422);
     }
 
+    public function fusionar(Persona $persona, Request $request)
+    {
+        $messages = [
+            'idPersona.not_in' => 'No se puede fusionar una cuenta consigo misma',
+        ];
+        
+        $validado = $request->validate([
+            'idPersona' => 'required|exists:Persona|not_in:' . $persona->idPersona,
+        ], $messages);
+
+        $target = Persona::find($validado['idPersona']);
+
+        $persona->fusionar($target);
+
+        return response('ok', 200);
+    }
+
     public function inscripciones($persona, Request $request)
     {
         $sort = 'fechaInscripcion desc';

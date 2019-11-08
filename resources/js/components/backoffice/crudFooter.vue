@@ -3,7 +3,7 @@
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
         <div class="row hidden-sm">
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-4">
                 <button class="btn btn-default" @click="cancelar">
                     <i class="fa fa-arrow-circle-left"></i> Volver al listado
                 </button>
@@ -19,7 +19,11 @@
                     Clonar Actividad
                 </button>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-5">
+                <button class="btn btn-primary" v-show="readonly && canFusionar" @click="fusionar">
+                    <i class="fa fa-random"></i>
+                    Fusionar
+                </button>
                 <button class="btn btn-primary" v-show="readonly && canEditar" @click="editar">
                     <i class="fa fa-edit"></i>
                     Editar
@@ -28,7 +32,6 @@
                     <i class="fa fa-trash"></i>
                     Borrar
                 </button>
-
                 <button class="btn btn-success" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
                     Guardar
@@ -87,7 +90,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar', 'canFusionar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")
@@ -148,6 +151,10 @@
                         Event.$emit('clonar');
                     }
                 })
+            },
+
+            fusionar: function () {
+                Event.$emit('fusionar');
             },
 
             guardar: function () {
