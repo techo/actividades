@@ -87,6 +87,7 @@
                                         </form>
                                     </div>
                                 </div>
+                                <hr class="ml-5 mr-5">
                                 <div class="row pl-5 mt-4">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary facebook" @click="registro_facebook()"><i
