@@ -8,7 +8,7 @@
 				</div>
 				
 				<div> 
-					<h3>  {{ personas_movilizadas.length }} </h3> 
+					<h3>  {{ personas_movilizadas.cantidad }} </h3> 
 					<span>Personas Movilizadas</span>
 				</div>
 

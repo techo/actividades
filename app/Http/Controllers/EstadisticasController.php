@@ -37,12 +37,10 @@ class EstadisticasController extends Controller
 
     public function personas_movilizadas()
     {
-        $personas = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.IdPersona')
-            ->whereYear('Inscripcion.fechaInscripcion', now()->year)
+        $personas = \App\Inscripcion::whereYear('Inscripcion.fechaInscripcion', now()->year)
             ->where('Inscripcion.presente', 1)
-            ->groupBy('Persona.idPersona')
-            ->select(DB::raw('Persona.idPersona, count(*)'))
-            ->get();
+            ->select(DB::raw('count(distinct Inscripcion.idPersona) as cantidad'))
+            ->first();
 
         return $personas; 
     }
