@@ -16,30 +16,30 @@
                             <div class="col-md-6 registro">
                                 <div class="row h-100 justify-content-center align-items-center">
                                     <div class="col">
-                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                        <h1>¿Primera vez por acá?</h1>
                                         <br>
                                         <a
                                                 href="/registro"
                                                 class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
                                         >
-                                            ¡Quiero ser voluntario!
+                                            ¡CREA TU CUENTA!
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="row pl-4 m-3">
+                              <!--  <div class="row m-3">
                                     <div class="col-md-12">
                                         <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo"
                                              height="25" width="95">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <h2>Ingresar a tu perfil</h2>
+                                        <h2></h2>
                                     </div>
-                                </div>
-                                <div class="row pl-4 m-3">
+                                </div> 
+                                <div class="row pl-3 pr-3 m-2">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
                                             <div class="form-group">
@@ -80,20 +80,20 @@
                                                         Ingresar
                                                     </button>
                                                 </div>
-                                                <div class="col-6 text-left">
+                                                <div class="col-6 text-right">
                                                     <a href="/password/reset">Olvidé mi contraseña</a>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-5 mt-4">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary facebook" @click="registro_facebook()"><i
                                                 class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
                                     </div>
                                 </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pb-3 pl-5">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary google" @click="registro_google()"><i
                                                 class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
