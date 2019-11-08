@@ -39,6 +39,13 @@ return [
 	'login_error' => 'El correo electrónico y/o la contraseña es incorrecta',
 
 
+	// reset.blade
+	'reset_password' => 'Restablecer Contraseña',
+
+	//email.blade
+	'send_link' => 'Enviar enlace',
+
+
 	// home
 	'title' => 'Transformemos esta realidad',
 	'which_type_of_activity' => '¿En qué actividad querés participar?',
@@ -58,7 +65,7 @@ return [
     'born_date'  =>  'NACIMIENTO*',
     'gender'  =>  'GENERO*',
     'gender_m'  =>  'Masculino',
-    'gender_x'  =>  'Other</b-form-radio>',
+    'gender_x'  =>  'Other',
     'gender_o'  =>  'Prefiero no decirlo',
     'passport'  =>  'NRO. DE DNI / PASAPORTE*',
     'country'  =>  'PAIS*',
@@ -72,6 +79,11 @@ return [
     'techo_notifications_agreement'  =>  'Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas',
 	'save'  =>  'Guardar', 
     'delete_account'  =>  'Eliminar mi cuenta',
+ 	'account_rrss_text_1' => 'Tu cuenta está vinculada a una red social, para cambiar tu contraseña debes',
+ 	'account_rrss_text_2' => 'y hacer click en',
+ 	'delete_account_message' => "Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
+ 	'delete_account_confirm_button' =>'SI, ELIMINAR',
+
 
 
 	// perfil/actividades
@@ -96,6 +108,11 @@ return [
 	'unapply' => 'Desinscribirme',
 	'absent' => 'Ausente',
 	'evaluations_start_on' => 'Las evaluaciones comienzan el',
+	'unenroll_title' => 'DESINSCRIBIRME DE ACTIVIDAD',
+	'message_1' => 'Estás por desinscribirte de la actividad',
+	'message_2' => ' se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?',
+	'unenroll_button' => 'SI, DESINSCRIBIRME',
+
 
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filtrar por',
@@ -139,6 +156,8 @@ return [
 	'ask_for_grant' => 'SOLICITAR UNA BECA',
 	'go_back' => 'VOLVER',
 	'continue' => 'SIGUIENTE',
+	'cancel' => 'SIGUIENTE',
+	'unenroll' => 'SIGUIENTE',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirma con tu pago',

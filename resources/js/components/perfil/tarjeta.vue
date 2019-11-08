@@ -77,15 +77,15 @@
             desincribir: function (idActividad) {
                 let self = this;
                 self.$refs.confirmar.openSimplert({
-                    title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
+                    title: this._i18n.t('frontend.unenroll_title'),
+                    message: this._i18n.t('frontend.message_1') + self.inscripcion.nombreActividad + this._i18n.t('frontend.message_2'),
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
                     customClass: 'confirmar',
-                    customCloseBtnText: 'CANCELAR', //string -- close button text
+                    customCloseBtnText: this._i18n.t('frontend.message_1'), //string -- close button text
                     customCloseBtnClass: 'btn btn-default', //string -- custom class for close button
-                    customConfirmBtnText: 'SI, DESINSCRIBIRME', //string -- confirm button text
+                    customConfirmBtnText: this._i18n.t('frontend.unenroll_button'), //string -- confirm button text
                     customConfirmBtnClass: 'btn btn-danger mb-1', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario/inscripciones/' + idActividad).then(response => {

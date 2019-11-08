@@ -542,15 +542,15 @@
             eliminar: function () {
                 let self = this;
                 self.$refs.confirmar.openSimplert({
-                    title:'ELIMINAR MI CUENTA',
-                    message:"Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
+                    title:this._i18n.t('frontend.delete_account'),
+                    message:this._i18n.t('frontend.delete_account_message'),
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
                     customClass: 'confirmar',
-                    customCloseBtnText: 'CANCELAR', //string -- close button text
+                    customCloseBtnText: this._i18n.t('frontend.go_back'), //string -- close button text
                     customCloseBtnClass: 'btn btn-secondary', //string -- custom class for close button
-                    customConfirmBtnText: 'SI, ELIMINAR', //string -- confirm button text
+                    customConfirmBtnText: this._i18n.t('frontend.delete_account_confirm_button'), //string -- confirm button text
                     customConfirmBtnClass: 'btn btn-danger', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario').then(response => {
