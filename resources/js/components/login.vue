@@ -16,13 +16,14 @@
                             <div class="col-md-6 registro">
                                 <div class="row h-100 justify-content-center align-items-center">
                                     <div class="col">
-                                        <h1>¿Primera vez por acá?</h1>
+                                        <h1>¿PRIMERA VEZ POR ACÁ?</h1>
                                         <br>
                                         <a
                                                 href="/registro"
                                                 class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
+                                                style="font-weight: 600;"
                                         >
-                                            ¡CREA TU CUENTA!
+                                            ¡REGISTRATE!
                                         </a>
                                     </div>
                                 </div>
@@ -81,7 +82,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="col-6 text-right">
-                                                    <a href="/password/reset">Olvidé mi contraseña</a>
+                                                    <a href="/password/reset" class="forget">Olvidé mi contraseña</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -90,13 +91,13 @@
                                 <hr class="ml-5 mr-5">
                                 <div class="row pl-5 mt-4">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i
+                                        <a class="btn btn-primary tag-social facebook" @click="registro_facebook()"><i
                                                 class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
                                     </div>
                                 </div>
                                 <div class="row pb-3 pl-5">
                                     <div class="col-md-12">
-                                        <a class="btn btn-primary google" @click="registro_google()"><i
+                                        <a class="btn btn-primary tag-social google" @click="registro_google()"><i
                                                 class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
                                     </div>
                                 </div>
@@ -376,6 +377,12 @@
      font-size: 1.4rem;
     }
 
+    .tag-social {
+        line-height: 1.33;
+        font-size: 12px;
+        width: 269px;
+    }
+
     .registro {
         background-color: #0092dd;
         font-weight: bold;
@@ -390,12 +397,18 @@
             padding-top: 10%;
             padding-bottom: 10%;
         }
+        .tag-social {
+            width:  fit-content;
+            font-size: .75rem;
+        }
     }
 
     .registro h1{
-    vertical-align: middle;
-     font-family: Montserrat, sans-serif;
+        vertical-align: middle;
+        font-family: Montserrat, sans-serif;
+        font-size: 2rem;
     }
+    
     .dropdown-item {
         font-family: Montserrat, sans-serif;
         text-transform: uppercase;
