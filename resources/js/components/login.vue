@@ -129,7 +129,9 @@
 
                 <div class="locale-changer col-md-2 offset-md-2 d-none d-md-block">
                     <select v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
-                        <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang">{{ lang }}</option>
+                        <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                            {{ lang[1] }}
+                        </option>
                     </select>
                 </div>
 
@@ -228,7 +230,7 @@
                     id: ''
                 },
                 verAdmin: this.veradmin,
-                langs: ['es_AR', 'en', 'pt'],
+                langs: [['es_AR', 'ES'],['en', 'EN'],['pt_BR','PT']],
             };
             
             if(this.usuario) {
