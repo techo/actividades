@@ -195,7 +195,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>{{ $t('frontend.telphone') }}</label>
+                            <label>{{ $t('frontend.telephone') }}</label>
                         </div>
                     </div>
                     <div class="row">

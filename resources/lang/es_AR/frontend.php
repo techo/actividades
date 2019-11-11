@@ -53,6 +53,33 @@ return [
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
 
+		// registro.vue
+	'register' => 'Registrate',
+	'finish' => 'Finalizar',
+	'step_1' => 'PASO 1/3',
+	'step_2' => 'PASO 2/3',
+	'step_3' => 'PASO 3/3',
+    'register_facebook' => 'Registrate con Facebook',
+    'register_google' => 'Registrate con Google',
+    'create_password' => 'Crear nueva Contraseña',
+    'almost_there' => '¡Ya casi terminamos!',
+    'i_accept_the' => 'Acepto la ' ,
+    'privacy_policy' => 'Politica de Privacidad',
+    'error_privacy_policy' => 'Debe aceptar las políticas de privacidad para continuar',
+	'already_register' => 'Ya estás registrado/a como voluntario/a, te esperamos!! ;)',
+	'search_activities' => 'BUSCAR ACTIVIDADES',
+	'link_to_rrss' => 'Confimar Link Red Social',
+	'link_rrss_techo' => 'Relacionar la cuenta de techo con tu cuenta de red social',
+	'confirm' => 'Confirmar',	
+
+	// verify.blade.php
+	'confirm_your_email' => 'Verificar dirección de email',
+    'verify_email_message_1' => 'Se envió un enlace de verificación a tu casilla de email',
+    'verify_email_message_2' => 'Para poder seguir, verificá tu casilla de email y hacé click en el enlace de verificación que te enviamos.',
+    'verify_email_message_3' => 'Si no recibiste el mail', 
+	'verify_email_resend' => 'hacé click para solicitar otro',
+
+
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'Los cambios fueron guardados con éxito.',
