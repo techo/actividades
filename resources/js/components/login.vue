@@ -114,20 +114,52 @@
                         <a class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
                         </a>
+                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">
+                                            {{ $t('frontend.hello') }}, {{ user.nombres }}
+                        </a>
                     </div>
                 </div>
                 
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
                 <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link text-uppercase" href="/actividades">{{ $t('frontend.activities') }} <span class="sr-only">(current)</span></a>
 
                         </li>
+                        
+
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="perfil">{{ $t('frontend.profile') }}</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
+                            <a class="nav-link text-uppercase" v-on:click="admin">{{ $t('frontend.admin') }}</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && this.docs">
+                            <a class="nav-link text-uppercase" v-on:click="ayuda">{{ $t('frontend.help') }}</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
+                        </li>
+                        <li class="locale-changer ">
+                            <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
+                                <option class="btn dropdown-item btnUser dropdown-toggle" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                                    {{ lang[1] }}
+                                </option>
+                            </select>
+                        </li>
                     </ul>
                 </div>
 
 
-                <div class="locale-changer col-md-2 offset-md-2 d-none d-md-block">
+                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block">
                     <select v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
                         <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                             {{ lang[1] }}
@@ -196,7 +228,7 @@
                     </div>
                 </div>
                 <!-- Si no esta autenticado -->
-                <form class="form-inline col-md-2 offset-md-4 " v-else>
+                <form class="form-inline col-md-2" v-else>
                     <button
                             class="btn btn-primary"
                             type="button"
