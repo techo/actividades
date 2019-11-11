@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
 
     @if(config('app.env') == 'production' && !empty(config('app.google_analytics_token')))
