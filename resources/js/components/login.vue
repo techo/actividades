@@ -127,12 +127,13 @@
 
                 <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link text-uppercase" href="/actividades">{{ $t('frontend.activities') }} <span class="sr-only">(current)</span></a>
-
-                        </li>
-                        
-
+                        <div class="btn-group" role="group">
+                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary btnUser dropdown-toggle" >Pais</button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item" type="button" v-on:click="pais('ar')">Argentina</button>
+                                <button class="dropdown-item" type="button" v-on:click="pais('bo')">Bolivia</button>
+                            </div>
+                        </div>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
                         </li>
@@ -292,6 +293,10 @@
 
         },
         methods: {
+            pais: function(codigo) {
+                //console.log('pais');
+                window.location.href = '/seleccionar-pais/' +  codigo;
+            },
             registro_facebook: function() {
               window.location.href = '/auth/facebook';
             },

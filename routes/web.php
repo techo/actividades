@@ -13,7 +13,7 @@ Route::get('/carta-voluntariado', function (){ return view('terminos.actividades
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
 Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
-Route::get('/seleccionar-pais/{id}', 'HomeController@seleccionarPais');
+Route::get('/seleccionar-pais/{codigo}', 'HomeController@seleccionarPais');
 Route::get('/deseleccionar-pais', 'HomeController@deseleccionarPais');
 
 // Ajax calls
