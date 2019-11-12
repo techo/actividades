@@ -37,7 +37,7 @@ class HomeController extends Controller
 
     public function seleccionarPais(Request $request, $codigo)
     {
-        $pais = \App\Pais::where('codigo', $codigo)->first();
+        $pais = \App\Pais::porCodigo($codigo);
         if($pais)
             $request->session()->put('pais', $pais->id);
         

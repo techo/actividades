@@ -124,14 +124,12 @@
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <div class="btn-group" role="group">
-                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary btnUser dropdown-toggle" >Pais</button>
+                        <div class="btn-group" role="group" ref="paises">
+                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary btnUser dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
                             <div class="dropdown-menu">
-                                <button class="dropdown-item" type="button" v-on:click="pais('ar')">Argentina</button>
-                                <button class="dropdown-item" type="button" v-on:click="pais('bo')">Bolivia</button>
+                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.codigo)">Argentina</button>
                             </div>
                         </div>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
@@ -248,7 +246,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais' ],
         data () {
             let data = {
                 credentials: {
@@ -263,6 +261,7 @@
                     id: ''
                 },
                 verAdmin: this.veradmin,
+                paises: [],
             };
             
             if(this.usuario) {
@@ -288,14 +287,20 @@
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
             }
+            this.paises_habilitados();
             //Eventos
             events.$on('cerrar-sesion', this.logout);
 
         },
         methods: {
-            pais: function(codigo) {
+            ir_a_pais: function(codigo) {
                 //console.log('pais');
                 window.location.href = '/seleccionar-pais/' +  codigo;
+            },
+            paises_habilitados: function() {
+                axios.get('/ajax/paises/habilitados')
+                    .then(respuesta => { this.paises = respuesta.data; })
+                    .catch(error => { debugger; });
             },
             registro_facebook: function() {
               window.location.href = '/auth/facebook';
