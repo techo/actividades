@@ -84,6 +84,8 @@ class ajaxActividadesTest extends TestCase
     /** @test */
     public function ver_detalle_de_actividad()
     {
+        $this->withoutExceptionHandling();
+        
         $actividad = factory('App\Actividad')->create();
 
         $this->get('/ajax/actividades/' . $actividad->idActividad)
