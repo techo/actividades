@@ -2,15 +2,14 @@
 
 @section('content')
     <p style="font-size: larger">
-        Hola {{$persona->nombres}},
+        @lang('frontend.hello') {{$persona->nombres}},
     </p>
     <p>
-        Te informamos que la actividad <strong>{{$actividad->nombreActividad}}</strong> de
-        TECHO - {{$pais->nombre}} que iniciaba el
-        {{$actividad->fechaInicio->format('d/m/Y')}}, ha sido <strong>CANCELADA</strong>
+        @lang('emails.activity_canceled_1') <strong>{{$actividad->nombreActividad}}</strong> de
+        TECHO - {{$pais->nombre}}  @lang('emails.begins_on')
+        {{$actividad->fechaInicio->format('d/m/Y')}}, @lang('emails.has_been') <strong>@lang('emails.cancelada')</strong>
     </p>
     <p>
-        Lamentamos cualquier inconveniente causado y te invitamos a entrar en el sitio de
-        Techo para buscar otras actividades.
+        @lang('emails.activity_canceled_2')
     </p>
 @endsection

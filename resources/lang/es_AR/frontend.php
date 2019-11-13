@@ -171,6 +171,11 @@ return [
 	// filtro.vue
 	'categories' => 'CATEGORÍAS',
 	'select_all' => 'Marcar Todas',
+
+
+ 	// contenedorchecktipoactividad
+ 	'activity_types' => 'Tipos de Actividad',
+
     
 	// actividades/show.blade.php
     'description' => '',
@@ -205,8 +210,8 @@ return [
 	'ask_for_grant' => 'SOLICITAR UNA BECA',
 	'go_back' => 'VOLVER',
 	'continue' => 'SIGUIENTE',
-	'cancel' => 'SIGUIENTE',
-	'unenroll' => 'SIGUIENTE',
+	'cancel' => 'CANCELAR',
+	'unenroll' => 'DESINSCRIBIRME',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirma con tu pago',

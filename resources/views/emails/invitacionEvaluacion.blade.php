@@ -3,18 +3,18 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$persona->nombres}},
+        @lang('frontend.hello') {{$persona->nombres}},
     </p>
 
     <p>
-        Queremos saber cómo te fue en
-        <strong>{{$actividad->nombreActividad}}</strong> de TECHO
+        @lang('email.evaluation_1') 
+        <strong>{{$actividad->nombreActividad}}</strong> - TECHO
         - {{$actividad->pais->nombre}}
-        que inició el {{$actividad->fechaInicio->format('d/m/Y')}} en
+        @lang('email.begins_on') {{$actividad->fechaInicio->format('d/m/Y')}} @lang('email.begins_at')
         {{$actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}.
     </p>
 
-    <p>Para darnos tu opinión, haz click en el enlace </p>
+    <p>@lang('email.evaluation_2') </p>
     <p>
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
             <img src="{{ asset('/img/boton_evaluar.png') }}" alt="Ir a evaluaciones">
@@ -22,7 +22,7 @@
     </p>
 
     <p>
-        Si no puedes usar el enlace, copia y pega esta dirección en tu navegador:
+       @lang('email.evaluation_3') 
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
             {{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}
         </a>
