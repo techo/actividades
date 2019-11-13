@@ -78,6 +78,7 @@ return [
     'verify_email_message_2' => 'Para poder seguir, verificá tu casilla de email y hacé click en el enlace de verificación que te enviamos.',
     'verify_email_message_3' => 'Si no recibiste el mail', 
 	'verify_email_resend' => 'hacé click para solicitar otro',
+	'verify_email' => 'Verificar email',
 
 
 
@@ -98,7 +99,7 @@ return [
     'country'  =>  'PAIS*',
 	'state'  =>  'PROVINCIA',
 	'city'  =>  'LOCALIDAD',
-	'telphone'  =>  'TELEFONO*',
+	'telephone'  =>  'TELEFONO*',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL*',
 	'new_password'  =>  'NUEVA CONTRASEÑA*',
     'confirm_new_password'  =>  'CONFIRMAR CONTRASEÑA*',
@@ -111,6 +112,23 @@ return [
  	'delete_account_message' => "Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
  	'delete_account_confirm_button' =>'SI, ELIMINAR',
 
+ 	'date_placeholder' => 'Seleccione una fecha',	
+
+
+ 	// perfil/index.blade.php
+ 	'profile' => 'Perfil',
+
+ 	// perfil/cambiar-email.blade.php
+ 	'change_email' => 'Cambiar Email',
+ 	'change_email_title' => 'Aquí podrás realizar cambios en tu casilla de email.',
+ 	'change_email_title_2' => 'Tené en cuenta que:',
+	'change_email_req_1' => 'Es necesario verificar la nueva dirección de email',
+	'change_email_req_2' => 'Se pierden las asociaciones a redes sociales.',
+	'change_email_req_3' => 'Tenés que volver a iniciar sesión.',
+	'change_email_new_email' => 'Nueva casilla',
+	'change_email_new_email_confirmation' => 'Volvé a ingresar la casilla para confirmar',
+	'change_email_are_you_sure' => '¿Estás seguro?',
+	'change_email_confirm_button' => 'Si, cambiar',
 
 
 	// perfil/actividades
@@ -149,6 +167,10 @@ return [
 	// components/datatable.vue
 	'empty_records' => "No hay registros para mostrar",
 	'pagination_detail' => "Mostrando :of  de :total actividades",
+
+	// filtro.vue
+	'categories' => 'CATEGORÍAS',
+	'select_all' => 'Marcar Todas',
     
 	// actividades/show.blade.php
     'description' => '',

@@ -126,7 +126,7 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <label> {{ $t('frontend.born_date') }} *</label>
-                        <datepicker placeholder="Selecciona una fecha" v-model="user.nacimiento" id="nacimiento"
+                        <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
                                     lang="es" format="DD-MM-YYYY"></datepicker>
                         <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
                     </div>
@@ -279,7 +279,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <div class="row pb-4">
                 <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i
                         class="fas fa-long-arrow-alt-left "></i> {{ $t('frontend.go_back') }}</a></span></div>
                 <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso()">{{ $t('frontend.continue') }}</a></div>

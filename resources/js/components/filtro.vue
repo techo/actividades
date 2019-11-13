@@ -107,7 +107,7 @@
                         if(response.data.length) {
                             this.tiposDeActividad = [{ 
                                         id: 0,
-                                        titulo: 'Marcar todas',
+                                        titulo: this._i18n.t('frontend.select_all'),
                                         actividades: response.data
                             }];
                         }
@@ -189,7 +189,7 @@
         created: function() {
             this.idCategoria        = (this.idCategoria)?JSON.parse(this.idCategoria):null;
             this.dataCategorias     = JSON.parse(this.categorias);
-            this.dataCategorias.unshift({'id': null, 'nombre': 'CATEGORÍAS'})
+            this.dataCategorias.unshift({'id': null, 'nombre': this._i18n.t('frontend.categories')})
             this.actualizarFiltros();
         },
         mounted() {

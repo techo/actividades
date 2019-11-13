@@ -78,6 +78,7 @@ return [
     'verify_email_message_2' => 'Check your email and confirm your email address to continue',
     'verify_email_message_3' => "If you don't get our email,", 
 	'verify_email_resend' => 'click here!',
+	'verify_email' => 'Verify email',
 
 
 	// perfil/perfil.vue
@@ -98,7 +99,7 @@ return [
     'country'  =>  'COUNTRY',
 	'state'  =>  'STATE',
 	'city'  =>  'CITY',
-	'telpehone'  =>  'TELEPHONE',
+	'telephone'  =>  'TELEPHONE',
 	'actual_password'  =>  'ACTUAL PASSWORD',
 	'new_password'  =>  'NEW PASSWORD',
     'confirm_new_password'  =>  'NEW PASSWORD CONFIRMATION',
@@ -112,7 +113,25 @@ return [
  	'delete_account_confirm_button' => "DELETE ACCOUNT",
 
 
+ 	'date_placeholder' => 'Select a date',
 
+
+ 	// perfil/index.blade.php
+ 	'profile' => 'Profile',
+
+
+
+ 	// perfil/cambiar-email.blade.php
+ 	'change_email' => 'Change Email',
+ 	'change_email_title' => 'Here you can make change your email address related to this account',
+ 	'change_email_title_2' => 'Have in mind that:',
+	'change_email_req_1' => 'Its mandatory to verify your new email address',
+	'change_email_req_2' => 'You will lose your social media link',
+	'change_email_req_3' => 'You will have to sign in again',
+	'change_email_new_email' => 'New Email',
+	'change_email_new_email_confirmation' => 'New Email Confirmation',
+	'change_email_are_you_sure' => 'Are you sure?',
+	'change_email_confirm_button' => 'Yes, Change',
 
 	// perfil/actividades
 	'my_activities' => 'My Activities',
@@ -150,6 +169,17 @@ return [
 	'empty_records' => "There are no records to show",
 	'pagination_detail' => "showing :of  of :total activities",
     
+
+
+	// filtro.vue
+	'categories' => 'CATEGORIES',
+	'select_all' => 'Select all',
+
+	
+ 	// contenedorchecktipoactividad
+ 	'activity_types' => 'Types of Activities',
+
+
 	// actividades/show.blade.php
     'description' => '',
     'not_defined' => 'Not Defined',
@@ -173,7 +203,7 @@ return [
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Last Step!',
 	'you_are_pre_registered' => "Now you're pre enroll to the activity:",
-	'mail_sended' => 'And we also send and email you andY también te mandamos un mail con toda la información de la actividad! Chequealo!',
+	'mail_sended' => 'And we also send an email to you with all the info about the activity',
 	'complete_registration' => 'But First: Confirm your place!',
 	'donation_ammount' => 'Donation Ammount',
 	'suggested_donation' => 'Suggested Donation: ',

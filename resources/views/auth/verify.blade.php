@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Verificar email
+    {{ __('frontend.verify_email') }}
 @endsection
 
 @section('main_image')
