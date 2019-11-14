@@ -14,7 +14,7 @@ class IncluyeCampoCodigoPais extends Migration
     public function up()
     {
         Schema::table('atl_pais', function (Blueprint $table) {
-            $table->char('codigo', 2)->nullable();
+            $table->boolean('habilitado')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class IncluyeCampoCodigoPais extends Migration
     public function down()
     {
         Schema::table('atl_pais', function (Blueprint $table) {
-            $table->dropColumn('codigo');
+            $table->dropColumn('habilitado');
         });
     }
 }

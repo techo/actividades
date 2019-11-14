@@ -20,7 +20,7 @@ class SeleccionarPais
         }
         else {
             if(config('app.pais_default')){
-                $pais = \App\Pais::porCodigo(config('app.pais_default'));
+                $pais = \App\Pais::find(config('app.pais_default'));
                 config([ 'app.pais' => $pais->id ]);
             }
         }

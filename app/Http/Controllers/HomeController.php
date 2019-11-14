@@ -35,9 +35,9 @@ class HomeController extends Controller
         return view('home', compact('categoriaActividad', 'showLogin'));
     }
 
-    public function seleccionarPais(Request $request, $codigo)
+    public function seleccionarPais(Request $request, $id)
     {
-        $pais = \App\Pais::porCodigo($codigo);
+        $pais = \App\Pais::find($id);
         if($pais)
             $request->session()->put('pais', $pais->id);
         

@@ -28,7 +28,7 @@ Route::prefix('ajax')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
-        Route::get('/habilitados', 'ajax\PaisesController@paisesConCodigo');
+        Route::get('/habilitados', 'ajax\PaisesController@paisesHabilitados');
 	});
 
 	Route::prefix('usuario')->group(

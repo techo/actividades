@@ -129,7 +129,7 @@
                         <div class="btn-group" role="group" ref="paises">
                             <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
                             <div class="dropdown-menu">
-                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.codigo)">Argentina</button>
+                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)">Argentina</button>
                             </div>
                         </div>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">

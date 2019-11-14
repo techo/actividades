@@ -27,8 +27,8 @@ class PaisesController extends Controller
     	return Provincia::find($id_provincia)->localidades;
     }
 
-    public function paisesConCodigo() {
-        return Pais::whereNotNull('codigo')->orderBy('nombre')->get();
+    public function paisesHabilitados() {
+        return Pais::where('habilitado', true)->get();
     }
 
 }
