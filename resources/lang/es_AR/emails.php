@@ -20,7 +20,9 @@ return [
 	'here' => 'Aqui',
 	'from' => 'desde',
 	'unsuscribe' => 'No quiero recibir emails',
-	
+	'email_verification' => 'VERIFICAR EMAIL',
+	'profile' => 'perfil',
+	'hour' => 'horario',
 
 
 
@@ -67,7 +69,27 @@ return [
 	'evaluation_3' => 'Si no puedes usar el enlace, copia y pega esta dirección en tu navegador: ',
 
 
+	// notificacionRegistracionUsuario
+	'account_registration_title' => 'Bienvenido a la plataforma de actividades de TECHO',
+	'account_registration_1' => 'Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email:',
+	'account_registration_2' => 'Una vez verificada tu cuenta enterate de toda la oferta de voluntariado visitando la ',
+	'account_registration_3' => 'En esta plataforma vas a poder:',
+	'account_registration_4' => 'Inscribirte en las actividades',
+	'account_registration_5' => 'Cancelar tu inscripción en caso que no puedas asistir',
+	'account_registration_6' => 'Confirmar en caso de que la actividad lo necesite',
+	'account_registration_7' => 'Evaluar la actividad en la que participaste y a tus compañeros',
+	'account_registration_8' => 'Además, podés ver y editar tus datos y tu configuración desde tu ',
+	'account_registration_9' => 'y consultar tus ',
+	'account_registration_10' => 'inscripciones e historial de participación',
 
 
+	// recordatorioActividad
+	'activity_reminder_1' => 'Te recordamos que te has inscrito para participar en ',
+
+	// template 
+	'template_1' => 'Para TECHO - Argentina es importante que te mantengas enterado de las nuevas actividades. Para ello, entra siempre en nuestro Sitio Web',
+
+	//VerificarMail
+	'verificar_mail_1' => 'Este email es para verificar tu dirección de email:',
 
 ];

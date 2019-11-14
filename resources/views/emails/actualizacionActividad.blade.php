@@ -7,15 +7,15 @@
     </p>
 
     <p>
-        @lang('emails.activity_update_1')
+        @lang('email.activity_update_1')
     </p>
     <p>
         <strong>{{$inscripcion->actividad->nombreActividad}}</strong> - TECHO
        
        - {{$inscripcion->actividad->pais->nombre}},
        
-        @lang('emails.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} 
-        @lang('emails.begins_at') {{$inscripcion->actividad->provincia->provincia}}.
+        @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} 
+        @lang('email.begins_at') {{$inscripcion->actividad->provincia->provincia}}.
     </p>
 
     @if($inscripcion->actividad->coordinador)
@@ -33,7 +33,7 @@
     </p>
 
     <p>
-        <strong>@lang('emails.greetings')</strong>
+        <strong>@lang('email.greetings')</strong>
     </p>
     @if($inscripcion->punto_encuentro)
         <p>
