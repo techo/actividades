@@ -87,7 +87,7 @@ return [
 	'activity_reminder_1' => 'You are enrrolled to ',
 
 	// template 
-	'template_1' => "For TECHO it's very important that you stay informed about nes activities. You can always do that at our site ',
+	'template_1' => "For TECHO it's very important that you stay informed about nes activities. You can always do that at our site ",
 
 	//VerificarMail
 	'verificar_mail_1' => "We have send this to verify your account: ",
