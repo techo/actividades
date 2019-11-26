@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Auth;
 
 //Frontoffice
-Route::get('/', 'HomeController@index')->name('home');
+#Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
+Route::get('/', 'ActividadesController@index');
 Route::get('/actividades', 'ActividadesController@index');
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
