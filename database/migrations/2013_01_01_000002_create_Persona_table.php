@@ -19,16 +19,16 @@ class CreatePersonaTable extends Migration {
 			$table->integer('idPais')->index('idPais');
 			$table->integer('idUnidadOrganizacional');
 
-			$table->string('nombres', 300);
-			$table->string('apellidoPaterno', 300);
-			$table->string('apellidoMaterno', 300)->nullable();
+			$table->string('nombres', 250);
+			$table->string('apellidoPaterno', 250);
+			$table->string('apellidoMaterno', 250)->nullable();
 			$table->dateTime('fechaNacimiento');
-			$table->string('telefono', 300)->nullable();
-			$table->string('telefonoMovil', 300);
+			$table->string('telefono', 250)->nullable();
+			$table->string('telefonoMovil', 250);
 			$table->string('sexo', 1)->nullable();
 			$table->string('dni', 50);
-			$table->string('mail', 300)->index('mail');
-			$table->string('password', 400);
+			$table->string('mail', 250)->index('mail');
+			$table->string('password', 250);
 
 			$table->integer('recibirMails')->nullable();
 			$table->string('remember_token', 100)->nullable();
