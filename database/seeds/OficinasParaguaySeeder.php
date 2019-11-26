@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ProvinciasBolviaSeeder extends Seeder
+class OficinasParaguaySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,10 @@ class ProvinciasBolviaSeeder extends Seeder
     public function run()
     {
         $listado_oficinas = [
-            'Oficina Nacional Bolivia',
+            'Central (Paraguay)',
+            'Alto Paraná',
+            'Itapúa',
+            'Caaguazú',
         ];
 
         foreach ($listado_oficinas as $v) {

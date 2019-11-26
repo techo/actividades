@@ -470,7 +470,6 @@
         color: #fff !important;
     }
     .dropdown-menu {
-        width: 10em;
         padding: 1em 0;
         margin: 0;
     }
