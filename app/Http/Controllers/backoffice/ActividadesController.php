@@ -47,20 +47,6 @@ class ActividadesController extends Controller
         $edicion = true;
         $paises = Pais::has("provincias")->get();
         $columns = Schema::getColumnListing('Actividad');
-        $excluidas =
-            [
-                'pApMat',
-                'pDNI',
-                'pFonoMovil',
-                'pUniversidad',
-                'pCarrera',
-                'pAnoEstudio',
-                'pAcompanante',
-                'tPortugues',
-                'enviarMail',
-                'compromiso'
-            ];
-        $columns = array_diff($columns, $excluidas);
         $arrayColumnas = array_fill_keys($columns, null);
 
 
@@ -486,16 +472,8 @@ class ActividadesController extends Controller
 
         $actividad->idPersonaModificacion = auth()->user()->idPersona;
 
-        // Campos definidos en la DB como NOT NULL, sin valor default y que no estan presentes en el $request //
-        $actividad->actividadSecundaria = 1;
-        $actividad->casasConstruidas = 0;
-        $actividad->casasPlanificadas = 0;
-        $actividad->comentarios = '';
-        $actividad->idEncuestaDinamica = 0;
-        $actividad->idListaCTCT = '';
         $actividad->lugar = '';
-        $actividad->mostrarFB = 0;
-        $actividad->tipoConstruccion = '';
+        /*Esto debería salir de la configuración*/
         $actividad->moneda = 'ARS';
 
         if ($actividad->save()) {

@@ -315,8 +315,6 @@ class InscripcionesController extends BaseController
             'idPuntoEncuentro'  => $inscripcion['idPuntoEncuentro'],
             'pago'            => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
             'presente'            => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
-            'evaluacion'        => 0,
-            'acompanante'       => ''
         ];
 
         return Inscripcion::create($data);

@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Persona;
-use App\VerificacionMailPersona;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -17,22 +16,10 @@ class UserService
         $persona = new Persona();
         $persona = $this->cargar_cambios($request, $persona);
         $persona->password = $this->setPassword(str_random(30));
-        $persona->carrera = '';
-        $persona->anoEstudio = '';
-        $persona->idContactoCTCT = '';
-        $persona->statusCTCT = '';
-        $persona->lenguaje = '';
-        $persona->idRegionLT = 0;
         $persona->idUnidadOrganizacional = 0;
-        $persona->idCiudad = 0;
-        $persona->verificado = false;
         $persona->recibirMails = 1;
         $persona->unsubscribe_token = Uuid::generate()->string;
         $persona->save();
-        $verificacion = new VerificacionMailPersona();
-        $verificacion->idPersona = $persona->idPersona;
-        $verificacion->token = str_random(40);
-        $verificacion->save();
         if (!empty($persona->idPersona) && $persona->assignRole($request->rol['rol'])) {
             return $persona;
         }
@@ -49,7 +36,6 @@ class UserService
         $persona->fechaNacimiento = $fechaNacimiento;
         $persona->nombres = $request->nombre;
         $persona->idPais = $request->pais['id'];
-        $persona->idPaisResidencia = $request->pais['id'];
         if($request->has('provincia') && $request->provincia != null)   {
             $persona->idProvincia = $request->provincia['id'];
         }
@@ -125,14 +111,7 @@ class UserService
 
         $persona = $this->cargar_cambios($request, $persona);
 
-        $persona->carrera = '';
-        $persona->anoEstudio = '';
-        $persona->idContactoCTCT = '';
-        $persona->statusCTCT = '';
-        $persona->lenguaje = '';
-        $persona->idRegionLT = 0;
         $persona->idUnidadOrganizacional = 0;
-        $persona->idCiudad = 0;
 
         $persona->save();
 

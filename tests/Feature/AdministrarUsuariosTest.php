@@ -14,6 +14,41 @@ class AdministrarUsuariosTest extends TestCase
 	use RefreshDatabase;
 
     /** @test */
+    public function administrador_puede_crear_usuario()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $jose = factory('App\Persona')->make();
+
+        $datos = [
+            'idUsuario' => $jose->idPersona,
+            'nombre' => $jose->nombres,
+            'apellido' => $jose->apellidoPaterno,
+            'rol' => $jose->rol,
+            'pais' => [ 'id' => $jose->idPais],
+            'sexo' => $jose->sexo,
+            'nacimiento' => $jose->fechaNacimiento,
+            'telefono' => $jose->telefonoMovil,
+            'dni' => $jose->dni,
+            'email' => $jose->mail,
+            'rol' => [ 'rol' => 'usuario_autenticado'],
+            'password' => 'contraseña',
+            'password_confirmation' => 'contraseña'
+            ];
+        
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/registrar', $datos)
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('Persona', [ 'nombres' => $jose->nombres ]);
+    }
+
+    /** @test */
     public function administrador_puede_editar_usuario()
     {
     	$this->withoutExceptionHandling();
@@ -50,7 +85,6 @@ class AdministrarUsuariosTest extends TestCase
 
         $this->assertDatabaseHas('Persona', [ 'nombres' => 'Modificado' ]);
     }
-
 
     /** @test */
     public function administrador_puede_eliminar_usuario_y_volver_a_crear_con_mismo_email()

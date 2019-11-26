@@ -56,15 +56,7 @@ class UsuarioController extends BaseController
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
       $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
-      $persona->carrera = '';
-      $persona->anoEstudio = '';
-      $persona->idContactoCTCT = '';
-      $persona->statusCTCT = '';
-      $persona->lenguaje = '';
-      $persona->idRegionLT = 0;
       $persona->idUnidadOrganizacional = 0;
-      $persona->idCiudad = 0;
-      $persona->verificado = false;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
@@ -98,7 +90,6 @@ class UsuarioController extends BaseController
       $persona->fechaNacimiento = $fechaNacimiento;
       $persona->nombres = $request->nombre;
       $persona->idPais = $request->pais;
-      $persona->idPaisResidencia = $request->pais;
       $persona->idProvincia = $request->provincia;
       $persona->sexo = $request->sexo;
       $persona->telefonoMovil = $request->telefono;
