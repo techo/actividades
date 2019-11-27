@@ -257,9 +257,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
     Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');
     Route::post('/configuracion/oficinas/registrar', 'backoffice\ajax\OficinasController@store')->middleware('role:admin');
-    Route::get('/configuracion/oficias/{id}', 'backoffice\OficinasController@show')->middleware('permission:ver_usuarios');
+    Route::get('/configuracion/oficinas/{id}', 'backoffice\OficinasController@show')->middleware('role:admin');
     Route::post('/configuracion/oficinas/{id}/editar', 'backoffice\ajax\OficinasController@update')->middleware('role:admin');
-    Route::delete('/configuracion/oficinas/{id}', 'backoffice\OficinasController@delete')->middleware('permission:borrar_usuarios');
+    Route::get('/ajax/configuracion/oficinas/{id}', 'backoffice\ajax\OficinasController@get')->middleware('role:admin');
+    Route::delete('/configuracion/oficinas/{id}', 'backoffice\OficinasController@delete')->middleware('role:admin');
     
     
     

@@ -323,8 +323,13 @@ return [
             ],
             [
                 'name' => 'nombre',
-                'sortField' => 'nombres',
+                'sortField' => 'nombre',
                 'title' => 'Nombre'
+            ],
+            [
+                'name' => 'pais',
+                'sortField' => 'pais',
+                'title' => 'País'
             ],
         ],
         'sortOrder' => [
