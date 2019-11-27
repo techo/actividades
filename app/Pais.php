@@ -21,4 +21,9 @@ class Pais extends Model
     {
         return $this->hasMany(Actividad::class, 'idPais', 'id');
     }
+
+    public function oficinas()
+    {
+        return $this->hasMany(Oficina::class);
+    }
 }

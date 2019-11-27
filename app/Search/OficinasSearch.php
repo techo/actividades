@@ -38,7 +38,10 @@ class OficinasSearch
     }
 
     private static function newQuery(){
+
         $query = (new Oficina())->newQuery();
+        $query->join('atl_pais', 'atl_oficinas.id_pais', '=', 'atl_pais.id')
+        ->selectRaw('atl_oficinas.id as id, atl_oficinas.nombre as nombre, atl_pais.nombre as pais');
         return $query;
     }
 }

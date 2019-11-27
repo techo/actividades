@@ -36,4 +36,36 @@ class OficinasController extends Controller
         $result = OficinasSearch::apply($filtros, $sort, $per_page);
         return response()->json($result);
     }
+
+    public function store(Request $request) {
+        $oficina = $request->validate([
+            'nombre' => 'required',
+            'id_pais' => 'required',
+        ]);
+
+        Oficina::create($oficina);
+
+        return response()->json($oficina);
+    }
+
+    public function update(Request $request) {
+      
+    }
+
+    public function delete(Persona $id)
+    {
+        if ($id->delete()){
+            Session::flash('mensaje', 'Persona eliminada correctamente');
+        } else {
+            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a la Persona');
+        }
+        return redirect()->to('/admin/usuarios');
+    }
+
+
+    public function get($id)
+    {
+        $oficina = Oficina::find($id);
+        return response()->json($oficina);
+    }
 }

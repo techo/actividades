@@ -98,7 +98,7 @@ Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
 Vue.component('oficinas-datatable', OficinasDatatable);
 Vue.component('oficinas-filter-bar', OficinasFilterBar);
-Vue.component('oficinas-form', OficinasForm);
+Vue.component('oficina-form', OficinasForm);
 
 window.Event = new Vue();
 
