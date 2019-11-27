@@ -313,5 +313,26 @@ return [
                 'direction' => 'asc'
             ],
         ]
+    ],
+    'oficinas' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombres',
+                'title' => 'Nombre'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
     ]
 ];

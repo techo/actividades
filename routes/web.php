@@ -220,7 +220,9 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/inscripciones/importar/template', 'backoffice\InscripcionesController@descargarTemplate'); //TODO: segurizar
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
-    Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@index');
+    Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@getOficinas');
+    Route::get('/ajax/configuracion/oficinas', 'backoffice\ajax\OficinasController@index');
+    
     Route::get('/ajax/usuarios', 'backoffice\ajax\UsuariosController@index')->middleware('permission:ver_usuarios');
     Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::post('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index');// para testing only. eliminar
@@ -248,6 +250,14 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones');
     Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales');
+
+    Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
+    Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');
+    Route::post('/configuracion/oficinas/registrar', 'backoffice\ajax\OficinasController@store')->middleware('role:admin');
+    Route::get('/configuracion/oficias/{id}', 'backoffice\OficinasController@show')->middleware('permission:ver_usuarios');
+    Route::post('/configuracion/oficinas/{id}/editar', 'backoffice\ajax\OficinasController@update')->middleware('role:admin');
+    Route::delete('/configuracion/oficinas/{id}', 'backoffice\OficinasController@delete')->middleware('permission:borrar_usuarios');
+    
     
     
 });
