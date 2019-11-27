@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Oficina;
 use App\Search\OficinasSearch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class OficinasController extends Controller
 {
@@ -49,17 +51,27 @@ class OficinasController extends Controller
     }
 
     public function update(Request $request) {
-      
+        $validados = $request->validate([
+            'id' => 'required',
+            'nombre' => 'required',
+            'id_pais' => 'required',
+        ]);
+
+        $oficina = Oficina::find($validados['id']);
+        $oficina->update($validados);
+
+
+        return response()->json($validados);
     }
 
-    public function delete(Persona $id)
+    public function delete(Oficina $id)
     {
         if ($id->delete()){
-            Session::flash('mensaje', 'Persona eliminada correctamente');
+            Session::flash('mensaje', 'Oficina eliminada correctamente');
         } else {
-            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a la Persona');
+            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a la Oficina');
         }
-        return redirect()->to('/admin/usuarios');
+        return redirect()->to('/admin/configuracion/oficinas');
     }
 
 

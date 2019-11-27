@@ -57,7 +57,6 @@
     import DatePicker from 'vue2-datepicker';
     import moment from 'moment';
     import vSwitch from 'vue-switches';
-    import fusionarModal from '../../../components/backoffice/usuarios/usuarios-fusionar-modal';
 
     export default {
         name: "oficina-form",
@@ -99,9 +98,9 @@
         },
         watch: {
             oficina: function() {
-                this.paisSeleccionado = this.dataPaises.filter((o) => {
+                this.paisSeleccionado = this.dataPaises.find((o) => {
                     return o.id == this.oficina.id_pais
-                })
+                });
             }
         },
         methods: {
@@ -135,7 +134,6 @@
                 let url;
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
-                window.scrollTo(0, 0);
 
                 if (this.oficina.id === undefined || this.oficina.id === null) {
                     url = `/admin/configuracion/oficinas/registrar`;
@@ -143,21 +141,24 @@
                     url = `/admin/configuracion/oficinas/${encodeURI(this.oficina.id)}/editar`;
                 }
 
-                this.oficina.id_pais = this.paisSeleccionado.id;
+                this.oficina.id_pais = (this.paisSeleccionado)?this.paisSeleccionado.id:null;
 
                 axios.post(url, this.oficina)
                     .then((respuesta) => {
                         this.oficina = respuesta.data;
-                        this.mensajeGuardado = data[0];
+                        this.mensajeGuardado = 'Registro guardado correctamente';
                         this.guardado = true;
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
+                        this.readonly = true;
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();
                         if (error.response) {
                             if (error.response.status === 422) {
                                 this.validationErrors = Object.values(error.response.data.errors);
+                                Event.$emit('error');
+                               
                             }
                         }});
 

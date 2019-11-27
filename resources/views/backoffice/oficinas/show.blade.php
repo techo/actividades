@@ -6,7 +6,7 @@
 @section('content')
 
  <form method="POST" id="formDelete"
-          action="{{ action('backoffice\OficinasController@delete', ['id' => $oficina->id]) }}">
+          action="{{ action('backoffice\ajax\OficinasController@delete', ['id' => $oficina->id]) }}">
 
         <input type="hidden" value="DELETE" name="_method">
         {{ csrf_field() }}
@@ -23,8 +23,7 @@
 
             </div>
         </div>
-        <br/>
-        <br/>
+</div>
 @endsection
 
 @section('footer')
@@ -33,7 +32,6 @@
             cancelar-url="/admin/configuracion/oficinas"
             edicion="{{ $edicion }}"
             can-editar="true"
-            can-fusionar="false"
             can-borrar="{{Auth::user()->hasRole('admin')}}"
     ></crud-footer>
     @endrole
