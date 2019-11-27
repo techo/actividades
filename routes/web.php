@@ -260,7 +260,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/configuracion/oficinas/{id}', 'backoffice\OficinasController@show')->middleware('role:admin');
     Route::post('/configuracion/oficinas/{id}/editar', 'backoffice\ajax\OficinasController@update')->middleware('role:admin');
     Route::get('/ajax/configuracion/oficinas/{id}', 'backoffice\ajax\OficinasController@get')->middleware('role:admin');
-    Route::delete('/configuracion/oficinas/{id}', 'backoffice\OficinasController@delete')->middleware('role:admin');
+    Route::delete('/configuracion/oficinas/{id}', 'backoffice\ajax\OficinasController@delete')->middleware('role:admin');
     
     
     
