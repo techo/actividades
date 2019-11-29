@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Confirma con tu pago
+    {{ __('frontend.last_step_confirm_by_donation') }}
 @endsection
 
 

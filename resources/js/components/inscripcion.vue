@@ -3,20 +3,19 @@
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="card-title">Elegir un punto de encuentro</h2>
+                    <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <p>Una actividad puede tener uno o más puntos de encuentro.
-                        ¡Elegí el que encuentres más cómodo y nos vemos ahí!</p>
+                    <p>{{ $t('frontend.whats_a_meeting_point') }}</p>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="card-title">Puntos de encuentro</h5>
+                    <h5 class="card-title">{{ $t('frontend.meeting_points') }}</h5>
                 </div>
             </div>
             <form
@@ -41,10 +40,10 @@
                   <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
                   <div class="col-md-2 text-primary">
                       <p>
-                          <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> Volver</a>
+                          <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
                       </p>
                   </div>
-                  <div class="col-md-3"><input type="submit" value="SIGUIENTE" class="btn btn-primary"></div>
+                  <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary"></div>
               </div>
             </form>
         </div>

@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Detalle de Actividad
+    {{ __('frontend.activity_detail') }}
 @endsection
 
 
@@ -15,16 +15,16 @@
                 <div class="col-md-12">
                     @if( $actividad->confirmar == 1 ||
                     $actividad->pago == 1 )
-                        <h2 class="card-title">Finalizar tu pre-inscripción</h2>
+                        <h2 class="card-title">{{ __('frontend.finish_pre_registration') }}</h2>
                     @else
-                        <h2 class="card-title">Finalizar tu inscripción</h2>
+                        <h2 class="card-title">{{ __('frontend.finish_registration') }}</h2>
                     @endif
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <h4>Elegiste el punto de encuentro:</h4>
+                    <h4>{{ __('frontend.meeting_points') }}</h4>
                 </div>
             </div>
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
@@ -42,7 +42,7 @@
                         </p>
                             
                         <p>
-                            <h4>A las:</h4>
+                            <h4>{{ __('frontend.at') }}</h4>
                             {{ \Illuminate\Support\Carbon::parse($punto_encuentro->horario)->format('H:i') }} hs
                         </p>
                     </div>
@@ -58,7 +58,7 @@
                                     value="1"
                                     required
                             >
-                            Acepto la <a href="/carta-voluntariado" target="_blank">carta de voluntariado</a>
+                            {{ __('frontend.accept') }} <a href="/carta-voluntariado" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
                         </label>
                         @if($mensaje = Session::get('status'))
                             <p class="text-danger">{{ $mensaje }}</p>
@@ -68,10 +68,10 @@
                 <hr>
                 <div class="row  align-middle">
                     <div class="col-md-2 text-primary">
-                        <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link"> Volver</a>
+                        <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link"> {{ __('frontend.go_back') }}</a>
                     </div>
                     <div class="col-md-3">
-                        <input type="submit" value="FINALIZAR" class="btn btn-primary">
+                        <input type="submit" value="{{ __('frontend.finish') }}" class="btn btn-primary">
                     </div>
                 </div>
             </form>

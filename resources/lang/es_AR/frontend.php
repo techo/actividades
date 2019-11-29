@@ -34,17 +34,14 @@ return [
 	'logout' => 'Salir',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
 
-
 	//loginController
 	'login_error' => 'El correo electrónico y/o la contraseña es incorrecta',
-
 
 	// reset.blade
 	'reset_password' => 'Restablecer Contraseña',
 
 	//email.blade
 	'send_link' => 'Enviar enlace',
-
 
 	// home
 	'title' => 'Transformemos esta realidad',
@@ -53,7 +50,7 @@ return [
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
 
-		// registro.vue
+	// registro.vue
 	'register' => 'Registrate',
 	'finish' => 'Finalizar',
 	'step_1' => 'PASO 1/3',
@@ -79,8 +76,6 @@ return [
     'verify_email_message_3' => 'Si no recibiste el mail', 
 	'verify_email_resend' => 'hacé click para solicitar otro',
 	'verify_email' => 'Verificar email',
-
-
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'Los cambios fueron guardados con éxito.',
@@ -111,9 +106,7 @@ return [
  	'account_rrss_text_2' => 'y hacer click en',
  	'delete_account_message' => "Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
  	'delete_account_confirm_button' =>'SI, ELIMINAR',
-
  	'date_placeholder' => 'Seleccione una fecha',	
-
 
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
@@ -130,22 +123,18 @@ return [
 	'change_email_are_you_sure' => '¿Estás seguro?',
 	'change_email_confirm_button' => 'Si, cambiar',
 
-
 	// perfil/actividades
 	'my_activities' => 'Mis Actividades',
 	'next_activities' => 'Próximas Actividades', 
     'past_activities' => 'Actividades Pasadas',
 	'filter_placeholder' => 'Nombre o localidad de la actividad',
 
-
 	// perfil/btnMisActividades
 	'view_evaluations' => 'Ver Evaluaciones',
-
 
 	// perfil/actividades.vue
 	'unenroll_ok' => "Te has desinscripto correctamente de la actividad.",
 	'enrollment_empty' => "Ey, ninguna inscripción futura, tiempo de buscar una! :)",
-
 
 	// perfil/tarjeta.vue
 	'unenroll_ok' => "Te has desinscripto correctamente de la actividad.",
@@ -157,7 +146,6 @@ return [
 	'message_1' => 'Estás por desinscribirte de la actividad',
 	'message_2' => ' se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?',
 	'unenroll_button' => 'SI, DESINSCRIBIRME',
-
 
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filtrar por',
@@ -172,19 +160,16 @@ return [
 	'categories' => 'CATEGORÍAS',
 	'select_all' => 'Marcar Todas',
 
-
  	// contenedorchecktipoactividad
  	'activity_types' => 'Tipos de Actividad',
-
     
 	// actividades/show.blade.php
     'description' => '',
     'not_defined' => 'No definido',
     'coordinator' => 'Coordina',
-    'meeting_points' => '¿Dónde nos encontramos?',
+    'meeting_points' => 'Puntos de encuentro',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
-
 
     // actividadesController
     'error' => 'ERROR',
@@ -196,6 +181,14 @@ return [
 	'activity_full' => 'La actividad no tiene más cupos',
 	'pre_registration' => 'PREINSCRIBIRME',
 	'apply_now' => 'INSCRIBIRME',
+
+	// components/inscripcion.vue
+	'select_a_meeting_point' => 'Elegir un punto de encuentro',
+	'whats_a_meeting_point' => 'Una actividad puede tener uno o más puntos de encuentro ¡Elegí el que encuentres más cómodo y nos vemos ahí!',
+
+	// confirmar-paso-1
+	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
+	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => '¡Sólo queda un paso!',
@@ -214,10 +207,17 @@ return [
 	'unenroll' => 'DESINSCRIBIRME',
 
 	//pagar_paso_2
-	'confirm_by_paying' => 'Confirma con tu pago',
+	'confirm_by_paying' => 'Confirmar con tu donación',
 	'ready_for_paying' => '¡Listo para pagar por la plataforma!',
 	'you_choose' => 'Elegiste donar:',
 	'redirect_pay_platform' => 'Al hacer click se te redirigirá a la plataforma de pago',
+
+	//inscripciones/confirmar.blade.php
+	'finish_pre_registration' => 'Finalizar tu pre-inscripción',
+	'finish_registration' => 'Finalizar tu inscripción',
+	'at' => 'A las',
+	'accept' => 'A las',
+	'terms_and_conditions' => 'carta de voluntariado',
 
 	//gracias.blade.php
     'frontend.activity_detail' => 'Detalle de Actividad',

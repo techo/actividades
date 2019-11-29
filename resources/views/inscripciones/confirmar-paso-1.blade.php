@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Esperá a que te confirmen
+    {{ __('frontend.last_step_waiting_for_confirmation') }}
 @endsection
 
 @section('main_image')
@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <br>
             <h3 class="card-subtitle">
-                Estás pre-inscripto a
+                {{ __('frontend.you_are_pre_registered') }}
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
@@ -23,11 +23,11 @@
             <br>
             <p>
                 <h4>
-                ¡Quedás a la espera de que te confirmemos!
+                {{ __('frontend.last_step_waiting_for_confirmation') }}
                 </h4>
             </p>
             <p>
-                En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.
+                {{ __('frontend.will_be_in_touch') }}
             </p>
             <p>
                 <h5>Coordinador</h5>
