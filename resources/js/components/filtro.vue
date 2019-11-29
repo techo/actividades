@@ -7,7 +7,7 @@
                 v-model="idCategoria"
             >
                 <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
-                    {{ categoria.nombre }}
+                    {{ $t('frontend.' + categoria.nombre) }}
                 </option>
             </select>
         <!-- <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">

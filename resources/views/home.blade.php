@@ -47,8 +47,8 @@
                             >
                         </a>
                         <div class="card-body px-0">
-                            <h3 class="card-title">{{ $categoria->nombre }}</h3>
-                            <p class="card-text">{{ $categoria->descripcion }}</p>
+                            <h3 class="card-title">{{ __('frontend.' . $categoria->nombre ) }}</h3>
+                            <p class="card-text">{{ __('frontend.' . $categoria->nombre . '_description' ) }}</p>
                             <p>
                                 <a class="techo-h6 techo-blue" data-toggle="collapse" href="#collapse_{{ $categoria->id }}" role="button">
                                     {{  __('frontend.activities_types') }} <i class="fas fa-chevron-down"></i>

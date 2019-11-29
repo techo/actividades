@@ -307,7 +307,7 @@
                 <div class="col-md-12">
                     <span v-show='volver'>
                         <button @click="cancelar()" class="btn btn-link" :disabled="!formDirty">
-                            {{ $t('frontend.cancel') }}Cancelar
+                            {{ $t('frontend.cancel') }}
                         </button>
                     </span>
                     <button class="btn btn-primary" href="#" @click="guardar()" :disabled="!formDirty">{{ $t('frontend.save') }}</button> 

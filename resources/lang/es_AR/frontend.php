@@ -10,6 +10,10 @@ return [
 	|
 	*/
 
+	// cookies-bar.vue
+	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
+	'cookie_policy' => 'Politicas de Cookies',
+
 	// login.vue
     'login' => 'Ingresar',
     'login_to_account' => 'Ingresar a mi cuenta',
@@ -46,6 +50,13 @@ return [
 	// home
 	'title' => 'Transformemos esta realidad',
 	'which_type_of_activity' => '¿En qué actividad querés participar?',
+	'activities_types' => 'Tipos de Actividad',
+	'to_act' => 'Actividades en Asentamientos',
+	'to_act_description' => 'Acompañanos y trabajemos junto a cientos de vecinos y voluntarios que luchan día a día para transformar la realidad de cientos de barrios de todo el país. No hace falta conocimientos previos, solo tu voluntad y ganas de participar.',
+	'to_reflect_and_learn' => 'Actividades de Oficina y Formación',
+	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
+	'especial_events' => 'Eventos Especiales',
+	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'activities_types' => 'Tipos de Actividad',
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
@@ -88,6 +99,7 @@ return [
     'born_date'  =>  'NACIMIENTO*',
     'gender'  =>  'GENERO*',
     'gender_m'  =>  'Masculino',
+    'gender_f'  =>  'Femenino',
     'gender_x'  =>  'Other',
     'gender_o'  =>  'Prefiero no decirlo',
     'passport'  =>  'NRO. DE DNI / PASAPORTE*',
@@ -107,6 +119,7 @@ return [
  	'delete_account_message' => "Estás por eliminar tu cuenta de esta plataforma. La acción no podrá deshacerse. ¿Deseas continuar?",
  	'delete_account_confirm_button' =>'SI, ELIMINAR',
  	'date_placeholder' => 'Seleccione una fecha',	
+ 	'email_succesfully_updated' => 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!',
 
  	// perfil/index.blade.php
  	'profile' => 'Perfil',

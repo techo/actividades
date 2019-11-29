@@ -326,7 +326,7 @@
                 <div class="row">
                     <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">
                         Volver</a></div>
-                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">$t('frontend.confirm') }}</a></div>
+                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a></div>
                 </div>
 
             </div>
