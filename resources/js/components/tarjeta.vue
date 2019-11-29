@@ -8,16 +8,16 @@
                     'inscripto': true, 
                     'badge': true, 
                     'badge-pill': true, 
-                    'badge-danger': actividad.estadoInscripcion == 'Fecha de confirmación vencida', 
-                    'badge-primary': actividad.estadoInscripcion == 'Confirmar con tu donación', 
-                    'badge-warning': actividad.estadoInscripcion == 'Esperar confirmación',
-                    'badge-success': actividad.estadoInscripcion == 'Confirmado',
+                    'badge-danger': actividad.estadoInscripcion == 'confirmation_date_is_closed', 
+                    'badge-primary': actividad.estadoInscripcion == 'confirm_by_paying', 
+                    'badge-warning': actividad.estadoInscripcion == 'waiting_for_confirmation',
+                    'badge-success': actividad.estadoInscripcion == 'confirmed',
                 }" >
                 {{ actividad.estadoInscripcion }}
             </span>
-            <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">¡Quedan pocos cupos!</span>
-            <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">¡Se llenaron los cupos!</span>
-            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">Fecha de confirmación vencida</span>
+            <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
+            <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
+            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
         </div>
       <div class="card-body px-0">

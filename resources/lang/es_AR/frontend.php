@@ -179,6 +179,7 @@ return [
 	'waiting_for_confirmation' => 'ESPERAR CONFIRMACIÓN',
     'confirmed' => 'CONFIRMADO',
 	'activity_full' => 'La actividad no tiene más cupos',
+	'limit_about_to_be_reached' => '¡Quedan pocos cupos!',
 	'pre_registration' => 'PREINSCRIBIRME',
 	'apply_now' => 'INSCRIBIRME',
 
