@@ -148,9 +148,9 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
-                        <li class="locale-changer ">
+                        <li class="locale-changer " v-show="langs.length>0" >
                             <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
-                                <option class="btn dropdown-item btnUser dropdown-toggle" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                                <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                                     {{ lang[1] }}
                                 </option>
                             </select>
@@ -159,8 +159,8 @@
                 </div>
 
 
-                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block">
-                    <select v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
+                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block" >
+                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
                         <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                             {{ lang[1] }}
                         </option>
@@ -247,7 +247,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales' ],
         data () {
             let data = {
                 credentials: {
@@ -262,7 +262,6 @@
                     id: ''
                 },
                 verAdmin: this.veradmin,
-                langs: [['es_AR', 'ES'],['en', 'EN'],['pt_BR','PT']],
             };
             
             if(this.usuario) {
@@ -274,6 +273,15 @@
         },
         created () {
           this.authenticated = this.checkLogin();
+        },
+        computed: {
+            langs: function() {
+                if(this.available_locales) {
+                    let locales = this.available_locales.split(',');
+                    return locales.map(function(v){ return v.split('|') });
+                }
+                else return []
+            },
         },
         mounted(){
             if(this.showlogin){

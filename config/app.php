@@ -38,7 +38,7 @@ return [
     'google_analytics_token' => env('GOOGLE_ANALYTICS_TOKEN'),
     'docs' => env('APP_DOCS', false),
     'estadisticas' => env('APP_ESTADISTICAS', false),
-
+    'available_locales' => env('APP_AVAILABLE_LOCALES', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
     |
     */
 
-    'locale' => 'es_AR',
+    'locale' => env('LOCALE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +103,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'es_AR',
+    'fallback_locale' => env('FALLBACK_LOCALE'),
 
     /*
     |--------------------------------------------------------------------------

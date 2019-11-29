@@ -5,6 +5,9 @@
            @if(config('app.docs'))
            docs="{{ config('app.docs') }}"
            @endif
+           @if(config('app.available_locales'))
+           available_locales="{{ config('app.available_locales') }}"
+           @endif
     ></login>
 @endauth
 @guest
