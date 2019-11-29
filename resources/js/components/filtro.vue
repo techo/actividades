@@ -189,7 +189,7 @@
         created: function() {
             this.idCategoria        = (this.idCategoria)?JSON.parse(this.idCategoria):null;
             this.dataCategorias     = JSON.parse(this.categorias);
-            this.dataCategorias.unshift({'id': null, 'nombre': this._i18n.t('frontend.categories')})
+            this.dataCategorias.unshift({'id': null, 'nombre': this._i18n.t('categories')})
             this.actualizarFiltros();
         },
         mounted() {

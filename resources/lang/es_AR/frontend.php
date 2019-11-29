@@ -61,6 +61,11 @@ return [
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
 
+	// components/estadisticas-publicas.vue
+	'mobilized_volunteer_instances' => 'Voluntades movilizadas',
+	'mobilized_volunteers' => 'Voluntarios movilizadas',
+	'statistics_message' => 'En el :ciclo llevamos',
+
 	// registro.vue
 	'register' => 'Registrate',
 	'finish' => 'Finalizar',
