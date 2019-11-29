@@ -16,10 +16,9 @@
           <source srcset="{{ asset('/img/hero-mobile.jpg') }}" media="(max-width: 720px)">
           <img src="{{ asset('/img/hero.jpg') }}" alt="hero image">
         </picture>
-        <h1 class="text-uppercase">{{ __('frontend.title') }}</h1>
-        <h1 class="text-uppercase mobile">Transformemos esta realidad</h1>
+        
         <div class="techo-hero-text" >
-            <h1 class="text-uppercase desktop">Transformemos esta realidad</h1>
+            <h1 class="text-uppercase">{{ __('frontend.title') }}</h1>
             @if(config('app.estadisticas'))
             <estadisticas-publicas></estadisticas-publicas>
             @endif

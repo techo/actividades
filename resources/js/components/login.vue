@@ -278,7 +278,7 @@
             langs: function() {
                 if(this.available_locales) {
                     let locales = this.available_locales.split(',');
-                    return locales.map(function(v){ return v.split('|') });
+                    return locales.map(function(v){ return v.trim().split('|') });
                 }
                 else return []
             },

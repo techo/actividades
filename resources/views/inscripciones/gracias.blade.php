@@ -32,7 +32,7 @@
     <div class="row justify-content-start">
         <div class="col-md-8">
             <p>
-                {{ __('frontend.mail_message') }} <a href="/perfil/actividades">Mis actividades</a>.
+                {{ __('frontend.mail_message') }} <a href="/perfil/actividades">{{ __('frontend.my_activities') }}</a>.
             </p>
         </div>
     </div>
