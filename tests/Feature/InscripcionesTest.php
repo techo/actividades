@@ -65,7 +65,7 @@ class InscripcionesTest extends TestCase
             ]);
 
         $this->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('cupos')
+            ->assertSee('activity_full')
             ->assertStatus(200);
 
         $datos = [
@@ -108,7 +108,7 @@ class InscripcionesTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('período')
+            ->assertSee('closed_inscriptions')
             ->assertStatus(200);
 
         $this->assertDatabaseMissing('Inscripcion', [

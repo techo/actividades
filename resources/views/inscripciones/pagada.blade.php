@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Detalle de Actividad
+    {{ __('frontend.inscription_confirmed') }}
 @endsection
 
 
@@ -14,7 +14,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Participación confirmada!</h1>
+            <h1 class="card-subtitle">{{ __('frontend.inscription_confirmed') }}</h1>
         </div>
         <hr>
     </div>
@@ -22,7 +22,7 @@
         <div class="col-md-8">
             <h3 class="card-title">
                 <br>
-                Con esta donación, ya confirmaste tu participación en
+                {{ __('frontend.with_this_donation') }}
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}
                 </a>
@@ -32,34 +32,34 @@
     <div class="row justify-content-start">
         <div class="col-md-8">
             <p>
-                Te recordamos algunos datos importantes:
+                {{ __('frontend.important_remainder') }}
             </p>
             <p>
-                <strong>Punto de Encuentro: </strong><br>
+                <strong>{{ __('frontend.meeting_points') }}</strong><br>
                 {{ $inscripcion->punto_encuentro->punto }}, {{ \Carbon\Carbon::parse($inscripcion->punto_encuentro->horario)->format('H:i') }} hs
             </p>
-            <p>Este punto está coordinado por {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
+            <p>{{ __('frontend.coordinator') }} {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
                 (<a href="mailto:{{$inscripcion->punto_encuentro->responsable->mail}}">
-                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), podés
-                comunicarte si tenés alguna duda o pregunta sobre el punto de encuentro.
+                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), {{ __('frontend.any_doubt_contact') }}
             </p>
-            <p>La actividad se realizará en {{ $actividad->localidad->localidad }},
+            <p>{{ __('frontend.activity_takes_place') }} 
+                {{ $actividad->localidad->localidad }},
                 {{ $actividad->provincia->provincia }},
                 {{ $actividad->pais->nombre }}
             </p>
-            <p>Comienzo: {{ $actividad->fechaInicio->format('d/m/Y H:i') }}</p>
-            <p>Fin: {{ $actividad->fechaFin->format('d/m/Y H:i') }}</p>
-            <p class="h3">¡Te esperamos!</p>
+            <p>{{ __('frontend.activity_starts_at') }} {{ $actividad->fechaInicio->format('d/m/Y H:i') }}</p>
+            <p>{{ __('frontend.activity_ends_at') }} {{ $actividad->fechaFin->format('d/m/Y H:i') }}</p>
+        
         </div>
     </div>
     <div class="row justify-content-start">
         <div class="col-md-2">
             <button type="button" class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
-                <i class="fas fa-share-alt"></i>  COMPARTIR
+                <i class="fas fa-share-alt"></i>  {{ __('frontend.share') }}
             </button>
         </div>
         <div class="col-md-2">
-            <a href="/" class="btn btn-link">Volver al Inicio</a>
+            <a href="/" class="btn btn-link">{{ __('frontend.go_back') }}</a>
         </div>
     </div>
 @endsection

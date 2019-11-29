@@ -95,7 +95,7 @@ class UsuariosTest extends TestCase
                 'email_confirmation' => 'nuevo@email.com',
             ])
             ->assertRedirect('/')
-            ->assertSessionHas('mensaje', 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!');
+            ->assertSessionHas('mensaje', 'frontend.email_succesfully_updated');
 
         $this->assertDatabaseHas('Persona', ['mail' => 'nuevo@email.com' ]);
 

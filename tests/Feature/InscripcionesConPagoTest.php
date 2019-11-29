@@ -49,11 +49,11 @@ class InscripcionesConPagoTest extends TestCase
         $this->actingAs($jose)
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', $datos)
             ->assertSessionHasNoErrors()
-            ->assertSee('Sólo queda un paso');
+            ->assertSee('last_step_confirm_by_donation');
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMÁ')
+            ->assertSee('approval_needed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -97,7 +97,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('FECHA DE CONFIRMACIÓN VENCIDA')
+            ->assertSee('confirmation_date_is_closed')
             ->assertStatus(200);
     }
 
@@ -133,7 +133,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('FECHA DE CONFIRMACIÓN VENCIDA')
+            ->assertSee('confirmation_date_is_closed')
             ->assertStatus(200);
     }
 
@@ -178,7 +178,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMADO')
+            ->assertSee('confirmed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -288,7 +288,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)
-            ->assertSeeText('¡Participación confirmada!')
+            ->assertSeeText('inscription_confirmed')
             ->assertOk();
     }
 
@@ -346,7 +346,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)
-            ->assertSeeText('¡Participación confirmada!')
+            ->assertSeeText('inscription_confirmed')
             ->assertOk();
     }
 
@@ -445,7 +445,7 @@ class InscripcionesConPagoTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)
-            ->assertSeeText('¡Participación confirmada!')
+            ->assertSeeText('inscription_confirmed')
             ->assertOk();
 
     }

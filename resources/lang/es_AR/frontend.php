@@ -172,7 +172,7 @@ return [
 
 	// components/datatable.vue
 	'empty_records' => "No hay registros para mostrar",
-	'pagination_detail' => "Mostrando :of  de :total actividades",
+	'pagination_detail' => "Mostrando :of de :total actividades",
 
 	// filtro.vue
 	'categories' => 'CATEGORÍAS',
@@ -244,6 +244,14 @@ return [
     'already_inscripted' => 'Ya estás inscripto a ',
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscripto y modificarlas ingresá a ',
 
+	// pagada.blade.php
+	'already_inscripted' => 'Ya estás inscripto a ',
+	'with_this_donation' => 'Con esta donación, ya confirmaste tu participación en',
+	'important_remainders' => 'Te recordamos algunos datos importantes',
+	'activity_starts_at' => 'Comienzo',
+	'activity_ends_at' => 'Finaliza',
+	'any_doubt_contact' => 'podés comunicarte si tenés alguna duda o pregunta sobre el punto de encuentro.',
+	'activity_takes_place' => 'La actividad se realizará en',
 
 	// actividades/index.blade.php
 	'index_actividades_text' =>  'Si te da lo mismo, estás haciendo mal las cuentas',
