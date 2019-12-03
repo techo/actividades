@@ -118,6 +118,7 @@ composer install
 php artisan key:generate
 php artisan migrate
 npm install
+php artisan vue-i18n:generate
 npm run prod
 chmod -R 775 storage
 mkdir photos
