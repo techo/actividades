@@ -33,7 +33,7 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Solo falta un paso para confirmar: ' . $this->inscripcion->actividad->nombreActividad)
+            ->subject(__('email.missing_payment_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('no-reply@techo.org')
             ->view('emails.InscripcionFaltaPago');
     }

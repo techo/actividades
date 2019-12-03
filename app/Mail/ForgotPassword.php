@@ -34,7 +34,7 @@ class ForgotPassword extends Mailable
     public function build()
     {
         return $this
-            ->subject('Restablece tu contraseña de TECHO')
+            ->subject(__('email.forgot_password_title'))
             ->from('no-reply@techo.org')
             ->view('emails.forgot-password');
     }

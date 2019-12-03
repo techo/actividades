@@ -34,7 +34,7 @@ class CancelacionActividad extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: ' . $this->actividad->nombreActividad . ' fue cancelada')
+            ->subject(__('email.activity_cancel_title') . ' ' . $this->actividad->nombreActividad)
             ->from('no-reply@techo.org')
             ->view('emails.cancelacionActividad',['persona' => $this->persona, 'actividad' => $this->actividad, 'pais' => $this->pais]);
     }

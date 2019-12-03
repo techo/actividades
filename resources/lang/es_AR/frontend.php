@@ -258,6 +258,8 @@ return [
 	'index_actividades_text_2' => 'Anotate y participá',
 	'delete_filter' => 'Borrar Filtros',
 
-
+	// compartir-modal.blade.php
+	'email' => 'Correo',
+	'copy_link' => 'Copiar link',
 
 ];
