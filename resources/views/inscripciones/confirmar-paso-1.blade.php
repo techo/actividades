@@ -30,7 +30,7 @@
                 {{ __('frontend.will_be_in_touch') }}
             </p>
             <p>
-                <h5>Coordinador</h5>
+                <h5>{{ __('frontend.coordinator') }}</h5>
                 <p>{{ $actividad->coordinador->nombres  }} {{ $actividad->coordinador->apellidoPaterno }}</p>
                 <p>{{ $actividad->coordinador->mail  }}</p>
             </p>

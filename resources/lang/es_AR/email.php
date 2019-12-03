@@ -16,7 +16,7 @@ return [
 	'greetings' => '¡Te esperamos!',
 	'has_been' => 'ha sido',
 	'cancelada' => 'CANCELADA', 
-	'coordinator_message' => 'Mensaje del coordinador:',
+	'coordinator_message' => 'Mensaje del coordinador',
 	'here' => 'Aqui',
 	'from' => 'desde',
 	'unsuscribe' => 'No quiero recibir emails',

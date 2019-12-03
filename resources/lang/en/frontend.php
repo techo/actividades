@@ -89,7 +89,7 @@ return [
     'personal_data'  =>  'Personal Information',
     'name'  =>  'NAME',
     'surname'  =>  'SURNAME',
-    'born_date'  =>  'BORN DATE',
+    'birth_date'  =>  'BIRTH DATE',
     'gender'  =>  'GENDER',	
     'gender_m'  =>  'Male',
     'gender_f'  =>  'Female',
@@ -98,7 +98,7 @@ return [
     'passport'  =>  'PASSPORT',
     'country'  =>  'COUNTRY',
 	'state'  =>  'STATE',
-	'city'  =>  'CITY',
+	'municipality'  =>  'MUNICIPALITY',
 	'telephone'  =>  'TELEPHONE',
 	'actual_password'  =>  'ACTUAL PASSWORD',
 	'new_password'  =>  'NEW PASSWORD',
@@ -150,7 +150,7 @@ return [
 
 
 	// perfil/tarjeta.vue
-	'unapply' => 'Unaplly',
+	'unapply' => 'Unapply',
 	'absent' => 'Absent',
 	'evaluations_start_on' => "Evalution starts on",
 	'unenroll_title' => 'Unenroll from activity',

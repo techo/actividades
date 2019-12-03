@@ -125,7 +125,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label> {{ $t('frontend.born_date') }} *</label>
+                        <label> {{ $t('frontend.birth_date') }} *</label>
                         <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
                                     lang="es" format="DD-MM-YYYY"></datepicker>
                         <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
@@ -228,7 +228,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>{{ $t('frontend.city') }}</label>
+                        <label>{{ $t('frontend.municipality') }}</label>
                         <select id="localidad" v-model="user.localidad" class="form-control">
                             <option v-for="localidad in localidades" v-bind:value="localidad.id">
                                 {{localidad.localidad}}
@@ -280,7 +280,7 @@
             </div>
             <hr>
             <div class="row pb-4">
-                <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i
+                <div class="col-md-3 text-primary"><span v-bind:text="$t('frontend.go_back')"><a href='#' @click="paso_actual = 'email'"><i
                         class="fas fa-long-arrow-alt-left "></i> {{ $t('frontend.go_back') }}</a></span></div>
                 <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso()">{{ $t('frontend.continue') }}</a></div>
             </div>
@@ -324,8 +324,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">
-                        Volver</a></div>
+                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">{{ $t('frontend.go_back') }}</a></div>
                     <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a></div>
                 </div>
 

@@ -13,7 +13,7 @@
                     'badge-warning': actividad.estadoInscripcion == 'waiting_for_confirmation',
                     'badge-success': actividad.estadoInscripcion == 'confirmed',
                 }" >
-                {{ actividad.estadoInscripcion }}
+                {{ $t('frontend.' + actividad.estadoInscripcion) }}
             </span>
             <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
             <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
