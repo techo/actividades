@@ -57,7 +57,6 @@ return [
 	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
-	'activities_types' => 'Tipos de Actividad',
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
 
@@ -101,7 +100,7 @@ return [
     'personal_data'  =>  'Datos personales',
     'name'  =>  'NOMBRE*',
     'surname'  =>  'APELLIDO*',
-    'born_date'  =>  'NACIMIENTO*',
+    'birth_date'  =>  'NACIMIENTO*',
     'gender'  =>  'GENERO*',
     'gender_m'  =>  'Masculino',
     'gender_f'  =>  'Femenino',
@@ -110,7 +109,7 @@ return [
     'passport'  =>  'NRO. DE DNI / PASAPORTE*',
     'country'  =>  'PAIS*',
 	'state'  =>  'PROVINCIA',
-	'city'  =>  'LOCALIDAD',
+	'municipality'  =>  'LOCALIDAD',
 	'telephone'  =>  'TELEFONO*',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL*',
 	'new_password'  =>  'NUEVA CONTRASEÑA*',
@@ -235,7 +234,7 @@ return [
 	'finish_pre_registration' => 'Finalizar tu pre-inscripción',
 	'finish_registration' => 'Finalizar tu inscripción',
 	'at' => 'A las',
-	'accept' => 'A las',
+	'accept' => 'Aceptar',
 	'terms_and_conditions' => 'carta de voluntariado',
 
 	//gracias.blade.php

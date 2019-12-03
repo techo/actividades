@@ -10,12 +10,17 @@ return [
 	|
 	*/
 
+	// cookies-bar.vue
+	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',
+	'cookie_policy' => 'Cookies policy',
+
 	// login.vue
     'login' => 'Login',
     'login_to_account' => 'Login to your account',
     'create_account' => '¡I want to volunteer!',
     'forget_password' => 'Forgot your password?',
     'close' => 'close',
+    'forget_password' => 'Forgot my password',
     'login_facebook' => 'Facebook Login',
     'login_google' => 'Google Login',
     'mail' => 'Mail',
@@ -33,25 +38,32 @@ return [
 	'logout' => 'Logout',
 	'login_null' => 'The mail and password is required',
 
-
 	//loginController
 	'login_error' => "Your password or Email isn't correct",
 
 	// reset.blade
 	'reset_password' => 'Reset Password',
 
-
 	//email.blade
 	'send_link' => 'Send Link',
-
-
 
 	// home
 	'title' => "Let's change this reality",
 	'which_type_of_activity' => 'In which activity do you wanna apply?',
 	'activities_types' => 'Types of activities',
+	'to_act' => 'Going to informal settlements',
++	'to_act_description' => 'Join us working together with hundreds of neighbours and volunteers that fight every to to transform hundreds of informal settlements all around the country, No previous knowledge required, only willingness to participate.',
++	'to_reflect_and_learn' => 'To reflect and Learn',
++	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
++	'especial_events' => 'Special events',
++	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
+
+	// components/estadisticas-publicas.vue
+	'mobilized_volunteer_instances' => 'Volunteer participations',
+	'mobilized_volunteers' => 'Mobilized volunteers',
+	'statistics_message' => 'Our numbers in :ciclo',
 
 	// registro.vue
 	'register' => 'Register',
@@ -79,7 +91,6 @@ return [
     'verify_email_message_3' => "If you don't get our email,", 
 	'verify_email_resend' => 'click here!',
 	'verify_email' => 'Verify email',
-
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'The changes have been saved',
@@ -111,15 +122,11 @@ return [
  	'account_rrss_text_2' => 'and then ',
  	'delete_account_message' => "You are trying to delete your account, don't go! Have you tried muting the notifications? ;)",
  	'delete_account_confirm_button' => "DELETE ACCOUNT",
-
-
  	'date_placeholder' => 'Select a date',
-
+ 	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
 
  	// perfil/index.blade.php
  	'profile' => 'Profile',
-
-
 
  	// perfil/cambiar-email.blade.php
  	'change_email' => 'Change Email',
@@ -139,17 +146,16 @@ return [
     'past_activities' => 'Past Activities',
 	'filter_placeholder' => 'Name or location of the activity',
 
-
 	// perfil/btnMisActividades
 	'view_evaluations' => 'View Evaluations',
-
 
 	// perfil/actividades.vue
 	'unenroll_ok' => "You have been unenrolled correctly",
 	'enrollment_empty' => "Hey, there is no next inscription, time for apllying! :)",
 
-
 	// perfil/tarjeta.vue
+	'unenroll_ok' => "You have un-enrrolled succesfully from this activity.",
+	'enrollment_empty' => "Hey! No suscriptions yet. Time to look for one :)",
 	'unapply' => 'Unapply',
 	'absent' => 'Absent',
 	'evaluations_start_on' => "Evalution starts on",
@@ -157,8 +163,6 @@ return [
 	'message_1' => "you're about unenroll yourself from" ,
 	'message_2' => ' you can enroll again but data will be erased. ¿Would you like to continue?',
 	'unenroll_button' => 'YES, UNENROLL ME',
-
-
 
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filter by',
@@ -169,16 +173,12 @@ return [
 	'empty_records' => "There are no records to show",
 	'pagination_detail' => "showing :of  of :total activities",
     
-
-
 	// filtro.vue
 	'categories' => 'CATEGORIES',
 	'select_all' => 'Select all',
-
 	
  	// contenedorchecktipoactividad
  	'activity_types' => 'Types of Activities',
-
 
 	// actividades/show.blade.php
     'description' => '',
@@ -188,7 +188,6 @@ return [
     'referring' => 'Referring',
     'share' => 'SHARE',
 
-
     // actividadesController
     'error' => 'ERROR',
     'closed_inscriptions' => 'Inscrption time is closed',
@@ -197,8 +196,17 @@ return [
 	'waiting_for_confirmation' => 'WAITING FOR APROVAL',
     'confirmed' => 'CONFIRMED',
 	'activity_full' => 'The activity is full',
+	'limit_about_to_be_reached' => 'Enrollment limite about to be reached',
 	'pre_registration' => 'PRE ENRROL',
 	'apply_now' => 'APPLY',
+
+	// components/inscripcion.vue
+	'select_a_meeting_point' => 'Select a location to meet',
+	'whats_a_meeting_point' => 'An activity might have more than one location to meet. Choose the most convenient for you!',
+
+	// confirmar-paso-1
+	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
+	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Last Step!',
@@ -213,6 +221,8 @@ return [
 	'ask_for_grant' => 'ASK FOR A GRANT',
 	'go_back' => 'GO BACK',
 	'continue' => 'CONTINUE',
+	'cancel' => 'CANCEL',
+	'unenroll' => 'UN-ENROLL',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
@@ -220,18 +230,35 @@ return [
 	'you_choose' => "You choose to donate:",
 	'redirect_pay_platform' => "When clicking you'll be redirected to the paying platform",
 
+	//inscripciones/confirmar.blade.php
+	'finish_pre_registration' => 'Finish your pre-enrollment',
+	'finish_registration' => 'Finish your enrollment',
+	'at' => 'at',
+	'accept' => 'Accept',
+	'terms_and_conditions' => 'terms and conditions',
+
 	//gracias.blade.php
     'frontend.activity_detail' => 'Details of the activity',
     'inscription_confirmed' => 'Inscription confirmed!',
     'already_inscripted' => 'Already inscrited to ',
 	'mail_message' => "We have send you an email with the information about this activity. For watching the activities you are enrolled follow this link ",
 
+	// pagada.blade.php
+	'already_inscripted' => 'Your enrolled in ',
+	'with_this_donation' => 'With your donation your enrollment is comfirmed in',
+	'important_remainders' => 'Some important remainders',
+	'activity_starts_at' => 'Starts at',
+	'activity_ends_at' => 'Finishes at',
+	'any_doubt_contact' => 'you can contact us if you have questions about the location.',
+	'activity_takes_place' => 'The activity takes place in',
 
 	// actividades/index.blade.php
 	'index_actividades_text' =>  "50% of the peple involved in our programs have changed their vocation",
 	'index_actividades_text_2' => "Apply and see it for yourself",
 	'delete_filter' => "Delete Filters",
 
-
+	// compartir-modal.blade.php
+	'email' => 'Email Address',
+	'copy_link' => 'Copy link',
 
 ];
