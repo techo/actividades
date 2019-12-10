@@ -102,7 +102,7 @@
                     filtros.categoria = this.idCategoria;
                 }
 
-                axios.post(url, filtros)
+                axios.get(url, { params: filtros })
                     .then(response => {
                         if(response.data.length) {
                             this.tiposDeActividad = [{ 
@@ -151,16 +151,16 @@
                 if(this.idCategoria) {
                     formData.categoria = this.idCategoria;
                 }
-                
-                this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
-                    self.lista_provincias = Object.keys(response).map(i => response[i]);
-                            for (let i=0; i< self.$children.length; i++) {
-                                self.$children[i].listaProvincias = self.lista_provincias;
-                            }
-                        },formData,
-                function (error) {
-                    console.log('error en getProvinciasYLocalidades. url: ' + url);
-                });
+
+                axios.get(url, { params: formData })
+                    .then(response => {
+                        let datos = response.data;
+                        this.lista_provincias = Object.keys(datos).map(i => datos[i]);
+                        for (let i=0; i< this.$children.length; i++) {
+                            this.$children[i].listaProvincias = this.lista_provincias;
+                        }
+                    })
+                    .catch((error) => { debugger; });
             },
 
             borrarFiltros: function () {

@@ -26,4 +26,9 @@ class PaisesController extends Controller
     public function localidades($id_pais, $id_provincia) {
     	return Provincia::find($id_provincia)->localidades;
     }
+
+    public function paisesHabilitados() {
+        return Pais::where('habilitado', true)->get();
+    }
+
 }

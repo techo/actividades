@@ -110,13 +110,17 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-techo-blue">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <a class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
                         </a>
-                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">
-                                            {{ $t('frontend.hello') }}, {{ user.nombres }}
-                        </a>
+                        <div class="btn-group " role="group" ref="paises">
+                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
+                            <div class="dropdown-menu">
+                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
+                            </div>
+                        </div>
+                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a>
                     </div>
                 </div>
                 
@@ -124,15 +128,8 @@
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link text-uppercase" href="/actividades">{{ $t('frontend.activities') }} <span class="sr-only">(current)</span></a>
-
-                        </li>
-                        
-
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
                         </li>
@@ -247,7 +244,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais' ],
         data () {
             let data = {
                 credentials: {
@@ -262,6 +259,7 @@
                     id: ''
                 },
                 verAdmin: this.veradmin,
+                paises: [],
             };
             
             if(this.usuario) {
@@ -287,11 +285,21 @@
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
             }
+            this.paises_habilitados();
             //Eventos
             events.$on('cerrar-sesion', this.logout);
 
         },
         methods: {
+            ir_a_pais: function(codigo) {
+                //console.log('pais');
+                window.location.href = '/seleccionar-pais/' +  codigo;
+            },
+            paises_habilitados: function() {
+                axios.get('/ajax/paises/habilitados')
+                    .then(respuesta => { this.paises = respuesta.data; })
+                    .catch(error => { debugger; });
+            },
             registro_facebook: function() {
               window.location.href = '/auth/facebook';
             },
@@ -460,7 +468,6 @@
         color: #fff !important;
     }
     .dropdown-menu {
-        width: 10em;
         padding: 1em 0;
         margin: 0;
     }

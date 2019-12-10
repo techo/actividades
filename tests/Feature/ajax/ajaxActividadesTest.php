@@ -17,7 +17,7 @@ class ajaxActividadesTest extends TestCase
 
         $params = [];
 
-        $response = $this->post('/ajax/actividades/tipos', $params);
+        $response = $this->get('/ajax/actividades/tipos', $params);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -35,7 +35,7 @@ class ajaxActividadesTest extends TestCase
     {
         $params = [];
 
-        $response = $this->post('/ajax/actividades/provincias/', $params);
+        $response = $this->json('GET', '/ajax/actividades/provincias/', $params);
 
         $response
             ->assertStatus(200)
@@ -60,7 +60,7 @@ class ajaxActividadesTest extends TestCase
             });
 
         $params = [];
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
         $response
             ->assertStatus(200)
             ->assertJsonStructure(
@@ -84,11 +84,11 @@ class ajaxActividadesTest extends TestCase
     /** @test */
     public function ver_detalle_de_actividad()
     {
+        $this->withoutExceptionHandling();
+        
         $actividad = factory('App\Actividad')->create();
-        $url = '/ajax/actividades/' . $actividad->idActividad;
 
-        $response = $this->get($url);
-        $response
+        $this->get('/ajax/actividades/' . $actividad->idActividad)
             ->assertStatus(200)
             ->assertJsonStructure(
                 [

@@ -3,17 +3,19 @@
 use Illuminate\Support\Facades\Auth;
 
 //Frontoffice
-Route::get('/', 'HomeController@index')->name('home');
+#Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
+Route::get('/', 'ActividadesController@index');
 Route::get('/actividades', 'ActividadesController@index');
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
-Route::get('/carta-voluntariado', function (){
-    return view('terminos.actividades.show');
-});
+Route::get('/carta-voluntariado', function (){ return view('terminos.actividades.show');  });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
 Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
+
+Route::get('/seleccionar-pais/{codigo}', 'HomeController@seleccionarPais');
+Route::get('/deseleccionar-pais', 'HomeController@deseleccionarPais');
 
 // Ajax calls
 Route::prefix('ajax')->group(function () {
@@ -27,6 +29,7 @@ Route::prefix('ajax')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
+        Route::get('/habilitados', 'ajax\PaisesController@paisesHabilitados');
 	});
 
 	Route::prefix('usuario')->group(
@@ -48,9 +51,9 @@ Route::prefix('ajax')->group(function () {
         Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
     });
     
-    Route::post('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
-    Route::post('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
-    Route::post('actividades', 'ajax\ActividadesController@index');
+    Route::get('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
+    Route::get('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
+    Route::get('actividades', 'ajax\ActividadesController@index');
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
 
     Route::get('auditorias/{tabla}/{id}', 'ajax\AuditoriasController@show');

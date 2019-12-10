@@ -56,6 +56,11 @@ class ActividadesSearch
             ->where('fechaInicioInscripciones', '<=', date('Y-m-d H:i'))
             ->where('fechaFinInscripciones', '>=', date('Y-m-d H:i'))
             ->where('fechaInicio', '>=', date('Y-m-d H:i'));
+
+        if(config('app.pais')) {
+            $query->where('Actividad.idPais', config('app.pais'));
+        }
+
         return $query;
     }
 }

@@ -37,16 +37,10 @@ class ProvinciasSeeder extends Seeder
         ];
 
         foreach ($listado_provincias as $v) {
-            //dd($v);
             $p = new App\Provincia;
             $p->provincia = $v;
             $p->id_pais = $pais->id;
             $p->save();
-
-            $l = new App\Localidad;
-            $l->localidad = 'Sin especificar';
-            $l->id_provincia = $p->id;
-            $l->save();
         }
 
     }
