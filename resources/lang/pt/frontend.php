@@ -10,6 +10,10 @@ return [
 	|
 	*/
 
+	// cookies-bar.vue
+	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',
+	'cookie_policy' => 'Cookies policy',
+
 	// login.vue
     'login' => 'Acessar',
     'login_to_account' => 'Acessar à minha conta',
@@ -34,10 +38,8 @@ return [
 	'logout' => 'Sair',
 	'login_null' => 'O e-mail e a senha são obrigatórios',
 
-
 	//loginController
 	'login_error' => 'E-mail e/ou senha es incorretos',
-
 
 	// reset.blade
 	'reset_password' => 'Redefinir senha',
@@ -45,15 +47,25 @@ return [
 	//email.blade
 	'send_link' => 'Enviar link',
 
-
 	// home
 	'title' => 'Vamos transformar essa realidade',
 	'which_type_of_activity' => 'Em que atividade deseja participar?',
 	'activities_types' => 'Tipos de Atividades',
+	'to_act' => 'Going to informal settlements',
+	'to_act_description' => 'Join us working together with hundreds of neighbours and volunteers that fight every to to transform hundreds of informal settlements all around the country, No previous knowledge required, only willingness to participate.',
+	'to_reflect_and_learn' => 'To reflect and Learn',
+	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
+	'especial_events' => 'Special events',
+	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bemvindo',
 
-		// registro.vue
+	// components/estadisticas-publicas.vue
+	'mobilized_volunteer_instances' => 'Volunteer participations',
+	'mobilized_volunteers' => 'Mobilized volunteers',
+	'statistics_message' => 'Our numbers in :ciclo',
+
+	// registro.vue
 	'register' => 'Registre-se',
 	'finish' => 'Terminar',
 	'step_1' => 'PASSO 1/3',
@@ -80,8 +92,6 @@ return [
 	'verify_email_resend' => 'clique para solicitar outro',
 	'verify_email' => 'Verificar email',
 
-
-
 	// perfil/perfil.vue
 	'changes_success'  =>  'As mudanças foram salvas com sucesso.',
 	'profile_text_1'  =>  'Aqui você pode fazer alterações no seu perfil. Modifique sua senha y dados pessoais.',
@@ -93,12 +103,13 @@ return [
     'born_date'  =>  'ANIVERSÁRIO*',
     'gender'  =>  'Sexo*',
     'gender_m'  =>  'Masculino',
+    'gender_f'  =>  'Femenino',
     'gender_x'  =>  'Outro',
     'gender_o'  =>  'Prefiro não dizer',
     'passport'  =>  'CPF / PASAPORTE*',
     'country'  =>  'PAÍS*',
 	'state'  =>  'PROVÍNCIA',
-	'city'  =>  'LOCALIDADE',
+	'municipality'  =>  'LOCALIDADE',
 	'telephone'  =>  'TELEFONE*',
 	'actual_password'  =>  'SENHA ATUAL*',
 	'new_password'  =>  'NOVA SENHA*',
@@ -111,9 +122,8 @@ return [
  	'account_rrss_text_2' => 'e clicar em',
  	'delete_account_message' => "Você está prestes a excluir sua conta desta plataforma. Essa ação não pode ser desfeita. Deseja continuar?",
  	'delete_account_confirm_button' =>'SIM, EXCLUIR',
-
  	'date_placeholder' => 'Selecione uma data',	
-
+ 	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
 
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
@@ -130,22 +140,18 @@ return [
 	'change_email_are_you_sure' => 'Tem certeza?',
 	'change_email_confirm_button' => 'Sim, mudar',
 
-
 	// perfil/actividades
 	'my_activities' => 'Minhas Atividades',
 	'next_activities' => 'Próximas Atividades', 
     'past_activities' => 'Atividades passadas',
 	'filter_placeholder' => 'Nome o localidade da actividade',
 
-
 	// perfil/btnMisActividades
 	'view_evaluations' => 'Ver avaliações',
-
 
 	// perfil/actividades.vue
 	'unenroll_ok' => "Você cancelou sua inscrição com sucesso na atividade.",
 	'enrollment_empty' => "Ei, sem inscrições futuras, hora de procurar uma! :)",
-
 
 	// perfil/tarjeta.vue
 	'unenroll_ok' => "Você cancelou sua inscrição com sucesso na atividade.",
@@ -157,7 +163,6 @@ return [
 	'message_1' => 'Você está prestes a cancelar sua inscrição da atividade',
 	'message_2' => ' seus dados de participação serão excluídos. Você pode se inscrever quando quiser. Deseja continuar?',
 	'unenroll_button' => 'SIM, CANCELAR MINHA INSCRIÇÃO',
-
 
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filtrar por',
@@ -172,10 +177,8 @@ return [
 	'categories' => 'CATEGORIAS',
 	'select_all' => 'Marcar tudo',
 
-
  	// contenedorchecktipoactividad
  	'activity_types' => 'Tipos de Actividade',
-
     
 	// actividades/show.blade.php
     'description' => '',
@@ -185,7 +188,6 @@ return [
     'referring' => 'Liderança',
     'share' => 'COMPARTILHAR',
 
-
     // actividadesController
     'error' => 'ERRO',
     'closed_inscriptions' => 'O período de inscrição está fechado',
@@ -194,8 +196,17 @@ return [
 	'waiting_for_confirmation' => 'ESPERAR CONFIRMAÇÃO',
     'confirmed' => 'CONFIRMADO',
 	'activity_full' => 'A atividade não tem mais lugares',
+	'limit_about_to_be_reached' => 'Enrollment limite about to be reached',
 	'pre_registration' => 'PRÉ-REGISTO',
 	'apply_now' => 'ME INSCREVER',
+
+	// components/inscripcion.vue
+	'select_a_meeting_point' => 'Select a location to meet',
+	'whats_a_meeting_point' => 'An activity might have more than one location to meet. Choose the most convenient for you!',
+
+	// confirmar-paso-1
+	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
+	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Só mais um passo!',
@@ -219,18 +230,35 @@ return [
 	'you_choose' => 'Você escolheu doar:',
 	'redirect_pay_platform' => 'Ao clicar, você será redirecionado para o site de pagamento',
 
+	//inscripciones/confirmar.blade.php
+	'finish_pre_registration' => 'Finish your pre-enrollment',
+	'finish_registration' => 'Finish your enrollment',
+	'at' => 'at',
+	'accept' => 'Accept',
+	'terms_and_conditions' => 'terms and conditions',
+
 	//gracias.blade.php
     'frontend.activity_detail' => 'Detalhe da Actividade',
     'inscription_confirmed' => 'Inscrição confirmada!',
     'already_inscripted' => 'Você já está registrado em ',
 	'mail_message' => 'Enviamos um e-mail com mais informações sobre esta atividade. Para ver as atividades nas quais você está registrado e modificá-las, acesse à ',
 
+	// pagada.blade.php
+	'already_inscripted' => 'Your enrolled in ',
+	'with_this_donation' => 'With your donation your enrollment is comfirmed in',
+	'important_remainders' => 'Some important remainders',
+	'activity_starts_at' => 'Starts at',
+	'activity_ends_at' => 'Finishes at',
+	'any_doubt_contact' => 'you can contact us if you have questions about the location.',
+	'activity_takes_place' => 'The activity takes place in',
 
 	// actividades/index.blade.php
 	'index_actividades_text' =>  'Se para você o resultado é a misma coisa, você está fazendo as contas erradas',
 	'index_actividades_text_2' => 'Inscreva-se e participe',
 	'delete_filter' => 'Apagar Filtros',
 
-
+	// compartir-modal.blade.php
+	'email' => 'Email Address',
+	'copy_link' => 'Copy link',
 
 ];
