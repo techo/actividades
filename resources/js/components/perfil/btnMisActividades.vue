@@ -6,7 +6,7 @@
                 class="btn btn-sm btn-info"
                 @click="ir_a_evaluar"
         >
-            Ver Evaluaciones
+            {{ __('frontend.view_evaluations') }}
         </button>
     </div>
 </template>

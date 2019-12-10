@@ -3,13 +3,13 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$inscripcion->persona->nombres}}
+         @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
-    <p>Te has preinscripto para participar: <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-        Inicia el 
+    <p>@lang('email.missing_payment_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
+            @lang('email.begins_on')  
             <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
                 {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
-            </strong> en
+            </strong> @lang('email.begins_at')
             <strong>
                 @if($inscripcion->actividad->idLocalidad)
                     {{$inscripcion->actividad->localidad->localidad}}, 
@@ -20,37 +20,35 @@
 
         <p>
             <strong>
-                <span style="color:rgb(255,153,0)">SOLO FALTA CONFIRMAR CON TU DONACIÓN</span>
+                <span style="color:rgb(255,153,0)">@lang('email.missing_payment_2')</span>
             </strong>
         </p>
         <p>
-            ¡Tenés tiempo hasta el 
-            @if($inscripcion->actividad->fechaLimitePago)
+            @lang('email.missing_payment_3')            @if($inscripcion->actividad->fechaLimitePago)
                 <b>{{$inscripcion->actividad->fechaLimitePago->format('d/m/Y')}}</b>!
             @else
                 <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b>!
             @endif
         </p>
         <p>
-            Para confirmar tu participación, haz click en el botón
-            <strong>Confirmar con tu donación</strong> en la <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" >actividad.</a>
+            @lang('email.missing_payment_4')
+            <strong>@lang('email.confirm_by_donation')</strong> @lang('email.from') <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" > @lang('email.here') </a>
         </p>
         <p>
-            Te recordamos que el monto mínimo sugerido para abonar es de <b>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</b>, los cuales cubren
-            los gastos de traslado, seguro y comida durante la construcción.
+             @lang('email.missing_payment_5') <b>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</b>, @lang('email.missing_payment_6')
         </p>
         <p>
-            En el caso que no puedas abonar, no queremos que dejes de participar,
+            @lang('email.missing_payment_7') En el caso que no puedas abonar, no queremos que dejes de participar,
             @if(!empty($inscripcion->actividad->beca))
-                solicitá una <a href="{{ $inscripcion->actividad->beca }}">BECA</a>.
+                 <a href="{{ $inscripcion->actividad->beca }}">@lang('frontend.ask_for_grant')</a>.
             @else
-                ponete en contacto con el coodinador de la actividad para gestionar una BECA
+                @lang('email.missing_payment_8')
             @endif
         </p>
 
     @if($inscripcion->actividad->coordinador)
         <p>
-            <strong>Coordinador de la actividad:</strong>
+            <strong>@lang('frontend.coordinator'):</strong>
         </p>
         <p>
             {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
@@ -63,7 +61,7 @@
     @if($inscripcion->punto_encuentro)
         <p>
           <strong>
-              Punto de encuentro:
+              @lang('frontend.meeting_points')
           </strong>
             {{$inscripcion->punto_encuentro->punto}} ({{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
             @if($inscripcion->punto_encuentro->idLocalidad)
@@ -75,7 +73,7 @@
         @if($inscripcion->punto_encuentro->responsable)
             <p>
                 <strong>
-                    Referente del punto de encuentro:
+                    @lang('frontend.referring'):
                 </strong>
             </p>
             <p>
@@ -88,7 +86,7 @@
         @endif
     @endif
 
-    <p>¡Te esperamos!</p>
+    <p>@lang('email.greetings')</p>
     TECHO - {{$inscripcion->actividad->pais->nombre}}
 
 @endsection

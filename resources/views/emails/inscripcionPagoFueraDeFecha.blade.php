@@ -3,25 +3,27 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$inscripcion->persona->nombres}}
+        @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
     <p>
-        Recibimos tu donación pero está fuera de la fecha límite para confirmar:
-        
+        @lang('email.payment_outdated_1') 
+
         @if($inscripcion->actividad->fechaLimitePago)
             {{ $inscripcion->actividad->fechaLimitePago }}.
         @endif
     </p>
-    <p>
-        Es por esto que <b>no quedaste confirmado para participar</b>.
+    <p> 
+        <b>
+            @lang('email.payment_outdated_2')
+        </b>.
     </p>
     <p>
-        Si te interesa recuperar esa donación, podés contactarte con el coodinador de la actividad y solicitarle que tramite la devolución.
+        @lang('email.payment_outdated_3')
     </p>
 
     @if($inscripcion->actividad->coordinador)
         <p>
-            <strong>Coordinador de la actividad:</strong>
+            <strong>@lang('frontend.coordinator'):</strong>
         </p>
         <p>
             {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
@@ -31,7 +33,7 @@
         </p>
     @endif
 
-    <p>¡Saludos!</p>
+    <p>@lang('email.greetings')</p>
     TECHO - {{$inscripcion->actividad->pais->nombre}}
 
 @endsection

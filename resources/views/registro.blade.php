@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Registro
+    {{ __('frontend.register') }}
 @endsection
 
 @section('main_image')

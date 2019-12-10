@@ -3,13 +3,13 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$inscripcion->persona->nombres}}
+        @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
-    <p>Te has preinscripto para participar: <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-        Inicia el 
+    <p>@lang('email.pre_enroll_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
+        @lang('email.begins_on')
             <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
                 {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
-            </strong> en
+            </strong> @lang('email.begins_at')
             <strong>
                 @if($inscripcion->actividad->idLocalidad)
                     {{$inscripcion->actividad->localidad->localidad}}, 
@@ -19,13 +19,13 @@
     </p>
 
     <p>
-        <strong>¡Quedás a la espera de que te confirmemos!</strong>
-        En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.
+        <strong>@lang('email.pre_enroll_2')</strong>
+        @lang('email.pre_enroll_3')
     </p>
 
     @if($inscripcion->actividad->coordinador)
         <p>
-            <strong>Coordinador de la actividad:</strong>
+            <strong>@lang('frontend.coordinator'):</strong>
         </p>
         <p>
             {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
@@ -38,7 +38,7 @@
     @if($inscripcion->punto_encuentro)
         <p>
           <strong>
-              Punto de encuentro:
+              @lang('frontend.meeting_points'):
           </strong>
             {{$inscripcion->punto_encuentro->punto}} ({{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
             @if($inscripcion->punto_encuentro->idLocalidad)
@@ -50,7 +50,7 @@
         @if($inscripcion->punto_encuentro->responsable)
             <p>
                 <strong>
-                    Referente del punto de encuentro:
+                    @lang('frontend.referring')::
                 </strong>
             </p>
             <p>
@@ -63,7 +63,7 @@
         @endif
     @endif
 
-    <p>¡Te esperamos!</p>
+    <p>@lang('email.greetings')</p>
     TECHO - {{$inscripcion->actividad->pais->nombre}}
 
 @endsection

@@ -267,3 +267,8 @@ Route::prefix('/pagos/')->group(function() {
     Route::get('{idInscripcion}/response', 'PagosController@response');
     Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
 });
+
+Route::get('locale/{locale}', function($locale){
+    Session::put('locale',$locale);
+    return redirect()->back();
+});

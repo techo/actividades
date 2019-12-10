@@ -7,8 +7,8 @@
 @section('main_image')
     <div class="techo-hero actividades">
         <!-- <img src="{{ asset('/img/hero-slim.jpg') }}" alt="hero image" height="210"> -->
-        <h2 class="text-uppercase">Si te da lo mismo, estás haciendo mal las cuentas <br>
-            Anotate y participá</h2>
+        <h2 class="text-uppercase">{{ __('frontend.index_actividades_text') }} <br>
+            {{ __('frontend.index_actividades_text_2') }}</h2>
     </div>
 @endsection
 

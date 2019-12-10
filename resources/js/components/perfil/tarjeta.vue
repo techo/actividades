@@ -21,7 +21,7 @@
                             class="btn btn-danger text-light font-weight-bold pull-right"
                             @click="desincribir(inscripcion.idActividad)"
                         >
-                            Desinscribirme
+                            {{ $t('frontend.unapply') }}
                         </a>
                     </span>
                     <span v-else> <!-- la actividad ya terminó -->
@@ -31,14 +31,14 @@
                                     v-show="inscripcion.presente === 1"
                                     @click="ir_a_evaluar"
                             >
-                                Ver Evaluaciones
+                            {{ $t('frontend.view_evaluations') }}
                             </a>
                             <p v-show="inscripcion.presente === 0">
-                                <strong>No asististe a esta actividad</strong>
+                                <strong> {{ $t('frontend.absent') }}</strong>
                             </p>
                         </span>
                         <span v-else>  <!-- Actividad terminó pero no esta en el periodo de evaluación -->
-                            <p><strong>Las evaluaciones comienzan el <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
+                            <p><strong> {{ $t('frontend.evaluations_start_on') }} <br>{{ inscripcion.fechaInicioEvaluaciones}}</strong></p>
                         </span>
                     </span>
                 </div>
@@ -77,15 +77,15 @@
             desincribir: function (idActividad) {
                 let self = this;
                 self.$refs.confirmar.openSimplert({
-                    title:'DESINSCRIBIRME DE ACTIVIDAD',
-                    message:"Estás por desinscribirte de la actividad " + self.inscripcion.nombreActividad + ", se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?",
+                    title: this._i18n.t('frontend.unenroll_title'),
+                    message: this._i18n.t('frontend.message_1') + self.inscripcion.nombreActividad + this._i18n.t('frontend.message_2'),
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
                     customClass: 'confirmar',
-                    customCloseBtnText: 'CANCELAR', //string -- close button text
+                    customCloseBtnText: this._i18n.t('frontend.message_1'), //string -- close button text
                     customCloseBtnClass: 'btn btn-default', //string -- custom class for close button
-                    customConfirmBtnText: 'SI, DESINSCRIBIRME', //string -- confirm button text
+                    customConfirmBtnText: this._i18n.t('frontend.unenroll_button'), //string -- confirm button text
                     customConfirmBtnClass: 'btn btn-danger mb-1', //string -- custom class for confirm button
                     onConfirm: function() {
                         axios.delete('/ajax/usuario/inscripciones/' + idActividad).then(response => {

@@ -11,7 +11,7 @@
                                 :aria-controls="'cardEvaluacionPersona_'+ persona.idPersona"
                                 @click="cambiarIcono"
                         >
-                            Evaluación de {{ nombre }} - {{ persona.rol }}
+                            {{ $t('frontend.feedback_of') }} {{ nombre }} - {{ persona.rol }}
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
@@ -27,8 +27,8 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="sliderTecnico">Puntaje Técnico <div v-show="!noAplicaTecnico" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
-                                    <p style="font-size: 12px; color: #6d6d6c" >Conocimientos sobre la tarea a desarrollar</p>
+                                    <label for="sliderTecnico">{{ $t('frontend.technical_score') }}<div v-show="!noAplicaTecnico" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
+                                    <p style="font-size: 12px; color: #6d6d6c" >{{ $t('frontend.technical_score_description') }}</p>
                                     <input type="range"
                                            class="form-control-range"
                                            id="sliderTecnico"
@@ -43,7 +43,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplicaTecnico" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
-                                        No Aplica / No tengo opinión
+                                        {{ $t('frontend.doesn_not_apply') }}
                                     </label>
                                     <input
                                             type="checkbox"
@@ -59,8 +59,8 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="sliderSocial">Puntaje Social <div v-show="!noAplicaSocial" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeSocial}">{{ puntajeSocial }}</div></label>
-                                    <p style="font-size: 12px; color: #6d6d6c;" >Habilidades para comuncicarse y empatizar con otros.</p>
+                                    <label for="sliderSocial">{{ $t('frontend.social_score') }}<div v-show="!noAplicaSocial" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeSocial}">{{ puntajeSocial }}</div></label>
+                                    <p style="font-size: 12px; color: #6d6d6c;" >{{ $t('frontend.social_score_description') }}</p>
                                     <input type="range"
                                            class="form-control-range"
                                            id="sliderSocial"
@@ -76,7 +76,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplicaSocial" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
-                                        No Aplica / No tengo opinión
+                                        {{ $t('frontend.doesn_not_apply') }}
                                     </label>
                                     <input
                                             type="checkbox"
@@ -90,7 +90,7 @@
 
                         </div>
                         <div class="form-group">
-                            <label for="comentarios">Comentarios</label>
+                            <label for="comentarios">{{ $t('frontend.comments') }}</label>
                             <textarea
                                     name="comentarios"
                                     id="comentarios"
@@ -107,14 +107,14 @@
                                 v-if="!enviado && !evaluacionPasada"
                                 @click="enviarEvaluacion"
                         >
-                            Enviar Evaluación
+                            {{ $t('frontend.send') }}
                         </button>
-                        <p class="pull-right" v-if="enviado"><strong>Enviado</strong></p>
-                        <p class="pull-right" v-if="evaluacionPasada & !enviado">La fecha de fin de las evaluaciones ya pasó &#9785;</p>
+                        <p class="pull-right" v-if="enviado"><strong>{{ $t('frontend.sent') }}</strong></p>
+                        <p class="pull-right" v-if="evaluacionPasada & !enviado">{{ $t('frontend.unable_to_sent_feeback') }}</p>
                         <p class="red" v-if="error">
                             <i class="fas fa-exclamation"></i> &nbsp;
                             <i style="margin-left: 0.5em">
-                                No se pudo guardar la evaluación. Intentalo de nuevo más tarde.
+                                {{ $t('frontend.unable_to_sent_feeback') }}
                             </i>
                         </p>
                     </div>

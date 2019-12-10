@@ -33,7 +33,7 @@ class MailInscripcionEsperarConfirmacion extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Te preinscribiste a ' . $this->inscripcion->actividad->nombreActividad . ' ahora, esperá la confirmación')
+            ->subject( __('email.pre_enroll_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('no-reply@techo.org')
             ->view('emails.inscripcionEsperarConfirmacion');
     }

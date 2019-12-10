@@ -45,6 +45,6 @@
                 </tr>
             </table>
         </td>
-        <td width="25%"><a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}">No quiero recibir emails</a></td>
+        <td width="25%"><a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}">@lang('email.unsuscribe')</a></td>
     </tr>
 </table>

@@ -37,12 +37,12 @@ class InscripcionesConConfirmacionTest extends TestCase
         
         $this->actingAs($jose)
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
-            ->assertSee('espera')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('ESPERAR')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -86,7 +86,7 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMADO')
+            ->assertSee('confirmed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -121,12 +121,12 @@ class InscripcionesConConfirmacionTest extends TestCase
         
         $this->actingAs($jose)
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', $datos)
-            ->assertSee('espera')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('ESPERAR')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -181,7 +181,7 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMAR')
+            ->assertSee('approval_needed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [

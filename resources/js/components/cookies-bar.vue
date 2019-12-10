@@ -1,8 +1,8 @@
 <template>
     <div id="cookies-bar">
         <div class="cookies-bar-content">
-            Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las
-            <a href="https://www.techo.org/politica-de-privacidad#cookies" target="_blank">Politicas de Cookies</a>
+            {{ $t('frontend.cookie_bar_message') }}
+            <a href="https://www.techo.org/politica-de-privacidad#cookies" target="_blank">{{ $t('frontend.cookie_policy') }}</a>
             <button class="pull-right" @click="cerrar">
                 <i class="fas fa-times"></i>
             </button>

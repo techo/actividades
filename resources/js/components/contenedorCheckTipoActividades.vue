@@ -4,7 +4,7 @@
             v-bind:class="{active: $parent.dataTiposActividad.length > 0}"
             data-toggle="collapse" href="#tipoActividades" 
             role="button" aria-expanded="false"
-            ><span> Tipos de Actividad </span> <i class="fas fa-caret-down"></i>
+            ><span> {{ $t('frontend.activity_types') }} </span> <i class="fas fa-caret-down"></i>
         </a>
         <div id="tipoActividades" class="collapse lista-opciones" >
                 
@@ -16,8 +16,8 @@
                 </check-tipo-actividades>
 
             </div>
-            <button class="btn btn-sm" type="button" v-on:click="borrar">Borrar</button>
-            <button class="btn btn-sm aplicar" type="button" v-on:click="aplicar">Aplicar</button>
+            <button class="btn btn-sm" type="button" v-on:click="borrar">{{ $t('frontend.delete') }}</button>
+            <button class="btn btn-sm aplicar" type="button" v-on:click="aplicar">{{ $t('frontend.filter') }}</button>
         </div>
     </div>
 </template>

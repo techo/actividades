@@ -1,9 +1,9 @@
 <template>
     <div>
         <p class="text-muted">
-            Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.
+            {{ $t('frontend.feedback_text') }}
         </p>
-        <h4 class="subtitle">Evalúa la actividad</h4>
+        <h4 class="subtitle">{{ $t('frontend.activity_feedback') }}</h4>
         <div :id="'evaluaciones_' + actividad.idActividad">
             <div class="card"  style="width: 100%">
                 <div class="card-header accordion" id="headingOne">
@@ -15,7 +15,7 @@
                                 aria-controls="cardEvaluacion"
                                 @click="cambiarIcono"
                         >
-                            Evaluación de {{ actividad.nombreActividad }}
+                            {{ $t('frontend.feedback_of') }} {{ actividad.nombreActividad }}
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                         </h6>
@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
-                                    <label for="slider">Puntaje General <div v-show="!noAplica" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntaje}">{{ puntaje }}</div></label>
+                                    <label for="slider">{{ $t('frontend.general_score') }} <div v-show="!noAplica" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntaje}">{{ puntaje }}</div></label>
                                     <input type="range"
                                            class="form-control-range"
                                            id="slider"
@@ -42,7 +42,7 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="noAplica" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
-                                        No Aplica / No tengo opinión
+                                        {{ $t('frontend.doesn_not_apply') }}
                                     </label>
                                     <input type="checkbox" id="noAplica" :value="1" v-model="noAplica" :disabled="evaluacionPasada || enviado">
                                 </div>
@@ -50,7 +50,7 @@
 
                         </div>
                         <div class="form-group">
-                            <label for="comentarios">Comentarios</label>
+                            <label for="comentarios">{{ $t('frontend.comments') }}</label>
                             <textarea
                                     name="comentarios"
                                     id="comentarios"
@@ -66,14 +66,14 @@
                                 v-if="!enviado && !evaluacionPasada"
                                 @click="enviarEvaluacion"
                         >
-                            Enviar Evaluación
+                            {{ $t('frontend.send') }}
                         </button>
-                        <p class="pull-right" v-if="enviado"><strong>Enviado</strong></p>
-                        <p class="pull-right" v-if="evaluacionPasada && !enviado">La fecha de fin de las evaluaciones ya pasó &#9785;</p>
+                        <p class="pull-right" v-if="enviado"><strong>{{ $t('frontend.sent') }}</strong></p>
+                        <p class="pull-right" v-if="evaluacionPasada && !enviado"> {{ $t('frontend.feedback_date_expired')}}</p>
                         <p class="red" v-if="error">
                             <i class="fas fa-exclamation"></i> &nbsp;
                             <i style="margin-left: 0.5em">
-                                No se pudo guardar la evaluación. Intentalo de nuevo más tarde.
+                                {{ $t('frontend.unable_to_sent_feeback') }}
                             </i>
                         </p>
                     </div>

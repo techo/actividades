@@ -3,14 +3,14 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$inscripcion->persona->nombres}},
+        @lang('frontend.hello') {{$inscripcion->persona->nombres}},
     </p>
 
     <p>
-        Te recordamos que te has inscrito para participar en
-        <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO
+        @lang('email.activity_reminder_1')
+        <strong>{{$inscripcion->actividad->nombreActividad}}</strong> - TECHO
         - {{$inscripcion->actividad->pais->nombre}}
-        que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} en
+        @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} @lang('email.begins_at') 
         {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.           @if($inscripcion->actividad->idLocalidad)
             {{$inscripcion->actividad->localidad->localidad}}, 
         @endif
@@ -20,7 +20,7 @@
 
     @if($inscripcion->actividad->coordinador)
         <p>
-            <strong>Coordinador de la actividad:</strong>
+            <strong>@lang('frontend.coordinator'):</strong>
             {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
             <a href="mailto:{{ $inscripcion->actividad->coordinador->mail }}" target="_blank">
                 {{ $inscripcion->actividad->coordinador->mail }}
@@ -33,12 +33,12 @@
     </p>
 
     <p>
-        <strong>¡Te esperamos!</strong>
+        <strong>@lang('email.greetings')</strong>
     </p>
     @if($inscripcion->punto_encuentro)
         <p>
             <strong>
-                Punto de encuentro:
+                @lang('frontend.meeting_points')
             </strong>
         </p>
         <p>
@@ -51,7 +51,7 @@
         </p>
         <p>
             <strong>
-                Horario:
+                @lang('email.hour'):
             </strong>
         </p>
         <p>
@@ -61,7 +61,7 @@
         @if($inscripcion->punto_encuentro->responsable)
             <p>
                 <strong>
-                    Coordinador del punto de encuentro:
+                    @lang('frontend.referring'):
                 </strong>
             </p>
             <p>
