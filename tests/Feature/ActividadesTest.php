@@ -171,7 +171,7 @@ class ActividadesTest extends TestCase
         ]);
 
         $this->actingAs($mati)
-            ->post('/ajax/actividades')
+            ->get('/ajax/actividades')
             ->assertSeeText("waiting_for_confirmation");
 
     }
@@ -199,7 +199,7 @@ class ActividadesTest extends TestCase
         ]);
 
         $this->actingAs($mati)
-            ->post('/ajax/actividades')
+            ->get('/ajax/actividades')
             ->assertSeeText("confirmed");
     }
 
@@ -225,7 +225,7 @@ class ActividadesTest extends TestCase
         ]);
 
         $this->actingAs($mati)
-            ->post('/ajax/actividades')
+            ->get('/ajax/actividades')
             ->assertSeeText("confirm");
     }
 
