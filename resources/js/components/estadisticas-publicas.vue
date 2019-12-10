@@ -1,21 +1,21 @@
 <template>
 	<div>
-		<div class="estadisticas-publicas-label" >En el {{ciclo}} llevamos</div>
+		<div class="estadisticas-publicas-label" > {{ $t('frontend.statistics_message', {'ciclo' : ciclo}) }}</div>
 		<div class="estadisticas-publicas">
 				<div> 
 					<h3>  {{ voluntades_movilizadas }} </h3>  
-					<span>Voluntades Movilizadas</span>
+					<span>{{ $t('frontend.mobilized_volunteer_instances') }}</span>
 				</div>
 				
 				<div> 
 					<h3>  {{ personas_movilizadas.cantidad }} </h3> 
-					<span>Personas Movilizadas</span>
+					<span>{{ $t('frontend.mobilized_volunteers') }}</span>
 				</div>
 
 				<template v-for="actividadtotal in actividadestotales">
 					<div> 
 						<h3> {{ actividadtotal.cantidad }} </h3> 
-						<span> {{ actividadtotal.nombre }} </span>
+						<span> {{ $t('frontend.' + actividadtotal.nombre) }} </span>
 					</div>
 				</template>
 		</div>

@@ -4,7 +4,7 @@
             v-bind:class="{active: $parent.dataLocalidades.length > 0 || $parent.dataProvincias.length > 0}"
             data-toggle="collapse" href="#provincias" 
             role="button" aria-expanded="false"
-        ><span> Provincias</span> <i class="fas fa-caret-down"></i>
+        ><span> {{ $t('frontend.state') }}</span> <i class="fas fa-caret-down"></i>
         </a>
         <div id="provincias" class="collapse lista-opciones" >
 
@@ -16,8 +16,8 @@
                 </check-provincias>
 
             </div>
-            <button class="btn btn-sm" type="button" v-on:click="borrar">Borrar</button>
-            <button class="btn btn-sm aplicar" type="button" v-on:click="aplicar">Aplicar</button>
+            <button class="btn btn-sm" type="button" v-on:click="borrar">{{ $t('frontend.delete') }}</button>
+            <button class="btn btn-sm aplicar" type="button" v-on:click="aplicar">{{ $t('frontend.filter') }}</button>
         </div>
     </div>
 </template>

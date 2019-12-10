@@ -51,10 +51,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <p style="font-size: smaller; color: #4c4d4f">Para TECHO - Argentina es importante
-                                        que te
-                                        mantengas enterado de las nuevas actividades.
-                                        Para ello, entra siempre en nuestro Sitio Web
+                                    <p style="font-size: smaller; color: #4c4d4f">
+                                        @lang('email.template_1')
                                         <a href="{{ url('/') }}">{{ url('/') }}</a>
                                     </p>
 

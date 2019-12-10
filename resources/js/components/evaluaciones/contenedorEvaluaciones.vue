@@ -1,38 +1,38 @@
 <template>
     <span>
-        <h4>Evalúa a tus compañeros</h4>
+        <h4>{{ $t('frontend.feedback_to_your_peers') }}</h4>
         <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <h4 v-if="evaluados.length > 0">Compañeros ya evaluados</h4>
+        <h4 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h4>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
         <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
             <i class="fa fa-star" style="margin-right: 0.5em"></i>
-            ¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla
+            {{ $t('frontend.cannot_find_peer') }}
         </p>
 
         <div class="row"  v-if="!evaluacionPasada">
             <div class="col-md-8">
                 <div class="form-group">
-                    <label for="listadoInscriptos">Nombre, apellido o DNI del voluntario</label>
+                    <label for="listadoInscriptos">{{ $t('frontend.search_volunteer') }}</label>
                     <v-select
                             :options="personasNoEvaluadas"
                             label="nombre"
-                            placeholder="Escribe el nombre, apellido o DNI"
+                            :placeholder="$t('frontend.search_volunteer')"
                             name="listadoInscriptos"
                             id="listadoInscriptos"
                             v-model="personaSeleccionada"
                             :filterable="true"
                     >
-                        <span slot="no-options">Empezá a escribir para buscar.</span>
+                        <span slot="no-options">{{ $t('frontend.type_to_search') }}</span>
                     </v-select>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group"> <br>
-                    <button class="btn btn-primary" @click="incluirPersona">Incluir en mis evaluaciones</button>
+                    <button class="btn btn-primary" @click="incluirPersona">{{ $t('frontend.include_peer') }}</button>
                 </div>
             </div>
         </div>

@@ -26,4 +26,4 @@ web.dockerfile
 composer.lock
 /database/seeds/PayuArgentinaSeeder.php
 worker.log
-/test_db.sql
+/resources/js/vue-i18n-locales.generated.js

@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Cambiar email
+    {{ __('change_email') }}
 @endsection
 
 @section('main_image')
@@ -11,36 +11,36 @@
 <div>
     <div class="row">
         <div class="col-md-12">
-            <h2>Bienvenido, {{ $usuario->nombres}} ({{ $usuario->mail }})</h2>
+            <h2>{{ __('welcome') }}, {{ $usuario->nombres}} ({{ $usuario->mail }})</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            Aquí podrás realizar cambios en tu casilla de email.
+            {{ __('frontend.change_email_title') }}
         </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-md-5">
         	<br>
-            Tené en cuenta que:
+            {{ __('frontend.change_email_title_2') }}
             <ul>
-            	<li>Es necesario verificar la nueva dirección de email</li>
-            	<li>Se pierden las asociaciones a redes sociales.</li>  
-            	<li>Tenés que volver a iniciar sesión.</li>
+            	<li>{{ __('frontend.change_email_req_1') }}</li>
+            	<li>{{ __('frontend.change_email_req_2') }}</li>  
+            	<li>{{ __('frontend.change_email_req_3') }}</li>
             </ul>
             
         	<form method="POST" action="/perfil/actualizar_email" >
         		@csrf
 
-                <label>Nueva casilla</label>
+                <label>{{ __('frontend.change_email_new_email') }}</label>
             	<input type="text" class="form-control" name="email" value="{{ old('email') }}">
                 <br>
-                <label>Volvé a ingresar la casilla para confirmar</label>
+                <label>{{ __('frontend.change_email_new_email_confirmation') }}</label>
                 <input type="text" class="form-control" name="email_confirmation" value="{{ old('email_confirmation') }}">
             	<br>
-                <p>¿Estás seguro?</p>
-            	<input type="submit" class="btn btn-primary" name="enviar" value="Si, cambiar" > 
+                <p>{{ __('frontend.change_email_are_you_sure') }}</p>
+            	<input type="submit" class="btn btn-primary" name="enviar" value="{{ __('frontend.change_email_confirm_button') }}" > 
             </form>
             <br>
             @if ($errors->any())

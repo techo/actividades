@@ -3,7 +3,7 @@
         <div v-show="paso('email')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>Registrate</strong> > Datos personales > Finalizar
+                    <strong>{{ $t('frontend.register') }}</strong>  > {{ $t('frontend.personal_data') }} > {{ $t('frontend.finish') }}
                 </div>
             </div>
             <div class="alert alert-danger hidden" v-bind:class="{'d-none': !message.danger}">
@@ -11,35 +11,30 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Registrate como voluntario.</h2>
+                    <h2> {{ $t('frontend.register') }}</h2>
                 </div>
                 <div class="col-md-6">
-                    <label>PASO 1/3</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <h5>Crea tu cuenta de voluntario de Techo</h5>
+                    <label> {{ $t('frontend.step_1') }}</label>
                 </div>
             </div>
 
+            <hr>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <a class="btn facebook" @click="registro_facebook()">
-                        <i class="fab fa-facebook-f"></i>&nbsp;&nbsp;Registro con Facebook
+                        <i class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.register_facebook') }}
                     </a>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-12 align-center">
                     <a class="btn google" @click="registro_google()">
-                        <i class="fab fa-google"></i> Registro con Google
+                        <i class="fab fa-google"></i> {{ $t('frontend.register_google') }}
                     </a>
                 </div>
             </div>
-            <hr>
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Correo electrónico*</label>
+                        <label>{{ $t('frontend.mail') }}*</label>
                         <input type="text" class="form-control" name="email" id="email" v-model="user.email">
                         <small class="form-text text-danger">{{validacion.email.texto}}&nbsp;<br></small>
                     </div>
@@ -56,7 +51,7 @@
 
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Crear una contraseña *</label>
+                        <label>{{ $t('frontend.create_password') }}</label>
                         <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
                         <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
                     </div>
@@ -68,20 +63,23 @@
                             class="fas fa-times text-danger"></i></span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-3">
                     <a class="btn btn-primary" @click="cambiar_paso()">
-                        Continuar
+                        {{ $t('frontend.continue') }}
                     </a>
                 </div>
             </div>
+            <hr>
+            
+
+            
         </div>
 
         <div v-show="paso('personales')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>Registrate</strong> > <strong>Datos personales</strong> > Finalizar
+                    <strong>{{ $t('frontend.register') }}</strong>  > <strong> {{ $t('frontend.personal_data') }} </strong>> {{ $t('frontend.finish') }}
                 </div>
             </div>
             <div class="alert alert-danger hidden" v-bind:class="{'d-none': !message.danger}">
@@ -89,16 +87,16 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>¡Ya casi terminamos!</h2>
+                    <h2>{{ $t('frontend.almost_there') }}</h2>
                 </div>
                 <div class="col-md-6">
-                    <label>PASO 2/3</label>
+                    <label>{{ $t('frontend.step_2') }}</label>
                 </div>
             </div>
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Nombre *</label>
+                        <label>{{ $t('frontend.name') }} *</label>
                         <input type="text" class="form-control" name="nombre" id="nombre" v-model="user.nombre">
                         <small class="form-text text-danger">{{validacion.nombre.texto}}&nbsp;<br></small>
                     </div>
@@ -110,7 +108,7 @@
 
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Apellido *</label>
+                        <label>{{ $t('frontend.surname') }} *</label>
                         <input type="text" class="form-control" name="apellido" id="apellido" v-model="user.apellido">
                         <small class="form-text text-danger">{{validacion.apellido.texto}}&nbsp;<br></small>
                     </div>
@@ -127,8 +125,8 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Fecha de nacimiento *</label>
-                        <datepicker placeholder="Selecciona una fecha" v-model="user.nacimiento" id="nacimiento"
+                        <label> {{ $t('frontend.birth_date') }} *</label>
+                        <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
                                     lang="es" format="DD-MM-YYYY"></datepicker>
                         <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
                     </div>
@@ -142,13 +140,13 @@
 
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Genero *</label>
+                        <label>{{ $t('frontend.gender') }} *</label>
                         <b-form-group>
                             <b-form-radio-group id="radios2" v-model="user.sexo">
-                                <b-form-radio value="F">Femenino</b-form-radio>
-                                <b-form-radio value="M">Masculino</b-form-radio>
-                                <b-form-radio value="X">Otro</b-form-radio>
-                                <b-form-radio value="O">Prefiero no decirlo</b-form-radio>
+                                <b-form-radio value="F">{{ $t('frontend.gender_f') }}</b-form-radio>
+                                <b-form-radio value="M">{{ $t('frontend.gender_m') }}</b-form-radio>
+                                <b-form-radio value="X">{{ $t('frontend.gender_x') }}</b-form-radio>
+                                <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio>
                             </b-form-radio-group>
                         </b-form-group>
                         <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
@@ -165,7 +163,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>DNI / Pasaporte *</label>
+                        <label>{{ $t('frontend.passport') }} *</label>
                         <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
                         <small class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
                     </div>
@@ -178,7 +176,7 @@
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Teléfono *</label>
+                        <label>{{ $t('frontend.telephone') }} *</label>
                         <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono">
                         <small class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
                     </div>
@@ -195,7 +193,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>País de residencia *</label>
+                        <label>{{ $t('frontend.country') }} *</label>
                         <select id="pais" v-model="user.pais" class="form-control">
                             <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
                         </select>
@@ -210,7 +208,7 @@
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Provincia</label>
+                        <label>{{ $t('frontend.state') }}</label>
                         <select id="provincia" v-model="user.provincia" class="form-control">
                             <option v-for="provincia in provincias" v-bind:value="provincia.id">
                                 {{provincia.provincia}}
@@ -230,7 +228,7 @@
             <div class="row h-100 justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>Localidad</label>
+                        <label>{{ $t('frontend.municipality') }}</label>
                         <select id="localidad" v-model="user.localidad" class="form-control">
                             <option v-for="localidad in localidades" v-bind:value="localidad.id">
                                 {{localidad.localidad}}
@@ -259,14 +257,14 @@
                     <div class="form-check">
                         <input v-model="user.privacidad" class="form-check-input" type="checkbox" id="privacidad" required>
                         <label class="form-check-label" for="privacidad">
-                            Acepto la <a href="https://www.techo.org/politica-de-privacidad" target="_blank">Política de privacidad</a> *
+                            {{ $t('frontend.i_accept_the') }} <a href="https://www.techo.org/politica-de-privacidad" target="_blank"> {{ $t('frontend.privacy_policy') }}</a> *
                         </label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <span v-bind:class="{'d-none':!validacion.privacidad.invalido}">
                         <i class="fas fa-times text-danger"></i>
-                        Debe aceptar las políticas de privacidad para continuar
+                         {{ $t('frontend.error_privacy_policy') }}
                     </span>
                 </div>
             </div>
@@ -275,60 +273,59 @@
                     <div class="form-check">
                         <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox" id="acepta_marketing">
                         <label class="form-check-label" for="acepta_marketing">
-                            Acepto que TECHO se contacte conmigo para notificarme de eventos y campañas
+                            {{ $t('frontend.techo_notifications_agreement') }}
                         </label>
                     </div>
                 </div>
             </div>
             <hr>
-            <div class="row">
-                <div class="col-md-3 text-primary"><span v-show='volver'><a href='#' @click="paso_actual = 'email'"><i
-                        class="fas fa-long-arrow-alt-left "></i> Volver</a></span></div>
-                <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso()">Crear cuenta</a></div>
+            <div class="row pb-4">
+                <div class="col-md-3 text-primary"><span v-bind:text="$t('frontend.go_back')"><a href='#' @click="paso_actual = 'email'"><i
+                        class="fas fa-long-arrow-alt-left "></i> {{ $t('frontend.go_back') }}</a></span></div>
+                <div class="col-md-3"><a class="btn btn-primary" @click="cambiar_paso()">{{ $t('frontend.continue') }}</a></div>
             </div>
 
         </div>
         <div v-show="paso('gracias')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>Registrate</strong> > <strong>Datos personales</strong> > <strong>Finalizar</strong>
+                    <strong>{{ $t('frontend.register') }}</strong>  > <strong> {{ $t('frontend.personal_data') }} </strong>> <strong>{{ $t('frontend.finish') }} </strong>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Bienvenid@ a Techo</h2>
+                    <h2>{{ $t('frontend.welcome') }} TECHO</h2>
                 </div>
                 <div class="col-md-6">
-                    <label>PASO 3/3</label>
+                    <label>{{ $t('frontend.step_3') }}</label>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-8">
-                    Ya estás registrado/a como voluntario/a ¡Te esperamos en las próximas actividades!
+                    {{ $t('frontend.already_register') }}
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-12">
-                    <a href="/" class="btn btn-primary btn-lg">VOLVER AL HOME</a>
+                    <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
                 </div>
             </div>
         </div>
         <div v-show="paso('linkear')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>Registrate</strong> > <strong>Confimar Link Red Social</strong>
+                    <strong>{{ $t('frontend.register') }}</strong> > <strong>{{ $t('frontend.link_to_rrss') }} </strong>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Relacionar la cuenta de techo con tu cuenta de red social</h2>
+                    <h2>{{ $t('frontend.link_rrss_techo') }}</h2>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">
-                        Volver</a></div>
-                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">Confirmar</a></div>
+                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">{{ $t('frontend.go_back') }}</a></div>
+                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a></div>
                 </div>
 
             </div>

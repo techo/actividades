@@ -3,25 +3,24 @@
 @section('content')
 
     <p style="font-size: larger">
-        Hola {{$inscripcion->persona->nombres}},
+        @lang('frontend.hello') {{$inscripcion->persona->nombres}},
     </p>
 
     <p>
-        Hubo cambios en la actividad que te has inscrito. A continuación encontrarás la información actualizada:
+        @lang('email.activity_update_1')
     </p>
     <p>
-        <strong>{{$inscripcion->actividad->nombreActividad}}</strong> de TECHO
+        <strong>{{$inscripcion->actividad->nombreActividad}}</strong> - TECHO
        
        - {{$inscripcion->actividad->pais->nombre}},
        
-        que inicia el {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} en
-
-        {{$inscripcion->actividad->provincia->provincia}}.
+        @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} 
+        @lang('email.begins_at') {{$inscripcion->actividad->provincia->provincia}}.
     </p>
 
     @if($inscripcion->actividad->coordinador)
         <p>
-            <strong>Coordinador de la actividad:</strong>
+            <strong>@lang('frontend.coordinator'):</strong>
             {{$inscripcion->actividad->coordinador->nombres}} {{$inscripcion->actividad->coordinador->apellidoPaterno}}
             <a href="mailto:{{ $inscripcion->actividad->coordinador->mail }}" target="_blank">
                 {{ $inscripcion->actividad->coordinador->mail }}
@@ -34,12 +33,12 @@
     </p>
 
     <p>
-        <strong>¡Te esperamos!</strong>
+        <strong>@lang('email.greetings')</strong>
     </p>
     @if($inscripcion->punto_encuentro)
         <p>
             <strong>
-                Punto de encuentro:
+                @lang('frontend.meeting_points')
             </strong>
         </p>
         <p>
@@ -53,7 +52,7 @@
             {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
 
         @if($inscripcion->punto_encuentro->responsable)
-            (Responsable del punto: 
+            (@lang('frontend.referring'): 
                 {{$inscripcion->punto_encuentro->responsable->nombres}}
                 {{$inscripcion->punto_encuentro->responsable->apellidoPaterno}}
                 <a href="mailto:{{ $inscripcion->punto_encuentro->responsable->mail }}" target="_blank">

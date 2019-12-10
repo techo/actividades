@@ -3,7 +3,7 @@
         <form class="form-inline">
 
             <div class="form-group">
-                <label class="label-filtrar">Filtrar por:</label>
+                <label class="label-filtrar">{{ $t('frontend.filter_by') }}:</label>
                 <input
                         type="text"
                         v-model="filterText"
@@ -12,8 +12,8 @@
                         :placeholder="dataPlaceholderText"
                         style="width: 35em"
                 >
-                <button class="btn btn-primary" @click.prevent="doFilter">Filtrar</button>
-                <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
+                <button class="btn btn-primary" @click.prevent="doFilter">{{ $t('frontend.filter') }}</button>
+                <button class="btn btn-default" @click.prevent="resetFilter">{{ $t('frontend.delete') }}</button>
             </div>
         </form>
     </div>

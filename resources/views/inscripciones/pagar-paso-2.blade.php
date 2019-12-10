@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Confirma con tu pago
+    {{ __('frontend.confirm_by_paying') }}
 @endsection
 
 
@@ -14,7 +14,7 @@
 @section('main_content')
     <div class="row">
         <div class="col-md-12">
-            <h1 class="card-subtitle">¡Listo para pagar por la plataforma!</h1>
+            <h1 class="card-subtitle">{{ __('frontend.ready_for_paying') }}</h1>
         </div>
         <hr>
     </div>
@@ -25,7 +25,7 @@
 
             @if($actividad->pago == 1)
 
-                <p><strong>Elegiste donar: ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
+                <p><strong>{{ __('frontend.you_choose') }} ${{ $actividad->moneda }} {{ $payment->getMonto() }}</strong></p>
                 <div class="row justify-content-start">
                     <div class="col-md-6 col-sm-6">
                         @php
@@ -33,7 +33,7 @@
                             $form = strtolower($config->payment_class)
                         @endphp
                         @include('pagos.' . $form)
-                        <span class="text-muted techo-small-text" style="margin-top: -0.5em">Al hacer click se te redirigirá a la plataforma de pago</span>
+                        <span class="text-muted techo-small-text" style="margin-top: -0.5em">{{ __('frontend.redirect_pay_platform') }}</span>
                     </div>
                 </div>
             @endif
@@ -43,7 +43,7 @@
                     <div class="col-md-4">
                         <br><br>
                         <p>
-                            <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-link">VOLVER</a>
+                            <a href="{{ action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                         </p>
                     </div>
                 </div>

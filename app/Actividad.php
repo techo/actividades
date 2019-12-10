@@ -192,18 +192,18 @@ class Actividad extends Model
         if(!$inscripcion) return false;
 
         if($this->confirmacion == $inscripcion->confirma && $this->pago == $inscripcion->pago) {
-            return "Confirmado";
+            return "confirmed";
         }
 
         if($this->confirmacion == $inscripcion->confirma && $this->pago != $inscripcion->pago) {
             if( !$this->fechaLimitePago || $this->fechaLimitePago && $this->fechaLimitePago > \Carbon\Carbon::now() )
-                return "Confirmar con tu donación";
+                return "confirm_by_paying";
             else 
-                return "Fecha de confirmación vencida";
+                return "confirmation_date_is_closed";
         }
 
         if($this->confirmacion != $inscripcion->confirma) {
-            return "Esperar confirmación";
+            return "waiting_for_confirmation";
         }
 
     }

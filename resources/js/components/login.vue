@@ -9,57 +9,57 @@
                         <div class="">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
                                     style="opacity: 1; margin-top: -1em">
-                                <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
+                                <span aria-hidden="true" class="cerrar">{{ $t('frontend.close') }} &times;</span>
                             </button>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <img src="/img/techo-cyan_235x62.png" alt="Ingresa a tu cuenta de Techo"
+                                        <img src="/img/techo-cyan_235x62.png" alt="Techo"
                                              height="25" width="95">
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
-                                        <h2>Ingresar a tu perfil</h2>
+                                        <h2>{{ $t('frontend.login') }}</h2>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary facebook" @click="registro_facebook()"><i
-                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;Ingresar con Facebook</a>
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.login_facebook') }}</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
                                         <a class="btn btn-primary google" @click="registro_google()"><i
-                                                class="fab fa-google"></i>&nbsp;&nbsp;Ingresar con Google</a>
+                                                class="fab fa-google"></i>&nbsp;&nbsp;{{ $t('frontend.login_google') }}</a>
                                     </div>
                                 </div>
                                 <div class="row pl-4 m-3">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
                                             <div class="form-group">
-                                                <label for="mail">Correo Electrónico</label>
+                                                <label for="mail">{{ $t('frontend.mail') }}</label>
                                                 <input v-bind:class="{ 'is-invalid': hasError }"
                                                        type="email"
                                                        v-model="credentials.mail"
                                                        v-on:keyup.enter="login"
                                                        class="form-control"
                                                        id="mail"
-                                                       placeholder="Ingresa tu correo electrónico"
+                                                       v-bind:placeholder="$t('frontend.mail_placeholder')"
                                                        required>
                                             </div>
                                             <div class="form-group">
-                                                <label for="password">Contraseña</label>
+                                                <label for="password">{{ $t('frontend.password') }}</label>
                                                 <input type="password"
                                                        v-bind:class="{ 'is-invalid': hasError }"
                                                        v-model="credentials.password"
                                                        v-on:keyup.enter="login"
                                                        class="form-control"
                                                        id="password"
-                                                       placeholder="Ingresa tu contraseña"
+                                                       v-bind:placeholder="$t('frontend.password_placeholder')"
                                                        required>
                                             </div>
                                             <div class="row">
@@ -75,11 +75,11 @@
                                                             type="button"
                                                             class="btn btn-primary"
                                                     >
-                                                        Ingresar
+                                                        {{ $t('frontend.login') }}
                                                     </button>
                                                 </div>
                                                 <div class="col-8 text-right">
-                                                    <a href="/password/reset">Olvidé mi contraseña</a>
+                                                    <a href="/password/reset">{{ $t('frontend.forget_password') }}</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -89,13 +89,13 @@
                             <div class="col-md-6 registro">
                                 <div class="row h-100 justify-content-center align-items-center">
                                     <div class="col">
-                                        <h1>¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?</h1>
+                                        <h1>{{ $t('frontend.not_a_volunteer') }}</h1>
                                         <br>
                                         <a
                                                 href="/registro"
                                                 class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
                                         >
-                                            ¡Quiero ser voluntario!
+                                            {{ $t('frontend.volunteer_me') }}
                                         </a>
                                     </div>
                                 </div>
@@ -114,39 +114,61 @@
                         <a class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
                         </a>
-                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">Hola, {{ user.nombres }}</a>
+                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">
+                                            {{ $t('frontend.hello') }}, {{ user.nombres }}
+                        </a>
                     </div>
                 </div>
-
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="col-md-4 collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link text-uppercase" href="/actividades">Actividades <span class="sr-only">(current)</span></a>
+                            <a class="nav-link text-uppercase" href="/actividades">{{ $t('frontend.activities') }} <span class="sr-only">(current)</span></a>
 
                         </li>
+                        
+
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
-                            <a class="nav-link text-uppercase" v-on:click="misactividades">Mis Actividades</a>
+                            <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
-                            <a class="nav-link text-uppercase" v-on:click="perfil">Perfil</a>
+                            <a class="nav-link text-uppercase" v-on:click="perfil">{{ $t('frontend.profile') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
-                            <a class="nav-link text-uppercase" v-on:click="admin">Admin</a>
+                            <a class="nav-link text-uppercase" v-on:click="admin">{{ $t('frontend.admin') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated && this.docs">
-                            <a class="nav-link text-uppercase" v-on:click="ayuda">Ayuda</a>
+                            <a class="nav-link text-uppercase" v-on:click="ayuda">{{ $t('frontend.help') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
-                            <a class="nav-link text-uppercase" v-on:click="logout">Salir</a>
+                            <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
+                        </li>
+                        <li class="locale-changer " v-show="langs.length>0" >
+                            <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
+                                <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                                    {{ lang[1] }}
+                                </option>
+                            </select>
                         </li>
                     </ul>
                 </div>
+
+
+                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block" >
+                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
+                        <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                            {{ lang[1] }}
+                        </option>
+                    </select>
+                </div>
+
                 <!-- Si esta autenticado -->
-                <div id="userDetail" class="col-md-2 offset-md-4 d-none d-md-block" v-if="authenticated">
+                <div id="userDetail" class="col-md-2 d-none d-md-block" v-if="authenticated">
                     <div class="btn-group" role="group">
                         <button
                                 type="button"
@@ -156,7 +178,7 @@
                                 aria-expanded="false"
                                 v-model="user.nombres"
                         >
-                               Hola, {{ user.nombres }}
+                               {{ $t('frontend.hello') }}, {{ user.nombres }}
                         </button>
                         <div
                                 class="dropdown-menu"
@@ -168,14 +190,14 @@
                                     type="button"
                                     v-on:click="misactividades"
                             >
-                                Mis Actividades</button>
+                                {{ $t('frontend.my_activities') }}</button>
                             <button
                                     class="dropdown-item"
                                     id="btn-perfil"
                                     type="button"
                                     v-on:click="perfil"
                             >
-                                Perfil
+                                {{ $t('frontend.profile') }}
                             </button>
                             <button
                                     v-show="this.verAdmin"
@@ -183,7 +205,7 @@
                                     id="btn-admin" type="button"
                                     v-on:click="admin"
                             >
-                                Admin
+                                {{ $t('frontend.admin') }}
                             </button>
                             <button
                                     v-if="authenticated && this.docs"
@@ -192,7 +214,7 @@
                                     type="button"
                                     v-on:click="ayuda"
                             >
-                                Ayuda
+                                {{ $t('frontend.help') }}
                             </button>
                             <button
                                     class="dropdown-item"
@@ -200,13 +222,13 @@
                                     type="button"
                                     v-on:click="logout"
                             >
-                                Salir
+                                {{ $t('frontend.logout') }}
                             </button>
                         </div>
                     </div>
                 </div>
                 <!-- Si no esta autenticado -->
-                <form class="form-inline col-md-2 offset-md-4 " v-else>
+                <form class="form-inline col-md-2" v-else>
                     <button
                             class="btn btn-primary"
                             type="button"
@@ -214,7 +236,7 @@
                             data-target="#login-modal"
                             id="btnShowModal"
                     >
-                        Ingresar
+                        {{ $t('frontend.login') }}
                     </button>
                 </form>
             </div>
@@ -225,7 +247,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales' ],
         data () {
             let data = {
                 credentials: {
@@ -239,8 +261,9 @@
                     nombres: '',
                     id: ''
                 },
-                verAdmin: this.veradmin
+                verAdmin: this.veradmin,
             };
+            
             if(this.usuario) {
                 let user = JSON.parse(this.usuario);
                 data.user.nombres = user.nombres;
@@ -250,6 +273,15 @@
         },
         created () {
           this.authenticated = this.checkLogin();
+        },
+        computed: {
+            langs: function() {
+                if(this.available_locales) {
+                    let locales = this.available_locales.split(',');
+                    return locales.map(function(v){ return v.trim().split('|') });
+                }
+                else return []
+            },
         },
         mounted(){
             if(this.showlogin){
@@ -282,7 +314,7 @@
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 if(this.credentials.mail === "" || this.credentials.password === ""){
                     this.hasError = true;
-                    this.mensajeError = "El Correo electrónico y la contraseña son requeridos";
+                    this.mensajeError = this._i18n.t('frontend.login_error');
                     return
                 }
                 axios.post(
@@ -362,6 +394,9 @@
             checkLogin() {
                 if (this.user.nombres) return true;
                 return false;
+            },
+            onChangeLocalization(event) {
+                window.location.href = '/locale/' + event.target.value;
             }
         }
     }

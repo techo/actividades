@@ -30,6 +30,6 @@
     <input name="confirmationUrl"    type="hidden"  value="{{ url('/') }}/pagos/{{ $payment->inscripcion->idInscripcion }}/confirmation" >
 
     <button name="btnPago"        type="submit"  class="btn btn-primary">
-        <i class="fas fa-external-link-alt"></i> Confirmar con tu donación
+        <i class="fas fa-external-link-alt"></i> {{ __('confirm_by_paying') }}
     </button>
 </form>

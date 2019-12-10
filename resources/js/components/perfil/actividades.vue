@@ -1,10 +1,10 @@
 <template>
     <div>
       <div class="alert alert-warning" v-show='borro'>
-        <strong>Te has desinscrito satisfactoriamente de la actividad.</strong>
+        <strong>{{ $t('frontend.unenroll_ok') }}</strong>
       </div>
       <div class="alert alert-warning" v-show='!inscripciones.length'>
-        <strong>Todavia no estas inscripto a ninguna actividad.</strong>
+        <strong>{{ $t('frontend.enrollment_empty') }}</strong>
       </div>
         <div class="row">
             <tarjeta
