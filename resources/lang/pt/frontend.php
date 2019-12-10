@@ -261,4 +261,32 @@ return [
 	'email' => 'Email Address',
 	'copy_link' => 'Copy link',
 
+	// evaluaciones/index.blade.php
+	'feedback_of' => 'Evaluaciones de',
+
+	// evaluarActividad.vue
+	'feedback_text' => 'Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.',
+	'activity_feedback' => 'Evalúa la actividad',
+	'general_score' => 'Puntaje General',
+	'doesn_not_apply' => 'No Aplica / No tengo opinión',
+	'comments' => 'Comentarios',
+	'sent' => 'Enviado',
+	'send' => 'Enviar',
+	'feedback_date_expired' => 'La fecha de fin de las evaluaciones ya pasó',
+	'unable_to_sent_feeback' => 'No se pudo guardar la evaluación. Intentalo de nuevo más tarde.',
+
+	// evaluarPersona.vue
+	'technical_score' => 'Puntaje Técnico',
+	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
+	'social_score' => 'Puntaje Técnico',
+	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
+
+	// contenedorEvaluaciones.vue
+	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
+	'peers_already_received_feedback' => 'Compañeros ya evaluados',
+	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla',
+	'search_volunteer' => 'Nombre, apellido o DNI del voluntario',
+	'type_to_search' => 'Empezá a escribir para buscar.',
+	'include_peer' => 'Incluir en mis evaluaciones',
+
 ];

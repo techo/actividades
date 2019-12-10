@@ -261,4 +261,32 @@ return [
 	'email' => 'Email Address',
 	'copy_link' => 'Copy link',
 
+	// evaluaciones/index.blade.php
+	'feedback_of' => 'Feedback of',
+
+	// evaluarActividad.vue
+	'feedback_text' => 'Your feedback help us improve as an organization and make our activities more reewarding to you.',
+	'activity_feedback' => 'Give feedback about',
+	'general_score' => 'General Score',
+	'doesn_not_apply' => 'Does not apply / No comment',
+	'comments' => 'Comments',
+	'sent' => 'Sent',
+	'send' => 'Send',
+	'feedback_date_expired' => 'The time to give feedback expired :(',
+	'unable_to_sent_feeback' => 'Unable to send. Try again later.',
+
+	// evaluarPersona.vue
+	'technical_score' => 'Technical Score',
+	'technical_score_description' => 'Knowledge about the task',
+	'social_score' => 'Technical Score',
+	'social_score_description' => 'Skills to communicate and empathize with others',
+
+	// contenedorEvaluaciones.vue
+	'feedback_to_your_peers' => 'Give feedback to your peers',
+	'peers_already_received_feedback' => 'Already received feedback',
+	'cannot_find_peer' => 'If you cannot see the peer your looking for use the search field to look it up',
+	'search_volunteer' => 'Name or surname',
+	'type_to_search' => 'Start typing to search.',
+	'include_peer' => 'Include peer in my feedback',
+
 ];

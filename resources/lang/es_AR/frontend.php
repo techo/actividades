@@ -279,7 +279,7 @@ return [
 	'technical_score' => 'Puntaje Técnico',
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Técnico',
-	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
+	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
 
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
