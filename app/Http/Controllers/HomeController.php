@@ -34,4 +34,19 @@ class HomeController extends Controller
 
         return view('home', compact('categoriaActividad', 'showLogin'));
     }
+
+    public function seleccionarPais(Request $request, $id)
+    {
+        $pais = \App\Pais::find($id);
+        if($pais)
+            $request->session()->put('pais', $pais->id);
+        
+        return redirect('/actividades');
+    }
+
+    public function deseleccionarPais(Request $request)
+    {
+        $request->session()->forget('pais');
+        return redirect('/actividades');
+    }
 }

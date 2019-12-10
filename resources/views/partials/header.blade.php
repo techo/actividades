@@ -8,11 +8,13 @@
            @if(config('app.available_locales'))
            available_locales="{{ config('app.available_locales') }}"
            @endif
+           pais="{{ config('app.pais') }}"
     ></login>
 @endauth
 @guest
     <login ref="login"
            showlogin="{{empty($showLogin) ? "" : "1" }}"
            available_locales="{{ config('app.available_locales') }}"
+           pais="{{ config('app.pais') }}"
     ></login>
 @endguest

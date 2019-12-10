@@ -26,4 +26,12 @@ class Pais extends Model
     {
         return $this->hasMany(Oficina::class);
     }
+
+    public static function porCodigo($codigo) 
+    {
+        if(!$codigo) {
+            return null;
+        }
+        return static::where('codigo', $codigo)->first();
+    }
 }
