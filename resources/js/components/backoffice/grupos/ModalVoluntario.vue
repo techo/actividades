@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Email:</strong></p>
-                            <p>{{ info.email}}</p>
+                            <p>{{ info.mail}}</p>
                         </div>
                     </div>
                     <div class="row">
