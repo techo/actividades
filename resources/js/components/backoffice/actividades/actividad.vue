@@ -47,6 +47,28 @@
                 </div>
 
                 <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="categoria">Categoría</label>
+                            <select name="idCategoria" class="form-control" v-model="actividad.idCategoria" required >
+                                <option v-text="categoria.nombre" v-bind:value="categoria.idCategoria" v-for="categoria in categorias" ></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="tipo">Tipo</label>
+                            <select name="idTipo" class="form-control" v-model="actividad.idTipo" required >
+                                <option v-text="tipo.nombre" v-bind:value="tipo.idTipo" v-for="tipo in tipos" ></option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="fechaInicio">Empieza</label>
@@ -76,24 +98,9 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="oficina">Oficina</label>
-                            <input id="oficina" name="idOficina"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.idOficina"
-                                   required
-                            >
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <input id="tipo" name="idTipo"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.idTipo"
-                                   required
-                            >
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required >
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                            </select>
                         </div>
                     </div>
 
@@ -104,18 +111,6 @@
                                    type="text"
                                    class="form-control"
                                    v-model="actividad.idCoordinador"
-                                   required
-                            >
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="limiteInscripciones">Cupos</label>
-                            <input id="limiteInscripciones" name="limiteInscripciones"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.limiteInscripciones"
                                    required
                             >
                         </div>
@@ -234,6 +229,31 @@
 
             </div>
         </div>
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Extras</h3>
+            </div>
+            <div class="box-body">
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="limiteInscripciones">Cupos</label>
+                            <input id="limiteInscripciones" name="limiteInscripciones"
+                                   type="text"
+                                   class="form-control"
+                                   v-model="actividad.limiteInscripciones"
+                                   required
+                            >
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
