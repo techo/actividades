@@ -7,6 +7,7 @@ import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import ActividadesShow from './components/backoffice/actividades/actividades-show'
+import Actividad from './components/backoffice/actividades/actividad'
 import ModalAuditoria from './components/backoffice/auditorias/ModalAuditoria';
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
 import CondicionesSeleccionadas from './components/backoffice/actividades/condiciones-seleccionadas'
@@ -61,6 +62,7 @@ import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);
 
 Vue.component('actividades-show', ActividadesShow);
+Vue.component('actividad', Actividad);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
 Vue.component('condiciones-seleccionadas', CondicionesSeleccionadas);

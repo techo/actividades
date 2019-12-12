@@ -177,10 +177,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
+    Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
+    Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');

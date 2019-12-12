@@ -37,16 +37,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
-                <actividades-show
-                        actividad="{{ $actividad }}"
-                        paises="{{ $paises }}"
-                        tipos="{{ $tipos }}"
-                        categorias="{{ $categorias }}"
-                        provincias="{{  $provincias }}"
-                        localidades="{{ $localidades }}"
-                        edicion="{{ $edicion }}"
-                        ref="actividad"
-                ></actividades-show>
+                <actividad id="{{ $actividad->idActividad }}"></actividad>
             </div>
             <div class="tab-pane" id="grupos">
                 <div class="box box-primary">

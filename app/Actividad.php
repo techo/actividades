@@ -13,7 +13,6 @@ class Actividad extends Model
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
     protected $guarded = ['idActividad'];
-    protected $fillable = ['nombreActividad', 'fechaInicio'];
     protected $dates =
         [
             'fechaInicio', 'fechaFin',

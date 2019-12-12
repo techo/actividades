@@ -96,6 +96,17 @@ class ActividadesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function actividad(Actividad $id)
+    {
+        return response()->json($id);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
         $edicion = false;
@@ -230,18 +241,48 @@ class ActividadesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Actividad $actividad)
     {
-        $actividad = Actividad::findOrFail($id);
-        $validator = $this->createValidator($request);
-        if ($validator->passes()) {
-            if ($this->guardarActividad($request, $actividad)) {
-                return response('Actividad guardada correctamente.', 200);
-            } else {
-                return response('No se pudo guardar la actividad', 500);
-            }
-        }
-        return response($validator->errors()->all(), 422);
+        $validado = $request->validate([
+            'nombreActividad' => 'required',
+            'descripcion' => 'required',
+            'estadoConstruccion' => 'required',
+            'confirmacion' => 'required',
+            'pago' => 'required',
+
+            'idTipo' => 'required',
+            'idOficina' => 'required',
+            'idCoordinador' => 'required',
+
+            'fechaInicio' => 'required|date',
+            'fechaFin' => 'required|date',
+
+            'fechaInicioInscripciones' => 'nullable|date',
+            'fechaFinInscripciones' => 'nullable|date',
+            'fechaInicioEvaluaciones' => 'nullable|date',
+            'fechaFinEvaluaciones' => 'nullable|date',
+            
+            'lugar' => 'present',
+            'idPais' => 'required',
+            'idProvincia' => 'required',
+
+            'limiteInscripciones' => '',
+            'inscripcionInterna' => 'required',
+            
+            'montoMin' => 'nullable',
+            'montoMax' => 'nullable',
+            'moneda' => 'nullable',
+            'fechaLimitePago' => 'nullable',
+            'beca' => 'nullable',
+        ]);
+        
+        $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
+
+        $actividad->fill($validado);
+
+        $actividad->save();
+
+        return response()->json($actividad);
     }
 
     /**
