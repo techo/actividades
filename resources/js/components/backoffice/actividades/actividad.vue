@@ -23,24 +23,20 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="estado">Estado</label>
-                            <input id="estado" name="estado"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.estadoConstruccion"
-                                   required
-                            >
+                            <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required >
+                                <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
+                                <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="inscripcionInterna">Pública</label>
-                            <input id="inscripcionInterna" name="inscripcionInterna"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.inscripcionInterna"
-                                   required
-                            >
+                            <label for="inscripcionInterna">Visibilidad</label>
+                            <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required >
+                                <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
+                                <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
+                            </select>
                         </div>
                     </div>
 
@@ -190,27 +186,23 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="pago">Por pago</label>
-                            <input id="pago" name="pago"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.pago"
-                                   required
-                            >
+                            <select name="pago" class="form-control" v-model="actividad.pago" required >
+                                <option value="1" :selected="actividad.pago == 1" >Activado</option>
+                                <option value="0" :selected="actividad.pago == 0" >Desactivado</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="confirmacion">Manual</label>
-                            <input id="confirmacion" name="confirmacion"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.confirmacion"
-                                   required
-                            >
+                            <select name="confirmacion" class="form-control" v-model="actividad.confirmacion" required >
+                                <option value="1" :selected="actividad.confirmacion == 1" >Activado</option>
+                                <option value="0" :selected="actividad.confirmacion == 0" >Desactivado</option>
+                            </select>
                         </div>
                     </div>
 
