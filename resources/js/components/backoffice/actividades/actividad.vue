@@ -250,6 +250,8 @@
 </template>
 
 <script>
+    import store from '../stores/store'; //legado, sacar en cuanto sea posible
+
     export default {
         name: "actividad",
         props: ['id'],
@@ -272,6 +274,9 @@
                     categoria: null,
                 }
             }
+        },
+        created() {
+            store.commit('initIdActividad', this.id); // legado, sacar en cuanto se pueda
         },
         mounted() {
             Event.$on('guardar', this.guardar);

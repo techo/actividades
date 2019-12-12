@@ -190,6 +190,10 @@ class ActividadesController extends Controller
             $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
             $miembros = $actividad->miembros;
 
+            $datatablePuntosConfig = config('datatables.puntos');
+            $fieldsPuntos = json_encode($datatablePuntosConfig['fields']);
+            $sortOrderPuntos = json_encode($datatablePuntosConfig['sortOrder']);
+
             foreach($actividad->puntosEncuentro as &$punto) {
                 if($punto->tieneInscriptos()) {
                     $punto->borrable = false;
@@ -215,7 +219,9 @@ class ActividadesController extends Controller
                     'sortOrderMiembros',
                     'miembros',
                     'camposInscripciones',
-                    'condiciones'
+                    'condiciones',
+                    'fieldsPuntos',
+                    'sortOrderPuntos'
                 )
             );
         }

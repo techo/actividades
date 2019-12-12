@@ -83,6 +83,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="puntos">
+                <puntos id="{{ $actividad->idActividad }}" fields="{{ $fieldsPuntos }}" sort-order="{{ $sortOrderPuntos }}" ></puntos>
             </div>
             <div class="tab-pane" id="inscripciones">
                 <div class="box box-primary collapsed-box">

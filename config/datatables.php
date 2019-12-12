@@ -313,5 +313,45 @@ return [
                 'direction' => 'asc'
             ],
         ]
+    ],
+    'puntos' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false
+            ],
+            [
+                'name' => 'punto',
+                'title' => 'Punto'
+            ],
+            [
+                'name' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellidoPaterno',
+                'title' => 'Apellido'
+            ],
+            [
+                'name' => 'pais',
+                'title' => 'Pais'
+            ],
+            [
+                'name' => 'provincia',
+                'title' => 'Provincia'
+            ],
+            [
+                'name' => 'localidad',
+                'title' => 'Localidad'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'punto',
+                'sortField' => 'punto',
+                'direction' => 'asc'
+            ],
+        ]
     ]
 ];
