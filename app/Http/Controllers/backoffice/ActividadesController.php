@@ -266,8 +266,8 @@ class ActividadesController extends Controller
             'idPais' => 'required',
             'idProvincia' => 'required',
 
-            'limiteInscripciones' => '',
-            'inscripcionInterna' => 'required',
+            'limiteInscripciones' => 'nullable',
+            'inscripcionInterna' => 'nullable',
             
             'montoMin' => 'nullable',
             'montoMax' => 'nullable',
