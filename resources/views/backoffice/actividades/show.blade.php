@@ -25,6 +25,9 @@
             <li class="active">
                 <a href="#general" data-toggle="tab" aria-expanded="true">General</a>
             </li>
+            <li class="">
+                <a href="#puntos" data-toggle="tab" aria-expanded="true">Puntos de encuentro</a>
+            </li>
             <li>
                 <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
             </li>
@@ -78,6 +81,8 @@
 
                     </div>
                 </div>
+            </div>
+            <div class="tab-pane" id="puntos">
             </div>
             <div class="tab-pane" id="inscripciones">
                 <div class="box box-primary collapsed-box">

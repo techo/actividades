@@ -149,7 +149,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="pais">País</label>
-                            <select name="idPais" class="form-control" v-model="actividad.idPais" required >
+                            <select name="idPais" class="form-control" v-model="actividad.idPais" required @change="getProvincias($event);actividad.idProvincia=null;actividad.idLocalidad=null;" >
                                 <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
                             </select>
                         </div>
@@ -158,7 +158,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="provincia">Provincia</label>
-                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required >
+                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)">
                                 <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                             </select>
                         </div>
@@ -276,16 +276,14 @@
         mounted() {
             Event.$on('guardar', this.guardar);
 
-            this.getPaises();
-            this.getProvincias();
-            this.getLocalidades();
-            this.getOficinas();
-            this.getTipos();
-            this.getCategorias();
 
             axios.get('/admin/ajax/actividades/' + this.id)
-                .then((datos) => { this.actividad = datos.data; })
+                .then((datos) => { 
+                    this.actividad = datos.data; 
+                    this.getRelaciones();
+                })
                 .catch((error) => { debugger; });
+
         },
         computed: {},
         filters: {},
@@ -296,18 +294,26 @@
                     .then((datos) => { this.actividad = datos.data; })
                     .catch((error) => { debugger; });
             },
+            getRelaciones(){
+                this.getPaises();
+                this.getProvincias();
+                this.getLocalidades();
+                this.getOficinas();
+                this.getTipos();
+                this.getCategorias();
+            },
             getPaises(){
                 axios.get('/ajax/paises/habilitados')
                     .then((datos) => { this.paises = datos.data; })
                     .catch((error) => { debugger; });
             },
             getProvincias(){
-                axios.get('/ajax/paises/13/provincias')
+                axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias')
                     .then((datos) => { this.provincias = datos.data; })
                     .catch((error) => { debugger; });
             },
             getLocalidades(){
-                axios.get('/ajax/paises/13/provincias/1/localidades')
+                axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias/' + this.actividad.idProvincia + '/localidades')
                     .then((datos) => { this.localidades = datos.data; })
                     .catch((error) => { debugger; });
             },
