@@ -17,7 +17,7 @@ class Persona extends Authenticatable implements MustVerifyEmail
     use Notifiable, HasRoles, SoftDeletes;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'google_id', 'email_verified_at'];
     protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail'];
     protected $dates = ['deleted_at'];
 

@@ -62,6 +62,15 @@
                         </div>
                     </div>
 
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="oficina">Oficina</label>
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required >
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="row">
@@ -90,28 +99,6 @@
                 </div>
 
                 <div class="row">
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="oficina">Oficina</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required >
-                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="coordinador">Coordinador</label>
-                            <input id="coordinador" name="idMunicipalidad"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.idCoordinador"
-                                   required
-                            >
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="row">
@@ -206,8 +193,6 @@
                         </div>
                     </div>
 
-
-
                 </div>
 
                 <div class="row">
@@ -265,14 +250,6 @@
                 oficinas: [],
                 tipos: [],
                 categorias: [],
-                seleccionados: {
-                    pais: null,
-                    provincia: null,
-                    localidad: null,
-                    oficina: null,
-                    tipo: null,
-                    categoria: null,
-                }
             }
         },
         created() {
@@ -280,7 +257,6 @@
         },
         mounted() {
             Event.$on('guardar', this.guardar);
-
 
             axios.get('/admin/ajax/actividades/' + this.id)
                 .then((datos) => { 

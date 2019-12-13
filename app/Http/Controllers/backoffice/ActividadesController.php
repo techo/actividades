@@ -6,20 +6,21 @@ use App\Actividad;
 use App\CategoriaActividad;
 use App\Grupo;
 use App\GrupoRolPersona;
+use App\Http\Controllers\Controller;
 use App\Jobs\EnviarMailsCancelacionActividad;
-use App\Rules\FechaFinActividad;
-use Carbon\Carbon;
 use App\Pais;
+use App\Persona;
 use App\PuntoEncuentro;
+use App\Rules\FechaFinActividad;
+use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
 use App\UnidadOrganizacional;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
-use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ActividadesController extends Controller
 {
@@ -99,6 +100,21 @@ class ActividadesController extends Controller
     public function actividad(Actividad $id)
     {
         return response()->json($id);
+    }
+
+    public function guardarCoordinador(Actividad $actividad, Persona $persona)
+    {    
+        $actividad->idPersona = $persona->idPersona;
+        $actividad->save;
+        $persona->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')';
+        return $persona;
+    }
+
+    public function coordinador(Actividad $id)
+    {    
+        $persona = $id->coordinador;
+        $persona->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')';
+        return $persona;
     }
 
     /**
@@ -258,7 +274,6 @@ class ActividadesController extends Controller
 
             'idTipo' => 'required',
             'idOficina' => 'required',
-            'idCoordinador' => 'required',
 
             'fechaInicio' => 'required|date',
             'fechaFin' => 'required|date',
@@ -615,4 +630,5 @@ class ActividadesController extends Controller
         }
 
     }
+
 }

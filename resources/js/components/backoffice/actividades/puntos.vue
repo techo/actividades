@@ -2,7 +2,6 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Básica</h3>
             </div>
             <div class="box-body">
                 <vuetable-puntos 

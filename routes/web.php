@@ -24,6 +24,7 @@ Route::prefix('ajax')->group(function () {
     Route::get('categorias/{id}', 'ajax\CategoriasController@show');
     Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
     Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
+    Route::get('personas', 'ajax\UsuarioController@getPersonas');
 
     Route::prefix('paises')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
@@ -183,6 +184,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
     Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
+    Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinador');
+    Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');

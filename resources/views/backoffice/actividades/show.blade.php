@@ -37,6 +37,9 @@
             <li>
                 <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
             </li>
+            <li>
+                <a href="#coordinadores" data-toggle="tab" aria-expanded="true">Coordinadores</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
@@ -82,9 +85,11 @@
                     </div>
                 </div>
             </div>
+
             <div class="tab-pane" id="puntos">
                 <puntos id="{{ $actividad->idActividad }}" fields="{{ $fieldsPuntos }}" sort-order="{{ $sortOrderPuntos }}" ></puntos>
             </div>
+
             <div class="tab-pane" id="inscripciones">
                 <div class="box box-primary collapsed-box">
                     <div class="box-header with-border">
@@ -140,6 +145,10 @@
                 <evaluaciones-general-stats></evaluaciones-general-stats>
                 <evaluaciones-actividad></evaluaciones-actividad>
                 <evaluaciones-voluntarios></evaluaciones-voluntarios>
+            </div>
+
+            <div class="tab-pane" id="coordinadores">
+                <accesos :id="{{ $actividad->idActividad }}"></accesos>
             </div>
         </div>
     </div>
