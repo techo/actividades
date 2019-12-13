@@ -66,7 +66,6 @@
             this.sortOrder_ = JSON.parse(this.sortOrder);
         },
         mounted() {
-            Event.$on('guardar', this.guardar);
         },
         computed: {},
         filters: {},
