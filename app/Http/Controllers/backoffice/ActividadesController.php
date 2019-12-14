@@ -128,7 +128,7 @@ class ActividadesController extends Controller
         $punto->idPersona = $actividad->idCoordinador;
         $actividad->puntosEncuentro()->save($punto);        
 
-        return response()->json($actividad);
+        return response()->json($actividad->fresh());
 
     }
 

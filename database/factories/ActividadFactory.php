@@ -41,7 +41,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'idPersonaCreacion' => 1,
       'idPersonaModificacion' => 1,
 
-      'lugar' => "",
+      'lugar' => $faker->name,
       'idPais' => factory(App\Pais::class)->create(),
       'idProvincia' => factory(App\Provincia::class)->create(),
       'idLocalidad' => factory(App\Localidad::class)->create(),
@@ -57,7 +57,6 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'beca' => null,
       'fechaLimitePago' => null,
 
-      'idUnidadOrganizacional' => 1,
     ];
 });
 

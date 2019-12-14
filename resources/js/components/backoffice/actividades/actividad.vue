@@ -213,7 +213,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-1">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input id="limiteInscripciones" name="limiteInscripciones"
@@ -251,8 +251,8 @@
                     idTipo: null,
                     idOficina: null,
 
-                    fechaInicio: moment().format('YYYY-MM-DD HH:mm:ss'),
-                    fechaFin: moment().add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
+                    fechaInicio: moment().format('YYYY-MM-DD HH:mm'),
+                    fechaFin: moment().add(1, 'days').format('YYYY-MM-DD HH:mm'),
 
                     lugar: '',
                     idPais: null,

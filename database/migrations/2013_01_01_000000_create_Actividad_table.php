@@ -46,7 +46,7 @@ class CreateActividadTable extends Migration {
 			$table->integer('idPersonaModificacion')->nullable()->index('fk_Actividad_1_idx');
 
 			//legado
-			$table->integer('idUnidadOrganizacional')->index('idUnidadOrganizacional_actividad');
+			$table->integer('idUnidadOrganizacional')->nullable();
 			
 		});
 	}
