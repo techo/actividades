@@ -74,32 +74,30 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="fechaInicio">Empieza</label>
-                            <input id="fechaInicio" name="fechaInicio"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.fechaInicio"
-                                   required
-                            >
+
+                    <div class="col-md-4">
+                        <label for="fechaInicio">Empieza</label>
+                        <div class="input-group">
+                            <input :value="fechaInicio_f" ref="fechaInicio_f" type="date" class="form-control" required style="line-height: inherit;">
+                            <span class="input-group-addon">
+                                <input :value="fechaInicio_h" ref="fechaInicio_h" type="time" required style="border: none; height: 20px;">
+                            </span>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="fechaFin">Termina</label>
-                            <input id="fechaFin" name="fechaFin"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.fechaFin"
-                                   required
-                            >
+
+                    <div class="col-md-4">
+                        <label for="fechaFin">Termina</label>
+                        <div class="input-group">
+                            <input :value="fechaFin_f" ref="fechaFin_f" type="date" class="form-control" required style="line-height: inherit;">
+                            <span class="input-group-addon">
+                                <input :value="fechaFin_h" ref="fechaFin_h" type="time" required style="border: none; height: 20px;">
+                            </span>
                         </div>
-                    </div>
+                    </div>       
+                            
                 </div>
 
-                <div class="row">
-                </div>
+                <br>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -219,7 +217,7 @@
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input id="limiteInscripciones" name="limiteInscripciones"
-                                   type="text"
+                                   type="number"
                                    class="form-control"
                                    v-model="actividad.limiteInscripciones"
                                    required
@@ -266,14 +264,33 @@
                 .catch((error) => { debugger; });
 
         },
-        computed: {},
+        computed: {
+            fechaInicio_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
+            },
+            fechaInicio_h(){
+                if(this.actividad)
+                    return moment(this.actividad.fechaInicio).format('HH:mm:ss');
+            },
+            fechaFin_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaFin).format('YYYY-MM-DD');
+            },
+            fechaFin_h(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaFin).format('HH:mm:ss');
+            },
+        },
         filters: {},
         watch: {},
         methods: {
             guardar(){
+                this.actividad.fechaInicio = moment(this.$refs["fechaInicio_f"].value + ' ' + this.$refs["fechaInicio_h"].value).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaFin = moment(this.$refs["fechaFin_f"].value + ' ' + this.$refs["fechaFin_h"].value).format('YYYY-MM-DD HH:mm:ss');
+
                 axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
-                    .then((datos) => { this.actividad = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });
             },
             getRelaciones(){
                 this.getPaises();
@@ -285,33 +302,27 @@
             },
             getPaises(){
                 axios.get('/ajax/paises/habilitados')
-                    .then((datos) => { this.paises = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.paises = datos.data; }).catch((error) => { debugger; });
             },
             getProvincias(){
                 axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias')
-                    .then((datos) => { this.provincias = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.provincias = datos.data; }).catch((error) => { debugger; });
             },
             getLocalidades(){
                 axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias/' + this.actividad.idProvincia + '/localidades')
-                    .then((datos) => { this.localidades = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.localidades = datos.data; }).catch((error) => { debugger; });
             },
             getOficinas(){
                 axios.get('/admin/ajax/oficinas')
-                    .then((datos) => { this.oficinas = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
             },
             getTipos(){
                 axios.get('/ajax/categorias/1/tipos')
-                    .then((datos) => { this.tipos = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.tipos = datos.data; }).catch((error) => { debugger; });
             },
             getCategorias(){
                 axios.get('/ajax/categorias/')
-                    .then((datos) => { this.categorias = datos.data; })
-                    .catch((error) => { debugger; });
+                    .then((datos) => { this.categorias = datos.data; }).catch((error) => { debugger; });
             },
         }
     }
