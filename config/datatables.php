@@ -326,14 +326,6 @@ return [
                 'title' => 'Punto'
             ],
             [
-                'name' => 'nombres',
-                'title' => 'Nombre'
-            ],
-            [
-                'name' => 'apellidoPaterno',
-                'title' => 'Apellido'
-            ],
-            [
                 'name' => 'pais',
                 'title' => 'Pais'
             ],
@@ -344,6 +336,14 @@ return [
             [
                 'name' => 'localidad',
                 'title' => 'Localidad'
+            ],
+            [
+                'name' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellidoPaterno',
+                'title' => 'Apellido'
             ],
         ],
         'sortOrder' => [

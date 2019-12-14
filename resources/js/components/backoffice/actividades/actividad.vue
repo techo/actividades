@@ -241,7 +241,33 @@
         components: {},
         data() {
             return {
-                actividad: {},
+                actividad: {
+                    nombreActividad: null,
+                    descripcion: '',
+                    estadoConstruccion: 'Abierta',
+                    confirmacion: 0,
+                    pago: 0,
+
+                    idTipo: null,
+                    idOficina: null,
+
+                    fechaInicio: moment().format('YYYY-MM-DD HH:mm:ss'),
+                    fechaFin: moment().add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
+
+                    lugar: '',
+                    idPais: null,
+                    idProvincia: null,
+                    idLocalidad: null,
+
+                    limiteInscripciones: 0,
+                    inscripcionInterna: 0,
+
+                    montoMin: 0,
+                    montoMax: 0,
+                    moneda: null,
+                    fechaLimitePago: null,
+                    beca: null
+                },
                 paises: [],
                 provincias: [],
                 localidades: [],
@@ -256,12 +282,16 @@
         mounted() {
             Event.$on('guardar', this.guardar);
 
-            axios.get('/admin/ajax/actividades/' + this.id)
-                .then((datos) => { 
-                    this.actividad = datos.data; 
-                    this.getRelaciones();
-                })
-                .catch((error) => { debugger; });
+            if(this.id) {
+                axios.get('/admin/ajax/actividades/' + this.id)
+                    .then((datos) => { 
+                        this.actividad = datos.data; 
+                        this.getTodasRelaciones();
+                    }).catch((error) => { debugger; });
+            }
+            else {
+                this.getRelaciones();
+            }
 
         },
         computed: {
@@ -288,11 +318,25 @@
             guardar(){
                 this.actividad.fechaInicio = moment(this.$refs["fechaInicio_f"].value + ' ' + this.$refs["fechaInicio_h"].value).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.$refs["fechaFin_f"].value + ' ' + this.$refs["fechaFin_h"].value).format('YYYY-MM-DD HH:mm:ss');
-
-                axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
-                    .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });
+                if(this.id) {
+                    axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
+                        .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });
+                }
+                else {
+                    axios.post('/admin/actividades/crear', this.actividad)
+                        .then((datos) => {
+                            debugger;
+                            window.location = '/admin/actividades/' + datos.data.idActividad;
+                        }).catch((error) => { debugger; });
+                }
             },
             getRelaciones(){
+                this.getPaises();
+                this.getOficinas();
+                this.getTipos();
+                this.getCategorias();
+            },
+            getTodasRelaciones(){
                 this.getPaises();
                 this.getProvincias();
                 this.getLocalidades();

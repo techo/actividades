@@ -15,15 +15,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
-                <actividades-show
-                        actividad="{{ $actividad }}"
-                        paises="{{ $paises }}"
-                        localidades=""
-                        provincias=""
-                        tipos=""
-                        categorias="{{ $categorias }}"
-                        edicion="{{ $edicion }}"
-                ></actividades-show>
+                <actividad></actividad>
             </div>
             <div class="tab-pane" id="grupos">
             </div>

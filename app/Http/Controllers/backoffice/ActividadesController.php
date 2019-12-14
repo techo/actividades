@@ -77,18 +77,111 @@ class ActividadesController extends Controller
     public function store(Request $request)
     {
         $actividad = new Actividad();
-        $validator = $this->createValidator($request);
-        if ($validator->passes()) {
-            if ($this->guardarActividad($request, $actividad) && $this->crearGrupo($actividad)) {
-                $request->session()->flash('mensaje', 'Actividad creada correctamente');
-                return response('Actividad creada correctamente', 200);
-            } else {
-                return response('No se pudo crear la actividad', 500);
-            }
-        }
+        
+        $validado = $request->validate([
+            'nombreActividad' => 'required',
+            'descripcion' => 'required',
+            'estadoConstruccion' => 'required',
+            'confirmacion' => 'required',
+            'pago' => 'required',
 
-        return response($validator->errors()->all(), 422);
+            'idTipo' => 'required',
+            'idOficina' => 'required',
 
+            'fechaInicio' => 'required|date',
+            'fechaFin' => 'required|date',
+
+            'fechaInicioInscripciones' => 'nullable|date',
+            'fechaFinInscripciones' => 'nullable|date',
+            'fechaInicioEvaluaciones' => 'nullable|date',
+            'fechaFinEvaluaciones' => 'nullable|date',
+            
+            'lugar' => 'present',
+            'idPais' => 'required',
+            'idProvincia' => 'required',
+            'idLocalidad' => 'required',
+
+            'limiteInscripciones' => 'nullable',
+            'inscripcionInterna' => 'nullable',
+            'mensajeInscripcion' => 'required',
+            
+            'montoMin' => 'nullable',
+            'montoMax' => 'nullable',
+            'moneda' => 'nullable',
+            'fechaLimitePago' => 'nullable',
+            'beca' => 'nullable',
+        ]);
+
+        $actividad->fill($validado);
+        
+        //por defecto el usuario cargando es coordinador
+        $actividad->idCoordinador = auth()->user()->idPersona;
+
+        $actividad->save();
+
+        //por defecto se carga con un punto de encuentro igual a la ubicación de la actividad
+        $punto = new PuntoEncuentro;
+        $punto->punto = $actividad->lugar;
+        $punto->idPais = $actividad->idPais;
+        $punto->idProvincia = $actividad->idProvincia;
+        $punto->idLocalidad = $actividad->idLocalidad;
+        $punto->idPersona = $actividad->idCoordinador;
+        $actividad->puntosEncuentro()->save($punto);        
+
+        return response()->json($actividad);
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Actividad $actividad)
+    {
+        $validado = $request->validate([
+            'nombreActividad' => 'required',
+            'descripcion' => 'required',
+            'estadoConstruccion' => 'required',
+            'confirmacion' => 'required',
+            'pago' => 'required',
+
+            'idTipo' => 'required',
+            'idOficina' => 'required',
+
+            'fechaInicio' => 'required|date',
+            'fechaFin' => 'required|date',
+
+            'fechaInicioInscripciones' => 'nullable|date',
+            'fechaFinInscripciones' => 'nullable|date',
+            'fechaInicioEvaluaciones' => 'nullable|date',
+            'fechaFinEvaluaciones' => 'nullable|date',
+            
+            'lugar' => 'present',
+            'idPais' => 'required',
+            'idProvincia' => 'required',
+            'idLocalidad' => 'required',
+
+            'limiteInscripciones' => 'nullable',
+            'inscripcionInterna' => 'nullable',
+            'mensajeInscripcion' => 'required',
+            
+            'montoMin' => 'nullable',
+            'montoMax' => 'nullable',
+            'moneda' => 'nullable',
+            'fechaLimitePago' => 'nullable',
+            'beca' => 'nullable',
+        ]);
+        
+        $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
+
+        $actividad->fill($validado);
+
+        $actividad->save();
+
+        return response()->json($actividad);
     }
 
     /**
@@ -254,57 +347,6 @@ class ActividadesController extends Controller
     public function edit($id)
     {
         //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Actividad $actividad)
-    {
-        $validado = $request->validate([
-            'nombreActividad' => 'required',
-            'descripcion' => 'required',
-            'estadoConstruccion' => 'required',
-            'confirmacion' => 'required',
-            'pago' => 'required',
-
-            'idTipo' => 'required',
-            'idOficina' => 'required',
-
-            'fechaInicio' => 'required|date',
-            'fechaFin' => 'required|date',
-
-            'fechaInicioInscripciones' => 'nullable|date',
-            'fechaFinInscripciones' => 'nullable|date',
-            'fechaInicioEvaluaciones' => 'nullable|date',
-            'fechaFinEvaluaciones' => 'nullable|date',
-            
-            'lugar' => 'present',
-            'idPais' => 'required',
-            'idProvincia' => 'required',
-            'idLocalidad' => 'required',
-
-            'limiteInscripciones' => 'nullable',
-            'inscripcionInterna' => 'nullable',
-            
-            'montoMin' => 'nullable',
-            'montoMax' => 'nullable',
-            'moneda' => 'nullable',
-            'fechaLimitePago' => 'nullable',
-            'beca' => 'nullable',
-        ]);
-        
-        $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
-
-        $actividad->fill($validado);
-
-        $actividad->save();
-
-        return response()->json($actividad);
     }
 
     /**
