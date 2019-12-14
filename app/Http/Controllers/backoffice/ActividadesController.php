@@ -118,6 +118,7 @@ class ActividadesController extends Controller
         $actividad->idCoordinador = auth()->user()->idPersona;
 
         $actividad->save();
+        $actividad->tipo; //para mostrar categoria
 
         //por defecto se carga con un punto de encuentro igual a la ubicación de la actividad
         $punto = new PuntoEncuentro;
@@ -178,8 +179,9 @@ class ActividadesController extends Controller
         $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
 
         $actividad->fill($validado);
-
         $actividad->save();
+
+        $id->tipo;
 
         return response()->json($actividad);
     }
@@ -192,6 +194,7 @@ class ActividadesController extends Controller
      */
     public function actividad(Actividad $id)
     {
+        $id->tipo;
         return response()->json($id);
     }
 

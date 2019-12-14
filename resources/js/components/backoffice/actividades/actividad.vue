@@ -47,8 +47,8 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="categoria">Categoría</label>
-                            <select name="idCategoria" class="form-control" v-model="actividad.idCategoria" required >
-                                <option v-text="categoria.nombre" v-bind:value="categoria.idCategoria" v-for="categoria in categorias" ></option>
+                            <select name="idCategoria" @change="getTipos($event.target.value)"  required class="form-control" >
+                                <option v-text="categoria.nombre" v-bind:value="categoria.id" v-for="categoria in categorias" :selected="actividad.tipo.idCategoria == categoria.id"></option>
                             </select>
                         </div>
                     </div>
@@ -266,7 +266,11 @@
                     montoMax: 0,
                     moneda: null,
                     fechaLimitePago: null,
-                    beca: null
+                    beca: null,
+
+                    tipo : {
+                        idCategoria: 1
+                    }
                 },
                 paises: [],
                 provincias: [],
@@ -333,7 +337,7 @@
             getRelaciones(){
                 this.getPaises();
                 this.getOficinas();
-                this.getTipos();
+                this.getTipos(1);
                 this.getCategorias();
             },
             getTodasRelaciones(){
@@ -341,7 +345,7 @@
                 this.getProvincias();
                 this.getLocalidades();
                 this.getOficinas();
-                this.getTipos();
+                this.getTipos(this.actividad.tipo.idCategoria);
                 this.getCategorias();
             },
             getPaises(){
@@ -360,8 +364,8 @@
                 axios.get('/admin/ajax/oficinas')
                     .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
             },
-            getTipos(){
-                axios.get('/ajax/categorias/1/tipos')
+            getTipos(id){
+                axios.get('/ajax/categorias/' + id + '/tipos')
                     .then((datos) => { this.tipos = datos.data; }).catch((error) => { debugger; });
             },
             getCategorias(){
