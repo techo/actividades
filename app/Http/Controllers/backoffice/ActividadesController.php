@@ -104,8 +104,8 @@ class ActividadesController extends Controller
 
     public function guardarCoordinador(Actividad $actividad, Persona $persona)
     {    
-        $actividad->idPersona = $persona->idPersona;
-        $actividad->save;
+        $actividad->idCoordinador = $persona->idPersona;
+        $actividad->save();
         $persona->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')';
         return $persona;
     }

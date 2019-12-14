@@ -1,12 +1,13 @@
 <template>
     <div>
         <div class="box">
-            <div class="box-header with-border"> </div>
+            <div class="box-header with-border">
+                <h3 class="box-title">Coordinador de la actividad</h3>
+            </div>
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="coordinador">Coordinador</label>
+                        <div class="input-group">
                             <v-select 
                                 :options="personas" 
                                 @search="onSearch" 
@@ -18,12 +19,10 @@
                             >
                                 <template slot="no-options">Escribe el nombre, apellido o DNI</template>
                             </v-select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary pull-right" @click="guardar()">Guardar</button>
+                            </span>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <button class="btn btn-primary pull-right" @click="guardar()">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -87,5 +86,7 @@
 </script>
 
 <style scoped>
-
+.vs__dropdown-toggle {
+    padding: 3px 0 3px 0;
+}
 </style>
