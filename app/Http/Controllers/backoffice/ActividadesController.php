@@ -182,7 +182,7 @@ class ActividadesController extends Controller
         $actividad->fill($validado);
         $actividad->save();
 
-        $id->tipo;
+        $actividad->tipo;
 
         return response()->json($actividad);
     }

@@ -28,7 +28,7 @@
 
 @push('additional_scripts')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
     <script>
         var editor_config = {
             path_absolute : "/",

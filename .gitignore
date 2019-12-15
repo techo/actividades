@@ -5,6 +5,7 @@
 /public/css/app.css
 /public/js/atlas.js
 /public/bundle.js
+/public/js/skins
 /storage/*.key
 /public/storage
 /vendor

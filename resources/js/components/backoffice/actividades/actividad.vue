@@ -103,7 +103,15 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
-                            <textarea name="descripcion" v-model="actividad.descripcion" class="form-control" required ></textarea>
+                            <tinymce-editor 
+                                v-model="actividad.descripcion" 
+                                :init="{
+                                    menubar: 'false',
+                                }"
+                                toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
+                                plugins="paste autoresize image preview paste emoticons link"
+                                
+                            ></tinymce-editor>
                         </div>
                     </div>
                 </div>
@@ -197,7 +205,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="mensajeInscripcion">Mensaje</label>
-                            <textarea name="descripcion" v-model="actividad.mensajeInscripcion" class="form-control" required ></textarea>
+                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required ></textarea>
                         </div>
                     </div>
                 </div>
@@ -234,11 +242,26 @@
 
 <script>
     import store from '../stores/store'; //legado, sacar en cuanto sea posible
+    import editor from '@tinymce/tinymce-vue'
+
+    import 'tinymce/tinymce'
+
+    // Theme
+    import 'tinymce/themes/silver/theme'
+
+    // Plugins
+    import 'tinymce/plugins/paste'
+    import 'tinymce/plugins/autoresize'
+    import 'tinymce/plugins/image'
+    import 'tinymce/plugins/preview'
+    import 'tinymce/plugins/paste'
+    import 'tinymce/plugins/emoticons'
+    import 'tinymce/plugins/link'
 
     export default {
         name: "actividad",
         props: ['id'],
-        components: {},
+        components: { 'tinymce-editor': editor },
         data() {
             return {
                 actividad: {
@@ -296,6 +319,7 @@
             else {
                 this.getRelaciones();
             }
+
 
         },
         computed: {
