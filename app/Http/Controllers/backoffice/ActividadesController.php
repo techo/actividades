@@ -123,6 +123,7 @@ class ActividadesController extends Controller
         //por defecto se carga con un punto de encuentro igual a la ubicación de la actividad
         $punto = new PuntoEncuentro;
         $punto->punto = $actividad->lugar;
+        $punto->horario = $actividad->fechaInicio->format('H:i');
         $punto->idPais = $actividad->idPais;
         $punto->idProvincia = $actividad->idProvincia;
         $punto->idLocalidad = $actividad->idLocalidad;

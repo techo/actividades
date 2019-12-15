@@ -326,6 +326,10 @@ return [
                 'title' => 'Punto'
             ],
             [
+                'name' => 'horario',
+                'title' => 'Hora'
+            ],
+            [
                 'name' => 'pais',
                 'title' => 'Pais'
             ],

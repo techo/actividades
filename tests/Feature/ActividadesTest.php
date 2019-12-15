@@ -118,7 +118,12 @@ class ActividadesTest extends TestCase
             //->assertSessionHas('mensaje', 'Actividad creada correctamente');
 
         $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
-        	->assertDatabaseHas('PuntoEncuentro', [ 'punto' => $actividad->lugar ]);
+        	->assertDatabaseHas('PuntoEncuentro', [ 
+                'punto' => $actividad->lugar, 
+                'idPais' => $actividad->idPais, 
+                'idPersona' => $persona->idPersona,
+                'horario' => $actividad->fechaInicio->format('H:i'), 
+            ]);
     }
 
     /** @test */

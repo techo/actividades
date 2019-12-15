@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\ajax;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\ActividadFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\Permission\Models\Permission;
+use Tests\TestCase;
 
 class backofficeActividadesTest extends TestCase
 {
@@ -40,6 +41,26 @@ class backofficeActividadesTest extends TestCase
                     "total"
                 ]
             );
+    }
+
+    /** @test */
+    public function crear_punto_encuentro()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $punto = factory('App\PuntoEncuentro')->make();
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
+            ->assertJsonFragment([ 'punto' => $punto->punto ]);
     }
 }
 

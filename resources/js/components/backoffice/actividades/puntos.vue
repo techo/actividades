@@ -1,9 +1,14 @@
 <template>
     <div>
+        <puntos-modal :id="id" ></puntos-modal>
         <div class="box">
             <div class="box-header with-border">
             </div>
             <div class="box-body">
+                <span class="pull-right">
+                    <button class="btn btn-primary" @click.prevent="desplegarModal()">Crear <i class="fa fa-plus"></i></button>
+                </span>
+                <br>
                 <vuetable-puntos 
                     :api-url="url" 
                     :fields="fields_" 
@@ -22,11 +27,12 @@
 <script>
 
     import Vuetable from 'vuetable-2'
+    import puntosModal from './puntos-modal'
 
     export default {
         name: "puntos",
         props: ['id', 'fields', 'sortOrder'],
-        components: {'vuetable-puntos': Vuetable},
+        components: {'vuetable-puntos': Vuetable, 'puntos-modal': puntosModal },
         data() {
             return {
                 url: '/admin/ajax/actividades/' + this.id + '/puntos',
@@ -75,6 +81,9 @@
                     .then((datos) => { this.actividad = datos.data; })
                     .catch((error) => { debugger; });
             },
+            desplegarModal() {
+                Event.$emit('puntos:crear');
+            }
         }
     }
 </script>

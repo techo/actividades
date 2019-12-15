@@ -49,8 +49,29 @@ class ActividadesController extends BaseController
                'atl_provincias.provincia as provincia',
                'atl_localidades.localidad as localidad',
                'Persona.nombres',
-               'Persona.apellidoPaterno')
+               'Persona.apellidoPaterno',
+               'horario')
            ->get();
+    }
+
+    public function guardarPunto(Request $request, $id)
+    {
+      $actividad = Actividad::findOrFail($id);
+      $punto = new PuntoEncuentro;
+      $validado = $request->validate([
+        'punto' => 'required',
+        'horario' => 'required',
+        'idProvincia' => 'required',
+        'idLocalidad' => 'required',
+        'idPersona' => 'required',
+        'estado' => 'nullable',
+      ]);
+
+      $punto->fill($validado);
+      $punto->idPais = $actividad->idPais;
+      $actividad->puntosEncuentro()->save($punto);
+
+      return response()->json($punto->fresh());
     }
 
 }

@@ -9,6 +9,7 @@ class PuntoEncuentro extends Model
     protected $table = 'PuntoEncuentro';
     protected $primaryKey = 'idPuntoEncuentro';
     public $timestamps = false;
+    protected $guarded = [ 'idPuntoEncuentro' ];
 
     public function actividad()
     {

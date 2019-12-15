@@ -328,10 +328,7 @@
                 }
                 else {
                     axios.post('/admin/actividades/crear', this.actividad)
-                        .then((datos) => {
-                            debugger;
-                            window.location = '/admin/actividades/' + datos.data.idActividad;
-                        }).catch((error) => { debugger; });
+                        .then((datos) => { window.location = '/admin/actividades/' + datos.data.idActividad; }).catch((error) => { debugger; });
                 }
             },
             getRelaciones(){
