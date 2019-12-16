@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="display = false" >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()" >
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">Puntos</h4>
                 </div>
@@ -12,39 +12,43 @@
                     <div class="row">
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.punto }">
                                 <label for="punto" >Punto</label>
-                                <input v-model="punto.punto" name="punto" type="text" class="form-control" required >
+                                <input v-model="form.punto" name="punto" type="text" class="form-control" required >
+                                <span v-if="errors.punto" v-text="errors.punto[0]" class="help-block" ></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.horario }">
                                 <label for="horario" >Horario</label>
-                                <input v-model="punto.horario" name="horario" type="time" class="form-control" required >
+                                <input v-model="form.horario" name="horario" type="time" class="form-control" required >
+                                <span v-if="errors.horario" v-text="errors.horario[0]" class="help-block" ></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }">
                                 <label for="idProvincia">Provincia</label>
-                                <select v-model="punto.idProvincia" name="idProvincia" class="form-control" required @change="getLocalidades($event);actividad.idLocalidad=null;" >>
+                                <select v-model="form.idProvincia" name="idProvincia" class="form-control" required @change="getLocalidades($event);actividad.idLocalidad=null;" >>
                                     <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                                 </select>
+                                <span v-if="errors.idProvincia" v-text="errors.idProvincia[0]" class="help-block" ></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }">
                                 <label for="idLocalidad">Localidad</label>
-                                <select v-model="punto.idLocalidad" name="idLocalidad" class="form-control" required >
+                                <select v-model="form.idLocalidad" name="idLocalidad" class="form-control" required >
                                     <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
                                 </select>
+                                <span v-if="errors.idLocalidad" v-text="errors.idLocalidad[0]" class="help-block" ></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
                                 <label for="idPersona">Persona</label>
                                 <v-select
                                     :options="personas" 
@@ -54,15 +58,16 @@
                                     :filterable="false"
                                     :selectOnTab="true"
                                 ></v-select>
+                                <span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block" ></span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="estado">Estado</label>
-                                <select v-model="punto.estado" name="estado" class="form-control" required >
-                                    <option value="1" :selected="punto.estado == 1 " >Activo</option>
-                                    <option value="0" :selected="punto.estado == 0 " >Inactivo</option>
+                                <select v-model="form.estado" name="estado" class="form-control" required >
+                                    <option value="1" :selected="form.estado == 1 " >Activo</option>
+                                    <option value="0" :selected="form.estado == 0 " >Inactivo</option>
                                 </select>
                             </div>
                         </div>
@@ -70,7 +75,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button ref="cancelar" class="btn" >Cancelar</button>
+                    <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
                     <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()" >Guardar</button>
                 </div>
             </div>
@@ -94,7 +99,7 @@ export default {
             personas: [],
             provincias: [],
             localidades: [],
-            punto: {
+            form: {
                 punto: null,
                 horario: null,
                 idProvincia: null,
@@ -111,15 +116,19 @@ export default {
     },
     watch: { 
         persona(v,vv) {
-            this.punto.idPersona = v.idPersona
+            this.form.idPersona = v.idPersona
         }
     },
     methods: {
         guardar(){
-            axios.post('/admin/ajax/actividades/' + this.id + '/puntos', this.punto)
+            axios.post('/admin/ajax/actividades/' + this.id + '/puntos', this.form)
                 .then((datos) => {
-                    //refrescar tabla
-                }).catch((error) => { debugger; });
+                    Event.$emit('puntos:refrescar');
+                    this.hide();
+                })
+                .catch((error) => { 
+                    this.errors = this.errors = error.response.data.errors; 
+                });
         },
         getActividad() {
             axios.get('/admin/ajax/actividades/' + this.id )
@@ -133,11 +142,28 @@ export default {
                 .then((datos) => { this.provincias = datos.data; }).catch((error) => { debugger; });
         },
         getLocalidades(){
-            axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias/' + this.punto.idProvincia + '/localidades')
+            axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias/' + this.form.idProvincia + '/localidades')
                     .then((datos) => { this.localidades = datos.data; }).catch((error) => { debugger; });
         },
         show: function () { this.display = true; },
         hide: function () { this.display = false; },
+        reset: function () {
+            for (let field in this.form) {
+                this.form[field] = null;
+            }
+            this.reset_errors();
+        },
+        reset_errors: function () {
+            for (let field in this.errors) {
+                this.errors[field] = null;
+                delete this.errors[field];
+            }
+        },
+        cancelar() {
+            this.reset();
+            this.reset_errors();
+            this.hide();
+        },
         onSearch: _.debounce( function (text, loading) {
             if(text.length > 3) {
                 loading(true);
@@ -146,10 +172,7 @@ export default {
                         this.personas = datos.data.data; 
                         loading(false);
                     })
-                    .catch((error) => { 
-                        console.log(error);
-                        loading(false);
-                    });
+                    .catch((error) => { loading(false); });
                 }
             }, 400),
 

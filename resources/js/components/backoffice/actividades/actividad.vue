@@ -109,7 +109,7 @@
                                     menubar: 'false',
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
-                                plugins="paste autoresize image preview paste emoticons link"
+                                plugins="paste autoresize image preview paste link"
                                 
                             ></tinymce-editor>
                         </div>
@@ -255,7 +255,6 @@
     import 'tinymce/plugins/image'
     import 'tinymce/plugins/preview'
     import 'tinymce/plugins/paste'
-    import 'tinymce/plugins/emoticons'
     import 'tinymce/plugins/link'
 
     export default {

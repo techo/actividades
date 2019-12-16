@@ -17,6 +17,7 @@
 
                     class="vuetable"
                     :css="css.table"
+                    ref="tabla"
                     >
                 </vuetable-puntos>
             </div>
@@ -71,6 +72,7 @@
             this.sortOrder_ = JSON.parse(this.sortOrder);
         },
         mounted() {
+            Event.$on('puntos:refrescar', this.refrescar);
         },
         computed: {},
         filters: {},
@@ -83,6 +85,10 @@
             },
             desplegarModal() {
                 Event.$emit('puntos:crear');
+            },
+            refrescar() {
+                this.$refs.tabla.resetData();
+                this.$nextTick( () => this.$refs.tabla.refresh());
             }
         }
     }
