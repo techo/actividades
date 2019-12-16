@@ -349,6 +349,10 @@ return [
                 'name' => 'apellidoPaterno',
                 'title' => 'Apellido'
             ],
+            [
+                'name' => 'estado',
+                'title' => 'Estado'
+            ],
         ],
         'sortOrder' => [
             [

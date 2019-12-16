@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()" >
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Puntos</h4>
+                    <h4 class="modal-title">Punto</h4>
                 </div>
                 <div class="modal-body">
 
@@ -112,6 +112,7 @@ export default {
     },
     mounted() {
         Event.$on('puntos:crear', this.show);
+        Event.$on('puntos:editar', this.editar);
         this.getActividad();
     },
     watch: { 
@@ -120,15 +121,36 @@ export default {
         }
     },
     methods: {
-        guardar(){
+        guardar() {
+            if(this.form['idPuntoEncuentro'])
+                this.update();
+            else
+                this.store();
+        },
+        store(){
             axios.post('/admin/ajax/actividades/' + this.id + '/puntos', this.form)
-                .then((datos) => {
-                    Event.$emit('puntos:refrescar');
-                    this.hide();
+                .then((datos) => { 
+                    Event.$emit('puntos:refrescar'); 
+                    this.cancelar(); 
                 })
-                .catch((error) => { 
-                    this.errors = this.errors = error.response.data.errors; 
-                });
+                .catch((error) => {this.errors = this.errors = error.response.data.errors; });
+        },
+        update () {
+            axios.post('/admin/ajax/actividades/' + this.id + '/puntos/' + this.form.idPuntoEncuentro, this.form)
+                .then((datos) => { 
+                    Event.$emit('puntos:refrescar'); 
+                    this.cancelar(); 
+                })
+                .catch((error) => {this.errors = this.errors = error.response.data.errors; });
+        },
+        editar(p) {
+            this.show();
+            axios.get('/admin/ajax/actividades/' + this.id + '/puntos/' + p.id)
+                .then((datos) => { 
+                    this.form = datos.data; 
+                    this.getLocalidades();
+                    this.persona = datos.data.persona;
+                }).catch((error) => { debugger; });
         },
         getActividad() {
             axios.get('/admin/ajax/actividades/' + this.id )

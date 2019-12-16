@@ -34,6 +34,17 @@ class ActividadesController extends BaseController
         return $actividad->grupos;
     }
 
+    public function punto(Actividad $id, PuntoEncuentro $punto)
+    {
+      $r = $punto->responsable;
+      $punto->persona = [
+        "idPersona" => $r->idPersona,
+        "nombre" => $r->nombres . ' ' . $r->apellidoPaterno . ' (' . $r->mail . ')',
+      ];
+
+      return response()->json($punto);
+    }
+
     public function getPuntos($id)
     {
        $query = (new PuntoEncuentro)->newQuery();
@@ -50,7 +61,8 @@ class ActividadesController extends BaseController
                'atl_localidades.localidad as localidad',
                'Persona.nombres',
                'Persona.apellidoPaterno',
-               'horario')
+               'horario',
+               'estado')
            ->get();
     }
 
@@ -70,6 +82,23 @@ class ActividadesController extends BaseController
       $punto->fill($validado);
       $punto->idPais = $actividad->idPais;
       $actividad->puntosEncuentro()->save($punto);
+
+      return response()->json($punto->fresh());
+    }
+
+    public function editarPunto(Request $request, $id, PuntoEncuentro $punto)
+    {
+      $validado = $request->validate([
+        'punto' => 'required',
+        'horario' => 'required',
+        'idProvincia' => 'required',
+        'idLocalidad' => 'required',
+        'idPersona' => 'required',
+        'estado' => 'nullable',
+      ]);
+
+      $punto->fill($validado);
+      $punto->save();
 
       return response()->json($punto->fresh());
     }

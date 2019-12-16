@@ -62,5 +62,27 @@ class backofficeActividadesTest extends TestCase
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
             ->assertJsonFragment([ 'punto' => $punto->punto ]);
     }
+
+    /** @test */
+    public function editar_punto_encuentro()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $punto = $actividad->PuntosEncuentro[0];
+
+        $punto->punto = "modificado";
+
+        $this->actingAs($admin)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
+            ->assertJsonFragment([ 'punto' => $punto->punto ]);
+    }
 }
 

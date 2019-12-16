@@ -2,18 +2,22 @@
     <div>
         <puntos-modal :id="id" ></puntos-modal>
         <div class="box">
-            <div class="box-header with-border">
-            </div>
+
             <div class="box-body">
-                <span class="pull-right">
-                    <button class="btn btn-primary" @click.prevent="desplegarModal()">Crear <i class="fa fa-plus"></i></button>
-                </span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="pull-right">
+                            <button class="btn btn-primary" @click.prevent="desplegarModal()">Crear <i class="fa fa-plus"></i></button>
+                        </span>
+                    </div>
+                </div>
                 <br>
                 <vuetable-puntos 
                     :api-url="url" 
                     :fields="fields_" 
                     pagination-path="" 
                     data-path=""
+                    v-on:vuetable:row-clicked="editar"
 
                     class="vuetable"
                     :css="css.table"
@@ -21,6 +25,7 @@
                     >
                 </vuetable-puntos>
             </div>
+
         </div>
     </div>
 </template>
@@ -89,7 +94,10 @@
             refrescar() {
                 this.$refs.tabla.resetData();
                 this.$nextTick( () => this.$refs.tabla.refresh());
-            }
+            },
+            editar(p) {
+                Event.$emit('puntos:editar', p);
+            },
         }
     }
 </script>

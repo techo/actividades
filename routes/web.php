@@ -196,6 +196,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/grupos/getInscriptos', 'backoffice\ajax\InscripcionesController@getInscriptos')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@getPuntos')->middleware('can:editar,App\Actividad,id');
     Route::post('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@guardarPunto')->middleware('can:editar,App\Actividad,id');
+    Route::get('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\ActividadesController@punto');
+    Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\ActividadesController@editarPunto');
     Route::post('/ajax/actividades/{id}/enviar-evaluaciones', 'backoffice\ajax\EvaluacionesController@enviar')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/stats', 'backoffice\ajax\EvaluacionesController@getActividadStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/chartdata', 'backoffice\ajax\EvaluacionesController@getActividadChartData')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
