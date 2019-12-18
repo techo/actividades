@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backoffice;
 
-use App\Oficina;
+use App\Tipo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -20,14 +20,14 @@ class TiposActividadController extends Controller
     public function create()
     {
         $edicion = true;
-        return view('backoffice.oficinas.create', compact('edicion'));
+        return view('backoffice.tiposActividad.create', compact('edicion'));
     }
 
     public function show(Request $request, $id)
     {
-        $oficina = Oficina::find($id);
+        $tipoActividad = Tipo::find($id);
         $edicion = false;
-        return view('backoffice.oficinas.show', compact('edicion', 'oficina'));
+        return view('backoffice.tiposActividad.show', compact('edicion', 'tipoActividad'));
     }
 
     

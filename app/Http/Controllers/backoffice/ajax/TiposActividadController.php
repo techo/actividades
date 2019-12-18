@@ -59,20 +59,20 @@ class TiposActividadController extends Controller
         return response()->json($validados);
     }
 
-    public function delete(Oficina $id)
+    public function delete(Tipo $id)
     {
         if ($id->delete()){
-            Session::flash('mensaje', 'Oficina eliminada correctamente');
+            Session::flash('mensaje', 'Tipo de Actividad eliminada correctamente');
         } else {
-            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a la Oficina');
+            Session::flash('mensaje', 'Ocurrio un error al querer eliminar a el Tipo de Actividad');
         }
-        return redirect()->to('/admin/configuracion/oficinas');
+        return redirect()->to('/admin/configuracion/tipos-actividad');
     }
 
 
     public function get($id)
     {
-        $oficina = Oficina::find($id);
-        return response()->json($oficina);
+        $tipoActividad = Tipo::find($id);
+        return response()->json($tipoActividad);
     }
 }
