@@ -39,6 +39,12 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 
+import TiposActividadDatatable from './components/backoffice/datatable/TiposActividadDatatable';
+import TiposActividadFilterBar from './components/backoffice/datatable/TiposActividadFilterBar';
+
+Vue.component('tipos-actividad-datatable', TiposActividadDatatable);
+Vue.component('tipos-actividad-filter-bar', TiposActividadFilterBar);
+
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
 
