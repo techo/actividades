@@ -35,25 +35,25 @@ class TiposActividadController extends Controller
     }
 
     public function store(Request $request) {
-        $oficina = $request->validate([
+        $tipoActividad = $request->validate([
             'nombre' => 'required',
-            'id_pais' => 'required',
+            'idCategoria' => 'required',
         ]);
 
-        Oficina::create($oficina);
+        Tipo::create($tipoActividad);
 
-        return response()->json($oficina);
+        return response()->json($tipoActividad);
     }
 
-    public function update(Request $request) {
+      public function update(Request $request) {
         $validados = $request->validate([
-            'id' => 'required',
+            'idTipo' => 'required',
             'nombre' => 'required',
-            'id_pais' => 'required',
+            'idCategoria' => 'required',
         ]);
 
-        $oficina = Oficina::find($validados['id']);
-        $oficina->update($validados);
+        $tipoActividad = Tipo::find($validados['idTipo']);
+        $tipoActividad->update($validados);
 
 
         return response()->json($validados);
@@ -69,6 +69,8 @@ class TiposActividadController extends Controller
         return redirect()->to('/admin/configuracion/tipos-actividad');
     }
 
+
+    
 
     public function get($id)
     {

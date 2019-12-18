@@ -64,7 +64,7 @@
         data(){
             return {
                 tipoActividad: {
-                    id: null,
+                    idTipo: null,
                     nombre: "",
                     idCategoria: null,
                 },
@@ -130,15 +130,15 @@
                 let url;
                 this.mostrarLoadingAlert();
                 this.validationErrors = [];
-                if (this.oficina.id === undefined || this.oficina.id === null) {
-                    url = `/admin/configuracion/oficinas/registrar`;
+                if (this.tipoActividad.idTipo === undefined || this.tipoActividad.idTipo === null) {
+                    url = `/admin/ajax/configuracion/tipos-actividad/registrar`;
                 } else {
-                    url = `/admin/configuracion/oficinas/${encodeURI(this.oficina.id)}/editar`;
+                    url = `/admin/ajax/configuracion/tipos-actividad/${encodeURI(this.tipoActividad.idTipo)}/editar`;
                 }
-                this.oficina.id_pais = (this.paisSeleccionado)?this.paisSeleccionado.id:null;
-                axios.post(url, this.oficina)
+                this.tipoActividad.idCategoria = (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null;
+                axios.post(url, this.tipoActividad)
                     .then((respuesta) => {
-                        this.oficina = respuesta.data;
+                        this.tipoActividad = respuesta.data;
                         this.mensajeGuardado = 'Registro guardado correctamente';
                         this.guardado = true;
                         this.validationErrors = [];
