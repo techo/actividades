@@ -15,7 +15,7 @@ class TiposActividadController extends Controller
     {
         $filtros = [];
         if($request->has('tiposActividad')){
-            $filtros['tiposActividad'] = $request->tiposActividad;
+            $filtros['tipo'] = $request->tiposActividad;
         }
         
         if($request->filled('sort')) {
