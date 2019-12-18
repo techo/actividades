@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tipo extends Model
 {
+    use SoftDeletes;
     protected $table = "Tipo";
     protected $primaryKey = "idTipo";
     public $timestamps = false;
