@@ -117,6 +117,12 @@ class ActividadesController extends Controller
         //por defecto el usuario cargando es coordinador
         $actividad->idCoordinador = auth()->user()->idPersona;
 
+        //por defecto las fechas de inscripciones/evaluaciones son 10 días antes/después;
+        $actividad->fechaInicioInscripciones = $actividad->fechaInicio->subDays(10);
+        $actividad->fechaFinInscripciones = $actividad->fechaInicio->subMinutes(1);
+        $actividad->fechaInicioEvaluaciones = $actividad->fechaFin->addMinutes(1);
+        $actividad->fechaFinEvaluaciones = $actividad->fechaFin->addDays(10);
+
         $actividad->save();
         $actividad->tipo; //para mostrar categoria
 

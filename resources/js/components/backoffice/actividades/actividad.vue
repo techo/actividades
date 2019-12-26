@@ -11,13 +11,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label for="nombreActividad">Nombre</label>
-                            <input id="nombreActividad" name="nombreActividad"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.nombreActividad"
-                                   required
-                            >
-                        </div>
+                            <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required > </div>
                     </div>
 
                     <div class="col-md-2">
@@ -95,6 +89,62 @@
                         </div>
                     </div>       
                             
+                </div>
+
+                <div class="box" style="border-top: 12px; display: none">
+
+                    <div class="box-body">
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <label for="fechaInicio">Inscripciones empiezan</label>
+                                <div class="input-group">
+                                    <input :value="fechaInicioInscripciones_f" ref="" type="date" class="form-control" required style="line-height: inherit;">
+                                    <span class="input-group-addon">
+                                        <input :value="fechaInicio_h" ref="" type="time" required style="border: none; height: 20px;">
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="fechaFin">Terminan</label>
+                                <div class="input-group">
+                                    <input :value="fechaFinInscripciones_f" ref="" type="date" class="form-control" required style="line-height: inherit;">
+                                    <span class="input-group-addon">
+                                        <input :value="fechaFin_h" ref="" type="time" required style="border: none; height: 20px;">
+                                    </span>
+                                </div>
+                            </div>       
+                                    
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <label for="fechaInicio">Evaluaciones empiezan</label>
+                                <div class="input-group">
+                                    <input :value="fechaInicioEvaluaciones_f" ref="" type="date" class="form-control" required style="line-height: inherit;">
+                                    <span class="input-group-addon">
+                                        <input :value="fechaInicioEvaluaciones_h" ref="" type="time" required style="border: none; height: 20px;">
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="fechaFin">Terminan</label>
+                                <div class="input-group">
+                                    <input :value="fechaFinEvaluaciones_f" ref="" type="date" class="form-control" required style="line-height: inherit;">
+                                    <span class="input-group-addon">
+                                        <input :value="fechaFinEvaluaciones_h" ref="" type="time" required style="border: none; height: 20px;">
+                                    </span>
+                                </div>
+                            </div>       
+                                    
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <br>
@@ -338,13 +388,47 @@
                 if(this.actividad) 
                     return moment(this.actividad.fechaFin).format('HH:mm:ss');
             },
+            fechaInicioInscripciones_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaInicioInscripciones).format('YYYY-MM-DD');
+            },
+            fechaInicioInscripciones_h(){
+                if(this.actividad)
+                    return moment(this.actividad.fechaInicioInscripciones).format('HH:mm:ss');
+            },
+            fechaFinInscripciones_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
+            },
+            fechaFinInscripciones_h(){
+                if(this.actividad)
+                    return moment(this.actividad.fechaFinInscripciones).format('HH:mm:ss');
+            },
+            fechaInicioEvaluaciones_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
+            },
+            fechaInicioEvaluaciones_h(){
+                if(this.actividad)
+                    return moment(this.actividad.fechaInicioEvaluaciones).format('HH:mm:ss');
+            },
+            fechaFinEvaluaciones_f(){
+                if(this.actividad) 
+                    return moment(this.actividad.fechaFinEvaluaciones).format('YYYY-MM-DD');
+            },
+            fechaFinEvaluaciones_h(){
+                if(this.actividad)
+                    return moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
+            },
         },
         filters: {},
         watch: {},
         methods: {
             guardar(){
-                this.actividad.fechaInicio = moment(this.$refs["fechaInicio_f"].value + ' ' + this.$refs["fechaInicio_h"].value).format('YYYY-MM-DD HH:mm:ss');
-                this.actividad.fechaFin = moment(this.$refs["fechaFin_f"].value + ' ' + this.$refs["fechaFin_h"].value).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaInicio = moment(this.$refs.fechaInicio_f.value + ' ' + this.$refs.fechaInicio_h.value).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaFin = moment(this.$refs.fechaFin_f.value + ' ' + this.$refs.fechaFin_h.value).format('YYYY-MM-DD HH:mm:ss');
+                debugger;
+
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
                         .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });

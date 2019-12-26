@@ -330,10 +330,6 @@ return [
                 'title' => 'Hora'
             ],
             [
-                'name' => 'pais',
-                'title' => 'Pais'
-            ],
-            [
                 'name' => 'provincia',
                 'title' => 'Provincia'
             ],
