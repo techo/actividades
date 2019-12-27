@@ -1,17 +1,21 @@
 <template>
     <div>
         <div class="box">
+
             <div class="box-header with-border">
                 <h3 class="box-title">Básica</h3>
             </div>
+
             <div class="box-body">
                 
                 <div class="row">
 
                     <div class="col-md-8">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.nombreActividad }" >
                             <label for="nombreActividad">Nombre</label>
-                            <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required > </div>
+                            <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required > 
+                            <span class="help-block">{{ errors.nombreActividad }}</span>
+                        </div>
                     </div>
 
                     <div class="col-md-2">
@@ -48,20 +52,22 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idTipo }" >
                             <label for="tipo">Tipo</label>
                             <select name="idTipo" class="form-control" v-model="actividad.idTipo" required >
                                 <option v-text="tipo.nombre" v-bind:value="tipo.idTipo" v-for="tipo in tipos" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idTipo }}</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">Oficina</label>
                             <select name="idOficina" class="form-control" v-model="actividad.idOficina" required >
                                 <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idOficina }}</span>
                         </div>
                     </div>
 
@@ -71,7 +77,7 @@
 
                     <div class="col-md-4">
                         <label for="fechaInicio">Empieza</label>
-                        <div class="input-group">
+                        <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input :value="fechaInicio_f" ref="fechaInicio_f" type="date" class="form-control" required style="line-height: inherit;">
                             <span class="input-group-addon">
                                 <input :value="fechaInicio_h" ref="fechaInicio_h" type="time" required style="border: none; height: 20px;">
@@ -81,13 +87,15 @@
 
                     <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
-                        <div class="input-group">
+                        <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input :value="fechaFin_f" ref="fechaFin_f" type="date" class="form-control" required style="line-height: inherit;">
                             <span class="input-group-addon">
                                 <input :value="fechaFin_h" ref="fechaFin_h" type="time" required style="border: none; height: 20px;">
                             </span>
                         </div>
-                    </div>       
+                    </div>
+
+                    <span class="help-block">{{ errors.fechaInicio }}</span>
                             
                 </div>
 
@@ -159,7 +167,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.descripcion }" >
                             <label for="descripcion">Descripción</label>
                             <tinymce-editor 
                                 v-model="actividad.descripcion" 
@@ -170,6 +178,7 @@
                                 plugins="paste autoresize image preview paste link"
                                 
                             ></tinymce-editor>
+                            <span class="help-block">{{ errors.descripcion }}</span>
                         </div>
                     </div>
                 </div>
@@ -186,41 +195,41 @@
                 <div class="row">
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
                             <label for="lugar">Lugar</label>
-                            <input id="lugar" name="lugar"
-                                   type="text"
-                                   class="form-control"
-                                   v-model="actividad.lugar"
-                                   required
+                            <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
                             >
+                            <span class="help-block">{{ errors.lugar }}</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
                             <label for="pais">País</label>
                             <select name="idPais" class="form-control" v-model="actividad.idPais" required @change="getProvincias($event);actividad.idProvincia=null;actividad.idLocalidad=null;" >
                                 <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idPais }}</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
                             <label for="provincia">Provincia</label>
                             <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)">
                                 <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idProvincia }}</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
                             <label for="localidad">Localidad</label>
                             <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required >
                                 <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idLocalidad }}</span>
                         </div>
                     </div>
 
@@ -261,9 +270,10 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group">
+                        <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
                             <label for="mensajeInscripcion">Mensaje</label>
                             <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required ></textarea>
+                            <span class="help-block">{{ errors.mensajeInscripcion }}</span>
                         </div>
                     </div>
                 </div>
@@ -282,11 +292,7 @@
                     <div class="col-md-1">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
-                            <input id="limiteInscripciones" name="limiteInscripciones"
-                                   type="number"
-                                   class="form-control"
-                                   v-model="actividad.limiteInscripciones"
-                                   required
+                            <input type="number" class="form-control" v-model="actividad.limiteInscripciones" required
                             >
                         </div>
                     </div>
@@ -358,6 +364,7 @@
                         idCategoria: 1
                     }
                 },
+                errors: {},
                 paises: [],
                 provincias: [],
                 localidades: [],
@@ -456,8 +463,13 @@
                         .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });
                 }
                 else {
+                    this.errors = {};
                     axios.post('/admin/actividades/crear', this.actividad)
-                        .then((datos) => { window.location = '/admin/actividades/' + datos.data.idActividad; }).catch((error) => { debugger; });
+                        .then((datos) => { window.location = '/admin/actividades/' + datos.data.idActividad; })
+                        .catch((error) => {
+                                this.errors = error.response.data.errors;
+                                debugger;
+                            });
                 }
             },
             getRelaciones(){
