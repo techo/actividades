@@ -115,7 +115,6 @@ class ActividadesTest extends TestCase
         $this->actingAs($persona)
         	->post('/admin/actividades/crear', $actividad->toArray())
         	->assertJsonFragment([ 'nombreActividad' => $actividad->nombreActividad ]);
-            //->assertSessionHas('mensaje', 'Actividad creada correctamente');
 
         $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
         	->assertDatabaseHas('PuntoEncuentro', [ 
@@ -124,6 +123,80 @@ class ActividadesTest extends TestCase
                 'idPersona' => $persona->idPersona,
                 'horario' => $actividad->fechaInicio->format('H:i'), 
             ]);
+    }
+
+    /** @test */
+    public function usuario_puede_crear_actividad_sin_fechas_explicitas()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        unset($actividad['fechaInicioInscripciones']);
+        unset($actividad['fechaFinInscripciones']);
+        unset($actividad['fechaInicioEvaluaciones']);
+        unset($actividad['fechaFinEvaluaciones']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertSessionHasNoErrors();
+
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_explicitas_vacias()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('sin fechas explicitas')
+            ->create();
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incompletas()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('fechas explicitas incompletas')
+            ->create();
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incorrectas()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('fechas explicitas incorrectas')
+            ->create();
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertSessionHasErrors();
     }
 
     /** @test */

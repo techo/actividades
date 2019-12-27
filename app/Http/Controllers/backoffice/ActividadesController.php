@@ -7,6 +7,7 @@ use App\CategoriaActividad;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CrearActividad;
 use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Pais;
 use App\Persona;
@@ -74,43 +75,11 @@ class ActividadesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrearActividad $request)
     {
         $actividad = new Actividad();
         
-        $validado = $request->validate([
-            'nombreActividad' => 'required',
-            'descripcion' => 'required',
-            'estadoConstruccion' => 'required',
-            'confirmacion' => 'required',
-            'pago' => 'required',
-
-            'idTipo' => 'required',
-            'idOficina' => 'required',
-
-            'fechaInicio' => 'required|date',
-            'fechaFin' => 'required|date',
-
-            'fechaInicioInscripciones' => 'nullable|date',
-            'fechaFinInscripciones' => 'nullable|date',
-            'fechaInicioEvaluaciones' => 'nullable|date',
-            'fechaFinEvaluaciones' => 'nullable|date',
-            
-            'lugar' => 'present',
-            'idPais' => 'required',
-            'idProvincia' => 'required',
-            'idLocalidad' => 'required',
-
-            'limiteInscripciones' => 'nullable',
-            'inscripcionInterna' => 'nullable',
-            'mensajeInscripcion' => 'required',
-            
-            'montoMin' => 'nullable',
-            'montoMax' => 'nullable',
-            'moneda' => 'nullable',
-            'fechaLimitePago' => 'nullable',
-            'beca' => 'nullable',
-        ]);
+        $validado = $request->validated();
 
         $actividad->fill($validado);
         
@@ -118,10 +87,23 @@ class ActividadesController extends Controller
         $actividad->idCoordinador = auth()->user()->idPersona;
 
         //por defecto las fechas de inscripciones/evaluaciones son 10 días antes/después;
-        $actividad->fechaInicioInscripciones = $actividad->fechaInicio->subDays(10);
-        $actividad->fechaFinInscripciones = $actividad->fechaInicio->subMinutes(1);
-        $actividad->fechaInicioEvaluaciones = $actividad->fechaFin->addMinutes(1);
-        $actividad->fechaFinEvaluaciones = $actividad->fechaFin->addDays(10);
+        if($request->filled('fechaInicioInscripciones') && $request->has('fechaInicioInscripciones')) {
+            $actividad->fechaInicioInscripciones = $validado['fechaInicioInscripciones'];
+            $actividad->fechaFinInscripciones = $validado['fechaFinInscripciones'];
+        }
+        else {
+            $actividad->fechaInicioInscripciones = $actividad->fechaInicio->subDays(10);
+            $actividad->fechaFinInscripciones = $actividad->fechaInicio->subMinutes(1);
+        }
+
+        if($request->filled('fechaInicioEvaluaciones') && $request->has('fechaInicioEvaluaciones')) {
+            $actividad->fechaInicioEvaluaciones = $validado['fechaInicioEvaluaciones'];
+            $actividad->fechaFinEvaluaciones = $validado['fechaFinEvaluaciones'];
+        }
+        else{
+            $actividad->fechaInicioEvaluaciones = $actividad->fechaFin->addMinutes(1);
+            $actividad->fechaFinEvaluaciones = $actividad->fechaFin->addDays(10);
+        }
 
         $actividad->save();
         $actividad->tipo; //para mostrar categoria
@@ -147,41 +129,9 @@ class ActividadesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Actividad $actividad)
+    public function update(CrearActividad $request, Actividad $actividad)
     {
-        $validado = $request->validate([
-            'nombreActividad' => 'required',
-            'descripcion' => 'required',
-            'estadoConstruccion' => 'required',
-            'confirmacion' => 'required',
-            'pago' => 'required',
-
-            'idTipo' => 'required',
-            'idOficina' => 'required',
-
-            'fechaInicio' => 'required|date',
-            'fechaFin' => 'required|date',
-
-            'fechaInicioInscripciones' => 'nullable|date',
-            'fechaFinInscripciones' => 'nullable|date',
-            'fechaInicioEvaluaciones' => 'nullable|date',
-            'fechaFinEvaluaciones' => 'nullable|date',
-            
-            'lugar' => 'present',
-            'idPais' => 'required',
-            'idProvincia' => 'required',
-            'idLocalidad' => 'required',
-
-            'limiteInscripciones' => 'nullable',
-            'inscripcionInterna' => 'nullable',
-            'mensajeInscripcion' => 'required',
-            
-            'montoMin' => 'nullable',
-            'montoMax' => 'nullable',
-            'moneda' => 'nullable',
-            'fechaLimitePago' => 'nullable',
-            'beca' => 'nullable',
-        ]);
+        $validado = $validado = $request->validated();
         
         $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
 

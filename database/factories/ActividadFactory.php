@@ -68,6 +68,39 @@ $factory->state(App\Actividad::class, 'pasada', [
     'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
 ]);
 
+$factory->state(App\Actividad::class, 'sin fechas explicitas', [
+      'fechaInicioInscripciones' => null,
+      'fechaFinInscripciones' => null,
+      'fechaInicioEvaluaciones' => null,
+      'fechaFinEvaluaciones' => null,
+]);
+
+$factory->state(App\Actividad::class, 'fechas explicitas incompletas', [
+      'fechaInicioInscripciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->subDays(10)->format('Y-m-d H:i:s');
+      },
+      'fechaFinInscripciones' => null,
+      'fechaInicioEvaluaciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaFin'])->addMinute()->format('Y-m-d H:i:s');
+      },
+      'fechaFinEvaluaciones' => null,
+]);
+
+$factory->state(App\Actividad::class, 'fechas explicitas incorrectas', [
+      'fechaInicioInscripciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->addDays(10)->format('Y-m-d H:i:s');
+      },
+      'fechaFinInscripciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaInicio'])->addMinute()->format('Y-m-d H:i:s');
+      },
+      'fechaInicioEvaluaciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaFin'])->subMinute()->format('Y-m-d H:i:s');
+      },
+      'fechaFinEvaluaciones' => function($actividad) { 
+            return Carbon::parse($actividad['fechaFin'])->subDays(10)->format('Y-m-d H:i:s');
+      },
+]);
+
 $factory->state(App\Actividad::class, 'con confirmacion', [
     'confirmacion' => 1,
 ]);
