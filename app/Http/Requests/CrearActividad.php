@@ -36,10 +36,10 @@ class CrearActividad extends FormRequest
             'fechaInicio' => 'required|date',
             'fechaFin' => 'required|date',
 
-            'fechaInicioInscripciones' => 'sometimes|nullable|date|before_or_equal:fechaInicio',
-            'fechaFinInscripciones' => 'sometimes|required_unless:fechaInicioInscripciones,null|nullable|date|after_or_equal:fechaInicioInscripciones',
-            'fechaInicioEvaluaciones' => 'sometimes|nullable|date|after_or_equal:fechaInicio',
-            'fechaFinEvaluaciones' => 'sometimes|required_unless:fechaInicioEvaluaciones,null|nullable|date|after_or_equal:fechaInicioEvaluaciones',
+            'fechaInicioInscripciones' => 'sometimes|date|before_or_equal:fechaInicio',
+            'fechaFinInscripciones' => 'required_with:fechaInicioInscripciones|after_or_equal:fechaInicioInscripciones',
+            'fechaInicioEvaluaciones' => 'sometimes|date|after_or_equal:fechaFin',
+            'fechaFinEvaluaciones' => 'required_with:fechaInicioEvaluaciones|after_or_equal:fechaInicioEvaluaciones',
             
             'lugar' => 'present',
             'idPais' => 'required',

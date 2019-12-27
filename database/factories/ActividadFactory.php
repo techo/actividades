@@ -68,7 +68,7 @@ $factory->state(App\Actividad::class, 'pasada', [
     'fechaInicio' => Carbon::now()->subDays(5)->format('Y-m-d H:i:s')
 ]);
 
-$factory->state(App\Actividad::class, 'sin fechas explicitas', [
+$factory->state(App\Actividad::class, 'fechas explicitas vacias', [
       'fechaInicioInscripciones' => null,
       'fechaFinInscripciones' => null,
       'fechaInicioEvaluaciones' => null,

@@ -137,13 +137,15 @@ class ActividadesTest extends TestCase
 
         $actividad = factory('App\Actividad')->make();
 
-        unset($actividad['fechaInicioInscripciones']);
-        unset($actividad['fechaFinInscripciones']);
-        unset($actividad['fechaInicioEvaluaciones']);
-        unset($actividad['fechaFinEvaluaciones']);
+        $a = $actividad->toArray();
+
+        unset($a['fechaInicioInscripciones']);
+        unset($a['fechaFinInscripciones']);
+        unset($a['fechaInicioEvaluaciones']);
+        unset($a['fechaFinEvaluaciones']);
 
         $this->actingAs($persona)
-            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->post('/admin/actividades/crear', $a)
             ->assertSessionHasNoErrors();
 
     }
@@ -156,12 +158,15 @@ class ActividadesTest extends TestCase
         $persona = factory('App\Persona')->create();
         $persona->assignRole('coordinador');
 
-        $actividad = app(ActividadFactory::class)
-            ->conEstado('sin fechas explicitas')
-            ->create();
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        $a['fechaInicioInscripciones'] = null;
+        $a['fechaInicioEvaluaciones'] = null;
 
         $this->actingAs($persona)
-            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->post('/admin/actividades/crear', $a)
             ->assertSessionHasErrors();
     }
 
@@ -173,13 +178,36 @@ class ActividadesTest extends TestCase
         $persona = factory('App\Persona')->create();
         $persona->assignRole('coordinador');
 
-        $actividad = app(ActividadFactory::class)
-            ->conEstado('fechas explicitas incompletas')
-            ->create();
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        unset($a['fechaFinInscripciones']);
+        unset($a['fechaFinEvaluaciones']);
 
         $this->actingAs($persona)
-            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->post('/admin/actividades/crear', $a)
             ->assertSessionHasErrors();
+    }
+
+        /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incompletas_2()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        unset($a['fechaInicioInscripciones']);
+        unset($a['fechaInicioEvaluaciones']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasNoErrors();
     }
 
     /** @test */

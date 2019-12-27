@@ -115,7 +115,7 @@
 
                             <div class="col-md-4">
                                 <label for="fechaInicio">Inscripciones empiezan</label>
-                                <div class="input-group">
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input :value="fechaInicioInscripciones_f" ref="fechaInicioInscripciones_f" type="date" class="form-control" required style="line-height: inherit;">
                                     <span class="input-group-addon">
                                         <input :value="fechaInicioInscripciones_h" ref="fechaInicioInscripciones_h" type="time" required style="border: none; height: 20px;">
@@ -125,7 +125,7 @@
 
                             <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
-                                <div class="input-group">
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
                                     <input :value="fechaFinInscripciones_f" ref="fechaFinInscripciones_f" type="date" class="form-control" required style="line-height: inherit;">
                                     <span class="input-group-addon">
                                         <input :value="fechaFinInscripciones_h" ref="fechaFinInscripciones_h" type="time" required style="border: none; height: 20px;">
@@ -139,7 +139,7 @@
 
                             <div class="col-md-4">
                                 <label for="fechaInicio">Evaluaciones empiezan</label>
-                                <div class="input-group">
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input :value="fechaInicioEvaluaciones_f" ref="fechaInicioEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;">
                                     <span class="input-group-addon">
                                         <input :value="fechaInicioEvaluaciones_h" ref="fechaInicioEvaluaciones_h" type="time" required style="border: none; height: 20px;">
@@ -149,7 +149,7 @@
 
                             <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
-                                <div class="input-group">
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
                                     <input :value="fechaFinEvaluaciones_f" ref="fechaFinEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;">
                                     <span class="input-group-addon">
                                         <input :value="fechaFinEvaluaciones_h" ref="fechaFinEvaluaciones_h" type="time" required style="border: none; height: 20px;">
@@ -160,6 +160,8 @@
                         </div>
 
                     </div>
+
+                    <span class="help-block">{{ errors.fechaInicio }}</span>
 
                 </div>
 
@@ -339,12 +341,6 @@
 
                     fechaInicio: moment().add(1, 'days').format('YYYY-MM-DD 09:00:00'),
                     fechaFin: moment().add(1, 'days').format('YYYY-MM-DD 18:00:00'),
-
-                    //fechas inscripción evaluación
-                    fechaInicioInscripciones: null,
-                    fechaFinInscripciones: null,
-                    fechaInicioEvaluaciones: null,
-                    fechaFinEvaluaciones: null,
 
                     lugar: '',
                     idPais: null,
