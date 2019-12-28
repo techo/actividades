@@ -13,7 +13,6 @@ import Simplert from "vue2-simplert";
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
-import ActividadesShow from './components/backoffice/actividades/actividades-show'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import Accesos from './components/backoffice/actividades/accesos'
@@ -70,7 +69,6 @@ Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);
 
-Vue.component('actividades-show', ActividadesShow);
 Vue.component('actividad', Actividad);
 Vue.component('puntos', Puntos);
 Vue.component('accesos', Accesos);
