@@ -12,18 +12,20 @@
                     </div>
                 </div>
                 <br>
-                <vuetable-puntos 
-                    :api-url="url" 
-                    :fields="fields_" 
-                    pagination-path="" 
-                    data-path=""
-                    v-on:vuetable:row-clicked="editar"
+                <div class="table-responsive">
+                    <vuetable-puntos 
+                        :api-url="url" 
+                        :fields="fields_" 
+                        pagination-path="" 
+                        data-path=""
+                        v-on:vuetable:row-clicked="editar"
 
-                    class="vuetable"
-                    :css="css.table"
-                    ref="tabla"
-                    >
-                </vuetable-puntos>
+                        class=""
+                        :css="css.table"
+                        ref="tabla"
+                        >
+                    </vuetable-puntos>
+                </div>
             </div>
 
         </div>

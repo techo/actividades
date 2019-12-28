@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'modal':true, 'fade': true, 'in': display }" :style="{ 'display': display ? 'block' : 'none' }" id="inscribir-modal">
+    <div :class="{ 'modal':true, 'fade': true }" :style="{}" id="inscribir-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -167,8 +167,12 @@ export default {
             axios.get('/ajax/paises/' + this.actividad.idPais + '/provincias/' + this.form.idProvincia + '/localidades')
                     .then((datos) => { this.localidades = datos.data; }).catch((error) => { debugger; });
         },
-        show: function () { this.display = true; },
-        hide: function () { this.display = false; },
+        show: function () { 
+            $('#inscribir-modal').modal('show'); //sino pasan cosas raras con el scroll
+        },
+        hide: function () { 
+            $('#inscribir-modal').modal('hide');
+        },
         reset: function () {
             for (let field in this.form) {
                 this.form[field] = null;
