@@ -53,7 +53,7 @@ class CrearActividad extends FormRequest
             'montoMin' => "required_if:pago,==,1|numeric|min:1",
             'montoMax' => 'sometimes|nullable',
             'moneda' => 'sometimes|nullable',
-            'fechaLimitePago' => 'sometimes|date',
+            'fechaLimitePago' => 'sometimes',
             'beca' => 'sometimes|nullable|url',
         ];
     }
