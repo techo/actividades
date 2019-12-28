@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <label for="categoria">Categoría</label>
                             <select name="idCategoria" @change="getTipos($event.target.value)"  required class="form-control" >
-                                <option v-text="categoria.nombre" v-bind:value="categoria.id" v-for="categoria in categorias" :selected="actividad.tipo.idCategoria == categoria.id"></option>
+                                <option v-bind:value="categoria.id" v-for="categoria in categorias" :selected="actividad.tipo.idCategoria == categoria.id">{{ $t('frontend.' + categoria.nombre) }}</option>
                             </select>
                         </div>
                     </div>

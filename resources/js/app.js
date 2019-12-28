@@ -1,8 +1,15 @@
 require('./bootstrap.js');
 
+import VueInternationalization from 'vue-i18n';
+import Locale from './vue-i18n-locales.generated';
+Vue.use(VueInternationalization);
+const lang = document.documentElement.lang;
+const i18n = new VueInternationalization({
+    locale: lang,
+    messages: Locale
+});
+
 import Simplert from "vue2-simplert";
-
-
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
@@ -152,5 +159,6 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#app',
+    i18n,
     store,
 });

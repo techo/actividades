@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 <head>
     @include('backoffice.partials.meta')
     @include('backoffice.partials.css')
