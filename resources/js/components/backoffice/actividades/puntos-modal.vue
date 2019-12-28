@@ -11,7 +11,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-12">
+                        <div class="col-md-7">
                             <div :class="{ 'form-group': true, 'has-error': errors.punto }">
                                 <label for="punto" >Punto</label>
                                 <input v-model="form.punto" name="punto" type="text" class="form-control" required >
@@ -19,7 +19,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-3">
                             <div :class="{ 'form-group': true, 'has-error': errors.horario }">
                                 <label for="horario" >Horario</label>
                                 <input v-model="form.horario" name="horario" type="time" class="form-control" required >
@@ -27,7 +27,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }">
                                 <label for="idProvincia">Provincia</label>
                                 <select v-model="form.idProvincia" name="idProvincia" class="form-control" required @change="getLocalidades($event);actividad.idLocalidad=null;" >>
@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }">
                                 <label for="idLocalidad">Localidad</label>
                                 <select v-model="form.idLocalidad" name="idLocalidad" class="form-control" required >
