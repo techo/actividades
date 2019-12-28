@@ -41,7 +41,7 @@ class CrearActividad extends FormRequest
             'fechaInicioEvaluaciones' => 'sometimes|date|after_or_equal:fechaFin',
             'fechaFinEvaluaciones' => 'required_with:fechaInicioEvaluaciones|after_or_equal:fechaInicioEvaluaciones',
             
-            'lugar' => 'present',
+            'lugar' => 'required',
             'idPais' => 'required',
             'idProvincia' => 'required',
             'idLocalidad' => 'required',
@@ -50,11 +50,11 @@ class CrearActividad extends FormRequest
             'inscripcionInterna' => 'nullable',
             'mensajeInscripcion' => 'required',
             
-            'montoMin' => 'nullable',
-            'montoMax' => 'nullable',
-            'moneda' => 'nullable',
-            'fechaLimitePago' => 'nullable',
-            'beca' => 'nullable',
+            'montoMin' => "required_if:pago,==,1|numeric|min:1",
+            'montoMax' => 'sometimes|nullable',
+            'moneda' => 'sometimes|nullable',
+            'fechaLimitePago' => 'sometimes|date',
+            'beca' => 'sometimes|nullable|url',
         ];
     }
 }

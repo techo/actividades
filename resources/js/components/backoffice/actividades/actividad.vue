@@ -270,6 +270,43 @@
 
                 </div>
 
+                <div class="row" v-show="actividad.pago == 1">
+
+                    <div class="col-md-2">
+                        <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
+                            <label for="fechaInicio">Monto Min.</label>
+                            <input type="number" class="form-control" v-model="actividad.montoMin" >
+                            <span class="help-block">{{ errors.montoMin }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="fechaInicio">Monto Max.</label>
+                            <input type="number" class="form-control" v-model="actividad.montoMax" >
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
+                            <label for="fechaInicio">Fecha límite de pago</label>
+                            <input type="date" class="form-control" v-model="actividad.fechaLimitePago" >
+                            <span class="help-block">{{ errors.fechaLimitePago }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
+                            <label for="fechaInicio">Link formulario de beca</label>
+                            <input type="text" class="form-control" v-model="actividad.beca" >
+                            <span class="help-block">{{ errors.beca }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <br>
+
                 <div class="row">
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
@@ -349,12 +386,6 @@
 
                     limiteInscripciones: 0,
                     inscripcionInterna: 0,
-
-                    montoMin: 0,
-                    montoMax: 0,
-                    moneda: null,
-                    fechaLimitePago: null,
-                    beca: null,
 
                     tipo : {
                         idCategoria: 1
