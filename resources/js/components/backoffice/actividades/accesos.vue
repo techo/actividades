@@ -15,12 +15,13 @@
                                 v-model="persona" 
                                 :filterable="false"
                                 :selectOnTab="true"
-                                @search:focus=""
+                                @input="enviado = false;"
+                                class="select_persona"
                             >
                                 <template slot="no-options">Escribe el nombre, apellido o DNI</template>
                             </v-select>
                             <span class="input-group-btn">
-                                <button class="btn btn-primary pull-right" @click="guardar()">Guardar</button>
+                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="deshabilitado || enviado" @click="guardar()" v-text="(enviado)?'Enviado':'Guardar'"></button>
                             </span>
                         </div>
                     </div>
@@ -42,6 +43,7 @@
             return {
                 persona: null,
                 personas: [],
+                enviado: false,
             }
         },
         created() {},
@@ -52,6 +54,12 @@
             nombre() {
                 if(this.persona)
                     return this.persona.nombres + ' ' + this.persona.apellidoPaterno + ' (' + this.persona.mail + ')'
+            },
+            deshabilitado() {
+                if(this.persona)
+                    if(this.persona.hasOwnProperty('idPersona'))
+                        return false;
+                return true;
             }
         },
         filters: {},
@@ -59,7 +67,10 @@
         methods: {
             guardar(){
                 axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + this.persona.idPersona)
-                    .then((datos) => { this.persona = datos.data; })
+                    .then((datos) => { 
+                        this.persona = datos.data;
+                        this.enviado = true;
+                    })
                     .catch((error) => { debugger; });
             },
             getPersona(){
@@ -85,8 +96,9 @@
     }
 </script>
 
-<style scoped>
-.vs__dropdown-toggle {
-    padding: 3px 0 3px 0;
+<style>
+.select_persona .vs__dropdown-toggle {
+    padding: 3px 0 4px 0;
+    border-radius: 3px 0 0 3px;
 }
 </style>
