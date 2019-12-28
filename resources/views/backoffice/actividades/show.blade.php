@@ -44,6 +44,26 @@
         <div class="tab-content">
             <div class="tab-pane active" id="general">
                 <actividad id="{{ $actividad->idActividad }}"></actividad>
+                <crud-footer
+                    cancelar-url="/admin/actividades/usuario"
+                    edicion="{{ $edicion }}"
+                    compartir="{{ $compartir }}"
+                    can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
+                    (
+                        ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                            $actividad->idCoordinador == Auth::user()->idPersona
+                        ) ||
+                        Auth::user()->hasRole('admin')
+                    ) }}"
+                    can-borrar="{{Auth::user()->hasPermissionTo('borrar_actividad') &&
+                    (
+                        ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                            $actividad->idCoordinador == Auth::user()->idPersona
+                        ) ||
+                        Auth::user()->hasRole('admin')
+                    )}}"
+                    can-clonar="true"
+                ></crud-footer>
             </div>
             <div class="tab-pane" id="grupos">
                 <div class="box box-primary">
@@ -152,8 +172,9 @@
             </div>
         </div>
     </div>
-    <p style="margin-bottom: 4em"></p>
+
     @include('backoffice.partials.compartir-modal', ['url' => action('ActividadesController@show', ['id' => $actividad->idActividad]), 'title' => $actividad->nombreActividad])
+
 @endsection
 
 @push('additional_scripts')
@@ -166,26 +187,6 @@
 @endpush
 
 @section('footer')
-    <crud-footer
-            cancelar-url="/admin/actividades/usuario"
-            edicion="{{ $edicion }}"
-            compartir="{{ $compartir }}"
-            can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
-            (
-                ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
-                    $actividad->idCoordinador == Auth::user()->idPersona
-                ) ||
-                Auth::user()->hasRole('admin')
-            ) }}"
-            can-borrar="{{Auth::user()->hasPermissionTo('borrar_actividad') &&
-            (
-                ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
-                    $actividad->idCoordinador == Auth::user()->idPersona
-                ) ||
-                Auth::user()->hasRole('admin')
-            )}}"
-            can-clonar="true"
-    ></crud-footer>
 @endsection
 
 

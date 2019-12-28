@@ -490,9 +490,13 @@
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
-                        .then((datos) => { this.actividad = datos.data; })
+                        .then((datos) => { 
+                            this.actividad = datos.data;
+                            Event.$emit('success');
+                        })
                         .catch((error) => { 
                             this.errors = error.response.data.errors;
+                            Event.$emit('error');
                             debugger; 
                         });
                 }
@@ -502,6 +506,7 @@
                         .then((datos) => { window.location = '/admin/actividades/' + datos.data.idActividad; })
                         .catch((error) => {
                             this.errors = error.response.data.errors;
+                            Event.$emit('error');
                             debugger;
                         });
                 }
