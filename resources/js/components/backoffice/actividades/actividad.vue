@@ -87,19 +87,21 @@
 
                     <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
-                        <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
+                        <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input :value="fechaFin_f" ref="fechaFin_f" type="date" class="form-control" required style="line-height: inherit;">
                             <span class="input-group-addon">
                                 <input :value="fechaFin_h" ref="fechaFin_h" type="time" required style="border: none; height: 20px;">
                             </span>
                         </div>
                     </div>
-
-                    <span class="help-block">{{ errors.fechaInicio }}</span>
                             
                 </div>
 
                 <br>
+
+                <ul v-show="fechas.length > 0" style="color: #dd4b39;">
+                    <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
+                </ul>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -160,8 +162,6 @@
                         </div>
 
                     </div>
-
-                    <span class="help-block">{{ errors.fechaInicio }}</span>
 
                 </div>
 
@@ -438,6 +438,9 @@
                 if(this.actividad.fechaFinEvaluaciones)
                     return moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
             },
+            fechas() {
+                return Object.keys(this.errors).filter((v) => { return v.match('fecha') }).map((v) => { return [v, this.errors[v]] });
+            }
         },
         filters: {},
         watch: {},
@@ -456,16 +459,20 @@
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
-                        .then((datos) => { this.actividad = datos.data; }).catch((error) => { debugger; });
+                        .then((datos) => { this.actividad = datos.data; })
+                        .catch((error) => { 
+                            this.errors = error.response.data.errors;
+                            debugger; 
+                        });
                 }
                 else {
                     this.errors = {};
                     axios.post('/admin/actividades/crear', this.actividad)
                         .then((datos) => { window.location = '/admin/actividades/' + datos.data.idActividad; })
                         .catch((error) => {
-                                this.errors = error.response.data.errors;
-                                debugger;
-                            });
+                            this.errors = error.response.data.errors;
+                            debugger;
+                        });
                 }
             },
             getRelaciones(){
