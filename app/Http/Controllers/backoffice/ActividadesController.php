@@ -13,7 +13,6 @@ use App\Pais;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Rules\FechaFinActividad;
-use App\Rules\PuntoEncuentro as PuntoEncuentroRule;
 use App\UnidadOrganizacional;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -338,79 +337,7 @@ class ActividadesController extends Controller
         return redirect()->to('/admin/actividades/usuario');
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    private function createValidator(Request $request)
-    {
-        $messages = [
-            'fechaFinInscripciones.after_or_equal' =>
-                'La fecha de fin de las inscripciones debe ser posterior a la fecha de inicio de las inscripciones',
-            'fechaFinInscripciones.before_or_equal' =>
-                'Las inscripciones deben finalizar antes del inicio de la actividad',
-            'inscripcionesInternas' =>
-                'visibilidad de las inscripciones',
-            'fechaInicioInscripciones.before_or_equal' =>
-                'La fecha de inicio de las inscripciones debe ser anterior al inicio de la actividad',
-            'limiteInscripciones.*' =>
-                'El límite máximo de voluntarios debe tener un valor numérico válido',
-            'coordinador.*' =>
-                'Debe seleccionar un Coordinador para la actividad',
-            'idTipo.*' =>
-                'Debe seleccionar una categoría y un tipo de actividad',
-            'tipo.*' =>
-                'Debe seleccionar una categoría y un tipo de actividad',
-            'oficina.*' =>
-                'El campo Oficina es requerido',
-            'provincia.*' =>
-                'Debe seleccionar la provincia de la actividad',
-            'nombreActividad.*' =>
-                'La actividad debe tener un nombre',
-            'pais.*' =>
-                'Debe seleccionar el país de la actividad',
-            'montoMin.*' =>
-                'Debe especificar el monto mínimo de donación',
-            'fechaInicioEvaluaciones.after_or_equal' => 'La fecha de inicio de las evaluaciones debe ser igual o
-                posterior al final de la actividad',
-            'beca.url' => 'El enlace al formulario de solicitud de beca debe ser una URL válida'
-        ];
-        $v = Validator::make(
-            $request->all(),
-            [
-                'nombreActividad'           => 'required',
-                'coordinador.idPersona'     => 'required | numeric',
-                'tipo.categoria.id'         => 'required',
-                'idTipo'                    => 'required',
-                'oficina.id'                => 'required',
-                'fechaInicio'               => 'required | date',
-                'fechaFin'                  => ['required', 'date', new FechaFinActividad($request->fechaInicio)], 
-                'fechaInicioInscripciones'  => 'required | date | before_or_equal:fechaInicio',
-                'fechaFinInscripciones'     => ['required', 'date', new FechaFinActividad($request->fechaInicioInscripciones), 'before_or_equal:fechaInicio'],
-                'fechaInicioEvaluaciones'   => 'required | date | after_or_equal:fechaFin',
-                'fechaFinEvaluaciones'      => ['required', 'date', new FechaFinActividad($request->fechaInicioEvaluaciones), 'after_or_equal:fechaInicioEvaluaciones'],
-                'descripcion'               => 'required',
-                'pais.id'                   => 'required',
-                'provincia.id'              => 'required',
-                'puntos_encuentro'          => [new PuntoEncuentroRule],
-                'limiteInscripciones'       => 'numeric',                
-                'inscripcionInterna'        => 'required',
-                'mensajeInscripcion'        => 'required',
-            ], $messages
-        );
 
-        $v->sometimes('montoMin', 'required|numeric|min:1', function ($request) {
-            return $request->filled('pago') && $request->pago == 1;
-        });
-
-        if($request->filled('beca')){
-            $v->sometimes('beca', 'url', function ($request) {
-                return $request->filled('pago') && $request->pago == 1;
-            });
-        }
-
-        return $v;
-    }
 
     public function clonar(Request $request)
     {
@@ -469,114 +396,6 @@ class ActividadesController extends Controller
         $punto->estado = $editado['estado'];
         $punto->save();
         return $punto;
-    }
-
-    /**
-     * @param Request $request
-     * @param $actividad
-     * @return Boolean
-     */
-    private function guardarActividad(Request $request, $actividad)
-    {
-        foreach ($request->except('idActividad',
-            'casasPlanificadas',
-            'casasConstruidas',
-            'comentarios',
-            'tipoConstruccion',
-            'idListaCTCT',
-            'modificado_por.idPersona',
-            'idOficina',
-            'fechaInicio',
-            'fechaFin',
-            'fechaInicioInscripciones',
-            'fechaFinInscripciones',
-            'fechaInicioEvaluaciones',
-            'fechaFinEvaluaciones',
-            'fechaLimitePago'
-        ) as $field => $value) {
-
-            $esFecha = in_array($field, $actividad->getDates());
-
-            if (!is_array($value) && Schema::hasColumn('Actividad', $field) && $esFecha) {
-                $value = Carbon::parse($value)->format('Y-m-d');
-                $actividad->{$field} = $value;
-            }
-
-            if (!is_array($value) && Schema::hasColumn('Actividad', $field) && !$esFecha) {
-                $actividad->{$field} = $value;
-            }
-
-        }
-
-        $actividad->estadoConstruccion = ($request->estadoConstruccion) ? "Abierta" : "Cerrada";
-        $actividad->idPais = $request['pais']['id'];
-        $actividad->idProvincia = $request['provincia']['id'];
-        $actividad->idLocalidad = (isset($request['localidad']['id']))?$request['localidad']['id']:null;
-        $actividad->idCoordinador = $request['coordinador']['idPersona'];
-        $actividad->idOficina = $request['oficina']['id'];
-        $actividad->fechaInicio = $request->fechaInicio;
-        $actividad->fechaFin = $request->fechaFin;
-        $actividad->montoMin = $request->montoMin > 0 ? $request->montoMin : 0;
-        $actividad->montoMax = $request->montoMax > 0 ? $request->montoMax : 0;
-        $actividad->fechaInicioInscripciones = $request->fechaInicioInscripciones;
-        $actividad->fechaFinInscripciones = $request->fechaFinInscripciones;
-        $actividad->fechaInicioEvaluaciones = $request->fechaInicioEvaluaciones;
-        $actividad->fechaFinEvaluaciones = $request->fechaFinEvaluaciones;
-        
-        $actividad->fechaLimitePago = $request->fechaLimitePago;
-
-        if (empty($request['idUnidadOrganizacional'])) {
-            $actividad->idUnidadOrganizacional = UnidadOrganizacional::where('nombre', 'No Aplica')
-                ->first()
-                ->idUnidadOrganizacional;
-        }
-
-        if ($request->is('admin/actividades/crear')) {
-            $actividad->idPersonaCreacion = auth()->user()->idPersona;
-        }
-
-        $actividad->idPersonaModificacion = auth()->user()->idPersona;
-
-        $actividad->lugar = '';
-        /*Esto debería salir de la configuración*/
-        $actividad->moneda = 'ARS';
-
-        if ($actividad->save()) {
-            $grupoRaiz = Grupo::where('idActividad', '=', $actividad->idActividad)
-                ->where('idPadre', '=', 0)->first();
-            if ($grupoRaiz) {
-                $grupoRaiz->nombre = $actividad->nombreActividad;
-                $grupoRaiz->save();
-            }
-            //dd($request->puntos_encuentro);
-
-            if (!empty($request->puntos_encuentro)) {
-                $puntosGuardados = $actividad->puntosEncuentro->count() > 0 ? $actividad->puntosEncuentro->pluck('idPuntoEncuentro')->toArray() : [];
-                foreach ($request->puntos_encuentro as $punto) {
-                    if (!empty($punto['nuevo']) && $punto['nuevo'] == true) {
-                        $punto = $this->guardarPunto($punto, $actividad);
-                    }
-                }
-            }
-
-            foreach ($request->puntosEncuentroBorrados as $borrado) {
-                $punto = PuntoEncuentro::find($borrado['idPuntoEncuentro']);
-                if ($punto && !$punto->tieneInscriptos()) {
-                    $punto->delete();
-                }
-            }
-
-            foreach ($request->puntosEncuentroEditados as $editado) {
-                $punto = PuntoEncuentro::find($editado['idPuntoEncuentro']);
-                if ($punto) {
-                    $this->editarPunto($punto, $editado, $actividad);
-                }
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
