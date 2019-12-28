@@ -98,6 +98,9 @@
             editar(p) {
                 Event.$emit('puntos:editar', p);
             },
+            estado(v) {
+                return (v=='1')?'Activo':'Inactivo';
+            }
         }
     }
 </script>

@@ -347,7 +347,8 @@ return [
             ],
             [
                 'name' => 'estado',
-                'title' => 'Estado'
+                'title' => 'Estado',
+                'callback' => 'estado',
             ],
         ],
         'sortOrder' => [
