@@ -495,11 +495,12 @@
                         .then((datos) => { 
                             this.actividad = datos.data;
                             Event.$emit('success');
+                            this.reset_errors();
+
                         })
                         .catch((error) => { 
                             this.errors = error.response.data.errors;
                             Event.$emit('error');
-                            debugger; 
                         });
                 }
                 else {
@@ -509,8 +510,13 @@
                         .catch((error) => {
                             this.errors = error.response.data.errors;
                             Event.$emit('error');
-                            debugger;
                         });
+                }
+            },
+            reset_errors: function () {
+                for (let field in this.errors) {
+                    this.errors[field] = null;
+                    delete this.errors[field];
                 }
             },
             getRelaciones(){
