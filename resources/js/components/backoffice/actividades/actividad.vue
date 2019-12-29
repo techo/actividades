@@ -13,7 +13,7 @@
                     <div class="col-md-8">
                         <div :class="{ 'form-group': true, 'has-error': errors.nombreActividad }" >
                             <label for="nombreActividad">Nombre</label>
-                            <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required > 
+                            <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required :disabled="!edicion"> 
                             <span class="help-block">{{ errors.nombreActividad }}</span>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="estado">Estado</label>
-                            <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required >
+                            <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
                                 <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
                                 <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
                             </select>
@@ -31,7 +31,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="inscripcionInterna">Visibilidad</label>
-                            <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required >
+                            <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
                                 <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
                                 <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
                             </select>
@@ -45,7 +45,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="categoria">Categoría</label>
-                            <select name="idCategoria" @change="getTipos($event.target.value)"  required class="form-control" >
+                            <select name="idCategoria" @change="getTipos($event.target.value)"  required class="form-control" :disabled="!edicion" >
                                 <option v-bind:value="categoria.id" v-for="categoria in categorias" :selected="actividad.tipo.idCategoria == categoria.id">{{ $t('frontend.' + categoria.nombre) }}</option>
                             </select>
                         </div>
@@ -54,7 +54,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idTipo }" >
                             <label for="tipo">Tipo</label>
-                            <select name="idTipo" class="form-control" v-model="actividad.idTipo" required >
+                            <select name="idTipo" class="form-control" v-model="actividad.idTipo" required :disabled="!edicion" >
                                 <option v-text="tipo.nombre" v-bind:value="tipo.idTipo" v-for="tipo in tipos" ></option>
                             </select>
                             <span class="help-block">{{ errors.idTipo }}</span>
@@ -64,7 +64,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">Oficina</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required >
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
                                 <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
                             <span class="help-block">{{ errors.idOficina }}</span>
@@ -78,9 +78,9 @@
                     <div class="col-md-4">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
-                            <input :value="fechaInicio_f" ref="fechaInicio_f" type="date" class="form-control" required style="line-height: inherit;">
+                            <input :value="fechaInicio_f" ref="fechaInicio_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="input-group-addon">
-                                <input :value="fechaInicio_h" ref="fechaInicio_h" type="time" required style="border: none; height: 20px;">
+                                <input :value="fechaInicio_h" ref="fechaInicio_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
                     </div>
@@ -88,9 +88,9 @@
                     <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
-                            <input :value="fechaFin_f" ref="fechaFin_f" type="date" class="form-control" required style="line-height: inherit;">
+                            <input :value="fechaFin_f" ref="fechaFin_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="input-group-addon">
-                                <input :value="fechaFin_h" ref="fechaFin_h" type="time" required style="border: none; height: 20px;">
+                                <input :value="fechaFin_h" ref="fechaFin_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="checkbox" v-model="calculaFechas"> Especificar fechas de inscripción/evaluación manualmente
+                        <input type="checkbox" v-model="calculaFechas" > Especificar fechas de inscripción/evaluación manualmente
                     </div>
                 </div>
 
@@ -118,9 +118,9 @@
                             <div class="col-md-4">
                                 <label for="fechaInicio">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
-                                    <input :value="fechaInicioInscripciones_f" ref="fechaInicioInscripciones_f" type="date" class="form-control" required style="line-height: inherit;">
+                                    <input :value="fechaInicioInscripciones_f" ref="fechaInicioInscripciones_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="input-group-addon">
-                                        <input :value="fechaInicioInscripciones_h" ref="fechaInicioInscripciones_h" type="time" required style="border: none; height: 20px;">
+                                        <input :value="fechaInicioInscripciones_h" ref="fechaInicioInscripciones_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>
@@ -128,9 +128,9 @@
                             <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
-                                    <input :value="fechaFinInscripciones_f" ref="fechaFinInscripciones_f" type="date" class="form-control" required style="line-height: inherit;">
+                                    <input :value="fechaFinInscripciones_f" ref="fechaFinInscripciones_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="input-group-addon">
-                                        <input :value="fechaFinInscripciones_h" ref="fechaFinInscripciones_h" type="time" required style="border: none; height: 20px;">
+                                        <input :value="fechaFinInscripciones_h" ref="fechaFinInscripciones_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>       
@@ -144,7 +144,7 @@
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input :value="fechaInicioEvaluaciones_f" ref="fechaInicioEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;">
                                     <span class="input-group-addon">
-                                        <input :value="fechaInicioEvaluaciones_h" ref="fechaInicioEvaluaciones_h" type="time" required style="border: none; height: 20px;">
+                                        <input :value="fechaInicioEvaluaciones_h" ref="fechaInicioEvaluaciones_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>
@@ -152,9 +152,9 @@
                             <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
-                                    <input :value="fechaFinEvaluaciones_f" ref="fechaFinEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;">
+                                    <input :value="fechaFinEvaluaciones_f" ref="fechaFinEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="input-group-addon">
-                                        <input :value="fechaFinEvaluaciones_h" ref="fechaFinEvaluaciones_h" type="time" required style="border: none; height: 20px;">
+                                        <input :value="fechaFinEvaluaciones_h" ref="fechaFinEvaluaciones_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>       
@@ -178,6 +178,7 @@
                                     file_picker_callback: tiny_mce_filemanager_callback,
                                     relative_urls: false,
                                     resize: true,
+                                    readonly: !edicion
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
                                 plugins="paste autoresize image preview paste link"
@@ -202,7 +203,7 @@
                         <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
                             <label for="lugar">Lugar</label>
                             <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
-                            >
+                            :disabled="!edicion" >
                             <span class="help-block">{{ errors.lugar }}</span>
                         </div>
                     </div>
@@ -210,7 +211,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
                             <label for="pais">País</label>
-                            <select name="idPais" class="form-control" v-model="actividad.idPais" required @change="getProvincias($event);actividad.idProvincia=null;actividad.idLocalidad=null;" >
+                            <select name="idPais" class="form-control" v-model="actividad.idPais" required @change="getProvincias($event);actividad.idProvincia=null;actividad.idLocalidad=null;" :disabled="!edicion" >
                                 <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
                             </select>
                             <span class="help-block">{{ errors.idPais }}</span>
@@ -220,7 +221,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
                             <label for="provincia">Provincia</label>
-                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)">
+                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
                                 <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                             </select>
                             <span class="help-block">{{ errors.idProvincia }}</span>
@@ -230,7 +231,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
                             <label for="localidad">Localidad</label>
-                            <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required >
+                            <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
                                 <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
                             </select>
                             <span class="help-block">{{ errors.idLocalidad }}</span>
@@ -253,7 +254,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="pago">Por pago</label>
-                            <select name="pago" class="form-control" v-model="actividad.pago" required >
+                            <select name="pago" class="form-control" v-model="actividad.pago" required :disabled="!edicion">
                                 <option value="1" :selected="actividad.pago == 1" >Activado</option>
                                 <option value="0" :selected="actividad.pago == 0" >Desactivado</option>
                             </select>
@@ -263,7 +264,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="confirmacion">Manual</label>
-                            <select name="confirmacion" class="form-control" v-model="actividad.confirmacion" required >
+                            <select name="confirmacion" class="form-control" v-model="actividad.confirmacion" required :disabled="!edicion">
                                 <option value="1" :selected="actividad.confirmacion == 1" >Activado</option>
                                 <option value="0" :selected="actividad.confirmacion == 0" >Desactivado</option>
                             </select>
@@ -277,7 +278,7 @@
                     <div class="col-md-2">
                         <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
                             <label for="fechaInicio">Monto Min.</label>
-                            <input type="number" class="form-control" v-model="actividad.montoMin" >
+                            <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
                             <span class="help-block">{{ errors.montoMin }}</span>
                         </div>
                     </div>
@@ -285,14 +286,14 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="fechaInicio">Monto Max.</label>
-                            <input type="number" class="form-control" v-model="actividad.montoMax" >
+                            <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
                             <label for="fechaInicio">Fecha límite de pago</label>
-                            <input ref="fechaLimitePago_f" type="date" class="form-control" :value="fechaLimitePago_f" >
+                            <input ref="fechaLimitePago_f" type="date" class="form-control" :value="fechaLimitePago_f" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaLimitePago }}</span>
                         </div>
                     </div>
@@ -300,7 +301,7 @@
                     <div class="col-md-5">
                         <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
                             <label for="fechaInicio">Link formulario de beca</label>
-                            <input type="text" class="form-control" v-model="actividad.beca" >
+                            <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
                     </div>
@@ -313,7 +314,7 @@
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
                             <label for="mensajeInscripcion">Mensaje</label>
-                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required ></textarea>
+                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" ></textarea>
                             <span class="help-block">{{ errors.mensajeInscripcion }}</span>
                         </div>
                     </div>
@@ -334,7 +335,7 @@
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input type="number" class="form-control" v-model="actividad.limiteInscripciones" required
-                            >
+                            :disabled="!edicion" >
                         </div>
                     </div>
 
@@ -401,6 +402,7 @@
                 tipos: [],
                 categorias: [],
                 calculaFechas: false,
+                edicion: false,
             }
         },
         created() {
@@ -408,6 +410,7 @@
         },
         mounted() {
             Event.$on('guardar', this.guardar);
+            Event.$on('editar', () => { this.edicion = true; });
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
