@@ -292,7 +292,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
                             <label for="fechaInicio">Fecha límite de pago</label>
-                            <input type="date" class="form-control" v-model="actividad.fechaLimitePago" >
+                            <input ref="fechaLimitePago_f" type="date" class="form-control" :value="fechaLimitePago_f" >
                             <span class="help-block">{{ errors.fechaLimitePago }}</span>
                         </div>
                     </div>
@@ -471,6 +471,10 @@
                 if(this.actividad.fechaFinEvaluaciones)
                     return moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
             },
+            fechaLimitePago_f(){
+                if(this.actividad.fechaLimitePago)
+                    return moment(this.actividad.fechaLimitePago).format('YYYY-MM-DD');
+            },
             fechas() {
                 return Object.keys(this.errors).filter((v) => { return v.match('fecha') }).map((v) => { return [v, this.errors[v]] });
             }
@@ -481,6 +485,11 @@
             guardar(){
                 this.actividad.fechaInicio = moment(this.$refs.fechaInicio_f.value + ' ' + this.$refs.fechaInicio_h.value).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.$refs.fechaFin_f.value + ' ' + this.$refs.fechaFin_h.value).format('YYYY-MM-DD HH:mm:ss');
+                debugger;
+                if(this.$refs.fechaLimitePago_f.value != "")
+                    this.actividad.fechaLimitePago = moment(this.$refs.fechaLimitePago_f.value + ' 23:59:00').format('YYYY-MM-DD HH:mm:ss');
+                else
+                    this.actividad.fechaLimitePago = null;
 
                 if(this.calculaFechas){
                     this.actividad.fechaInicioInscripciones = moment(this.$refs.fechaInicioInscripciones_f.value + ' ' + this.$refs.fechaInicioInscripciones_h.value).format('YYYY-MM-DD HH:mm:ss');
