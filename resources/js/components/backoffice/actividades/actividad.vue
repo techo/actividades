@@ -175,10 +175,12 @@
                                 v-model="actividad.descripcion" 
                                 :init="{
                                     menubar: 'false',
+                                    file_picker_callback: tiny_mce_filemanager_callback,
+                                    relative_urls: false,
+                                    resize: true,
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
                                 plugins="paste autoresize image preview paste link"
-                                
                             ></tinymce-editor>
                             <span class="help-block">{{ errors.descripcion }}</span>
                         </div>
@@ -549,6 +551,26 @@
                 axios.get('/ajax/categorias/')
                     .then((datos) => { this.categorias = datos.data; }).catch((error) => { debugger; });
             },
+            tiny_mce_filemanager_callback(callback, value, meta) {
+                //gracias a esto ❤ https://github.com/UniSharp/laravel-filemanager/issues/759 
+                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                let cmsURL = '/laravel-filemanager?editor=tinymce5&field_name=' + value;
+                if (meta.filetype == 'image') { cmsURL = cmsURL + "&type=Images"; } 
+                else { cmsURL = cmsURL + "&type=Files"; }
+
+                tinyMCE.activeEditor.windowManager.openUrl({
+                    url : cmsURL,
+                    title : 'Administrador de archivos',
+                    width : x * 0.8,
+                    height : y * 0.8,
+                    resizable : "yes",
+                    close_previous : "no",
+                    onMessage: (api, message) => {
+                        callback(message.content);
+                    }
+                });
+            }
         }
     }
 </script>
