@@ -84,5 +84,45 @@ class backofficeActividadesTest extends TestCase
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
             ->assertJsonFragment([ 'punto' => $punto->punto ]);
     }
+
+    /** @test */
+    public function eliminar_punto_encuentro()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $punto = $actividad->PuntosEncuentro[0];
+
+        $this->actingAs($admin)
+            ->delete('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos/' . $punto->idPuntoEncuentro)
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function no_se_puede_eliminar_punto_encuentro_con_inscriptos()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(1)
+            ->create();
+
+        $punto = $actividad->PuntosEncuentro[0];
+
+        $this->actingAs($admin)
+            ->delete('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos/' . $punto->idPuntoEncuentro)
+            ->assertStatus(422);
+    }
 }
 

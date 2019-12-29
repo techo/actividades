@@ -1,5 +1,6 @@
 <template>
     <div :class="{ 'modal':true, 'fade': true }" :style="{}" id="inscribir-modal">
+        <simplert ref="confirmar"></simplert>
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -8,6 +9,10 @@
                     <h4 class="modal-title">Punto</h4>
                 </div>
                 <div class="modal-body">
+
+                    <div v-if="errors.idPuntoEncuentro" class="callout callout-danger">
+                        <p v-text="errors.idPuntoEncuentro[0]" ></p>
+                    </div>
 
                     <div class="row">
 
@@ -63,12 +68,13 @@
                         </div>
 
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div :class="{ 'form-group': true, 'has-error': errors.estado }">
                                 <label for="estado">Estado</label>
                                 <select v-model="form.estado" name="estado" class="form-control" required >
                                     <option value="1" :selected="form.estado == 1 " >Activo</option>
                                     <option value="0" :selected="form.estado == 0 " >Inactivo</option>
                                 </select>
+                                <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block" ></span>
                             </div>
                         </div>
                 </div>
@@ -76,6 +82,7 @@
                 </div>
                 <div class="modal-footer">
                     <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
+                    <button ref="eliminar" v-show="editando" class="btn btn-danger" @click.prevent="confirmar()" >Eliminar</button>
                     <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()" >Guardar</button>
                 </div>
             </div>
@@ -86,6 +93,7 @@
 <script>
 
 import vSelect from 'vue-select';
+import Simplert from 'vue2-simplert';
 import { debounce } from 'lodash';
 
 export default {
@@ -117,7 +125,14 @@ export default {
     },
     watch: { 
         persona(v,vv) {
-            this.form.idPersona = v.idPersona
+            if(v) this.form.idPersona = v.idPersona
+        }
+    },
+    computed: {
+        editando() {
+            if(this.form['idPuntoEncuentro'])
+                return true
+            return false
         }
     },
     methods: {
@@ -137,6 +152,14 @@ export default {
         },
         update () {
             axios.post('/admin/ajax/actividades/' + this.id + '/puntos/' + this.form.idPuntoEncuentro, this.form)
+                .then((datos) => { 
+                    Event.$emit('puntos:refrescar'); 
+                    this.cancelar(); 
+                })
+                .catch((error) => {this.errors = this.errors = error.response.data.errors; });
+        },
+        eliminar () {
+            axios.delete('/admin/ajax/actividades/' + this.id + '/puntos/' + this.form.idPuntoEncuentro, this.form)
                 .then((datos) => { 
                     Event.$emit('puntos:refrescar'); 
                     this.cancelar(); 
@@ -177,6 +200,7 @@ export default {
             for (let field in this.form) {
                 this.form[field] = null;
             }
+            this.persona = null;
             this.reset_errors();
         },
         reset_errors: function () {
@@ -189,6 +213,23 @@ export default {
             this.reset();
             this.reset_errors();
             this.hide();
+        },
+        confirmar () {
+            this.$refs.confirmar.openSimplert({
+                title: 'Eliminar Registro',
+                message: "Estás por eliminar este registro, se borrará permanentemente y no podrá recuperarse. ¿Deseas continuar?",
+                useConfirmBtn: true,
+                isShown: true,
+                disableOverlayClick: true,
+                customClass: 'confirmar',
+                customCloseBtnText: 'CANCELAR',
+                customCloseBtnClass: 'btn btn-default',
+                customConfirmBtnText: 'Si, borrar',
+                customConfirmBtnClass: 'btn btn-danger',
+                onConfirm: function () {
+                    this.$parent.eliminar();
+                }
+            })
         },
         onSearch: _.debounce( function (text, loading) {
             if(text.length > 3) {

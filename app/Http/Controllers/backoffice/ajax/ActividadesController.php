@@ -34,18 +34,7 @@ class ActividadesController extends BaseController
         return $actividad->grupos;
     }
 
-    public function punto(Actividad $id, PuntoEncuentro $punto)
-    {
-      $r = $punto->responsable;
-      $punto->persona = [
-        "idPersona" => $r->idPersona,
-        "nombre" => $r->nombres . ' ' . $r->apellidoPaterno . ' (' . $r->mail . ')',
-      ];
-
-      return response()->json($punto);
-    }
-
-    public function getPuntos($id)
+    public function puntos($id)
     {
        $query = (new PuntoEncuentro)->newQuery();
        return $query->join('Persona', 'PuntoEncuentro.idPersona', '=', 'Persona.idPersona')
@@ -64,43 +53,6 @@ class ActividadesController extends BaseController
                'horario',
                'estado')
            ->get();
-    }
-
-    public function guardarPunto(Request $request, $id)
-    {
-      $actividad = Actividad::findOrFail($id);
-      $punto = new PuntoEncuentro;
-      $validado = $request->validate([
-        'punto' => 'required',
-        'horario' => 'required',
-        'idProvincia' => 'required',
-        'idLocalidad' => 'required',
-        'idPersona' => 'required',
-        'estado' => 'nullable',
-      ]);
-
-      $punto->fill($validado);
-      $punto->idPais = $actividad->idPais;
-      $actividad->puntosEncuentro()->save($punto);
-
-      return response()->json($punto->fresh());
-    }
-
-    public function editarPunto(Request $request, $id, PuntoEncuentro $punto)
-    {
-      $validado = $request->validate([
-        'punto' => 'required',
-        'horario' => 'required',
-        'idProvincia' => 'required',
-        'idLocalidad' => 'required',
-        'idPersona' => 'required',
-        'estado' => 'nullable',
-      ]);
-
-      $punto->fill($validado);
-      $punto->save();
-
-      return response()->json($punto->fresh());
     }
 
 }

@@ -366,39 +366,6 @@ class ActividadesController extends Controller
     }
 
     /**
-     * @param $punto PuntoEncuentro
-     * @param $actividad Actividad
-     * @return mixed
-     */
-    private function guardarPunto($punto, $actividad)
-    {
-        $p = new PuntoEncuentro();
-        $p->punto = $punto['punto'];
-        $p->horario = $punto['horario'];
-        $p->idActividad = $actividad->idActividad;
-        $p->idLocalidad = $punto['idLocalidad'];
-        $p->idPais = $punto['idPais'];
-        $p->idProvincia = $punto['idProvincia'];
-        $p->idPersona = $punto['responsable']['idPersona'];
-        $p->estado = $punto['estado'];
-        $p->save();
-        return $punto;
-    }
-
-    private function editarPunto($punto, $editado)
-    {
-        $punto->punto = $editado['punto'];
-        $punto->horario = $editado['horario'];
-        $punto->idLocalidad = $editado['idLocalidad'];
-        $punto->idPais = $editado['idPais'];
-        $punto->idProvincia = $editado['idProvincia'];
-        $punto->idPersona = $editado['responsable']['idPersona'];
-        $punto->estado = $editado['estado'];
-        $punto->save();
-        return $punto;
-    }
-
-    /**
      * Crea grupo Raiz al crear una actividad nueva
      * @param Actividad $actividad
      * @return bool
