@@ -343,6 +343,17 @@
             </div>
         </div>
 
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Auditoría</h3>
+            </div>
+            <div class="box-body">
+                <p class="text-muted">
+                    Última modificación: {{ actividad.fechaModificacion }}&nbsp;<a class="btn btn-primary btn-sm" @click="cargarAuditoria(actividad.idActividad)">Ver auditoría</a>
+                </p>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -588,6 +599,9 @@
                         callback(message.content);
                     }
                 });
+            },
+            cargarAuditoria: function(id) {
+                Event.$emit('cargarAuditoria', {tabla: 'actividad', id: id});
             }
         }
     }
