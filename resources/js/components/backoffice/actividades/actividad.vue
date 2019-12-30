@@ -181,7 +181,7 @@
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
                                 plugins="paste autoresize image preview paste link"
-                                :disabled="!edicion"
+                                :disabled="disabled"
                             ></tinymce-editor>
                             <span class="help-block">{{ errors.descripcion }}</span>
                         </div>
