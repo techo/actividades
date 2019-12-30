@@ -376,7 +376,7 @@
 
     export default {
         name: "actividad",
-        props: ['id'],
+        props: {'id': {}, 'disabled': {default: false, type: Boolean} },
         components: { 'tinymce-editor': editor },
         data() {
             return {
@@ -422,6 +422,8 @@
         mounted() {
             Event.$on('guardar', this.guardar);
             Event.$on('editar', () => { this.edicion = true; });
+
+            this.edicion = !this.disabled;
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)

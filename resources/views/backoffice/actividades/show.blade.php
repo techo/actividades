@@ -43,7 +43,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="general">
-                <actividad id="{{ $actividad->idActividad }}"></actividad>
+                <actividad :disabled="true" id="{{ $actividad->idActividad }}"></actividad>
                 <crud-footer
                     cancelar-url="/admin/actividades/usuario"
                     edicion="{{ $edicion }}"
