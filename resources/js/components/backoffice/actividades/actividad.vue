@@ -142,7 +142,7 @@
                             <div class="col-md-4">
                                 <label for="fechaInicio">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
-                                    <input :value="fechaInicioEvaluaciones_f" ref="fechaInicioEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;">
+                                    <input :value="fechaInicioEvaluaciones_f" ref="fechaInicioEvaluaciones_f" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="input-group-addon">
                                         <input :value="fechaInicioEvaluaciones_h" ref="fechaInicioEvaluaciones_h" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
