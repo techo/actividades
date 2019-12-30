@@ -181,7 +181,7 @@
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
                                 plugins="paste autoresize image preview paste link"
-                                :disabled="disabled"
+                                :disabled="!edicion"
                             ></tinymce-editor>
                             <span class="help-block">{{ errors.descripcion }}</span>
                         </div>
@@ -418,12 +418,11 @@
         },
         created() {
             store.commit('initIdActividad', this.id); // legado, sacar en cuanto se pueda
+            this.edicion = !this.disabled;
         },
         mounted() {
             Event.$on('guardar', this.guardar);
             Event.$on('editar', () => { this.edicion = true; });
-
-            this.edicion = !this.disabled;
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
