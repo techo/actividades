@@ -44,6 +44,157 @@ class backofficeActividadesTest extends TestCase
     }
 
     /** @test */
+    public function usuario_puede_crear_actividad()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertJsonFragment([ 'nombreActividad' => $actividad->nombreActividad ]);
+
+        $this->assertDatabaseHas('Actividad', [ 'nombreActividad' => $actividad->nombreActividad])
+            ->assertDatabaseHas('PuntoEncuentro', [ 
+                'punto' => $actividad->lugar, 
+                'idPais' => $actividad->idPais, 
+                'idPersona' => $persona->idPersona,
+                'horario' => $actividad->fechaInicio->format('H:i'), 
+            ]);
+    }
+
+    /** @test */
+    public function usuario_puede_crear_actividad_sin_fechas_explicitas()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        unset($a['fechaInicioInscripciones']);
+        unset($a['fechaFinInscripciones']);
+        unset($a['fechaInicioEvaluaciones']);
+        unset($a['fechaFinEvaluaciones']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasNoErrors();
+
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_explicitas_vacias()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        $a['fechaInicioInscripciones'] = null;
+        $a['fechaInicioEvaluaciones'] = null;
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incompletas()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        unset($a['fechaFinInscripciones']);
+        unset($a['fechaFinEvaluaciones']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incompletas_2()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make();
+
+        $a = $actividad->toArray();
+
+        unset($a['fechaInicioInscripciones']);
+        unset($a['fechaInicioEvaluaciones']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasNoErrors();
+    }
+
+    /** @test */
+    public function usuario_no_puede_crear_actividad_con_fechas_incorrectas()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->conEstado('fechas explicitas incorrectas')
+            ->create();
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $actividad->toArray())
+            ->assertSessionHasErrors();
+    }
+
+    /** @test */
+    public function usuario_puede_crear_actividad_sin_pago()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make([ 
+            'pago' => "0",
+            'montoMin' => "0.00"
+        ]);
+
+        $a = $actividad->toArray();
+
+        //unset($a['montoMin']);
+
+        //dd($a);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasNoErrors();
+    }
+
+    /** @test */
     public function crear_punto_encuentro()
     {
         $this->withoutExceptionHandling();

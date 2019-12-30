@@ -50,7 +50,7 @@ class CrearActividad extends FormRequest
             'inscripcionInterna' => 'nullable',
             'mensajeInscripcion' => 'required',
             
-            'montoMin' => "required_if:pago,==,1|numeric|min:1",
+            'montoMin' => "required_if:pago,==,1|numeric",
             'montoMax' => 'sometimes|nullable',
             'moneda' => 'sometimes|nullable',
             'fechaLimitePago' => 'sometimes',
