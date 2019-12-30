@@ -178,10 +178,10 @@
                                     file_picker_callback: tiny_mce_filemanager_callback,
                                     relative_urls: false,
                                     resize: true,
-                                    readonly: !edicion
                                 }"
                                 toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
                                 plugins="paste autoresize image preview paste link"
+                                :disabled="!edicion"
                             ></tinymce-editor>
                             <span class="help-block">{{ errors.descripcion }}</span>
                         </div>
