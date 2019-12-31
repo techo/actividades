@@ -185,6 +185,13 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
+
+    Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos');
+    Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones');
+    Route::get('/actividades/{id}/grupos', 'backoffice\ActividadesController@grupos');
+    Route::get('/actividades/{id}/evaluaciones', 'backoffice\ActividadesController@evaluaciones');
+    Route::get('/actividades/{id}/accesos', 'backoffice\ActividadesController@accesos');
+
     Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
     Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinador');
     Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador');

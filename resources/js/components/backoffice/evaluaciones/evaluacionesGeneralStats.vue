@@ -40,19 +40,18 @@
 </template>
 
 <script>
-    import store from '../stores/store';
-
     export default {
         name: "evaluaciones-general-stats",
+        props: ['id'],
+        data(){
+            return {
+                inscriptos: 0,
+                presentes: 0,
+            }
+        },
         computed: {
-            inscriptos: function () {
-                return store.state.inscriptos;
-            },
-            presentes: function () {
-                return store.state.presentes;
-            },
             ausentes: function () {
-                return store.state.inscriptos - store.state.presentes;
+                return this.inscriptos-this.presentes;
             }
         },
         created(){
@@ -62,16 +61,11 @@
         },
         methods:{
             getData: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/general/stats";
-                this.axiosGet(url,
-                //successCallback
-                function (data, self) {
-                    store.commit("updatePresentes", data.presentes);
-                    store.commit("updateInscriptos", data.inscriptos);
-                },
-                    //payload
-                    //errorCallback
-                );
+                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/general/stats")
+                    .then((datos) => { 
+                        this.presentes = datos.data.presentes; 
+                        this.inscriptos = datos.data.inscriptos; 
+                    }).catch((error) => { debugger; });
             }
         }
     }

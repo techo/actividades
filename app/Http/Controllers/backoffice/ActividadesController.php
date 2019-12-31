@@ -169,132 +169,105 @@ class ActividadesController extends Controller
         return $persona;
     }
 
+    public function puntos(Actividad $id)
+    {
+        $actividad = $id;
+
+        $datatablePuntosConfig = config('datatables.puntos');
+        $fieldsPuntos = json_encode($datatablePuntosConfig['fields']);
+        $sortOrderPuntos = json_encode($datatablePuntosConfig['sortOrder']);
+
+        return view('backoffice.actividades.puntos', 
+            compact(
+                'actividad',
+                'fieldsPuntos',
+                'sortOrderPuntos'
+            ) 
+        );
+    }
+
+    public function inscripciones(Actividad $id)
+    {
+        $actividad = $id;
+
+        $fields = json_encode(config('datatables.inscripciones.fields'));
+        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+
+        $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
+        $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));
+
+        return view('backoffice.actividades.inscripciones', 
+            compact(
+                'actividad',
+                'fields',
+                'sortOrder',
+                'camposInscripciones',
+                'condiciones'
+            ) 
+        );
+    }
+
+    public function grupos(Actividad $id)
+    {
+        $actividad = $id;
+
+        $fieldsMiembros = json_encode(config('datatables.miembros.fields'));
+        $sortOrderMiembros = json_encode(config('datatables.miembros.sortOrder'));
+        $miembros = $actividad->miembros;
+
+        return view('backoffice.actividades.grupos', 
+            compact(
+                'actividad',
+                'fieldsMiembros',
+                'sortOrderMiembros',
+                'miembros'
+            ) 
+        );
+    }
+
+    public function evaluaciones(Actividad $id)
+    {
+        $actividad = $id;
+
+        return view('backoffice.actividades.evaluaciones', 
+            compact(
+                'actividad'
+            ) 
+        );
+    }
+
+    public function accesos(Actividad $id)
+    {
+        $actividad = $id;
+
+        return view('backoffice.actividades.accesos', 
+            compact(
+                'actividad'
+            ) 
+        );
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Actividad $id)
     {
+        $actividad = $id;
         $edicion = false;
         $compartir = true;
-        $paises = Pais::has("provincias")->get();
 
-        $actividad = Actividad::with(
-            [
-                'tipo.categoria',
-                'oficina',
-                'modificadoPor' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); },
-                'puntosEncuentro.pais',
-                'puntosEncuentro.provincia',
-                'puntosEncuentro.localidad',
-                'puntosEncuentro.responsable' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); },
-                'pais',
-                'provincia',
-                'localidad',
-                'coordinador' =>function($query){ $query->select('idPersona','nombres','apellidoPaterno','dni'); }
-            ]
-        )
-        ->where('idActividad', $id)->first();
+        return view(
+            'backoffice.actividades.show',
+            compact(
+                'actividad',
+                'edicion',
+                'compartir'
+            )
+        );
 
-        if ($actividad) {
-            if ($actividad->coordinador) {
-                $actividad->coordinador->nombre = $actividad->coordinador->nombreCompleto;
-            }
-
-            $categorias = CategoriaActividad::all();
-
-            try {
-                $tipos = $actividad->tipo->categoria->tipos;
-            } catch (\Exception $e) {
-                $actividad->tipo->categoria = null;
-                $tipos = null;
-            }
-
-            try {
-                $provincias = $actividad->pais->provincias;
-                $localidades = $actividad->provincia->localidades;
-
-            } catch (\Exception $e) {
-                $provincias = null;
-                $localidades = null;
-            }
-
-            $datatableConfig = config('datatables.inscripciones');
-            $fields = $datatableConfig['fields'];
-
-            if ($actividad->confirmacion == 1) {
-                $checkConfirma = [[
-                    'name' => '__component:confirma',
-                    'title' => 'Confirma',
-                    'titleClass' => 'text-center',
-                    'dataClass' => 'text-center'
-                ]];
-                array_splice($fields, count($fields) - 1, 0, $checkConfirma);
-
-            }
-            if ($actividad->pago == 1) {
-                $checkPago = [[
-                    'name' => '__component:pago',
-                    'title' => 'Pago',
-                    'titleClass' => 'text-center',
-                    'dataClass' => 'text-center'
-                ]];
-                array_splice($fields, count($fields) - 1, 0, $checkPago);
-
-            }
-            $fields = json_encode($fields);
-            $sortOrder = json_encode($datatableConfig['sortOrder']);
-
-            $camposInscripciones = config('dropdownOptions.actividad.filtroInscripciones.campos');
-            $condiciones = config('dropdownOptions.actividad.filtroInscripciones.condiciones');;
-
-            $camposInscripciones = json_encode($camposInscripciones);
-            $condiciones = json_encode($condiciones);
-
-            $datatableMiembrosConfig = config('datatables.miembros');
-            $fieldsMiembros = json_encode($datatableMiembrosConfig['fields']);
-            $sortOrderMiembros = json_encode($datatableMiembrosConfig['sortOrder']);
-            $miembros = $actividad->miembros;
-
-            $datatablePuntosConfig = config('datatables.puntos');
-            $fieldsPuntos = json_encode($datatablePuntosConfig['fields']);
-            $sortOrderPuntos = json_encode($datatablePuntosConfig['sortOrder']);
-
-            foreach($actividad->puntosEncuentro as &$punto) {
-                if($punto->tieneInscriptos()) {
-                    $punto->borrable = false;
-                } else {
-                    $punto->borrable = true;
-                }
-            }
-
-            return view(
-                'backoffice.actividades.show',
-                compact(
-                    'actividad',
-                    'paises',
-                    'provincias',
-                    'localidades',
-                    'edicion',
-                    'tipos',
-                    'categorias',
-                    'compartir',
-                    'fields',
-                    'sortOrder',
-                    'fieldsMiembros',
-                    'sortOrderMiembros',
-                    'miembros',
-                    'camposInscripciones',
-                    'condiciones',
-                    'fieldsPuntos',
-                    'sortOrderPuntos'
-                )
-            );
-        }
-
-        abort(404);
     }
 
     /**

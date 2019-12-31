@@ -3,6 +3,12 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Coordinador de la actividad</h3>
+                <p class="help-block">
+                    <ul>
+                        <li>El coordinador de la actividad es la persona de contacto para los inscriptos, además tiene permisos para modificar y gestionar la actividad.</li>
+                        <li>Próximamente una actividad va a poder tener más de un coordinador</li>
+                    </ul>
+                </p>
             </div>
             <div class="box-body">
                 <div class="row">

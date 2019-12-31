@@ -12,10 +12,10 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-md-6 divisor">
-                    <evaluaciones-voluntarios-stats></evaluaciones-voluntarios-stats>
+                    <evaluaciones-voluntarios-stats :id="id" ></evaluaciones-voluntarios-stats>
                 </div>
                 <div class="col-md-6">
-                    <evaluaciones-voluntarios-chart></evaluaciones-voluntarios-chart>
+                    <evaluaciones-voluntarios-chart :id="id" ></evaluaciones-voluntarios-chart>
                 </div>
             </div>
         </div>
@@ -27,14 +27,15 @@
 </template>
 
 <script>
-    import store from '../stores/store';
+
     export default {
         name: "evaluaciones-voluntarios",
+        props: [ 'id' ],
         data(){
             return {
                 chartLoading: true,
                 statsLoading: true,
-                urlExportar: "/admin/actividades/" + store.state.idActividad + "/exportar-evaluaciones-voluntarios",
+                urlExportar: '',
             }
         },
         computed: {
@@ -45,6 +46,9 @@
         created(){
             Event.$on('chart-voluntarios-loaded', this.chartLoaded);
             Event.$on('stats-voluntarios-loaded', this.statsLoaded);
+        },
+        mounted() {
+            this.urlExportar = "/admin/actividades/" + this.id + "/exportar-evaluaciones-voluntarios";
         },
         methods: {
             chartLoaded: function () {

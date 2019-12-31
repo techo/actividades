@@ -2,6 +2,14 @@
     <div>
         <puntos-modal :id="id" ></puntos-modal>
         <div class="box">
+            <div class="box-header">
+                <p class="help-block">
+                    Los puntos de encuentro son lugares físicos en donde se pueden encontrar los voluntarios antes de ir a la actividad.
+                </p>
+                <p class="help-block">
+                    Para que una actividad se muestre en el sitio <b>tiene que tener uno (o más) puntos de encuentro activos.</b>
+                </p>
+            </div>
 
             <div class="box-body">
                 <div class="row">

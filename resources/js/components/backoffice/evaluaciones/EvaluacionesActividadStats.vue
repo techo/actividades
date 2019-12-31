@@ -40,31 +40,31 @@
 
 <script>
     import knob from '../../plugins/knob';
-    import store from '../stores/store';
 
     export default {
         name: "evaluaciones-actividad-stats",
+        props: [ 'id' ],
         components: { knob },
         data(){
             return {
                 evaluaron: 0,
                 promedio: 0,
                 loading: true,
-              //  presentes: store.state.presentes,
+                presentes: 0,
             }
         },
         computed: {
           porcentajeEvaluaciones: function () {
               if(this.loading) return 0;
-              if(store.state.presentes === 0) return 0;
+              if(this.presentes === 0) return 0;
 
-              let porcentaje = Math.round(this.evaluaron * 100 / store.state.presentes);
+              let porcentaje = Math.round(this.evaluaron * 100 / this.presentes);
               Event.$emit("knob-eval-actividad-upd", porcentaje);
               return porcentaje;
           },
           pendientesEvaluar: function () {
               if(this.loading) return 0;
-              return store.state.presentes - this.evaluaron;
+              return this.presentes - this.evaluaron;
             }
         },
         created(){
@@ -72,19 +72,14 @@
         },
         methods: {
             getStats: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/stats";
-                this.axiosGet(
-                    url,
-                    //success callback
-                    function (data, self) {
-                        self.evaluaron = data.evaluaron;
-                        self.promedio = data.promedio;
+                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/stats")
+                    .then((datos) => { 
+                        this.evaluaron = datos.data.evaluaron;
+                        this.promedio = datos.data.promedio;
+                        this.presentes = datos.data.presentes;
                         Event.$emit('stats-actividad-loaded');
-                        self.loading = false;
-                    }
-                    //payload
-                    //error callback
-                );
+                        this.loading = false;
+                    }).catch((error) => { debugger; });
             }
         }
     }
