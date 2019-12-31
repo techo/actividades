@@ -97,7 +97,11 @@
                             
                 </div>
 
-                <br>
+                <div class="row">
+                    <div class="col-md-12" style="clear:both">
+                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                    </div>
+                </div>
 
                 <ul v-show="fechas.length > 0" style="color: #dd4b39;">
                     <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
@@ -194,6 +198,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Ubicación</h3>
+                <span class="help-block">La ubicación es el lugar físico donde se va a realizar la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
             </div>
             <div class="box-body">
 
@@ -241,12 +246,24 @@
                 </div>
 
             </div>
+            <div class="box-footer">
+                <span class="help-block text-light-blue"><i class="fa  fa-exclamation"></i> El sistema carga automáticamente un punto de encuentro que coincide con la ubicación de la actividad. En caso de ser necesario, se puede editar o borrar y cargar otros puntos de encuentro según la lógica de la actividad.</span>
+            </div>
         </div>
 
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Confirmación</h3>
+                <p class="help-block">Una actividad puede o no requerir que sus inscriptos confirmen su participación. Hay cuatro opciones:
+                    <ul>
+                        <li><b>Automática</b>: al inscribirse están automáticamente confirmados</li>
+                        <li><b>Por donación</b>: se pre-inscriben y tienen que realizar una donación para estar confirmados</li>
+                        <li><b>Manual</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad</li>
+                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, tiene que confirmarlo un coordinador y recién ahí confirmar con una donación.</li>
+                    </ul>
+                </p>
             </div>
+
             <div class="box-body">
 
                 <div class="row">
@@ -314,6 +331,7 @@
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
                             <label for="mensajeInscripcion">Mensaje</label>
+                            <p class="help-block">Este mensaje llegar al inscripto al confirmarse su participación.</p>
                             <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" ></textarea>
                             <span class="help-block">{{ errors.mensajeInscripcion }}</span>
                         </div>
