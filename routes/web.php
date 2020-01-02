@@ -184,17 +184,18 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
-    Route::get('/actividades/{id}', 'backoffice\ActividadesController@show');
-
-    Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos');
-    Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones');
-    Route::get('/actividades/{id}/grupos', 'backoffice\ActividadesController@grupos');
-    Route::get('/actividades/{id}/evaluaciones', 'backoffice\ActividadesController@evaluaciones');
-    Route::get('/actividades/{id}/accesos', 'backoffice\ActividadesController@accesos');
+    
+    //vista de actividad
+    Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{id}/grupos', 'backoffice\ActividadesController@grupos')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{id}/evaluaciones', 'backoffice\ActividadesController@evaluaciones')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{id}/accesos', 'backoffice\ActividadesController@accesos')->middleware('can:ver,App\Actividad,id');
 
     Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
     Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinador');
-    Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador');
+    Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador')->middleware('can:ver,App\Actividad,id');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');

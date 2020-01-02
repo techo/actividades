@@ -223,6 +223,9 @@ class Actividad extends Model
 
         static::deleting(function ($actividad) {});
 
-        static::updating(function ($actividad) { Auditoria::crear($actividad); });
+        static::updating(function ($actividad) { 
+            $actividad->idPersonaModificacion = auth()->user()->idPersona;
+            Auditoria::crear($actividad); 
+        });
     }
 }

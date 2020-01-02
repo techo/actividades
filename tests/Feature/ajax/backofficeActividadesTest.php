@@ -185,13 +185,43 @@ class backofficeActividadesTest extends TestCase
 
         $a = $actividad->toArray();
 
-        //unset($a['montoMin']);
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasNoErrors();
+    }
 
-        //dd($a);
+    /** @test */
+    public function usuario_puede_crear_actividad_con_pago()
+    {
+        $this->seed('PermisosSeeder');
+
+        $persona = factory('App\Persona')->create();
+        $persona->assignRole('coordinador');
+
+        $actividad = factory('App\Actividad')->make([ 
+            'pago' => "0",
+        ]);
+
+        $a = $actividad->toArray();
+
+        unset($a['montoMin']);
 
         $this->actingAs($persona)
             ->post('/admin/actividades/crear', $a)
             ->assertSessionHasNoErrors();
+
+        $actividad = factory('App\Actividad')->make([ 
+            'pago' => "1",
+            //'montoMin' => "0.00"
+        ]);
+
+        $a = $actividad->toArray();
+
+        unset($a['montoMin']);
+
+        $this->actingAs($persona)
+            ->post('/admin/actividades/crear', $a)
+            ->assertSessionHasErrors();
     }
 
     /** @test */
@@ -275,5 +305,43 @@ class backofficeActividadesTest extends TestCase
             ->delete('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos/' . $punto->idPuntoEncuentro)
             ->assertStatus(422);
     }
+
+    /** @test */
+    public function no_se_puede_ver_sin_ser_creador_o_coordinador_o_administrador()
+    {
+        //$this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $migue = factory('App\Persona')->create();
+        $migue->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(1)
+            ->create();
+
+        $this->actingAs($migue)
+            ->get('/admin/actividades/' . $actividad->idActividad)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function se_puede_si_es_coordinador()
+    {
+        //$this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $alber = factory('App\Persona')->create();
+        $alber->assignRole('coordinador');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(1)
+            ->coordinadaPor($alber)
+            ->create();
+
+        $this->actingAs($alber)
+            ->get('/admin/actividades/' . $actividad->idActividad)
+            ->assertStatus(200);
+    }
+
 }
 

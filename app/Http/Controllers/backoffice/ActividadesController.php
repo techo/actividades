@@ -84,6 +84,7 @@ class ActividadesController extends Controller
         
         //por defecto el usuario cargando es coordinador
         $actividad->idCoordinador = auth()->user()->idPersona;
+        $actividad->idPersonaCreacion = auth()->user()->idPersona;
 
         //por defecto las fechas de inscripciones/evaluaciones son 10 días antes/después;
         if($request->filled('fechaInicioInscripciones') && $request->has('fechaInicioInscripciones')) {
