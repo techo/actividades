@@ -94,7 +94,7 @@ class ActividadesPolicy
             );
     }
 
-    public function editar(Persona $user, Actividad $id)
+    public function editar(Persona $user, Actividad $actividad)
     {
 
         return $user->hasPermissionTo('editar_actividad') &&

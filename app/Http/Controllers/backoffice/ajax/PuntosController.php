@@ -20,9 +20,9 @@ class PuntosController extends Controller
 		return response()->json($punto);
 	}
 
-	public function store(Request $request, $id)
+	public function store(Request $request, Actividad $id)
 	{
-		$actividad = Actividad::findOrFail($id);
+		$actividad = $id;
 		$punto = new PuntoEncuentro;
 		$validado = $request->validate([
 			'punto' => 'required',

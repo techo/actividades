@@ -34,14 +34,14 @@ class ActividadesController extends BaseController
         return $actividad->grupos;
     }
 
-    public function puntos($id)
+    public function puntos(Actividad $id)
     {
        $query = (new PuntoEncuentro)->newQuery();
        return $query->join('Persona', 'PuntoEncuentro.idPersona', '=', 'Persona.idPersona')
            ->join('atl_pais', 'PuntoEncuentro.idPais', '=', 'atl_pais.id')
            ->join('atl_provincias', 'PuntoEncuentro.idProvincia', '=', 'atl_provincias.id')
            ->leftJoin('atl_localidades', 'PuntoEncuentro.idLocalidad', '=', 'atl_localidades.id')
-           ->where('idActividad', $id)
+           ->where('idActividad', $id->idActividad)
            ->select(
                'idPuntoEncuentro as id',
                'punto',

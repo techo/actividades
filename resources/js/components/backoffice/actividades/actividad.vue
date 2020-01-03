@@ -376,7 +376,6 @@
 </template>
 
 <script>
-    import store from '../stores/store'; //legado, sacar en cuanto sea posible
     import editor from '@tinymce/tinymce-vue'
 
     import 'tinymce/tinymce'
@@ -435,7 +434,6 @@
             }
         },
         created() {
-            store.commit('initIdActividad', this.id); // legado, sacar en cuanto se pueda
             this.edicion = !this.disabled;
         },
         mounted() {
@@ -537,6 +535,7 @@
                         .then((datos) => { 
                             this.actividad = datos.data;
                             Event.$emit('success');
+                            this.edicion = false;
                             this.reset_errors();
 
                         })

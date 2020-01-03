@@ -108,6 +108,12 @@ class ActividadesController extends Controller
         $actividad->save();
         $actividad->tipo; //para mostrar categoria
 
+        //por defecto se carga un grupo raíz
+        $grupo = new Grupo();
+        $grupo->idPadre = 0;
+        $grupo->nombre = 'base';
+        $actividad->grupos()->save($grupo);
+
         //por defecto se carga con un punto de encuentro igual a la ubicación de la actividad
         $punto = new PuntoEncuentro;
         $punto->punto = $actividad->lugar;
@@ -191,7 +197,18 @@ class ActividadesController extends Controller
     {
         $actividad = $id;
 
-        $fields = json_encode(config('datatables.inscripciones.fields'));
+        $fields = config('datatables.inscripciones.fields');
+
+        if ($actividad->confirmacion == 1) {
+            $checkConfirma = [[ 'name' => '__component:confirma', 'title' => 'Confirma', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
+            array_splice($fields, count($fields) - 1, 0, $checkConfirma);
+        }
+        if ($actividad->pago == 1) {
+            $checkPago = [[ 'name' => '__component:pago', 'title' => 'Pago', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
+            array_splice($fields, count($fields) - 1, 0, $checkPago);
+        }
+
+        $fields = json_encode($fields);
         $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));

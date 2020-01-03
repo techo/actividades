@@ -225,6 +225,24 @@ class backofficeActividadesTest extends TestCase
     }
 
     /** @test */
+    public function listar_puntos_encuentro()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntos(2)
+            ->create();
+
+        $this->actingAs($admin)
+            ->get('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos')
+            ->assertJsonCount(2);
+    }
+
+    /** @test */
     public function crear_punto_encuentro()
     {
         $this->withoutExceptionHandling();
