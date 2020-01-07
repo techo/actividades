@@ -472,6 +472,7 @@
                     }).catch((error) => { debugger; });
             }
             else {
+                debugger;
                 this.getRelaciones();
             }
 
@@ -502,18 +503,15 @@
                this.horas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('HH:mm:ss');
              },
              handler(fechaInicioEvaluaciones){
-                debugger;
                this.fechas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
                this.horas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('HH:mm:ss');
              },
              handler(fechaFinEvaluaciones){
-                debugger;
-
                this.fechas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('YYYY-MM-DD');
                this.horas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
              },
              handler(fechaLimitePago){
-                debugger;
+                
              },
              deep: true
           }
