@@ -65,7 +65,7 @@
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">Oficina</label>
                             <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
-                                <option v-text="oficina.pais.nombre + ' ' + oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                                <option v-text="'pais' + ' ' + oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
                             <span class="help-block">{{ errors.idOficina }}</span>
                         </div>
@@ -472,7 +472,6 @@
                     }).catch((error) => { debugger; });
             }
             else {
-                debugger;
                 this.getRelaciones();
             }
 
