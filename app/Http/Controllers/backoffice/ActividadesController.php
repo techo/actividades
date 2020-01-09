@@ -87,24 +87,11 @@ class ActividadesController extends Controller
         $actividad->idPersonaCreacion = auth()->user()->idPersona;
 
         //por defecto las fechas de inscripciones/evaluaciones son 10 días antes/después;
-        if($request->filled('fechaInicioInscripciones') && $request->has('fechaInicioInscripciones')) {
-            $actividad->fechaInicioInscripciones = $validado['fechaInicioInscripciones'];
-            $actividad->fechaFinInscripciones = $validado['fechaFinInscripciones'];
-        }
-        else {
-            $actividad->fechaInicioInscripciones = $actividad->fechaInicio->subDays(10);
-            $actividad->fechaFinInscripciones = $actividad->fechaInicio;
-        }
-
-        if($request->filled('fechaInicioEvaluaciones') && $request->has('fechaInicioEvaluaciones')) {
-            $actividad->fechaInicioEvaluaciones = $validado['fechaInicioEvaluaciones'];
-            $actividad->fechaFinEvaluaciones = $validado['fechaFinEvaluaciones'];
-        }
-        else{
-            $actividad->fechaInicioEvaluaciones = $actividad->fechaFin->addMinutes(1);
-            $actividad->fechaFinEvaluaciones = $actividad->fechaFin->addDays(10);
-        }
-
+        $actividad->fechaInicioInscripciones = $validado['fechaInicioInscripciones'];
+        $actividad->fechaFinInscripciones = $validado['fechaFinInscripciones'];
+        $actividad->fechaInicioEvaluaciones = $validado['fechaInicioEvaluaciones'];
+        $actividad->fechaFinEvaluaciones = $validado['fechaFinEvaluaciones'];
+        
         $actividad->save();
         $actividad->tipo; //para mostrar categoria
 
