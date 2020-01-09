@@ -93,7 +93,7 @@ class ActividadesController extends Controller
         }
         else {
             $actividad->fechaInicioInscripciones = $actividad->fechaInicio->subDays(10);
-            $actividad->fechaFinInscripciones = $actividad->fechaInicio->subMinutes(1);
+            $actividad->fechaFinInscripciones = $actividad->fechaInicio;
         }
 
         if($request->filled('fechaInicioEvaluaciones') && $request->has('fechaInicioEvaluaciones')) {

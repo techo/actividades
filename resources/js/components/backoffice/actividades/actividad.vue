@@ -109,11 +109,13 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <input type="checkbox" v-model="calculaFechas" > Especificar fechas de inscripción/evaluación manualmente
+                        <label>
+                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
+                        </label>
                     </div>
                 </div>
 
-                <div class="box" style="border-top: 12px;" v-show="calculaFechas">
+                <div class="box" style="border-top: 12px;">
 
                     <div class="box-body">
 
@@ -122,9 +124,9 @@
                             <div class="col-md-4">
                                 <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
-                                    <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                        <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
                                     </span>
                                 </div>
                             </div>
@@ -132,9 +134,9 @@
                             <div class="col-md-4">
                                 <label for="fechaFinInscripciones">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
-                                    <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                        <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
                                     </span>
                                 </div>
                             </div>       
@@ -146,9 +148,9 @@
                             <div class="col-md-4">
                                 <label for="fechaFin">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
-                                    <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaInicioEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                        <input v-model="horas.fechaInicioEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
                                     </span>
                                 </div>
                             </div>
@@ -156,9 +158,9 @@
                             <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
-                                    <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaFinEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                        <input v-model="horas.fechaFinEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
                                     </span>
                                 </div>
                             </div>       
@@ -361,7 +363,7 @@
             </div>
         </div>
 
-        <div class="box">
+        <div class="box" v-show="edicion == false">
             <div class="box-header with-border">
                 <h3 class="box-title">Auditoría</h3>
             </div>
@@ -423,8 +425,9 @@
                     }
                 },
                 fechas: {
-                    fechaInicio: moment().add(1, 'days').format('YYYY-MM-DD'),
-                    fechaFin: moment().add(1, 'days').format('YYYY-MM-DD'),
+                    // fechaInicio: moment().add(1, 'days').format('YYYY-MM-DD'),
+                    fechaInicio: null,
+                    fechaFin: null,//moment().add(1, 'days').format('YYYY-MM-DD'),
 
                     fechaInicioInscripciones: null,
                     fechaFinInscripciones: null,
@@ -435,8 +438,8 @@
                     fechaLimitePago: null,
                 },
                 horas: {
-                    fechaInicio: '09:00:00',
-                    fechaFin: '18:00:00',
+                    fechaInicio: null, // '09:00:00',
+                    fechaFin: null, //'18:00:00',
 
                     fechaInicioInscripciones: null,
                     fechaFinInscripciones: null,
@@ -478,50 +481,45 @@
 
         },
         computed: {
-            /*fechas() {
-                return Object.keys(this.errors).filter((v) => { return v.match('fecha') }).map((v) => { return [v, this.errors[v]] });
-            }*/
+     
         },
         filters: {},
         watch: {
             actividad: {
-             handler(fechaInicio){
+            deep: true,
+             handler(){
                this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
                this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
-             },
-             handler(fechaFin){
+
                this.fechas.fechaFin = moment(this.actividad.fechaFin).format('YYYY-MM-DD');
                this.horas.fechaFin = moment(this.actividad.fechaFin).format('HH:mm:ss');
-             },
-             handler(fechaInicioInscripciones){
+
+
+
                this.fechas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('YYYY-MM-DD');
                this.horas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('HH:mm:ss');
-             },
-             handler(fechaFinInscripciones){
+
                this.fechas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
                this.horas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('HH:mm:ss');
-             },
-             handler(fechaInicioEvaluaciones){
+
                this.fechas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
                this.horas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('HH:mm:ss');
-             },
-             handler(fechaFinEvaluaciones){
+
                this.fechas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('YYYY-MM-DD');
                this.horas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
              },
-             handler(fechaLimitePago){
-                
-             },
-             deep: true
           }
         },
         methods: {
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
-
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
-
+                
                 if(this.calculaFechas){
+                    this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
+                    this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
+                    this.actividad.fechaInicioEvaluaciones = moment(this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
+                    this.actividad.fechaFinEvaluaciones = moment(this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
                 }
 
                 if(this.id) {
