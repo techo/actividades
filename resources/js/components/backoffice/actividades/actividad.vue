@@ -415,6 +415,7 @@
                     idTipo: null,
                     idOficina: null,
 
+                    calculaFecha: 0,
                     fechaInicio: null,
                     fechaFin: null,
 
@@ -461,7 +462,7 @@
                 oficinas: [],
                 tipos: [],
                 categorias: [],
-                calculaFechas: false,
+                calculaFechas: true,
                 edicion: false,
             }
         },
@@ -477,6 +478,7 @@
                     .then((datos) => { 
                         this.actividad = datos.data; 
                         this.getTodasRelaciones();
+                        this.cargarFechas();
                     }).catch((error) => { debugger; });
             }
             else {
@@ -490,34 +492,51 @@
         },
         filters: {},
         watch: {
-            actividad: {
-            deep: true,
-                handler(){
-                   this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
-                   this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
-
-                   this.fechas.fechaFin = moment(this.actividad.fechaFin).format('YYYY-MM-DD');
-                   this.horas.fechaFin = moment(this.actividad.fechaFin).format('HH:mm:ss');
-
-                   this.fechas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('YYYY-MM-DD');
-                   this.horas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('HH:mm:ss');
-
-                   this.fechas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
-                   this.horas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('HH:mm:ss');
-
-                   this.fechas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
-                   this.horas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('HH:mm:ss');
-
-                   this.fechas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('YYYY-MM-DD');
-                   this.horas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
-
-                   this.fechas.fechaLimitePago = moment(this.actividad.fechaLimitePago).format('YYYY-MM-DD');
-                   this.horas.fechaLimitePago = moment(this.actividad.fechaLimitePago).format('HH:mm:ss');
-                }
-            },
             fechas: {
                 deep: true,
                 handler(){
+                    this.calcularFechas();
+                }
+            },
+            horas: {
+                deep: true,
+                handler(){
+                    this.calcularFechas();
+                }
+            },
+            calculaFechas: {
+                handler(){
+                    if (!this.calculaFechas) {
+                        this.calcularFechas();
+                    }
+                }
+            }
+        },
+        methods: {
+            cargarFechas(){
+                this.calculaFechas = this.actividad.calculaFechas;
+
+                this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
+                this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
+                this.fechas.fechaFin = moment(this.actividad.fechaFin).format('YYYY-MM-DD');
+                this.horas.fechaFin = moment(this.actividad.fechaFin).format('HH:mm:ss');
+
+                this.fechas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('YYYY-MM-DD');
+                this.horas.fechaInicioInscripciones = moment(this.actividad.fechaInicioInscripciones).format('HH:mm:ss');
+
+                this.fechas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
+                this.horas.fechaFinInscripciones = moment(this.actividad.fechaFinInscripciones).format('HH:mm:ss');
+
+                this.fechas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
+                this.horas.fechaInicioEvaluaciones = moment(this.actividad.fechaInicioEvaluaciones).format('HH:mm:ss');
+
+                this.fechas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('YYYY-MM-DD');
+                this.horas.fechaFinEvaluaciones = moment(this.actividad.fechaFinEvaluaciones).format('HH:mm:ss');
+
+                this.fechas.fechaLimitePago = moment(this.actividad.fechaLimitePago).format('YYYY-MM-DD');
+                this.horas.fechaLimitePago = moment(this.actividad.fechaLimitePago).format('HH:mm:ss');
+            },
+            calcularFechas(){
                     if (!this.calculaFechas){
                         if (this.fechas.fechaFinInscripciones != this.fechas.fechaInicio ) {
                             this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(10, 'd').format('YYYY-MM-DD');
@@ -527,13 +546,6 @@
                             this.fechas.fechaInicioEvaluaciones = moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD');
                             this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(11, 'd').format('YYYY-MM-DD');
                         }
-                    }
-                }
-            },
-            horas: {
-                deep: true,
-                handler(){
-                    if (!this.calculaFechas){
                         if (this.horas.fechaFinInscripciones != this.horas.fechaInicio ) {
                             this.horas.fechaInicioInscripciones = this.horas.fechaInicio;
                             this.horas.fechaFinInscripciones = this.horas.fechaInicio;
@@ -543,20 +555,17 @@
                             this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
                         }
                     }
-                }
-            }
-        },
-        methods: {
+            },
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
                 
-                if(this.calculaFechas){
-                    this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
-                    this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
-                    this.actividad.fechaInicioEvaluaciones = moment(this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
-                    this.actividad.fechaFinEvaluaciones = moment(this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
-                }
+                this.actividad.calculaFechas = this.calculaFechas;
+                
+                this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaInicioEvaluaciones = moment(this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
+                this.actividad.fechaFinEvaluaciones = moment(this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)

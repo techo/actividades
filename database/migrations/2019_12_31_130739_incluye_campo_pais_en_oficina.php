@@ -13,9 +13,11 @@ class IncluyeCampoPaisEnOficina extends Migration
      */
     public function up()
     {
-        Schema::table('atl_oficinas', function (Blueprint $table) {
-            $table->integer('id_pais')->unsigned()->nullable();
-        });
+        if (!Schema::hasColumn('atl_oficinas', 'id_pais')) {
+            Schema::table('atl_oficinas', function (Blueprint $table) {
+                $table->integer('id_pais')->unsigned()->nullable();
+            });
+        };
     }
 
     /**
@@ -25,8 +27,10 @@ class IncluyeCampoPaisEnOficina extends Migration
      */
     public function down()
     {
-        Schema::table('atl_oficinas', function (Blueprint $table) {
-            $table->dropColumn('id_pais');
-        });
+        if (Schema::hasColumn('atl_oficinas', 'id_pais')) {
+            Schema::table('atl_oficinas', function (Blueprint $table) {
+                $table->dropColumn('id_pais');
+            });
+        };
     }
 }
