@@ -515,7 +515,7 @@
         },
         methods: {
             cargarFechas(){
-                this.calculaFechas = this.actividad.calculaFechas;
+                this.calculaFechas = this.actividad.calculaFecha;
 
                 this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
                 this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
@@ -543,7 +543,7 @@
                             this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(10, 'd').format('YYYY-MM-DD');
                             this.fechas.fechaFinInscripciones = this.fechas.fechaInicio;
                         }
-                        if (this.fechas.fechaInicioEvaluaciones != moment(this.fechas.fechaFin).add(1,'d')) {
+                        if (this.fechas.fechaInicioEvaluaciones != moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD')) {
                             this.fechas.fechaInicioEvaluaciones = moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD');
                             this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(11, 'd').format('YYYY-MM-DD');
                         }
