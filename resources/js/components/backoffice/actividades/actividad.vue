@@ -472,6 +472,7 @@
         mounted() {
             Event.$on('guardar', this.guardar);
             Event.$on('editar', () => { this.edicion = true; });
+            Event.$on('clonar', this.clonar);
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
@@ -657,7 +658,22 @@
             },
             cargarAuditoria: function(id) {
                 Event.$emit('cargarAuditoria', {tabla: 'actividad', id: id});
-            }
+            },
+            clonar: function() {
+                let url = '/admin/ajax/actividades/'+ this.actividad.idActividad +'/clonar';
+                let params = { idActividad: this.actividad.idActividad };
+                debugger;
+                this.axiosPost(url, function(response, self) {
+                    if (response.idActividad) {
+                        window.location = '/admin/actividades/' + response.idActividad
+                    }
+                }, params,
+                    function (response, self) {
+                    // Si hay error
+                        this.errors = error.response.data.errors;
+                        Event.$emit('error');
+                    })
+            },
         }
     }
 </script>
