@@ -473,6 +473,7 @@
             Event.$on('guardar', this.guardar);
             Event.$on('editar', () => { this.edicion = true; });
             Event.$on('clonar', this.clonar);
+            Event.$on('eliminar', this.eliminar);
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
@@ -673,6 +674,10 @@
                         this.errors = error.response.data.errors;
                         Event.$emit('error');
                     })
+            },
+            eliminar: function () {
+                let form = document.getElementById('formDelete');
+                form.submit();
             },
         }
     }
