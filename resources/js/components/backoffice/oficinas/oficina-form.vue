@@ -151,6 +151,7 @@
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
                         this.readonly = true;
+                        window.location.replace('/admin/configuracion/oficinas');
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();
