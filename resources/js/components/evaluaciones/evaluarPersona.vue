@@ -12,8 +12,8 @@
                                 @click="cambiarIcono"
                         >
                             {{ $t('frontend.feedback_of') }} {{ nombre }} - {{ persona.rol }}
-                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
-                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
+                            <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
+                            <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                         </h6>
                     </div>
                 </div>
