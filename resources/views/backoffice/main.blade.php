@@ -43,6 +43,8 @@ desired effect
         <!-- Main content -->
         <section class="content container-fluid">
 
+            <modal-auditoria></modal-auditoria>
+
             @yield('content')
 
         </section>
