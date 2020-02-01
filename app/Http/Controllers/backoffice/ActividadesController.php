@@ -97,7 +97,7 @@ class ActividadesController extends Controller
         //por defecto se carga un grupo raíz
         $grupo = new Grupo();
         $grupo->idPadre = 0;
-        $grupo->nombre = 'base';
+        $grupo->nombre = $actividad->nombreActividad;
         $actividad->grupos()->save($grupo);
 
         //por defecto se carga con un punto de encuentro igual a la ubicación de la actividad
