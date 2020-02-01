@@ -15,7 +15,7 @@
                     <h3 class="pull-left">Evaluaciones</h3>
                     <span class="pull-right">
                         <br>
-                        <btn-enviar-evaluaciones :prop-actividad="{{$actividad}}"></btn-enviar-evaluaciones>
+                        <btn-enviar-evaluaciones :id="{{$actividad->idActividad}}"></btn-enviar-evaluaciones>
                     </span>
                 </div>
             </div>
