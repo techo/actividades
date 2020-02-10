@@ -238,7 +238,7 @@ return [
 	'terms_and_conditions' => 'carta de voluntariado',
 
 	//gracias.blade.php
-    'frontend.activity_detail' => 'Detalle de Actividad',
+    'activity_detail' => 'Detalle de Actividad',
     'inscription_confirmed' => '¡Inscripción confirmada!',
     'already_inscripted' => 'Ya estás inscripto a ',
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscripto y modificarlas ingresá a ',

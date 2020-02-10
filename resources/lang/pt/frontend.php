@@ -238,7 +238,7 @@ return [
 	'terms_and_conditions' => 'terms and conditions',
 
 	//gracias.blade.php
-    'frontend.activity_detail' => 'Detalhe da Actividade',
+    'activity_detail' => 'Detalhe da Actividade',
     'inscription_confirmed' => 'Inscrição confirmada!',
     'already_inscripted' => 'Você já está registrado em ',
 	'mail_message' => 'Enviamos um e-mail com mais informações sobre esta atividade. Para ver as atividades nas quais você está registrado e modificá-las, acesse à ',
