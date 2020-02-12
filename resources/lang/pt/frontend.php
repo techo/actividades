@@ -281,6 +281,11 @@ return [
 	'social_score' => 'Puntaje Técnico',
 	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
 
+
+	//perfil/evaluacion.vue
+	'my_score' => 'Mi puntaje',
+	'my_score_description' => 'If you have any doubt contact someone from the team! :)',
+
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
 	'peers_already_received_feedback' => 'Compañeros ya evaluados',

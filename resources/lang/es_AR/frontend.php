@@ -281,6 +281,10 @@ return [
 	'social_score' => 'Puntaje Social',
 	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
 
+	//perfil/evaluacion.vue
+	'my_score' => 'Mi Evaluación',
+	'my_score_description' => 'Ante cualquier duda contactate con alguien del equipo :)',
+
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
 	'peers_already_received_feedback' => 'Compañeros ya evaluados',

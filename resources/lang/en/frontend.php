@@ -281,6 +281,11 @@ return [
 	'social_score' => 'Technical Score',
 	'social_score_description' => 'Skills to communicate and empathize with others',
 
+
+	//perfil/evaluacion.vue
+	'my_score' => 'My Score',
+	'my_score_description' => 'If you have any doubt contact someone from the team! :)',
+
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Give feedback to your peers',
 	'peers_already_received_feedback' => 'Already received feedback',
