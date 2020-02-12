@@ -1,12 +1,21 @@
 require('./bootstrap.js');
 
+import VueInternationalization from 'vue-i18n';
+import Locale from './vue-i18n-locales.generated';
+Vue.use(VueInternationalization);
+const lang = document.documentElement.lang;
+const i18n = new VueInternationalization({
+    locale: lang,
+    messages: Locale
+});
+
 import Simplert from "vue2-simplert";
-
-
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
-import ActividadesShow from './components/backoffice/actividades/actividades-show'
+import Actividad from './components/backoffice/actividades/actividad'
+import Puntos from './components/backoffice/actividades/puntos'
+import Accesos from './components/backoffice/actividades/accesos'
 import ModalAuditoria from './components/backoffice/auditorias/ModalAuditoria';
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
 import CondicionesSeleccionadas from './components/backoffice/actividades/condiciones-seleccionadas'
@@ -60,7 +69,9 @@ Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);
 
-Vue.component('actividades-show', ActividadesShow);
+Vue.component('actividad', Actividad);
+Vue.component('puntos', Puntos);
+Vue.component('accesos', Accesos);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
 Vue.component('condiciones-seleccionadas', CondicionesSeleccionadas);
@@ -146,5 +157,6 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#app',
+    i18n,
     store,
 });

@@ -55,7 +55,8 @@ class ActividadesSearch
             ->where('inscripcionInterna', 0) //Visibilidad pública
             ->where('fechaInicioInscripciones', '<=', date('Y-m-d H:i'))
             ->where('fechaFinInscripciones', '>=', date('Y-m-d H:i'))
-            ->where('fechaInicio', '>=', date('Y-m-d H:i'));
+            ->where('fechaInicio', '>=', date('Y-m-d H:i'))
+            ->where('PuntoEncuentro.estado', 1);
 
         if(config('app.pais')) {
             $query->where('Actividad.idPais', config('app.pais'));

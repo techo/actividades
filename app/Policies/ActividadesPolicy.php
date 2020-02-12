@@ -66,6 +66,16 @@ class ActividadesPolicy
         return $user->idPersona == $actividad->idCoordinador && $user->hasPermissionTo('ver_mis_actividades');
     }
 
+    public function ver(Persona $user, Actividad $actividad)
+    {   
+        return (
+                    $user->idPersona == $actividad->idCoordinador || 
+                    $user->idPersona == $actividad->idPersonaCreacion
+                ) && $user->hasPermissionTo('ver_mis_actividades') 
+                || 
+                $user->hasRole('admin');
+    }
+
     public function indexMisActividades(Persona $user)
     {
         return $user->hasPermissionTo('ver_mis_actividades');
@@ -84,9 +94,8 @@ class ActividadesPolicy
             );
     }
 
-    public function editar(Persona $user, $id)
+    public function editar(Persona $user, Actividad $actividad)
     {
-        $actividad = Actividad::findOrFail($id);
 
         return $user->hasPermissionTo('editar_actividad') &&
             (

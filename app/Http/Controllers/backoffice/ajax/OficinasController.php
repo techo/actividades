@@ -10,6 +10,6 @@ class OficinasController extends Controller
 {
     public function index()
     {
-        return Oficina::all();
+        return Oficina::with('pais')->get();
     }
 }

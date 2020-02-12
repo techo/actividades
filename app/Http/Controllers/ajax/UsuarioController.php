@@ -168,6 +168,21 @@ class UsuarioController extends BaseController
         return $coordinadores;
     }
 
+    public function getPersonas(Request $request)
+    {
+        $query = (new Persona)->newQuery();
+        
+        $palabras = explode(' ', $request->q);
+
+        foreach ($palabras as $palabra) {
+          $query->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like '%" . $palabra . "%'");
+        }
+
+        $query->take(25)->orderBy('nombres', 'asc');
+
+        return $query->get();
+    }
+
     public function delete(Request $request)
     {
         // Traer todas las inscripciones de actividades futuras del usuario

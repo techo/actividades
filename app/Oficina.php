@@ -14,4 +14,9 @@ class Oficina extends Model
     {
         return $this->hasMany(Actividad::class, 'idOficina');
     }
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'id_pais');
+    }
 }

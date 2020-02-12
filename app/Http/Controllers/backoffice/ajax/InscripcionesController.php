@@ -9,6 +9,10 @@ use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
 use App\Inscripcion;
 use App\Log;
+use App\Mail\ActualizacionActividad;
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionEsperarConfirmacion;
+use App\Mail\MailInscripcionFaltaPago;
 use App\Persona;
 use App\PuntoEncuentro;
 use Carbon\Carbon;
@@ -19,10 +23,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Rap2hpoutre\FastExcel\FastExcel;
-
-use App\Mail\MailInscripcionConfirmada;
-use App\Mail\MailInscripcionFaltaPago;
-use App\Mail\ActualizacionActividad;
 
 class InscripcionesController extends BaseController
 {
@@ -259,10 +259,11 @@ class InscripcionesController extends BaseController
                 $grupo = $this->incluirEnGrupo($request->all());
 
                 if($request->notificar) {
-                    $this->intentaEnviar(
-                        new MailInscripcionConfirmada($inscripto), 
-                        $inscripto->persona
-                    );
+                    if($inscripto->actividad->confirmacion == 1) 
+                        $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripto), $inscripto->persona);
+
+                    if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1)
+                        $this->intentaEnviar(new MailInscripcionFaltaPago($inscripto), $inscripto->persona);
                 }
 
                 return response('ok');
@@ -276,10 +277,11 @@ class InscripcionesController extends BaseController
         if ($inscripto &&  $grupo) {
 
             if($request->notificar) {
-                $this->intentaEnviar(
-                    new MailInscripcionConfirmada($inscripto), 
-                    $inscripto->persona
-                );
+                if($inscripto->actividad->confirmacion == 1)
+                    $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripto), $inscripto->persona);
+
+                if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1)
+                    $this->intentaEnviar(new MailInscripcionFaltaPago($inscripto), $inscripto->persona);
             }
 
             return response('ok');

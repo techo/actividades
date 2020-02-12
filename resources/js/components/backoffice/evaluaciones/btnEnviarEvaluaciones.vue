@@ -15,7 +15,7 @@
                     </div>
                     <div class="modal-body">
                         <span v-if="!error && !success">
-                            <p>Al hacer click en <strong>Enviar</strong> se enviará un correo electrónico a todos los inscriptos en {{ actividad.nombreActividad }}.</p>
+                            <p>Al hacer click en <strong>Enviar</strong> se enviará un correo electrónico a todos los inscriptos.</p>
                             <p>
                                 <b>El mail solo le llega a los inscriptos que están marcados como *PRESENTE*.</b>
                             </p>
@@ -61,11 +61,10 @@
 </template>
 
 <script>
-import store from '../stores/store';
 
 export default {
     name: "btnEnviarEvaluaciones",
-    props: ['prop-actividad'],
+    props: ['id'],
     data: function () {
         return {
             loading: false,
@@ -74,21 +73,19 @@ export default {
             actividad: {},
             mensajeCopiar: "Copiar link",
             copiarClicked: false,
-            urlEvaluaciones: window.location.origin + '/actividades/' + store.state.idActividad + '/evaluaciones',
+            urlEvaluaciones: '',
             notificados: 0,
         }
     },
     created: function () {
-        this.actividad = this.propActividad;
+        this.urlEvaluaciones = window.location.origin + '/actividades/' + this.id + '/evaluaciones';
     },
     methods: {
         enviarEvaluaciones: function () {
             this.loading = true;
             this.error = false;
-            let url = '/admin/ajax/actividades/'+ this.actividad.idActividad +'/enviar-evaluaciones';
-            let payload = {
-                actividad: this.actividad
-            };
+            let url = '/admin/ajax/actividades/'+ this.id +'/enviar-evaluaciones';
+            let payload = { actividad: this.id };
             axios.post(url, payload)
                 .then(response => {
                     this.loading = false;
