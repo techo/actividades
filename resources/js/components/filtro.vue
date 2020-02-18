@@ -7,7 +7,7 @@
                 v-model="idCategoria"
             >
                 <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
-                    {{ categoria.nombre }}
+                    {{ $t('frontend.' + categoria.nombre) }}
                 </option>
             </select>
         <!-- <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
@@ -35,7 +35,7 @@
         <div class="borrar-filtros col-xs-12 col-md-2 col-lg-1 mr-md-3 pl-lg-0">
             <span class="btn btn-default boton-filtro text-center" v-on:click="borrarFiltros">
                 <i class="fas fa-sync"></i>
-                Borra Filtros
+                {{ $t('frontend.delete_filter') }}
             </span>
         </div>
     </div>
@@ -102,12 +102,12 @@
                     filtros.categoria = this.idCategoria;
                 }
 
-                axios.post(url, filtros)
+                axios.get(url, { params: filtros })
                     .then(response => {
                         if(response.data.length) {
                             this.tiposDeActividad = [{ 
                                         id: 0,
-                                        titulo: 'Marcar todas',
+                                        titulo: this._i18n.t('frontend.select_all'),
                                         actividades: response.data
                             }];
                         }
@@ -151,16 +151,16 @@
                 if(this.idCategoria) {
                     formData.categoria = this.idCategoria;
                 }
-                
-                this.axiosPost(url, function (response, self) { //implemenatación de axiosPost global
-                    self.lista_provincias = Object.keys(response).map(i => response[i]);
-                            for (let i=0; i< self.$children.length; i++) {
-                                self.$children[i].listaProvincias = self.lista_provincias;
-                            }
-                        },formData,
-                function (error) {
-                    console.log('error en getProvinciasYLocalidades. url: ' + url);
-                });
+
+                axios.get(url, { params: formData })
+                    .then(response => {
+                        let datos = response.data;
+                        this.lista_provincias = Object.keys(datos).map(i => datos[i]);
+                        for (let i=0; i< this.$children.length; i++) {
+                            this.$children[i].listaProvincias = this.lista_provincias;
+                        }
+                    })
+                    .catch((error) => { debugger; });
             },
 
             borrarFiltros: function () {
@@ -189,7 +189,7 @@
         created: function() {
             this.idCategoria        = (this.idCategoria)?JSON.parse(this.idCategoria):null;
             this.dataCategorias     = JSON.parse(this.categorias);
-            this.dataCategorias.unshift({'id': null, 'nombre': 'CATEGORÍAS'})
+            this.dataCategorias.unshift({'id': null, 'nombre': this._i18n.t('categories')})
             this.actualizarFiltros();
         },
         mounted() {

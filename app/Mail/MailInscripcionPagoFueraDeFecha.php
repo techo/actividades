@@ -33,7 +33,7 @@ class MailInscripcionPagoFueraDeFecha extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Pago recibido fuera de la fecha límite para: ' . $this->inscripcion->actividad->nombreActividad)
+            ->subject(__('email.pre_enroll_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('no-reply@techo.org')
             ->view('emails.inscripcionPagoFueraDeFecha');
     }

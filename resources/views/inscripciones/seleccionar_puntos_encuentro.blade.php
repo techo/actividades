@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Detalle de Actividad
+    {{ __('frontend.meeting_points') }}
 @endsection
 
 

@@ -14,58 +14,26 @@ class CreatePersonaTable extends Migration {
 	{
 		Schema::create('Persona', function(Blueprint $table)
 		{
-			$table->engine = 'InnoDB';
-			$table->charset = 'utf8';
-			$table->collation = 'utf8_spanish_ci';
-
 			$table->integer('idPersona', true);
+
 			$table->integer('idPais')->index('idPais');
-			$table->integer('idPaisResidencia')->index('idPaisResidencia');
-			$table->integer('idCiudad')->index('idCiudad');
 			$table->integer('idUnidadOrganizacional');
-			$table->string('nombres', 300);
-			$table->string('apellidoPaterno', 300);
-			$table->string('apellidoMaterno', 300)->nullable();
+
+			$table->string('nombres', 250);
+			$table->string('apellidoPaterno', 250);
+			$table->string('apellidoMaterno', 250)->nullable();
 			$table->dateTime('fechaNacimiento');
-			$table->string('telefono', 300)->nullable();
-			$table->string('telefonoMovil', 300);
+			$table->string('telefono', 250)->nullable();
+			$table->string('telefonoMovil', 250);
 			$table->string('sexo', 1)->nullable();
 			$table->string('dni', 50);
-			$table->string('mail', 300)->index('mail');
-			$table->string('password', 400);
-			$table->integer('idUniversidad')->nullable()->index('fk_Persona_Universidad');
-			$table->integer('idColegio')->nullable()->index('fk_Persona_Colegio');
-			$table->string('universidad_string', 300)->nullable();
-			$table->string('carrera', 300);
-			$table->string('anoEstudio', 20);
-			$table->string('loginActiveDirectory', 100)->nullable();
-			$table->string('loginMailUTPMP', 200)->nullable();
-			$table->boolean('nuevaPortada')->default(0);
-			$table->string('idContactoCTCT', 300);
-			$table->string('statusCTCT', 30);
-			$table->string('lenguaje', 300);
-			$table->string('captacion', 500)->nullable();
-			$table->binary('configuracion', 65535)->nullable();
-			$table->integer('idEmpresa')->nullable()->index('Persona_ibfk_4');
-			$table->boolean('terminosVoluntarioPermanente')->nullable()->default(0);
-			$table->boolean('terminosVoluntarioMasivo')->nullable()->default(0);
-			$table->integer('idRegionLT')->index('fk_Persona_RegionLT_idx');
-			$table->string('calle')->nullable();
-			$table->string('numero')->nullable();
-			$table->string('piso')->nullable();
-			$table->string('dpto')->nullable();
-			$table->dateTime('fechaInscripcion')->nullable();
-			$table->dateTime('ultimaEntrada')->nullable();
-			$table->dateTime('ultimaActualizacion')->nullable();
-			$table->string('dispHoraria', 400)->nullable();
+			$table->string('mail', 250)->index('mail');
+			$table->string('password', 250);
+
 			$table->integer('recibirMails')->nullable();
-			$table->integer('idCarrera')->nullable()->index('fk_Persona_Carrera_idx');
-			$table->integer('idAreaEstudio')->nullable()->index('Persona_ibfk_5_idx');
-			$table->char('Vecino_Voluntario', 1)->nullable();
-			$table->string('Barrio_Vecino', 40)->nullable();
 			$table->string('remember_token', 100)->nullable();
-			$table->index(['idPaisResidencia','dni'], 'ix_Persona_DniPais');
 			$table->index(['apellidoPaterno','apellidoMaterno','nombres'], 'idx_Persona_1');
+
 		});
 	}
 

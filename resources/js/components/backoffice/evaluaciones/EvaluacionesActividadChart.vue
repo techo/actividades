@@ -19,10 +19,10 @@
 
 <script>
     import BarChart from '../../plugins/BarChart'
-    import store from '../stores/store';
 
     export default {
         name: "evaluaciones-actividad-chart",
+        props: [ 'id' ],
         components: { BarChart },
         data(){
             return {
@@ -65,7 +65,7 @@
         },
         methods: {
             getData: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/chartdata";
+                let url = window.location.origin + "/admin/ajax/actividades/" + this.id + "/evaluaciones/chartdata";
                 this.axiosGet(
                     url,
                     //success callback

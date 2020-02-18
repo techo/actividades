@@ -33,7 +33,7 @@ class ActualizacionActividad extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject('TECHO: Cambios en la actividad: ' . $this->inscripcion->actividad->nombreActividad)
+            ->subject( __('email.activity_update_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->view('emails.actualizacionActividad');
     }
 }

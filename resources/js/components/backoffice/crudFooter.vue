@@ -1,41 +1,41 @@
 <template>
-    <footer class="main-footer" style="position:fixed; bottom: 0; width: 100%">
+    <footer class="main-footer" style="margin: 0">
         <!-- To the right -->
         <simplert ref="confirmar"></simplert>
         <div class="row hidden-sm">
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-4">
                 <button class="btn btn-default" @click="cancelar">
                     <i class="fa fa-arrow-circle-left"></i> Volver al listado
                 </button>
             </div>
-            <div class="col-sm-12 col-md-1">
-                <button type="button" class="btn btn-primary" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
+
+            <div class="col-sm-12 col-md-8" style="display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
                     <i class="fa fa-share-alt"></i>  Compartir
                 </button>
-            </div>
-            <div class="col-sm-12 col-md-2">
-                <button class="btn btn-primary" v-show="readonly && canClonar" @click="clonar">
+                <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canClonar" @click="clonar">
                     <i class="fa fa-clone"></i>
                     Clonar Actividad
                 </button>
-            </div>
-            <div class="col-sm-12 col-md-4">
-                <button class="btn btn-primary" v-show="readonly && canEditar" @click="editar">
+                <button class="btn btn-secondary" style="margin-right: 4px;" v-show="!readonly" @click="cancelar">
+                    <i class="fa fa-ban"></i>
+                    Cancelar
+                </button>
+                <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canFusionar" @click="fusionar">
+                    <i class="fa fa-random"></i>
+                    Fusionar
+                </button>
+                <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canEditar" @click="editar">
                     <i class="fa fa-edit"></i>
                     Editar
                 </button>
-                <button class="btn btn-danger" v-show="readonly && canBorrar" @click="eliminar">
+                <button class="btn btn-danger" style="margin-right: 4px;" v-show="readonly && canBorrar" @click="eliminar">
                     <i class="fa fa-trash"></i>
                     Borrar
                 </button>
-
-                <button class="btn btn-success" v-show="!readonly" @click="this.guardar">
+                <button class="btn btn-success" style="margin-right: 4px;" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
                     Guardar
-                </button>
-                <button class="btn btn-secondary" v-show="!readonly" @click="cancelar">
-                    <i class="fa fa-ban"></i>
-                    Cancelar
                 </button>
             </div>
         </div>
@@ -87,7 +87,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar', 'canFusionar'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")
@@ -148,6 +148,10 @@
                         Event.$emit('clonar');
                     }
                 })
+            },
+
+            fusionar: function () {
+                Event.$emit('fusionar');
             },
 
             guardar: function () {

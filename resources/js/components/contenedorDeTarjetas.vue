@@ -66,7 +66,7 @@
                 let self = this;
                 this.loading = true;
                 this.vacio = false;
-                axios.post(url, filtros)
+                axios.get(url, { params:  filtros })
                     .then(response => {
                         if(typeof response.data.data == "undefined" || response.data.data.length == 0) {
                             this.loading = false;

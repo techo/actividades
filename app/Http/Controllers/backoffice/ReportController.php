@@ -34,7 +34,7 @@ class ReportController extends Controller
     {
         $filtros['idActividad'] = $id;
 
-        if(!empty($request->filter)){
+        if($request->filter){
             $filtros['HotFilter'] = $request->filter;
             unset($filtros['filter']);
         }

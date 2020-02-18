@@ -9,6 +9,7 @@ before_script:
   - composer install --no-interaction
   - php artisan key:generate
   - npm install
+  - php artisan vue-i18n:generate
   - npm run test
   - npm run dev
 # - php artisan config:clear

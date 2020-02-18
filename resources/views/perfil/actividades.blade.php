@@ -1,27 +1,27 @@
 @extends('main')
 
 @section('page_title')
-    Mis Actividades
+    {{ __('frontend.my_activities') }}
 @endsection
 
 @section('main_image')
 @endsection
 
 @section('main_content')
-    <h1>Tus Actividades de Voluntariado</h1>
+    <h1>{{ __('frontend.my_activities') }}</h1>
     <div class="col-md-4">
-        <h3>Próximas Actividades</h3>
+        <h3>{{ __('frontend.next_activities') }} </h3>
     </div>
 
     <mis-actividades></mis-actividades>
     <div class="col-md-4">
-        <h3>Actividades Pasadas</h3>
+        <h3>{{ __('frontend.past_activities') }} </h3>
     </div>
     <datatable
             api-url="/ajax/usuario/inscripciones?date=pasadas"
             fields="{{ $fields }}"
             sort-order="{{ $sortOrder }}"
-            placeholder-text="Nombre o localidad de la actividad"
+            v-bind:placeholder-text="$t('frontend.filter_placeholder')"
             id="datatable-mis-actividades"
             track-by="idActividad"
     ></datatable>

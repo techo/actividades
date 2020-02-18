@@ -1,5 +1,16 @@
 
 import Vue from 'vue';
+
+import VueInternationalization from 'vue-i18n';
+import Locale from './vue-i18n-locales.generated';
+Vue.use(VueInternationalization);
+const lang = document.documentElement.lang;
+const i18n = new VueInternationalization({
+    locale: lang,
+    messages: Locale
+});
+
+
 // import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
@@ -114,6 +125,7 @@ Vue.mixin({
 
 var app = new Vue({
     el: "#app",
+    i18n,
     data() {
       return {
           meta: [],

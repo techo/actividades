@@ -34,7 +34,7 @@ class UsuarioController extends BaseController
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
         break;
         case 'create':
-          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
+          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona,deleted_at,NULL|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
           if($request->has('privacidad')) $rules['privacidad'] = 'accepted';
         break;
@@ -56,15 +56,7 @@ class UsuarioController extends BaseController
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
       $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
-      $persona->carrera = '';
-      $persona->anoEstudio = '';
-      $persona->idContactoCTCT = '';
-      $persona->statusCTCT = '';
-      $persona->lenguaje = '';
-      $persona->idRegionLT = 0;
       $persona->idUnidadOrganizacional = 0;
-      $persona->idCiudad = 0;
-      $persona->verificado = false;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       $persona->save();
@@ -72,7 +64,7 @@ class UsuarioController extends BaseController
       event(new RegistroUsuario($persona));
 
       $request->session()->regenerate();
-      $request->session()->flash('mensaje', 'La cuenta fue creada con éxito ¡Verificá tu casilla de email para activarla!');
+      $request->session()->flash('mensaje', __('messages.account_created'));
 
       return ['login_callback' =>  '/', 'user' => null];
   }
@@ -98,7 +90,6 @@ class UsuarioController extends BaseController
       $persona->fechaNacimiento = $fechaNacimiento;
       $persona->nombres = $request->nombre;
       $persona->idPais = $request->pais;
-      $persona->idPaisResidencia = $request->pais;
       $persona->idProvincia = $request->provincia;
       $persona->sexo = $request->sexo;
       $persona->telefonoMovil = $request->telefono;
@@ -175,6 +166,21 @@ class UsuarioController extends BaseController
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
         return $coordinadores;
+    }
+
+    public function getPersonas(Request $request)
+    {
+        $query = (new Persona)->newQuery();
+        
+        $palabras = explode(' ', $request->q);
+
+        foreach ($palabras as $palabra) {
+          $query->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like '%" . $palabra . "%'");
+        }
+
+        $query->take(25)->orderBy('nombres', 'asc');
+
+        return $query->get();
     }
 
     public function delete(Request $request)

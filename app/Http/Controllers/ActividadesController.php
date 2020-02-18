@@ -70,7 +70,7 @@ class actividadesController extends Controller
 
         $inscripciones_abiertas = $actividad->fechaInicioInscripciones->lte(Carbon::now()) &&  $actividad->fechaFinInscripciones->gte(Carbon::now());
 
-        $mensaje = "ERROR";
+        $mensaje = __('frontend.error');
         $clase = 'btn-danger';
         $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
         $habilitado = false;
@@ -97,19 +97,23 @@ class actividadesController extends Controller
                     $habilitado = true;
                     $accion = action('InscripcionesController@confirmarDonacion', ['id' => $actividad->idActividad]);
                     $clase = 'btn-primary';
+                    $mensaje = __('frontend.approval_needed');
                     break;
 
                 case 'FECHA DE CONFIRMACIÓN VENCIDA':
+                    $mensaje = __('frontend.confirmation_date_is_closed');
                     $clase = 'btn-danger disabled';
                     $habilitado = false;
                     break;
 
                 case 'ESPERAR CONFIRMACIÓN':
+                    $mensaje = __('frontend.waiting_for_confirmation');
                     $clase = 'btn-warning disabled';
                     $habilitado = false;
                     break;
 
                 case 'CONFIRMADO':
+                    $mensaje = __('frontend.confirmed');
                     $clase = 'btn-success disabled';
                     $habilitado = false;
                     break;
@@ -119,26 +123,26 @@ class actividadesController extends Controller
         {
 
             if(!$inscripciones_abiertas) {
-                $mensaje = "El período de inscripción está cerrado";
+                $mensaje = __('frontend.closed_inscriptions');
                 $clase = "disabled";
                 $habilitado = true;
                 return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
             }
             if(!$hay_cupos) {
-                $mensaje = "La actividad no tiene más cupos";
+                $mensaje = __('frontend.activity_full');
                 $clase = "disabled";
                 $habilitado = false;
                 return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
             }
 
             if($actividad->confirmacion == 1 || $actividad->pago == 1) {
-                $mensaje = "PREINSCRIBIRME";
+                $mensaje = __('frontend.pre_registration');
                 $clase = 'btn-primary';
                 $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
                 $habilitado = true;
             }
             else {
-                $mensaje = "INSCRIBIRME";
+                $mensaje = __('frontend.apply_now');
                 $clase = 'btn-primary';
                 $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
                 $habilitado = true;
@@ -147,7 +151,7 @@ class actividadesController extends Controller
             $fecha_hoy = Carbon::parse(Carbon::now()->format('Y-m-d'));
 
             if($actividad->pago == 1 && $actividad->fechaLimitePago && $actividad->fechaLimitePago->lessThanOrEqualTo($fecha_hoy) ) {
-                $mensaje = "FECHA DE CONFIRMACIÓN VENCIDA";
+                $mensaje = __('frontend.approval_needed');
                 $clase = 'btn-danger disabled';
                 $habilitado = false;
             }

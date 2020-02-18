@@ -5,6 +5,7 @@
 /public/css/app.css
 /public/js/atlas.js
 /public/bundle.js
+/public/js/skins
 /storage/*.key
 /public/storage
 /vendor
@@ -16,14 +17,12 @@ npm-debug.log
 yarn-error.log
 storage/debugbar/
 .env
-package-lock.json
 /public/mix-manifest.json
 /storage/debugbar
 app.dockerfile
 docker-compose.yml
 pilote.sql.tar
 web.dockerfile
-composer.lock
 /database/seeds/PayuArgentinaSeeder.php
 worker.log
-/test_db.sql
+/resources/js/vue-i18n-locales.generated.js

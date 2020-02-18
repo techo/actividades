@@ -95,6 +95,22 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="treeview {{ request()->is('admin/configuracion*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-cogs"></i> <span>Configuración</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/configuracion/oficinas') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/oficinas">Oficinas</a>
+                    </li>
+                    <li class="{{request()->is('admin/configuracion/tiposActividades') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/tiposActividades">Tipos de Actividades</a>
+                    </li>
+                </ul>
+            </li>
             @endif
 
             @if(config('app.docs'))

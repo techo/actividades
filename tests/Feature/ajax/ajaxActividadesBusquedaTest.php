@@ -29,7 +29,7 @@ class ajaxActividadesBusqueda extends TestCase
 			// 'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -55,7 +55,7 @@ class ajaxActividadesBusqueda extends TestCase
             // 'tipos' => []
         ];
 
-        $this->post('/ajax/actividades', $params)
+        $this->json('GET', '/ajax/actividades', $params)
             ->assertStatus(200)
             ->assertJsonCount(1, 'data');
 
@@ -80,7 +80,7 @@ class ajaxActividadesBusqueda extends TestCase
             // 'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -106,7 +106,7 @@ class ajaxActividadesBusqueda extends TestCase
             // 'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -132,7 +132,7 @@ class ajaxActividadesBusqueda extends TestCase
             'tipos' => [$actividades[0]->tipo()->first()->idTipo]
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -158,7 +158,7 @@ class ajaxActividadesBusqueda extends TestCase
             // 'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -184,9 +184,7 @@ class ajaxActividadesBusqueda extends TestCase
             'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
-
-        $response
+        $this->json('GET', '/ajax/actividades', $params)
             ->assertStatus(200)
             ->assertJsonCount(4, 'data');
     }
@@ -210,7 +208,7 @@ class ajaxActividadesBusqueda extends TestCase
             'tipos' => []
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)
@@ -233,7 +231,7 @@ class ajaxActividadesBusqueda extends TestCase
             'localidades' => null,
         ];
 
-        $response = $this->post('/ajax/actividades', $params);
+        $response = $this->json('GET', '/ajax/actividades', $params);
 
         $response
             ->assertStatus(200)

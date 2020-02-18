@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Perfil
+    {{ __('frontend.profile') }}
 @endsection
 
 @section('main_image')

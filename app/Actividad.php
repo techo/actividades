@@ -12,17 +12,14 @@ class Actividad extends Model
     use SoftDeletes;
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
-    protected $guarded = ['idActividad', 'pDNI'];
-    protected $fillable = ['nombreActividad', 'fechaInicio'];
+    protected $guarded = ['idActividad'];
     protected $dates =
         [
-            'fechaCreacion', 
-            'fechaModificacion',
             'fechaInicio', 'fechaFin',
             'fechaInicioInscripciones', 'fechaFinInscripciones',
             'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
             'fechaLimitePago',
-
+            'fechaCreacion', 'fechaModificacion',
         ];
 
     const CREATED_AT = 'fechaCreacion';
@@ -36,6 +33,11 @@ class Actividad extends Model
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idActividad');
+    }
+
+    public function getCantidadPresentesAttribute()
+    {
+        return $this->inscripciones()->where('presente','=',1)->count();
     }
 
     public function membresias()
@@ -194,18 +196,18 @@ class Actividad extends Model
         if(!$inscripcion) return false;
 
         if($this->confirmacion == $inscripcion->confirma && $this->pago == $inscripcion->pago) {
-            return "Confirmado";
+            return "confirmed";
         }
 
         if($this->confirmacion == $inscripcion->confirma && $this->pago != $inscripcion->pago) {
             if( !$this->fechaLimitePago || $this->fechaLimitePago && $this->fechaLimitePago > \Carbon\Carbon::now() )
-                return "Confirmar con tu donación";
+                return "confirm_by_paying";
             else 
-                return "Fecha de confirmación vencida";
+                return "confirmation_date_is_closed";
         }
 
         if($this->confirmacion != $inscripcion->confirma) {
-            return "Esperar confirmación";
+            return "waiting_for_confirmation";
         }
 
     }
@@ -221,6 +223,9 @@ class Actividad extends Model
 
         static::deleting(function ($actividad) {});
 
-        static::updating(function ($actividad) { Auditoria::crear($actividad); });
+        static::updating(function ($actividad) { 
+            $actividad->idPersonaModificacion = auth()->user()->idPersona;
+            Auditoria::crear($actividad); 
+        });
     }
 }

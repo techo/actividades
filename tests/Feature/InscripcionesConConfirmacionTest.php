@@ -37,12 +37,12 @@ class InscripcionesConConfirmacionTest extends TestCase
         
         $this->actingAs($jose)
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
-            ->assertSee('espera')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('ESPERAR')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -86,7 +86,7 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMADO')
+            ->assertSee('confirmed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -121,12 +121,12 @@ class InscripcionesConConfirmacionTest extends TestCase
         
         $this->actingAs($jose)
             ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', $datos)
-            ->assertSee('espera')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('ESPERAR')
+            ->assertSee('waiting_for_confirmation')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -181,7 +181,7 @@ class InscripcionesConConfirmacionTest extends TestCase
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)
-            ->assertSee('CONFIRMAR')
+            ->assertSee('approval_needed')
             ->assertStatus(200);
 
         $this->assertDatabaseHas('Inscripcion', [
@@ -192,6 +192,39 @@ class InscripcionesConConfirmacionTest extends TestCase
         ]); 
 
         Mail::assertQueued(MailInscripcionFaltaPago::class, 1);
+    }
+
+    /** @test */
+    public function coordinador_puede_preinscribir_con_confirmacion()
+    {
+        $this->withoutExceptionHandling();
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($coordinador)
+            ->conEstado('con confirmacion')
+            ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
+            ->create();
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $datos = [
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro, 
+            'idPersona' => $jose->idPersona,
+            'notificar' => 1,
+        ];
+
+        $this->actingAs($coordinador)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/', $datos)
+            ->assertSessionHasNoErrors()
+            ->assertStatus(200);
+
+        Mail::assertQueued(MailInscripcionEsperarConfirmacion::class, 1);
     }
 
 }

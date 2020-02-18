@@ -58,6 +58,7 @@
             cancelar-url="/admin/usuarios"
             edicion="{{ $edicion }}"
             can-editar="true"
+            can-fusionar="true"
             can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
     ></crud-footer>
     @endrole

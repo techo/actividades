@@ -49,10 +49,10 @@
 
 <script>
     import knob from '../../plugins/knob';
-    import store from '../stores/store';
 
     export default {
         name: "evaluaciones-voluntarios-stats",
+        props: [ 'id' ],
         components: { knob },
         data(){
             return {
@@ -60,46 +60,42 @@
                 promedioSocial: 0,
                 promedioTecnico: 0,
                 loading: true,
-              //  presentes: store.state.presentes,
+                presentes: 0,
             }
         },
         computed: {
           porcentajeEvaluaciones: function () {
               if(this.loading) return 0;
-              if(store.state.presentes === 0) return 0;
+              if(this.presentes === 0) return 0;
 
-              let porcentaje = Math.round(this.evaluaron * 100 / store.state.presentes);
+              let porcentaje = Math.round(this.evaluaron * 100 / this.presentes);
               Event.$emit("knob-eval-voluntarios-upd", porcentaje);
               return porcentaje;
           },
           totalPresentes: function () {
-              return store.state.presentes;
+              return this.presentes;
           },
           pendientesEvaluar: function () {
               if(this.loading) return 0;
-              return store.state.presentes - this.evaluaron;
+              return this.presentes - this.evaluaron;
           }
         },
-        created(){
+        mounted(){
+            
             this.getStats();
         },
         methods: {
-            getStats: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/voluntarios/stats";
-                this.axiosGet(
-                    url,
-                    //success callback
-                    function (data, self) {
-                        // store.commit("updatePresentes", data.presentes);
-                        self.evaluaron = data.evaluaron;
-                        self.promedioSocial = data.promedioSocial;
-                        self.promedioTecnico = data.promedioTecnico;
+            getStats() {
+                let url = "/admin/ajax/actividades/" + this.id + "/evaluaciones/voluntarios/stats";
+                axios.get(url)
+                    .then((datos) => { 
+                        this.presentes = datos.data.presentes;
+                        this.evaluaron = datos.data.evaluaron;
+                        this.promedioSocial = datos.data.promedioSocial;
+                        this.promedioTecnico = datos.data.promedioTecnico;
                         Event.$emit('stats-voluntarios-loaded');
-                        self.loading = false;
-                    }
-                    //payload
-                    //error callback
-                );
+                        this.loading = false;
+                    }).catch((error) => { debugger; });
             }
         }
     }

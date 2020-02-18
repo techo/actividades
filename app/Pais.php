@@ -21,4 +21,18 @@ class Pais extends Model
     {
         return $this->hasMany(Actividad::class, 'idPais', 'id');
     }
+
+    public static function porCodigo($codigo) 
+    {
+        if(!$codigo) {
+            return null;
+        }
+        return static::where('codigo', $codigo)->first();
+    }
+
+    public function oficinas()
+    {
+        return $this->hasMany(Oficina::class);
+    }
+    
 }

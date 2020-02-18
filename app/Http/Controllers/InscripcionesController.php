@@ -57,8 +57,6 @@ class InscripcionesController extends BaseController
                 $inscripcion->idActividad = $id;
                 $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
                 $inscripcion->idPersona = Auth::user()->idPersona;
-                $inscripcion->evaluacion = 0;
-                $inscripcion->acompanante = '';
                 $inscripcion->fechaInscripcion = new Carbon();
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }

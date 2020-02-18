@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    Verificar email
+    {{ __('frontend.verify_email') }}
 @endsection
 
 @section('main_image')
@@ -11,23 +11,23 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h3>{{ __('Verificar dirección de email') }}</h3>
+            <h3>{{ __('frontend.confirm_your_email') }}</h3>
 
             <div>
                 @if (session('resent'))
                     <div class="alert alert-success" role="alert">
-                        {{ __('Se envió un enlace de verificación a tu casilla de email.') }}
+                        {{ __('frontend.verify_email_message_1') }}
                     </div>
                 @endif
                 <br>
                 <p>
-                    {{ __('Para poder seguir, verificá tu casilla de email y hacé click en el enlace de verificación que te enviamos.') }}
+                    {{ __('frontend.verify_email_message_2') }}
                 </p>
                 <p>
-                    {{ __('Si no recibiste el mail') }} 
+                    {{ __('frontend.verify_email_message_3') }} 
                     <br>
                     <br>
-                    <a href="{{ route('verification.resend') }}" class="btn btn-primary">{{ __('hacé click para solicitar otro') }} </a>
+                    <a href="{{ route('verification.resend') }}" class="btn btn-primary">{{ __('frontend.verify_email_resend') }} </a>
                 </p>
             </div>
         </div>

@@ -13,9 +13,6 @@ $factory->define(App\Inscripcion::class, function (Faker $faker) {
 			'confirma' => 0,
 			'pago' => 0,
 			'presente' => 0,
-
-			'evaluacion' => true,
-			'aceptarCompromiso' => true,
     ];
 });
 

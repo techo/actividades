@@ -58,7 +58,7 @@ class PerfilController extends Controller
 		Redirect::setIntendedUrl("/");
 
 		Auth::logout();
-		$request->session()->flash('mensaje', 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!');
+		$request->session()->flash('mensaje', __('frontend.email_succesfully_updated'));
 
 		return redirect('/');
     }
