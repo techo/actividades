@@ -48,6 +48,10 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 
+import OficinasDatatable from './components/backoffice/datatable/OficinasDatatable';
+import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterBar';
+import OficinasForm from './components/backoffice/oficinas/oficina-form';
+
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
 
@@ -103,6 +107,9 @@ Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
 Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
+Vue.component('oficinas-datatable', OficinasDatatable);
+Vue.component('oficinas-filter-bar', OficinasFilterBar);
+Vue.component('oficina-form', OficinasForm);
 
 window.Event = new Vue();
 

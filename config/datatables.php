@@ -358,5 +358,31 @@ return [
                 'direction' => 'asc'
             ],
         ]
+    ],
+    'oficinas' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'pais',
+                'sortField' => 'pais',
+                'title' => 'País'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
     ]
 ];

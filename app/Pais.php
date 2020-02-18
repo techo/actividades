@@ -29,4 +29,10 @@ class Pais extends Model
         }
         return static::where('codigo', $codigo)->first();
     }
+
+    public function oficinas()
+    {
+        return $this->hasMany(Oficina::class);
+    }
+    
 }

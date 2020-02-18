@@ -9,6 +9,7 @@ class Oficina extends Model
     protected $table = 'atl_oficinas';
     protected $primaryKey = 'id';
     public $timestamps = false;
+    protected $fillable = ['nombre', 'id_pais'];
 
     public function actividades()
     {
