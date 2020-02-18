@@ -384,5 +384,31 @@ return [
                 'direction' => 'asc'
             ],
         ]
+    ],
+    'tiposActividad' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'categoria',
+                'sortField' => 'categoria',
+                'title' => 'Categoría'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
     ]
 ];

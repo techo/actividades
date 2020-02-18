@@ -283,9 +283,16 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/configuracion/oficinas/{id}/editar', 'backoffice\ajax\OficinasController@update')->middleware('role:admin');
     Route::get('/ajax/configuracion/oficinas/{id}', 'backoffice\ajax\OficinasController@get')->middleware('role:admin');
     Route::delete('/configuracion/oficinas/{id}', 'backoffice\ajax\OficinasController@delete')->middleware('role:admin');
-    
-    
-    
+
+    Route::get('/ajax/configuracion/tipos-actividad', 'backoffice\ajax\TiposActividadController@index');
+    Route::post('/ajax/configuracion/tipos-actividad/{id}/editar', 'backoffice\ajax\TiposActividadController@update')->middleware('role:admin');
+    Route::get('/ajax/configuracion/tipos-actividad/{id}', 'backoffice\ajax\TiposActividadController@get')->middleware('role:admin');
+    Route::delete('/ajax/configuracion/tipos-actividad/{id}', 'backoffice\ajax\TiposActividadController@delete')->middleware('role:admin');
+    Route::post('/ajax/configuracion/tipos-actividad/registrar', 'backoffice\ajax\TiposActividadController@store')->middleware('role:admin');
+    Route::get('/configuracion/tipos-actividad', 'backoffice\TiposActividadController@index')->middleware('role:admin');
+    Route::get('/configuracion/tipos-actividad/registrar', 'backoffice\TiposActividadController@create')->middleware('role:admin');
+    Route::get('/configuracion/tipos-actividad/{id}', 'backoffice\TiposActividadController@show')->middleware('role:admin');
+
 });
 
 Route::prefix('/pagos/')->group(function() {

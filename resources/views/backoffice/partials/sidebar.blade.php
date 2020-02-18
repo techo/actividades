@@ -106,8 +106,8 @@
                     <li class="{{request()->is('admin/configuracion/oficinas') ? 'active' : ''}}">
                         <a href="/admin/configuracion/oficinas">Oficinas</a>
                     </li>
-                    <li class="{{request()->is('admin/configuracion/tiposActividades') ? 'active' : ''}}">
-                        <a href="/admin/configuracion/tiposActividades">Tipos de Actividades</a>
+                    <li class="{{request()->is('admin/configuracion/tipos-actividad') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/tipos-actividad">Tipos de Actividades</a>
                     </li>
                 </ul>
             </li>
