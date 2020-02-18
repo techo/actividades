@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 <head>
     @include('backoffice.partials.meta')
     @include('backoffice.partials.css')
@@ -42,6 +42,8 @@ desired effect
 
         <!-- Main content -->
         <section class="content container-fluid">
+
+            <modal-auditoria></modal-auditoria>
 
             @yield('content')
 

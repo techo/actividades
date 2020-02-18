@@ -1,12 +1,21 @@
 require('./bootstrap.js');
 
+import VueInternationalization from 'vue-i18n';
+import Locale from './vue-i18n-locales.generated';
+Vue.use(VueInternationalization);
+const lang = document.documentElement.lang;
+const i18n = new VueInternationalization({
+    locale: lang,
+    messages: Locale
+});
+
 import Simplert from "vue2-simplert";
-
-
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
-import ActividadesShow from './components/backoffice/actividades/actividades-show'
+import Actividad from './components/backoffice/actividades/actividad'
+import Puntos from './components/backoffice/actividades/puntos'
+import Accesos from './components/backoffice/actividades/accesos'
 import ModalAuditoria from './components/backoffice/auditorias/ModalAuditoria';
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
 import CondicionesSeleccionadas from './components/backoffice/actividades/condiciones-seleccionadas'
@@ -39,6 +48,7 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 
+
 import TiposActividadDatatable from './components/backoffice/datatable/TiposActividadDatatable';
 import TiposActividadFilterBar from './components/backoffice/datatable/TiposActividadFilterBar';
 import TiposActividadForm from './components/backoffice/tiposActividad/tipos-actividad-form';
@@ -47,6 +57,11 @@ import TiposActividadForm from './components/backoffice/tiposActividad/tipos-act
 Vue.component('tipos-actividad-datatable', TiposActividadDatatable);
 Vue.component('tipos-actividad-filter-bar', TiposActividadFilterBar);
 Vue.component('tipos-actividad-form', TiposActividadForm);
+
+import OficinasDatatable from './components/backoffice/datatable/OficinasDatatable';
+import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterBar';
+import OficinasForm from './components/backoffice/oficinas/oficina-form';
+
 
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
@@ -69,7 +84,9 @@ Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);
 
-Vue.component('actividades-show', ActividadesShow);
+Vue.component('actividad', Actividad);
+Vue.component('puntos', Puntos);
+Vue.component('accesos', Accesos);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
 Vue.component('condiciones-seleccionadas', CondicionesSeleccionadas);
@@ -101,6 +118,9 @@ Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
 Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
+Vue.component('oficinas-datatable', OficinasDatatable);
+Vue.component('oficinas-filter-bar', OficinasFilterBar);
+Vue.component('oficina-form', OficinasForm);
 
 window.Event = new Vue();
 
@@ -155,5 +175,6 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#app',
+    i18n,
     store,
 });

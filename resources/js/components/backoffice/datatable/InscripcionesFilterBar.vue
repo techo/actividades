@@ -64,10 +64,8 @@
                 this.$events.fire('filter-reset-inscripciones');
             },
             exportar() {
-                let url = window.location.href;
-                url = url.slice(-1) !== "/" ? url + "/" : url;
                 let filter = this.$parent.moreParams.filter !== undefined ? 'filter=' + this.$parent.moreParams.filter + '&' : '';
-                location.href = url + 'inscripciones/exportar?' + filter + 'condiciones=' + JSON.stringify(this.$parent.moreParams.condiciones)
+                location.href = 'inscripciones/exportar?' + filter + 'condiciones=' + JSON.stringify(this.$parent.moreParams.condiciones)
             },
             mostrarModalImportar() {
                 Event.$emit('inscripciones:importar-button-clicked');

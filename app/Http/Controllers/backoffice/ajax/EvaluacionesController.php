@@ -35,7 +35,8 @@ class EvaluacionesController extends BaseController
         $promedio = round($actividad->evaluaciones()->whereNotNull('puntaje')->avg('puntaje'),2);
         return response()->json([
             'evaluaron' => $evaluaron,
-            'promedio' => $promedio
+            'promedio' => $promedio,
+            'presentes' => $actividad->cantidadPresentes,
         ]);
 
     }
@@ -74,6 +75,7 @@ class EvaluacionesController extends BaseController
         return response()->json(
             [
                 'evaluaron' => $evaluaron,
+                'presentes' => $actividad->cantidadPresentes,
                 'promedioSocial' => $promedioSocial,
                 'promedioTecnico' => $promedioTecnico
             ]

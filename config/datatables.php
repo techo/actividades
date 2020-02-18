@@ -314,6 +314,51 @@ return [
             ],
         ]
     ],
+    'puntos' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false
+            ],
+            [
+                'name' => 'punto',
+                'title' => 'Punto'
+            ],
+            [
+                'name' => 'horario',
+                'title' => 'Hora'
+            ],
+            [
+                'name' => 'provincia',
+                'title' => 'Provincia'
+            ],
+            [
+                'name' => 'localidad',
+                'title' => 'Localidad'
+            ],
+            [
+                'name' => 'nombres',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'apellidoPaterno',
+                'title' => 'Apellido'
+            ],
+            [
+                'name' => 'estado',
+                'title' => 'Estado',
+                'callback' => 'estado',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'punto',
+                'sortField' => 'punto',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'oficinas' => [
         'fields' => [
             [

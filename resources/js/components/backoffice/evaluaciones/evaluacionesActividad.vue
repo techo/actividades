@@ -12,10 +12,10 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-md-6 divisor">
-                    <evaluaciones-actividad-stats></evaluaciones-actividad-stats>
+                    <evaluaciones-actividad-stats :id="id" ></evaluaciones-actividad-stats>
                 </div>
                 <div class="col-md-6">
-                    <evaluaciones-actividad-chart></evaluaciones-actividad-chart>
+                    <evaluaciones-actividad-chart :id="id" ></evaluaciones-actividad-chart>
                 </div>
             </div>
         </div>
@@ -27,15 +27,15 @@
 </template>
 
 <script>
-    import store from '../stores/store';
     export default {
         name: "evaluaciones-actividad",
+        props: [ 'id' ],
         data(){
             return {
                 chartLoading: true,
                 statsLoading: true,
-                urlExportar: "/admin/actividades/" + store.state.idActividad + "/exportar-evaluaciones",
-                idActividad: store.state.idActividad,
+                urlExportar: '',
+                idActividad: null,
             }
         },
         computed: {
@@ -44,6 +44,9 @@
             }
         },
         created(){
+            this.urlExportar = "/admin/actividades/" + this.id + "/exportar-evaluaciones";
+            this.idActividad = this.id;
+
             Event.$on('chart-actividad-loaded', this.chartLoaded);
             Event.$on('stats-actividad-loaded', this.statsLoaded);
         },

@@ -35,10 +35,10 @@
 
 <script>
     import BarChart from '../../plugins/BarChart'
-    import store from '../stores/store';
 
     export default {
         name: "evaluaciones-voluntarios-chart",
+        props: [ 'id' ],
         components: { BarChart },
         data(){
             return {
@@ -79,7 +79,7 @@
                 }
             }
         },
-        created(){
+        mounted(){
             this.getData();
         },
         methods: {
@@ -99,36 +99,30 @@
                 this.btnPuntajeTecnicoClicked = true;
             },
             getData: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + store.state.idActividad + "/evaluaciones/voluntarios/chartdata";
-                this.axiosGet(
-                    url,
-                    //success callback
-                    function (data, self) {
-                        self.infoSocial = {
+                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/voluntarios/chartdata")
+                    .then((datos) => { 
+                        this.infoSocial = {
                             labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
                                 datasets: [
                                     {
                                         label: 'Cantidad',
                                         backgroundColor: '#82CFE8',
-                                        data: data.cantidadesSocial
+                                        data: datos.data.cantidadesSocial
                                     }
                                 ]
                             };
-                        self.infoTecnico = {
+                        this.infoTecnico = {
                             labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
                             datasets: [
                                 {
                                     label: 'Cantidad',
                                     backgroundColor: '#82CFE8',
-                                    data: data.cantidadesTecnico
+                                    data: datos.data.cantidadesTecnico
                                 }
                             ]
                         };
                         Event.$emit('chart-voluntarios-loaded');
-                    }
-                    //payload
-                    //error callback
-                );
+                    }).catch((error) => { debugger; });
             }
         }
     }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\Mail\MailInscripcionPagoFueraDeFecha;
 use Carbon\Carbon;
@@ -526,6 +527,79 @@ class InscripcionesConPagoTest extends TestCase
             ->assertSeeText('¡Pago fuera de fecha!')
             ->assertOk();
 
+    }
+
+    /** @test */
+    public function coordinador_puede_preinscribir_con_pago()
+    {
+        $this->withoutExceptionHandling();
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($coordinador)
+            ->conEstado('con pago')
+            ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
+            ->create();
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $datos = [
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro, 
+            'idPersona' => $jose->idPersona,
+            'notificar' => 1,
+        ];
+
+        $this->actingAs($coordinador)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/', $datos)
+            ->assertSessionHasNoErrors()
+            ->assertStatus(200);
+
+        Mail::assertQueued(MailInscripcionFaltaPago::class, 1);
+    }
+
+    /** @test */
+    public function coordinador_puede_preinscribir_con_confirmacion_y_pago()
+    {
+        $this->withoutExceptionHandling();
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($coordinador)
+            ->conEstado('con confirmacion y pago')
+            ->agregarPuntoConInscriptos(0)
+            ->conGrupoRaiz()
+            ->create();
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $datos = [
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro, 
+            'idPersona' => $jose->idPersona,
+            'notificar' => 1,
+        ];
+
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona
+        ]);
+        $i->delete();
+
+        $this->actingAs($coordinador)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/', $datos)
+            ->assertSessionHasNoErrors()
+            ->assertStatus(200);
+
+        Mail::assertQueued(MailInscripcionEsperarConfirmacion::class, 1);
     }
 
 }
