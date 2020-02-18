@@ -238,7 +238,7 @@ return [
 	'terms_and_conditions' => 'terms and conditions',
 
 	//gracias.blade.php
-    'frontend.activity_detail' => 'Details of the activity',
+    'activity_detail' => 'Details of the activity',
     'inscription_confirmed' => 'Inscription confirmed!',
     'already_inscripted' => 'Already inscrited to ',
 	'mail_message' => "We have send you an email with the information about this activity. For watching the activities you are enrolled follow this link ",

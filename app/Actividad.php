@@ -13,7 +13,6 @@ class Actividad extends Model
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
     protected $guarded = ['idActividad'];
-    protected $fillable = ['nombreActividad', 'fechaInicio'];
     protected $dates =
         [
             'fechaInicio', 'fechaFin',
@@ -34,6 +33,11 @@ class Actividad extends Model
     public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idActividad');
+    }
+
+    public function getCantidadPresentesAttribute()
+    {
+        return $this->inscripciones()->where('presente','=',1)->count();
     }
 
     public function membresias()
@@ -219,6 +223,9 @@ class Actividad extends Model
 
         static::deleting(function ($actividad) {});
 
-        static::updating(function ($actividad) { Auditoria::crear($actividad); });
+        static::updating(function ($actividad) { 
+            $actividad->idPersonaModificacion = auth()->user()->idPersona;
+            Auditoria::crear($actividad); 
+        });
     }
 }

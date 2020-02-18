@@ -20,6 +20,7 @@ class ActividadFactory
     public $evaluados = [];
     public $evaluaciones = [];
     public $miembros = [];
+    public $puntos = null;
 
     public function create($atributos_extra = [])
     {
@@ -73,6 +74,13 @@ class ActividadFactory
             }
         }
 
+        if($this->puntos) 
+        {
+            factory(PuntoEncuentro::class, $this->puntos)->create([
+                'idActividad' => $actividad->idActividad
+            ]);
+        }
+
         foreach ($this->evaluados as $persona) 
         {
             factory('App\EvaluacionPersona')->create([ 'idEvaluado' => $persona ]);
@@ -111,6 +119,13 @@ class ActividadFactory
     public function agregarPuntoConInscriptos($cantidad)
     {
         array_push($this->cantidad_inscriptos_por_punto_encuentro, $cantidad);
+
+        return $this;
+    }
+
+    public function agregarPuntos($cantidad)
+    {
+        $this->puntos = $cantidad;
 
         return $this;
     }

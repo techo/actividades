@@ -13,7 +13,7 @@ class OficinasController extends Controller
 {
     public function getOficinas()
     {
-        return Oficina::all();
+        return Oficina::with('pais')->get();
     }
 
     public function index(Request $request)
