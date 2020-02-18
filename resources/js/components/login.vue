@@ -13,31 +13,23 @@
                             </button>
                         </div>
                         <div class="row">
+                            <div class="col-md-6 registro">
+                                <div class="row h-100 justify-content-center align-items-center">
+                                    <div class="col">
+                                        <h1>{{ $t('frontend.not_a_volunteer') }}</h1>
+                                        <br>
+                                        <a
+                                                href="/registro"
+                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
+                                                style="font-weight: 600;"
+                                        >
+                                            {{ $t('frontend.volunteer_me') }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <img src="/img/techo-cyan_235x62.png" alt="Techo"
-                                             height="25" width="95">
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <h2>{{ $t('frontend.login') }}</h2>
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary facebook" @click="registro_facebook()"><i
-                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.login_facebook') }}</a>
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary google" @click="registro_google()"><i
-                                                class="fab fa-google"></i>&nbsp;&nbsp;{{ $t('frontend.login_google') }}</a>
-                                    </div>
-                                </div>
-                                <div class="row pl-4 m-3">
+                                <div class="row pl-3 pr-3 m-2">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
                                             <div class="form-group">
@@ -68,7 +60,7 @@
                                                 </div>
                                             </div>
                                             <div class="row h-100 align-items-center">
-                                                <div class="col-4">
+                                                <div class="col-6">
                                                     <button
                                                             id="btnLogin"
                                                             v-on:click="login"
@@ -78,25 +70,25 @@
                                                         {{ $t('frontend.login') }}
                                                     </button>
                                                 </div>
-                                                <div class="col-8 text-right">
-                                                    <a href="/password/reset">{{ $t('frontend.forget_password') }}</a>
+                                                <div class="col-6 text-right">
+                                                    <a href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
+
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 registro">
-                                <div class="row h-100 justify-content-center align-items-center">
-                                    <div class="col">
-                                        <h1>{{ $t('frontend.not_a_volunteer') }}</h1>
-                                        <br>
-                                        <a
-                                                href="/registro"
-                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
-                                        >
-                                            {{ $t('frontend.volunteer_me') }}
-                                        </a>
+                                <hr class="ml-5 mr-5">
+                                <div class="row pl-5 mt-4">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary tag-social facebook" @click="registro_facebook()"><i
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.login_facebook') }}</a>
+                                    </div>
+                                </div>
+                                <div class="row pb-3 pl-5">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-primary tag-social google" @click="registro_google()"><i
+                                                class="fab fa-google"></i>&nbsp;&nbsp;{{ $t('frontend.login_google') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -418,6 +410,12 @@
      font-size: 1.4rem;
     }
 
+    .tag-social {
+        line-height: 1.33;
+        font-size: 12px;
+        width: 269px;
+    }
+
     .registro {
         background-color: #0092dd;
         font-weight: bold;
@@ -432,12 +430,18 @@
             padding-top: 10%;
             padding-bottom: 10%;
         }
+        .tag-social {
+            width:  fit-content;
+            font-size: .75rem;
+        }
     }
 
     .registro h1{
-    vertical-align: middle;
-     font-family: Montserrat, sans-serif;
+        vertical-align: middle;
+        font-family: Montserrat, sans-serif;
+        font-size: 2rem;
     }
+
     .dropdown-item {
         font-family: Montserrat, sans-serif;
         text-transform: uppercase;

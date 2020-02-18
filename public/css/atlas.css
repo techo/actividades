@@ -63,7 +63,6 @@ code {
     background-color: #004d92  !important;
     color: #ffffff  !important;
     font-weight: bold;
-    width: 269px;
     text-align: left;
     padding: 5px;
     margin: 5px;
@@ -74,11 +73,9 @@ code {
     background-color: #e53935 !important;
     color: #ffffff  !important;
     font-weight: bold;
-    width: 269px;
     text-align: left;
     padding: 5px;
     margin: 5px;
-
 }
 
 
@@ -228,7 +225,7 @@ a {
     text-shadow: none;
 }
 
-#login-modal a {
+#login-modal .forget {
     font-family: Montserrat, sans-serif;
     font-size: 12px;
     font-weight: 600;
@@ -240,6 +237,7 @@ a {
     color: #0092dd;
     text-transform: uppercase;
 }
+
 .techo-btn-azul {
     background-color: #0092dd;
     color: #ffffff;
