@@ -13,13 +13,7 @@ class IncluyeCampoPaisEnOficinas extends Migration
      */
     public function up()
     {
-        Schema::table('atl_oficinas', function (Blueprint $table) {
-            $table->integer('id_pais')->unsigned()->nullable();
-        });
-
-        Schema::table('atl_oficinas', function (Blueprint $table){
-            $table->integer('id_pais')->nullable(false)->change();
-        });
+       
     }
 
     /**
@@ -29,8 +23,6 @@ class IncluyeCampoPaisEnOficinas extends Migration
      */
     public function down()
     {
-        Schema::table('atl_oficinas', function (Blueprint $table) {
-                $table->dropColumn('id_pais');
-        });
+      
     }
 }
