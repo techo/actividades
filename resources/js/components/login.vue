@@ -407,7 +407,7 @@
      border: none;
      color: #0092dd;
      background-color: #ffffff;
-     font-size: 1.4rem;
+     font-size: 1rem;
     }
 
     .tag-social {
