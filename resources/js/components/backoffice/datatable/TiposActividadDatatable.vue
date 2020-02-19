@@ -109,6 +109,9 @@ export default {
         ? ''
         : moment(value, 'YYYY-MM-DD').format(fmt)
     },
+    traducir (value){
+      return this._i18n.t('frontend.'+ value)
+    },
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);
       this.$refs.paginationInfo.setPaginationData(paginationData);

@@ -34,7 +34,7 @@
                                     <label for="pais">Categoría</label>
                                     <v-select
                                             :options="dataCategorias"
-                                            label="nombre"
+                                            label="traduccion"
                                             placeholder="Seleccione"
                                             name="categoria"
                                             id="categoria"
@@ -105,7 +105,12 @@
             },
             getCategorias: function () {
                 axios.get("/ajax/categorias")
-                    .then((respuesta) => {this.dataCategorias = respuesta.data})
+                    .then((respuesta) => {
+                        this.dataCategorias = respuesta.data
+                        for (let [i,o] of this.dataCategorias.entries()){
+                            this.dataCategorias[i].traduccion = this._i18n.t('frontend.'+o.nombre)
+                        }
+                    })
                     .catch(() => {debugger});
             },
             getTipoActividad(id){

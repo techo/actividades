@@ -367,8 +367,8 @@ return [
                 'visible' => false
             ],
             [
-                'name' => 'nombre',
-                'sortField' => 'nombre',
+                'name' => 'oficina',
+                'sortField' => 'oficina',
                 'title' => 'Nombre'
             ],
             [
@@ -379,8 +379,8 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'nombre',
-                'sortField' => 'nombre',
+                'field' => 'oficina',
+                'sortField' => 'oficina',
                 'direction' => 'asc'
             ],
         ]
@@ -400,7 +400,8 @@ return [
             [
                 'name' => 'categoria',
                 'sortField' => 'categoria',
-                'title' => 'Categoría'
+                'title' => 'Categoría',
+                'callback' => 'traducir'
             ],
         ],
         'sortOrder' => [
