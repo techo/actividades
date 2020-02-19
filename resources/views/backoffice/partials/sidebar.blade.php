@@ -123,7 +123,10 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
-                        <a href="{{ config('app.docs') }}" target="_blank">Wiki</a>
+                        <a href="https://github.com/techo/voluntariado-eventual/wiki" target="_blank">Wiki</a>
+                    </li>
+                    <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
+                        <a href="https://github.com/techo/voluntariado-eventual/issues/new/choose" target="_blank">Soporte</a>
                     </li>
                 </ul>
             </li>
