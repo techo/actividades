@@ -7,6 +7,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
+                                <p class="text-muted">
+                                    {{ $t('frontend.my_score_description') }}
+                                </p>
                                 <div class="form-group">
                                     <label for="slider">{{ $t('frontend.technical_score') }}
                                     <div class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
@@ -32,8 +35,10 @@
                                            v-model="puntajeSocial">
                                 </div>
                                 <p class="text-muted">
-                                    {{ $t('frontend.my_score_description') }}
+                                    {{ $t('frontend.my_score_contact') }}
                                 </p>
+                                <a href="/perfil/actividades" class="btn btn-primary" >{{ $t('frontend.my_score_feedback') }}</a>
+
                             </div>
 
                         </div>
