@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - inscripciones')
+@section('page_title', $actividad->nombreActividad . ' - Inscripciones')
 
 @section('content')
 <div class="nav-tabs-custom">

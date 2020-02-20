@@ -38,7 +38,7 @@
                         </a>
                     </div>
                     <div class="col-md-3 text-center">
-                        <a class="btn btn-lg" data-toggle="tooltip" title="Link copiado" data-placement="top" onclick="mostrarTooltip()" href="#" id="copiar_url" data-clipboard-text="{{ $url }}">
+                        <a class="btn btn-lg" data-toggle="tooltip" title="Link copiado" data-placement="top" href="#" id="copiar_url" data-clipboard-text="{{ $url }}">
                             <i class="fa fa-clipboard fa-2x" style="color:black"></i>
                             <br>
                             <h5>{{ __('frontend.copy_link') }}</h5>
@@ -49,5 +49,3 @@
         </div>
     </div>
 </div>
-
-
