@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PerfilResource;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class PerfilController extends Controller
@@ -21,6 +22,15 @@ class PerfilController extends Controller
         $fields = json_encode($datatableConfig['fields']);
 	    $sortOrder = json_encode($datatableConfig['sortOrder']);
 		return view('perfil.actividades', compact('fields', 'sortOrder'));
+	}
+
+	public function evaluacion(Request $request) {
+		$persona = Auth::user();
+        $evaluacionPersonal = \App\EvaluacionPersona::where('idEvaluado', '=', $persona->idPersona)
+        	->select(DB::raw('ROUND(avg(puntajeSocial),1) as puntajeSocial,  ROUND(avg(puntajeTecnico),1) as puntajeTecnico'))
+        	->get();
+
+		return view('perfil.evaluaciones', compact('evaluacionPersonal'));
 	}
 
 	public function cambiar_email()

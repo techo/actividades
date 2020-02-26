@@ -126,6 +126,9 @@
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a class="nav-link text-uppercase" v-on:click="evaluacion">{{ $t('frontend.my_score') }}</a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="perfil">{{ $t('frontend.profile') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated && this.verAdmin">
@@ -180,6 +183,14 @@
                                     v-on:click="misactividades"
                             >
                                 {{ $t('frontend.my_activities') }}</button>
+                            <button
+                                    class="dropdown-item"
+                                    id="btn-evaluacion"
+                                    type="button"
+                                    v-on:click="evaluacion"
+                            >
+                                {{ $t('frontend.my_score') }}
+                            </button>
                             <button
                                     class="dropdown-item"
                                     id="btn-perfil"
@@ -309,6 +320,9 @@
             },
             misactividades: function() {
               window.location.href = '/perfil/actividades';
+            },
+            evaluacion: function() {
+              window.location.href = '/perfil/evaluacion';
             },
             login: function () {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

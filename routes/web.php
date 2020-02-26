@@ -126,6 +126,7 @@ Route::get('email/resend', 'Auth\VerificationController@resend')->name('verifica
 Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
     Route::get('/', 'PerfilController@show')->middleware('verified');
     Route::get('/actividades', 'PerfilController@actividades');
+    Route::get('/evaluacion', 'PerfilController@evaluacion');
     Route::get('/cambiar_email', 'PerfilController@cambiar_email');
     Route::post('/actualizar_email', 'PerfilController@actualizar_email');
 });

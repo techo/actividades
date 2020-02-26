@@ -278,8 +278,15 @@ return [
 	// evaluarPersona.vue
 	'technical_score' => 'Technical Score',
 	'technical_score_description' => 'Knowledge about the task',
-	'social_score' => 'Technical Score',
+	'social_score' => 'Social Score',
 	'social_score_description' => 'Skills to communicate and empathize with others',
+
+
+	//perfil/evaluacion.vue//perfil/evaluacion.vue
+	'my_score' => 'My score',
+	'my_score_description' => 'This score is an average of all the activities you have attended',
+	'my_score_contact' => 'If you have any doubt contact your coordinator ;)',
+	'my_score_feedback' => 'Give your Feedback now!',
 
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Give feedback to your peers',

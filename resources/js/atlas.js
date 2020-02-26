@@ -27,6 +27,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import EvaluarActividad from './components/evaluaciones/evaluarActividad';
+import EvaluacionPersonal from './components/perfil/evaluacion';
 import ContenedorEvaluaciones from './components/evaluaciones/contenedorEvaluaciones';
 import DataTable from './components/datatable/DataTable';
 import BtnMisActividades from './components/perfil/btnMisActividades';
@@ -64,6 +65,7 @@ Vue.component('mis-actividades', MisActividades);
 Vue.component('datepicker', Datepicker);
 Vue.component('simplert', Simplert);
 Vue.component('evaluar-actividad', EvaluarActividad);
+Vue.component('evaluacion-personal', EvaluacionPersonal);
 Vue.component('contenedor-evaluaciones', ContenedorEvaluaciones);
 Vue.component('datatable', DataTable);
 Vue.component('btn-mis-actividades', BtnMisActividades);
