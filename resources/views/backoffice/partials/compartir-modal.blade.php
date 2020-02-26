@@ -56,3 +56,16 @@
 </div>
 
 
+@push('additional_scripts')
+    <script>
+        function mostrarTooltip(){
+            $("#copiar_url").tooltip({trigger: 'manual'});
+            $("#copiar_url").tooltip('show');
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    new ClipboardJS('#copiar_url');
+</script>
+@endpush
