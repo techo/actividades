@@ -109,7 +109,7 @@ class EvaluacionesController extends Controller
             ->select(
                 [
                     'Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno', 'Persona.dni',
-                    'Grupo_Persona.rol', 'Grupo_Persona.idGrupo'
+                    'Inscripcion.rol', 'Grupo_Persona.idGrupo'
                 ]
             )
             ->where('Inscripcion.presente', '=', 1)
