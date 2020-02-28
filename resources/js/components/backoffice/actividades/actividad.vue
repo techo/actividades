@@ -462,7 +462,7 @@
                 oficinas: [],
                 tipos: [],
                 categorias: [],
-                calculaFechas: true,
+                calculaFechas: false,
                 edicion: false,
             }
         },
@@ -562,14 +562,16 @@
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
                 
-                this.actividad.calculaFechas = this.calculaFechas;
+                (this.calculaFechas) ?  this.actividad.calculaFechas = 1 :  this.actividad.calculaFechas = 0 ;
                 
                 this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaInicioEvaluaciones = moment(this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFinEvaluaciones = moment(this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
-                this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
-
+                
+                if (this.actividad.pago==1){
+                    this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
+                }
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
