@@ -2,6 +2,7 @@
   <div class="col-md-4">
     <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
         <div class="img-tarjeta">
+            <div class="card-top" v-bind:style="{backgroundColor:actividad.tipo.color}" ></div>
             <span
                 v-show="actividad.estadoInscripcion"
                 :class="{ 
@@ -18,11 +19,11 @@
             <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
             <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
             <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
-            <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
+            <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
         </div>
       <div class="card-body px-0">
-        <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p>
         <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
+        <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p>
         <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
@@ -87,6 +88,11 @@
         cursor: pointer;
         border: 0px;
         text-align: center;
+    }
+
+    div.card-top {
+        height: 40px;
+        border-radius: 4px 4px 0 0;
     }
 
     .img-tarjeta {
