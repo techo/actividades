@@ -184,7 +184,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
-    Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades');
+    Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
     
     //vista de actividad
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
@@ -274,9 +274,9 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones-sociales', 'backoffice\EstadisticasController@evaluaciones_sociales');
     Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
 
-    Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones');
-    Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales');
-    Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales');
+    Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones')->middleware('role:admin');;
+    Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales')->middleware('role:admin');;
+    Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales')->middleware('role:admin');;
 
     Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
     Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');
