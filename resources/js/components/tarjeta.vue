@@ -22,8 +22,8 @@
             <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
         </div>
       <div class="card-body px-0">
-        <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
         <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p>
+        <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
         <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
