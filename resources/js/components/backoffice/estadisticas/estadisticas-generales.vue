@@ -17,7 +17,7 @@
 			<div class="tab-content" style="min-height: 500px">
 				<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarInscriptos()" >Descargar datos <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarInscriptos()" >Descargar Inscriptos <i class="fa fa-download"></i></button>
 					</div>
 
 					<div style="height: 200px" >
@@ -31,7 +31,8 @@
 				</div>
 				<div id="evaluaciones" class="tab-pane" :class="{'active': display.evaluaciones}" >
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarEvaluaciones()" >Descargar datos <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarEvaluaciones()" >Descargar Evaluaciones <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarEvaluadores()" >Descargar Evaluadores <i class="fa fa-download"></i></button>
 					</div>
 
 					<div style="height: 200px" >
@@ -266,6 +267,29 @@ export default {
 				const link = document.createElement('a');
 				link.href = url;
 				link.setAttribute('download', 'evaluacionesGenerales.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				this.loading = false;
+			})
+			.catch((error) => { debugger; });
+		},
+		exportarEvaluadores: function() {
+			this.loading = true;
+			//https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743
+			axios({
+				url: '/admin/ajax/estadisticas/evaluadores/exportar', 
+				params: this.filtros,
+				responseType: 'blob',
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+				}
+			})
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'evaluadoresGenerales.xlsx');
 				document.body.appendChild(link);
 				link.click();
 				this.loading = false;

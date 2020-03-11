@@ -8,6 +8,7 @@ use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
 use App\Exports\EvaluacionesGeneralesExport;
+use App\Exports\EvaluadoresGeneralesExport;
 use App\Exports\InscripcionesUsuarioExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\InscripcionesGeneralExport;
@@ -67,6 +68,12 @@ class ReportController extends Controller
         return Excel::download($evaluaciones, 'evaluaciones.xlsx');
     }
     
+    public function exportarEvaluadoresGenerales(Request $request)
+    {
+        $evaluadores = new EvaluadoresGeneralesExport($request);
+        return Excel::download($evaluadores, 'evaluadores.xlsx');
+    }
+
     public function exportarEvaluacionesPersonas($id)
     {
         $actividad = Actividad::find($id);
