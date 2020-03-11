@@ -13,7 +13,7 @@
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="vacio" class="loading" style="text-align: center">
-            La búsqueda no tiene resultados
+            {{ $t('frontend.empty_search') }}
         </div>
     </span>
 </template>

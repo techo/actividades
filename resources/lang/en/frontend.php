@@ -60,6 +60,8 @@ return [
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 
+	'empty_search' => 'There is no activity with these filters',
+
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Volunteer participations',
 	'mobilized_volunteers' => 'Mobilized volunteers',
