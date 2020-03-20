@@ -141,9 +141,10 @@ class Actividad extends Model
         return $this->belongsTo(Persona::class, 'idPersonaModificacion', 'idPersona');
     }
 
-    public function coordinador()
+    public function coordinadores()
     {
-        return $this->belongsTo(Persona::class, 'idCoordinador', 'idPersona');
+        return $this->hasMany(Coordinador::class, 'idActividad');
+        // return $this->belongsTo(Persona::class, 'idCoordinador', 'idPersona');
     }
 
     public function scopePersonaInscripta($query, $idPersona) {
