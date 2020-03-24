@@ -12,6 +12,7 @@ use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Pais;
 use App\Persona;
 use App\PuntoEncuentro;
+use App\Coordinador;
 use App\Rules\FechaFinActividad;
 use App\UnidadOrganizacional;
 use Carbon\Carbon;
@@ -147,19 +148,29 @@ class ActividadesController extends Controller
         return response()->json($id);
     }
 
+    public function eliminarCoordinador(Actividad $actividad, Coordinador $coordinador)
+    {    
+        $coordinador->delete();
+    }
+
     public function guardarCoordinador(Actividad $actividad, Persona $persona)
     {    
-        $actividad->idCoordinador = $persona->idPersona;
-        $actividad->save();
+        $coordinador = new Coordinador();
+        $coordinador->idPersona = $persona->idPersona;
+        $actividad->coordinadores()->save($coordinador);
         $persona->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')';
         return $persona;
     }
 
-    public function coordinador(Actividad $id)
+    public function coordinadores(Actividad $id)
     {    
-        $persona = $id->coordinador;
-        $persona->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')';
-        return $persona;
+
+        $coordinadores = $id->coordinadores;
+        // dd($coordinadores[0]->persona);
+        foreach ($coordinadores as $coordinador) {
+            $coordinador->nombre = $coordinador->persona->nombres . ' ' . $coordinador->persona->apellidoPaterno. ' (' . $coordinador->persona->mail . ')';
+        }
+        return $coordinadores;
     }
 
     public function puntos(Actividad $id)

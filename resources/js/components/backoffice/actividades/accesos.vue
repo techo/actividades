@@ -2,11 +2,10 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Coordinador de la actividad</h3>
+                <h3 class="box-title">Coordinadores de la actividad</h3>
                 <p class="help-block">
                     <ul>
-                        <li>El coordinador de la actividad es la persona de contacto para los inscriptos, además tiene permisos para modificar y gestionar la actividad.</li>
-                        <li>Próximamente una actividad va a poder tener más de un coordinador</li>
+                        <li>Lxs coordinadores de la actividad son las personas de contacto para lxs inscriptxs, además tienen permisos para modificar y gestionar la actividad.</li>
                     </ul>
                 </p>
             </div>
@@ -32,6 +31,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <ul>
+                        <li v-for="coordinador in coordinadores" :key='coordinador.idPersona'>
+                            {{ coordinador.nombre }} 
+                            <span class="input-group-btn">
+                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="'Eliminar'"></button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -49,6 +58,7 @@
             return {
                 persona: null,
                 personas: [],
+                coordinadores: [],
                 enviado: false,
             }
         },
@@ -74,14 +84,20 @@
             guardar(){
                 axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + this.persona.idPersona)
                     .then((datos) => { 
-                        this.persona = datos.data;
+                        this.persona = null;
                         this.enviado = true;
+                        this.coordinadores = this.getPersona();
                     })
                     .catch((error) => { debugger; });
             },
             getPersona(){
                 axios.get('/admin/ajax/actividades/' + this.id + '/accesos')
-                    .then((datos) => { this.persona = datos.data; })
+                    .then((datos) => { this.coordinadores = datos.data; })
+                    .catch((error) => { debugger; });
+            },
+            eliminar(idCoordinador){
+                axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + idCoordinador + '/borrar')
+                    .then((datos) => { this.coordinadores = this.getPersona(); })
                     .catch((error) => { debugger; });
             },
             onSearch: _.debounce( function (text, loading) {
