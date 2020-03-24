@@ -62,7 +62,9 @@
 		</div>
 			<div class="row">
 				<div class="col-md-12">
-                    {{ isset($actividad->coordinador) ? $actividad->coordinador->nombreCompleto :  __('frontend.not_defined') }}
+                    @foreach($actividad->coordinadores as $coordinador)
+                        <li> {{$coordinador->persona->nombres}} {{$coordinador->persona->apellidoPaterno }} </li>
+                    @endforeach
 				</div>
 			</div>
 		<hr>
