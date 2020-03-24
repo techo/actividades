@@ -31,8 +31,9 @@
             </p>
             <p>
                 <h5>{{ __('frontend.coordinator') }}</h5>
-                <p>{{ $actividad->coordinador->nombres  }} {{ $actividad->coordinador->apellidoPaterno }}</p>
-                <p>{{ $actividad->coordinador->mail  }}</p>
+                @foreach($actividad->coordinadores as $coordinador)
+                        {{ $coordinador->persona->nombres }} {{ $coordinador->persona->apellidoPaterno }} 
+                @endforeach
             </p>
             
         </div>
