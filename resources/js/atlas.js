@@ -34,6 +34,10 @@ import BtnMisActividades from './components/perfil/btnMisActividades';
 import TarjetaHorizontal from './components/perfil/tarjeta-horizontal';
 import CookiesBar from './components/cookies-bar';
 import EstadisticasPublicas from './components/estadisticas-publicas';
+import avisoModal from './components/aviso-modal'
+Vue.component('aviso-modal', avisoModal);
+
+
 
 
 import axios from 'axios';
