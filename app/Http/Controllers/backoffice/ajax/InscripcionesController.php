@@ -315,8 +315,9 @@ class InscripcionesController extends BaseController
             'fechaInscripcion'  => Carbon::now(),
             'idPersonaModificacion' => auth()->user()->idPersona,
             'idPuntoEncuentro'  => $inscripcion['idPuntoEncuentro'],
-            'pago'            => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
-            'presente'            => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
+            'rol'               => array_key_exists('rol', $inscripcion) ? $inscripcion['rol'] : '',
+            'pago'              => empty($inscripcion['pago']) ? 0 : $inscripcion['pago'],
+            'presente'          => empty($inscripcion['presente']) ? 0 : $inscripcion['presente'],
         ];
 
         return Inscripcion::create($data);
