@@ -63,13 +63,14 @@ class ActividadesPolicy
 
     public function showActividadCoordinador(Persona $user, Actividad $actividad)
     {
-        return $user->idPersona == $actividad->idCoordinador && $user->hasPermissionTo('ver_mis_actividades');
+        return $user->idPersona == $actividad->coordinadores->contains('idPersona', $user->idPersona) && $user->hasPermissionTo('ver_mis_actividades');
     }
 
     public function ver(Persona $user, Actividad $actividad)
     {   
         return (
-                    $user->idPersona == $actividad->idCoordinador || 
+                    $actividad->coordinadores->contains('idPersona', $user->idPersona)
+                    ||
                     $user->idPersona == $actividad->idPersonaCreacion
                 ) && $user->hasPermissionTo('ver_mis_actividades') 
                 || 
@@ -88,7 +89,7 @@ class ActividadesPolicy
         return $user->hasPermissionTo('borrar_actividad') &&
             (
                 ($actividad->idPersonaModificacion == $user->idPersona ||
-                    $actividad->idCoordinador == $user->idPersona
+                    $actividad->coordinadores->contains('idPersona', $user->idPersona)
                 ) ||
                 $user->hasRole('admin')
             );
@@ -100,7 +101,7 @@ class ActividadesPolicy
         return $user->hasPermissionTo('editar_actividad') &&
             (
                 ($actividad->idPersonaModificacion == $user->idPersona ||
-                    $actividad->idCoordinador == $user->idPersona
+                    $actividad->coordinadores->contains('idPersona', $user->idPersona)
                 ) ||
                 $user->hasRole('admin')
             );
