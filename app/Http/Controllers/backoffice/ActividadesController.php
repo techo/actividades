@@ -155,7 +155,12 @@ class ActividadesController extends Controller
 
     public function eliminarCoordinador(Actividad $actividad, Coordinador $coordinador)
     {    
-        $coordinador->delete();
+        if ($actividad->coordinadores->count() > 1){
+            $coordinador->delete();
+        } else {
+            Session::flash('mensaje', 'La actividad debe tener al menos 1 coordinador');
+        }
+        return redirect()->back();
     }
 
     public function guardarCoordinador(Actividad $actividad, Persona $persona)

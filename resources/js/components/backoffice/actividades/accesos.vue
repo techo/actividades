@@ -5,7 +5,10 @@
                 <h3 class="box-title">Coordinadores de la actividad</h3>
                 <p class="help-block">
                     <ul>
-                        <li>Lxs coordinadores de la actividad son las personas de contacto para lxs inscriptxs, además tienen permisos para modificar y gestionar la actividad.</li>
+                        <li>Estas son las personas de contacto para lxs inscriptxs, además tienen permisos para modificar y gestionar la actividad.</li>
+                        <li> 
+                        Cada actividad tiene que tener al menos UN Coordinador/a
+                        </li>
                     </ul>
                 </p>
             </div>
