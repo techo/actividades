@@ -33,6 +33,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             ->leftJoin('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->leftJoin('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
             ->leftJoin('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
+            ->leftJoin('Coordinadores', 'Coordinadores.idActividad', '=', 'Actividad.idActividad')
             ->select(
                 [
                     'Actividad.idActividad AS id',
@@ -51,7 +52,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
 
         $result->where(function ($result) {
             $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);
-            $result->orWhere('idCoordinador', Auth::user()->idPersona);
+            $result->orWhere('Coordinadores.idPersona', Auth::user()->idPersona);
         });
 
         if ($this->filter) {
