@@ -81,6 +81,14 @@ class ActividadFactory
             ]);
         }
 
+        if($this->coordinador) 
+        {
+            factory(Coordinador::class)->create([
+                'idActividad' => $actividad->idActividad,
+                'idPersona' => $this->coordinador
+            ]);
+        }
+
         foreach ($this->evaluados as $persona) 
         {
             factory('App\EvaluacionPersona')->create([ 'idEvaluado' => $persona ]);
