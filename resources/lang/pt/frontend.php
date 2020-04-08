@@ -59,6 +59,9 @@ return [
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bemvindo',
+	
+	'empty_search' => 'There is no activity with those filters',
+
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Volunteer participations',

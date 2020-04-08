@@ -295,10 +295,10 @@ class ActividadesController extends Controller
     {
         $actividad = Actividad::findOrFail($id);
 
-        if ($actividad->fechaFin < Carbon::today()) {
-            Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
-            return redirect()->back();
-        }
+        // if ($actividad->fechaFin < Carbon::today()) {
+        //     Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
+        //     return redirect()->back();
+        // }
 
 
         try {

@@ -45,7 +45,7 @@ class RegistroUsuario extends Notification implements ShouldQueue
 
         return (new MailMessage)
             ->view('emails.notificacionRegistroUsuario', ['url_verificacion' => $this->verificationUrl($notifiable), 'persona' => $notifiable ])
-            ->subject('TECHO: Te registraste en la plataforma');
+            ->subject(__('email.account_registration_subject'));
     }
 
     /**

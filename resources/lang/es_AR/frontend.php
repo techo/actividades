@@ -60,6 +60,8 @@ return [
 	'view_activities'  =>  'Anotame',
 	'welcome' => 'Bienvenido',
 
+	'empty_search' => 'No hay Actividades Abiertas con estos filtros',
+
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Voluntades movilizadas',
 	'mobilized_volunteers' => 'Voluntarios movilizadas',
@@ -284,7 +286,7 @@ return [
 	//perfil/evaluacion.vue
 	'my_score' => 'Mi Evaluación',
 	'my_score_description' => 'Esta evaluación es un promedio sobre todas las actividades en las que participaste',
-	'my_score_contact' => 'Ante cualquier duda contactate con el tu coordinador de personas de la sede en que participas ;)',
+	'my_score_contact' => 'Ante cualquier duda contactate con el coordinador de personas, de la sede en que participas ;)',
 	'my_score_feedback' => 'Evalua ahora!',
 
 

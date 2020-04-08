@@ -70,6 +70,7 @@ return [
 
 
 	// notificacionRegistracionUsuario
+	'account_registration_subject' => 'Howdy, Welcome Abroad!',
 	'account_registration_title' => 'Welcome abroad our activities Platform!',
 	'account_registration_1' => "You're already registered in our platform, now we need you to validate your email in the next link:",
 	'account_registration_2' => 'Once you validate your account you can access the platform to know and apply to our activities here ',
@@ -87,7 +88,7 @@ return [
 	'activity_reminder_1' => 'You are enrrolled to ',
 
 	// template 
-	'template_1' => "For TECHO it's very important that you stay informed about nes activities. You can always do that at our site ",
+	'template_1' => "For TECHO it's very important that you stay informed about our activities. You can always do that at our site ",
 
 	//VerificarMail
 	'verificar_mail_1' => "We have send this to verify your account: ",
