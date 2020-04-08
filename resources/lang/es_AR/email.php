@@ -78,7 +78,7 @@ return [
 
 
 	// notificacionRegistracionUsuario
-	'account_registration_subject' => 'Ultimo Paso: Verifica tu cuenta!'
+	'account_registration_subject' => 'Ultimo Paso: Verifica tu cuenta!',
 	'account_registration_title' => 'Bienvenido a la plataforma de actividades de TECHO',
 	'account_registration_1' => 'Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email:',
 	'account_registration_2' => 'Una vez verificada tu cuenta enterate de toda la oferta de voluntariado visitando la ',
