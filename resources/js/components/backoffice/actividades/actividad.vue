@@ -637,8 +637,6 @@
                 axios.get('/ajax/categorias/' + id + '/tipos')
                     .then((datos) => { 
                         this.tipos = datos.data; 
-
-                        }
                     }).catch((error) => { debugger; });
             },
             getCategorias(){
