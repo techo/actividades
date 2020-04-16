@@ -266,6 +266,7 @@ return [
 	// evaluaciones/index.blade.php
 	'feedback_of' => 'Feedback of',
 
+
 	// evaluarActividad.vue
 	'feedback_text' => 'Your feedback help us improve as an organization and make our activities more reewarding to you.',
 	'activity_feedback' => 'Give feedback about',
@@ -297,5 +298,8 @@ return [
 	'search_volunteer' => 'Name or surname',
 	'type_to_search' => 'Start typing to search.',
 	'include_peer' => 'Include peer in my feedback',
+
+	//aviso_modal
+	'aviso_modal' => 'Continue to Online Activities',
 
 ];

@@ -298,4 +298,7 @@ return [
 	'type_to_search' => 'Empezá a escribir para buscar.',
 	'include_peer' => 'Incluir en mis evaluaciones',
 
+	//aviso_modal
+	'aviso_modal' => 'Ver Actividades Virtuales',
+
 ];
