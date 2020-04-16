@@ -247,6 +247,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@getOficinas');
+    Route::get('/ajax/oficinas/pais/{idpais}', 'backoffice\ajax\OficinasController@getOficinasPais');
     Route::get('/ajax/configuracion/oficinas', 'backoffice\ajax\OficinasController@index');
 
     Route::get('/ajax/usuarios', 'backoffice\ajax\UsuariosController@index')->middleware('permission:ver_usuarios');

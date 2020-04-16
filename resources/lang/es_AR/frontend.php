@@ -57,7 +57,9 @@ return [
 	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
+	'online_events' => 'Virtual',
 	'view_activities'  =>  'Anotame',
+
 	'welcome' => 'Bienvenido',
 
 	'empty_search' => 'No hay Actividades Abiertas con estos filtros',

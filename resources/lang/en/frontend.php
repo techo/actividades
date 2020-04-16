@@ -57,6 +57,7 @@ return [
 	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
 	'especial_events' => 'Special events',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
+	'online_events' => 'Online',
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 

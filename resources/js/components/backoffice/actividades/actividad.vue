@@ -3,7 +3,7 @@
         <div class="box">
 
             <div class="box-header with-border">
-                <h3 class="box-title">Básica</h3>
+                <h3 class="box-title"></h3>
             </div>
 
             <div class="box-body">
@@ -62,10 +62,21 @@
                     </div>
 
                     <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
+                            <label for="pais">País</label>
+                            <select name="idPais" class="form-control" v-model="actividad.idPais" required 
+                            @change="getProvincias($event);getOficinas($event);actividad.idProvincia=null;actividad.idOficina=null; actividad.idLocalidad=null;" 
+                            :disabled="!edicion" >
+                                <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idPais }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">Oficina</label>
                             <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
-                                <option v-text="oficina.pais.nombre + ' - ' + oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
                             <span class="help-block">{{ errors.idOficina }}</span>
                         </div>
@@ -212,26 +223,16 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
-                            <label for="lugar">Lugar</label>
+                            <label for="lugar">Lugar / Url </label>
                             <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.lugar }}</span>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
-                            <label for="pais">País</label>
-                            <select name="idPais" class="form-control" v-model="actividad.idPais" required @change="getProvincias($event);actividad.idProvincia=null;actividad.idLocalidad=null;" :disabled="!edicion" >
-                                <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
-                            </select>
-                            <span class="help-block">{{ errors.idPais }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
                             <label for="provincia">Provincia</label>
                             <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
@@ -241,7 +242,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
                             <label for="localidad">Localidad</label>
                             <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
@@ -444,8 +445,8 @@
                     fechaLimitePago: null,
                 },
                 horas: {
-                    fechaInicio: null,
-                    fechaFin: null,
+                    fechaInicio: "19:00:00",
+                    fechaFin: "21:00:00",
 
                     fechaInicioInscripciones: null,
                     fechaFinInscripciones: null,
@@ -604,8 +605,7 @@
                 }
             },
             getRelaciones(){
-                this.getPaises();
-                this.getOficinas();
+                this.getPaises();                
                 this.getTipos(1);
                 this.getCategorias();
             },
@@ -630,12 +630,16 @@
                     .then((datos) => { this.localidades = datos.data; }).catch((error) => { debugger; });
             },
             getOficinas(){
-                axios.get('/admin/ajax/oficinas')
+                axios.get('/admin/ajax/oficinas/pais/' + this.actividad.idPais)
                     .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
             },
             getTipos(id){
                 axios.get('/ajax/categorias/' + id + '/tipos')
-                    .then((datos) => { this.tipos = datos.data; }).catch((error) => { debugger; });
+                    .then((datos) => { 
+                        this.tipos = datos.data; 
+
+                        }
+                    }).catch((error) => { debugger; });
             },
             getCategorias(){
                 axios.get('/ajax/categorias/')
