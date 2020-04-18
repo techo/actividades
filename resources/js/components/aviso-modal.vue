@@ -3,7 +3,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title centered">SEGUIMOS VIRTUAL</h4>
+                    <h4 class="modal-title centered">ACTIVIDADES VIRTUALES</h4>
                     <button type="button" 
                             class="close" 
                             data-dismiss="modal" 

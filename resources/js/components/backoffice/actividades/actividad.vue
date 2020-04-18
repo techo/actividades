@@ -217,7 +217,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Ubicación</h3>
-                <span class="help-block">La ubicación es el lugar físico donde se va a realizar la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
+                <span class="help-block">La ubicación es el lugar físico o vitual donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
             </div>
             <div class="box-body">
 
@@ -341,7 +341,7 @@
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
                             <label for="mensajeInscripcion">Mensaje</label>
                             <p class="help-block">Este mensaje llegar al inscripto al confirmarse su participación.</p>
-                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" ></textarea>
+                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" >Has sido Confirmado para la Actividad!</textarea>
                             <span class="help-block">{{ errors.mensajeInscripcion }}</span>
                         </div>
                     </div>
