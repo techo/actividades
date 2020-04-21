@@ -383,7 +383,7 @@
         'user.apellido': function() { this.validar_data('apellido') },
         'user.nacimiento': function() { this.validar_data('nacimiento') },
         'user.sexo': function() { this.validar_data('sexo') },
-        'user.dni': function() { this.validar_data('dni') },
+        // 'user.dni': function() { this.validar_data('dni') },
         'user.telefono': function() { this.validar_data('telefono') },
         'user.pais': function() { 
             this.validar_data('pais') 

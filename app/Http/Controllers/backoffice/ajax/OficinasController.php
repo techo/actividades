@@ -15,6 +15,10 @@ class OficinasController extends Controller
     {
         return Oficina::with('pais')->get();
     }
+    public function getOficinasPais($idpais)
+    {
+        return Oficina::where('id_pais', $idpais)->get();
+    }
 
     public function index(Request $request)
     {
