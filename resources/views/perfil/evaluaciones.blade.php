@@ -10,7 +10,12 @@
 @section('main_content')
     <h1>{{ __('frontend.my_score') }}</h1>
 
-    <evaluacion-personal :puntaje-tecnico="{{ $evaluacionPersonal[0]->puntajeTecnico}}" :puntaje-social="{{ $evaluacionPersonal[0]->puntajeSocial}}" ></evaluacion-personal>
+
+    @if ( $evaluacionPersonal[0]->puntajeTecnico > 4) 
+    	<evaluacion-personal :puntaje-tecnico="{{ $evaluacionPersonal[0]->puntajeTecnico}}" :puntaje-social="{{ $evaluacionPersonal[0]->puntajeSocial}}" ></evaluacion-personal>
+    @else
+    	<p> {{ __('frontend.my_score_not_active') }}<p>
+    @endif
     <br>
 @endsection
 

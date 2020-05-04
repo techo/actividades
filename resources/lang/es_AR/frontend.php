@@ -290,6 +290,7 @@ return [
 	'my_score_description' => 'Esta evaluación es un promedio sobre todas las actividades en las que participaste',
 	'my_score_contact' => 'Ante cualquier duda contactate con el coordinador de personas, de la sede en que participas ;)',
 	'my_score_feedback' => 'Evalua ahora!',
+	'my_score_not_active' => ' Todavia no tienes la suficiente cantidad de evaluaciones para hacer el cálculo.',
 
 
 	// contenedorEvaluaciones.vue
