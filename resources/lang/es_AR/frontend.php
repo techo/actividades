@@ -227,6 +227,7 @@ return [
 	'continue' => 'SIGUIENTE',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
+	'make_donation' => 'Hace tu donación por el siguiente ',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

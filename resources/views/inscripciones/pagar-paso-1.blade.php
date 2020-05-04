@@ -45,15 +45,19 @@
             </p> --}}
             <br>
             @if($actividad->pago == 1)
+
                     <form action="{{ action('InscripcionesController@donacionCheckout', ['id' => $actividad->idActividad]) }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-md-8">
+                            @if($actividad->idpais == 13) //Argentina
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p class="font-weight-bold">{{ __('frontend.donation_ammount') }}</p>
                                     </div>
                                 </div>
+
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto"
@@ -65,17 +69,31 @@
                                         @endif
                                     </div>
                                 </div>
+                            @else
+                                <div class="row">
+                                        <div class="col-md-12">
+                                           <p class="font-weight-bold"> {{ __('frontend.make_donation') }} 
+                                            <a href="{{ $actividad->linkPago }}" class="btn btn-link" target="_blank">LINK</a>
+                                           </p>
+                                        
+                                
+                                    @if ($actividad->montoMax === '0.00')
+                                            {{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}$)
+                                    @else
+                                            {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}$)
+                                    @endif
+                                            <br>
+                                        </div>
+                                </div>
+                            @endif
                             </div>
                             @if(!empty($actividad->beca))
                                 <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p class="font-weight-bold"> &nbsp;{{__('frontend.also_you_can') }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">{{ __('frontend.ask_for_grant') }}</a>
+                                            <p class="font-weight-bold">{{__('frontend.also_you_can') }}
+                                                <a href="{{ $actividad->beca }}" class="btn btn-link" target="_blank">{{ __('frontend.ask_for_grant') }}</a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -89,8 +107,9 @@
                                     @else
                                         <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                                     @endif
-                                
-                                <button type="submit" class="btn btn-primary" style="margin: 0 16px;">{{ __('frontend.continue') }}</button>
+                                @if($actividad->idpais == 13) //Argentina
+                                    <button type="submit" class="btn btn-primary" style="margin: 0 16px;">{{ __('frontend.continue') }}</button>
+                                @endif
                             </div>
                         </div>
 
