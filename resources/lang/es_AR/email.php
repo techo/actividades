@@ -16,7 +16,7 @@ return [
 	'greetings' => '¡Te esperamos!',
 	'has_been' => 'ha sido',
 	'cancelada' => 'CANCELADA', 
-	'coordinator_message' => 'Mensaje del coordinador',
+	'coordinator_message' => 'Mensaje de la coordinación',
 	'here' => 'Aqui',
 	'from' => 'desde',
 	'unsuscribe' => 'No quiero recibir emails',
@@ -31,7 +31,7 @@ return [
 	'activity_update_1' => 'Hubo cambios en la actividad que te has inscrito. A continuación encontrarás la información actualizada:',
 
 	// actividad cancelada
-	'activity_canceled_title' => 'TECHO Actividad cancelada',
+	'activity_cancel_title' => 'TECHO Actividad cancelada - ',
 	'activity_canceled_1' => 'Te informamos que la actividad ',
 	'activity_canceled_2' => 'Lamentamos cualquier inconveniente causado y te invitamos a entrar en el sitio de Techo para buscar otras actividades.',
 
@@ -43,8 +43,8 @@ return [
 
 
 	// Inscripcion Cofirmada
-	'inscription_confirmed_title' => 'TECHO Estás confirmado para participar en ',
-	'inscription_confirmed_1' => 'Ya estás confirmado para participar en ',
+	'inscription_confirmed_title' => 'TECHO Confirmación para participar en ',
+	'inscription_confirmed_1' => 'Te enviamos tu confirmación para participar en ',
 
 	// InscripcionEsperarConfirmacion
 	'pre_enroll_title' => 'TECHO Solo falta un paso para confirmar',
@@ -79,14 +79,14 @@ return [
 
 	// notificacionRegistracionUsuario
 	'account_registration_subject' => 'Ultimo Paso: Verifica tu cuenta!',
-	'account_registration_title' => 'Bienvenido a la plataforma de actividades de TECHO',
-	'account_registration_1' => 'Ya estás registrado en nuestra plataforma, solo te falta verificar tu cuenta de email:',
+	'account_registration_title' => 'Te damos la bienvenida a la plataforma de actividades de TECHO',
+	'account_registration_1' => 'Estas en proceso de registro en nuestra plataforma, solo falta verificar el mail:',
 	'account_registration_2' => 'Una vez verificada tu cuenta enterate de toda la oferta de voluntariado visitando la ',
 	'account_registration_3' => 'En esta plataforma vas a poder:',
 	'account_registration_4' => 'Inscribirte en las actividades',
 	'account_registration_5' => 'Cancelar tu inscripción en caso que no puedas asistir',
 	'account_registration_6' => 'Confirmar en caso de que la actividad lo necesite',
-	'account_registration_7' => 'Evaluar la actividad en la que participaste y a tus compañeros',
+	'account_registration_7' => 'Evaluar la actividad en la que participaste y a las personas que te acompañaron',
 	'account_registration_8' => 'Además, podés ver y editar tus datos y tu configuración desde tu ',
 	'account_registration_9' => 'y consultar tus ',
 	'account_registration_10' => 'inscripciones e historial de participación',
