@@ -303,7 +303,7 @@
 
                     <div class="col-md-2">
                         <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
-                            <label for="">Monto Min.</label>
+                            <label for="">Monto</label>
                             <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
                             <span class="help-block">{{ errors.montoMin }}</span>
                         </div>
@@ -311,7 +311,7 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Monto Max.</label>
+                            <label for="">Monto Max. (Opcional)</label>
                             <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
                         </div>
                     </div>
@@ -324,14 +324,21 @@
                         </div>
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="col-md-6" v-show="actividad.idPais != 13">
+                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
+                            <label for="">Link para el Pago</label>
+                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkPago }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
-                            <label for="">Link formulario de beca</label>
+                            <label for="">Link formulario de beca (Opcional) </label>
                             <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
                     </div>
-
                 </div>
 
                 <br>
@@ -339,7 +346,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
-                            <label for="mensajeInscripcion">Mensaje</label>
+                            <label for="mensajeInscripcion">Mensaje *</label>
                             <p class="help-block">Este mensaje llegar al inscripto al confirmarse su participación.</p>
                             <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" >Has sido Confirmado para la Actividad!</textarea>
                             <span class="help-block">{{ errors.mensajeInscripcion }}</span>
@@ -358,10 +365,10 @@
 
                 <div class="row">
 
-                    <div class="col-md-1">
+                    <div class="col-md-5">
                         <div class="form-group">
-                            <label for="limiteInscripciones">Cupos</label>
-                            <input type="number" class="form-control" v-model="actividad.limiteInscripciones" required
+                            <label for="limiteInscripciones">Cupos (0 es "sin limite de inscriptos")</label>
+                            <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
                             :disabled="!edicion" >
                         </div>
                     </div>

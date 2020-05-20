@@ -291,6 +291,7 @@ return [
 	'my_score_description' => 'This score is an average of all the activities you have attended',
 	'my_score_contact' => 'If you have any doubt contact your coordinator ;)',
 	'my_score_feedback' => 'Give your Feedback now!',
+	'my_score_not_active' => 'Not enought evaluations from your activities to make a average',
 
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Give feedback to your peers',
