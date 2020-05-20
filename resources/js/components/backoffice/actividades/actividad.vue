@@ -368,7 +368,7 @@
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos (0 es "sin limite de inscriptos")</label>
-                            <input type="number" class="form-control" v-model="actividad.limiteInscripciones" required
+                            <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
                             :disabled="!edicion" >
                         </div>
                     </div>
