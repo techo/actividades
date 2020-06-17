@@ -60,7 +60,7 @@ return [
 	'missing_payment_4' => 'Para confirmar tu participación, haz click en el botón ',
 	'confirm_by_donation' => 'Confirmar con tu donación ',
 	'missing_payment_5' => 'Te recordamos que el monto mínimo sugerido para abonar es de ',
-	'missing_payment_6' => 'los cuales cubren los gastos de traslado, seguro y comida durante la construcción.	',
+	'missing_payment_6' => ' esto contribuye a desarrollar nuestro trabajo en comunidad.	',
 	'missing_payment_7' => 'En el caso que no puedas abonar, no queremos que dejes de participar, ',
 	'missing_payment_8' => 'ponete en contacto con el coodinador de la actividad para gestionar una BECA ',
 
