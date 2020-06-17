@@ -32,13 +32,22 @@
         </p>
         <p>
             @lang('email.missing_payment_4')
-            <strong>@lang('email.confirm_by_donation')</strong> @lang('email.from') <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" > @lang('email.here') </a>
+            <strong>@lang('email.confirm_by_donation')</strong> @lang('email.from') 
+            
+            @if($inscripcion->actividad->linkPago)
+                <a href="{{ $inscripcion->actividad->linkPago }}" > 
+            @else
+                <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" > 
+            @endif
+
+            @lang('email.here') </a>
+
         </p>
         <p>
              @lang('email.missing_payment_5') <b>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</b>, @lang('email.missing_payment_6')
         </p>
         <p>
-            @lang('email.missing_payment_7') En el caso que no puedas abonar, no queremos que dejes de participar,
+            @lang('email.missing_payment_7')
             @if(!empty($inscripcion->actividad->beca))
                  <a href="{{ $inscripcion->actividad->beca }}">@lang('frontend.ask_for_grant')</a>.
             @else
