@@ -35,16 +35,18 @@
                     can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&
                     (
                         ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                        $actividad->idCoordinador == Auth::user()->idPersona ||
                             $actividad->coordinadores->contains('idPersona', Auth::user()->idPersona)
                         ) ||
-                        $user->hasRole('admin')
+                        Auth::user()->hasRole('admin')
                     ) }}"
                     can-borrar="{{Auth::user()->hasPermissionTo('borrar_actividad') &&
                     (
                         ($actividad->idPersonaModificacion == Auth::user()->idPersona ||
+                        $actividad->idCoordinador == Auth::user()->idPersona ||
                             $actividad->coordinadores->contains('idPersona', Auth::user()->idPersona)
                         ) ||
-                        $user->hasRole('admin')
+                        Auth::user()->hasRole('admin')
                     ) }}"
                     can-clonar="true"
                 ></crud-footer>
