@@ -40,6 +40,7 @@ class CrearActividad extends FormRequest
             'fechaFinInscripciones' => 'required_with:fechaInicioInscripciones|after_or_equal:fechaInicioInscripciones',
             'fechaInicioEvaluaciones' => 'sometimes|date|after_or_equal:fechaFin',
             'fechaFinEvaluaciones' => 'required_with:fechaInicioEvaluaciones|after_or_equal:fechaInicioEvaluaciones',
+            'calculaFecha' => 'required',
             
             'lugar' => 'required',
             'idPais' => 'required',

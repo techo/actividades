@@ -110,21 +110,24 @@
                             
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12" style="clear:both">
-                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
-                    </div>
-                </div>
+                
 
                 <!-- <ul v-show="fechas.length > 0" style="color: #dd4b39;">
                     <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
                 </ul> -->
 
                 <div class="row" v-show="edicion">
+                    <br>
                     <div class="col-md-12">
                         <label>
                             <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
                         </label>
+                    </div>
+                </div>
+
+                <div class="row" v-show="edicion">
+                    <div class="col-md-12" style="clear:both">
+                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
                     </div>
                 </div>
 
@@ -135,7 +138,7 @@
                         <div class="row">
 
                             <div class="col-md-4">
-                                <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
+                                <label for="fechaInicioInscripciones">Inscripciones</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
@@ -217,7 +220,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Ubicación</h3>
-                <span class="help-block">La ubicación es el lugar físico o vitual donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
+                <span class="help-block">La ubicación es el lugar físico o virtual donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
             </div>
             <div class="box-body">
 
@@ -423,7 +426,7 @@
                     idTipo: null,
                     idOficina: null,
 
-                    calculaFecha: 0,
+                    calculaFecha: false,
                     fechaInicio: null,
                     fechaFin: null,
 
@@ -570,8 +573,12 @@
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
                 
-                (this.calculaFechas) ?  this.actividad.calculaFechas = 1 :  this.actividad.calculaFechas = 0 ;
-                
+                if (this.calculaFechas == 1){
+                    this.actividad.calculaFecha = 1;
+                }
+                else{
+                    this.actividad.calculaFecha = 0 ;
+                }
                 this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaInicioEvaluaciones = moment(this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones).format('YYYY-MM-DD HH:mm:ss');
