@@ -37,7 +37,7 @@
                     @elseif (!isset($actividad->provincia))
                         Sin especificar
                     @else
-                        {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
+                        {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
                     @endif
                 </span>
             </div>
@@ -80,9 +80,7 @@
                 <div class="col-md-4">
                     @php
                         echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
-                        echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . ', ': '';
-                        echo isset($puntoEncuentro->pais->nombre) ? $puntoEncuentro->pais->nombre : '';
-                    @endphp
+                        echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . '': '';                    @endphp
 
                 </div>
                 <div class="col-md-4">

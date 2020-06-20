@@ -220,7 +220,8 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Ubicación</h3>
-                <span class="help-block">La ubicación es el lugar físico o virtual donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
+                <span class="help-block" v-show="virtual==true">En este espacio podes poner tanto el medio donde se realizará (ej, ZOOM, HANHOUTS) o directemente poner la url de la reunión. Tener en cuenta que la misma sería pública en tal caso</span>
+                <span class="help-block" v-show="virtual==false">La ubicación es el lugar físico donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
             </div>
             <div class="box-body">
 
@@ -228,14 +229,14 @@
 
                     <div class="col-md-4">
                         <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
-                            <label for="lugar">Lugar / Url </label>
+                            <label for="lugar">Lugar / Medio </label>
                             <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.lugar }}</span>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
                             <label for="provincia">Provincia</label>
                             <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
@@ -245,7 +246,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
                             <label for="localidad">Localidad</label>
                             <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
@@ -475,6 +476,7 @@
                 categorias: [],
                 calculaFechas: false,
                 edicion: false,
+                virtual: false,
             }
         },
         created() {
@@ -523,7 +525,7 @@
                         this.calcularFechas();
                     }
                 }
-            }
+            },
         },
         methods: {
             cargarFechas(){
@@ -578,6 +580,11 @@
                 }
                 else{
                     this.actividad.calculaFecha = 0 ;
+                }
+
+                if (this.virtual){
+                    this.actividad.idProvincia = 44;
+                    this.actividad.idLocalidad = 2663;
                 }
                 this.actividad.fechaInicioInscripciones = moment(this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFinInscripciones = moment(this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones).format('YYYY-MM-DD HH:mm:ss');
@@ -652,6 +659,7 @@
                     .then((datos) => { 
                         this.tipos = datos.data; 
                     }).catch((error) => { debugger; });
+                if (id == 4) { this.virtual = true; } else { this.virtual = false; }
             },
             getCategorias(){
                 axios.get('/ajax/categorias/')
