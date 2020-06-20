@@ -259,9 +259,9 @@
                 </div>
 
             </div>
-            <div class="box-footer">
+           <!--  <div class="box-footer">
                 <span class="help-block text-light-blue"><i class="fa  fa-exclamation"></i> El sistema carga automáticamente un punto de encuentro que coincide con la ubicación de la actividad. En caso de ser necesario, se puede editar o borrar y cargar otros puntos de encuentro según la lógica de la actividad.</span>
-            </div>
+            </div> -->
         </div>
 
         <div class="box">

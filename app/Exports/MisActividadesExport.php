@@ -52,6 +52,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
 
         $result->where(function ($result) {
             $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);
+            $result->orWhere('Actividad.idCoordinador', Auth::user()->idPersona);
             $result->orWhere('Coordinadores.idPersona', Auth::user()->idPersona);
         });
 
