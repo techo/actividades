@@ -89,7 +89,7 @@
                     <div class="col-md-4">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
-                            <input v-model="fechas.fechaInicio" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                            <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaInicio }}</span>
                             <span class="input-group-addon">
                                 <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
