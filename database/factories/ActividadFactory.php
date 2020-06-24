@@ -32,7 +32,7 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'fechaFinEvaluaciones' => function($actividad) { 
             return Carbon::parse($actividad['fechaFin'])->addDays(10)->format('Y-m-d H:i:s');
       },
-
+      'calculaFecha' => 1, 
       'confirmacion' => 0,
       'pago' => 0,
 
