@@ -50,7 +50,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-8">
-                            @if($actividad->idpais == 13) //Argentina
+                            @if($actividad->pais->id == 13)
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p class="font-weight-bold">{{ __('frontend.donation_ammount') }}</p>
