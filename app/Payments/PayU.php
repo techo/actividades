@@ -83,7 +83,7 @@ class PayU implements PaymentGateway
             $config->merchant_id . '~' .
             $this->referenceCode() . '~' .
             $this->monto . '~' .
-            $this->actividad->moneda);
+            'ARS');
     }
 
     /**

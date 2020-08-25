@@ -32,7 +32,7 @@
         </p>
         <p>
             @lang('email.missing_payment_4')
-            <strong>@lang('email.confirm_by_donation')</strong> @lang('email.from') 
+            <strong>@lang('email.confirm_by_donation')</strong>
             
             @if($inscripcion->actividad->linkPago)
                 <a href="{{ $inscripcion->actividad->linkPago }}" > 

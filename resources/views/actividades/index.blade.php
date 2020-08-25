@@ -22,7 +22,7 @@
 
     <contenedor-de-tarjetas ref="contenedor"></contenedor-de-tarjetas>
 
-    <aviso-modal></aviso-modal>
+    <!-- <aviso-modal></aviso-modal> -->
 
 
 
