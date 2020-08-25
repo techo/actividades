@@ -6,9 +6,17 @@
 
 @section('main_image')
     <div class="techo-hero actividades">
-        <!-- <img src="{{ asset('/img/hero-slim.jpg') }}" alt="hero image" height="210"> -->
-        <h2 class="text-uppercase">{{ __('frontend.index_actividades_text') }} <br>
-            {{ __('frontend.index_actividades_text_2') }}</h2>
+        <h2 class="text-uppercase">
+
+            @if ( config('app.pais') == 13)
+                {{ __('frontend.index_actividades_colecta') }} <br>
+                        {{ __('frontend.index_actividades_colecta_2') }}
+            @else 
+                {{ __('frontend.index_actividades_text') }} <br>
+                        {{ __('frontend.index_actividades_text_2') }}
+            @endif
+
+        </h2>
     </div>
 @endsection
 
