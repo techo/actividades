@@ -61,7 +61,7 @@
           fechaLimitePagoVencida: function () {
             let hoy = moment(moment().format("MM-DD-YYYY"),"MM-DD-YYYY");
             let fecha_limite = moment(this.actividad.fechaLimitePago, "DD-MM-YYYY");
-            return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite <= hoy;
+            return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite < hoy;
           }
         },
         filters: {
