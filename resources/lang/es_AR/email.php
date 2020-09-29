@@ -96,7 +96,7 @@ return [
 	'activity_reminder_1' => 'Te recordamos que te has inscrito para participar en ',
 
 	// template 
-	'template_1' => 'Para TECHO - Argentina es importante que te mantengas enterado de las nuevas actividades. Para ello, entra siempre en nuestro Sitio Web',
+	'template_1' => 'Para TECHO es importante que te mantengas enterado de las nuevas actividades. Para ello, entra siempre en nuestro Sitio Web',
 
 	//VerificarMail
 	'verificar_mail_1' => 'Este email es para verificar tu dirección de email:',
