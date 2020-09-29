@@ -260,8 +260,6 @@ return [
 	// actividades/index.blade.php
 	'index_actividades_text' =>  'Si te da lo mismo, estás haciendo mal las cuentas',
 	'index_actividades_text_2' => 'Anotate y participá',
-	'index_actividades_colecta' =>  '#ColectaTECHO',
-	'index_actividades_colecta_2' => '¡Elegí tu ciudad y anotate!',
 	'delete_filter' => 'Borrar Filtros',
 
 	// compartir-modal.blade.php

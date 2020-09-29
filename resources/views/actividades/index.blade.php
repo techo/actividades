@@ -8,13 +8,9 @@
     <div class="techo-hero actividades">
         <h2 class="text-uppercase">
 
-            @if ( config('app.pais') == 13)
-                {{ __('frontend.index_actividades_colecta') }} <br>
-                        {{ __('frontend.index_actividades_colecta_2') }}
-            @else 
-                {{ __('frontend.index_actividades_text') }} <br>
-                        {{ __('frontend.index_actividades_text_2') }}
-            @endif
+            {{ __('frontend.index_actividades_text') }} <br>
+                    {{ __('frontend.index_actividades_text_2') }}
+
 
         </h2>
     </div>
