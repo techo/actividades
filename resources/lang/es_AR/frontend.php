@@ -112,8 +112,8 @@ return [
     'gender_o'  =>  'Prefiero no decirlo',
     'passport'  =>  'NRO. DE DOCUMENTO / PASAPORTE',
     'country'  =>  'PAIS',
-	'state'  =>  'PROVINCIA',
-	'municipality'  =>  'LOCALIDAD',
+	'state'  =>  'ESTADO',
+	'municipality'  =>  'CIUDAD',
 	'telephone'  =>  'TELEFONO',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL',
 	'new_password'  =>  'NUEVA CONTRASEÑA',
@@ -178,11 +178,13 @@ return [
 	'pagination_detail' => "Mostrando :of de :total actividades",
 
 	// filtro.vue
-	'categories' => 'CATEGORÍAS',
+	'categories' => 'Categoría',
 	'select_all' => 'Marcar Todas',
 
  	// contenedorchecktipoactividad
- 	'activity_types' => 'Tipos de Actividad',
+ 	'activity_types' => 'Tipo',
+ 	// contenedorcheckprovincias
+ 	'place' => 'Lugar',
     
 	// actividades/show.blade.php
     'description' => '',

@@ -66,7 +66,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>{{ $t('frontend.born_date') }}</label>
+                            <label>{{ $t('frontend.birth_date') }}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -172,7 +172,7 @@
                 <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>{{ $t('frontend.city') }}</label>
+                            <label>{{ $t('frontend.municipality') }}</label>
                         </div>
                     </div>
                     <div class="row">

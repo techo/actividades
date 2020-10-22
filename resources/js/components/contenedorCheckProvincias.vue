@@ -4,7 +4,7 @@
             v-bind:class="{active: $parent.dataLocalidades.length > 0 || $parent.dataProvincias.length > 0}"
             data-toggle="collapse" href="#provincias" 
             role="button" aria-expanded="false"
-        ><span> {{ $t('frontend.state') }}</span> <i class="fas fa-caret-down"></i>
+        ><span> {{ $t('frontend.place') }}</span> <i class="fas fa-caret-down"></i>
         </a>
         <div id="provincias" class="collapse lista-opciones" >
 

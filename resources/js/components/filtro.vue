@@ -1,6 +1,6 @@
 <template>
     <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
-            <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mb-md-2"
+           <!--  <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mb-md-2"
                 title="Categorías"
                 name="categorias"
                 v-on:change="cambiarCategoria"
@@ -9,7 +9,7 @@
                 <option v-for="categoria in dataCategorias" v-bind:value="categoria.id">
                     {{ $t('frontend.' + categoria.nombre) }}
                 </option>
-            </select>
+            </select> -->
         <!-- <div id="filtro-lugar" class="btn-group btn-group-toggle botones-rad col-xs-12 col-md-4 col-lg-4 col-xl-2 mr-md-3 mr-lg-2 mb-md-2 mb-lg-2">
             <label class="btn boton-filtro" v-bind:class="{active: dataBusqueda == 'punto'}" >
                <input type="radio" name="busqueda" value="punto" v-model="dataBusqueda" >Punto de encuentro
