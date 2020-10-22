@@ -1,5 +1,6 @@
 <template>
-    <div class="row mt-4 mb-4 pl-xs-4 pl-md-0" id="filtro">
+    <div class="row mb-4 pl-xs-4 pl-md-0" id="filtro">
+
            <!--  <select id="filtro-categoria" class="dropdown boton-filtro col-xs-12 col-md-5 col-lg-4 col-xl-3 mr-md-3 mb-md-2"
                 title="Categorías"
                 name="categorias"

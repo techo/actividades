@@ -21,13 +21,21 @@
             <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
             <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
         </div>
-      <div class="card-body px-0">
-        <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p>
-        <h5 class="card-title text-left">{{ actividad.nombreActividad }}</h5>
-        <div style="width: 100%; border-top: #b7babf thin solid;border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+        
+      <div class="card-body px-0 pt-1">
+        <div style="width: 100%; border-bottom: #b7babf thin solid;">
+            <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
+            <div class=" texto-encima centrado">
+                <span class="col-sm-6 techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
+                <span class="col-sm-6 techo-h6" style="color: white;">{{ actividad.ubicacion }}</span>
+            </div>
+        </div>
+        <!-- <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p> -->
+        <h5 class="card-title text-center">{{ actividad.nombreActividad }}</h5>
+        <div style="width: 100%; border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
-            <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.ubicacion }}</span>
+            <!-- <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.ubicacion }}</span> -->
         </div>
         <p class="card-text text-left">{{ actividad.descripcion | truncate(100) }}</p>
       </div>
@@ -112,9 +120,29 @@
     }
 
     .img-tarjeta .pocos-cupos {
-        position: absolute;
+        /*position: absolute;*/
         bottom: 5px;
         left: 5px;
+        position: relative;
+        display: inline-block;
+        text-align: center;
     }
+    .texto-encima{
+        background: rgba(51, 51, 51, 0.9);
+        position: absolute;
+        top: 22em;
+        right: 1em;
+        width: 80%;
+        border-radius: 10px 10px 10px 10px;
+        -moz-border-radius: 10px 10px 10px 10px;
+        -webkit-border-radius: 10px 10px 10px 10px;
+    }
+    
+    .centrado{
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
 
 </style>
