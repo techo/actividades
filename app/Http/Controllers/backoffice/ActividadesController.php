@@ -345,11 +345,17 @@ class ActividadesController extends Controller
             $original = Actividad::find($request->idActividad);
             $clon = $original->replicate();
             $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
+            $clon->idPersonaCreacion = auth()->user()->idPersona;
             $clon->push();
             foreach ($original->puntosEncuentro as $punto) {
                 $nuevoPunto = $punto->replicate();
                 $nuevoPunto->idActividad = $clon->idActividad;
                 $nuevoPunto->push();
+            }
+            foreach ($original->coordinadores as $coordinador) {
+                $nuevoCoordinador = $coordinador->replicate();
+                $nuevoCoordinador->idActividad = $clon->idActividad;
+                $nuevoCoordinador->push();
             }
 
             $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
