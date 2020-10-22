@@ -23,7 +23,8 @@ class InscripcionesPolicy
     public function verInscripciones(Persona $user, $idActividad)
     {
         $actividad = Actividad::findOrFail($idActividad);
+
         return $user->hasAnyPermission(['tomar_asistencia', 'control_pagos'])
-            && ($user->idPersona === $actividad->idPersonaCreacion || $user->idPersona === $actividad->idCoordinador || $user->hasRole('admin'));
+            && ($user->idPersona === $actividad->idPersonaCreacion || $user->actividades()->where('idActividad', $idActividad)->count() > 0 || $user->hasRole('admin'));
     }
 }
