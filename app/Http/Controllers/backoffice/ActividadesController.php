@@ -82,8 +82,7 @@ class ActividadesController extends Controller
         $validado = $request->validated();
 
         $actividad->fill($validado);
-        //por defecto el usuario cargando es coordinador
-        // $actividad->idCoordinador = auth()->user()->idPersona;
+        $actividad->idPersonaCreacion = auth()->user()->idPersona;
 
         $actividad->fechaInicioInscripciones = $validado['fechaInicioInscripciones'];
         $actividad->fechaFinInscripciones = $validado['fechaFinInscripciones'];
@@ -111,6 +110,7 @@ class ActividadesController extends Controller
 
         
         $coordinador = new Coordinador();
+        //por defecto el usuario cargando es coordinador
         $coordinador->idPersona = auth()->user()->idPersona;
         $actividad->coordinadores()->save($coordinador);
         $actividad->idPersonaCreacion = auth()->user()->idPersona;
@@ -155,12 +155,13 @@ class ActividadesController extends Controller
 
     public function eliminarCoordinador(Actividad $actividad, Coordinador $coordinador)
     {    
-        if ($actividad->coordinadores->count() > 1){
+        if ($actividad->idPersonaCreacion != $coordinador->idPersona){
             $coordinador->delete();
+            $mensaje = 'ok';
         } else {
-            Session::flash('mensaje', 'La actividad debe tener al menos 1 coordinador');
+            $mensaje = 'error';
         }
-        return redirect()->back();
+        return response()->json($mensaje);
     }
 
     public function guardarCoordinador(Actividad $actividad, Persona $persona)

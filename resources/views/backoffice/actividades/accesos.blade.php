@@ -10,7 +10,7 @@
     <div class="tab-content">
 
         <div class="tab-pane active" id="accesos">
-            <accesos :id="{{ $actividad->idActividad }}"></accesos>
+            <accesos :id="{{ $actividad->idActividad }}" :id-persona-creacion="{{ $actividad->idPersonaCreacion }}"></accesos>
         </div>
 
     </div>

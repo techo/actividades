@@ -5,10 +5,7 @@
                 <h3 class="box-title">Coordinadores de la actividad</h3>
                 <p class="help-block">
                     <ul>
-                        <li>Estas son las personas de contacto para lxs inscriptxs, además tienen permisos para modificar y gestionar la actividad.</li>
-                        <li> 
-                        Cada actividad tiene que tener al menos UN Coordinador/a
-                        </li>
+                        <li>Todas estas Personas tienen acceso a editar la actividad.</li>
                     </ul>
                 </p>
             </div>
@@ -34,12 +31,13 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row">
                     <ul>
                         <li v-for="coordinador in coordinadores" :key='coordinador.idPersona'>
                             {{ coordinador.nombre }} 
-                            <span class="input-group-btn">
-                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="'Eliminar'"></button>
+                            <span class="input-group-btn">          
+                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="'Eliminar'" v-if="idPersonaCreacion !=  coordinador.idPersona"></button>
                             </span>
                         </li>
                     </ul>
@@ -55,7 +53,7 @@
 
     export default {
         name: "accesos",
-        props: ['id',],
+        props: ['id','idPersonaCreacion'],
         components: { vSelect },
         data() {
             return {
@@ -63,6 +61,7 @@
                 personas: [],
                 coordinadores: [],
                 enviado: false,
+                mensaje: null,
             }
         },
         created() {},
@@ -100,7 +99,7 @@
             },
             eliminar(idCoordinador){
                 axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + idCoordinador + '/borrar')
-                    .then((datos) => { this.coordinadores = this.getPersona(); })
+                    .then((datos) => { this.mensaje = datos.data; this.getPersona(); })
                     .catch((error) => { debugger; });
             },
             onSearch: _.debounce( function (text, loading) {
