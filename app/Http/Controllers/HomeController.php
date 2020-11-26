@@ -38,8 +38,10 @@ class HomeController extends Controller
     public function seleccionarPais(Request $request, $id)
     {
         $pais = \App\Pais::find($id);
-        if($pais)
+        if($pais) {
             $request->session()->put('pais', $pais->id);
+            $request->session()->put('locale',$pais->locale);
+        }
         
         return redirect('/actividades');
     }
