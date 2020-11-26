@@ -47,6 +47,9 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
             ->leftJoin('atl_pais', 'Actividad.idPais', '=', 'atl_pais.id')
             ->orderBy($sortField, $sortOrder);
 
+
+              $result->where('Actividad.idPais', '=', auth()->user()->idPais);
+
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);
             foreach ($palabras as $palabra)

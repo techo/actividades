@@ -31,4 +31,8 @@ class PaisesController extends Controller
         return Pais::where('habilitado', true)->get();
     }
 
+    public function paisesPropios() {
+        return Pais::where('id', '=', auth()->user()->idPais)->get();
+    }
+
 }

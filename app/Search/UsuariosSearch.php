@@ -40,6 +40,8 @@ class UsuariosSearch
 
     private static function newQuery(){
         $query = (new Persona())->newQuery();
+
+        $query->where('idPais', '=', auth()->user()->idPais);
         return $query;
     }
 }

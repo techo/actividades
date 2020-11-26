@@ -639,7 +639,7 @@
                 this.getCategorias();
             },
             getPaises(){
-                axios.get('/ajax/paises/habilitados')
+                axios.get('/ajax/paises/propios')
                     .then((datos) => { this.paises = datos.data; }).catch((error) => { debugger; });
             },
             getProvincias(){
