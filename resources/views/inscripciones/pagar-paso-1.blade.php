@@ -107,7 +107,7 @@
                                     @else
                                         <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                                     @endif
-                                @if($actividad->idpais == 13) //Argentina
+                                @if($actividad->pais->id == 13)
                                     <button type="submit" class="btn btn-primary" style="margin: 0 16px;">{{ __('frontend.continue') }}</button>
                                 @endif
                             </div>
