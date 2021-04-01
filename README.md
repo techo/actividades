@@ -78,12 +78,19 @@ sudo apt-get install php7.2-xmlreader
 sudo apt-get install php7.2-gd
 sudo apt-get install php7.2-mysql
 sudo apt-get install php7.2-imagick
+sudo apt-get install php7.2-bcmath
+sudo apt-get install php7.2-curl
 sudo apt-get install apache2
 sudo apt-get install mysql-server
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo apt-get install gzip
 sudo apt install composer
+```
+
+###Verificar version 7.2 de PHP
+```bash
+sudo update-alternatives --config php
 ```
 
 ###Paso 2: Clonar repo y copiar config

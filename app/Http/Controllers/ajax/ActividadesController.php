@@ -21,7 +21,7 @@ class actividadesController extends BaseController
      * @param int $items Cantidad de elementos en cada página
      * @return ActividadCollection
      */
-    public function index(Request $request, $items=6)
+    public function index(Request $request, $items=20)
     {
         $actividades = $this->filtrar($request);
 
