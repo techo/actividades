@@ -25,6 +25,9 @@
 					</div>
 				</div>
 				<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
+					<div style="text-align: right">
+						<button class="btn btn-default" @click="exportarActividades()" >Descargar Actividades <i class="fa fa-download"></i></button>
+					</div>
 					<div style="height: 200px" >
 						<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
 					</div>
@@ -224,6 +227,28 @@ export default {
 				this.loading = false;
 				if(this.$refs.graficoevaluaciones != undefined)
 					this.$refs.graficoevaluaciones.$data._chart.update()
+			})
+			.catch((error) => { debugger; });
+		},
+		exportarActividades: function() {
+			this.loading = true;
+			axios({
+				url: '/admin/actividades/exportar', 
+				params: this.filtros,
+				responseType: 'blob',
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+				}
+			})
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'Actividades.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				this.loading = false;
 			})
 			.catch((error) => { debugger; });
 		},

@@ -5,15 +5,43 @@ Online en: [actividades.techo.org](https://actividades.techo.org)
 
 ## Instalación para desarrollo
 
+
+###Usa
+- [Laravel 5.5](https://laravel.com/docs/5.5)
+- [VueJS 2](https://vuejs.org/v2/guide/)
+
 ###Pre-Requisitos:
 - PHP 7.2
 - Composer
 - Mysql 5.7
 - Nodejs 10 y npm
 
-###Usa
-- [Laravel 5.5](https://laravel.com/docs/5.5)
-- [VueJS 2](https://vuejs.org/v2/guide/)
+###Instalación requisitos previos
+```bash
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.2
+sudo apt-get install php7.2-mbstring
+sudo apt-get install php7.2-zip
+sudo apt-get install php7.2-xmlreader
+sudo apt-get install php7.2-gd
+sudo apt-get install php7.2-mysql
+sudo apt-get install php7.2-imagick
+sudo apt-get install php7.2-bcmath
+sudo apt-get install php7.2-curl
+sudo apt-get install apache2
+sudo apt-get install mysql-server
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo apt-get install gzip
+sudo apt install composer
+```
+
+### Si exiten errores verificar version 7.2 de PHP como default
+```bash
+sudo update-alternatives --config php
+```
 
 ###Paso 1 - Clonar repo y archivo de config
 
