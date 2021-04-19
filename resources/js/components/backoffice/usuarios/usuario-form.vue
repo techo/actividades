@@ -153,7 +153,7 @@
                                             name="pais"
                                             id="pais"
                                             v-model="paisSeleccionado"
-                                            v-bind:disabled="this.readonly"
+                                            v-bind:disabled="true"
                                     >
                                     <span slot="no-options"></span>
                                     </v-select>

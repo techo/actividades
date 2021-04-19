@@ -135,7 +135,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-10">
-                            <select id="pais" v-model="user.pais" class="form-control">
+                            <select id="pais" v-model="user.pais" class="form-control" disabled>
                                 <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
                             </select>
                             <small class="form-text text-danger">{{validacion.pais.texto}}&nbsp;<br></small>
