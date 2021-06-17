@@ -32,7 +32,7 @@ class MailRegistroUsuario extends Mailable
     {
         return $this
             ->subject(__('email.account_registration_title'))
-            ->from('no-reply@techo.org')
+            ->from('noreply.actividades@techo.org')
             ->view('emails.notificacionRegistroUsuario');
     }
 }
