@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Auth;
 //Frontoffice
 #Route::get('/', 'HomeController@index')->name('home');
 Route::get('/login', 'HomeController@index')->name('home');
-Route::get('/', 'ActividadesController@index');
-Route::get('/actividades', 'ActividadesController@index');
+
+
+
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
@@ -308,4 +309,13 @@ Route::prefix('/pagos/')->group(function() {
 Route::get('locale/{locale}', function($locale){
     Session::put('locale',$locale);
     return redirect()->back();
+});
+
+
+    Route::get('/home', 'HomeController@index');
+     Route::get('/', 'ActividadesController@index');
+     Route::get('/actividades', 'ActividadesController@index');
+
+Route::group(['prefix' => '{pais}', 'middleware' => 'pais'], function () {
+    Route::get('/', 'ActividadesController@index');
 });

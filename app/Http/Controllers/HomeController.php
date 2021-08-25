@@ -43,7 +43,7 @@ class HomeController extends Controller
             $request->session()->put('locale',$pais->locale);
         }
         
-        return redirect('/actividades');
+        return redirect($pais->abreviacion);
     }
 
     public function deseleccionarPais(Request $request)
