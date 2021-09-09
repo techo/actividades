@@ -46,6 +46,17 @@ class HomeController extends Controller
         return redirect($pais->abreviacion);
     }
 
+    public function seleccionarPaisAbreviacion(Request $request, $abreviacion)
+    {
+        $pais = \App\Pais::where('abreviacion', '=', $abreviacion)->where('habilitado', '=', 1)->first();
+        if($pais) {
+            $request->session()->put('pais', $pais->id);
+            $request->session()->put('locale',$pais->locale);
+        }
+        return redirect('/actividades');
+    
+    }
+
     public function deseleccionarPais(Request $request)
     {
         $request->session()->forget('pais');

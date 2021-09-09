@@ -316,6 +316,7 @@ Route::get('locale/{locale}', function($locale){
      Route::get('/', 'ActividadesController@index');
      Route::get('/actividades', 'ActividadesController@index');
 
-Route::group(['prefix' => '{pais}', 'middleware' => 'pais'], function () {
-    Route::get('/', 'ActividadesController@index');
+Route::group(['prefix' => '{abreviacion}'], function ($abreviacion) {
+    Route::get('/', 'HomeController@seleccionarPaisAbreviacion');
+
 });
