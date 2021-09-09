@@ -25,6 +25,8 @@ class PaisMiddleware
            return redirect('/actividades');
        }
        config([ 'app.pais' => $country->id ]);
+       $request->session()->put('pais', $country->id);
+       $request->session()->put('locale',$country->locale);
 
        return $next($request);
    }
