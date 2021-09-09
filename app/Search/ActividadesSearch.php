@@ -60,6 +60,8 @@ class ActividadesSearch
 
         if(config('app.pais')) {
             $query->where('Actividad.idPais', config('app.pais'));
+        } else if (Session::get('pais')){
+            $query->where('Actividad.idPais', Session::get('pais'));
         }
 
         return $query;
