@@ -103,7 +103,7 @@ Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesContro
 
 // Flujo de inscripciones
 
-Route::get('/actividades/{id}', 'ActividadesController@show');
+Route::get('/actividades/{id}', 'ActividadesController@show')->middleware('pais');
 
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
@@ -316,7 +316,7 @@ Route::get('locale/{locale}', function($locale){
      Route::get('/', 'ActividadesController@index');
      Route::get('/actividades', 'ActividadesController@index');
 
-Route::group(['prefix' => '{abreviacion}'], function ($abreviacion) {
-    Route::get('/', 'HomeController@seleccionarPaisAbreviacion');
+Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
+    Route::get('/', 'ActividadesController@index');
 
 });

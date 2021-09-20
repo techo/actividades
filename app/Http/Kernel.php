@@ -46,7 +46,12 @@ class Kernel extends HttpKernel
 
         'pais' => [
             'web',
-            \App\Http\Middleware\PaisMiddleware::class
+            \App\Http\Middleware\SeleccionarPaisActividad::class
+        ],
+
+        'UrlPais' => [
+            'web',
+            \App\Http\Middleware\UrlPais::class
         ],
     ];
 
