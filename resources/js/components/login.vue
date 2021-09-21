@@ -3,7 +3,7 @@
         <!-- Modal begin-->
         <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="">
@@ -13,26 +13,25 @@
                             </button>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 registro">
-                                <div class="row h-100 justify-content-center align-items-center">
-                                    <div class="col">
-                                        <h1>{{ $t('frontend.not_a_volunteer') }}</h1>
-                                        <br>
-                                        <a
-                                                href="/registro"
-                                                class="btn btn-light btn-lg my-sm-0 bg-white techo-btn-blanco"
-                                                style="font-weight: 600;"
-                                        >
-                                            {{ $t('frontend.volunteer_me') }}
-                                        </a>
+                            <div class="col-md-12">
+
+                                
+                                <div class="row pl-3 pr-3 m-2 justify-center">
+                                    <div class="col-md-12">
+
+                                        <h3 style="font-size: 1em; margin-top: 0.2em;" >{{ $t('frontend.welcome_techo') }}</h3>
+                                        <h3 style="text-align: center; font-size: 0.7em; margin-top: 0.4em;" >{{ $t('frontend.not_a_volunteer') }}</h3>
+                                        <a class="btn btn-primary tag-social facebook" @click="registro_facebook()" style="width: inherit"><i
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;facebook</a>
+                                        <a class="btn btn-primary tag-social google" @click="registro_google()" style="width: inherit"><i
+                                                class="fab fa-google"></i>&nbsp;&nbsp;google</a>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+                                <hr style="border-bottom:solid 1px grey; width:60%; ">
                                 <div class="row pl-3 pr-3 m-2">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
-                                            <div class="form-group">
+                                            <div class="form-group" style="margin-bottom: 0.5em;">
                                                 <label for="mail">{{ $t('frontend.mail') }}</label>
                                                 <input v-bind:class="{ 'is-invalid': hasError }"
                                                        type="email"
@@ -41,9 +40,10 @@
                                                        class="form-control"
                                                        id="mail"
                                                        v-bind:placeholder="$t('frontend.mail_placeholder')"
+                                                       style="font-size: 0.5em;"
                                                        required>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" style="margin-bottom: 0.5em;">
                                                 <label for="password">{{ $t('frontend.password') }}</label>
                                                 <input type="password"
                                                        v-bind:class="{ 'is-invalid': hasError }"
@@ -52,6 +52,7 @@
                                                        class="form-control"
                                                        id="password"
                                                        v-bind:placeholder="$t('frontend.password_placeholder')"
+                                                       style="font-size: 0.5em;"
                                                        required>
                                             </div>
                                             <div class="row">
@@ -60,7 +61,18 @@
                                                 </div>
                                             </div>
                                             <div class="row h-100 align-items-center">
-                                                <div class="col-6">
+                                                
+                                                <div class="col-6 text-left" style="font-size:0.5em">
+                                                    <a href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
+                                                    <a
+                                                href="/registro"
+                                                class="forget" style="font-size:0.8em"
+                                        >
+                                            {{ $t('frontend.volunteer_me') }}
+                                        </a>
+
+                                                </div>
+                                                <div class="col-6  text-right">
                                                     <button
                                                             id="btnLogin"
                                                             v-on:click="login"
@@ -70,27 +82,11 @@
                                                         {{ $t('frontend.login') }}
                                                     </button>
                                                 </div>
-                                                <div class="col-6 text-right">
-                                                    <a href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
-
-                                                </div>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                                <hr class="ml-5 mr-5">
-                                <div class="row pl-5 mt-4">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary tag-social facebook" @click="registro_facebook()"><i
-                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.login_facebook') }}</a>
-                                    </div>
-                                </div>
-                                <div class="row pb-3 pl-5">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-primary tag-social google" @click="registro_google()"><i
-                                                class="fab fa-google"></i>&nbsp;&nbsp;{{ $t('frontend.login_google') }}</a>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -106,13 +102,8 @@
                         <a class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
                         </a>
-                        <div class="btn-group " role="group" ref="paises">
-                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
-                            <div class="dropdown-menu">
-                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
-                            </div>
-                        </div>
-                        <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a>
+                        
+                        
                     </div>
                 </div>
                 
@@ -121,6 +112,14 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="btn-group " role="group" ref="paises">
+                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
+                            <div class="dropdown-menu">
+                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
+                            </div>
+                        </div>
+                        <br>
+                    <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a>
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
@@ -140,7 +139,7 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
-                        <li class="locale-changer " v-show="langs.length>0" >
+                        <li class="nav-item active d-block d-md-none locale-changer " v-show="langs.length>0" >
                             <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
                                 <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                                     {{ lang[1] }}

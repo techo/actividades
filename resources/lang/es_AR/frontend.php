@@ -27,8 +27,8 @@ return [
 	'mail_placeholder' => 'Ingresá tu Mail',
 	'password' => 'Contraseña',
 	'password_placeholder' => 'Ingresá tu contraseña',
-	'not_a_volunteer' => '¿TODAVÍA NO SOS VOLUNTARIO DE TECHO?',
-	'volunteer_me' => '¡Quiero ser voluntario!',
+	'not_a_volunteer' => 'Iniciá sesión o registrate con',
+	'volunteer_me' => 'Registrarme con mail',
 	'hello' => 'Hola',
 	'activities' => 'Actividades',
 	'my_activities' => 'Mis Actividades',
@@ -36,7 +36,9 @@ return [
 	'admin' => 'Admin',
 	'help' => 'Ayuda',
 	'logout' => 'Salir',
+	'welcome_techo' => 'BIENVENIDO A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
+
 
 	//loginController
 	'login_error' => 'El correo electrónico y/o la contraseña es incorrecta',

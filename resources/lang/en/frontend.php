@@ -27,14 +27,16 @@ return [
 	'mail_placeholder' => 'Enter your mail',
 	'password' => 'Password',
 	'password_placeholder' => 'Enter your password',
-	'not_a_volunteer' => 'Not yet a volunteer?',
+	'not_a_volunteer' => 'Log in or Sign up with',
 	'volunteer_me' => 'I want to volunteer!',
 	'hello' => 'Hi',
 	'activities' => 'Activities',
 	'my_activities' => 'My Activities',
 	'profile' => 'Profile',
 	'admin' => 'Admin',
-	'help' => 'Help',
+	'help' => 'Help',	
+	'welcome_techo' => 'Welcome to TECHO',
+
 	'logout' => 'Logout',
 	'login_null' => 'The mail and password is required',
 
