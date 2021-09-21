@@ -371,9 +371,19 @@
 
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="limiteInscripciones">Cupos (0 es "sin limite de inscriptos")</label>
+                            <label for="limiteInscripciones">Cupos</label>
                             <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
                             :disabled="!edicion" >
+                            <p class="help-block">0 es "sin limite de inscriptos"</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="linkEvaluacion">Link de evaluación</label>
+                            <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
+                            :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkEvaluacion }}</span>
+                            <p class="help-block">Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)</p>
                         </div>
                     </div>
 
