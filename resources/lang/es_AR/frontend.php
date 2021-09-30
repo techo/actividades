@@ -27,8 +27,8 @@ return [
 	'mail_placeholder' => 'Ingresá tu Mail',
 	'password' => 'Contraseña',
 	'password_placeholder' => 'Ingresá tu contraseña',
-	'not_a_volunteer' => 'Iniciá sesión o registrate con',
-	'volunteer_me' => 'Registrarme con mail',
+	'not_a_volunteer' => 'Inicia sesión o registrate con',
+	'volunteer_me' => 'Registrate con mail',
 	'hello' => 'Hola',
 	'activities' => 'Actividades',
 	'my_activities' => 'Mis Actividades',
@@ -36,7 +36,7 @@ return [
 	'admin' => 'Admin',
 	'help' => 'Ayuda',
 	'logout' => 'Salir',
-	'welcome_techo' => 'BIENVENIDO A TECHO',
+	'welcome_techo' => 'BIENVENIDX A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
 
 
