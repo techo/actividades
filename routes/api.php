@@ -29,9 +29,11 @@ Route::post('register', 'api\PersonasController@register');
 // forgot password
 // change password
 
+
 // actividades que estoy inscripto
 
 // edit Usuario 
+Route::post('editPersona/{persona}', 'api\PersonasController@update');
 // delete usuario
 
 

@@ -71,9 +71,11 @@ class PersonasController extends Controller
             'recibirMails' => $fields['recibirMails'],
             'acepta_marketing' => $fields['acepta_marketing'],
             'idPais' => $fields['idPais'],
+            'idProvincia' => $fields['idProvincia'],
+            'idLocalidad' => $fields['idLocalidad'],
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
         ]);
-        
+
         return response(
                 [
                     'success' => true,
@@ -85,10 +87,48 @@ class PersonasController extends Controller
     }
 
     public function update(Request $request, Persona $persona)
-    {
-        $persona->update($request->all());
+    {   
 
-        return response()->json($persona, 200);
+        $fields = $this->validate($request, [
+            'mail' => 'required',
+            'nombres' => 'required',
+            'apellidoPaterno' => 'required',
+            'fechaNacimiento' => 'required|date',
+            'telefono' => 'required|integer',
+            'telefonoMovil' => 'required|integer',
+            'dni' => 'required|integer',
+            'recibirMails' => 'required|boolean',
+            'acepta_marketing' => 'required|boolean',
+            'idPais' => 'required|integer',
+            'idProvincia' => 'required|integer',
+            'idLocalidad' => 'required|integer',
+            'idUnidadOrganizacional' => 'required|integer',
+        ]);
+
+        $persona->update([
+            'dni' => $fields['dni'],
+            'nombres' => $fields['nombres'],
+            'apellidoPaterno' => $fields['apellidoPaterno'],
+            'mail' => $fields['mail'],
+            'fechaNacimiento' => $fields['fechaNacimiento'],
+            'telefono' => $fields['telefono'],
+            'telefonoMovil' => $fields['telefonoMovil'],
+            'recibirMails' => $fields['recibirMails'],
+            'acepta_marketing' => $fields['acepta_marketing'],
+            'idPais' => $fields['idPais'],
+            'idProvincia' => $fields['idProvincia'],
+            'idLocalidad' => $fields['idLocalidad'],
+            'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
+        ]);
+
+        return response(
+                [
+                    'success' => true,
+                    'persona' => $persona,
+                    'mensaje' => "Persona Actualizada",
+                ],
+                200
+            );
     }
 
     public function delete(Persona $persona)

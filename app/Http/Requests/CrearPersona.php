@@ -34,8 +34,10 @@ class CrearPersona extends FormRequest
             'dni' => 'required|integer',
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
-            'idPais' => 'required',
-            'idUnidadOrganizacional' => 'required',
+            'idPais' => 'required|integer',
+            'idProvincia' => 'required|integer',
+            'idLocalidad' => 'required|integer',
+            'idUnidadOrganizacional' => 'required|integer',
         ];
     }
 }
