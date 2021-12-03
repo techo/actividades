@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Laravel\Passport\HasApiTokens;
 
 class Persona extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, HasRoles, SoftDeletes;
+    use Notifiable, HasRoles, SoftDeletes, HasApiTokens;
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];

@@ -35,11 +35,14 @@ class PersonasController extends Controller
         $afterLoginUrl = '';
 
         if ($authSuccess){ 
+            $user = Persona::where('mail', $credentials['mail'])->first();
+            $token = $user->createToken('Token Name')->accessToken;
             return response(
                 [
                     'success' => true,
                     'user' => Auth::user(),
                     'mensaje' => "Autenticación OK",
+                    'token' => $token,
                 ],
                 200
             );

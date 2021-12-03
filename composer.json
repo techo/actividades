@@ -10,14 +10,15 @@
         "doctrine/dbal": "^2.7",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.7.*",
+        "laravel/passport": "7.5.1",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^3.0",
         "rap2hpoutre/fast-excel": "^1.2.2",
+        "sentry/sentry-laravel": "^0.11.0",
         "spatie/laravel-permission": "^2.11",
         "unisharp/laravel-filemanager": "~1.8",
-        "webpatser/laravel-uuid": "^3.0",
-        "sentry/sentry-laravel": "^0.11.0"
+        "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

@@ -14,29 +14,28 @@ use Illuminate\Http\Request;
 */
 
 
+
+// Rutas Publicas
+Route::post('login', 'api\PersonasController@login');
+Route::post('register', 'api\PersonasController@register');
+
+// forgot password
+
+
+// Rutas Privadas, por Token
+
+// edit Usuario 
+Route::post('editPersona/{persona}', 'api\PersonasController@update');
+// delete usuario
+// change password
+
 Route::get('personas', 'api\PersonasController@index');
-Route::get('personas/{persona}', 'api\PersonasController@show');
+Route::get('personas/{persona}', 'api\PersonasController@show')->middleware('auth:api');
 // Route::post('personas', 'api\PersonasController@store');
 // Route::put('personas/{persona}', 'api\PersonasController@update');
 // Route::delete('personas/{persona}', 'api\PersonasController@delete');
 
 Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail');
-
-// login
-Route::post('login', 'api\PersonasController@login');
-// register
-Route::post('register', 'api\PersonasController@register');
-// forgot password
-// change password
-
-
-// actividades que estoy inscripto
-
-// edit Usuario 
-Route::post('editPersona/{persona}', 'api\PersonasController@update');
-// delete usuario
-
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
