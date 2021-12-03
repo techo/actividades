@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CrearPersona;
 use App\Persona;
+use App\Inscripcion;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -20,6 +21,23 @@ class PersonasController extends Controller
     public function show(Persona $persona)
     {
         return $persona;
+    }
+
+    public function getInscripciones(Request $request)
+    {
+        $Inscripciones = Inscripcion::with('actividad')
+                                ->where('idPersona', auth('api')->user()->idPersona)
+                                ->where('presente', '1')
+                                ->get();
+
+        return response(
+                [
+                    'success' => true,
+                    'inscripciones' => $Inscripciones,
+                    'mensaje' => "Inscripciones OK"
+                ],
+                200
+            );
     }
 
     public function getPersonaxMail($mail)

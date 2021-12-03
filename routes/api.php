@@ -37,7 +37,8 @@ Route::get('personas/{persona}', 'api\PersonasController@show')->middleware('aut
 // Route::put('personas/{persona}', 'api\PersonasController@update');
 // Route::delete('personas/{persona}', 'api\PersonasController@delete');
 
-Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail');
+Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail')->middleware('auth:api');
+Route::get('inscripciones/', 'api\PersonasController@getInscripciones')->middleware('auth:api');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
