@@ -97,11 +97,15 @@ class PersonasController extends Controller
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
         ]);
 
+        $persona->sendEmailVerificationNotification();
+        $token = $persona->createToken('Token Name')->accessToken;
+
         return response(
                 [
                     'success' => true,
                     'persona' => $persona,
                     'mensaje' => "Persona Creada, validacion de mail pendiente",
+                    'token'   => $token,
                 ],
                 201
             );
