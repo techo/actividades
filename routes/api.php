@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 Route::post('login', 'api\PersonasController@login');
 Route::post('register', 'api\PersonasController@register');
 
+
+Route::get('/sedes', 'backoffice\ajax\OficinasController@getOficinas');
 // forgot password
 
 
