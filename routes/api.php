@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,15 +24,18 @@ Route::post('register', 'api\PersonasController@register');
 Route::get('/sedes', 'backoffice\ajax\OficinasController@getOficinas');
 // forgot password
 
+Route::post('resetPassword', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 
 // Rutas Privadas, por Token
 
 // edit Usuario 
-Route::post('editPersona/{persona}', 'api\PersonasController@update');
+Route::post('editPersona/{persona}', 'api\PersonasController@update')->middleware('auth:api');
+Route::post('logout', 'api\PersonasController@logout')->middleware('auth:api');
+
 // delete usuario
 // change password
 
-Route::get('personas', 'api\PersonasController@index');
+Route::get('personas', 'api\PersonasController@index')->middleware('auth:api');
 Route::get('personas/{persona}', 'api\PersonasController@show')->middleware('auth:api');
 // Route::post('personas', 'api\PersonasController@store');
 // Route::put('personas/{persona}', 'api\PersonasController@update');

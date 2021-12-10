@@ -76,6 +76,20 @@ class PersonasController extends Controller
         }
     }
 
+    public function logout(request $request)
+    {   
+        $user = Auth::user()->token();
+        $user->revoke();
+        
+        return response(
+                [
+                    'success' => true,
+                    'mensaje' => "Sesión Cerrada",
+                ],
+                200
+        );
+    }
+
     public function register(CrearPersona $request)
     {   
         $fields = $request->validated();
