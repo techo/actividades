@@ -89,6 +89,39 @@
                             </div>
 
                         </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="sliderGenero">{{ $t('frontend.gender_score') }}<div v-show="!noAplicaGenero" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeGenero}">{{ puntajeGenero }}</div></label>
+                                    <p style="font-size: 12px; color: #6d6d6c;" >{{ $t('frontend.gender_score_description') }}</p>
+                                    <input type="range"
+                                           class="form-control-range"
+                                           id="sliderGenero"
+                                           min="1"
+                                           max="10"
+                                           step="1"
+                                           :disabled="noAplicaGenero || evaluacionPasada || enviado"
+                                           v-model="puntajeGenero"
+                                    >
+                                </div>
+
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="noAplicaGenero" style="margin-right: 2em; margin-top: 2em" :class="{'gris': evaluacionPasada }">
+                                        {{ $t('frontend.doesn_not_apply') }}
+                                    </label>
+                                    <input
+                                            type="checkbox"
+                                            id="noAplicaGenero"
+                                            :value="1"
+                                            :disabled="evaluacionPasada || enviado"
+                                            v-model="noAplicaGenero"
+                                    >
+                                </div>
+                            </div>
+
+                        </div>
                         <div class="form-group">
                             <label for="comentarios">{{ $t('frontend.comments') }}</label>
                             <textarea
@@ -136,8 +169,10 @@
             if (this.persona.puntajeSocial !== undefined) {
                 this.puntajeTecnico = this.persona.puntajeTecnico;
                 this.puntajeSocial = this.persona.puntajeSocial;
+                this.puntajeGenero = this.persona.puntajeGenero;
                 if (this.puntajeTecnico === null) { this.noAplicaTecnico = true; }
                 if (this.puntajeSocial === null) { this.noAplicaSocial = true; }
+                if (this.puntajeGenero === null) { this.noAplicaGenero = true; }
                 this.comentario = this.persona.comentario;
                 this.enviado = true;
             }
@@ -146,10 +181,12 @@
             return {
                 puntajeSocial: 5,
                 puntajeTecnico: 5,
+                puntajeGenero: 5,
                 comentario: '',
                 abierto: true,
                 noAplicaTecnico: false,
                 noAplicaSocial: false,
+                noAplicaGenero: false,
                 error: false,
                 enviado: false,
             }
@@ -162,10 +199,12 @@
                     idActividad: this.actividad.idActividad,
                     puntajeTecnico: (this.noAplicaTecnico) ? null : this.puntajeTecnico,
                     puntajeSocial: (this.noAplicaSocial) ? null : this.puntajeSocial,
+                    puntajeGenero: (this.noAplicaGenero) ? null : this.puntajeGenero,
                     comentario: this.comentario,
                     evaluado: this.persona,
                     noAplicaSocial: this.noAplicaSocial,
-                    noAplicaTecnico: this.noAplicaTecnico
+                    noAplicaTecnico: this.noAplicaTecnico,
+                    noAplicaTecnico: this.noAplicaGenero
                 };
                 this.axiosPost(url,
                     function(response, self) {
@@ -198,6 +237,15 @@
                 } else if (this.puntajeSocial <= 6) {
                     return '#FFF79A';
                 } else if (this.puntajeSocial <= 10) {
+                    return '#82CA9D';
+                }
+            },
+            colorPuntajeGenero: function() {
+                if (this.puntajeGenero <= 3) {
+                    return '#F7977A';
+                } else if (this.puntajeGenero <= 6) {
+                    return '#FFF79A';
+                } else if (this.puntajeGenero <= 10) {
                     return '#82CA9D';
                 }
             },

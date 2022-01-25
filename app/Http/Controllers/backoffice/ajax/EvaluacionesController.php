@@ -71,13 +71,16 @@ class EvaluacionesController extends BaseController
         $evaluaron = $actividad->evaluacionesVoluntarios()->distinct('idEvaluador')->count('idEvaluador');
         $promedioSocial = round($actividad->evaluacionesVoluntarios()->whereNotNull('puntajeSocial')->avg('puntajeSocial'),2);
         $promedioTecnico = round($actividad->evaluacionesVoluntarios()->whereNotNull('puntajeTecnico')->avg('puntajeTecnico'),2);
+        $promedioGenero = round($actividad->evaluacionesVoluntarios()->whereNotNull('puntajeGenero')->avg('puntajeGenero'),2);
+
 
         return response()->json(
             [
                 'evaluaron' => $evaluaron,
                 'presentes' => $actividad->cantidadPresentes,
                 'promedioSocial' => $promedioSocial,
-                'promedioTecnico' => $promedioTecnico
+                'promedioTecnico' => $promedioTecnico,
+                'promedioGenero' => $promedioGenero
             ]
         );
     }
@@ -96,11 +99,19 @@ class EvaluacionesController extends BaseController
             ->selectRaw('puntajeTecnico, count(*) as cantidad')
             ->get();
 
+        $query = (new EvaluacionPersona())->newQuery();
+        $dataGenero = $query->where('idActividad', $id)
+            ->groupBy('puntajeGenero')
+            ->selectRaw('puntajeGenero, count(*) as cantidad')
+            ->get();
+
         $dataSocial = $dataSocial->toArray();
         $dataTecnico = $dataTecnico->toArray();
+        $dataGenero = $dataGenero->toArray();
         $puntajesKeys = [1,2,3,4,5,6,7,8,9,10];
         $puntajesSocial = array_fill_keys($puntajesKeys, 0);
         $puntajesTecnico = array_fill_keys($puntajesKeys, 0);
+        $puntajesGenero = array_fill_keys($puntajesKeys, 0);
 
         foreach ($dataSocial as $item){
             $puntajesSocial[$item['puntajeSocial']] = $item['cantidad'];
@@ -110,10 +121,15 @@ class EvaluacionesController extends BaseController
             $puntajesTecnico[$item['puntajeTecnico']] = $item['cantidad'];
         }
 
+        foreach ($dataGenero as $item){
+            $puntajesGenero[$item['puntajeGenero']] = $item['cantidad'];
+        }
+
         return response()->json(
             [
                 'cantidadesSocial' => array_values($puntajesSocial),
-                'cantidadesTecnico' => array_values($puntajesTecnico)
+                'cantidadesTecnico' => array_values($puntajesTecnico),
+                'cantidadesGenero' => array_values($puntajesGenero)
             ],
             200
         );

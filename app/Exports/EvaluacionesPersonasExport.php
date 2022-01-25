@@ -21,7 +21,7 @@ class EvaluacionesPersonasExport implements FromCollection, WithHeadings, Should
         return EvaluacionPersona::join('Persona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
             ->select(
                 ['Persona.nombres', 'Persona.apellidoPaterno', 'Persona.dni', 'Persona.mail',
-                    'EvaluacionPersona.puntajeSocial', 'EvaluacionPersona.puntajeTecnico', 'EvaluacionPersona.comentario']
+                    'EvaluacionPersona.puntajeSocial', 'EvaluacionPersona.puntajeTecnico','EvaluacionPersona.puntajeGenero', 'EvaluacionPersona.comentario']
             )
             ->where('idActividad', $this->actividad->idActividad)
             ->get();
@@ -36,6 +36,7 @@ class EvaluacionesPersonasExport implements FromCollection, WithHeadings, Should
             'Email',
             'Puntaje Social',
             'Puntaje Técnico',
+            'Puntaje Genero',
             'Comentario'
         ];
     }

@@ -289,6 +289,8 @@ return [
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Social',
 	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
+	'gender_score' => 'Puntaje perspectiva de género',
+	'gender_score_description' => 'Promoción de un entorno seguro y de igualdad.',
 
 	//perfil/evaluacion.vue
 	'my_score' => 'Mi Evaluación',

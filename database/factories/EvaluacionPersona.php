@@ -9,6 +9,7 @@ $factory->define(App\EvaluacionPersona::class, function (Faker $faker) {
 			'idEvaluador' => factory('App\Persona')->create(),
 			'puntajeSocial' => $faker->randomDigit,
 			'puntajeTecnico' => $faker->randomDigit,
+			'puntajeGenero' => $faker->randomDigit,
 			'comentario' => $faker->sentence,
         //
     ];

@@ -18,6 +18,9 @@
 					<p>
 						<b>Puntaje social</b>: habilidades para comuncicarse y empatizar con otros.
 					</p>
+					<p>
+						<b>Puntaje perspectiva de género</b>: Promoción de un entorno seguro y de igualdad.
+					</p>
 				</div>
 			</div>
 		</div>
@@ -74,6 +77,7 @@
 					},
 					{ title: 'Promedio técnico', name: 'puntajeTecnico', sortField: 'puntajeTecnico', },
 					{ title: 'Promedio social', name: 'puntajeSocial', sortField: 'puntajeSocial',  },
+					{ title: 'Promedio género', name: 'puntajeGenero', sortField: 'puntajeGenero',  },
 					{ title: 'Comentario', name: 'comentario', sortField: 'comentario', },
 				],
 				css: {

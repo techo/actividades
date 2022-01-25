@@ -86,12 +86,14 @@ class EvaluacionesController extends Controller
 
         $puntajeSocial = ($request->noAplicaSocial) ?  null : $request->puntajeSocial;
         $puntajeTecnico = ($request->noAplicaTecnico) ? null : $request->puntajeTecnico;
+        $puntajeGenero = ($request->noAplicaGenero) ? null : $request->puntajeGenero;
         $evaluacion = [
             'idActividad'   => $actividad->idActividad,
             'idEvaluador' => $evaluador->idPersona,
             'idEvaluado' => $request->evaluado['idPersona'],
             'puntajeSocial' => $puntajeSocial,
             'puntajeTecnico' => $puntajeTecnico,
+            'puntajeGenero' => $puntajeGenero,
             'comentario'    => $request->comentario
         ];
 
@@ -135,7 +137,7 @@ class EvaluacionesController extends Controller
         return Persona::join('EvaluacionPersona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
             ->join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
             ->select([ 'Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno', 'Persona.dni',
-                'EvaluacionPersona.puntajeSocial', 'EvaluacionPersona.puntajeTecnico', 'EvaluacionPersona.comentario',
+                'EvaluacionPersona.puntajeSocial', 'EvaluacionPersona.puntajeTecnico','EvaluacionPersona.puntajeGenero', 'EvaluacionPersona.comentario',
                 'Grupo_Persona.rol'])
             ->where('EvaluacionPersona.idActividad', '=', $actividad->idActividad)
             ->where('EvaluacionPersona.idEvaluador', '=', $evaluador->idPersona)

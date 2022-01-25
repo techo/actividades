@@ -26,6 +26,7 @@ class EvaluacionesUsuarioExport implements FromCollection, WithHeadings, ShouldA
                 "Actividad.fechaInicio",
                 "puntajeSocial",
                 "puntajeTecnico",
+                "puntajeGenero",
                 "comentario",
             ])
             ->get();
@@ -39,6 +40,7 @@ class EvaluacionesUsuarioExport implements FromCollection, WithHeadings, ShouldA
             'Fecha',
             'Puntaje Social',
             'Puntaje Técnico',
+            'Puntaje perspectiva de género',
             'Comentario'
         ];
     }

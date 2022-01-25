@@ -34,6 +34,10 @@
                         <h1 class="promedio"><strong>{{ promedioTecnico }}</strong></h1>
                         <h5>Técnico</h5>
                     </div>
+                    <div class="col-md-6">
+                        <h1 class="promedio"><strong>{{ promedioGenero }}</strong></h1>
+                        <h5>Perspectiva de Género</h5>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 text-center">
@@ -59,6 +63,7 @@
                 evaluaron: 0,
                 promedioSocial: 0,
                 promedioTecnico: 0,
+                promedioGenero: 0,
                 loading: true,
                 presentes: 0,
             }
@@ -93,6 +98,7 @@
                         this.evaluaron = datos.data.evaluaron;
                         this.promedioSocial = datos.data.promedioSocial;
                         this.promedioTecnico = datos.data.promedioTecnico;
+                        this.promedioGenero = datos.data.promedioGenero;
                         Event.$emit('stats-voluntarios-loaded');
                         this.loading = false;
                     }).catch((error) => { debugger; });
