@@ -34,6 +34,18 @@
                                            :disabled="true"
                                            v-model="puntajeSocial">
                                 </div>
+                                <div class="form-group">
+                                    <label for="slider">{{ $t('frontend.gender_score') }}
+                                    <div class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeGenero}">{{ puntajeGenero }}</div></label>
+                                    <input type="range"
+                                           class="form-control-range"
+                                           id="slider"
+                                           min="1"
+                                           max="10"
+                                           step="1"
+                                           :disabled="true"
+                                           v-model="puntajeGenero">
+                                </div>
                                 <p class="text-muted">
                                     {{ $t('frontend.my_score_contact') }}
                                 </p>
@@ -57,7 +69,7 @@
         components: {
             'vue-slider': VueSlider
         },
-        props: ['puntajeTecnico', 'puntajeSocial'],
+        props: ['puntajeTecnico', 'puntajeSocial', 'puntajeGenero'],
         computed: {
             colorPuntajeTecnico: function() {
                 if (this.puntajeTecnico <= 3) {
@@ -74,6 +86,15 @@
                 } else if (this.puntajeSocial <= 6) {
                     return '#FFF79A';
                 } else if (this.puntajeSocial <= 10) {
+                    return '#82CA9D';
+                }
+            },
+            colorPuntajeGenero: function() {
+                if (this.puntajeGenero <= 3) {
+                    return '#F7977A';
+                } else if (this.puntajeGenero <= 6) {
+                    return '#FFF79A';
+                } else if (this.puntajeGenero <= 10) {
                     return '#82CA9D';
                 }
             },

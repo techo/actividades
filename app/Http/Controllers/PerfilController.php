@@ -26,11 +26,24 @@ class PerfilController extends Controller
 
 	public function evaluacion(Request $request) {
 		$persona = Auth::user();
-        $evaluacionPersonal = \App\EvaluacionPersona::where('idEvaluado', '=', $persona->idPersona)
-        	->select(DB::raw('ROUND(avg(puntajeSocial),1) as puntajeSocial,  ROUND(avg(puntajeTecnico),1) as puntajeTecnico'))
-        	->get();
 
-		return view('perfil.evaluaciones', compact('evaluacionPersonal'));
+        $promedioTecnico = \App\EvaluacionPersona::where('idEvaluado', '=', $persona->idPersona)
+        	->where('puntajeTecnico','>',0)
+        	->avg('puntajeTecnico');
+
+        $promedioSocial = \App\EvaluacionPersona::where('idEvaluado', '=', $persona->idPersona)
+        	->where('puntajeSocial','>',0)
+        	->avg('puntajeSocial');
+
+        $promedioGenero = \App\EvaluacionPersona::where('idEvaluado', '=', $persona->idPersona)
+        	->where('puntajeGenero','>',0)
+        	->avg('puntajeGenero');
+
+        if(!$promedioTecnico) $promedioTecnico = 0;
+        if(!$promedioSocial) $promedioSocial = 0;
+        if(!$promedioGenero) $promedioGenero = 0;
+
+		return view('perfil.evaluaciones', compact('promedioTecnico', 'promedioSocial', 'promedioGenero'));
 	}
 
 	public function cambiar_email()

@@ -11,8 +11,8 @@
     <h1>{{ __('frontend.my_score') }}</h1>
 
 
-    @if ( $evaluacionPersonal[0]->puntajeTecnico > 4) 
-    	<evaluacion-personal :puntaje-tecnico="{{ $evaluacionPersonal[0]->puntajeTecnico}}" :puntaje-social="{{ $evaluacionPersonal[0]->puntajeSocial}}" ></evaluacion-personal>
+    @if ( $promedioTecnico > 4) 
+    	<evaluacion-personal :puntaje-tecnico="{{ round($promedioTecnico,1)}}" :puntaje-social="{{ round($promedioSocial,1) }}" :puntaje-genero="{{ round($promedioGenero,1)}}" ></evaluacion-personal>
     @else
     	<p> {{ __('frontend.my_score_not_active') }}<p>
     @endif
