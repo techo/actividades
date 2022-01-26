@@ -13,6 +13,13 @@
                 v-bind:key="inscripcion.idInscripcion"
             >
             </tarjeta>
+            <button
+                v-if="actividadPasada && periodoDeEvaluacionYaComenzo && inscripcionPresente"
+                class="btn btn-sm btn-info"
+                @click="ir_a_evaluar"
+        >
+            {{ __('frontend.view_evaluations') }}
+        </button>
         </div>
     </div>
 </template>

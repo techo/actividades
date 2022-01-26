@@ -12,6 +12,13 @@
             <span class="small-text"><i class="fas fa-calendar-alt"></i> {{ rowData.fecha }}</span>
             <span class="small-text"><i class="fas fa-clock"></i> {{ rowData.hora }}</span>
             <span class="small-text"><i class="fas fa-map-marker-alt"></i> {{ rowData.lugar }}</span>
+            <button
+                v-if="actividadPasada && periodoDeEvaluacionYaComenzo && inscripcionPresente"
+                class="btn btn-sm btn-info"
+                @click="ir_a_evaluar"
+        >
+            {{ $t('frontend.view_evaluations') }}
+        </button>
 
         </div>
     </div>
@@ -40,7 +47,22 @@ export default {
             this.idActividad = nuevo;
         }
     },
+    methods: {
+        ir_a_evaluar: function () {
+                window.location.href = '/actividades/' + this.rowData.idActividad + '/evaluaciones'
+            },
+    },
     computed: {
+        actividadPasada: function () {
+            return moment().isAfter(moment(this.rowData.fechaFin, "DD/MM/YYYY hh:mm:ss"));
+        },
+        periodoDeEvaluacionYaComenzo: function () {
+            return moment().isSameOrAfter(moment(this.rowData.fechaInicioEvaluaciones, "DD/MM/YYYY hh:mm:ss")) &&
+                moment().isSameOrBefore(moment(this.rowData.fechaFinEvaluaciones, "DD/MM/YYYY hh:mm:ss"))
+        },
+        inscripcionPresente: function () {
+            return this.rowData.presente;
+        },
         urlDetalle: function () {
             return '/actividades/' + this.idActividad;
         }
