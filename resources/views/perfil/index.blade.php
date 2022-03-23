@@ -8,7 +8,7 @@
 @endsection
 
 @section('main_content')
-	<perfil usuario="{{json_encode($usuario)}}"></perfil>
+	<perfil usuario="{{json_encode($usuario)}}" fichaMedica="{{json_encode($fichaMedica)}}"></perfil>
 @endsection
 
 @section('footer')

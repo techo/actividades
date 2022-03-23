@@ -35,6 +35,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
 	});
 
+    Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+
 	Route::prefix('usuario')->group(
 	    function(){
 		Route::get('', function(){

@@ -213,4 +213,8 @@ class Persona extends Authenticatable implements MustVerifyEmail
         $target->delete();
 
     }
+    public function fichaMedica()
+    {
+        return $this->hasOne(FichaMedica::class, 'idPersona', 'idPersona');
+    }
 }

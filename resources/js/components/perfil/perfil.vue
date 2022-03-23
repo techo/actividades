@@ -2,6 +2,7 @@
     <div>
         <simplert ref="confirmar"></simplert>
         <div>
+
             <div class="row">
                 <div class="col-md-12">
                     <h2>{{ $t('frontend.welcome') }}, {{usernombre}} ({{ user.email }})</h2>
@@ -16,14 +17,19 @@
                     <p>{{ $t('frontend.profile_text_2') }} 
                         <a href="/perfil/cambiar_email">
                         {{ $t('frontend.profile_text_3') }}</a>.</p>
-                </div>
+                </div> 
             </div>
             <hr>
-            <div class="row">
+
+<div>
+    <b-tabs content-class="mt-3" v-model="tabIndex">
+        <b-tab :title="$t('frontend.personal_data')" href="#datos">
+
+            <!-- <div class="row">
                 <div class="col-md-5">
                     <h5>{{ $t('frontend.personal_data') }}</h5>
                 </div>
-            </div>
+            </div> -->
             <div class="row">
                 <div class="col-md-5">
                     <div class="row">
@@ -315,6 +321,123 @@
                 </div>
             </div>
             <hr>
+
+        </b-tab>
+        <b-tab href="#ficha" title="$t('frontend.ficha_medica')">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.contacto_nombre') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+
+                            <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre" v-model="ficha[0].contacto_nombre">
+                            <!-- <small class="form-text text-danger">{{validacion.contacto_nombre.texto}}&nbsp;<br></small>
+                        </div>
+                        <div class="col-md-2">
+                            <span v-bind:class="{'d-none':!validacion.contacto_nombre.invalido}"><i
+                                    class="fas fa-times text-danger"></i></span> -->
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.contacto_telefono') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="contacto_telefono" id="contacto_telefono"
+                                   v-model="ficha[0].contacto_telefono">
+                        </div> 
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.contacto_relacion') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
+                                   v-model="ficha[0].contacto_relacion">
+                        </div> 
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo" v-model="ficha[0].grupo_sanguinieo">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.cobertura_nombre') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
+                                   v-model="ficha[0].cobertura_nombre">
+                        </div> 
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.cobertura_numero') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
+                                   v-model="ficha[0].cobertura_numero">
+                        </div> 
+                    </div>  
+                </div>
+            </div>
+            <br>
+            <p class="text-muted">
+                {{ $t('frontend.ficha_medica') }}
+            </p>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input v-model="ficha[0].confirma_datos" class="form-check-input" type="checkbox" id="confirma_datos">
+                        <label class="form-check-label" for="confirma_datos">
+                            {{ $t('frontend.confirma_datos') }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <br><br>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" href="#" @click="guardarFicha()">{{ $t('frontend.save') }}</button> 
+                </div>
+            </div>
+            <br><br>
+        </b-tab>
+    </b-tabs>
+</div>
         </div>
     </div>
 </template>
@@ -328,6 +451,7 @@
             var data = {
                 guardo: false,
                 user: JSON.parse(this.usuario),
+                ficha: JSON.parse(this.fichamedica),
                 validacion: {},
                 paso_actual: 'email',
                 volver: true,
@@ -340,6 +464,11 @@
                     text: ''
                 }
             }
+            return {
+              tabIndex: 0,
+              tabs: ['#datos', '#ficha']
+            }
+
             data.usernombre = data.user.nombre;
         
             var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'sexo', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
@@ -362,12 +491,13 @@
             data.pass = '';
             return data
         },
-        props: ['usuario'],
+        props: ['usuario', 'fichamedica'],
         mounted: function () {
             this.traer_paises()
             this.traer_provincias()
             this.traer_localidades()
             this.formDirty = false
+            this.tabIndex = this.tabs.findIndex(tab => tab === this.$route.hash)
         },
         watch: {
             'user.email': function () {
@@ -434,6 +564,17 @@
                 var data = this.user
                 this.limpia_validacion_pass(data)
                 axios.put('/ajax/usuario', this.user).then(response => {
+                    this.guardo = true;
+                    this.formDirty = false;
+                    this.$parent.$refs.login.user.nombres = this.user.nombre
+                }).catch((error) => {
+                    this.validar_data()
+                });
+            },
+            guardarFicha: function () {
+                this.guardo = false;
+                var data = this.ficha[0]
+                axios.post('/ajax/fichaMedica', this.ficha[0]).then(response => {
                     this.guardo = true;
                     this.formDirty = false;
                     this.$parent.$refs.login.user.nombres = this.user.nombre
