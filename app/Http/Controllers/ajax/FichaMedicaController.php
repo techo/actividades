@@ -21,8 +21,7 @@ class FichaMedicaController extends Controller
               'grupo_sanguinieo' => 'nullable',
               'cobertura_nombre' => 'nullable',
               'cobertura_numero' => 'nullable',
-              'confirma_datos' => 'nullable',
-              'idPersona' => 'required'
+              'confirma_datos' => 'nullable'
               ]);
       $persona = Auth::user();
       $countFichas = FichaMedica::where('idPersona', $persona->idPersona)->count();
