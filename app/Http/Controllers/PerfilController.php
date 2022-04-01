@@ -12,9 +12,8 @@ class PerfilController extends Controller
 {
 	public function show(Request $request) {
 		$persona = Auth::user();
-		$fichaMedica = \App\FichaMedica::where('idPersona', $persona->idPersona)->get();
 		$usuario = new PerfilResource($persona);
-		return view('perfil.index', compact('usuario', 'fichaMedica'));
+		return view('perfil.index', compact('usuario'));
 	}
 
 

@@ -14,6 +14,20 @@ class PerfilResource extends Resource
      */
     public function toArray($request)
     {
+        if ($this->fichaMedica){
+            $fichaMedica = $this->fichaMedica;
+        } else {
+            $fichaMedica = [
+                'contacto_nombre' => '',
+                'contacto_telefono' => '',
+                'contacto_relacion' => '',
+                'grupo_sanguinieo' => '',
+                  'cobertura_nombre' => '',
+                  'cobertura_numero' => '',
+                  'confirma_datos' => '',
+                  'idPersona' => ''
+            ];
+        }
         return [
             'id'            => $this->idPersona,
             'email'         => $this->mail,
@@ -30,7 +44,8 @@ class PerfilResource extends Resource
             'facebook_id'   => $this->facebook_id,
             'recibirMails'  => $this->recibirMails,
             'acepta_marketing' => $this->acepta_marketing,
-            'pass'          => ''
+            'pass'          => '',
+            'fichaMedica'          => $fichaMedica
         ];
     }
 }

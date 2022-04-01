@@ -334,7 +334,7 @@
                     <div class="row">
                         <div class="col-md-10">
 
-                            <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre" v-model="ficha[0].contacto_nombre">
+                            <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre" v-model="user.fichaMedica.contacto_nombre">
                             <!-- <small class="form-text text-danger">{{validacion.contacto_nombre.texto}}&nbsp;<br></small>
                         </div>
                         <div class="col-md-2">
@@ -353,7 +353,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="contacto_telefono" id="contacto_telefono"
-                                   v-model="ficha[0].contacto_telefono">
+                                   v-model="user.fichaMedica.contacto_telefono">
                         </div> 
                     </div>  
                 </div>
@@ -366,7 +366,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
-                                   v-model="ficha[0].contacto_relacion">
+                                   v-model="user.fichaMedica.contacto_relacion">
                         </div> 
                     </div>  
                 </div>
@@ -380,7 +380,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo" v-model="ficha[0].grupo_sanguinieo">
+                            <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo" v-model="user.fichaMedica.grupo_sanguinieo">
                         </div>
                     </div>
 
@@ -394,7 +394,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
-                                   v-model="ficha[0].cobertura_nombre">
+                                   v-model="user.fichaMedica.cobertura_nombre">
                         </div> 
                     </div>  
                 </div>
@@ -407,7 +407,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
-                                   v-model="ficha[0].cobertura_numero">
+                                   v-model="user.fichaMedica.cobertura_numero">
                         </div> 
                     </div>  
                 </div>
@@ -420,7 +420,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-check">
-                        <input v-model="ficha[0].confirma_datos" class="form-check-input" type="checkbox" id="confirma_datos">
+                        <input v-model="user.fichaMedica.confirma_datos" class="form-check-input" type="checkbox" id="confirma_datos">
                         <label class="form-check-label" for="confirma_datos">
                             {{ $t('frontend.confirma_datos') }}
                         </label>
@@ -451,7 +451,6 @@
             var data = {
                 guardo: false,
                 user: JSON.parse(this.usuario),
-                ficha: JSON.parse(this.fichamedica),
                 validacion: {},
                 paso_actual: 'email',
                 volver: true,
@@ -490,7 +489,7 @@
             data.pass = '';
             return data
         },
-        props: ['usuario', 'fichamedica'],
+        props: ['usuario'],
         mounted: function () {
             this.traer_paises()
             this.traer_provincias()
@@ -572,8 +571,7 @@
             },
             guardarFicha: function () {
                 this.guardo = false;
-                var data = this.ficha[0]
-                axios.post('/ajax/fichaMedica', this.ficha[0]).then(response => {
+                axios.post('/ajax/fichaMedica', this.user.fichaMedica).then(response => {
                     this.guardo = true;
                     this.formDirty = false;
                     this.$parent.$refs.login.user.nombres = this.user.nombre
