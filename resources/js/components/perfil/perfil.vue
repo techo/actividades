@@ -464,10 +464,9 @@
                     text: ''
                 }
             }
-            return {
-              tabIndex: 0,
-              tabs: ['#datos', '#ficha']
-            }
+            data.tabIndex = 1,
+            data.tabs = ['#datos', '#ficha'],
+            
 
             data.usernombre = data.user.nombre;
         
