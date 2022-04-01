@@ -130,6 +130,17 @@ return [
  	'date_placeholder' => 'Select a date',
  	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
 
+ 	// perfil / ficha medica
+ 	'ficha_medica' => 'Medical Data',
+ 	'contacto_nombre' => 'Emergency Contact Name',
+ 	'contacto_telefono' => 'Emergency Contact Phone',
+ 	'contacto_relacion' => 'Emergency Contact Relation',
+ 	'grupo_sanguinieo' => 'Bloon Type',
+ 	'cobertura_nombre' => 'Medical Assurance Name',
+ 	'cobertura_numero' => 'Medical Assurance Number',
+ 	'acepta_terminos' => 'This information would be used only for your own safety',
+ 	'confirma_datos' => 'I declare this information is valid',
+
  	// perfil/index.blade.php
  	'profile' => 'Profile',
 

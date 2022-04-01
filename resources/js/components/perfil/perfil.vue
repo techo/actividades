@@ -323,7 +323,48 @@
             <hr>
 
         </b-tab>
-        <b-tab href="#ficha" title="$t('frontend.ficha_medica')">
+        <b-tab href="#ficha" :title="$t('frontend.ficha_medica')">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo" v-model="user.fichaMedica.grupo_sanguinieo">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.cobertura_nombre') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
+                                   v-model="user.fichaMedica.cobertura_nombre">
+                        </div> 
+                    </div>  
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{{ $t('frontend.cobertura_numero') }}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
+                                   v-model="user.fichaMedica.cobertura_numero">
+                        </div> 
+                    </div>  
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="row">
@@ -371,50 +412,10 @@
                     </div>  
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo" v-model="user.fichaMedica.grupo_sanguinieo">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>{{ $t('frontend.cobertura_nombre') }}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
-                                   v-model="user.fichaMedica.cobertura_nombre">
-                        </div> 
-                    </div>  
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>{{ $t('frontend.cobertura_numero') }}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
-                                   v-model="user.fichaMedica.cobertura_numero">
-                        </div> 
-                    </div>  
-                </div>
-            </div>
+            
             <br>
             <p class="text-muted">
-                {{ $t('frontend.ficha_medica') }}
+                {{ $t('frontend.acepta_terminos') }}
             </p>
 
             <div class="row">
@@ -495,7 +496,6 @@
             this.traer_provincias()
             this.traer_localidades()
             this.formDirty = false
-            this.tabIndex = this.tabs.findIndex(tab => tab === this.$route.hash)
         },
         watch: {
             'user.email': function () {

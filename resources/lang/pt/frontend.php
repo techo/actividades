@@ -129,6 +129,17 @@ return [
  	'date_placeholder' => 'Selecione uma data',	
  	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
 
+ 	// perfil / ficha medica
+ 	'ficha_medica' => 'Ficha Médica',
+ 	'contacto_nombre' => 'Nombre Contacto Emergencia',
+ 	'contacto_telefono' => 'Telefono Contacto Emergencia',
+ 	'contacto_relacion' => 'Relacion Contacto Emergencia',
+ 	'grupo_sanguinieo' => 'Grupo Sanguineo',
+ 	'cobertura_nombre' => 'Nombre de Cobertura Médica',
+ 	'cobertura_numero' => 'Número de Cobertura Médica',
+ 	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
+ 	'confirma_datos' => 'Declaro que estos datos son veridicos',
+
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
 
