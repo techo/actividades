@@ -56,6 +56,7 @@ class InscripcionesSearch
             ->leftJoin('atl_pais as personaPais', 'Persona.idPais', '=', 'personaPais.id')
             ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
             ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
+            ->leftJoin('ficha_medicas as ficha', 'Persona.idPersona', '=', 'ficha.idPersona')
             ->leftJoin('Grupo_Persona as Rol', function ($join) {
                 $join->on('Rol.idPersona', '=', 'Persona.idPersona');
                 $join->on('Rol.idActividad', '=', 'Inscripcion.idActividad');
@@ -71,6 +72,12 @@ class InscripcionesSearch
                     'Persona.mail',
                     'Persona.fechaNacimiento',
                     'Persona.sexo',
+                    'ficha.grupo_sanguinieo',
+                    'ficha.cobertura_nombre',
+                    'ficha.cobertura_numero',
+                    'ficha.contacto_nombre',
+                    'ficha.contacto_telefono',
+                    'ficha.contacto_relacion',
                     'personaPais.nombre as pPais',
                     'personaProvincia.provincia as pProvincia',
                     'personaLocalidad.localidad as pLocalidad',

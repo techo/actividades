@@ -20,6 +20,9 @@
             <li>
                 <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
             </li>
+            <li>
+                <a href="#ficha" data-toggle="tab" aria-expanded="true">Ficha Medica</a>
+            </li>
             @role('admin')
             <li>
                 <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
@@ -33,6 +36,14 @@
                     prop-usuario="{{ json_encode($arrUsuario) }}"
                     edicion="{{ $edicion }}"
                 ></usuario-form>
+
+            </div>
+            <div class="tab-pane" id="ficha">
+
+                <ficha-form
+                    prop-usuario="{{ json_encode($arrUsuario) }}"
+                    edicion="{{ $edicion }}"
+                ></ficha-form>
 
             </div>
             <div class="tab-pane" id="inscripciones">
