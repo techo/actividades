@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backoffice;
 
 use App\Persona;
+use App\FichaMedica;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -27,6 +28,7 @@ class UsuariosController extends Controller
     public function show(Request $request, $id)
     {
         $usuario = Persona::find($id);
+        $ficha = FichaMedica::where('idPersona', $id)->first();
         $rol = $usuario->roles->toArray();
         if(!empty($rol)){
             $rol = array_shift($rol);
@@ -51,7 +53,7 @@ class UsuariosController extends Controller
         ];
 
         $edicion = false;
-        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario'));
+        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario', 'ficha'));
     }
 
     public function delete(Persona $id)

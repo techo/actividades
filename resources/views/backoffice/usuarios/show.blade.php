@@ -40,10 +40,10 @@
             </div>
             <div class="tab-pane" id="ficha">
 
-                <ficha-form
-                    prop-usuario="{{ json_encode($arrUsuario) }}"
+                <usuario-ficha-tab
+                    prop-usuario="{{ json_encode($ficha) }}"
                     edicion="{{ $edicion }}"
-                ></ficha-form>
+                ></usuario-ficha-tab>
 
             </div>
             <div class="tab-pane" id="inscripciones">
