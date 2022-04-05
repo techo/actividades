@@ -24,12 +24,19 @@ class UrlPais
 
        if ($pais == null) {
             if(config('app.pais_default')){
-                $pais = \App\Pais::find(config('app.pais_default'));
-                config([ 'app.pais' => $pais->id ]);
+                $pais = Pais::where('id', config('app.pais_default'))->first();
+                config([ 'app.pais' =>  $pais->id]);
+                $request->session()->put('pais', $pais->id);
+                $request->session()->put('locale',$pais->locale);
             }
        } else {
-       config([ 'app.pais' => $pais->id ]);
+            config([ 'app.pais' => $pais->id ]);
+            $request->session()->put('pais', $pais->id);
+            $request->session()->put('locale',$pais->locale);
+           // dd($pais->id);
+
        }
+
        return $next($request);
    }
 }
