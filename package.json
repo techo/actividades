@@ -28,7 +28,7 @@
         "lodash": "^4.17.5",
         "mocha": "^6.1.4",
         "mocha-webpack": "^1.1.0",
-        "moment": "^2.17.1",
+        "moment": "^2.29.2",
         "moxios": "^0.4.0",
         "vue": "^2.5.16",
         "vue-events": "^3.0.0",
