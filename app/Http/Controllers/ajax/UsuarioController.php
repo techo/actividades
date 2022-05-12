@@ -63,7 +63,7 @@ class UsuarioController extends BaseController
 
       $persona->notify(new \App\Notifications\RegistroUsuario);
 
-      event(new RegistroUsuario($persona));
+     // event(new RegistroUsuario($persona));
 
       $request->session()->regenerate();
       $request->session()->flash('mensaje', __('messages.account_created'));
