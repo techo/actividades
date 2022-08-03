@@ -39,7 +39,7 @@
                 filtros: {}
             }
         },
-        components: {Suscribe},
+        components: {Suscribe, tarjeta: Tarjeta},
         created () {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
