@@ -6,14 +6,15 @@
         <p class="mt-3 lead">
             {{ $t('frontend.suscribe_so_we_get_in_touch') }}
         </p>
-        <input class="mt-3 text-center" type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.mail"
+        <input v-show="!submited" class="mt-3 text-center" type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.mail"
             @blur="validateEmail">
+        <p v-show="submited" class="lead text-success">OK</p>
         <small class="form-text text-danger" v-if="!validation">{{ $t('frontend.email_validation_error') }}</small>
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div class="row justify-content-center text-light">
-            <a class="btn btn-primary m-3" @click="suscribe">
+            <a class="btn btn-primary m-3" @click="suscribe" v-show="!submited">
                 <strong>{{ $t('frontend.suscribe') }} </strong>
             </a>
         </div>
@@ -36,6 +37,7 @@ export default {
             },
             validation: true,
             loading: false,
+            submited: false,
             url: '/ajax/actividades/suscribe',
 
         }
@@ -63,6 +65,7 @@ export default {
             axios.post(this.url, this.data)
                 .then(response => {
                     console.log(response);
+                    this.submited=true;
                 })
                 .catch((error) => {
                     // Error
