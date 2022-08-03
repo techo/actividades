@@ -43,7 +43,7 @@
         "chart.js": "^2.7.2",
         "extract-text-webpack-plugin": "^3.0.2",
         "jquery-knob": "^1.2.11",
-        "minimist": "^1.2.0",
+        "minimist": "^1.2.6",
         "tinymce": "^5.1.4",
         "vue-axios": "^2.1.1",
         "vue-chartjs": "^3.3.2",
