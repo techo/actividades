@@ -64,7 +64,10 @@ return [
 
 	'welcome' => 'Bienvenido',
 
-	'empty_search' => 'No hay Actividades Abiertas con estos filtros',
+	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
+	'suscribe_so_we_get_in_touch' => 'Suscribite para enterarte primerx de las próximas actividades',
+	'suscribe' => 'Suscribirme',
+	'email_validation_error' => 'Por favor, ingresa un email valido',
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Voluntades movilizadas',

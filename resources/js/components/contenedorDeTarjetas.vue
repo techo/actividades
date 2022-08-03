@@ -13,7 +13,7 @@
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="vacio" class="loading" style="text-align: center">
-            {{ $t('frontend.empty_search') }}
+            <Suscribe :filtros="filtros" />
         </div>
     </span>
 </template>
@@ -21,6 +21,7 @@
 <script>
     import axios from 'axios';
     import Tarjeta from './tarjeta';
+    import Suscribe from './suscribe';
 
     export default {
         name: "contenedor-de-tarjetas",
@@ -38,7 +39,7 @@
                 filtros: {}
             }
         },
-        components: {tarjeta: Tarjeta},
+        components: {Suscribe},
         created () {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()

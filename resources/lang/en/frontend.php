@@ -63,7 +63,10 @@ return [
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 
-	'empty_search' => 'There is no activity with these filters',
+	'empty_search' => 'Sorry! There are no open activity with those filters',
+	'suscribe_so_we_get_in_touch' => 'Suscribe to be the first on the next openings',
+	'suscribe' => 'Suscribe',
+	'email_validation_error' => 'Please enter a valid email address',
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Volunteer participations',
