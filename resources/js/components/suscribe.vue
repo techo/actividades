@@ -3,10 +3,10 @@
         <p class="m-3">
             {{ $t('frontend.empty_search') }}
         </p>
-        <p class="m-5 lead">
+        <p class="mt-3 lead">
             {{ $t('frontend.suscribe_so_we_get_in_touch') }}
         </p>
-        <input type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.email"
+        <input class="mt-3 text-center" type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.mail"
             @blur="validateEmail">
         <small class="form-text text-danger" v-if="!validation">{{ $t('frontend.email_validation_error') }}</small>
         <div v-show="loading" class="loading" style="text-align: center">
@@ -30,8 +30,9 @@ export default {
     data() {
         return {
             data: {
-                email: '',
-                filtros: []
+                mail: '',
+                filtros_categorias: [],
+                filtros_ubicaciones: [],
             },
             validation: true,
             loading: false,
@@ -44,21 +45,22 @@ export default {
     ],
     methods: {
         validateEmail() {
-            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.data.email)) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.data.mail)) {
                 this.validation = true;
             } else {
                 this.validation = false;
             }
             console.log(this.msg)
         },
-        suscribe(url, filtros, refresh) {
+        suscribe() {
             this.validateEmail();
             if (this.loading || !this.validation) { return; };
             this.loading = true;
 
-            this.data.filtros = this.filtros;
+            this.data.filtros_categorias = this.filtros.tipos;
+            this.data.filtros_ubicaciones = this.filtros.provincias;
 
-            axios.post(url, this.data)
+            axios.post(this.url, this.data)
                 .then(response => {
                     console.log(response);
                 })

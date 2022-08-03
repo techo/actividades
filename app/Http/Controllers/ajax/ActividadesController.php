@@ -10,6 +10,8 @@ use App\Search\LocalidadesSearch;
 use App\Search\TiposActividadesSearch;
 use Illuminate\Http\Request;
 use App\Actividad;
+use App\Suscribe;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 
@@ -96,6 +98,34 @@ class actividadesController extends BaseController
             $listTipos[$i]['nombre'] = $tipos[$i]->nombre;
         }
         return $listTipos;
+    }
+
+
+    public function suscribe(Request $request){
+        $validado = $request->validate([
+                'mail' => 'required',
+                'filtros_categorias' => 'nullable',
+                'filtros_ubicaciones' => 'nullable'
+            ]);
+
+        $suscription = new Suscribe();
+
+        $suscription->fill($validado);
+
+        $persona = Auth::user();
+        if ($persona){
+            $suscription->idPersona = $persona->idPersona;
+        } 
+
+        if (\Session::get('pais')){
+            $suscription->idPais = \Session::get('pais');
+        }else if(config('app.pais')) {
+            $suscription->idPais =  config('app.pais');
+        }  
+        
+
+        $suscription->save();
+
     }
 
 

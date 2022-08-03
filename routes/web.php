@@ -59,6 +59,7 @@ Route::prefix('ajax')->group(function () {
     Route::get('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
     Route::get('actividades/tipos', 'ajax\ActividadesController@filtrarTiposDeActividades');
     Route::get('actividades', 'ajax\ActividadesController@index');
+    Route::post('actividades/suscribe', 'ajax\ActividadesController@suscribe');
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
 
     Route::get('auditorias/{tabla}/{id}', 'ajax\AuditoriasController@show');
