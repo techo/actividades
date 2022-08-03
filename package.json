@@ -37,7 +37,7 @@
     },
     "dependencies": {
         "@tinymce/tinymce-vue": "^3.0.1",
-        "ajv": "^6.4.0",
+        "ajv": "^6.12.3",
         "babel-loader": "^7.1.4",
         "bootstrap-vue": "^2.0.0-rc.6",
         "chart.js": "^2.7.2",
