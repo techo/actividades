@@ -65,4 +65,12 @@ class UsuariosController extends Controller
         }
         return redirect()->to('/admin/usuarios');
     }
+
+    public function suscriptos()
+    {
+        $datatableConfig = config('datatables.suscriptos');
+        $fields = json_encode($datatableConfig['fields']);
+        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        return view('backoffice.usuarios.suscriptos', compact('fields', 'sortOrder'));
+    }
 }

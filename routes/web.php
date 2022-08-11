@@ -157,6 +157,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     });
 
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
+    Route::get('/suscriptos', 'backoffice\UsuariosController@suscriptos')->middleware('role:admin');
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
@@ -257,6 +258,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/configuracion/oficinas', 'backoffice\ajax\OficinasController@index');
 
     Route::get('/ajax/usuarios', 'backoffice\ajax\UsuariosController@index')->middleware('permission:ver_usuarios');
+
+    Route::get('/ajax/suscriptos', 'backoffice\ajax\SuscriptosController@index')->middleware('permission:ver_usuarios');
     Route::get('/ajax/usuarios/{id}/rol','backoffice\ajax\UsuariosController@getRol')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::post('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index');// para testing only. eliminar
     Route::get('/ajax/grupos/{id}/miembros', 'backoffice\ajax\GruposController@index');

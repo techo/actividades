@@ -314,6 +314,32 @@ return [
             ],
         ]
     ],
+    'suscriptos' => [
+        'fields' => [
+            [
+                'name' => 'idPersona',
+                'sortField' => 'idPersona',
+                'title' => 'Persona'
+            ],
+            [
+                'name' => 'email',
+                'sortField' => 'email',
+                'title' => 'Mail'
+            ],
+            [
+                'name' => 'created_at',
+                'sortField' => 'created_at',
+                'title' => 'Fecha Creación'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'created_at',
+                'sortField' => 'created_at',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'puntos' => [
         'fields' => [
             [
