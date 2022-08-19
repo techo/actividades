@@ -66,6 +66,9 @@ class LoginController extends Controller
                 $afterLoginUrl = '/';
             }
 
+            $request->session()->put('pais', Auth::user()->Pais->id);
+            $request->session()->put('locale', Auth::user()->Pais->locale);
+
             return response(
                 [
                     'success' => true,

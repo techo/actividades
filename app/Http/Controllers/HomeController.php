@@ -34,6 +34,26 @@ class HomeController extends Controller
 
         return view('home', compact('categoriaActividad', 'showLogin'));
     }
+    
+    public function multiPais(Request $request)
+    {   
+        if ($request->session()->get('pais')){
+            $pais = \App\Pais::find($request->session()->get('pais'));
+            return redirect($pais->abreviacion);
+        }
+
+
+        $paises = \App\Pais::where('habilitado',1)->get();
+        $showLogin = false;
+        $showPaises = 1;
+
+        if($request->path() == 'login'){
+            $showLogin = true;
+        }
+
+
+        return view('multiPais', compact('paises', 'showLogin', 'showPaises'));
+    }
 
     public function seleccionarPais(Request $request, $id)
     {
@@ -42,7 +62,7 @@ class HomeController extends Controller
             $request->session()->put('pais', $pais->id);
             $request->session()->put('locale',$pais->locale);
         }
-        
+
         return redirect($pais->abreviacion);
     }
 

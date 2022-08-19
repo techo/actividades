@@ -101,9 +101,7 @@
                     <div class="col-md-12">
                         <a class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
-                        </a>
-                        
-                        
+                        </a> 
                     </div>
                 </div>
                 
@@ -112,12 +110,12 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="btn-group " role="group" ref="paises">
-                            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
-                            <div class="dropdown-menu">
-                                <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
-                            </div>
+                    <div class="btn-group " role="group" ref="paises" v-if="this.showpaises==0">
+                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
+                        <div class="dropdown-menu">
+                            <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
                         </div>
+                    </div>
                         <br>
                     <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a>
                     <ul class="navbar-nav mr-auto">
@@ -167,7 +165,6 @@
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false"
-                                v-model="user.nombres"
                         >
                                {{ $t('frontend.hello') }}, {{ user.nombres }}
                         </button>
@@ -246,7 +243,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais', 'showpaises' ],
         data () {
             let data = {
                 credentials: {
