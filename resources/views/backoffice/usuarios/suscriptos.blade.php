@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Suscriptos')
+@section('page_title', 'Suscriptas')
 
 
 @section('content')

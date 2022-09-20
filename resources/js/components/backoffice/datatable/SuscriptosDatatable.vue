@@ -1,7 +1,12 @@
 <template>
   <div>
     <simple-alert ref="loading"></simple-alert>
+
+    <div style="text-align: right">
+				<button class="btn btn-default" @click="exportarSuscriptos()" >Descargar<i class="fa fa-download"></i></button>
+			</div>
     <usuarios-filter-bar v-bind:placeholder-text="dataPlaceholderText"></usuarios-filter-bar>
+
     <vuetable
       class="vuetable"
       ref="vuetable"
@@ -135,6 +140,28 @@ export default {
     ocultarLoadingAlert () {
         this.$refs.loading.justCloseSimplert();
     },
+    exportarSuscriptos: function() {
+			this.loading = true;
+			axios({
+				url: '/admin/suscriptos/exportar', 
+				params: null,
+				responseType: 'blob',
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+				}
+			})
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', 'Suscriptos.xlsx');
+				document.body.appendChild(link);
+				link.click();
+				this.loading = false;
+			})
+			.catch((error) => { debugger; });
+		},
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);

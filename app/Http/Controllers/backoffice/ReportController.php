@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Actividad;
 use App\Exports\ActividadesExport;
+use App\Exports\SuscriptosExport;
 use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
@@ -104,6 +105,11 @@ class ReportController extends Controller
     {
         $inscripciones = new InscripcionesUsuarioExport($id);
         return Excel::download($inscripciones,'Inscripciones de ' . $id . '.xlsx');
+    }
+    public function exportarSuscriptos(Request $request)
+    {
+        $suscriptos = (new SuscriptosExport($request->filter));
+        return Excel::download($suscriptos, 'suscriptas.xlsx');
     }
 
 }

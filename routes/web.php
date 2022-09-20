@@ -189,6 +189,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
+    Route::get('/suscriptos/exportar', 'backoffice\ReportController@exportarSuscriptos')->middleware('role:admin');
     
     Route::get('/actividades/{id}/exportar-evaluaciones-voluntarios', 'backoffice\ReportController@exportarEvaluacionesPersonas');
     Route::get('/actividades/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesActividad');
