@@ -27,8 +27,8 @@ return [
 	'mail_placeholder' => 'Digite seu e-mail',
 	'password' => 'Senha',
 	'password_placeholder' => 'Digite sua senha',
-	'not_a_volunteer' => 'AINDA NÃO É VOLUNTÁRIO DO TETO?',
-	'volunteer_me' => 'Quero ser voluntário!',
+	'not_a_volunteer' => 'Faça login ou cadastre-se com',
+	'volunteer_me' => 'Registre-se com e-mail',
 	'hello' => 'Olá',
 	'activities' => 'Atividades',
 	'my_activities' => 'Minhas Actividades',
@@ -37,6 +37,9 @@ return [
 	'help' => 'Ajuda',
 	'logout' => 'Sair',
 	'login_null' => 'O e-mail e a senha são obrigatórios',
+
+
+	'welcome_techo' => 'Bem-vindo ao TECHO',
 
 	//loginController
 	'login_error' => 'E-mail e/ou senha es incorretos',
@@ -61,10 +64,11 @@ return [
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bemvindo',
 	
-	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
-	'suscribe_so_we_get_in_touch' => 'Suscribite para enterarte primerx de las próximas actividades',
-	'suscribe' => 'Suscribirme',
-	'email_validation_error' => 'Por favor, ingresa un email valido',
+	'empty_search' => 'opa! Não há atividades abertas com esses filtros',
+	'suscribe_so_we_get_in_touch' => 'Inscreva-se para saber firstx sobre as próximas atividades',
+	'suscribe' => 'inscrever',
+	'suscribe_thanks' => 'Obrigada! Iremos notificá-lo quando as atividades forem abertas em sua área',
+	'email_validation_error' => 'por favor digite um email válido',
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Volunteer participations',
@@ -196,6 +200,9 @@ return [
 
  	// contenedorchecktipoactividad
  	'activity_types' => 'Tipos de Actividade',
+
+ 	// contenedorcheckprovincias
+ 	'place' => 'Lugar',
     
 	// actividades/show.blade.php
     'description' => '',
@@ -275,7 +282,7 @@ return [
 	'delete_filter' => 'Apagar Filtros',
 
 	// compartir-modal.blade.php
-	'email' => 'Email Address',
+	'email' => 'Email',
 	'copy_link' => 'Copy link',
 
 	// evaluaciones/index.blade.php

@@ -28,7 +28,7 @@ return [
 	'password' => 'Password',
 	'password_placeholder' => 'Enter your password',
 	'not_a_volunteer' => 'Log in or Sign up with',
-	'volunteer_me' => 'I want to volunteer!',
+	'volunteer_me' => 'Register with email',
 	'hello' => 'Hi',
 	'activities' => 'Activities',
 	'my_activities' => 'My Activities',
@@ -66,6 +66,7 @@ return [
 	'empty_search' => 'Sorry! There are no open activity with those filters',
 	'suscribe_so_we_get_in_touch' => 'Suscribe to be the first on the next openings',
 	'suscribe' => 'Suscribe',
+	'suscribe_thanks' => 'Thank you! We will notify you when activities open in your area',
 	'email_validation_error' => 'Please enter a valid email address',
 
 	// components/estadisticas-publicas.vue
@@ -198,6 +199,9 @@ return [
 	
  	// contenedorchecktipoactividad
  	'activity_types' => 'Types of Activities',
+
+ 	// contenedorcheckprovincias
+ 	'place' => 'Place',
 
 	// actividades/show.blade.php
     'description' => '',

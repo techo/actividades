@@ -8,7 +8,7 @@
         </p>
         <input v-show="!submited" class="mt-3 text-center" type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.mail"
             @blur="validateEmail">
-        <p v-show="submited" class="lead text-success">OK</p>
+        <p v-show="submited" class="lead text-success">{{ $t('frontend.suscribe_thanks') }}</p>
         <small class="form-text text-danger" v-if="!validation">{{ $t('frontend.email_validation_error') }}</small>
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
