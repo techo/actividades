@@ -34,6 +34,7 @@ import BtnMisActividades from './components/perfil/btnMisActividades';
 import TarjetaHorizontal from './components/perfil/tarjeta-horizontal';
 import CookiesBar from './components/cookies-bar';
 import EstadisticasPublicas from './components/estadisticas-publicas';
+import QuizTechero from './components/perfil/quizTechero';
 import avisoModal from './components/aviso-modal'
 Vue.component('aviso-modal', avisoModal);
 
@@ -76,6 +77,7 @@ Vue.component('btn-mis-actividades', BtnMisActividades);
 Vue.component('tarjeta-horizontal', TarjetaHorizontal);
 Vue.component('cookies-bar', CookiesBar);
 Vue.component('estadisticas-publicas', EstadisticasPublicas);
+Vue.component('quiz-techero', QuizTechero);
 
 window.Event = new Vue();
 

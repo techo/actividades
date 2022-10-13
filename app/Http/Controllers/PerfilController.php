@@ -53,6 +53,11 @@ class PerfilController extends Controller
 		return view('perfil.cambiar_email', compact('usuario'));
     }
 
+	public function quiz_techero()
+    {
+		return view('perfil.quizTechero');
+    }
+
     public function actualizar_email(Request $request)
     {
     	$persona = Auth::user();

@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Request;
 
 //Frontoffice
 #Route::get('/', 'HomeController@index')->name('home');
@@ -326,5 +329,5 @@ Route::get('locale/{locale}', function($locale){
 
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
     Route::get('/', 'ActividadesController@index');
-
+    Route::get('/autotest', 'PerfilController@quiz_techero');
 });
