@@ -104,8 +104,11 @@ class actividadesController extends BaseController
     public function suscribe(Request $request){
         $validado = $request->validate([
                 'mail' => 'required',
-                'filtros_categorias' => 'nullable',
-                'filtros_ubicaciones' => 'nullable'
+                'filtro_categorias' => 'nullable',
+                'filtro_ubicaciones' => 'nullable',
+                'perfil_seleccionado' => 'nullable',
+                'tematica' => 'nullable',
+                'tiempo_disponible' => 'nullable',
             ]);
 
         $suscription = new Suscribe();

@@ -69,6 +69,8 @@ return [
 	'suscribe' => 'Suscribirme',
 	'suscribe_thanks' => 'Gracias! te avisaremos cuando se abran actividades en tu zona',
 	'email_validation_error' => 'Por favor, ingresa un email valido',
+	'autotestTituloBoton' => 'Autotest: ¿Cuál es la actividad perfecta para vos?',
+	
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Voluntades movilizadas',

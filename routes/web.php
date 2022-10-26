@@ -327,7 +327,8 @@ Route::get('locale/{locale}', function($locale){
     // Route::get('/', 'ActividadesController@index');
     Route::get('/actividades', 'ActividadesController@index');
 
+Route::get('/autotest', 'PerfilController@quiz_techero');
+
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
     Route::get('/', 'ActividadesController@index');
-    Route::get('/autotest', 'PerfilController@quiz_techero');
 });

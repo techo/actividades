@@ -8,7 +8,16 @@ class Suscribe extends Model
 {
 
     protected $table = "Suscripciones";
-    protected $fillable = ['mail', 'idPersona', 'idPais', 'filtro_categorias', 'filtro_ubicaciones' ];
+    protected $fillable = [
+        'mail',
+        'idPersona',
+        'idPais',
+        'filtro_categorias',
+        'filtro_ubicaciones',
+        'perfil_seleccionado',
+        'tematica',
+        'tiempo_disponible'
+    ];
 
 
     public function pais()

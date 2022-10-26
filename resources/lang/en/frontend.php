@@ -68,6 +68,7 @@ return [
 	'suscribe' => 'Suscribe',
 	'suscribe_thanks' => 'Thank you! We will notify you when activities open in your area',
 	'email_validation_error' => 'Please enter a valid email address',
+	'autotestTituloBoton' => 'Self-test: What is the perfect activity for you?',
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Volunteer participations',

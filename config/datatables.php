@@ -327,6 +327,21 @@ return [
                 'title' => 'Mail'
             ],
             [
+                'name' => 'perfil_seleccionado',
+                'sortField' => 'perfil_seleccionado',
+                'title' => 'Perfil'
+            ],
+            [
+                'name' => 'tematica',
+                'sortField' => 'tematica',
+                'title' => 'Temática'
+            ],
+            [
+                'name' => 'tiempo_disponible',
+                'sortField' => 'tiempo_disponible',
+                'title' => 'Tiempo Disponible'
+            ],
+            [
                 'name' => 'created_at',
                 'sortField' => 'created_at',
                 'title' => 'Fecha Creación'

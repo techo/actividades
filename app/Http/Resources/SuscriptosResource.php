@@ -17,7 +17,9 @@ class SuscriptosResource extends Resource
         return [
             'idPersona' => $this->idPersona,
             'email'    => $this->mail,
-            'pais'    => $this->idPais,
+            'perfil_seleccionado'    => $this->perfil_seleccionado,
+            'tematica'    => $this->tematica,
+            'tiempo_disponible'    => $this->tiempo_disponible,
             'created_at' => ($this->created_at)?$this->created_at->format('d/m/Y'):'',
         ];
     }

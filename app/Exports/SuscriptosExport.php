@@ -29,7 +29,7 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         list($sortField, $sortOrder) = $sort;
 
         $result = \App\Suscribe::select(
-                ['mail', 'idPersona', 'created_at']
+                ['mail', 'idPersona', 'perfil_seleccionado', 'tematica', 'tiempo_disponible', 'created_at']
             )
             ->orderBy($sortField, $sortOrder);
 
@@ -59,6 +59,9 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         return [
             $suscritos->mail,
             $suscritos->idPersona,
+            $suscritos->perfil_seleccionado,
+            $suscritos->tematica,
+            $suscritos->tiempo_disponible,
             ($suscritos->created_at)?Date::dateTimeToExcel($suscritos->created_at):null
 
         ];
@@ -69,6 +72,9 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         return [
             'Mail',
             'IdPersona (si el mail esta asociado a un usuario)',
+            'Perfil Seleccionado',
+            'tematica',
+            'tiempo_disponible',
             'Fecha De Creación'
         ];
     }
