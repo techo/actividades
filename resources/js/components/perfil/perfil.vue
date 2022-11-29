@@ -380,7 +380,7 @@
                                     v-model="user.fichaMedica.contacto_relacion">
                             </div>
                         </div>
-                        <p class="text-muted">
+                        <p class="text-muted mt-2">
                             {{ $t('frontend.acepta_terminos') }}
                         </p>
 
@@ -395,15 +395,12 @@
                                 </div>
                             </div>
                         </div>
-
-                        <br><br>
-                        <div class="row">
+                        <div class="row mt-2">
                             <div class="col-md-12">
                                 <button v-if="user.fichaMedica.confirma_datos" class="btn btn-primary" href="#" @click="guardarFicha()">{{ $t('frontend.save')
                                 }}</button>
                             </div>
                         </div>
-                        <br><br>
                     </b-tab>
                 </b-tabs>
             </div>

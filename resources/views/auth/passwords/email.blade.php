@@ -18,10 +18,10 @@
                     <form class="form-inline" method="POST" action="{{ route('password.email') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('mail') ? ' has-error' : '' }}">
-                            <label for="mail" class="col-md-4 control-label">{{ __('frontend.mail') }}</label>
+                        <div class="form-group{{ $errors->has('mail') ? ' has-error' : '' }} col-md-8">
+                            <label for="mail" class="col-md-3 control-label">{{ __('frontend.mail') }}</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <input id="mail" type="email" class="form-control" name="mail" value="{{ old('mail') }}" required>
 
                                 @if ($errors->has('mail'))
@@ -31,13 +31,10 @@
                                 @endif
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('frontend.send_link') }}
-                                </button>
-                            </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('frontend.send_link') }}
+                            </button>
                         </div>
                     </form>
                 </div>
