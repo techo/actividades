@@ -96,7 +96,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <b-form-group>
-                                <b-form-radio-group id="radios2" v-model="user.sexo">
+                                <b-form-radio-group id="radios2" v-model="user.genero">
                                     <b-form-radio value="F">{{ $t('frontend.gender_f') }}</b-form-radio>
                                     <b-form-radio value="M">{{ $t('frontend.gender_m') }}</b-form-radio>
                                     <b-form-radio value="X">{{ $t('frontend.gender_x') }}</b-form-radio>
@@ -105,11 +105,11 @@
                             </b-form-group>
                         </div>
                         <div class="col-md-2">
-                            <span v-bind:class="{'d-none':!validacion.sexo.invalido}"><i
+                            <span v-bind:class="{'d-none':!validacion.genero.invalido}"><i
                                     class="fas fa-times text-danger"></i></span>
                         </div>
                         <div class="row">
-                            <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
+                            <small class="form-text text-danger">{{validacion.genero.texto}}&nbsp;<br></small>
                         </div>
 
                     </div>
@@ -470,7 +470,7 @@
 
             data.usernombre = data.user.nombre;
         
-            var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'sexo', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
+            var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'genero', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
             for (var i in campos) {
                 var campo = campos[i]
                 if (!data.user[campo]) data.user[campo] = ''
@@ -510,8 +510,8 @@
             'user.nacimiento': function () {
                 this.validar_data('nacimiento')
             },
-            'user.sexo': function () {
-                this.validar_data('sexo')
+            'user.genero': function () {
+                this.validar_data('genero')
             },
             'user.dni': function () {
                 this.validar_data('dni')

@@ -41,7 +41,7 @@ class UsuariosController extends Controller
             'email' => $usuario->mail,
             'nombre' => $usuario->nombres,
             'apellido' => $usuario->apellidoPaterno,
-            'sexo' => $usuario->sexo,
+            'genero' => $usuario->genero,
             'nacimiento' => $usuario->fechaNacimiento,
             'telefono' => $usuario->telefonoMovil,
             'pais' => $usuario->pais,

@@ -18,7 +18,7 @@ class PersonaDatosResource extends Resource
         return [
             'idPersona' => $this->idPersona,
             'dni' => $this->dni,
-            'sexo' => $this->sexo,
+            'genero' => $this->genero,
             'nombres' => $this->nombres,
             'apellido' => $this->apellidoPaterno,
             'telefonoMovil' => $this->telefonoMovil,

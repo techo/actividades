@@ -130,7 +130,7 @@ class UsuariosTest extends TestCase
             'pass' => "asfsdfsdfsdf",
             'privacidad' => "true",
             'provincia' => "",
-            'sexo' => "F",
+            'genero' => "F",
             'telefono' => "432342344",
             'user' => "",
             'acepta_marketing' => "true"

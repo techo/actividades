@@ -34,7 +34,7 @@ class PerfilResource extends Resource
             'nombre'        => $this->nombres,
             'apellido'      => $this->apellidoPaterno,
             'nacimiento'    => $this->fechaNacimiento,
-            'sexo'          => $this->sexo,
+            'genero'          => $this->genero,
             'dni'           => $this->dni,
             'pais'          => $this->idPais,
             'provincia'     => $this->idProvincia,

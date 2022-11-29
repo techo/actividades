@@ -12,7 +12,7 @@
 		<registro
 				nombre="{{$persona->nombre}}"
                 apellido="{{$persona->apellido}}"
-                sexo="{{$persona->sexo}}"
+                genero="{{$persona->genero}}"
                 email="{{$persona->email}}"
                 facebook_id="{{$persona->facebook_id}}"
                 google_id="{{$persona->google_id}}"

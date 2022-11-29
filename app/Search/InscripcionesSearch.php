@@ -71,7 +71,7 @@ class InscripcionesSearch
                     'Persona.telefonoMovil',
                     'Persona.mail',
                     'Persona.fechaNacimiento',
-                    'Persona.sexo',
+                    'Persona.genero',
                     'ficha.grupo_sanguinieo',
                     'ficha.cobertura_nombre',
                     'ficha.cobertura_numero',

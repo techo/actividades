@@ -112,7 +112,7 @@ return [
     'name'  =>  'NOME*',
     'surname'  =>  'SOBRENOME*',
     'born_date'  =>  'ANIVERSÁRIO*',
-    'gender'  =>  'Sexo*',
+    'gender'  =>  'genero*',
     'gender_m'  =>  'Masculino',
     'gender_f'  =>  'Femenino',
     'gender_x'  =>  'Outro',

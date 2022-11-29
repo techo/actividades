@@ -33,7 +33,7 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
             ->join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
             ->join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
-            ->select(DB::raw('dni, nombres, apellidoPaterno, telefonoMovil, mail, fechaNacimiento, sexo, Inscripcion.fechaInscripcion, presente, rol, Actividad.nombreActividad, atl_CategoriaActividad.nombre as categoria, Tipo.nombre as tipo, Actividad.fechaInicio'))
+            ->select(DB::raw('dni, nombres, apellidoPaterno, telefonoMovil, mail, fechaNacimiento, genero, Inscripcion.fechaInscripcion, presente, rol, Actividad.nombreActividad, atl_CategoriaActividad.nombre as categoria, Tipo.nombre as tipo, Actividad.fechaInicio'))
             ->whereYear('Inscripcion.created_at', $año);
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
@@ -65,7 +65,7 @@ class InscripcionesGeneralExport implements FromCollection, WithHeadings, WithCo
 
     public function map($query): array
     {
-        switch ($query->sexo) {
+        switch ($query->genero) {
             case 'M':
                 $genero = 'Masculino';
                 break;

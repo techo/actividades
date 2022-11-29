@@ -41,7 +41,7 @@ class UsuarioController extends BaseController
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
-        if($request->has('sexo')) $rules['sexo'] = 'required';
+        if($request->has('genero')) $rules['genero'] = 'required';
         if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
@@ -93,7 +93,7 @@ class UsuarioController extends BaseController
       $persona->nombres = $request->nombre;
       $persona->idPais = $request->pais;
       $persona->idProvincia = $request->provincia;
-      $persona->sexo = $request->sexo;
+      $persona->genero = $request->genero;
       $persona->telefonoMovil = $request->telefono;
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;

@@ -61,7 +61,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
 
     public function map($query): array
     {
-        switch ($query->sexo) {
+        switch ($query->genero) {
             case 'M':
                 $genero = 'Masculino';
                 break;

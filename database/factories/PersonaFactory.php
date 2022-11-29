@@ -6,7 +6,7 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     return [
     'dni'   => rand(1000000, 99999999),
     'mail'  => $faker->email,
-    'sexo'  => array_rand(['M', 'F']),
+    'genero'  => array_rand(['M', 'F']),
     'idPais'    => factory('App\Pais')->create(),
     'nombres'   => $faker->firstName,
     'password'  => Hash::make('password'),

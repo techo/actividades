@@ -48,7 +48,7 @@ class UserService
         if($request->has('localidad') && $request->localidad == null) {
             $persona->idLocalidad = null;
         }
-        $persona->sexo = $request->sexo['id'];
+        $persona->genero = $request->genero['id'];
         $persona->telefonoMovil = $request->telefono;
         
         if($request->has('email_verified_at') && $request->email_verified_at == 0) {
@@ -72,7 +72,7 @@ class UserService
     public function createValidator(Request $request)
     {
         $messages = [
-            "sexo.required" => "El género es requerido",
+            "genero.required" => "El género es requerido",
             "nacimiento.required" => "El fecha de nacimiento es requerido",
             "dni.required" => "El DNI/Pasaporte es requerido",
             "pais.required" => "El país es requerido",
@@ -89,7 +89,7 @@ class UserService
                 'apellido' => 'required|regex:/^[\pL\s\.\']+$/ui',
                 'rol' => 'required',
                 'pais' => 'required',
-                'sexo' => 'required',
+                'genero' => 'required',
                 'nacimiento' => 'required|date|before:' . date('Y-m-d'),
                 'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
                 'dni' => 'required',

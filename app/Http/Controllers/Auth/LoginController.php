@@ -132,7 +132,7 @@ class LoginController extends Controller
             $personaData->email = $user->email;
             $personaData->google_id = $user->user['id'];
             $personaData->facebook_id = '';
-            $personaData->sexo = '';
+            $personaData->genero = '';
         } else {
            $user = Socialite::driver($provider)->stateless()->fields([
                    'first_name', 'last_name', 'email', 'gender'
@@ -144,9 +144,9 @@ class LoginController extends Controller
             $personaData->google_id = '';
 
             if(isset($user->user['gender'])){
-                $personaData->sexo = $user->user['gender'] == 'male' ? 'M' : 'F';
+                $personaData->genero = $user->user['gender'] == 'male' ? 'M' : 'F';
             } else {
-                $personaData->sexo = '';
+                $personaData->genero = '';
             }
         }
 //        $personaData->password = bcrypt(str_random(30));

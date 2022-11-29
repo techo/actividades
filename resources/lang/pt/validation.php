@@ -163,7 +163,7 @@ return [
         'password'              => 'senha',
         'phone'                 => 'telefone',
         'second'                => 'segundo',
-        'sex'                   => 'sexo',
+        'sex'                   => 'genero',
         'state'                 => 'estado',
         'subject'               => 'assunto',
         'text'                  => 'texto',

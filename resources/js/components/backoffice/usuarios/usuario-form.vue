@@ -91,15 +91,15 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="sexo">Género</label>
+                                    <label for="genero">Género</label>
                                     <br>
                                     <v-select
                                             :options="dataGeneros"
                                             label="genero"
                                             placeholder="Seleccione"
-                                            name="sexo"
-                                            id="sexo"
-                                            v-model="usuario.sexo"
+                                            name="genero"
+                                            id="genero"
+                                            v-model="usuario.genero"
                                             v-bind:disabled="readonly"
                                             :filterable=false
                                     >
@@ -234,7 +234,7 @@
                     email: "",
                     nombre: "",
                     apellido: "",
-                    sexo: "",
+                    genero: "",
                     nacimiento: "",
                     telefono: "",
                     pais: null,
@@ -273,8 +273,8 @@
 
                 for (var i in Object.keys(this.dataGeneros)) 
                 {
-                    if(this.dataGeneros[i].id == this.usuario.sexo) 
-                        this.usuario.sexo = this.dataGeneros[i];
+                    if(this.dataGeneros[i].id == this.usuario.genero) 
+                        this.usuario.genero = this.dataGeneros[i];
                 }
 
                 this.paisSeleccionado = this.usuario.pais;

@@ -36,7 +36,7 @@
                             <p><strong>Género</strong></p>
                             <p><i
                                     class="fa"
-                                    :class="{'fa-male': info.sexo === 'M','fa-female': info.sexo === 'F', 'fa-question': info.sexo !== 'M' && info.sex !== 'F'}"
+                                    :class="{'fa-male': info.genero === 'M','fa-female': info.genero === 'F', 'fa-question': info.genero !== 'M' && info.sex !== 'F'}"
                             ></i></p>
                         </div>
                     </div>

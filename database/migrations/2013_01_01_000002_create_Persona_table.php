@@ -25,7 +25,7 @@ class CreatePersonaTable extends Migration {
 			$table->dateTime('fechaNacimiento');
 			$table->string('telefono', 250)->nullable();
 			$table->string('telefonoMovil', 250);
-			$table->string('sexo', 1)->nullable();
+			$table->string('genero', 1)->nullable();
 			$table->string('dni', 50);
 			$table->string('mail', 250)->index('mail');
 			$table->string('password', 250);

@@ -31,12 +31,12 @@
                     </a>
                 </div>
             </div>
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.mail') }}*</label>
                         <input type="text" class="form-control" name="email" id="email" v-model="user.email">
-                        <small class="form-text text-danger">{{validacion.email.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.email.texto" class="form-text text-danger">{{validacion.email.texto}}&nbsp;<br></small>
                     </div>
 
                 </div>
@@ -53,7 +53,7 @@
                     <div class="form-group">
                         <label>{{ $t('frontend.create_password') }}</label>
                         <input type="password" class="form-control" name="pass" id="pass" v-model="user.pass">
-                        <small class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.pass.texto" class="form-text text-danger">{{validacion.pass.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -93,12 +93,12 @@
                     <label>{{ $t('frontend.step_2') }}</label>
                 </div>
             </div>
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.name') }} *</label>
                         <input type="text" class="form-control" name="nombre" id="nombre" v-model="user.nombre">
-                        <small class="form-text text-danger">{{validacion.nombre.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.nombre.texto" class="form-text text-danger">{{validacion.nombre.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -110,7 +110,7 @@
                     <div class="form-group">
                         <label>{{ $t('frontend.surname') }} *</label>
                         <input type="text" class="form-control" name="apellido" id="apellido" v-model="user.apellido">
-                        <small class="form-text text-danger">{{validacion.apellido.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.apellido.texto" class="form-text text-danger">{{validacion.apellido.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -122,13 +122,13 @@
 
             </div>
 
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label> {{ $t('frontend.birth_date') }} *</label>
                         <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
                                     lang="es" format="DD-MM-YYYY"></datepicker>
-                        <small class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.nacimiento.texto" class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -142,30 +142,30 @@
                     <div class="form-group">
                         <label>{{ $t('frontend.gender') }} *</label>
                         <b-form-group>
-                            <b-form-radio-group id="radios2" v-model="user.sexo">
+                            <b-form-radio-group id="radios2" v-model="user.genero">
                                 <b-form-radio value="F">{{ $t('frontend.gender_f') }}</b-form-radio>
                                 <b-form-radio value="M">{{ $t('frontend.gender_m') }}</b-form-radio>
                                 <b-form-radio value="X">{{ $t('frontend.gender_x') }}</b-form-radio>
-                                <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio>
+                                <!-- <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio> -->
                             </b-form-radio-group>
                         </b-form-group>
-                        <small class="form-text text-danger">{{validacion.sexo.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.genero.texto" class="form-text text-danger">{{validacion.genero.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
-                    <span v-bind:class="{'d-none':!validacion.sexo.valido}"><i
+                    <span v-bind:class="{'d-none':!validacion.genero.valido}"><i
                             class="fas fa-check text-success"></i></span>
-                    <span v-bind:class="{'d-none':!validacion.sexo.invalido}"><i
+                    <span v-bind:class="{'d-none':!validacion.genero.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
             </div>
 
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.passport') }} *</label>
                         <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
-                        <small class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -178,7 +178,7 @@
                     <div class="form-group">
                         <label>{{ $t('frontend.telephone') }} *</label>
                         <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono">
-                        <small class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -190,14 +190,14 @@
             </div>
 
 
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.country') }} *</label>
                         <select id="pais" v-model="user.pais" class="form-control">
                             <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
                         </select>
-                        <small class="form-text text-danger">{{validacion.pais.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.pais.texto" class="form-text text-danger">{{validacion.pais.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -214,7 +214,7 @@
                                 {{provincia.provincia}}
                             </option>
                         </select>
-                        <small class="form-text text-danger">{{validacion.provincia.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.provincia.texto" class="form-text text-danger">{{validacion.provincia.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -225,7 +225,7 @@
                 </div>
             </div>
 
-            <div class="row h-100 justify-content-center align-items-center">
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.municipality') }}</label>
@@ -234,7 +234,7 @@
                                 {{localidad.localidad}}
                             </option>
                         </select>
-                        <small class="form-text text-danger">{{validacion.localidad.texto}}&nbsp;<br></small>
+                        <small v-if="validacion.localidad.texto" class="form-text text-danger">{{validacion.localidad.texto}}&nbsp;<br></small>
                     </div>
                 </div>
                 <div class="col-md-1">
@@ -257,7 +257,7 @@
                     <div class="form-check">
                         <input v-model="user.privacidad" class="form-check-input" type="checkbox" id="privacidad" required>
                         <label class="form-check-label" for="privacidad">
-                            {{ $t('frontend.i_accept_the') }} <a href="https://www.techo.org/politica-de-privacidad" target="_blank"> {{ $t('frontend.privacy_policy') }}</a> *
+                            {{ $t('frontend.i_accept_the') }} <a href="https://www.techo.org/politicas-de-privacidad" target="_blank"> {{ $t('frontend.privacy_policy') }}</a> *
                         </label>
                     </div>
                 </div>
@@ -352,7 +352,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','sexo','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -372,7 +372,7 @@
       	}
         return data
       },
-      props: ['nombre','apellido','email','facebook_id','google_id','sexo','linkear'],
+      props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear'],
       mounted: function(){
         this.traer_paises()
       },
@@ -382,7 +382,7 @@
         'user.nombre': function() { this.validar_data('nombre') },
         'user.apellido': function() { this.validar_data('apellido') },
         'user.nacimiento': function() { this.validar_data('nacimiento') },
-        'user.sexo': function() { this.validar_data('sexo') },
+        'user.genero': function() { this.validar_data('genero') },
         // 'user.dni': function() { this.validar_data('dni') },
         'user.telefono': function() { this.validar_data('telefono') },
         'user.pais': function() { 

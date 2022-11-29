@@ -36,7 +36,7 @@ class LoginSocialTest extends TestCase
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->email,'email');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->facebook_id,'id');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->google_id,'');
-        $this->assertEquals($response->getOriginalContent()->getData()['persona']->sexo,'M');
+        $this->assertEquals($response->getOriginalContent()->getData()['persona']->genero,'M');
     }
 
     /** @test */
@@ -61,7 +61,7 @@ class LoginSocialTest extends TestCase
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->email,'email');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->facebook_id,'');
         $this->assertEquals($response->getOriginalContent()->getData()['persona']->google_id,'id');
-        $this->assertEquals($response->getOriginalContent()->getData()['persona']->sexo,'');
+        $this->assertEquals($response->getOriginalContent()->getData()['persona']->genero,'');
     }
 
     /** @test */
