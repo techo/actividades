@@ -114,8 +114,8 @@ return [
     'surname'  =>  'APELLIDO',
     'birth_date'  =>  'NACIMIENTO',
     'gender'  =>  'GENERO',
-    'gender_m'  =>  'Masculino',
-    'gender_f'  =>  'Femenino',
+    'gender_m'  =>  'Masc',
+    'gender_f'  =>  'Fem',
     'gender_x'  =>  'Otrx',
     'gender_o'  =>  'Prefiero no decirlo',
     'passport'  =>  'NRO. DE DOCUMENTO / PASAPORTE',
@@ -147,6 +147,7 @@ return [
  	'cobertura_nombre' => 'Nombre de Cobertura Médica',
  	'cobertura_numero' => 'Número de Cobertura Médica',
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
+ 	'archivo_medico' => 'Archivo Médico',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 

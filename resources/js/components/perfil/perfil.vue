@@ -8,9 +8,6 @@
                     <h2>{{ $t('frontend.welcome') }}, {{ usernombre }} ({{ user.email }})</h2>
                 </div>
             </div>
-            <div class="alert alert-success" v-show='guardo'>
-                <strong>{{ $t('frontend.changes_success') }}</strong>
-            </div>
             <div class="row">
                 <div class="col-md-12">
                     <p>{{ $t('frontend.profile_text_1') }}</p>
@@ -25,12 +22,6 @@
             <div>
                 <b-tabs content-class="mt-3" v-model="tabIndex">
                     <b-tab :title="$t('frontend.personal_data')" href="#datos">
-
-                        <!-- <div class="row">
-                <div class="col-md-5">
-                    <h5>{{ $t('frontend.personal_data') }}</h5>
-                </div>
-            </div> -->
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="row">
@@ -81,7 +72,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <datepicker placeholder="Selecciona una fecha" v-model="user.nacimiento"
+                                        <datepicker class="w-100" placeholder="Selecciona una fecha" v-model="user.nacimiento"
                                             id="nacimiento" lang="es" format="DD-MM-YYYY"></datepicker>
                                         <small class="form-text text-danger">{{ validacion.nacimiento.texto
                                         }}&nbsp;<br></small>
@@ -105,7 +96,7 @@
                                                 <b-form-radio value="F">{{ $t('frontend.gender_f') }}</b-form-radio>
                                                 <b-form-radio value="M">{{ $t('frontend.gender_m') }}</b-form-radio>
                                                 <b-form-radio value="X">{{ $t('frontend.gender_x') }}</b-form-radio>
-                                                <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio>
+                                                <!-- <b-form-radio value="O">{{ $t('frontend.gender_o') }}</b-form-radio> -->
                                             </b-form-radio-group>
                                         </b-form-group>
                                     </div>
@@ -324,8 +315,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        <br><br>
+                        <div class="row alert alert-success" v-show='guardo'>
+                            <strong>{{ $t('frontend.changes_success') }}</strong>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <span v-show='volver'>
@@ -345,62 +337,7 @@
 
                     </b-tab>
                     <b-tab href="#ficha" :title="$t('frontend.ficha_medica')">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
-                                <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo"
-                                    v-model="user.fichaMedica.grupo_sanguinieo">
-
-                            </div>
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.cobertura_nombre') }}</label>
-                                <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
-                                    v-model="user.fichaMedica.cobertura_nombre">
-                            </div>
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.cobertura_numero') }}</label>
-                                <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
-                                    v-model="user.fichaMedica.cobertura_numero">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.contacto_nombre') }}</label>
-                                <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre"
-                                    v-model="user.fichaMedica.contacto_nombre">
-                            </div>
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.contacto_telefono') }}</label>
-                                <input type="text" class="form-control" name="contacto_telefono" id="contacto_telefono"
-                                    v-model="user.fichaMedica.contacto_telefono">
-                            </div>
-                            <div class="col-md-4">
-                                <label>{{ $t('frontend.contacto_relacion') }}</label>
-                                <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
-                                    v-model="user.fichaMedica.contacto_relacion">
-                            </div>
-                        </div>
-                        <p class="text-muted mt-2">
-                            {{ $t('frontend.acepta_terminos') }}
-                        </p>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input v-model="user.fichaMedica.confirma_datos" class="form-check-input"
-                                        type="checkbox" id="confirma_datos">
-                                    <label class="form-check-label" for="confirma_datos">
-                                        {{ $t('frontend.confirma_datos') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-12">
-                                <button v-if="user.fichaMedica.confirma_datos" class="btn btn-primary" href="#" @click="guardarFicha()">{{ $t('frontend.save')
-                                }}</button>
-                            </div>
-                        </div>
+                        <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
                 </b-tabs>
             </div>
@@ -430,10 +367,8 @@ export default {
             }
         }
         data.tabIndex = 1,
-            data.tabs = ['#datos', '#ficha'],
-
-
-            data.usernombre = data.user.nombre;
+        data.tabs = ['#datos', '#ficha'],
+        data.usernombre = data.user.nombre;
 
         var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'genero', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
         for (var i in campos) {
@@ -527,16 +462,6 @@ export default {
             var data = this.user
             this.limpia_validacion_pass(data)
             axios.put('/ajax/usuario', this.user).then(response => {
-                this.guardo = true;
-                this.formDirty = false;
-                this.$parent.$refs.login.user.nombres = this.user.nombre
-            }).catch((error) => {
-                this.validar_data()
-            });
-        },
-        guardarFicha: function () {
-            this.guardo = false;
-            axios.post('/ajax/fichaMedica', this.user.fichaMedica).then(response => {
                 this.guardo = true;
                 this.formDirty = false;
                 this.$parent.$refs.login.user.nombres = this.user.nombre

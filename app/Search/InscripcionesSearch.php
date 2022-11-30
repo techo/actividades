@@ -78,6 +78,7 @@ class InscripcionesSearch
                     'ficha.contacto_nombre',
                     'ficha.contacto_telefono',
                     'ficha.contacto_relacion',
+                    'ficha.archivo_medico',
                     'personaPais.nombre as pPais',
                     'personaProvincia.provincia as pProvincia',
                     'personaLocalidad.localidad as pLocalidad',

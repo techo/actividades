@@ -39,6 +39,7 @@ Route::prefix('ajax')->group(function () {
 	});
 
     Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+    Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
 	Route::prefix('usuario')->group(
 	    function(){

@@ -160,4 +160,5 @@ mkdir photos
 mkdir photos/shares
 mkdir photos/shares/thumbs 
 chmod -R 777 photos/  
+php artisan storage:link
 ```

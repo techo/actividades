@@ -5,8 +5,10 @@ namespace App\Http\Controllers\ajax;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use App\FichaMedica;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class FichaMedicaController extends Controller
 {
@@ -14,6 +16,8 @@ class FichaMedicaController extends Controller
 
   public function upsert(Request $request) {
       $url = $request->session()->get('login_callback','');
+
+      Log::info("hoals");
       $request->validate([
               'contacto_nombre' => 'nullable',
               'contacto_telefono' => 'nullable',
@@ -21,7 +25,8 @@ class FichaMedicaController extends Controller
               'grupo_sanguinieo' => 'nullable',
               'cobertura_nombre' => 'nullable',
               'cobertura_numero' => 'nullable',
-              'confirma_datos' => 'nullable'
+              'confirma_datos' => 'nullable',
+
               ]);
       $persona = Auth::user();
       $countFichas = FichaMedica::where('idPersona', $persona->idPersona)->count();
@@ -42,6 +47,26 @@ class FichaMedicaController extends Controller
       $fichaMedica->save();
   }
 
+  public function uploadArchivoMedico(Request $request)
+  {
+    $this->validate($request, array(
+        'archivo_medico' => 'required',
+    ));
+    $archivoMedico = $request->file('archivo_medico');
+    $fichaMedica = Auth::user()->fichaMedica;
+    if($archivoMedico){
+      $path = $request->file('archivo_medico')->store('public/perfil');
+      $oldPath = str_replace('storage', 'public', $fichaMedica->archivo_medico);
+      if(Storage::exists($oldPath))
+          Storage::delete($oldPath);
 
+      $fichaMedica->archivo_medico = str_replace('public', 'storage', $path);
+      $fichaMedica->save();
+      
+    }
 }
+
+  }
+
+
 

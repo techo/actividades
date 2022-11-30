@@ -112,8 +112,8 @@ return [
     'surname'  =>  'SURNAME',
     'birth_date'  =>  'BIRTH DATE',
     'gender'  =>  'GENDER',	
-    'gender_m'  =>  'Male',
-    'gender_f'  =>  'Female',
+    'gender_m'  =>  'Masc',
+    'gender_f'  =>  'Fem',
     'gender_x'  =>  'Other',
     'gender_o'  =>  'Prefer not to say',
     'passport'  =>  'PASSPORT',
@@ -144,6 +144,7 @@ return [
  	'cobertura_nombre' => 'Medical Assurance Name',
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
+ 	'archivo_medico' => 'Medical File',
  	'confirma_datos' => 'I declare this information is valid',
 
  	// perfil/index.blade.php
