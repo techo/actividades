@@ -4,8 +4,13 @@
         <div>
 
             <div class="row">
-                <div class="col-md-12">
-                    <h2>{{ $t('frontend.welcome') }}, {{ usernombre }} ({{ user.email }})</h2>
+                <div class="col-md-4 text-right text-buttom">
+                    <img v-if="(user.photo!=null)" src="user.photo" class="rounded-circle" alt="img" />
+                    <button class="btn btn-light align-center" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
+                </div>
+                <div class="col-md-8">
+                    <h3>{{ $t('frontend.welcome') }}, {{ usernombre }}</h3>
+                    <h4>({{ user.email }})</h4>
                 </div>
             </div>
             <div class="row">
