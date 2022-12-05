@@ -92,7 +92,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->contacto_nombre,
             $query->contacto_telefono,
             $query->contacto_relacion,
-            $query->archivo_medico,
+            env("APP_URL").$query->archivo_medico,
             Date::dateTimeToExcel(Carbon::parse($query->fechaInscripcion)),
             $query->cantActividades,
             (is_null($query->presente) || $query->presente == 0) ? 'No' : 'Si',

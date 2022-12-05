@@ -111,7 +111,7 @@ return [
     'personal_data'  =>  'Dados pessoais',
     'name'  =>  'NOME*',
     'surname'  =>  'SOBRENOME*',
-    'born_date'  =>  'ANIVERSÁRIO*',
+    'birth_date'  =>  'ANIVERSÁRIO*',
     'gender'  =>  'Genero*',
     'gender_m'  =>  'Masc',
     'gender_f'  =>  'Fem',
@@ -145,7 +145,7 @@ return [
  	'cobertura_nombre' => 'Nome da Cobertura Médica',
  	'cobertura_numero' => 'Número de Cobertura Médica',
  	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
- 	'archivo_medico' => 'ficha médica',
+ 	'archivo_medico' => 'Ficha médica',
  	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
  	// perfil/index.blade.php
