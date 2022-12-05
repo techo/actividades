@@ -162,3 +162,15 @@ mkdir photos/shares/thumbs
 chmod -R 777 photos/  
 php artisan storage:link
 ```
+
+
+###EXTRA 1: Develop en Sandbox
+git pull
+php artisan down
+php artisan migrate
+php artisan vue-i18n:generate
+npm run dev
+php artisan cache:clear
+php artisan route:clear
+php artisan config:clear
+php artisan up
