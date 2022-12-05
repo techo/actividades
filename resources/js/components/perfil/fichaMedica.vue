@@ -39,7 +39,7 @@
             <div class="row mt-2">
                 <div class="col-md-12">
                     <label >{{ $t('frontend.archivo_medico') }}</label>
-                    <a v-if="fichaMedica.archivo_medico != null" :href="fichaMedica.archivo_medico" target="_blank"> {{ $t('frontend.archivo_medico') }}</a>
+                    <a v-if="fichaMedica.archivo_medico != null" :href="fichaMedica.archivo_medico" target="_blank"> {{ $t('frontend.ver_adjunto') }}</a>
                     <button class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
                     <input v-if="(fichaMedica.archivo_medico == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="archivo_medico">
                 </div>

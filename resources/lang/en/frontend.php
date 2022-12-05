@@ -145,6 +145,7 @@ return [
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
  	'archivo_medico' => 'Medical File',
+ 	'ver_adjunto' => 'See File',
  	'confirma_datos' => 'I declare this information is valid',
 
  	// perfil/index.blade.php

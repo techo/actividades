@@ -147,6 +147,7 @@ return [
  	'cobertura_nombre' => 'Nombre de Cobertura Médica',
  	'cobertura_numero' => 'Número de Cobertura Médica',
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
+ 	'ver_adjunto' => 'Ver Adjunto',
  	'archivo_medico' => 'Archivo Médico',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 

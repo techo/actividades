@@ -146,6 +146,7 @@ return [
  	'cobertura_numero' => 'Número de Cobertura Médica',
  	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
  	'archivo_medico' => 'Ficha médica',
+ 	'ver_adjunto' => 'Ver Adjunto',
  	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
  	// perfil/index.blade.php
