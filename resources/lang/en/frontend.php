@@ -148,6 +148,13 @@ return [
  	'ver_adjunto' => 'See File',
  	'confirma_datos' => 'I declare this information is valid',
 
+	// perfil / educacion
+	'educacion' => 'Education',
+	'institucion_educativa' => 'Educational Institute',
+	'titulo_educacion' => 'Title',
+	'disciplina_academica' => 'Accademy disipline',
+	'descripcion_educacion' => 'Description',
+
  	// perfil/index.blade.php
  	'profile' => 'Profile',
 
@@ -191,6 +198,7 @@ return [
 	'filter_by' => 'Filter by',
 	'filter' => 'Filter',
 	'delete' => 'Delete',
+	'new' => 'New',
 
 	// components/datatable.vue
 	'empty_records' => "There are no records to show",

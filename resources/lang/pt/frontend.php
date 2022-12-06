@@ -149,6 +149,14 @@ return [
  	'ver_adjunto' => 'Ver Adjunto',
  	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
+
+	// perfil / educacion
+	'educacion' => 'Educação',
+	'institucion_educativa' => 'instituição educacional',
+	'titulo_educacion' => 'Título',
+	'disciplina_academica' => 'Disciplina académica',
+	'descripcion_educacion' => 'Descrição',
+
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
 
@@ -192,6 +200,7 @@ return [
 	'filter_by' => 'Filtrar por',
 	'filter' => 'Filtrar',
 	'delete' => 'Deletar',
+	'new' => 'Adicionar',
 
 	// components/datatable.vue
 	'empty_records' => "Não há registros para exibir",

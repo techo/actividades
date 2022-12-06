@@ -36,6 +36,8 @@ import CookiesBar from './components/cookies-bar';
 import EstadisticasPublicas from './components/estadisticas-publicas';
 import QuizTechero from './components/perfil/quizTechero';
 import fichaMedica from './components/perfil/fichaMedica';
+import estudios from './components/perfil/estudios';
+import cardEditDelete from './components/common/cardEditDelete.vue';
 import avisoModal from './components/aviso-modal'
 Vue.component('aviso-modal', avisoModal);
 
@@ -80,6 +82,8 @@ Vue.component('cookies-bar', CookiesBar);
 Vue.component('estadisticas-publicas', EstadisticasPublicas);
 Vue.component('quiz-techero', QuizTechero);
 Vue.component('ficha-medica', fichaMedica);
+Vue.component('estudios', estudios);
+Vue.component('cardEditDelete', cardEditDelete);
 
 window.Event = new Vue();
 

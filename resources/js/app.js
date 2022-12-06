@@ -49,7 +49,7 @@ import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDat
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 import UsuariosFichaTab from './components/backoffice/usuarios/usuario-ficha-tab';
-
+import UsuariosEstudiosTab from './components/backoffice/usuarios/usuario-estudios-tab';
 
 import TiposActividadDatatable from './components/backoffice/datatable/TiposActividadDatatable';
 import TiposActividadFilterBar from './components/backoffice/datatable/TiposActividadFilterBar';
@@ -122,6 +122,7 @@ Vue.component('suscriptos-datatable', SuscriptosDatatable);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
 Vue.component('usuario-ficha-tab', UsuariosFichaTab);
+Vue.component('usuario-estudios-tab', UsuariosEstudiosTab);
 Vue.component('oficinas-datatable', OficinasDatatable);
 Vue.component('oficinas-filter-bar', OficinasFilterBar);
 Vue.component('oficina-form', OficinasForm);

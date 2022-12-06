@@ -217,4 +217,8 @@ class Persona extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(FichaMedica::class, 'idPersona', 'idPersona');
     }
+    public function estudios()
+    {
+        return $this->hasMany(Estudios::class, 'idPersona', 'idPersona');
+    }
 }

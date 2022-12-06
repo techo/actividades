@@ -46,7 +46,8 @@ class PerfilResource extends Resource
             'recibirMails'  => $this->recibirMails,
             'acepta_marketing' => $this->acepta_marketing,
             'pass'          => '',
-            'fichaMedica'          => $fichaMedica
+            'fichaMedica'          => $fichaMedica,
+            'estudios'          => $this->estudios,
         ];
     }
 }

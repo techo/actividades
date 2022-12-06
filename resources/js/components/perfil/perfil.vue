@@ -336,7 +336,14 @@
                         <hr>
 
                     </b-tab>
-                    <b-tab href="#ficha" :title="$t('frontend.ficha_medica')">
+                    <b-tab href="#ficha" class="w-100" :title="$t('frontend.ficha_medica')">
+                        <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
+                    </b-tab>
+                    <b-tab href="#estudios" :title="$t('frontend.estudios')">
+                        <estudios ref="estudios" :estudios="user.estudios" />
+                    </b-tab>
+
+                    <b-tab href="#otros" :title="$t('frontend.otros_datos')">
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
                 </b-tabs>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice;
 
+use App\Estudios;
 use App\Persona;
 use App\FichaMedica;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class UsuariosController extends Controller
     {
         $usuario = Persona::find($id);
         $ficha = FichaMedica::where('idPersona', $id)->first();
+        $estudios = Estudios::where('idPersona', $id)->first();
         $rol = $usuario->roles->toArray();
         if(!empty($rol)){
             $rol = array_shift($rol);
@@ -53,7 +55,7 @@ class UsuariosController extends Controller
         ];
 
         $edicion = false;
-        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario', 'ficha'));
+        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario', 'ficha', 'estudios'));
     }
 
     public function delete(Persona $id)

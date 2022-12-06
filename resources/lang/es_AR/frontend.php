@@ -152,6 +152,16 @@ return [
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 
+	// perfil / educacion
+	'estudios' => 'Educación',
+	'institucion_educativa' => 'Institución educativa',
+	'titulo_educacion' => 'Título',
+	'disciplina_academica' => 'Disciplina académica',
+	'descripcion_educacion' => 'Descripción',
+
+	// perfil / otros datos
+	'otros_datos' => 'Otros Datos', 
+
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
 
@@ -195,6 +205,7 @@ return [
 	'filter_by' => 'Filtrar por',
 	'filter' => 'Filtrar',
 	'delete' => 'Borrar',
+	'new' => 'Agregar',
 
 	// components/datatable.vue
 	'empty_records' => "No hay registros para mostrar",
