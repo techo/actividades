@@ -41,6 +41,12 @@ Route::prefix('ajax')->group(function () {
     Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
     Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
+    Route::prefix('estudios')->group(function () {
+        Route::post('', 'ajax\EstudiosController@create');
+		Route::put('', 'ajax\EstudiosController@update');
+		Route::delete('/{id}', 'ajax\EstudiosController@delete');
+	});
+
 	Route::prefix('usuario')->group(
 	    function(){
 		Route::get('', function(){

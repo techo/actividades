@@ -340,12 +340,12 @@
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
                     <b-tab href="#estudios" :title="$t('frontend.estudios')">
-                        <estudios ref="estudios" :estudios="user.estudios" />
+                        <estudios ref="estudios" :estudios="user.estudios" :idPersona="user.id"/>
                     </b-tab>
 
-                    <b-tab href="#otros" :title="$t('frontend.otros_datos')">
+                    <!-- <b-tab href="#otros" :title="$t('frontend.otros_datos')">
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
-                    </b-tab>
+                    </b-tab> -->
                 </b-tabs>
             </div>
         </div>

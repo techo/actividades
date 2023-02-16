@@ -1,8 +1,9 @@
 <template>
     <div>
         <section>
-            <div class="card w-100 m-2" v-for="estudio in estudios_persona">
+            <div class="card w-100 m-2" v-for="(estudio, index) in estudios_persona">
                 <cardEditDelete 
+                :identifier="estudio.idEstudio"
                 :header="estudio.titulo"
                 :headerLabel="$t('frontend.titulo_educacion')"
                 :title="estudio.institucion_educativa"
@@ -11,7 +12,7 @@
                 :subTitleLabel="$t('frontend.disciplina_academica')" 
                 :text="estudio.descripcion_educacion" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
-                @deleteCard="deleteEstudio"
+                @deleteCard="deleteEstudio(index)"
                 @saveCard="saveEstudio"
                 />
             </div>
@@ -47,7 +48,6 @@ export default {
         var data = {
             guardo: false,
             estudios_persona: this.estudios,
-            archivo_medico: null,
             formDirty: false,
             message: {
                 danger: false,
@@ -57,7 +57,7 @@ export default {
         }
         return data;
     },
-    props: ['estudios'],
+    props: ['estudios', 'idPersona'],
     mounted: function () {
         this.formDirty = false
     },
@@ -65,30 +65,42 @@ export default {
 
     },
     methods: {
-        addEstudio: function () {
+        createEstudio: function (data) {
             this.guardo = false;
-            axios.post('/ajax/estudios', this.estudios).then(response => {
-                this.submitFile();
+            let form = {
+                titulo: data.header,
+                institucion_educativa: data.title,
+                disciplina_academica: data.subTitle,
+                descripcion_educacion: data.text,
+                idPersona: this.idPersona,
+            }
+            axios.post('/ajax/estudios', form).then(response => {
                 this.guardo = true;
                 this.formDirty = false;
             }).catch((error) => {
             });
         },
-        editEstudio: function () {
+        saveEstudio: function (data) {
             this.guardo = false;
-            axios.post('/ajax/estudios', this.estudios).then(response => {
-                this.submitFile();
+            let form = {
+                id: data.id,
+                titulo: data.header,
+                institucion_educativa: data.title,
+                disciplina_academica: data.subTitle,
+                descripcion_educacion: data.text,
+            }
+            axios.put('/ajax/estudios', form).then(response => {
                 this.guardo = true;
                 this.formDirty = false;
             }).catch((error) => {
             });
         },
-        deleteEstudio: function () {
+        deleteEstudio: function (index) {
             this.guardo = false;
-            axios.post('/ajax/estudios', this.estudios).then(response => {
-                this.submitFile();
+            axios.delete('/ajax/estudios/'+this.estudios_persona[index].idEstudio).then(response => {
                 this.guardo = true;
                 this.formDirty = false;
+                this.estudios_persona.splice(index, 1);
             }).catch((error) => {
             });
         },

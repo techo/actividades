@@ -51,6 +51,15 @@
                 <usuarios-inscripciones-tab persona="{{ $usuario->idPersona }}" > </usuarios-inscripciones-tab>
 
             </div>
+
+            <div class="tab-pane" id="estudios">
+
+                <usuario-estudios-tab
+                    prop-usuario="{{ json_encode($estudios) }}"
+                    edicion="{{ $edicion }}"
+                ></usuario-estudios-tab>
+
+            </div>
             @role('admin')
             <div class="tab-pane" id="evaluaciones">
 

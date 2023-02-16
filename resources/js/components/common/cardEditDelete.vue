@@ -55,7 +55,7 @@
                     </span>
 
                     <span v-if="newCard">
-                        <a @click="createCard" class="btn btn-primary text-white p-1 m-1">
+                        <a @click="saveCard" class="btn btn-primary text-white p-1 m-1">
                             <i class="fa fa-save"></i>
                             {{ $t('frontend.save') }}
                         </a>
@@ -74,6 +74,7 @@ export default {
         var data = {
             editando: this.newCard,
             data: {
+                id: this.identifier,
                 header: this.header,
                 headerLabel: this.headerLabel,
                 title: this.title,
@@ -87,6 +88,10 @@ export default {
         return data;
     },
     props: {
+        identifier: {
+            type: Number,
+            default: null
+        },
         header: {
             type: String,
             default: ""
@@ -135,7 +140,11 @@ export default {
             this.editando = true;
         },
         saveCard: function () {
-            this.$emit('saveCard');
+            if (this.data.id){
+                this.$emit('saveCard', this.data);
+            } else {
+                this.$emit('createCard', this.data);
+            }
             this.editando = false;
         },
         deleteCard: function () {
