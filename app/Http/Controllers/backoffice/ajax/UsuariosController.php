@@ -152,4 +152,20 @@ class UsuariosController extends Controller
             ->orderByRaw($sort)
             ->paginate();
     }
+
+    public function estudios($persona, Request $request)
+    {
+        //orden de la consulta
+        $sort = 'estudios.titulo desc';
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|"))
+                $sort = join(" ",explode("|", $request->sort));
+            else
+                $sort = $request->sort;
+        }
+
+        return \App\Estudios::where('idPersona', '=', $persona)
+            ->orderByRaw($sort)
+            ->paginate();
+    }
 }

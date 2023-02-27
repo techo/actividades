@@ -373,8 +373,8 @@ export default {
                 text: ''
             }
         }
-        data.tabIndex = 1,
-        data.tabs = ['#datos', '#ficha'],
+        data.tabIndex = 0,
+        data.tabs = ['#datos', '#ficha', '#estudios'],
         data.usernombre = data.user.nombre;
 
         var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'genero', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];

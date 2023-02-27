@@ -77,8 +77,10 @@ export default {
             axios.post('/ajax/estudios', form).then(response => {
                 this.guardo = true;
                 this.formDirty = false;
+                this.estudios_persona.push(form);
             }).catch((error) => {
             });
+            this.creandoEstudio = false;
         },
         saveEstudio: function (data) {
             this.guardo = false;
@@ -94,6 +96,7 @@ export default {
                 this.formDirty = false;
             }).catch((error) => {
             });
+            this.creandoEstudio = false;
         },
         deleteEstudio: function (index) {
             this.guardo = false;

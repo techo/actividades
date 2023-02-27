@@ -28,6 +28,10 @@
                 <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
             </li>
             @endrole
+
+            <li>
+                <a href="#estudios" data-toggle="tab" aria-expanded="true">Estudios</a>
+            </li>
         </ul>
         <div class="tab-content" style="background-color: #ECF0F1;">
             <div class="tab-pane active" id="general">
@@ -51,15 +55,6 @@
                 <usuarios-inscripciones-tab persona="{{ $usuario->idPersona }}" > </usuarios-inscripciones-tab>
 
             </div>
-
-            <div class="tab-pane" id="estudios">
-
-                <usuario-estudios-tab
-                    prop-usuario="{{ json_encode($estudios) }}"
-                    edicion="{{ $edicion }}"
-                ></usuario-estudios-tab>
-
-            </div>
             @role('admin')
             <div class="tab-pane" id="evaluaciones">
 
@@ -67,6 +62,9 @@
 
             </div>
             @endrole
+            <div class="tab-pane" id="estudios">
+                <usuarios-estudios-tab persona="{{ $usuario->idPersona }}" > </usuarios-estudios-tab>
+            </div>
         </div>
         <br/>
         <br/>
