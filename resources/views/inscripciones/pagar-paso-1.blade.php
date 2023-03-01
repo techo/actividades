@@ -50,7 +50,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-8">
-                            @if($actividad->pais->id == 13)
+                            @if($actividad->pais->id == 99999)
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p class="font-weight-bold">{{ __('frontend.donation_ammount') }}</p>
@@ -107,7 +107,7 @@
                                     @else
                                         <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                                     @endif
-                                @if($actividad->pais->id == 13)
+                                @if($actividad->pais->id == 9999)
                                     <button type="submit" class="btn btn-primary" style="margin: 0 16px;">{{ __('frontend.continue') }}</button>
                                 @endif
                             </div>

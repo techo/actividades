@@ -56,7 +56,7 @@ class CrearActividad extends FormRequest
             'moneda' => 'sometimes|nullable',
             'fechaLimitePago' => 'sometimes',
             'beca' => 'sometimes|nullable|url',
-            'linkPago' => 'sometimes|nullable|url',
+            'linkPago' => 'required_if:pago,1|url',
             'linkEvaluacion' => 'sometimes|nullable|url',
         ];
     }

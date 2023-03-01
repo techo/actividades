@@ -328,7 +328,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6" v-show="actividad.idPais != 13">
+                    <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
                             <label for="">Link para el Pago</label>
                             <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
