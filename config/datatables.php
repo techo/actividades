@@ -314,6 +314,37 @@ return [
             ],
         ]
     ],
+    'equipos' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idEquipo',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'title' => 'Fecha de Inicio'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'suscriptos' => [
         'fields' => [
             [

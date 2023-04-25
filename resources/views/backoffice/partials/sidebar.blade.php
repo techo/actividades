@@ -52,18 +52,20 @@
                 </ul>
             </li>
             @if (Auth::user()->hasRole('admin'))
-                <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos')) ? 'active menu-open' : ''}}">
+                <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos') || request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
                     <a href="#"><i class="fa fa-user"></i> <span>Personas</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                   </span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver todas</a></li>
-                        <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">Ver Suscriptas</a></li>
+                    <ul class="treeview-menu">                        
                         <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}">
                             <a href="/admin/usuarios/registrar"><i class="fa fa-plus"></i>Crear Persona</a>
                         </li>
+                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver todas</a></li>
+                        <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">Ver Suscriptas</a></li>
+                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">Ver Equipos</a></li>
+
                     </ul>
                 </li>
                     <ul class="treeview-menu">

@@ -175,6 +175,22 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::delete('/usuarios/{id}', 'backoffice\UsuariosController@delete')->middleware('permission:borrar_usuarios');
     Route::post('/usuarios/{persona}/fusionar', 'backoffice\ajax\UsuariosController@fusionar')->middleware('role:admin');
 
+
+    // panel Equipos
+
+    Route::prefix('/equipos')->group(function() {
+        Route::get('', 'backoffice\EquiposController@index')->middleware('role:admin');
+        Route::get('/crear', 'backoffice\EquiposController@create')->middleware('role:admin');
+        Route::post('/registrar', 'backoffice\EquiposController@store')->middleware('role:admin');
+        Route::get('/{idEquipo}', 'backoffice\EquiposController@show');
+        Route::put('/{idEquipo}', 'backoffice\EquiposController@update');
+        Route::delete('/{idEquipo}', 'backoffice\EquiposController@destroy');
+    });
+    Route::prefix('ajax/equipos')->group(function() {
+        Route::get('', 'backoffice\ajax\EquiposController@index')->middleware('permission:ver_usuarios');
+    });
+
+    
     //panel de usuario
     Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')
         ->middleware('permission:ver_usuarios');
