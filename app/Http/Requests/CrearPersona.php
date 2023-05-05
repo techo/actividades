@@ -13,7 +13,7 @@ class CrearPersona extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return request()->idPais == auth()->user()->idPaisPermitido;
     }
 
     /**

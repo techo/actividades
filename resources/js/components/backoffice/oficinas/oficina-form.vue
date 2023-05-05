@@ -108,7 +108,7 @@
                 this.readonly = false;
             },
             getPaises: function () {
-                axios.get("/ajax/paises")
+                axios.get("/ajax/paises/propios")
                     .then((respuesta) => {this.dataPaises = respuesta.data})
                     .catch(() => {debugger});
             },
