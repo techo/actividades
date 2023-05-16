@@ -59,6 +59,9 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
+      if (!empty($request->google_id) || !empty($request->facebook_id)){
+        $persona->email_verified_at = now(); 
+      }
       $persona->save();
 
       $persona->notify(new \App\Notifications\RegistroUsuario);
