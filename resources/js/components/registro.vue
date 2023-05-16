@@ -295,13 +295,13 @@
             
             <div class="row">
                 <div class="col-md-6">
-                    <h2>{{ $t('frontend.welcome') }} TECHO</h2>
+                    <h2>{{ $t('frontend.welcome') }} - TECHO</h2>
                 </div>
                 <div class="col-md-6">
                     <label>{{ $t('frontend.step_3') }}</label>
                 </div>
             </div>
-            <div v-if="!this.user.google_id || !this.user.facebook_id ">
+            <div v-if="!this.loginSocial">
                 <div class="row"> 
                     <div class="col-md-8">
                         {{ $t('frontend.last_step_is_to_cerfy_your_mail')  }}
@@ -357,6 +357,7 @@
       data: function(){
         var data = {
           user: {},
+          loginSocial: false,
           validacion: {},
           paso_actual: 'email',
           volver: true,
@@ -424,6 +425,7 @@
             case 'personales':
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
+                this.loginSocial = response.data.loginSocial
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;

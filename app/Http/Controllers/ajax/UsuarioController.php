@@ -70,7 +70,7 @@ class UsuarioController extends BaseController
       $request->session()->regenerate();
       $request->session()->flash('mensaje', __('messages.account_created'));
 
-      return ['login_callback' =>  '/', 'user' => null];
+      return ['login_callback' =>  '/', 'user' => null, 'loginSocial' => (empty($request->google_id) || empty($request->facebook_id))];
   }
 
   public function update(Request $request) {
