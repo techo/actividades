@@ -61,11 +61,10 @@ class UsuarioController extends BaseController
       $persona->unsubscribe_token = Uuid::generate()->string;
       if (!empty($request->google_id) || !empty($request->facebook_id)){
         $persona->email_verified_at = now(); 
+      } else {
+        $persona->notify(new \App\Notifications\RegistroUsuario);
       }
       $persona->save();
-
-      $persona->notify(new \App\Notifications\RegistroUsuario);
-
      // event(new RegistroUsuario($persona));
 
       $request->session()->regenerate();

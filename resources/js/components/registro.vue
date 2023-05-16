@@ -292,6 +292,7 @@
                     <strong>{{ $t('frontend.register') }}</strong>  > <strong> {{ $t('frontend.personal_data') }} </strong>> <strong>{{ $t('frontend.finish') }} </strong>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-6">
                     <h2>{{ $t('frontend.welcome') }} TECHO</h2>
@@ -300,15 +301,30 @@
                     <label>{{ $t('frontend.step_3') }}</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    {{ $t('frontend.already_register')  }} <a href="/login">{{ $t('frontend.login') }}</a>
+            <div v-if="!this.user.google_id || !this.user.facebook_id ">
+                <div class="row"> 
+                    <div class="col-md-8">
+                        {{ $t('frontend.last_step_is_to_cerfy_your_mail')  }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="/email/verify" class="btn btn-primary btn-lg">{{ $t('frontend.confirm_your_email') }}</a>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+            <div v-else>
+                <div class="row"> 
+                    <div class="col-md-8">
+                        {{ $t('frontend.already_register')  }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                    </div>
                 </div>
             </div>
         </div>
