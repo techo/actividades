@@ -323,7 +323,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                        <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
                     </div>
                 </div>
             </div>
@@ -358,6 +358,7 @@
         var data = {
           user: {},
           loginSocial: false,
+          abreviacionPais: '',
           validacion: {},
           paso_actual: 'email',
           volver: true,
@@ -426,6 +427,8 @@
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.loginSocial = response.data.loginSocial
+                this.abreviacionPais = response.data.abreviacionPais
+                
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
