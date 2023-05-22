@@ -321,9 +321,14 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
+                <div class="row" v-if="!this.login_callback">
                     <div class="col-md-12">
                         <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                    </div>
+                </div>
+                <div class="row" v-if="this.login_callback">
+                    <div class="col-md-12">
+                        <a :href="'/'+this.login_callback" class="btn btn-primary btn-lg">{{ $t('frontend.apply_now') }}</a>
                     </div>
                 </div>
             </div>
@@ -428,7 +433,8 @@
                 this.paso_actual = 'gracias'
                 this.loginSocial = response.data.loginSocial
                 this.abreviacionPais = response.data.abreviacionPais
-                
+                this.login_callback = response.data.login_callback
+                console.log(response.data.login_callback)
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
