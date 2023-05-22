@@ -9,6 +9,7 @@ use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\MisActividadesResource;
 use App\Http\Resources\PerfilResource;
 use App\Inscripcion;
+use App\Pais;
 use App\Persona;
 use App\Rules\PassExiste;
 use App\Search\CoordinadoresSearch;
@@ -59,16 +60,20 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
+      if (!empty($request->google_id) || !empty($request->facebook_id)){
+        $persona->email_verified_at = now(); 
+      } else {
+        $persona->notify(new \App\Notifications\RegistroUsuario);
+      }
       $persona->save();
-
-      $persona->notify(new \App\Notifications\RegistroUsuario);
-
      // event(new RegistroUsuario($persona));
 
+      $pais = Pais::find($persona->idPais);
+      Auth::login($persona, true);
       $request->session()->regenerate();
       $request->session()->flash('mensaje', __('messages.account_created'));
 
-      return ['login_callback' =>  '/', 'user' => null];
+      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (empty($request->google_id) || empty($request->facebook_id))];
   }
 
   public function update(Request $request) {

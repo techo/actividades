@@ -292,23 +292,55 @@
                     <strong>{{ $t('frontend.register') }}</strong>  > <strong> {{ $t('frontend.personal_data') }} </strong>> <strong>{{ $t('frontend.finish') }} </strong>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-6">
-                    <h2>{{ $t('frontend.welcome') }} TECHO</h2>
+                    <h2>{{ $t('frontend.welcome') }} - TECHO</h2>
                 </div>
                 <div class="col-md-6">
                     <label>{{ $t('frontend.step_3') }}</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    {{ $t('frontend.already_register')  }} <a href="/login">{{ $t('frontend.login') }}</a>
+            <div v-if="!this.loginSocial">
+                <div class="row"> 
+                    <div class="col-md-8">
+                        {{ $t('frontend.last_step_is_to_cerfy_your_mail')  }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="/email/verify" class="btn btn-primary btn-lg">{{ $t('frontend.confirm_your_email') }}</a>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+            <div v-else>
+                <div v-if="!this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register')  }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register_continue_inscription')  }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row" >
+                        <div class="col-md-12">
+                            <a :href="this.login_callback" class="btn btn-primary btn-lg">{{ $t('frontend.apply_now') }}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,6 +373,8 @@
       data: function(){
         var data = {
           user: {},
+          loginSocial: false,
+          abreviacionPais: '',
           validacion: {},
           paso_actual: 'email',
           volver: true,
@@ -408,6 +442,10 @@
             case 'personales':
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
+                this.loginSocial = response.data.loginSocial
+                this.abreviacionPais = response.data.abreviacionPais
+                this.login_callback = response.data.login_callback
+                console.log(response.data.login_callback)
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
