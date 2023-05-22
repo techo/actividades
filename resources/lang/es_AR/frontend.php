@@ -91,6 +91,7 @@ return [
     'privacy_policy' => 'Politica de Privacidad',
     'error_privacy_policy' => 'Debe aceptar las políticas de privacidad para continuar',
 	'already_register' => "¡Genial, ya estás registrado! Comienza explorando nuestras actividades. Cuando encuentres algo que te guste, te pediremos que inicies sesión por última vez. ¡Nos emociona ver qué vas a elegir!",
+	'already_register_continue_inscription' => "¡Genial, ya estás registrado! Ahora si, continua con tu inscripción!",
 	'last_step_is_to_cerfy_your_mail' => '¡Genial, ya estás registrado! Te hemos enviado un correo para verificar tu dirección de email. Si no lo ves, puedes pedir otro siguiendo el enlace. ',
 	'search_activities' => 'BUSCAR ACTIVIDADES',
 	'link_to_rrss' => 'Confimar Link Red Social',

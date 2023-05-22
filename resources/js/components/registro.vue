@@ -315,20 +315,31 @@
                 </div>
             </div>
             <div v-else>
-                <div class="row"> 
-                    <div class="col-md-8">
-                        {{ $t('frontend.already_register')  }}
+                <div v-if="!this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register')  }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <div class="row" v-if="!this.login_callback">
-                    <div class="col-md-12">
-                        <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+
+                <div v-if="this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register_continue_inscription')  }}
+                        </div>
                     </div>
-                </div>
-                <div class="row" v-if="this.login_callback">
-                    <div class="col-md-12">
-                        <a :href="'/'+this.login_callback" class="btn btn-primary btn-lg">{{ $t('frontend.apply_now') }}</a>
+                    <hr>
+                    <div class="row" >
+                        <div class="col-md-12">
+                            <a :href="this.login_callback" class="btn btn-primary btn-lg">{{ $t('frontend.apply_now') }}</a>
+                        </div>
                     </div>
                 </div>
             </div>
