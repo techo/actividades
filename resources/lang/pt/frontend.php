@@ -153,7 +153,7 @@ return [
 
 
 	// perfil / educacion
-	'educacion' => 'Educação',
+	'estudios' => 'Educação',
 	'institucion_educativa' => 'instituição educacional',
 	'titulo_educacion' => 'Título',
 	'disciplina_academica' => 'Disciplina académica',
@@ -318,6 +318,8 @@ return [
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Técnico',
 	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
+	'gender_score' => 'Pontuação de perspectiva de gênero',
+	'gender_score_description' => 'Promoção de um ambiente seguro e igualitário.'
 
 
 	//perfil/evaluacion.vue
