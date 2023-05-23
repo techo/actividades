@@ -319,7 +319,7 @@ return [
 	'social_score' => 'Puntaje Técnico',
 	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
 	'gender_score' => 'Pontuação de perspectiva de gênero',
-	'gender_score_description' => 'Promoção de um ambiente seguro e igualitário.'
+	'gender_score_description' => 'Promoção de um ambiente seguro e igualitário.',
 
 
 	//perfil/evaluacion.vue
