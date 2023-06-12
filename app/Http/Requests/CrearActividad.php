@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class CrearActividad extends FormRequest
 {
@@ -13,7 +14,9 @@ class CrearActividad extends FormRequest
      */
     public function authorize()
     {
-        return true;
+
+        Log::info(request());
+        return request()->input('idPais') == auth()->user()->idPaisPermitido;
     }
 
     /**

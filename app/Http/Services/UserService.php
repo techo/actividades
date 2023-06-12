@@ -6,6 +6,7 @@ use App\Persona;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Webpatser\Uuid\Uuid;
 
@@ -50,7 +51,15 @@ class UserService
         }
         $persona->genero = $request->genero['id'];
         $persona->telefonoMovil = $request->telefono;
-        
+
+        if($request->rol['rol'] == "admin" || $request->rol['rol'] == "coordinador"){
+            $persona->idPaisPermitido = auth()->user()->idPaisPermitido;
+        }
+
+        if($request->rol['rol'] == "usuario_autenticado"){
+            $persona->idPaisPermitido = 0;
+        }
+
         if($request->has('email_verified_at') && $request->email_verified_at == 0) {
             $persona->email_verified_at = null;
         }
@@ -98,7 +107,7 @@ class UserService
                 'password' => 'sometimes|required|min:8|confirmed'
             ], $messages
         );
-
+        // sumar validacion de seguridad
         return $v;
     }
 

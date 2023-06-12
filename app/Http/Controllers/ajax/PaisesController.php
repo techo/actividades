@@ -32,7 +32,7 @@ class PaisesController extends Controller
     }
 
     public function paisesPropios() {
-        return Pais::where('id', '=', auth()->user()->idPais)->get();
+        return Pais::where('id', '=', auth()->user()->idPaisPermitido)->get();
     }
 
 }

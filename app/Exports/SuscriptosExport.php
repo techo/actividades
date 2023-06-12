@@ -34,7 +34,7 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
             ->orderBy($sortField, $sortOrder);
 
 
-              $result->where('idPais', '=', auth()->user()->idPais);
+              $result->where('idPais', '=', auth()->user()->idPaisPermitido);
 
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);

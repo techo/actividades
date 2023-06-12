@@ -89,7 +89,9 @@ return [
     'i_accept_the' => 'Aceito à ' ,
     'privacy_policy' => 'Política de Privacidade',
     'error_privacy_policy' => 'Precisa aceitar as políticas de privacidade para continuar',
-	'already_register' => 'Você já está registrado/a como voluntário/a, esperamos você!! ;)',
+	'already_register' => "Legal, você já está registrado! Comece explorando nossas atividades. Quando encontrar algo de que goste, pediremos que faça login pela última vez. Estamos ansiosos para ver o que você vai escolher!",
+	'already_register_continue_inscription' => "Ótimo, você está registrado! Agora, por favor, continue com sua inscrição!",
+	'last_step_is_to_cerfy_your_mail' => "Legal, você já está registrado! Enviamos um email para você verificar seu endereço. Se você não o encontrar, pode solicitar outro seguindo o link.",
 	'search_activities' => 'BUSCAR ATIVIDADES',
 	'link_to_rrss' => 'Confimar Link Rede Social',
 	'link_rrss_techo' => 'Vincule sua conta de teto con sua conta de red social',
@@ -151,7 +153,7 @@ return [
 
 
 	// perfil / educacion
-	'educacion' => 'Educação',
+	'estudios' => 'Educação',
 	'institucion_educativa' => 'instituição educacional',
 	'titulo_educacion' => 'Título',
 	'disciplina_academica' => 'Disciplina académica',
@@ -316,6 +318,8 @@ return [
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Técnico',
 	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
+	'gender_score' => 'Pontuação de perspectiva de gênero',
+	'gender_score_description' => 'Promoção de um ambiente seguro e igualitário.',
 
 
 	//perfil/evaluacion.vue

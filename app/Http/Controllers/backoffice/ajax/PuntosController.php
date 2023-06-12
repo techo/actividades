@@ -6,6 +6,7 @@ use App\Actividad;
 use App\Http\Controllers\Controller;
 use App\PuntoEncuentro;
 use Illuminate\Http\Request;
+use App\Http\Requests\CrearPunto;
 
 class PuntosController extends Controller
 {
@@ -20,18 +21,11 @@ class PuntosController extends Controller
 		return response()->json($punto);
 	}
 
-	public function store(Request $request, Actividad $id)
+	public function store(CrearPunto $request, Actividad $id)
 	{
 		$actividad = $id;
 		$punto = new PuntoEncuentro;
-		$validado = $request->validate([
-			'punto' => 'required',
-			'horario' => 'required',
-			'idProvincia' => 'required',
-			'idLocalidad' => 'required',
-			'idPersona' => 'required',
-			'estado' => 'required',
-		]);
+		$validado = $request->validated();
 
 		$punto->fill($validado);
 		$punto->idPais = $actividad->idPais;

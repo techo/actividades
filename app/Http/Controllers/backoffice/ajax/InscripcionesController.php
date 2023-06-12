@@ -7,6 +7,7 @@ use App\Exports\InscripcionesExport;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\CrearInscripcion;
 use App\Inscripcion;
 use App\Log;
 use App\Mail\ActualizacionActividad;
@@ -21,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB as DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -63,7 +65,7 @@ class InscripcionesController extends BaseController
 
     }
 
-    public function update(Request $request, $id, $inscripcion)
+    public function update(CrearInscripcion $request, $id, $inscripcion)
     {
         $inscripcion = Inscripcion::findOrFail($inscripcion);
 
@@ -103,7 +105,7 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al actualizar el estado', 500);
     }
 
-    public function destroy(Request $request, $id, $inscripcion)
+    public function destroy(CrearInscripcion $request, $id, $inscripcion)
     {
         $inscripcion = Inscripcion::findOrFail($inscripcion);
 
@@ -115,7 +117,7 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al eliminar la inscripción', 500);
     }
 
-    public function desinscribir(Request $request)
+    public function desinscribir(CrearInscripcion $request)
     {
         foreach ($request->inscripciones as $idInscripcion)
         {
@@ -126,7 +128,7 @@ class InscripcionesController extends BaseController
             ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
     }
 
-    public function asignarRol(Request $request)
+    public function asignarRol(CrearInscripcion $request)
     {
         $idActividad = $request->actividad;
         foreach ($request->inscripciones as $idInscripcion)
@@ -139,7 +141,7 @@ class InscripcionesController extends BaseController
             ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function asignarGrupo(Request $request)
+    public function asignarGrupo(CrearInscripcion $request)
     {
         $datos = $request->all();
         $idActividad = $request->actividad;
@@ -164,7 +166,7 @@ class InscripcionesController extends BaseController
             ->json("Grupo " . $request->grupo['nombre']. " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function asignarPunto($idActividad, Request $request)
+    public function asignarPunto($idActividad, CrearInscripcion $request)
     {
         foreach ($request->inscripciones as $idInscripcion) {
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
@@ -176,7 +178,7 @@ class InscripcionesController extends BaseController
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function cambiarConfirmacion(Request $request, $id)
+    public function cambiarConfirmacion(CrearInscripcion $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
         {
@@ -190,7 +192,7 @@ class InscripcionesController extends BaseController
             ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function cambiarPago(Request $request, $id)
+    public function cambiarPago(CrearInscripcion $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
         {
@@ -204,7 +206,7 @@ class InscripcionesController extends BaseController
             ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function cambiarAsistencia(Request $request, $id)
+    public function cambiarAsistencia(CrearInscripcion $request, $id)
     {
         foreach ($request->inscripciones as $idInscripcion)
         {
@@ -218,7 +220,7 @@ class InscripcionesController extends BaseController
             ->json("Asistencia actualizada a " . $msgAsistencia . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
-    public function getInscriptos($id, Request $request)
+    public function getInscriptos($id, CrearInscripcion $request)
     {
         if($request->has('inscriptos')){
             $filtros['inscriptos'] = $request->inscriptos;
@@ -231,7 +233,7 @@ class InscripcionesController extends BaseController
         return response('La petición debe tener el parámetro "inscriptos"', 500);
     }
 
-    public function store($id, Request $request)
+    public function store($id, CrearInscripcion $request)
     {
         $idPuntoEncuentro = $request->idPuntoEncuentro;
 
@@ -323,8 +325,14 @@ class InscripcionesController extends BaseController
         return Inscripcion::create($data);
     }
 
-    public function procesarArchivo($id, Request $request)
+    public function procesarArchivo($id, CrearInscripcion $request)
     {
+
+        $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos.');
+            return redirect()->back();
+        }
         $this->validate($request, array(
             'archivo' => 'required'
         ));
@@ -343,7 +351,6 @@ class InscripcionesController extends BaseController
                         ->delete();
                     $counter = 1;
                     $errores = [];
-                    $actividad = Actividad::find($id);
                     foreach($data as $inscripcion){
                         $errorEnRegistro = false;
                         $counter++;

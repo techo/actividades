@@ -29,6 +29,10 @@ class UsuariosController extends Controller
     public function show(Request $request, $id)
     {
         $usuario = Persona::find($id);
+        if ($usuario->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos para ver ese perfil.');
+            return redirect()->back();
+        }
         $ficha = FichaMedica::where('idPersona', $id)->first();
         $estudios = Estudios::where('idPersona', $id)->first();
         $rol = $usuario->roles->toArray();
