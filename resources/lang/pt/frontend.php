@@ -316,7 +316,7 @@ return [
 	'technical_score' => 'Puntaje Técnico',
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Técnico',
-	'social_score_description' => 'Habilidades para comuncicarse y empatizar con otros.',
+	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
 
 
 	//perfil/evaluacion.vue
