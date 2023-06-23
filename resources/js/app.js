@@ -47,6 +47,8 @@ import EvaluacionesVoluntariosChart from './components/backoffice/evaluaciones/E
 import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatable';
 import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDatatable';
 import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable';
+import EquipoPersonasDatatable from './components/backoffice/datatable/EquipoPersonasDatatable';
+import EquipoPersonaModal from './components/backoffice/equipos/equipo-persona-modal';
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 import EquiposForm from './components/backoffice/equipos/equipos-form';
@@ -122,6 +124,8 @@ Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
 Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('suscriptos-datatable', SuscriptosDatatable);
 Vue.component('equipos-datatable', EquiposDatatable);
+Vue.component('equipo-personas-datatable', EquipoPersonasDatatable);
+Vue.component('equipo-persona-modal', EquipoPersonaModal);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
 Vue.component('equipo-form', EquiposForm);

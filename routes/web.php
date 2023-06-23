@@ -178,17 +178,29 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     // panel Equipos
 
-    Route::prefix('/equipos')->group(function() {
-        Route::get('', 'backoffice\EquiposController@index')->middleware('role:admin');
-        Route::get('/crear', 'backoffice\EquiposController@create')->middleware('role:admin');
-        Route::post('/registrar', 'backoffice\EquiposController@store')->middleware('role:admin');
+    Route::prefix('/equipos')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\EquiposController@index');
+        Route::get('/crear', 'backoffice\EquiposController@create');
+        Route::post('/registrar', 'backoffice\EquiposController@store');
         Route::get('/{idEquipo}', 'backoffice\EquiposController@show');
         Route::put('/{idEquipo}', 'backoffice\EquiposController@update');
         Route::delete('/{idEquipo}', 'backoffice\EquiposController@destroy');
+        Route::prefix('/{idEquipo}/personas')->group(function() {
+            Route::get('', 'backoffice\EquipoPersonaController@index');
+            Route::get('/crear', 'backoffice\EquipoPersonaController@create');
+            Route::get('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@show');
+            Route::put('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@update');
+            Route::delete('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@destroy');
+        });
     });
-    Route::prefix('ajax/equipos')->group(function() {
+    Route::prefix('ajax/equipos')->middleware(['role:admin'])->group(function() {
         Route::get('', 'backoffice\ajax\EquiposController@index')->middleware('permission:ver_usuarios');
-    });
+        
+        Route::prefix('/{idEquipo}/personas')->group(function() {
+            Route::get('', 'backoffice\ajax\EquipoPersonasController@index')->middleware('permission:ver_usuarios'); 
+            Route::post('/registrar', 'backoffice\EquipoPersonaController@store');  
+        });
+});
 
     
     //panel de usuario

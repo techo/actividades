@@ -20,7 +20,7 @@
 
     <div class="nav-tabs-custom">
         
-        @include('backoffice.equipos.tabs' , [ 'tab' => 'general' ])
+        @include('backoffice.equipos.tabs' , [ 'tab' => 'general' , 'idEquipo' => $equipo->idEquipo])
 
         <div class="tab-content">
 

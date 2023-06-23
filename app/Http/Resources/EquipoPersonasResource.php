@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class EquiposResource extends Resource
+class EquipoPersonasResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,8 @@ class EquiposResource extends Resource
     public function toArray($request)
     {
         return [
-            'idEquipo' => $this->idEquipo,
-            'idOficina' => $this->idOficina,
-            'idPais'    => $this->idPais,
-            'nombre'    => $this->nombre,
+            'idEquipoPersona' => $this->idEquipoPersona,
+            'nombre' => $this->persona->getNombreCompletoAttribute(),
             'estado'    => $this->estado,
             'fechaInicio' => ($this->fechaInicio)?$this->created_at->format('d/m/Y'):'',
             'fechaFin' => ($this->fechaFin)?$this->created_at->format('d/m/Y'):'',

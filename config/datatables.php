@@ -345,6 +345,42 @@ return [
             ],
         ]
     ],
+    'equipoPersonas' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idEquipoPersona',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'title' => 'Fecha de Inicio'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'suscriptos' => [
         'fields' => [
             [
