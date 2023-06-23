@@ -198,7 +198,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         
         Route::prefix('/{idEquipo}/personas')->group(function() {
             Route::get('', 'backoffice\ajax\EquipoPersonasController@index')->middleware('permission:ver_usuarios'); 
-            Route::post('/registrar', 'backoffice\EquipoPersonaController@store');  
+            Route::post('/crear', 'backoffice\ajax\EquipoPersonasController@store');  
         });
 });
 

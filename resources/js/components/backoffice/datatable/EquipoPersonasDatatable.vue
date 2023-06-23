@@ -1,6 +1,6 @@
 <template>
   <div>
-    <equipo-persona-modal :idEquipo="idEquipo" ></equipo-persona-modal>
+    <equipo-persona-modal :id-equipo="idEquipo" ></equipo-persona-modal>
     <div class="row">
       <div class="col-md-12">
           <span class="pull-right">
@@ -27,7 +27,7 @@
     <div class="vuetable-pagination">
       <vuetable-pagination-info
               ref="paginationInfo"
-              v-bind:infoTemplate="$t('frontend.pagination_detail', { of: 10, total: 'millon' })"
+              infoTemplate="Ítem {from} a {to} de {total}"
               info-class="pagination-info"
               v-bind:noDataTemplate="$t('frontend.empty_records')"
       ></vuetable-pagination-info>

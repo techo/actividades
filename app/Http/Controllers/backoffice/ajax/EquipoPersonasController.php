@@ -9,13 +9,19 @@ use App\EquipoPersonas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Requests\Equipo\CrearEquipoPersonas;
+use App\Persona;
+use Illuminate\Support\Facades\Log;
+
 class EquipoPersonasController extends Controller
 {
     public function index(Request $request)
     {
         $filtros = [];
-        if($request->has('nombre')){
-            $filtros['nombre'] = $request->nombre;
+        Log::info($request);
+        if($request->has('filter')){
+        Log::info("$request");
+        $filtros['nombre'] = $request->filter;
         }
         
         if($request->filled('sort')) {
@@ -35,5 +41,24 @@ class EquipoPersonasController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CrearEquipoPersonas $request, $idEquipo)
+    {
+        $equipoPersona = new EquipoPersonas();
+        $validado = $request->validated();
+        $persona = Persona::find($validado['idPersona']);
+        $equipoPersona->fill($validado);
+        $equipoPersona->idPersona = $persona->idPersona;
+
+        $equipoPersona->save();
+
+        return response()->json($equipoPersona->fresh());
+
+    }
     
 }

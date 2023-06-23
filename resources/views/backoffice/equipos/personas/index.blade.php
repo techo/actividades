@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Integrantes')
+@section('page_title', $equipo->nombre . ' - Integrantes')
 
 @section('content')
     @if (Session::has('mensaje'))
@@ -18,7 +18,7 @@
                         <equipo-personas-datatable
                             api-url="/admin/ajax/equipos/{{ $idEquipo }}/personas"
                             fields="{{ $fields }}"
-                            idEquipo="{{ $idEquipo }}"
+                            id-equipo="{{ $idEquipo }}"
                             sort-order="{{ $sortOrder }}"
                             placeholder-text="Buscar por nombre, apellido o documento"
                             detail-url="/admin/equipos/"

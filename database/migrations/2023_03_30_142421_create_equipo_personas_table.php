@@ -20,8 +20,9 @@ class CreateEquipoPersonasTable extends Migration
             $table->string('rol');
 			$table->boolean('estado');
             $table->dateTime('fechaInicio');
-            $table->dateTime('fechaFin');
+            $table->dateTime('fechaFin')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

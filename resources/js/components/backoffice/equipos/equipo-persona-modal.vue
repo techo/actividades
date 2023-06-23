@@ -89,6 +89,7 @@ export default {
             persona: null,
             personas: [],
             form: {
+                idEquipo: this.idEquipo,
                 idEquipoPersona: null,
                 idPersona: null,
                 rol: null,
@@ -123,9 +124,10 @@ export default {
                 this.store();
         },
         store() {
-            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/persona', this.form)
+            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/personas/crear', this.form)
                 .then((datos) => {
                     Event.$emit('equipo-persona:refrescar');
+                    location.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });

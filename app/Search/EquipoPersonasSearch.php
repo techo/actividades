@@ -40,7 +40,7 @@ class EquipoPersonasSearch
     private static function newQuery(){
         $query = (new EquipoPersonas())->newQuery();
 
-        $query->where('equipo.idPais', '=', auth()->user()->idPaisPermitido);
+        //$query->where('Equipo.idPais', '=', auth()->user()->idPaisPermitido);
 
         return $query;
     }

@@ -375,8 +375,8 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'nombre',
-                'sortField' => 'nombre',
+                'field' => 'estado',
+                'sortField' => 'estado',
                 'direction' => 'asc'
             ],
         ]

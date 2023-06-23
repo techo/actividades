@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class EquipoPersonas extends Model
 {
     use SoftDeletes;
-    protected $table = "EquipoPersona";
+    protected $table = "equipo_personas";
     protected $primaryKey = "idEquipoPersona";
-    protected $fillable = ['idEquipo', 'rol', 'estado', 'idPersona'];
+    protected $fillable = ['idEquipo', 'rol', 'estado', 'idPersona', 'fechaInicio', 'fechaFin'];
     protected $dates =
         [
             'fechaInicio', 'fechaFin'

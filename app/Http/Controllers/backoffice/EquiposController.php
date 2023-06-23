@@ -68,7 +68,7 @@ class EquiposController extends Controller
                 'edicion',
                 'tipos',
                 'categorias',
-                'edicion',
+                'edicion'
             )
         );
     }
@@ -128,7 +128,7 @@ class EquiposController extends Controller
             'backoffice.equipos.show',
             compact(
                 'equipo',
-                'edicion',
+                'edicion'
             )
         );
 
