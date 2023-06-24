@@ -21,12 +21,12 @@
         </a>
     </p>
 
-    {% if($actividad->linkEvaluacion) %}
+    @if($actividad->linkEvaluacion)
         <p> @lang('email.evaluation_2_1') <a href="{{ $actividad->linkEvaluacion }}">
                 aquí 
             </a>
         </p>
-    {% end if %}
+    @endif
     <p>
        @lang('email.evaluation_3') 
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
