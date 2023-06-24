@@ -11,19 +11,19 @@ return [
 	*/
 
 	// cookies-bar.vue
-	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',
-	'cookie_policy' => 'Cookies policy',
+	'cookie_bar_message' => 'Este site usa cookies para melhorar a experiência do usuário. Se você usar este site, estará aceitando nossa',
+	'cookie_policy' => 'politica de Cookies.',
 
 	// login.vue
-    'login' => 'Acessar',
-    'login_to_account' => 'Acessar à minha conta',
-    'create_account' => 'Quero ser voluntário!',
-    'forget_password' => 'Esqueci minha senha',
-    'close' => 'Fechar',
-    'forget_password' => 'Esqueci minha senha',
-    'login_facebook' => 'Acesse com Facebook',
-    'login_google' => 'Acesse com Google',
-    'mail' => 'Mail',
+	'login' => 'Login',
+	'login_to_account' => 'Acessar minha conta',
+	'create_account' => 'Quero ser voluntário!',
+	'forget_password' => 'Esqueci minha senha',
+	'close' => 'Fechar',
+	'forget_password' => 'Esqueci minha senha',
+	'login_facebook' => 'Login com Facebook',
+	'login_google' => 'Login com Google',
+	'mail' => 'E-mail',
 	'mail_placeholder' => 'Digite seu e-mail',
 	'password' => 'Senha',
 	'password_placeholder' => 'Digite sua senha',
@@ -31,7 +31,7 @@ return [
 	'volunteer_me' => 'Registre-se com e-mail',
 	'hello' => 'Olá',
 	'activities' => 'Atividades',
-	'my_activities' => 'Minhas Actividades',
+	'my_activities' => 'Minhas Atividades',
 	'profile' => 'Perfil',
 	'admin' => 'Admin',
 	'help' => 'Ajuda',
@@ -39,10 +39,13 @@ return [
 	'login_null' => 'O e-mail e a senha são obrigatórios',
 
 
-	'welcome_techo' => 'Bem-vindo ao TECHO',
+	'welcome_techo' => 'Bem-vindo a TETO',
 
 	//loginController
 	'login_error' => 'E-mail e/ou senha es incorretos',
+
+	//loginController
+	'login_error' => 'E-mail e/ou senha esta incorreto(s)',
 
 	// reset.blade
 	'reset_password' => 'Redefinir senha',
@@ -55,26 +58,26 @@ return [
 	'which_type_of_activity' => 'Em que atividade deseja participar?',
 	'activities_types' => 'Tipos de Atividades',
 	'to_act' => 'Going to informal settlements',
-	'to_act_description' => 'Join us working together with hundreds of neighbours and volunteers that fight every to to transform hundreds of informal settlements all around the country, No previous knowledge required, only willingness to participate.',
-	'to_reflect_and_learn' => 'To reflect and Learn',
-	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
-	'especial_events' => 'Special events',
+	'to_act_description' => 'Junte-se a nós, trabalhando junto com centenas de vizinhos e voluntários que lutam de todas as formas para transformar centenas de comunidades informais em todo o país. Não é necessário conhecimento prévio, apenas vontade de participar.',
+	'to_reflect_and_learn' => 'Para refletir e aprender',
+	'to_reflect_and_learn_description' => 'Procure uma de nossas sedes em todo o país, nos conheça e participe de atividades junto com toda nossa equipe. Venha tirar todas suas dúvidas. Te esperamos!',
+	'especial_events' => 'Eventos especiais',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Virtual',
 	'view_activities'  =>  'Me inscrever',
-	'welcome' => 'Bemvindo',
-	
-	'empty_search' => 'opa! Não há atividades abertas com esses filtros',
-	'suscribe_so_we_get_in_touch' => 'Inscreva-se para saber firstx sobre as próximas atividades',
+	'welcome' => 'Bem vindo',
+
+	'empty_search' => 'Opa! Não há atividades disponiveis com esses filtros',
+	'suscribe_so_we_get_in_touch' => 'Inscreva-se para saber primeiro sobre as próximas atividades',
 	'suscribe' => 'inscrever',
-	'suscribe_thanks' => 'Obrigada! Iremos notificá-lo quando as atividades forem abertas em sua área',
-	'email_validation_error' => 'por favor digite um email válido',
-	'autotestTituloBoton' => 'Autoteste: Qual é a atividade perfeita para você?',
+	'suscribe_thanks' => 'Obrigado! Iremos notificá-lo quando as atividades forem abertas em sua região',
+	'email_validation_error' => 'por favor digite um e-mail válido',
+	'autotestTituloBoton' => 'Auto teste: Qual é a atividade perfeita para você?',
 
 	// components/estadisticas-publicas.vue
-	'mobilized_volunteer_instances' => 'Volunteer participations',
-	'mobilized_volunteers' => 'Mobilized volunteers',
-	'statistics_message' => 'Our numbers in :ciclo',
+	'mobilized_volunteer_instances' => 'Participação voluntária',
+	'mobilized_volunteers' => 'Voluntários mobilizados',
+	'statistics_message' => 'Nossos números em :ciclo',
 
 	// registro.vue
 	'register' => 'Registre-se',
@@ -82,91 +85,92 @@ return [
 	'step_1' => 'PASSO 1/3',
 	'step_2' => 'PASSO 2/3',
 	'step_3' => 'PASSO 3/3',
-    'register_facebook' => 'Registre-se com Facebook',
-    'register_google' => 'Registre-se com Google',
-    'create_password' => 'Criar nova Senha',
-    'almost_there' => 'Já quase terminamos!',
-    'i_accept_the' => 'Aceito à ' ,
-    'privacy_policy' => 'Política de Privacidade',
-    'error_privacy_policy' => 'Precisa aceitar as políticas de privacidade para continuar',
-	'already_register' => "Legal, você já está registrado! Comece explorando nossas atividades. Quando encontrar algo de que goste, pediremos que faça login pela última vez. Estamos ansiosos para ver o que você vai escolher!",
-	'last_step_is_to_cerfy_your_mail' => "Legal, você já está registrado! Enviamos um email para você verificar seu endereço. Se você não o encontrar, pode solicitar outro seguindo o link.",
+	'register_facebook' => 'Registre-se com Facebook',
+	'register_google' => 'Registre-se com Google',
+	'create_password' => 'Criar nova Senha',
+	'almost_there' => 'Já estamos quase terminando!',
+	'i_accept_the' => 'Aceito à ',
+	'privacy_policy' => 'Política de Privacidade',
+	'error_privacy_policy' => 'É Preciso aceitar as políticas de privacidade para continuar',
+	'already_register' => "Legal, você já está registrado! Comece explorando nossas atividades. Quando encontrar alguma atividade interessante, pedimos que faça login e inscreva-se. ",
+	'already_register_continue_inscription' => "Ótimo, você está registrado! Agora, por favor, continue com sua inscrição!",
+	'last_step_is_to_cerfy_your_mail' => "Legal, você já está registrado! Enviamos um email de verificação para você. Se você não recebeu, pode solicitar outro seguindo o link.",
 	'search_activities' => 'BUSCAR ATIVIDADES',
-	'link_to_rrss' => 'Confimar Link Rede Social',
-	'link_rrss_techo' => 'Vincule sua conta de teto con sua conta de red social',
-	'confirm' => 'Confirmar',	
+	'link_to_rrss' => 'Confirmar Link Rede Social',
+	'link_rrss_techo' => 'Vincule sua conta da TETO con sua conta de rede social',
+	'confirm' => 'Confirmar',
 
 	// verify.blade.php
-	'confirm_your_email' => 'Verificar endereço de email',
-    'verify_email_message_1' => 'Um link de verificação foi enviado para sua caixa de e-mail',
-    'verify_email_message_2' => 'Para continuar, verifique sua caixa de e-mail e clique no link de verificação que enviamos a você.',
-    'verify_email_message_3' => 'Se você não recebeu o correo', 
-	'verify_email_resend' => 'clique para solicitar outro',
-	'verify_email' => 'Verificar email',
+	'confirm_your_email' => 'Verificar endereço de e-mail',
+	'verify_email_message_1' => 'Um link de verificação foi enviado para seu e-mail',
+	'verify_email_message_2' => 'Para continuar, verifique sua caixa de e-mail e clique no link de verificação que enviamos para você.',
+	'verify_email_message_3' => 'Se você não recebeu o e-mail',
+	'verify_email_resend' => 'clique aqui para solicitar outro',
+	'verify_email' => 'Verificar e-mail',
 
 	// perfil/perfil.vue
-	'changes_success'  =>  'As mudanças foram salvas com sucesso.',
-	'profile_text_1'  =>  'Aqui você pode fazer alterações no seu perfil. Modifique sua senha y dados pessoais.',
-    'profile_text_2'  =>  'Também pode',
-    'profile_text_3'  =>  'mudar seu endereço de e-mail',
-    'personal_data'  =>  'Dados pessoais',
-    'name'  =>  'NOME*',
-    'surname'  =>  'SOBRENOME*',
-    'birth_date'  =>  'ANIVERSÁRIO*',
-    'gender'  =>  'Genero*',
-    'gender_m'  =>  'Masc',
-    'gender_f'  =>  'Fem',
-    'gender_x'  =>  'Outro',
-    'gender_o'  =>  'Prefiro não dizer',
-    'passport'  =>  'CPF / PASAPORTE*',
-    'country'  =>  'PAÍS*',
-	'state'  =>  'PROVÍNCIA',
-	'municipality'  =>  'LOCALIDADE',
+	'changes_success'  =>  'As alterações foram salvas com sucesso.',
+	'profile_text_1'  =>  'Aqui você pode fazer alterações no seu perfil. Modifique sua senha e dados pessoais.',
+	'profile_text_2'  =>  'Também pode',
+	'profile_text_3'  =>  'modificar seu endereço de e-mail',
+	'personal_data'  =>  'Dados pessoais',
+	'name'  =>  'NOME*',
+	'surname'  =>  'SOBRENOME*',
+	'birth_date'  =>  'Data de Nascimento*',
+	'gender'  =>  'Sexo*',
+	'gender_m'  =>  'Masculino',
+	'gender_f'  =>  'Feminino',
+	'gender_x'  =>  'Outro',
+	'gender_o'  =>  'Prefiro não dizer',
+	'passport'  =>  'CPF / PASSAPORTE*',
+	'country'  =>  'PAÍS*',
+	'state'  =>  'Estado',
+	'municipality'  =>  'Municipio',
 	'telephone'  =>  'TELEFONE*',
 	'actual_password'  =>  'SENHA ATUAL*',
 	'new_password'  =>  'NOVA SENHA*',
-    'confirm_new_password'  =>  'CONFIRMAR SENHA*',
-    'platform_notifications_agreement'  =>  'Receba notificações operacionais da plataforma (necessário para estar informado das atividades nas quais você participa)',
-    'techo_notifications_agreement'  =>  'Aceito que o TETO entre em contato para me notificar sobre eventos e campanhas',
-	'save'  =>  'Salvar', 
-    'delete_account'  =>  'Excluir minha conta',
- 	'account_rrss_text_1' => 'Sua conta está vinculada com uma rede social, para mudar a senha precisas',
- 	'account_rrss_text_2' => 'e clicar em',
- 	'delete_account_message' => "Você está prestes a excluir sua conta desta plataforma. Essa ação não pode ser desfeita. Deseja continuar?",
- 	'delete_account_confirm_button' =>'SIM, EXCLUIR',
- 	'date_placeholder' => 'Selecione uma data',	
- 	'email_succesfully_updated' => 'Endereço de e-mail atualizado com sucesso. Verifique sua caixa de correio para verificar!',
+	'confirm_new_password'  =>  'CONFIRMAR SENHA*',
+	'platform_notifications_agreement'  =>  'Receba notificações da plataforma (necessário para estar informado das atividades nas quais você participa)',
+	'techo_notifications_agreement'  =>  'Aceito que a TETO entre em contato para me notificar sobre eventos e campanhas',
+	'save'  =>  'Salvar',
+	'delete_account'  =>  'Excluir minha conta',
+	'account_rrss_text_1' => 'Sua conta está vinculada com uma rede social, para mudar a senha você precisa',
+	'account_rrss_text_2' => 'e clicar em',
+	'delete_account_message' => "Você está prestes a excluir sua conta desta plataforma. Essa ação não pode ser desfeita. Deseja continuar?",
+	'delete_account_confirm_button' => 'SIM, EXCLUIR',
+	'date_placeholder' => 'Selecione uma data',
+	'email_succesfully_updated' => 'Endereço de e-mail atualizado com sucesso. Verifique sua caixa de correio para verificar!',
 
- 	// perfil / ficha medica
- 	'ficha_medica' => 'Registo médico',
- 	'contacto_nombre' => 'Nome Contato Emergência',
- 	'contacto_telefono' => 'Telefone de Contato de Emergência',
- 	'contacto_relacion' => 'Relacionamento Contato Emergência',
- 	'grupo_sanguinieo' => 'Grupo Sanguineo',
- 	'cobertura_nombre' => 'Nome da Cobertura Médica',
- 	'cobertura_numero' => 'Número de Cobertura Médica',
- 	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
- 	'archivo_medico' => 'Ficha médica',
- 	'ver_adjunto' => 'Ver Adjunto',
- 	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
+	// perfil / ficha medica
+	'ficha_medica' => 'Registro médico',
+	'contacto_nombre' => 'Nome do Contato de Emergência',
+	'contacto_telefono' => 'Telefone do Contato de Emergência',
+	'contacto_relacion' => 'Grau de parentesco do Contato Emergência',
+	'grupo_sanguinieo' => 'Tipo Sanguineo',
+	'cobertura_nombre' => 'Nome da Cobertura Médica Ex: SUS',
+	'cobertura_numero' => 'Número de Cobertura Médica',
+	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
+	'archivo_medico' => 'Ficha médica',
+	'ver_adjunto' => 'Ver Anexo',
+	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
 
 	// perfil / educacion
-	'educacion' => 'Educação',
-	'institucion_educativa' => 'instituição educacional',
-	'titulo_educacion' => 'Título',
+	'estudios' => 'Grau de Estudo',
+	'institucion_educativa' => 'Instituição de Ensino',
+	'titulo_educacion' => 'Curso',
 	'disciplina_academica' => 'Disciplina académica',
 	'descripcion_educacion' => 'Descrição',
 
- 	// perfil/index.blade.php
- 	'profile' => 'Perfil',
+	// perfil/index.blade.php
+	'profile' => 'Perfil',
 
- 	// perfil/cambiar-email.blade.php
- 	'change_email' => 'Alterar E-mail',
- 	'change_email_title' => 'Aqui você pode fazer alterações na sua caixa de e-mail.',
- 	'change_email_title_2' => 'Tem em conta que:',
+	// perfil/cambiar-email.blade.php
+	'change_email' => 'Alterar E-mail',
+	'change_email_title' => 'Aqui você pode fazer alterações seu e-mail.',
+	'change_email_title_2' => 'Leve em consideração que:',
 	'change_email_req_1' => 'É necessário verificar o novo endereço de e-mail',
-	'change_email_req_2' => 'Associações a redes sociais vão se perder.',
+	'change_email_req_2' => 'Vinculos com as redes sociais vão ser perdidas.',
 	'change_email_req_3' => 'Você precisa fazer login novamente.',
 	'change_email_new_email' => 'Novo e-mail',
 	'change_email_new_email_confirmation' => 'Digite novamente seu e-mail para confirmar',
@@ -175,9 +179,9 @@ return [
 
 	// perfil/actividades
 	'my_activities' => 'Minhas Atividades',
-	'next_activities' => 'Próximas Atividades', 
-    'past_activities' => 'Atividades passadas',
-	'filter_placeholder' => 'Nome o localidade da actividade',
+	'next_activities' => 'Próximas Atividades',
+	'past_activities' => 'Atividades atigas',
+	'filter_placeholder' => 'Nome o local da atividade',
 
 	// perfil/btnMisActividades
 	'view_evaluations' => 'Ver avaliações',
@@ -211,39 +215,39 @@ return [
 	'categories' => 'CATEGORIAS',
 	'select_all' => 'Marcar tudo',
 
- 	// contenedorchecktipoactividad
- 	'activity_types' => 'Tipos de Actividade',
+	// contenedorchecktipoactividad
+	'activity_types' => 'Tipos de Atividades',
 
- 	// contenedorcheckprovincias
- 	'place' => 'Lugar',
-    
+	// contenedorcheckprovincias
+	'place' => 'Lugar',
+
 	// actividades/show.blade.php
-    'description' => '',
-    'not_defined' => 'Não definido',
-    'coordinator' => 'Coordenador',
-    'meeting_points' => 'Onde nos encontramos?',
-    'referring' => 'Liderança',
-    'share' => 'COMPARTILHAR',
+	'description' => '',
+	'not_defined' => 'Não definido',
+	'coordinator' => 'Coordenador',
+	'meeting_points' => 'Onde nos encontramos?',
+	'referring' => 'Liderança',
+	'share' => 'COMPARTILHAR',
 
-    // actividadesController
-    'error' => 'ERRO',
-    'closed_inscriptions' => 'O período de inscrição está fechado',
+	// actividadesController
+	'error' => 'ERRO',
+	'closed_inscriptions' => 'O período de inscrição está fechado',
 	'approval_needed' => 'CONFIRME SUA PARTICIPAÇÃO',
 	'confirmation_date_is_closed' => 'DATA DE CONFIRMAÇÃO EXPIRADA',
 	'waiting_for_confirmation' => 'ESPERAR CONFIRMAÇÃO',
-    'confirmed' => 'CONFIRMADO',
+	'confirmed' => 'CONFIRMADO',
 	'activity_full' => 'A atividade não tem mais lugares',
-	'limit_about_to_be_reached' => 'Enrollment limite about to be reached',
-	'pre_registration' => 'PRÉ-REGISTO',
+	'limit_about_to_be_reached' => 'Limite de inscrições prestes a ser atingido',
+	'pre_registration' => 'PRÉ-REGISTRO',
 	'apply_now' => 'ME INSCREVER',
 
 	// components/inscripcion.vue
-	'select_a_meeting_point' => 'Select a location to meet',
-	'whats_a_meeting_point' => 'An activity might have more than one location to meet. Choose the most convenient for you!',
+	'select_a_meeting_point' => 'Selecione um lugar de encontro',
+	'whats_a_meeting_point' => 'Uma atividade pode ter mais de um lugar de encontro. Escolha o mais conveniente para você!',
 
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
-	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',
+	'will_be_in_touch' => 'Entraremos em contato para avisar se sua inscrição foi aprovada. Você pode entrar em contato com o coordenador se tiver dúvidas.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Só mais um passo!',
@@ -262,78 +266,80 @@ return [
 	'unenroll' => 'CANCELAR MINHA INSCRIÇÃO',
 
 	//pagar_paso_2
-	'confirm_by_paying' => 'Confirme com seu pagamento',
+	'confirm_by_paying' => 'Confirme seu pagamento',
 	'ready_for_paying' => 'Pronto para pagar pela site!',
 	'you_choose' => 'Você escolheu doar:',
 	'redirect_pay_platform' => 'Ao clicar, você será redirecionado para o site de pagamento',
 
 	//inscripciones/confirmar.blade.php
-	'finish_pre_registration' => 'Finish your pre-enrollment',
-	'finish_registration' => 'Finish your enrollment',
+	'finish_pre_registration' => 'Finalize sua pré-inscrição',
+	'finish_registration' => 'Termine sua inscrição',
 	'at' => 'at',
 	'accept' => 'Accept',
-	'terms_and_conditions' => 'terms and conditions',
+	'terms_and_conditions' => 'Termos e Condições',
 
 	//gracias.blade.php
-    'activity_detail' => 'Detalhe da Actividade',
-    'inscription_confirmed' => 'Inscrição confirmada!',
-    'already_inscripted' => 'Você já está registrado em ',
+	'activity_detail' => 'Detalhe da Actividade',
+	'inscription_confirmed' => 'Inscrição confirmada!',
+	'already_inscripted' => 'Você já está registrado em ',
 	'mail_message' => 'Enviamos um e-mail com mais informações sobre esta atividade. Para ver as atividades nas quais você está registrado e modificá-las, acesse à ',
 
 	// pagada.blade.php
-	'already_inscripted' => 'Your enrolled in ',
-	'with_this_donation' => 'With your donation your enrollment is comfirmed in',
+	'already_inscripted' => 'Você está registrado em ',
+	'with_this_donation' => 'Com sua doação sua inscrição é confirmada em ',
 	'important_remainders' => 'Some important remainders',
-	'activity_starts_at' => 'Starts at',
-	'activity_ends_at' => 'Finishes at',
-	'any_doubt_contact' => 'you can contact us if you have questions about the location.',
-	'activity_takes_place' => 'The activity takes place in',
+	'activity_starts_at' => 'Inicia em',
+	'activity_ends_at' => 'Termina em',
+	'any_doubt_contact' => 'você pode entrar em contato conosco se tiver dúvidas sobre o local.',
+	'activity_takes_place' => 'A atividade acontece em',
 
 	// actividades/index.blade.php
-	'index_actividades_text' =>  'Se para você o resultado é a misma coisa, você está fazendo as contas erradas',
+	'index_actividades_text' =>  'Se para você o resultado é a mesma coisa, algo está errado',
 	'index_actividades_text_2' => 'Inscreva-se e participe',
 	'delete_filter' => 'Apagar Filtros',
 
 	// compartir-modal.blade.php
 	'email' => 'Email',
-	'copy_link' => 'Copy link',
+	'copy_link' => 'Copiar Link',
 
 	// evaluaciones/index.blade.php
-	'feedback_of' => 'Evaluaciones de',
+	'feedback_of' => 'Avaliações de',
 
 	// evaluarActividad.vue
-	'feedback_text' => 'Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.',
-	'activity_feedback' => 'Evalúa la actividad',
-	'general_score' => 'Puntaje General',
-	'doesn_not_apply' => 'No Aplica / No tengo opinión',
-	'comments' => 'Comentarios',
+	'feedback_text' => 'Tua opnião nos ajuda a melhorar e fazer com que as atividades sejam cada vez melhores. ',
+	'activity_feedback' => 'Avalie a Atividade',
+	'general_score' => 'Pontuação Geral',
+	'doesn_not_apply' => 'Não se Aplica / Não quero opinar',
+	'comments' => 'Comentários',
 	'sent' => 'Enviado',
 	'send' => 'Enviar',
-	'feedback_date_expired' => 'La fecha de fin de las evaluaciones ya pasó',
-	'unable_to_sent_feeback' => 'No se pudo guardar la evaluación. Intentalo de nuevo más tarde.',
+	'feedback_date_expired' => 'A Data final das avaliações já expirou',
+	'unable_to_sent_feeback' => 'Não é possivel gravar a avaliação, Tente novamente mais tarde.',
 
 	// evaluarPersona.vue
-	'technical_score' => 'Puntaje Técnico',
-	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
-	'social_score' => 'Puntaje Técnico',
-	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
+	'technical_score' => 'Pontuação Técnica',
+	'technical_score_description' => 'Conhecimento sobre a tarefa a ser desenvolvida',
+	'social_score' => 'Pontuação Técnica',
+	'social_score_description' => 'Habilidades para se comunicar e  empatia com os outrps.',
+	'gender_score' => 'Pontuação de perspectiva de gênero',
+	'gender_score_description' => 'Pontuação de um ambiente seguro e igualitário.',
 
 
 	//perfil/evaluacion.vue
-	'my_score' => 'Mi Evaluación',
-	'my_score_description' => 'Esta evaluación es un promedio sobre todas las actividades en las que participaste',
-	'my_score_contact' => 'Ante cualquier duda contactate con el tu coordinador de personas de la sede en que participas ;)',
-	'my_score_feedback' => 'Evalua ahora!',
+	'my_score' => 'Minha avaliação',
+	'my_score_description' => 'Esta avaliação é um prómedio sobre todas as atividades que você participou',
+	'my_score_contact' => 'Em caso de alguma dúvida, entre em contato com seu coordenador da sede que você participa ;)',
+	'my_score_feedback' => 'Avalie agora!',
 
 	// contenedorEvaluaciones.vue
-	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
-	'peers_already_received_feedback' => 'Compañeros ya evaluados',
-	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla',
-	'search_volunteer' => 'Nombre, apellido o DNI del voluntario',
-	'type_to_search' => 'Empezá a escribir para buscar.',
-	'include_peer' => 'Incluir en mis evaluaciones',
+	'feedback_to_your_peers' => 'Avalie seus colegas',
+	'peers_already_received_feedback' => 'Colegas já avaliados',
+	'cannot_find_peer' => 'Não encontras a pessoa que você quer avaliar? Use esta busca para incluir-lá',
+	'search_volunteer' => 'Nome, Sobrenome o CPF do voluntário',
+	'type_to_search' => 'Comece a escrever para buscar.',
+	'include_peer' => 'Incluir na mesma avaliação',
 
 	//aviso_modal
-	'aviso_modal' => 'Ver Actividades Virtuales',
+	'aviso_modal' => 'Ver Atividades Virtuais',
 
 ];
