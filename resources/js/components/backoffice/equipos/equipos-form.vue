@@ -37,28 +37,26 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="fechaInicio">Fecha Inicio</label>
-                                <div :class="{  'has-error': errors.fechaInicio }">
-                                    <input name="fechaInicio" v-model="data.fechaInicio" type="date" class="form-control"
-                                        required style="line-height: inherit;" :disabled="this.readonly">
-                                    <span class="help-block">{{ errors.fechaInicio }}</span>
+                                    <label for="estado">Area</label>
+                                    <select name="estado" class="form-control" v-model="data.area" required
+                                        :disabled="this.readonly">
+                                        <option value="Administración y Finanzas">Administración y Finanzas</option>
+                                        <option value="Comunicaciones">Comunicaciones</option>
+                                        <option value="Construcción y Logística">Construcción y Logística</option>
+                                        <option value="Desarrollo de Fondos">Desarrollo de Fondos</option>
+                                        <option value="Vivienda y Hábitat">Vivienda y Hábitat</option>
+                                        <option value="Detección y Asignación">Detección y Asignación</option>
+                                        <option value="Dirección General">Dirección General</option>
+                                        <option value="Formación y Voluntariado">Formación y Voluntariado</option>
+                                        <option value="Legal">Legal</option>
+                                        <option value="Personas">Personas</option>
+                                        <option value="Gestión Comunitaria">Gestión Comunitaria</option>
+                                        <option value="Programas y Proyectos">Programas y Proyectos</option>
+                                        <option value="Equipos">Equipos</option>
+                                        <option value="Centro de Investigación Social">Centro de Investigación Social</option>
+                                        <option value="Procesos Comunitarios">Procesos Comunitarios</option>
+                                    </select>
                                 </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                <label for="fechaFin">Fecha Fin</label>
-                                <div :class="{ 'has-error': errors.fechaFin }">
-                                    <input name="fechaFin" v-model="data.fechaFin" type="date" class="form-control"
-                                        required style="line-height: inherit;" :disabled="this.readonly">
-                                    <span class="help-block">{{ errors.fechaFin }}</span>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -71,6 +69,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                <label for="fechaInicio">Fecha Inicio</label>
+                                <div :class="{  'has-error': errors.fechaInicio }">
+                                    <input name="fechaInicio" v-model="data.fechaInicio" type="date" class="form-control"
+                                        required style="line-height: inherit;" :disabled="this.readonly">
+                                    <span class="help-block">{{ errors.fechaInicio }}</span>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="data.activo==0">
+                                <div class="form-group">
+                                <label for="fechaFin">Fecha Fin</label>
+                                <div :class="{ 'has-error': errors.fechaFin }">
+                                    <input name="fechaFin" v-model="data.fechaFin" type="date" class="form-control"
+                                        required style="line-height: inherit;" :disabled="this.readonly">
+                                    <span class="help-block">{{ errors.fechaFin }}</span>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -93,7 +114,8 @@ export default {
                 idOficina: null,
                 fechaInicio: null,
                 fechaFin: null,
-                activo: null,
+                activo: 1,
+                area: null,
             },
             guardado: false,
             mensajeGuardado: '',

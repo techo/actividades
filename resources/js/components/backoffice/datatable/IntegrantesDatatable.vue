@@ -1,6 +1,6 @@
 <template>
   <div>
-    <equipo-persona-modal :id-equipo="idEquipo" ></equipo-persona-modal>
+    <integrante-modal :id-equipo="idEquipo" ></integrante-modal>
     <div class="row">
       <div class="col-md-12">
           <span class="pull-right">
@@ -8,7 +8,7 @@
           </span>
       </div>
     </div>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText"></filter-bar>
+    <usuarios-filter-bar v-bind:placeholder-text="dataPlaceholderText"></usuarios-filter-bar>
     <vuetable
       class="vuetable"
       ref="vuetable"
@@ -104,14 +104,11 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     desplegarModal() {
-      Event.$emit('equipo-persona:crear');
+      Event.$emit('integrante:crear');
     },
-    onCellClicked (data, field, event) { console.log(data);
-        if (this.detailUrl !== undefined) {
-            window.location.href = this.detailUrl + data.idActividad;
-        }
-
-      this.$refs.vuetable.toggleDetailRow(data.id)
+    onCellClicked (data, field, event) { 
+      console.log(data);
+      Event.$emit('integrante:editar', data);
     },
       bold: function(value) {
           return '<b>' + value + '</b>';

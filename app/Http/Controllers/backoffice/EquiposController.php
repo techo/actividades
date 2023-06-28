@@ -3,27 +3,14 @@
 namespace App\Http\Controllers\backoffice;
 
 use App\Equipo;
-use App\Actividad;
 use App\CategoriaActividad;
-use App\Grupo;
-use App\GrupoRolPersona;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Equipo\CrearEquipo;
-use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Pais;
-use App\Persona;
-use App\PuntoEncuentro;
-use App\Coordinador;
 use App\Oficina;
-use App\Rules\FechaFinActividad;
-use App\UnidadOrganizacional;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 
 class EquiposController extends Controller
 {

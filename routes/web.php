@@ -185,20 +185,23 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{idEquipo}', 'backoffice\EquiposController@show');
         Route::put('/{idEquipo}', 'backoffice\EquiposController@update');
         Route::delete('/{idEquipo}', 'backoffice\EquiposController@destroy');
-        Route::prefix('/{idEquipo}/personas')->group(function() {
-            Route::get('', 'backoffice\EquipoPersonaController@index');
-            Route::get('/crear', 'backoffice\EquipoPersonaController@create');
-            Route::get('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@show');
-            Route::put('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@update');
-            Route::delete('/{idEquipoPersona}', 'backoffice\EquipoPersonaController@destroy');
+        Route::prefix('/{idEquipo}/integrantes')->group(function() {
+            Route::get('', 'backoffice\IntegrantesController@index');
+        });
+
+        Route::prefix('/{idEquipo}/coordinadores')->group(function() {
+            Route::get('', 'backoffice\CoordinadorEquipoController@index');
         });
     });
     Route::prefix('ajax/equipos')->middleware(['role:admin'])->group(function() {
         Route::get('', 'backoffice\ajax\EquiposController@index')->middleware('permission:ver_usuarios');
         
-        Route::prefix('/{idEquipo}/personas')->group(function() {
-            Route::get('', 'backoffice\ajax\EquipoPersonasController@index')->middleware('permission:ver_usuarios'); 
-            Route::post('/crear', 'backoffice\ajax\EquipoPersonasController@store');  
+        Route::prefix('/{idEquipo}/integrante')->group(function() {
+            Route::get('', 'backoffice\ajax\IntegrantesController@index')->middleware('permission:ver_usuarios'); 
+            Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
+            Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
+            Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
+            Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
         });
 });
 

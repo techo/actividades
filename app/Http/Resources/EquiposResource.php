@@ -16,10 +16,11 @@ class EquiposResource extends Resource
     {
         return [
             'idEquipo' => $this->idEquipo,
-            'idOficina' => $this->idOficina,
+            'oficina' => $this->oficina->nombre,
             'idPais'    => $this->idPais,
             'nombre'    => $this->nombre,
-            'estado'    => $this->estado,
+            'estado'    => $this->activo,
+            'area'      => $this->area,
             'fechaInicio' => ($this->fechaInicio)?$this->created_at->format('d/m/Y'):'',
             'fechaFin' => ($this->fechaFin)?$this->created_at->format('d/m/Y'):'',
         ];

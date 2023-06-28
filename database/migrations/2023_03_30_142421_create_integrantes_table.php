@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEquipoPersonasTable extends Migration
+class CreateIntegrantesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateEquipoPersonasTable extends Migration
      */
     public function up()
     {
-        Schema::create('equipo_personas', function (Blueprint $table) {
-            $table->increments('idEquipoPersona');
+        Schema::create('Integrantes', function (Blueprint $table) {
+            $table->increments('idIntegrante');
             $table->integer('idEquipo')->index('idEquipo');
             $table->integer('idPersona')->index('idPersona');
             $table->string('rol');
@@ -33,6 +33,6 @@ class CreateEquipoPersonasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('equipo_personas');
+        Schema::dropIfExists('Integrantes');
     }
 }

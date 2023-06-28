@@ -17,6 +17,8 @@ class CreateEquipoTable extends Migration
             $table->increments('idEquipo');
             $table->integer('idOficina')->index('idOficina');
             $table->integer('idPais')->index('idPais');
+            $table->integer('idEquipoPadre')->nullable();
+            $table->string('area');
             $table->string('nombre');
 			$table->boolean('activo');
             $table->dateTime('fechaInicio');

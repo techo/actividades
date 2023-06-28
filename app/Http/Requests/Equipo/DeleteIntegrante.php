@@ -4,7 +4,7 @@ namespace App\Http\Requests\Equipo;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CrearEquipoPersonas extends FormRequest
+class DeleteIntegrante extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,6 @@ class CrearEquipoPersonas extends FormRequest
     public function rules()
     {
         return [
-            'idPersona' => 'required',
-            'idEquipo' => 'required',
-            'rol' => 'required',
-            'estado' => 'required|boolean',
-            'fechaInicio' => 'required|date',
-            'fechaFin' => 'nullable|date',
         ];
     }
 }

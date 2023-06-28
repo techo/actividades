@@ -15,14 +15,14 @@
             <div class="tab-pane active" id="personas">
                 <div class="box">
                     <div class="box-body  with-border">
-                        <equipo-personas-datatable
-                            api-url="/admin/ajax/equipos/{{ $idEquipo }}/personas"
+                        <integrantes-datatable
+                            api-url="/admin/ajax/equipos/{{ $idEquipo }}/integrante"
                             fields="{{ $fields }}"
                             id-equipo="{{ $idEquipo }}"
                             sort-order="{{ $sortOrder }}"
                             placeholder-text="Buscar por nombre, apellido o documento"
                             detail-url="/admin/equipos/"
-                        ></equipo-personas-datatable>
+                        ></integrantes-datatable>
                     </div>
                     <!-- /.box-body -->
                 </div>

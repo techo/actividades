@@ -2,9 +2,9 @@
   <div>
     <simple-alert ref="loading"></simple-alert>
 
-    <div style="text-align: right">
+    <!-- <div style="text-align: right">
 				<button class="btn btn-default" @click="exportarEquipos()" >Descargar<i class="fa fa-download"></i></button>
-			</div>
+			</div> -->
     <usuarios-filter-bar v-bind:placeholder-text="dataPlaceholderText"></usuarios-filter-bar>
 
     <vuetable

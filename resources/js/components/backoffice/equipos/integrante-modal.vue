@@ -10,8 +10,8 @@
                 </div>
                 <div class="modal-body">
 
-                    <div v-if="errors.idEquipoPersona" class="callout callout-danger">
-                        <p v-text="errors.idEquipoPersona[0]"></p>
+                    <div v-if="errors.idIntegrante" class="callout callout-danger">
+                        <p v-text="errors.idIntegrante[0]"></p>
                     </div>
 
                     <div class="row">
@@ -52,7 +52,7 @@
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" v-if="form.estado==0">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
                                 <label for="fechaFin">fechaFin</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
@@ -90,7 +90,7 @@ export default {
             personas: [],
             form: {
                 idEquipo: this.idEquipo,
-                idEquipoPersona: null,
+                idIntegrante: null,
                 idPersona: null,
                 rol: null,
                 estado: 1,
@@ -101,8 +101,8 @@ export default {
         }
     },
     mounted() {
-        Event.$on('equipo-persona:crear', this.show);
-        Event.$on('equipo-persona:editar', this.editar);
+        Event.$on('integrante:crear', this.show);
+        Event.$on('integrante:editar', this.editar);
     },
     watch: {
         persona(v, vv) {
@@ -111,49 +111,55 @@ export default {
     },
     computed: {
         editando() {
-            if (this.form['idEquipoPersona'])
+            if (this.form['idIntegrante'])
                 return true
             return false
         }
     },
     methods: {
         guardar() {
-            if (this.form['idEquipoPersona'])
+            if (this.form['idIntegrante'])
                 this.update();
             else
                 this.store();
         },
         store() {
-            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/personas/crear', this.form)
+            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
-                    Event.$emit('equipo-persona:refrescar');
+                    Event.$emit('integrante:refrescar');
                     location.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         update() {
-            axios.put('/admin/ajax/equipos/' + this.idEquipo + '/persona/' + this.form.idEquipoPersona, this.form)
+            axios.put('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
-                    Event.$emit('equipo-persona:refrescar');
+                    Event.$emit('integrante:refrescar');
+                    location.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         eliminar() {
-            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/persona/' + this.form.idEquipoPersona, this.form)
+            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
-                    Event.$emit('puntos:refrescar');
+                    Event.$emit('integrantes:refrescar');
+                    location.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         editar(p) {
+            console.log("holas");
             this.show();
-            axios.get('/admin/ajax/equipos/' + this.idEquipo + '/persona/' + p.id)
+            axios.get('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + p.idIntegrante)
                 .then((datos) => {
                     this.form = datos.data;
+                    this.form.fechaInicio = moment(this.form.fechaInicio).format('YYYY-MM-DD');
+                    this.form.fechaFin = moment(this.form.fechaFin).format('YYYY-MM-DD');
                     this.persona = datos.data.persona;
+                    this.persona.nombre = datos.data.personaData.nombre;
                 }).catch((error) => { debugger; });
         },
         show: function () {

@@ -285,7 +285,7 @@ return [
 	'activity_takes_place' => 'A atividade acontece em',
 
 	// actividades/index.blade.php
-	'index_actividades_text' =>  'Se para você o resultado é a mesma coisa, algo está errado',
+	'index_actividades_text' =>  'Por uma sociedade justa e sem pobreza!',
 	'index_actividades_text_2' => 'Inscreva-se e participe',
 	'delete_filter' => 'Apagar Filtros',
 

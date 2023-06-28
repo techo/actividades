@@ -2,14 +2,16 @@
 
 namespace App\Search;
 
-use App\EquipoPersonas;
+use App\Integrante;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
-class EquipoPersonasSearch
+class IntegrantesSearch
 {
     public static function apply($filters, $sort = 'created_at desc', $per_page = 25)
-    {
-        $query = static::applyDecoratorsFromRequest($filters, EquipoPersonasSearch::newQuery());
+    {   
+        Log::info($filters);
+        $query = static::applyDecoratorsFromRequest($filters, IntegrantesSearch::newQuery());
         return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
@@ -38,7 +40,7 @@ class EquipoPersonasSearch
     }
 
     private static function newQuery(){
-        $query = (new EquipoPersonas())->newQuery();
+        $query = (new Integrante())->newQuery();
 
         //$query->where('Equipo.idPais', '=', auth()->user()->idPaisPermitido);
 

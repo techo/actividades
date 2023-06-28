@@ -327,6 +327,16 @@ return [
                 'title' => 'Nombre'
             ],
             [
+                'name' => 'area',
+                'sortField' => 'area',
+                'title' => 'Area'
+            ],
+            [
+                'name' => 'oficina',
+                'sortField' => 'oficina',
+                'title' => 'Oficina'
+            ],
+            [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
                 'title' => 'Fecha de Inicio'
@@ -345,11 +355,11 @@ return [
             ],
         ]
     ],
-    'equipoPersonas' => [
+    'integrantes' => [
         'fields' => [
             [
                 'name' => 'id',
-                'sortField' => 'idEquipoPersona',
+                'sortField' => 'idIntegrante',
                 'visible' => false
             ],
             [
