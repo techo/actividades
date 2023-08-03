@@ -19,11 +19,10 @@
                                 <div class="row pl-3 pr-3 m-2 justify-center">
                                     <div class="col-md-12">
 
-                                        <h3 style="font-size: 1em; margin-top: 0.2em;" >{{ $t('frontend.welcome_techo') }}</h3>
-                                        <h3 style="text-align: center; font-size: 0.7em; margin-top: 0.4em;" >{{ $t('frontend.not_a_volunteer') }}</h3>
-                                        <a class="btn btn-primary tag-social facebook" @click="registro_facebook()" style="width: inherit"><i
+                                        <h3 class="text-center mt-2 ml-1" style="font-size: 0.7em;" >{{ $t('frontend.not_a_volunteer') }}</h3>
+                                        <a class="btn btn-primary tag-social facebook py-3" @click="registro_facebook()" style="width: inherit"><i
                                                 class="fab fa-facebook-f"></i>&nbsp;&nbsp;facebook</a>
-                                        <a class="btn btn-primary tag-social google" @click="registro_google()" style="width: inherit"><i
+                                        <a class="btn btn-primary tag-social google py-3" @click="registro_google()" style="width: inherit"><i
                                                 class="fab fa-google"></i>&nbsp;&nbsp;google</a>
                                     </div>
                                 </div>
@@ -31,55 +30,60 @@
                                 <div class="row pl-3 pr-3 m-2">
                                     <div class="col-md-12">
                                         <form id="frmLogin">
-                                            <div class="form-group" style="margin-bottom: 0.5em;">
-                                                <label for="mail">{{ $t('frontend.mail') }}</label>
-                                                <input v-bind:class="{ 'is-invalid': hasError }"
-                                                       type="email"
-                                                       v-model="credentials.mail"
-                                                       v-on:keyup.enter="login"
-                                                       class="form-control"
-                                                       id="mail"
-                                                       v-bind:placeholder="$t('frontend.mail_placeholder')"
-                                                       style="font-size: 0.5em;"
-                                                       required>
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 0.5em;">
-                                                <label for="password">{{ $t('frontend.password') }}</label>
-                                                <input type="password"
-                                                       v-bind:class="{ 'is-invalid': hasError }"
-                                                       v-model="credentials.password"
-                                                       v-on:keyup.enter="login"
-                                                       class="form-control"
-                                                       id="password"
-                                                       v-bind:placeholder="$t('frontend.password_placeholder')"
-                                                       style="font-size: 0.5em;"
-                                                       required>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <p class="text-danger">{{ mensajeError }}</p>
+                                            <div v-if="showMailLogin">
+                                                <div class="form-group" style="margin-bottom: 0.5em;">
+                                                    <label for="mail">{{ $t('frontend.mail') }}</label>
+                                                    <input v-bind:class="{ 'is-invalid': hasError }"
+                                                        type="email"
+                                                        v-model="credentials.mail"
+                                                        v-on:keyup.enter="login"
+                                                        class="form-control"
+                                                        id="mail"
+                                                        v-bind:placeholder="$t('frontend.mail_placeholder')"
+                                                        style="font-size: 0.5em;"
+                                                        required>
+                                                </div>
+                                                <div class="form-group" style="margin-bottom: 0.5em;">
+                                                    <label for="password">{{ $t('frontend.password') }}</label>
+                                                    <input type="password"
+                                                        v-bind:class="{ 'is-invalid': hasError }"
+                                                        v-model="credentials.password"
+                                                        v-on:keyup.enter="login"
+                                                        class="form-control"
+                                                        id="password"
+                                                        v-bind:placeholder="$t('frontend.password_placeholder')"
+                                                        style="font-size: 0.5em;"
+                                                        required>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <p class="text-danger">{{ mensajeError }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row h-100 align-items-center">
                                                 
-                                                <div class="col-6 text-left" style="font-size:0.5em">
-                                                    <a href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
-                                                    <a
-                                                href="/registro"
-                                                class="forget" style="font-size:0.8em"
-                                        >
-                                            {{ $t('frontend.volunteer_me') }}
-                                        </a>
-
+                                                <div class="col-6 text-left" style="font-size:0.5em" >
+                                                    <a v-if="showMailLogin" href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
+                                                    <a v-if="showMailLogin" href="/registro" class="forget" style="font-size:0.8em">
+                                                        {{ $t('frontend.volunteer_me') }}
+                                                    </a>
                                                 </div>
                                                 <div class="col-6  text-right">
                                                     <button
+                                                            v-if="showMailLogin"
                                                             id="btnLogin"
                                                             v-on:click="login"
                                                             type="button"
                                                             class="btn btn-primary"
                                                     >
                                                         {{ $t('frontend.login') }}
+                                                    </button>
+                                                    <button v-if="!showMailLogin" 
+                                                            v-on:click="showMailLogin = true"
+                                                            class="forget"
+                                                            style="font-size:0.5em">
+                                                        {{ $t('frontend.use_mail_login') }}
                                                     </button>
                                                 </div>
                                             </div>
@@ -109,7 +113,7 @@
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="collapse navbar-collapse text-right" id="navbarCollapse">
                     <div class="btn-group " role="group" ref="paises" v-if="this.showpaises==0">
                         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
                         <div class="dropdown-menu">
@@ -117,7 +121,7 @@
                         </div>
                     </div>
                         <br>
-                    <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a>
+                    <!-- <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a> -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
@@ -137,6 +141,7 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
+
                         <li class="nav-item active d-block d-md-none locale-changer " v-show="langs.length>0" >
                             <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
                                 <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
@@ -224,7 +229,7 @@
                     </div>
                 </div>
                 <!-- Si no esta autenticado -->
-                <form class="form-inline col-md-2" v-else>
+                <form class="form-inline" v-else>
                     <button
                             class="btn btn-primary"
                             type="button"
@@ -232,7 +237,7 @@
                             data-target="#login-modal"
                             id="btnShowModal"
                     >
-                        {{ $t('frontend.login') }}
+                        {{ $t('frontend.login_or_register') }}
                     </button>
                 </form>
             </div>
@@ -259,6 +264,7 @@
                 },
                 verAdmin: this.veradmin,
                 paises: [],
+                showMailLogin: false,
             };
             
             if(this.usuario) {

@@ -14,7 +14,7 @@
 
 
     <div class="row justify-content-center align-items-center mt-4">
-        <div class="col-md-5">
+        <div class="col-md-5 d-none d-md-block">
         <img src="/img/techo_logo_big.png" alt="Techo" width="80%">
         </div>
         <div class="col-md-3">

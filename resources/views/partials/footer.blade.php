@@ -34,7 +34,7 @@
             </p>
         </div>
         <div class="col-sm-3 pt-1">
-            <a href="https://www.techo.org/politicas-de-privacidad" target="_blank">Políticas de Privacidad</a>
+            <a href="https://www.techo.org/politicas-de-privacidad" target="_blank">{{ __('frontend.privacy_policy') }}</a>
         </div>
         @if(config('app.env') == 'local' || config('app.env') == 'development' )
         <div class="row ml-2 mt-0">
