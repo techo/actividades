@@ -16,6 +16,7 @@ return [
 
 	// login.vue
     'login' => 'Ingresar',
+    'login_or_register' => 'Login / Registro',
     'login_to_account' => 'Ingresar a mi cuenta',
     'create_account' => '¡Quiero ser voluntario!',
     'forget_password' => 'Olvidé mi contraseña',
@@ -27,7 +28,7 @@ return [
 	'mail_placeholder' => 'Ingresá tu Mail',
 	'password' => 'Contraseña',
 	'password_placeholder' => 'Ingresá tu contraseña',
-	'not_a_volunteer' => 'Inicia sesión o registrate con',
+	'not_a_volunteer' => 'Continuar con',
 	'volunteer_me' => 'Registrate con mail',
 	'hello' => 'Hola',
 	'activities' => 'Actividades',
@@ -38,6 +39,7 @@ return [
 	'logout' => 'Salir',
 	'welcome_techo' => 'BIENVENIDX A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
+	'use_mail_login' => 'Login con mail',
 
 
 	//loginController
@@ -97,6 +99,16 @@ return [
 	'link_to_rrss' => 'Confimar Link Red Social',
 	'link_rrss_techo' => 'Relacionar la cuenta de techo con tu cuenta de red social',
 	'confirm' => 'Confirmar',	
+
+    'how_did_you_meet_techo' => '¿CÓMO CONOCISTE A TECHO?',
+	'social_networks' => 'Redes sociales',
+    'advertisement_traditional_media' => 'Publicidad en medios tradicionales',
+    'outdoor_advertising' => 'Publicidad en vía pública',
+    'website' => 'Página web',
+    'known_person' => 'Por una persona conocida',
+    'email_campaign' => 'Por un envío de correo electrónico',
+    'street_intervention' => 'Por una intervención en la calle',
+    'event_collection_volunteer_campaign' => 'Por un evento: Colecta, Campaña de Voluntariado',
 
 	// verify.blade.php
 	'confirm_your_email' => 'Verificar dirección de email',
