@@ -69,8 +69,8 @@ class UsuarioController extends BaseController
      // event(new RegistroUsuario($persona));
 
       $pais = Pais::find($persona->idPais);
-      Auth::login($persona, true);
       $request->session()->regenerate();
+      Auth::login($persona, true);
       $request->session()->flash('mensaje', __('messages.account_created'));
 
       return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (empty($request->google_id) || empty($request->facebook_id))];
@@ -103,6 +103,8 @@ class UsuarioController extends BaseController
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;
       $persona->acepta_marketing = $request->acepta_marketing;
+      $persona->canal_contacto = $request->canal_contacto;
+
       return $persona;
   }
 

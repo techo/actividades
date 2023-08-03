@@ -245,7 +245,17 @@
                 </div>
                 <div class="col-md-5">
                     <div class="form-group">
-
+                        <label>{{ $t('frontend.how_did_you_meet_techo') }}</label>
+                        <select id="canal_contacto" v-model="user.canal_contacto" class="form-control">
+                            <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
+                            <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
+                            <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
+                            <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
+                            <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
+                            <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
+                            <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
+                            <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-1">
