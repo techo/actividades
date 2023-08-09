@@ -17,12 +17,12 @@
       @vuetable:pagination-data="onPaginationData"
     ></vuetable>
     <div class="vuetable-pagination">
-      <vuetable-pagination-info
+      <!-- <vuetable-pagination-info
               ref="paginationInfo"
               v-bind:infoTemplate="$t('frontend.pagination_detail', { of: 10, total: 'millon' })"
               info-class="pagination-info"
               v-bind:noDataTemplate="$t('frontend.empty_records')"
-      ></vuetable-pagination-info>
+      ></vuetable-pagination-info> -->
       <vuetable-pagination ref="pagination"
         :css="css.pagination"
         @vuetable-pagination:change-page="onChangePage"

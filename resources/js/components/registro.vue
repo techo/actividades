@@ -206,8 +206,8 @@
                     <span v-bind:class="{'d-none':!validacion.pais.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
-                <div class="col-md-5">
-                    <div class="form-group">
+                <div class="col-md-5" >
+                    <div class="form-group" v-if="(user.pais != '' && provincias.length > 0)">
                         <label>{{ $t('frontend.state') }}</label>
                         <select id="provincia" v-model="user.provincia" class="form-control">
                             <option v-for="provincia in provincias" v-bind:value="provincia.id">
@@ -227,7 +227,7 @@
 
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
-                    <div class="form-group">
+                    <div class="form-group" v-if="(user.provincia != '' && localidades.length > 0)">
                         <label>{{ $t('frontend.municipality') }}</label>
                         <select id="localidad" v-model="user.localidad" class="form-control">
                             <option v-for="localidad in localidades" v-bind:value="localidad.id">
@@ -243,6 +243,9 @@
                     <span v-bind:class="{'d-none':!validacion.localidad.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
+            
+            </div>
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.how_did_you_meet_techo') }}</label>
@@ -259,9 +262,15 @@
                     </div>
                 </div>
                 <div class="col-md-1">
-
+                    <span v-bind:class="{'d-none':!validacion.canal_contacto.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.canal_contacto.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+                <div class="col-md-6">
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-check">
@@ -396,7 +405,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad', 'canal_contacto'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -434,6 +443,7 @@
             this.traer_provincias() 
         },
         'user.provincia': function() { this.traer_localidades() },
+        'user.canal_contacto': function() { this.validar_data('canal_contacto')},
         'user.privacidad': function() { this.validar_data('privacidad')}
       },
       methods: {
@@ -530,6 +540,8 @@
           if(this.user.pais) {
             axios.get('/ajax/paises/'+this.user.pais+'/provincias').then(response => {
               this.provincias = response.data
+              this.provinciaSeleccionada = null
+              this.localidades = []
             })
           }
         },
@@ -537,6 +549,7 @@
           if(this.user.pais && this.user.provincia) {
             axios.get('/ajax/paises/'+this.user.pais+'/provincias/'+this.user.provincia+'/localidades').then(response => {
               this.localidades = response.data
+              this.localidadSeleccionada = null
             })
           }
         }

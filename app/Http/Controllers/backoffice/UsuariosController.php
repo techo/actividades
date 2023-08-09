@@ -56,6 +56,7 @@ class UsuariosController extends Controller
             'dni' => $usuario->dni,
             'rol' => $rol,
             'email_verified_at' => $usuario->email_verified_at,
+            'canal_contacto' => $usuario->canal_contacto,
         ];
 
         $edicion = false;

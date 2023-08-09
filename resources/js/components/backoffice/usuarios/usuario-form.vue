@@ -199,6 +199,20 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label for="telefono">Canal de Contacto</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="telefono"
+                                           id="telefono"
+                                           v-model="usuario.canal_contacto"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label for="localidad">Verificación</label>
                                     <br>
                                     <v-switch
@@ -243,6 +257,7 @@
                     dni: "",
                     rol: null,
                     email_verified_at: null,
+                    canal_contacto: null,
                 },
                 dataGeneros: [
                     {id: "M", genero: "Masculino"},
