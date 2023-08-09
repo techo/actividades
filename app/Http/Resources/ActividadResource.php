@@ -40,6 +40,7 @@ class ActividadResource extends Resource
             'fechaLimitePago'      => empty($this->fechaLimitePago) ? '' : $this->fechaLimitePago->format('d-m-Y'),
             'cantInscriptos' => $this->inscripciones()->count(),
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),
+            'seguimiento_google' => $this->seguimiento_google,
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0
         ];
     }

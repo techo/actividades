@@ -5,6 +5,7 @@
 @endsection
 
 
+
 @section('main_image')
     <div class="techo-hero actividades">
         {{--<img src="/img/hero-slim.jpg" alt="hero image">--}}
@@ -125,9 +126,23 @@
 
 @section('aditional_html')
 	@include('partials.compartir-modal', ['url' => Request::url(), 'title' => $actividad->nombreActividad])
+
+    
 @endsection
 
 @push('additional_scripts')
+
+    @if(!empty($actividad->seguimiento_google))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $actividad->seguimiento_google }}"></script> 
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '{{ $actividad->seguimiento_google }}');
+        </script>
+    @endif
+
 	<script>
         function mostrarTooltip(){
             $("#copiar_url").tooltip({trigger: 'manual'});

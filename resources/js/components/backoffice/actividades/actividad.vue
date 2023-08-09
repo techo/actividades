@@ -388,6 +388,20 @@
                     </div>
 
                 </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="seguimiento_google">Codigo Seguimiento Google</label>
+                            <input type="text" id="seguimiento_google" class="form-control" v-model="actividad.seguimiento_google"
+                            :disabled="!edicion" >
+                            <p class="help-block">En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        
+                    </div>
+
+                    </div>
             </div>
         </div>
 
@@ -448,6 +462,7 @@
 
                     limiteInscripciones: 0,
                     inscripcionInterna: 0,
+                    seguimiento_google: null,
 
                     tipo : {
                         idCategoria: 1

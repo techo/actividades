@@ -61,6 +61,7 @@ class CrearActividad extends FormRequest
             'beca' => 'sometimes|nullable|url',
             'linkPago' => 'sometimes|nullable|url',
             'linkEvaluacion' => 'sometimes|nullable|url',
+            'seguimiento_google' => 'sometimes|nullable',
         ];
     }
 }
