@@ -11,7 +11,7 @@ class Tipo extends Model
     protected $table = "Tipo";
     protected $primaryKey = "idTipo";
     public $timestamps = false;
-    protected $fillable = ['nombre', 'idCategoria'];
+    protected $fillable = ['nombre', 'idCategoria', 'imagen'];
 
     public function actividades()
     {
