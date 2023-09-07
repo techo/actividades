@@ -96,6 +96,12 @@
                     <li class="{{request()->is('admin/estadisticas/coordinadores') ? 'active' : ''}}">
                         <a href="/admin/estadisticas/coordinadores">Coordinadores</a>
                     </li>
+                    <li>
+                        <a href="https://lookerstudio.google.com/s/lGVoxRKcZZg" target="_blank">
+                            <span>Looker Studio</span>
+                            <i class="fa fa-external-link"></i> 
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -129,10 +135,10 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
-                        <a href="https://github.com/techo/voluntariado-eventual/wiki" target="_blank">Wiki</a>
+                        <a href="https://github.com/techo/voluntariado-eventual/wiki" target="_blank">Wiki <i class="fa fa-external-link"></i> </a>
                     </li>
                     <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
-                        <a href="https://github.com/techo/voluntariado-eventual/issues/new/choose" target="_blank">Soporte</a>
+                        <a href="https://github.com/techo/voluntariado-eventual/issues/new/choose" target="_blank">Soporte <i class="fa fa-external-link"></i> </a>
                     </li>
                 </ul>
             </li>

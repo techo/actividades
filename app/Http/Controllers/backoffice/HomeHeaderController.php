@@ -22,7 +22,7 @@ class HomeHeaderController extends Controller
             'backoffice.configuracion.homeHeader',
             compact(
                 'homeHeader',
-                'edicion',
+                'edicion'
             )
         );
     }
