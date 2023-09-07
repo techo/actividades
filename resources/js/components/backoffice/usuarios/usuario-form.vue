@@ -199,14 +199,17 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="telefono">Canal de Contacto</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           name="telefono"
-                                           id="telefono"
-                                           v-model="usuario.canal_contacto"
-                                           :disabled="readonly"
-                                    >
+                                    <label for="canal_contacto">Canal de Contacto</label>
+                                    <select  placeholder="Seleccione" :disabled="this.readonly" id="canal_contacto" v-model="usuario.canal_contacto" class="form-control">
+                                        <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
+                                        <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
+                                        <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
+                                        <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
+                                        <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
+                                        <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
+                                        <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
+                                        <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -254,6 +257,7 @@
                     pais: null,
                     provincia: null,
                     localidad: null,
+                    canal_contacto: "",
                     dni: "",
                     rol: null,
                     email_verified_at: null,
@@ -263,6 +267,11 @@
                     {id: "M", genero: "Masculino"},
                     {id: "F", genero: "Femenino"},
                     {id: "O", genero: "Prefiero no decirlo"},
+                ],
+                dataCanalesDeContacto: [
+                    {id: "M", canal_contacto: "Masculino"},
+                    {id: "F", canal_contacto: "Femenino"},
+                    {id: "O", canal_contacto: "Prefiero no decirlo"},
                 ],
                 dataPaises: [],
                 dataRoles: [],
@@ -314,7 +323,6 @@
         },
         watch: {
             paisSeleccionado: function (pais, paisAnterior) {
-                console.log(pais, paisAnterior);
                 if (pais !== null) {
                     this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
                         function (data, self) {

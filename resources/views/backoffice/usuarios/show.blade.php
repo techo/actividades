@@ -41,6 +41,15 @@
                     edicion="{{ $edicion }}"
                 ></usuario-form>
 
+                @role('admin')
+                    <crud-footer
+                            cancelar-url="/admin/usuarios"
+                            edicion="{{ $edicion }}"
+                            can-editar="true"
+                            can-fusionar="true"
+                            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
+                    ></crud-footer>
+                @endrole
             </div>
             <div class="tab-pane" id="ficha">
 
@@ -66,18 +75,4 @@
                 <usuarios-estudios-tab persona="{{ $usuario->idPersona }}" > </usuarios-estudios-tab>
             </div>
         </div>
-        <br/>
-        <br/>
-@endsection
-
-@section('footer')
-    @role('admin')
-    <crud-footer
-            cancelar-url="/admin/usuarios"
-            edicion="{{ $edicion }}"
-            can-editar="true"
-            can-fusionar="true"
-            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
-    ></crud-footer>
-    @endrole
 @endsection

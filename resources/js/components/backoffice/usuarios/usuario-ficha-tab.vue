@@ -108,8 +108,7 @@ export default {
         }
     },
     created() {
-
-        if (this.propUsuario) {
+        if (this.propUsuario.grupo_sanguineo) {
             this.usuario = JSON.parse(this.propUsuario);
         }
     },
