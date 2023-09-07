@@ -14,7 +14,7 @@
         <div class="box">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -22,7 +22,7 @@
                                     <input id="header"
                                            type="text"
                                            class="form-control"
-                                           v-model="header.header"
+                                           v-model="homeHeader.header"
                                     >
                                 </div>
                             </div>
@@ -30,12 +30,26 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pais">Imagen {{ homeHeader.header }}</label>
+                                    <label for="header">Sub Header</label>
+                                    <input id="header"
+                                           type="text"
+                                           class="form-control"
+                                           v-model="homeHeader.subHeader"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="pais">Imagen</label>
                                     <div>
-                                        <img v-if="homeHeader.imagen != null" :src="homeHeader.imagen" alt="imagen actividad">          
+                                        <img class="img-responsive" v-if="homeHeader.imagen != null" :src="homeHeader.imagen" alt="imagen actividad">          
                                     </div>
                                     <button v-if="!readonly" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                                    <input v-if="(homeHeader.imagen == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
+                                    <p v-if="updateArchivo" class="help-block ml-2">La imagen debe ser de exactamente 1366 x 210.</p>
+                                    
+                                    <input v-if="updateArchivo" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
                                 </div>
                             </div>
                         </div>
@@ -49,22 +63,17 @@
 <script>
     export default {
         name: "home-header-form",
-        props: ['homeHeader', 'edicion'],
+        props: ['idHomeHeader','header', 'subHeader', 'imagen', 'edicion'],
         components: {},
         data(){
             return {
-                tipoActividad: {
+                homeHeader: {
                     idHomeHeader: null,
                     header: "",
+                    subHeader: "",
                     imagen: null,
-                    imagenNew: null,
                 },
-                header: {
-                    idHomeHeader: null,
-                    header: "hols",
-                    imagen: null,
-                    imagenNew: null,
-                },
+                imagenNew: null,
                 readonly: !this.edicion,
                 guardado: false,
                 mensajeGuardado: '',
@@ -76,9 +85,10 @@
             Event.$on('guardar', this.guardar);
             Event.$on('eliminar', this.eliminar);
             Event.$on('editar', this.editar);
-           // this.header = this.homeHeader;
-            console.log(this.homeHeader['header']);
-            console.log(this.header.idPais);
+            this.homeHeader.idHomeHeader = this.idHomeHeader;
+            this.homeHeader.header = this.header;
+            this.homeHeader.subHeader = this.subHeader;
+            this.homeHeader.imagen = this.imagen;
         },
         computed: {
             tieneErrores: function () {
@@ -104,33 +114,33 @@
             },
             guardar(){
                 let url;
-                this.mostrarLoadingAlert();
+                // this.mostrarLoadingAlert();
                 this.validationErrors = [];
-                if (this.tipoActividad.idTipo === undefined || this.tipoActividad.idTipo === null) {
-                    url = `/admin/ajax/configuracion/tipos-actividad/registrar`;
+                if (this.homeHeader.idHomeHeader === undefined || this.homeHeader.idHomeHeader === null) {
+                    url = `/admin/ajax/configuracion/home-header/registrar`;
                 } else {
-                    url = `/admin/ajax/configuracion/tipos-actividad/${encodeURI(this.tipoActividad.idTipo)}/editar`;
+                    url = `/admin/ajax/configuracion/home-header/${encodeURI(this.homeHeader.idHomeHeader)}/editar`;
                 }
                 const data = new FormData();
 
-                data.append('idTipo', this.tipoActividad.idTipo);
-                data.append('nombre', this.tipoActividad.nombre);
-                data.append('idCategoria', (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null);
+                data.append('idHomeHeader', this.homeHeader.idHomeHeader);
+                data.append('header', this.homeHeader.header);
+                data.append('subHeader', this.homeHeader.subHeader);
 
-                if (this.tipoActividad.imagenNew != null)
-                    data.append('imagen', this.tipoActividad.imagenNew);
+                if (this.imagenNew != null)
+                    data.append('imagen', this.imagenNew);
 
                 const headers = { 'Content-Type': 'multipart/form-data' };
 
                 axios.post(url, data, { headers })
                     .then((respuesta) => {
-                        this.tipoActividad = respuesta.data;
+                        this.homeHeader = respuesta.data;
                         this.mensajeGuardado = 'Registro guardado correctamente';
                         this.guardado = true;
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
-                        this.readonly = true;
-                        window.location.replace('/admin/configuracion/tipos-actividad');
+                        this.ocultarLoadingAlert();
+                        window.location.replace('/admin/configuracion/home-header');
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();
@@ -143,7 +153,7 @@
                         }});
             },
             guardar_archivo(event) {
-                this.tipoActividad.imagenNew = this.$refs.imagen.files[0];
+                this.imagenNew = this.$refs.imagen.files[0];
             },
             eliminar(){
                 let form = document.getElementById('formDelete');

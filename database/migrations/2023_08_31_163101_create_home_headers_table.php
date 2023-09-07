@@ -15,8 +15,10 @@ class CreateHomeHeadersTable extends Migration
     {
         Schema::create('home_headers', function (Blueprint $table) {
             $table->increments('idHomeHeader');
-            $table->integer('idPais')->index('idPais');
+            $table->integer('idPais')->index('idPais')->unique();
             $table->string('header');
+            $table->string('subHeader');
+            $table->string('imagen');
         });
     }
 

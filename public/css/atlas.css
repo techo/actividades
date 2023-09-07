@@ -329,7 +329,6 @@ a {
 }
 
 .techo-hero.actividades {
-    background: url('/img/hero-slim.jpg');
     background-size: cover;
     /*height: 210px;*/
     padding-top: 8vh;

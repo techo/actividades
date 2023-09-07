@@ -5,13 +5,13 @@
 @endsection
 
 @section('main_image')
-    <div class="techo-hero actividades">
+    <div class="techo-hero actividades" style="
+        background: url({{$homeHeader->imagen}}); 
+        background-size: cover;
+        max-width: 100%;">
         <h2 class="text-uppercase">
-
-            {{ __('frontend.index_actividades_text') }} <br>
-                    {{ __('frontend.index_actividades_text_2') }}
-
-
+            {{ $homeHeader->header }} <br>
+            {{ $homeHeader->subHeader }} 
         </h2>
     </div>
 @endsection

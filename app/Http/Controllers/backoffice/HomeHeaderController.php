@@ -5,7 +5,6 @@ namespace App\Http\Controllers\backoffice;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\HomeHeader;
-use Illuminate\Support\Facades\Log;
 
 class HomeHeaderController extends Controller
 {
@@ -15,16 +14,9 @@ class HomeHeaderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
-    {
-        
-        $edicion = true;
-
-        // buscar el Pais del usuario logueado
-        Log::info("homeHeader");
-
+    {      
+        $edicion = false;
         $homeHeader = HomeHeader::where('idPais', auth()->user()->idPaisPermitido)->first();
-        Log::info($homeHeader);
-        // buscar su header, si no tiene mandarle el default (que es el actual)
 
         return view(
             'backoffice.configuracion.homeHeader',
@@ -34,7 +26,6 @@ class HomeHeaderController extends Controller
             )
         );
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -45,12 +36,12 @@ class HomeHeaderController extends Controller
     public function update(Request $request)
     {
         $validados = $request->validate([
-            'idTipo' => 'required',
-            'nombre' => 'required',
-            'idCategoria' => 'required',
-            'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248',
+            'idHomeHeader' => 'required',
+            'header' => 'required',
+            'subHeader' => 'required',
+            'imagen' => 'nullable|file|image|dimensions:max_width=1366,max_height=210,min_width=1366,min_height=210',
         ]);
-        $homeHeader = HomeHeader::find($validados->idHomeHeader);
+        $homeHeader = HomeHeader::find($request->idHomeHeader);
         
 
         $imagen = $request->file('imagen');
@@ -59,11 +50,11 @@ class HomeHeaderController extends Controller
             $homeHeader->imagen = str_replace('public', 'storage', '/'.$path);
         }
         $homeHeader->header = $validados['header'];
+        $homeHeader->subHeader = $validados['subHeader'];
         
         $homeHeader->save();
 
         return response()->json($validados);
 
     }
-
 }

@@ -112,6 +112,9 @@
                     <li class="{{request()->is('admin/configuracion/tipos-actividad') ? 'active' : ''}}">
                         <a href="/admin/configuracion/tipos-actividad">Tipos de Actividades</a>
                     </li>
+                    <li class="{{request()->is('admin/configuracion/home-header') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/home-header">Header</a>
+                    </li>
                 </ul>
             </li>
             @endif

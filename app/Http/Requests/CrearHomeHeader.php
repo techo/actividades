@@ -24,7 +24,6 @@ class CrearHomeHeader extends FormRequest
     public function rules()
     {
         return [
-            'idHomeHeader' => 'required',
             'header' => 'required',
             'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248',
         ];

@@ -9,7 +9,7 @@ class HomeHeader extends Model
     protected $table = "home_headers";
     protected $primaryKey = "idHomeHeader";
     public $timestamps = false;
-    protected $fillable = ['header', 'idPais', 'imagen'];
+    protected $fillable = ['header', 'subHeader', 'idPais', 'imagen'];
 
 
     public function pais()

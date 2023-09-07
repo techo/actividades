@@ -203,7 +203,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
         });
-});
+    });
 
     
     //panel de usuario
@@ -348,7 +348,11 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/configuracion/tipos-actividad', 'backoffice\TiposActividadController@index')->middleware('role:admin');
     Route::get('/configuracion/tipos-actividad/registrar', 'backoffice\TiposActividadController@create')->middleware('role:admin');
     Route::get('/configuracion/tipos-actividad/{id}', 'backoffice\TiposActividadController@show')->middleware('role:admin');
+
     Route::get('/configuracion/home-header', 'backoffice\HomeHeaderController@show')->middleware('role:admin');
+    Route::post('/ajax/configuracion/home-header/registrar', 'backoffice\HomeHeaderController@store')->middleware('role:admin');
+    Route::post('/ajax/configuracion/home-header/{id}/editar', 'backoffice\HomeHeaderController@update')->middleware('role:admin');
+
 });
 
 Route::prefix('/pagos/')->group(function() {

@@ -21,19 +21,13 @@
                     id="{{ $tipoActividad->idTipo }}"
                     edicion="{{ $edicion }}"
                 ></tipos-actividad-form>
-
+                
+                <crud-footer
+                    cancelar-url="/admin/configuracion/tipos-actividad"
+                    edicion="{{ $edicion }}"
+                    can-editar="true"
+                ></crud-footer>
             </div>
         </div>
 </div>
-@endsection
-
-@section('footer')
-    @role('admin')
-    <crud-footer
-            cancelar-url="/admin/configuracion/tipos-actividades"
-            edicion="{{ $edicion }}"
-            can-editar="true"
-            can-borrar="{{Auth::user()->hasRole('admin')}}"
-    ></crud-footer>
-    @endrole
 @endsection

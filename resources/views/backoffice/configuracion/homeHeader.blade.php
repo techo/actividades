@@ -5,13 +5,18 @@
 
 @section('content')
     <home-header-form
-            edicion="{{ $edicion }}"
-            home-header="{{ $homeHeader }}"
+        edicion="{{ $edicion }}"
+        id-home-header="{{ $homeHeader->idHomeHeader }}"
+        header="{{ $homeHeader->header }}"
+        sub-header="{{ $homeHeader->subHeader }}"
+        imagen="{{ $homeHeader->imagen }}"
     ></home-header-form>
 @endsection
 
 @section('footer')
     <crud-footer
-            edicion="{{ $edicion }}"
+        cancelar-url="/admin/configuracion/home-header"
+        edicion="{{ $edicion }}"
+        can-editar="true"
     ></crud-footer>
 @endsection
