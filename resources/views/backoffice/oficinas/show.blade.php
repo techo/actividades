@@ -21,18 +21,14 @@
                     edicion="{{ $edicion }}"
                 ></oficina-form>
 
+                <crud-footer
+                    cancelar-url="/admin/configuracion/oficinas"
+                    edicion="{{ $edicion }}"
+                    can-editar="true"
+                    can-borrar="{{Auth::user()->hasRole('admin')}}"
+                ></crud-footer>
+
             </div>
         </div>
 </div>
-@endsection
-
-@section('footer')
-    @role('admin')
-    <crud-footer
-            cancelar-url="/admin/configuracion/oficinas"
-            edicion="{{ $edicion }}"
-            can-editar="true"
-            can-borrar="{{Auth::user()->hasRole('admin')}}"
-    ></crud-footer>
-    @endrole
 @endsection

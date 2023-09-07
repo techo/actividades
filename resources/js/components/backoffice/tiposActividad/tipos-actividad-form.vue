@@ -54,6 +54,7 @@
                                         <img v-if="tipoActividad.imagen != null" :src="tipoActividad.imagen" alt="imagen actividad">          
                                     </div>
                                     <button v-if="!readonly" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
+                                    <p v-if="(tipoActividad.imagen == null || updateArchivo)" class="help-block ml-2">La imagen debe ser de exactamente 380 x 248.</p>
                                     <input v-if="(tipoActividad.imagen == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
                                 </div>
                             </div>
@@ -174,7 +175,7 @@
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
                         this.readonly = true;
-                        window.location.replace('/admin/configuracion/tipos-actividad');
+                        window.location.replace('/admin/configuracion/tipos-actividad/'+this.tipoActividad.idTipo);
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();

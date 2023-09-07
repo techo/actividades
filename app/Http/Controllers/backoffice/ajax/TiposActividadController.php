@@ -50,7 +50,7 @@ class TiposActividadController extends Controller
             'idTipo' => 'required',
             'nombre' => 'required',
             'idCategoria' => 'required',
-            'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248',
+            'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
         ]);
 
         $tipoActividad = Tipo::find($validados['idTipo']);
