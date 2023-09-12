@@ -391,6 +391,49 @@ return [
             ],
         ]
     ],
+
+    'provincias' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idProvincia',
+                'visible' => false
+            ],
+            [
+                'name' => 'provincia',
+                'sortField' => 'provincia',
+                'title' => 'Nombre'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'provincia',
+                'sortField' => 'provincia',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+    'localidades' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idLocalidad',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'estado',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'suscriptos' => [
         'fields' => [
             [

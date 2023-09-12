@@ -69,6 +69,14 @@ import OficinasDatatable from './components/backoffice/datatable/OficinasDatatab
 import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterBar';
 import OficinasForm from './components/backoffice/oficinas/oficina-form';
 
+import ProvinciasDatatable from './components/backoffice/datatable/configuracion/ProvinciasDatatable';
+import LocalidadModal from './components/backoffice/configuracion/provincias/localidad-modal';
+import ProvinciaForm from './components/backoffice/configuracion/provincias/provincia-form';
+
+
+Vue.component('provincias-datatable', ProvinciasDatatable);
+Vue.component('provincia-form', ProvinciaForm);
+Vue.component('localidad-modal', LocalidadModal);
 
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
@@ -136,6 +144,9 @@ Vue.component('usuarios-estudios-tab', UsuariosEstudiosTab);
 Vue.component('oficinas-datatable', OficinasDatatable);
 Vue.component('oficinas-filter-bar', OficinasFilterBar);
 Vue.component('oficina-form', OficinasForm);
+
+
+
 
 window.Event = new Vue();
 

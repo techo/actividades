@@ -205,6 +205,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         });
     });
 
+
+    
     
     //panel de usuario
     Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')
@@ -352,6 +354,33 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/configuracion/home-header', 'backoffice\HomeHeaderController@show')->middleware('role:admin');
     Route::post('/ajax/configuracion/home-header/registrar', 'backoffice\HomeHeaderController@store')->middleware('role:admin');
     Route::post('/ajax/configuracion/home-header/{id}/editar', 'backoffice\HomeHeaderController@update')->middleware('role:admin');
+
+
+        // panel Equipos
+
+    Route::prefix('configuracion/provincias')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ProvinciasController@index');
+        Route::get('/crear', 'backoffice\ProvinciasController@create');
+        Route::post('/registrar', 'backoffice\ProvinciasController@store');
+        Route::get('/{idProvincia}', 'backoffice\ProvinciasController@show');
+        Route::put('/{idProvincia}', 'backoffice\ProvinciasController@update');
+        Route::delete('/{idProvincia}', 'backoffice\ProvinciasController@destroy');
+        Route::prefix('/{idProvincia}/localidades')->group(function() {
+            Route::get('', 'backoffice\LocalidadesController@index');
+        });
+    });
+    Route::prefix('ajax/configuracion/provincias')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ajax\ProvinciasController@index')->middleware('permission:ver_usuarios');
+        
+        Route::prefix('/{idProvincia}/localidades')->group(function() {
+            Route::get('', 'backoffice\ajax\LocalidadesController@index')->middleware('permission:ver_usuarios'); 
+            Route::post('/crear', 'backoffice\ajax\LocalidadesController@store');  
+            Route::put('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@update');
+            Route::delete('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@delete');
+            Route::get('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@get');  
+        });
+    });
+    
 
 });
 
