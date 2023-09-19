@@ -19,6 +19,8 @@ class IntegranteResource extends Resource
             'nombre' => $this->persona->getNombreCompletoAttribute(),
             'rol' => $this->rol,
             'estado'    => $this->estado,
+            'despliegue'    => $this->despliegue,
+            'relacion'    => $this->relacion,
             'fechaInicio' => ($this->fechaInicio)?$this->created_at->format('d/m/Y'):'',
             'fechaFin' => ($this->fechaFin)?$this->created_at->format('d/m/Y'):'',
         ];

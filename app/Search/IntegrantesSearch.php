@@ -10,7 +10,6 @@ class IntegrantesSearch
 {
     public static function apply($filters, $sort = 'created_at desc', $per_page = 25)
     {   
-        Log::info($filters);
         $query = static::applyDecoratorsFromRequest($filters, IntegrantesSearch::newQuery());
         return static::getResults($query, $sort, $per_page);
     }
@@ -41,8 +40,6 @@ class IntegrantesSearch
 
     private static function newQuery(){
         $query = (new Integrante())->newQuery();
-
-        //$query->where('Equipo.idPais', '=', auth()->user()->idPaisPermitido);
 
         return $query;
     }

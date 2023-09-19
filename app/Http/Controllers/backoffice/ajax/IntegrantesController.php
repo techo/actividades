@@ -12,17 +12,14 @@ use App\Http\Requests\Equipo\CrearIntegrante;
 use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\Http\Requests\Equipo\GetIntegrante;
 use App\Persona;
-use Illuminate\Support\Facades\Log;
 
 class IntegrantesController extends Controller
 {
     public function index(Request $request, $idEquipo)
     {
         $filtros = [];
-        Log::info($request);
         if($request->has('filter')){
-        Log::info("$request");
-        $filtros['nombre'] = $request->filter;
+            $filtros['nombre'] = $request->filter;
         }
 
 
@@ -89,7 +86,6 @@ class IntegrantesController extends Controller
 			"idPersona" => $r->idPersona,
 			"nombre" => $r->nombres . ' ' . $r->apellidoPaterno . ' (' . $r->mail . ')',
 		];
-		Log::info($integrante);
 
         return response()->json($integrante);
     }
@@ -98,8 +94,6 @@ class IntegrantesController extends Controller
 	{
         $integrante = Integrante::findOrFail($idIntegrante);
 		$integrante->delete();
-		Log::info("integrante eliminado");
-		Log::info($integrante);
 
 		return response()->json('OK', 200);
 	}

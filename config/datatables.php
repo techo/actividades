@@ -373,6 +373,17 @@ return [
                 'title' => 'Rol'
             ],
             [
+                'name' => 'despliegue',
+                'sortField' => 'despliegue',
+                'title' => 'Despliegue'
+            ],
+
+            [
+                'name' => 'relacion',
+                'sortField' => 'relacion',
+                'title' => 'Relación'
+            ],
+            [
                 'name' => 'estado',
                 'sortField' => 'estado',
                 'title' => 'Estado'

@@ -45,6 +45,28 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
+                                <label for="despliegue">Despliegue</label>
+                                <select v-model="form.despliegue" name="despliegue" class="form-control" required>
+                                    <option value="Oficina" :selected="form.despliegue == 'Oficina'">Oficina</option>
+                                    <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">Comunidad</option>
+                                </select>
+                                <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.relacion }">
+                                <label for="relacion">Relación</label>
+                                <select v-model="form.relacion" name="relacion" class="form-control" required>
+                                    <option value="Rentado" :selected="form.relacion == 'Rentado'">Rentado</option>
+                                    <option value="Voluntario" :selected="form.relacion == 'Voluntario'">Voluntario</option>
+                                </select>
+                                <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaInicio }">
                                 <label for="fechaInicio">fechaInicio</label>
                                 <input v-model="form.fechaInicio" name="fechaInicio" type="date" class="form-control"
@@ -93,6 +115,8 @@ export default {
                 idIntegrante: null,
                 idPersona: null,
                 rol: null,
+                despliegue: null,
+                relacion: null,
                 estado: 1,
                 fechaInicio: null,
                 fechaFin: null,
@@ -151,7 +175,6 @@ export default {
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         editar(p) {
-            console.log("holas");
             this.show();
             axios.get('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + p.idIntegrante)
                 .then((datos) => {

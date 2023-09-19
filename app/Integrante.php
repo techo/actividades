@@ -10,7 +10,7 @@ class Integrante extends Model
     use SoftDeletes;
     protected $table = "Integrantes";
     protected $primaryKey = "idIntegrante";
-    protected $fillable = ['idEquipo', 'rol', 'estado', 'idPersona', 'fechaInicio', 'fechaFin'];
+    protected $fillable = ['idEquipo', 'rol', 'estado', 'despliegue', 'relacion', 'idPersona', 'fechaInicio', 'fechaFin'];
     protected $dates =
         [
             'fechaInicio', 'fechaFin'

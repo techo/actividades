@@ -28,6 +28,8 @@ class CrearIntegrante extends FormRequest
             'idEquipo' => 'required',
             'rol' => 'required',
             'estado' => 'required|boolean',
+            'despliegue' => 'required',
+            'relacion' => 'required',
             'fechaInicio' => 'required|date',
             'fechaFin' => 'nullable|date',
         ];
