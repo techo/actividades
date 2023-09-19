@@ -18,7 +18,7 @@ class IntegranteResource extends Resource
             'idIntegrante' => $this->idIntegrante,
             'nombre' => $this->persona->getNombreCompletoAttribute(),
             'rol' => $this->rol,
-            'estado'    => $this->estado,
+            'estado'    => $this->estado?"Activo":"Inactivo",
             'despliegue'    => $this->despliegue,
             'relacion'    => $this->relacion,
             'fechaInicio' => ($this->fechaInicio)?$this->created_at->format('d/m/Y'):'',

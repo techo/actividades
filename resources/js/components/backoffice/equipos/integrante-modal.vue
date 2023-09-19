@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaInicio }">
-                                <label for="fechaInicio">fechaInicio</label>
+                                <label for="fechaInicio">Fecha Inicio</label>
                                 <input v-model="form.fechaInicio" name="fechaInicio" type="date" class="form-control"
                                     required>
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-6" v-if="form.estado==0">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
-                                <label for="fechaFin">fechaFin</label>
+                                <label for="fechaFin">Fecha Fin</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
                                 <span v-if="errors.fechaFin" v-text="errors.fechaFin[0]" class="help-block"></span>
                             </div>

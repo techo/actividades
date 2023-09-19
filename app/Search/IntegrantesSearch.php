@@ -25,7 +25,7 @@ class IntegrantesSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\usuario\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\' . studly_case($name);
     }
     private static function isValidDecorator($decorator)
     {

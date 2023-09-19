@@ -23,10 +23,15 @@
                             placeholder-text="Buscar por nombre, apellido o documento"
                             detail-url="/admin/equipos/"
                         ></integrantes-datatable>
+                        <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
+                            cancelar-url="/admin/equipos"
+                        ></crud-footer>
                     </div>
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
+
+                
             </div>
         </div>
     </div>
