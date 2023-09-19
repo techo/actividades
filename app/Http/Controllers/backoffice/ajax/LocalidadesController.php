@@ -2,31 +2,25 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
+use App\Actividad;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\IntegranteResource;
-use App\Search\IntegrantesSearch;
-use App\Integrante;
+use App\Search\LocalidadesDataSearch;
+use App\Localidad;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Equipo\CrearIntegrante;
-use App\Http\Requests\Equipo\DeleteIntegrante;
-use App\Http\Requests\Equipo\GetIntegrante;
-use App\Persona;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Provincia\CrearLocalidad;
+use App\Http\Requests\Provincia\DeleteLocalidad;
 
 class LocalidadesController extends Controller
 {
-    public function index(Request $request, $idEquipo)
+    public function index(Request $request, $idProvincia)
     {
         $filtros = [];
-        Log::info($request);
         if($request->has('filter')){
-        Log::info("$request");
-        $filtros['nombre'] = $request->filter;
+            $filtros['localidad'] = $request->filter;
         }
 
-
-        $filtros['idEquipo'] = $idEquipo;
+        $filtros['id_provincia'] = $idProvincia;
         
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
@@ -40,8 +34,7 @@ class LocalidadesController extends Controller
             $per_page = $request->per_page;
         }
 
-        $result = IntegrantesSearch::apply($filtros, $sort, $per_page);
-        $equipos = IntegranteResource::collection($result); // Yo se que es horrible pero no funciona sin esto
+        $result = LocalidadesDataSearch::apply($filtros, $sort, $per_page);
         return response()->json($result);
     }
 
@@ -51,56 +44,58 @@ class LocalidadesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CrearIntegrante $request, $idEquipo)
+    public function store(CrearLocalidad $request, $idProvincia)
     {
-        $integrate = new Integrante();
-        $validado = $request->validated();
-        $persona = Persona::find($validado['idPersona']);
-        $integrate->fill($validado);
-        $integrate->idPersona = $persona->idPersona;
+        $localidad = new Localidad();
+        
+        $localidad->id_provincia = $request->idProvincia;
+        $localidad->localidad = $request->nombre;
+        $localidad->save();
 
-        $integrate->save();
-
-        return response()->json($integrate->fresh());
-
+        return response()->json($localidad->fresh());
     }
 
-    public function update(CrearIntegrante $request, $idEquipo, $idIntegrante)
+    public function update(CrearLocalidad $request, $idProvincia, $idLocalidad)
     {
-        $integrante = Integrante::findOrFail($idIntegrante);
-        $validado = $validado = $request->validated();
-        $integrante->fill($validado);
-        $integrante->save();
+        $localidad = Localidad::findOrFail($request->id);
 
-        return response()->json($integrante);
+        $localidad->localidad = $request->nombre;
+
+        $localidad->save();
+
+        return response()->json($localidad);
     }
 
-    /**
-     * Get a resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function get(GetIntegrante $request, $idEquipo, $idIntegrante)
+    // /**
+    //  * Get a resource in storage.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return \Illuminate\Http\Response
+    //  */
+    public function get(Request $request, $idProvincia, $idLocalidad)
     {
-        $integrante = Integrante::findOrFail($idIntegrante);
-        $r = $integrante->persona;
-		$integrante->personaData = [
-			"idPersona" => $r->idPersona,
-			"nombre" => $r->nombres . ' ' . $r->apellidoPaterno . ' (' . $r->mail . ')',
+        $localidad = Localidad::findOrFail($idLocalidad);
+        $r = $localidad->provincia;
+		$localidad->nombre = $localidad->localidad;
+        $localidad->provinciaData = [
+			"idProvincia" => $r->id,
+			"nombre" => $r->nombre
 		];
-		Log::info($integrante);
 
-        return response()->json($integrante);
+        return response()->json($localidad);
     }
 
-    public function delete(DeleteIntegrante $id, $idEquipo, $idIntegrante)
+    public function delete(DeleteLocalidad $id, $idProvincia, $idLocalidad)
 	{
-        $integrante = Integrante::findOrFail($idIntegrante);
-		$integrante->delete();
-		Log::info("integrante eliminado");
-		Log::info($integrante);
+        $actividades = Actividad::where('idLocalidad', $idLocalidad);
+        if($actividades->count()){
+            $mensaje = "Existen ".$actividades->count()." asociadas a esta división, primero debe editar esas actividades";
 
-		return response()->json('OK', 200);
+            return response()->json($mensaje, 200);
+        }
+        $localidad = Localidad::findOrFail($idLocalidad);
+		$localidad->delete();
+
+		return response()->json('ok', 200);
 	}
 }

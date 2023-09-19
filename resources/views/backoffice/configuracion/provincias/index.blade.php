@@ -1,12 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Provincias')
+@section('page_title', 'Primera División Geográfica')
 
 @section('add-new')
 
     <span class="pull-right">
         <a href="/admin/configuracion/provincias/crear" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Crear Provincia
+            <i class="fa fa-plus"></i> Crear Primera División
         </a>
     </span>
 @endsection

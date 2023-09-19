@@ -46,10 +46,10 @@
   import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
   import Vue from 'vue'
   import VueEvents from 'vue-events'
-  import FilterBar from './FilterBar'
+  //import FilterBar from './FilterBar'
 
   Vue.use(VueEvents);
-  Vue.component('filter-bar', FilterBar);
+//  Vue.component('filter-bar', FilterBar);
 
 export default {
   components: {
@@ -107,7 +107,6 @@ export default {
       Event.$emit('localidad:crear');
     },
     onCellClicked (data, field, event) { 
-      console.log(data);
       Event.$emit('localidad:editar', data);
     },
       bold: function(value) {
@@ -119,16 +118,16 @@ export default {
       this.dataFields = JSON.parse(this.fields);
   },
   events: {
-    'filter-set' (filterText) {
-      this.moreParams = {
-        filter: filterText
-      };
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
-    },
-    'filter-reset' () {
-      this.moreParams = {};
-      Vue.nextTick( () => this.$refs.vuetable.refresh() )
-    }
+    // 'filter-set' (filterText) {
+    //   this.moreParams = {
+    //     filter: filterText
+    //   };
+    //   Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    // },
+    // 'filter-reset' () {
+    //   this.moreParams = {};
+    //   Vue.nextTick( () => this.$refs.vuetable.refresh() )
+    // }
   }
 }
 </script>

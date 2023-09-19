@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Agregar Localidad')
+@section('page_title', 'Agregar Segunda División')
 
 
 @section('content')

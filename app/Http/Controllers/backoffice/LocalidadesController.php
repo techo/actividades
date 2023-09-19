@@ -17,7 +17,7 @@ class LocalidadesController extends Controller
     public function index(Request $request, $idProvincia)
     {
         $provincia = Provincia::findOrFail($idProvincia);
-        $datatableConfig = config('datatables.locaclidades');
+        $datatableConfig = config('datatables.localidades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
         return view('backoffice.configuracion.provincias.localidades.index', compact('fields', 'sortOrder', 'idProvincia', 'provincia'));

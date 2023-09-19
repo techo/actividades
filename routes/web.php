@@ -370,10 +370,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         });
     });
     Route::prefix('ajax/configuracion/provincias')->middleware(['role:admin'])->group(function() {
-        Route::get('', 'backoffice\ajax\ProvinciasController@index')->middleware('permission:ver_usuarios');
+        Route::get('', 'backoffice\ajax\ProvinciasController@index');
         
         Route::prefix('/{idProvincia}/localidades')->group(function() {
-            Route::get('', 'backoffice\ajax\LocalidadesController@index')->middleware('permission:ver_usuarios'); 
+            Route::get('', 'backoffice\ajax\LocalidadesController@index'); 
             Route::post('/crear', 'backoffice\ajax\LocalidadesController@store');  
             Route::put('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@delete');

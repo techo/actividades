@@ -70,13 +70,17 @@ import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterB
 import OficinasForm from './components/backoffice/oficinas/oficina-form';
 
 import ProvinciasDatatable from './components/backoffice/datatable/configuracion/ProvinciasDatatable';
-import LocalidadModal from './components/backoffice/configuracion/provincias/localidad-modal';
 import ProvinciaForm from './components/backoffice/configuracion/provincias/provincia-form';
 
+
+
+import LocalidadModal from './components/backoffice/configuracion/provincias/localidad-modal';
+import LocalidadesDatatable from './components/backoffice/datatable/configuracion/provincias/LocalidadesDatatable';
 
 Vue.component('provincias-datatable', ProvinciasDatatable);
 Vue.component('provincia-form', ProvinciaForm);
 Vue.component('localidad-modal', LocalidadModal);
+Vue.component('localidades-datatable', LocalidadesDatatable);
 
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);

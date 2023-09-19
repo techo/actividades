@@ -421,15 +421,15 @@ return [
                 'visible' => false
             ],
             [
-                'name' => 'nombre',
-                'sortField' => 'nombre',
+                'name' => 'localidad',
+                'sortField' => 'localidad',
                 'title' => 'Nombre'
             ],
         ],
         'sortOrder' => [
             [
-                'field' => 'nombre',
-                'sortField' => 'estado',
+                'field' => 'localidad',
+                'sortField' => 'localidad',
                 'direction' => 'asc'
             ],
         ]

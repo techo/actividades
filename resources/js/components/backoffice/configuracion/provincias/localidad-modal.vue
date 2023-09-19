@@ -6,7 +6,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Nuevo Integrante</h4>
+                    <h4 class="modal-title">Nueva Segunda División</h4>
                 </div>
                 <div class="modal-body">
 
@@ -16,31 +16,10 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
-                                <label for="idPersona">Persona</label>
-                                <v-select :options="personas" @search="onSearch" label="nombre" v-model="persona"
-                                    :filterable="false" :selectOnTab="true"></v-select>
-                                <span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
-                                <label for="rol">Nombre</label>
-                                <input v-model="form.nombre" name="nombre" type="text" class="form-control" required>
+                                <label for="nombre">Nombre</label>
+                                <input v-model="form.nombre" name="nombre" id="nombre"  type="text" class="form-control" required>
                                 <span v-if="errors.nombre" v-text="errors.nombre[0]" class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }">
-                                <label for="idProvincia">Provincia</label>
-                                <v-select :options="provincias" @search="onSearch" label="provincia" v-model="provincia"
-                                    :filterable="false" :selectOnTab="true"></v-select>
-                                <span v-if="errors.idProvincia" v-text="errors.idProvincia[0]" class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -69,8 +48,8 @@ export default {
         return {
             display: false,
             provincia: null,
-            provincias: [],
             form: {
+                nombre: "",
                 idProvincia: this.idProvincia,
                 idLocalidad: null,
             },
@@ -82,44 +61,46 @@ export default {
         Event.$on('localidad:editar', this.editar);
     },
     watch: {
-        persona(v, vv) {
-            if (v) this.form.idPersona = v.idPersona
+        provincia(v, vv) {
+            if (v) this.form.idProvincia = v.id
         }
     },
     computed: {
         editando() {
-            if (this.form['idLocalidad'])
+            if (this.form.id)
                 return true
             return false
         }
     },
     methods: {
         guardar() {
-            if (this.form['idLocalidad'])
+            if (this.form.id)
                 this.update();
             else
                 this.store();
         },
         store() {
-            axios.post('/admin/ajax/configuracion/provincias/' + this.idProvincias + '/localidad/crear', this.form)
+            axios.post('/admin/ajax/configuracion/provincias/' + this.form.idProvincias + '/localidades/crear', this.form)
                 .then((datos) => {
                     Event.$emit('localidad:refrescar');
                     location.reload();
+                    form.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         update() {
-            axios.put('/admin/ajax/configuracion/provincias/' + this.idProvincia + '/localidad/' + this.form.idProvincia, this.form)
+            axios.put('/admin/ajax/configuracion/provincias/' + this.form.idProvincia + '/localidades/' + this.form.id, this.form)
                 .then((datos) => {
                     Event.$emit('localidad:refrescar');
                     location.reload();
+                    form.reload();
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         eliminar() {
-            axios.delete('/admin/ajax/configuracion/provincias/' + this.idProvincia + '/localidad/' + this.form.idProvincia, this.form)
+            axios.delete('/admin/ajax/configuracion/provincias/' + this.idProvincia + '/localidades/' + this.form.id, this.form)
                 .then((datos) => {
                     Event.$emit('localidad:refrescar');
                     location.reload();
@@ -130,11 +111,10 @@ export default {
         editar(p) {
             console.log("holas");
             this.show();
-            axios.get('/admin/ajax/configuracion/provincias/' + this.idProvincia + '/localidad/' + p.idProvincia)
+            axios.get('/admin/ajax/configuracion/provincias/' + this.idProvincia + '/localidades/' + p.id)
                 .then((datos) => {
                     this.form = datos.data;
                     this.provincia = datos.data.provincia;
-                    this.provincia.nombre = datos.data.provincia.nombre;
                 }).catch((error) => { debugger; });
         },
         show: function () {
@@ -147,7 +127,6 @@ export default {
             for (let field in this.form) {
                 this.form[field] = null;
             }
-            this.persona = null;
             this.reset_errors();
         },
         reset_errors: function () {
@@ -164,7 +143,7 @@ export default {
         confirmar() {
             this.$refs.confirmar.openSimplert({
                 title: 'Eliminar Registro',
-                message: "Estás por eliminar este registro, se borrará permanentemente y no podrá recuperarse. ¿Deseas continuar?",
+                message: "Estás por eliminar este registro, de todas maneras no se eliminará si tiene actividades relacionadas. ¿Deseas continuar?",
                 useConfirmBtn: true,
                 isShown: true,
                 disableOverlayClick: true,
