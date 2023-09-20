@@ -180,7 +180,8 @@ export default {
                 .then((datos) => {
                     this.form = datos.data;
                     this.form.fechaInicio = moment(this.form.fechaInicio).format('YYYY-MM-DD');
-                    this.form.fechaFin = moment(this.form.fechaFin).format('YYYY-MM-DD');
+                    if (this.form.fechaFin)
+                        this.form.fechaFin = moment(this.form.fechaFin).format('YYYY-MM-DD');
                     this.persona = datos.data.persona;
                     this.persona.nombre = datos.data.personaData.nombre;
                 }).catch((error) => { debugger; });
