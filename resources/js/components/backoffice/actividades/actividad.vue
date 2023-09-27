@@ -363,7 +363,7 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Extras</h3>
+                <h3 class="box-title">Otros</h3>
             </div>
             <div class="box-body">
 
@@ -371,19 +371,21 @@
 
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="limiteInscripciones">Cupos</label>
-                            <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
-                            :disabled="!edicion" >
-                            <p class="help-block">0 es "sin limite de inscriptos"</p>
+                            <label for="require_ficha_medica">Requiere Ficha Medica</label>
+                            <select name="requiere_ficha_medica" class="form-control" v-model="actividad.requiere_ficha_medica" required :disabled="!edicion">
+                                <option value="1" :selected="actividad.requiere_ficha_medica == 1" >Si</option>
+                                <option value="0" :selected="actividad.requiere_ficha_medica == 0" >No</option>
+                            </select>
+
+                            <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
                         </div>
                     </div>
                     <div class="col-md-5">
                         <div class="form-group">
-                            <label for="linkEvaluacion">Link de evaluación</label>
-                            <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
+                            <label for="limiteInscripciones">Cupos</label>
+                            <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
                             :disabled="!edicion" >
-                            <span class="help-block">{{ errors.linkEvaluacion }}</span>
-                            <p class="help-block">Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)</p>
+                            <p class="help-block">0 es "sin limite de inscriptos"</p>
                         </div>
                     </div>
 
@@ -398,10 +400,15 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        
+                        <div class="form-group">
+                            <label for="linkEvaluacion">Link de evaluación</label>
+                            <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
+                            :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkEvaluacion }}</span>
+                            <p class="help-block">Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)</p>
+                        </div>
                     </div>
-
-                    </div>
+                </div>
             </div>
         </div>
 

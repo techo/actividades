@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8" v-if="!mostrarFichaMedica">
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -34,7 +34,7 @@
                        
                   </div>
               </div>
-                <hr>
+              <hr>
               <div class="row  align-middle">
                   <input type="hidden" name="_token" v-bind:value="csrf_token">
                   <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
@@ -47,6 +47,21 @@
               </div>
             </form>
         </div>
+        <div v-else class="col-md-8" >
+          <div class="row">
+              <div class="col-md-12">
+                  <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
+                  <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+              </div>
+          </div>
+          <hr>
+          <div class="row">
+              <div class="col-md-12 px-4">
+                <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" @guardado="mostrarFichaMedica = false"/>
+              </div>
+          </div>
+        </div>
+        <hr>
         <div class="col-md-4 prev" >
             <div class="card d-none d-lg-block">
                 <img :src="imagen" class="img-tarjeta">
@@ -97,6 +112,7 @@
                     nombre: ''
                 }
             },
+            mostrarFichaMedica: false,
             localidad: {},
             imagen: ''
           }
@@ -108,6 +124,8 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
+            if(self.actividad.requiere_ficha_medica)
+              self.mostrarFichaMedica = true;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
@@ -149,7 +167,7 @@
                 window.location.href = '/actividades/' + response.data.idActividad
               }
             });
-          }
+          },
         }
     }
 </script>

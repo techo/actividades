@@ -118,6 +118,7 @@ return [
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'The changes have been saved',
+	'changes_required_error'  =>  'All fields are required.',
 	'profile_text_1'  =>  'Here you can change your personal information',
     'profile_text_2'  =>  'Also you can change',
     'profile_text_3'  =>  'your email',
@@ -151,6 +152,7 @@ return [
 
  	// perfil / ficha medica
  	'ficha_medica' => 'Medical Data',
+ 	'ficha_medica_requerida' => 'This activity requires your medical record, upload or verify it here!',
  	'contacto_nombre' => 'Emergency Contact Name',
  	'contacto_telefono' => 'Emergency Contact Phone',
  	'contacto_relacion' => 'Emergency Contact Relation',
@@ -158,7 +160,7 @@ return [
  	'cobertura_nombre' => 'Medical Assurance Name',
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
- 	'archivo_medico' => 'Medical File',
+ 	'archivo_medico' => 'ID Photo',
  	'ver_adjunto' => 'See File',
  	'confirma_datos' => 'I declare this information is valid',
 

@@ -26,7 +26,7 @@ class IncluyeCampoRelacionYDespliegueTablaIntegrantes extends Migration
      */
     public function down()
     {
-        Schema::table('Actividad', function (Blueprint $table) {
+        Schema::table('Integrantes', function (Blueprint $table) {
             $table->dropColumn('despliegue');
             $table->dropColumn('relacion');
         });

@@ -125,6 +125,7 @@ return [
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'As alterações foram salvas com sucesso.',
+	'changes_required_error'  =>  'Todos os campos são obrigatórios.',
 	'profile_text_1'  =>  'Aqui você pode fazer alterações no seu perfil. Modifique sua senha e dados pessoais.',
 	'profile_text_2'  =>  'Também pode',
 	'profile_text_3'  =>  'modificar seu endereço de e-mail',
@@ -158,6 +159,7 @@ return [
 
 	// perfil / ficha medica
 	'ficha_medica' => 'Registro médico',
+	'ficha_medica_requerida' => 'Esta atividade requer seu prontuário médico, faça upload ou verifique aqui!',
 	'contacto_nombre' => 'Nome do Contato de Emergência',
 	'contacto_telefono' => 'Telefone do Contato de Emergência',
 	'contacto_relacion' => 'Grau de parentesco do Contato Emergência',
@@ -165,7 +167,7 @@ return [
 	'cobertura_nombre' => 'Nome da Cobertura Médica Ex: SUS',
 	'cobertura_numero' => 'Número de Cobertura Médica',
 	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
-	'archivo_medico' => 'Ficha médica',
+	'archivo_medico' => 'Identidade',
 	'ver_adjunto' => 'Ver Anexo',
 	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 

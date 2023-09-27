@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actividad;
+use App\FichaMedica;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
@@ -119,7 +120,9 @@ class InscripcionesController extends BaseController
     public function puntoDeEncuentro($id)
     {
         $actividad = Actividad::find($id);
-        return view('inscripciones.seleccionar_puntos_encuentro')->with('actividad', $actividad);
+
+        return view('inscripciones.seleccionar_puntos_encuentro',
+             compact('actividad'));
     }
 
     public function confirmarDonacion($id)

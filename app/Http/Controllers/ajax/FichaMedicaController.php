@@ -17,15 +17,14 @@ class FichaMedicaController extends Controller
   public function upsert(Request $request) {
       $url = $request->session()->get('login_callback','');
 
-      Log::info("hoals");
       $request->validate([
-              'contacto_nombre' => 'nullable',
-              'contacto_telefono' => 'nullable',
-              'contacto_relacion' => 'nullable',
-              'grupo_sanguinieo' => 'nullable',
-              'cobertura_nombre' => 'nullable',
-              'cobertura_numero' => 'nullable',
-              'confirma_datos' => 'nullable',
+              'contacto_nombre' => 'required',
+              'contacto_telefono' => 'required',
+              'contacto_relacion' => 'required',
+              'grupo_sanguinieo' => 'required',
+              'cobertura_nombre' => 'required',
+              'cobertura_numero' => 'required',
+              'confirma_datos' => 'required',
 
               ]);
       $persona = Auth::user();

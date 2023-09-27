@@ -6,7 +6,6 @@
                     <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
                     <input type="text" class="form-control" name="grupo_sanguinieo" id="grupo_sanguinieo"
                         v-model="ficha.grupo_sanguinieo">
-
                 </div>
                 <div class="col-md-4">
                     <label>{{ $t('frontend.cobertura_nombre') }}</label>
@@ -35,13 +34,14 @@
                     <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
                         v-model="ficha.contacto_relacion">
                 </div>
+                
             </div>
             <div class="row mt-2">
                 <div class="col-md-12">
                     <label >{{ $t('frontend.archivo_medico') }}</label>
-                    <a v-if="fichaMedica.archivo_medico != null" :href="fichaMedica.archivo_medico" target="_blank"> {{ $t('frontend.ver_adjunto') }}</a>
+                    <a v-if="ficha.archivo_medico != null" :href="ficha.archivo_medico" target="_blank"> {{ $t('frontend.ver_adjunto') }}</a>
                     <button class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                    <input v-if="(fichaMedica.archivo_medico == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="archivo_medico">
+                    <input v-if="(ficha.archivo_medico == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="archivo_medico">
                 </div>
             </div>
             <p class="text-muted mt-2">
@@ -59,7 +59,9 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row alert alert-danger" v-show='error'>
+                <strong>{{ $t('frontend.changes_required_error') }}</strong>
+            </div>
             <div class="row alert alert-success" v-show='guardo'>
                 <strong>{{ $t('frontend.changes_success') }}</strong>
             </div>
@@ -86,6 +88,7 @@ export default {
             ficha: this.fichaMedica,
             archivo_medico: null,
             formDirty: false,
+            error: false,
             message: {
                 danger: false,
                 text: ''
@@ -95,11 +98,22 @@ export default {
         return data;
     },
     props: ['fichaMedica'],
+    created: function () {
+        if (this.ficha == null){
+            this.ficha = {
+              'contacto_nombre' : "",
+              'contacto_telefono' : "",
+              'contacto_relacion' : "",
+              'grupo_sanguinieo' : "",
+              'cobertura_nombre' : "",
+              'cobertura_numero' : "",
+              'confirma_datos' : "",
+              'archivo_medico' : null
+            };
+        }
+    },
     mounted: function () {
         this.formDirty = false
-    },
-    watch: {
-
     },
     methods: {
         guardarFicha: function () {
@@ -108,7 +122,9 @@ export default {
                 this.submitFile();
                 this.guardo = true;
                 this.formDirty = false;
+                this.$emit('guardado');
             }).catch((error) => {
+                this.error = true;
             });
         },
         submitFile: function () {

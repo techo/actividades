@@ -120,6 +120,7 @@ return [
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'Los cambios fueron guardados con éxito.',
+	'changes_required_error'  =>  'Todos los campos son requeridos.',
 	'profile_text_1'  =>  'Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña y datos personales.',
     'profile_text_2'  =>  'También podés',
     'profile_text_3'  =>  'cambiar tu dirección de email',
@@ -154,6 +155,7 @@ return [
 
  	// perfil / ficha medica
  	'ficha_medica' => 'Ficha Médica',
+ 	'ficha_medica_requerida' => 'Esta actividad requiere que tu ficha médica, cargala o verificala aquí!',
  	'contacto_nombre' => 'Nombre Contacto Emergencia',
  	'contacto_telefono' => 'Telefono Contacto Emergencia',
  	'contacto_relacion' => 'Relacion Contacto Emergencia',
@@ -162,7 +164,7 @@ return [
  	'cobertura_numero' => 'Número de Cobertura Médica',
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
  	'ver_adjunto' => 'Ver Adjunto',
- 	'archivo_medico' => 'Archivo Médico',
+ 	'archivo_medico' => 'Documento de Identidad',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 
