@@ -155,16 +155,27 @@ return [
 
  	// perfil / ficha medica
  	'ficha_medica' => 'Ficha Médica',
+ 	'cobertura_medica' => 'Cobertura de Salud',
+ 	'cobertura_tipo' => 'Tipo de Cobertura',
+ 	'contacto_emergencia' => 'Contacto de Emergencia',
+ 	'documento_identidad_frente' => 'Documento Frente',
+ 	'documento_identidad_dorso' => 'Documento Dorso',
+ 	'ficha_otros' => 'Otros Datos',
+ 	'ficha_alergias' => 'Alergias',
+ 	'ficha_alimentacion' => 'Restricciones o dieta',
+ 	'ficha_confirma_datos' => 'Confirmacion de datos',
+ 	'contacto_emergencia' => 'Contacto de Emergencia',
+ 	'documents' => 'Documentos',
  	'ficha_medica_requerida' => 'Esta actividad requiere que tu ficha médica, cargala o verificala aquí!',
  	'contacto_nombre' => 'Nombre Contacto Emergencia',
  	'contacto_telefono' => 'Telefono Contacto Emergencia',
  	'contacto_relacion' => 'Relacion Contacto Emergencia',
  	'grupo_sanguinieo' => 'Grupo Sanguineo',
- 	'cobertura_nombre' => 'Nombre de Cobertura Médica',
- 	'cobertura_numero' => 'Número de Cobertura Médica',
+ 	'cobertura_nombre' => 'Nombre',
+ 	'cobertura_numero' => 'Número',
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
  	'ver_adjunto' => 'Ver Adjunto',
- 	'archivo_medico' => 'Documento de Identidad',
+ 	'archivo_medico' => 'Archivo Médico',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 
@@ -343,7 +354,7 @@ return [
 	//perfil/evaluacion.vue
 	'my_score' => 'Mi Evaluación',
 	'my_score_description' => 'Esta evaluación es un promedio sobre todas las actividades en las que participaste',
-	'my_score_contact' => 'Ante cualquier duda contactate con el coordinador de personas, de la sede en que participas ;)',
+	'my_score_contact' => 'Ante cualquier duda contactate con la coordinación de personas, de la sede en que participas ;)',
 	'my_score_feedback' => 'Evalua ahora!',
 	'my_score_not_active' => ' Todavia no tienes la suficiente cantidad de evaluaciones para hacer el cálculo.',
 
