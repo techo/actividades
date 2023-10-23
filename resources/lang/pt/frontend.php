@@ -170,6 +170,8 @@ return [
 	'ficha_alimentacion' => 'Restrições Alimentares',
 	'ficha_confirma_datos' => 'Confirmar Dados',
 	'documents' => 'Documentos',
+	'cobertura_paga' => 'Cobertura Paga',
+	'salud_publica' => 'Saúde Pública',
 	'contacto_nombre' => 'Nome do Contato de Emergência',
 	'contacto_telefono' => 'Telefone do Contato de Emergência',
 	'contacto_relacion' => 'Grau de parentesco do Contato Emergência',

@@ -163,6 +163,8 @@ return [
 	'ficha_alimentacion' => 'Dietary Restrictions', 
 	'ficha_confirma_datos' => 'Confirm Data',
 	'documents' => 'Documents',
+	'cobertura_paga' => 'Paid Coverage', 
+	'salud_publica' => 'Public Health',
  	'contacto_nombre' => 'Emergency Contact Name',
  	'contacto_telefono' => 'Emergency Contact Phone',
  	'contacto_relacion' => 'Emergency Contact Relation',
