@@ -166,6 +166,8 @@ return [
  	'ficha_confirma_datos' => 'Confirmacion de datos',
  	'contacto_emergencia' => 'Contacto de Emergencia',
  	'documents' => 'Documentos',
+ 	'cobertura_paga' => 'Cobertura Paga',
+ 	'salud_publica' => 'Salud Pública',
  	'ficha_medica_requerida' => 'Esta actividad requiere que tu ficha médica, cargala o verificala aquí!',
  	'contacto_nombre' => 'Nombre Contacto Emergencia',
  	'contacto_telefono' => 'Telefono Contacto Emergencia',
