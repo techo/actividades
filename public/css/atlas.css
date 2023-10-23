@@ -9,7 +9,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Granesta', 'Montserrat', sans-serif;
 }
 
 /* Custom page CSS
@@ -44,6 +44,10 @@ code {
 
 .bg-techo-blue {
     background-color: #0092dd;
+}
+
+.bg-techo-pink {
+    background-color: #e94362;
 }
 
 .card {
@@ -111,7 +115,7 @@ code {
 }
 
 .techo-h6 {
-    font-family: Montserrat, sans-serif;
+    font-family: 'Granesta', Montserrat, sans-serif;
     text-transform: uppercase;
     font-size: 17px;
     font-weight: 500;
@@ -153,7 +157,7 @@ code {
 
 
 .techo-footer-suscribe {
-    font-family: Montserrat, sans-serif;
+    font-family: 'Granesta', Montserrat, sans-serif;
     font-size: 18px;
     font-weight: bold;
     font-style: normal;
@@ -175,7 +179,7 @@ code {
     background: #392f28;
     position: relative;
     color: #ffffff;
-    font-family: Montserrat, sans-serif;
+    font-family: 'Granesta', Montserrat, sans-serif;
     flex-flow: column;
 }
 
@@ -492,6 +496,10 @@ footer.inscripcion-bar .text-primary {
     }
 }
 
+@font-face {
+    font-family: 'Granesta';
+    src:  url('/fonts/vendor/Granesta.ttf') format('truetype');
+  }
 
 
 /*.flex-container {

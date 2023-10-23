@@ -13,9 +13,9 @@
     @endif
 
 
-    <div class="row justify-content-center align-items-center mt-4">
+    <div style="background-image: url('/img/background-home.png'); background-size: cover;" class="row justify-content-center align-items-center py-4 px-4 h-auto">
         <div class="col-md-5 d-none d-md-block">
-        <img src="/img/techo_logo_big.png" alt="Techo" width="80%">
+            <!-- <img src="/img/techo_logo_big.png" alt="Techo" width="80%"> -->
         </div>
         <div class="col-md-3">
             <div class="list-group">
