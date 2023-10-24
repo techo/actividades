@@ -46,6 +46,15 @@ code {
     background-color: #0092dd;
 }
 
+.bg-black {
+    background-color: #212121;
+}
+
+
+.bg-secondary-blue {
+    background-color: #005CA9;
+}
+
 .bg-techo-pink {
     background-color: #e94362;
 }

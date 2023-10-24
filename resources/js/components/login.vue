@@ -99,7 +99,7 @@
         </div>
         <!-- Modal End-->
 
-        <nav class="navbar navbar-expand-md navbar-dark bg-techo-pink">
+        <nav class="navbar navbar-expand-md navbar-dark bg-black">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -153,8 +153,8 @@
                 </div>
 
 
-                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block bg-techo-pink" >
-                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle btn-secondary btnUser" @change="onChangeLocalization($event)">
+                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block" >
+                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle text-secondary bg-black pr-0" @change="onChangeLocalization($event)">
                         <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                             {{ lang[1] }}
                         </option>
@@ -166,7 +166,7 @@
                     <div class="btn-group" role="group">
                         <button
                                 type="button"
-                                class="btn bg-techo-pink btnUser dropdown-toggle"
+                                class="btn text-secondary bg-black dropdown-toggle"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false"
@@ -231,7 +231,7 @@
                 <!-- Si no esta autenticado -->
                 <form class="form-inline" v-else>
                     <button
-                            class="btn bg-techo-pink"
+                            class="btn text-secondary bg-black"
                             type="button"
                             data-toggle="modal"
                             data-target="#login-modal"

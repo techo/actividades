@@ -14,13 +14,13 @@
 
 
     <div style="background-image: url('/img/background-home.png'); background-size: cover;" class="row justify-content-center align-items-center py-4 px-4 h-auto">
-        <div class="col-md-5 d-none d-md-block">
+        <div class="col-md-3 d-none d-md-block">
             <!-- <img src="/img/techo_logo_big.png" alt="Techo" width="80%"> -->
         </div>
         <div class="col-md-3">
             <div class="list-group">
                 @foreach ($paises as $pais)
-                    <a href="{{$pais->abreviacion}}" class="list-group-item list-group-item-action">{{$pais->nombre}}</a>
+                    <a href="{{$pais->abreviacion}}" class="list-group-item list-group-item-action bg-secondary-blue">{{$pais->nombre}}</a>
                 @endforeach
                 
             </div>
