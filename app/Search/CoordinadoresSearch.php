@@ -40,7 +40,7 @@ class CoordinadoresSearch
     {
         $query = (new Persona)->newQuery();
 
-        $query->where('idPais', '=', auth()->user()->idPaisPermitido);
+        // $query->where('idPais', '=', auth()->user()->idPaisPermitido);
 
         $query->take(25)
             ->orderBy('nombres', 'asc');
