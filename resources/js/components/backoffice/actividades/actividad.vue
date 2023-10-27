@@ -543,7 +543,8 @@
                 axios.get('/admin/ajax/actividades/' + this.id)
                     .then((datos) => { 
                         this.actividad = datos.data; 
-                        this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
+                        if (this.actividad.ficha_medica_campos)
+                            this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
