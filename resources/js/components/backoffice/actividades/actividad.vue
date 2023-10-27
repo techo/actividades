@@ -370,8 +370,7 @@
             <div class="box-body">
 
                 <div class="row">
-
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="require_ficha_medica">Requiere Ficha Medica</label>
                             <select name="requiere_ficha_medica" class="form-control" v-model="actividad.requiere_ficha_medica" required :disabled="!edicion">
@@ -382,47 +381,22 @@
                             <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
                         </div>
                     </div>
-                    <div class="row" v-show="actividad.requiere_ficha_medica == 1">
-                        <div class="col-md-2">
-                            <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
-                                <label for="">Monto</label>
-                                <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.montoMin }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
+                    <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-9">
+                        <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-2">
                             <div class="form-group">
-                                <label for="">Monto Max. (Opcional)</label>
-                                <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
-                                <label for="">Fecha límite de pago</label>
-                                <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
-                                <span class="help-block">{{ errors.fechaLimitePago }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                                <label for="">Link para el Pago</label>
-                                <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.linkPago }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
-                                <label for="">Link formulario de beca (Opcional) </label>
-                                <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.beca }}</span>
+                                <label>{{ $t('frontend.'+ index) }}</label>
+                                <v-switch
+                                        theme="bootstrap" 
+                                        color="primary"
+                                        v-bind:disabled="!edicion"
+                                        @click="console.log('hols')"
+                                    ></v-switch>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
@@ -430,10 +404,7 @@
                             <p class="help-block">0 es "sin limite de inscriptos"</p>
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="seguimiento_google">Codigo Seguimiento Google</label>
                             <input type="text" id="seguimiento_google" class="form-control" v-model="actividad.seguimiento_google"
@@ -441,7 +412,7 @@
                             <p class="help-block">En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad</p>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="linkEvaluacion">Link de evaluación</label>
                             <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
@@ -470,6 +441,7 @@
 
 <script>
     import editor from '@tinymce/tinymce-vue'
+    import vSwitch from 'vue-switches';
 
     import 'tinymce/tinymce'
 
@@ -487,9 +459,25 @@
     export default {
         name: "actividad",
         props: {'id': {}, 'disabled': {default: false, type: Boolean} },
-        components: { 'tinymce-editor': editor },
+        components: { 'tinymce-editor': editor, vSwitch },
         data() {
             return {
+                fichaMedicaCamposSelect: [],
+                fichaMedicaCampos:{
+                    'contacto_nombre' : false,
+                    'contacto_telefono' : false,
+                    'contacto_relacion' : false,
+                    'grupo_sanguinieo' : false,
+                    'tipo_cobertura': false,
+                    'cobertura_tipo' : false,
+                    'cobertura_nombre' : false,
+                    'cobertura_numero' : false,
+                    'alergias' : false,
+                    'alimentacion' : false,
+                    'archivo_medico' : false,
+                    'documento_frente' : false,
+                    'documento_dorso' : false
+                },
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
