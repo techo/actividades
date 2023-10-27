@@ -57,7 +57,7 @@
           <hr>
           <div class="row">
               <div class="col-md-12 px-4">
-                <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" @guardado="mostrarFichaMedica = false"/>
+                <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
               </div>
           </div>
         </div>

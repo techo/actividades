@@ -178,6 +178,7 @@ return [
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
  	'ver_adjunto' => 'Ver Adjunto',
  	'archivo_medico' => 'Archivo Médico',
+ 	'documento_identidad' => 'Documento de Identidad',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 

@@ -180,6 +180,7 @@ return [
 	'cobertura_numero' => 'Número de Cobertura Médica',
 	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
 	'archivo_medico' => 'Identidade',
+	'documento_identidad' => 'Documento de Identidade',
 	'ver_adjunto' => 'Ver Anexo',
 	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 

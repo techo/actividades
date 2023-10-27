@@ -173,6 +173,7 @@ return [
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
  	'archivo_medico' => 'ID Photo',
+ 	'documento_identidad' => 'Document ID',
  	'ver_adjunto' => 'See File',
  	'confirma_datos' => 'I declare this information is valid',
 

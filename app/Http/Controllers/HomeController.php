@@ -37,8 +37,8 @@ class HomeController extends Controller
     
     public function multiPais(Request $request)
     {   
-        if ($request->session()->get('pais')){
-            $pais = \App\Pais::find($request->session()->get('pais'));
+        $pais = \App\Pais::where('id', $request->session()->get('pais'))->where('habilitado',1)->first();
+        if ($pais){
             return redirect($pais->abreviacion);
         }
 

@@ -381,21 +381,18 @@
                             <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
                         </div>
                     </div>
-                    <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-9">
-                        <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-2">
-                            <div class="form-group">
-                                <label>{{ $t('frontend.'+ index) }}</label>
-                                <v-switch
-                                        theme="bootstrap" 
-                                        color="primary"
-                                        v-bind:disabled="!edicion"
-                                        @click="console.log('hols')"
-                                    ></v-switch>
+                    <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
+                        <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-4">
+                            <div class="row">
+                                <label>
+                                <input class="col-md-1" :name="valor" v-model="fichaMedicaCampos[index]" type="checkbox" :disabled="!edicion" />
+                                <span class="col-md-11">{{ $t('frontend.'+ index) }}</span>
+                                </label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
@@ -462,21 +459,13 @@
         components: { 'tinymce-editor': editor, vSwitch },
         data() {
             return {
-                fichaMedicaCamposSelect: [],
                 fichaMedicaCampos:{
-                    'contacto_nombre' : false,
-                    'contacto_telefono' : false,
-                    'contacto_relacion' : false,
+                    'contacto_emergencia' : false,
                     'grupo_sanguinieo' : false,
-                    'tipo_cobertura': false,
-                    'cobertura_tipo' : false,
-                    'cobertura_nombre' : false,
-                    'cobertura_numero' : false,
-                    'alergias' : false,
-                    'alimentacion' : false,
-                    'archivo_medico' : false,
-                    'documento_frente' : false,
-                    'documento_dorso' : false
+                    'cobertura_medica': false,
+                    'ficha_alergias' : false,
+                    'ficha_alimentacion' : false,
+                    'documento_identidad' : false,
                 },
                 actividad: {
                     nombreActividad: null,
@@ -554,6 +543,7 @@
                 axios.get('/admin/ajax/actividades/' + this.id)
                     .then((datos) => { 
                         this.actividad = datos.data; 
+                        this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -655,6 +645,10 @@
                 
                 if (this.actividad.pago==1){
                     this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
+                }
+
+                if (this.actividad.requiere_ficha_medica==1){
+                    this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 }
 
                 if(this.id) {
