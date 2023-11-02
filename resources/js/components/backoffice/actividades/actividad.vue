@@ -19,16 +19,6 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
-                            <label for="oficina">Oficina</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
-                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
-                            </select>
-                            <span class="help-block">{{ errors.idOficina }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
                             <label for="pais">País</label>
                             <select name="idPais" class="form-control" v-model="actividad.idPais" required 
@@ -39,9 +29,16 @@
                             <span class="help-block">{{ errors.idPais }}</span>
                         </div>
                     </div>
-                    
-                    
-                   
+
+                    <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
+                            <label for="oficina">Oficina</label>
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idOficina }}</span>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -489,6 +486,10 @@
                     limiteInscripciones: 0,
                     inscripcionInterna: 0,
                     seguimiento_google: null,
+
+                    requiere_ficha_medica: 0,
+                    ficha_medica_campos: {},
+
 
                     tipo : {
                         idCategoria: 1
