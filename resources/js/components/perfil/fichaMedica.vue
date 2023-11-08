@@ -216,15 +216,12 @@ export default {
             });
         },
         guardar_archivo(event) {
-            console.log(this.$refs.archivo_medico.files[0]);
             this.archivo_medico = this.$refs.archivo_medico.files[0];
         },
         guardar_documento_frente(event) {
-            console.log(this.$refs.documento_frente.files[0]);
             this.documento_frente = this.$refs.documento_frente.files[0];
         },
         guardar_documento_dorso(event) {
-            console.log(this.$refs.documento_dorso.files[0]);
             this.documento_dorso = this.$refs.documento_dorso.files[0];
         },
 

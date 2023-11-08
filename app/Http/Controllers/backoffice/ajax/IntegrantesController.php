@@ -12,6 +12,7 @@ use App\Http\Requests\Equipo\CrearIntegrante;
 use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\Http\Requests\Equipo\GetIntegrante;
 use App\Persona;
+use Illuminate\Support\Facades\Storage;
 
 class IntegrantesController extends Controller
 {
@@ -97,4 +98,36 @@ class IntegrantesController extends Controller
 
 		return response()->json('OK', 200);
 	}
+
+    public function uploadArchivos(Request $request, $idEquipo, $idIntegrante)
+    {
+        $this->validate($request, array(
+            'archivo_carta_compromiso' => 'nullable',
+            'archivo_plan_de_trabajo' => 'nullable',
+        ));
+
+        $integrante = Integrante::findOrFail($idIntegrante);
+
+        if ($request->file('archivo_carta_compromiso')){
+            $archivo = $request->file('archivo_carta_compromiso');
+            $path = $archivo->store('public/integrante');
+            $oldPath = str_replace('storage', 'public', $integrante->archivo_carta_compromiso);
+            if(Storage::exists($oldPath))
+                Storage::delete($oldPath);
+
+            $integrante->archivo_carta_compromiso = str_replace('public', 'storage', $path);
+            $integrante->save();
+        }
+
+        if ($request->file('archivo_plan_de_trabajo')){
+            $archivo = $request->file('archivo_plan_de_trabajo');
+            $path = $archivo->store('public/integrante');
+            $oldPath = str_replace('storage', 'public', $integrante->archivo_plan_de_trabajo);
+            if(Storage::exists($oldPath))
+                Storage::delete($oldPath);
+
+            $integrante->archivo_plan_de_trabajo = str_replace('public', 'storage', $path);
+            $integrante->save();
+        }
+  }
 }

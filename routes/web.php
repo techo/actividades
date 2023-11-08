@@ -202,6 +202,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
+            Route::post('/{idIntegrante}/archivos', 'backoffice\ajax\IntegrantesController@uploadArchivos');  
         });
     });
 
