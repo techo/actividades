@@ -87,7 +87,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -98,7 +98,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -137,7 +137,7 @@
                     <div class="box-body">
 
                         <div class="row">                            
-                            <div class="col-md-3 ml-2">
+                            <div class="col-md-4 ml-2">
                                 <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -148,7 +148,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="fechaFinInscripciones">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
                                     <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -162,7 +162,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 ml-2">
+                            <div class="col-md-4 ml-2">
                                 <label for="fechaFin">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
                                     <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -546,6 +546,15 @@
                         this.actividad = datos.data; 
                         if (this.actividad.ficha_medica_campos)
                             this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
+                        else
+                            this.fichaMedicaCampos =   {
+                                'contacto_emergencia' : false,
+                                'grupo_sanguinieo' : false,
+                                'cobertura_medica': false,
+                                'ficha_alergias' : false,
+                                'ficha_alimentacion' : false,
+                                'documento_identidad' : false
+                            };
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -648,10 +657,8 @@
                 if (this.actividad.pago==1){
                     this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
                 }
-
-                if (this.actividad.requiere_ficha_medica==1){
-                    this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
-                }
+                
+                this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
