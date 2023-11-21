@@ -36,6 +36,7 @@
         "vuetable-2": "^1.2.0"
     },
     "dependencies": {
+        "@johmun/vue-tags-input": "^2.1.0",
         "@tinymce/tinymce-vue": "^3.0.1",
         "ajv": "^6.4.0",
         "babel-loader": "^7.1.4",

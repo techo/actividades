@@ -389,6 +389,25 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Roles Aplicables</label>
+                            <vue-tags-input
+                                v-model="tag"
+                                :tags="rolesTags"
+                                @tags-changed="newTags => rolesTags = newTags"
+                            />
+
+                            <p class="help-block">En caso de dar opciones de roles a aplicar, especificar aquí, luego se podra confirmar este rol desde la inscripción</p>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        
+                    </div>
+                </div>
+
                 <div class="row mb-2">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -449,13 +468,17 @@
     import 'tinymce/plugins/preview'
     import 'tinymce/plugins/paste'
     import 'tinymce/plugins/link'
+    import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
         name: "actividad",
         props: {'id': {}, 'disabled': {default: false, type: Boolean} },
-        components: { 'tinymce-editor': editor, vSwitch },
+        components: { 'tinymce-editor': editor, vSwitch, VueTagsInput },
         data() {
             return {
+                tag: '',
+                rolesTags: [],
+
                 fichaMedicaCampos:{
                     'contacto_emergencia' : false,
                     'grupo_sanguinieo' : false,
@@ -659,6 +682,7 @@
                 }
                 
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
+                this.actividad.roles_tags = this.rolesTags;
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)

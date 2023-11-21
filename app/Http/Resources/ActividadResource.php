@@ -47,6 +47,7 @@ class ActividadResource extends Resource
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
+            'roles_tags' =>  $this->roles_tags,
         ];
     }
 
