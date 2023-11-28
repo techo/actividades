@@ -383,7 +383,7 @@
                             <div class="row">
                                 <label>
                                 <input class="col-md-1" :name="valor" v-model="fichaMedicaCampos[index]" type="checkbox" :disabled="!edicion" />
-                                <span class="col-md-11">{{ $t('frontend.'+ index) }}</span>
+                                <span class="col-md-11 font-weight-light">{{ $t('frontend.'+ index) }}</span>
                                 </label>
                             </div>
                         </div>
@@ -391,16 +391,24 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="require_ficha_medica">Roles Aplicables</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar las opciones de roles al que el voluntariado puede aplicar para esta actividad.
+                                Presiona enter entre cada uno.
+                            </p>
                             <vue-tags-input
                                 v-model="tag"
                                 :tags="rolesTags"
+                                :disabled="!edicion"
+                                placeholder=""
                                 @tags-changed="newTags => rolesTags = newTags"
                             />
 
-                            <p class="help-block">En caso de dar opciones de roles a aplicar, especificar aquí, luego se podra confirmar este rol desde la inscripción</p>
+                            <p class="help-block">
+                                De dejar este campo en blanco no se le mostrara la opcion de seleccion de rol.
+                            </p>
                         </div>
                     </div>
                     <div class="col-md-10">
@@ -578,6 +586,8 @@
                                 'ficha_alimentacion' : false,
                                 'documento_identidad' : false
                             };
+                        if (this.actividad.roles_tags)
+                            this.rolesTags = this.actividad.roles_tags;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -683,6 +693,8 @@
                 
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 this.actividad.roles_tags = this.rolesTags;
+                
+                
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)

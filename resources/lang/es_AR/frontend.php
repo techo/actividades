@@ -274,6 +274,10 @@ return [
 	'select_a_meeting_point' => 'Elegir un punto de encuentro',
 	'whats_a_meeting_point' => 'Una actividad puede tener uno o más puntos de encuentro ¡Elegí el que encuentres más cómodo y nos vemos ahí!',
 
+	//seleccion rol
+	'apply_for_rol' => '¿Quieres ser parte del equipo organizador de esta actividad?',
+	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
+
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
 	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',

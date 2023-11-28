@@ -267,6 +267,10 @@ return [
 	'select_a_meeting_point' => 'Select a location to meet',
 	'whats_a_meeting_point' => 'An activity might have more than one location to meet. Choose the most convenient for you!',
 
+	//seleccion rol
+	'apply_for_rol' => 'Do you want to be part of the organizing team of this activity?',
+	'whats_a_rol' => 'Select the roles you would like to apply for.',
+
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
 	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',

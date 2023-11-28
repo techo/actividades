@@ -14,7 +14,7 @@ class IncluyeCampoRolesTagTablaActividades extends Migration
     public function up()
     {
         Schema::table('Actividad', function (Blueprint $table) {
-            $table->json('roles_tags');
+            $table->json('roles_tags')->nullable();
         });
     }
 
