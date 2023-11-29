@@ -278,6 +278,8 @@ return [
 	//seleccion rol
 	'apply_for_rol' => 'Quer fazer parte da equipa organizadora desta atividade?',
 	'whats_a_rol' => 'Selecione as funções às quais você gostaria de se candidatar.',
+	'roles_aplicados' => 'Roles seleccionados',
+	'yes' => 'Si, aplicar a rol',
 
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',

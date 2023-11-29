@@ -270,6 +270,8 @@ return [
 	//seleccion rol
 	'apply_for_rol' => 'Do you want to be part of the organizing team of this activity?',
 	'whats_a_rol' => 'Select the roles you would like to apply for.',
+	'roles_aplicados' => 'Selected Roles',
+	'yes' => 'Yes, apply for a rol',
 
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',

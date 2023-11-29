@@ -24,6 +24,10 @@
                     method="POST"
                     v-on:submit="validateForm"
                 >
+                    <input type="hidden" name="roles_aplicados" v-bind:value="convertToJSON()">
+
+                    <input type="hidden" name="aplica_rol" v-bind:value="aplicaRol">
+
                 <div class="row" v-for="(item, index) in puntosActivos">
                     <div class="col-md-12">
                         <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
@@ -178,7 +182,8 @@
             rolesAplicado: [],
             mostrarFichaMedica: false,
             localidad: {},
-            imagen: ''
+            imagen: '',
+            dummyInput: ''
           }
         },
         mounted: function() {
@@ -234,6 +239,9 @@
               }
             });
           },
+            convertToJSON: function() {
+                return JSON.stringify(this.rolesAplicado);
+            }
         }
     }
 </script>

@@ -157,6 +157,7 @@ export default {
             },
             updateArchivo: false,
             updateDocumentoDorso:false,
+            updateDocumentoFrente:false,
             grupo_sanguineos: [
                 'A+', 'A-', 'B+', 'B-', '0+', '0-'
             ],
