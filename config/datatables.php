@@ -56,18 +56,18 @@ return [
                 'title' => 'Estado',
             ],
             [
-               'name' => 'pais',
+                'name' => 'pais',
                 'sortField' => 'pais',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Pais',
             ],
-//            [
-//                'name' => '__component:mis-actividades',
-//                'title' => 'Acciones',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ]
+            //            [
+            //                'name' => '__component:mis-actividades',
+            //                'title' => 'Acciones',
+            //                'titleClass' => 'text-center',
+            //                'dataClass' => 'text-center'
+            //            ]
         ],
         'sortOrder' => [
             [
@@ -157,7 +157,7 @@ return [
                 'title' => 'Estado',
             ],
             [
-               'name' => 'pais',
+                'name' => 'pais',
                 'sortField' => 'pais',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
@@ -169,12 +169,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-//            [
-//                'name' => '__component:mis-actividades',
-//                'title' => 'Acciones',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ]
+            //            [
+            //                'name' => '__component:mis-actividades',
+            //                'title' => 'Acciones',
+            //                'titleClass' => 'text-center',
+            //                'dataClass' => 'text-center'
+            //            ]
         ],
         'sortOrder' => [
             [
@@ -221,6 +221,11 @@ return [
                 'title' => 'Rol'
             ],
             [
+                'name' => '__component:roles_asignados',
+                'sortField' => 'roles_aplicados',
+                'title' => 'Roles Aplicado'
+            ],
+            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',
@@ -240,15 +245,15 @@ return [
     ],
     'miembros' => [
         'fields' => [
-             [
-               'name' => '__checkbox',
-               'titleClass' => 'text-center',
-               'dataClass' => 'text-center',
-             ],
-             [
-               'name' => 'tipo',
-               'callback' => 'getIcon'
-             ],
+            [
+                'name' => '__checkbox',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+            ],
+            [
+                'name' => 'tipo',
+                'callback' => 'getIcon'
+            ],
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
