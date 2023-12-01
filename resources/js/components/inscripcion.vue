@@ -195,7 +195,7 @@
             self.actividad = response.data.data;
             if(self.actividad.requiere_ficha_medica)
                 self.mostrarFichaMedica = true;
-            if(self.actividad.roles_tags == null)
+            if(self.actividad.roles_tags == null || self.actividad.roles_tags.length == 0)
                 self.rolAplicado = true;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
