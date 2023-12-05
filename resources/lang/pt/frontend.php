@@ -67,6 +67,7 @@ return [
 	'especial_events' => 'Eventos especiais',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Virtual',
+	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bem vindo',
 

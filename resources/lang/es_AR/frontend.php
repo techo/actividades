@@ -62,6 +62,7 @@ return [
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'online_events' => 'Virtual',
+	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
 
 	'welcome' => 'Bienvenido',

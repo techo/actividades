@@ -50,6 +50,7 @@
                                 <select v-model="form.despliegue" name="despliegue" class="form-control" required>
                                     <option value="Oficina" :selected="form.despliegue == 'Oficina'">Oficina</option>
                                     <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">Comunidad</option>
+                                    <option value="Otras" :selected="form.despliegue == 'Otras'">Otras</option>
                                 </select>
                                 <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
                             </div>
@@ -60,6 +61,7 @@
                                 <select v-model="form.relacion" name="relacion" class="form-control" required>
                                     <option value="Rentado" :selected="form.relacion == 'Rentado'">Rentado</option>
                                     <option value="Voluntario" :selected="form.relacion == 'Voluntario'">Voluntario</option>
+                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">Pasante</option>
                                 </select>
                                 <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
                             </div>
