@@ -226,7 +226,7 @@ return [
                 'title' => 'Roles Aplicado'
             ],
             [
-                'name' => 'estadoPersona',
+                'name' => '__component:estado_persona',
                 'sortField' => 'estadoPersona',
                 'title' => 'estado'
             ],
