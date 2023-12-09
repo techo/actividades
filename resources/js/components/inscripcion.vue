@@ -66,6 +66,14 @@
                         {{ $t('frontend.yes') }}
                     </label>
                 </div>
+                <div v-if="!aplicaRol" class=" pl-0 form-check form-inline mb-2">
+                    <input class="form-check-input pl-0" checked type="checkbox"
+                        >
+                    <label class="form-check-label" for="aplica-rol">
+                        {{ $t('frontend.no_apply_rol') }}
+                    </label>
+                </div>
+                
 
                 <div v-if="aplicaRol" class="row">
                     <div class="col-md-12">
