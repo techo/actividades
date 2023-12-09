@@ -27,15 +27,17 @@
         },
 
         mounted() {
-            if(this.rowData.estadoPersona){
-                this.estado = this.rowData.estadoPersona;
+            if(this.rowData.estado_voluntario){
+                this.estado = this.rowData.estado_voluntario;
+                this.color = "label-default";
                 if(this.estado == "Suspendido")
                     this.color = "label-warning";
                 else if (this.estado == "Desvinculado")
                     this.color = "label-danger";
+
+
             } else {
-                this.estado = "Habilitado";
-                this.color = "label-secondary";
+                this.color = "label-default";
             }
         },
     }

@@ -20,6 +20,7 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];
     protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'estadoPersona'];
     protected $dates = ['deleted_at'];
+    protected $appends = array('estado_voluntario');
 
     public function routeNotificationForMail($notification)
     {
@@ -79,6 +80,25 @@ class Persona extends Authenticatable implements MustVerifyEmail
     public function getPromedioTecnicoAttribute()
     {
         return $this->evaluacionesRecibidas->avg('puntajeTecnico');
+    }
+
+    public function getEstadoVoluntarioAttribute()
+    {
+        if($this->estadoPersona == "Suspendido")
+            return $this->estadoPersona;
+        else if ($this->estadoPersona == "Desvinculado")
+            return $this->estadoPersona;
+
+        if ($this->estado_persona == "Habilitado" || !$this->estado_persona )
+        {
+            if ($this->inscripciones()->where('presente',1)->count() > 0)
+                return $this->inscripciones()->where('presente',1)->count() . " Presentes";
+            else if ($this->inscripciones()->where('presente',0)->count() > 1)
+                return "Sin Presentes";
+            else
+                return "Primera Inscripción";
+        }
+        return $this->estadoPersona;
     }
 
     public function getNombreCompletoAttribute() {

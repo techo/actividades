@@ -228,7 +228,7 @@ return [
             [
                 'name' => '__component:estado_persona',
                 'sortField' => 'estadoPersona',
-                'title' => 'estado'
+                'title' => 'Estado Voluntariado'
             ],
             [
                 'name' => '__component:asistencia',
