@@ -226,6 +226,11 @@ return [
                 'title' => 'Roles Aplicado'
             ],
             [
+                'name' => 'estadoPersona',
+                'sortField' => 'estadoPersona',
+                'title' => 'estado'
+            ],
+            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',

@@ -52,6 +52,7 @@ class UserService
         $persona->genero = $request->genero['id'];
         $persona->telefonoMovil = $request->telefono;
         $persona->canal_contacto = $request->canal_contacto;
+        $persona->estadoPersona = $request->estadoPersona;
 
         if($request->rol['rol'] == "admin" || $request->rol['rol'] == "coordinador"){
             $persona->idPaisPermitido = auth()->user()->idPaisPermitido;
@@ -106,7 +107,8 @@ class UserService
                 // 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
                 'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona,deleted_at,NULL|email',
                 'password' => 'sometimes|required|min:8|confirmed',
-                'canal_contacto' => 'nullable'
+                'canal_contacto' => 'nullable',
+                'estadoPersona' => 'nullable',
             ], $messages
         );
         // sumar validacion de seguridad

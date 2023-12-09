@@ -125,7 +125,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="rol">Rol</label>
                                     <v-select
@@ -135,6 +135,22 @@
                                             name="rol"
                                             id="rol"
                                             v-model="usuario.rol"
+                                            :disabled="this.readonly"
+                                    >
+                                    <span slot="no-options"></span>
+                                    </v-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estadoPersona">Estado</label>
+                                    <v-select
+                                            :options="dataEstados"
+                                            label="estadoPersona"
+                                            placeholder="Seleccione"
+                                            name="estadoPersona"
+                                            id="estadoPersona"
+                                            v-model="usuario.estadoPersona"
                                             :disabled="this.readonly"
                                     >
                                     <span slot="no-options"></span>
@@ -272,6 +288,11 @@
                     {id: "M", canal_contacto: "Masculino"},
                     {id: "F", canal_contacto: "Femenino"},
                     {id: "O", canal_contacto: "Prefiero no decirlo"},
+                ],
+                dataEstados: [
+                    "Habilitado",
+                    "Suspendido",
+                    "Desvinculado",
                 ],
                 dataPaises: [],
                 dataRoles: [],
