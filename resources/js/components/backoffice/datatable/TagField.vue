@@ -1,6 +1,6 @@
 <template>
     <span>
-        <span v-for="item in items" class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+        <span v-for="item in items" class="label label-primary">
             {{ item.text }}
         </span>
     </span>
@@ -25,9 +25,11 @@
         },
 
         mounted() {
-            var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
-            var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
-            this.items = JSON.parse(cadenaJSONSinEscape);
+            if(this.rowData.roles_aplicados){
+                var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
+                var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
+                this.items = JSON.parse(cadenaJSONSinEscape);
+            }
         },
     }
 </script>
