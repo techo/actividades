@@ -273,6 +273,7 @@ return [
 	'whats_a_rol' => 'Select the roles you would like to apply for.',
 	'roles_aplicados' => 'Selected Roles',
 	'yes' => 'Yes, apply for a rol',
+	'no_apply_rol' => "No, I don't want to apply for a rol",
 
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
