@@ -11,7 +11,7 @@ return [
 	*/
 
 	// generales
-	'begins_on' => 'que inicia el',
+	'begins_on' => 'que comienza el',
 	'begins_at' => 'en',
 	'greetings' => '¡Te esperamos!',
 	'has_been' => 'ha sido',
@@ -54,15 +54,15 @@ return [
 
 	// InscripcionFaltaPago
 	'missing_payment_title' => 'Te pre-inscribiste para participar:',
-	'missing_payment_1' => 'Te pre-inscribiste para participar:',
-	'missing_payment_2' => 'SOLO FALTA CONFIRMAR CON TU DONACIÓN',
+	'missing_payment_1' => '¡Estás a punto de embarcarte en una experiencia increíble! Te has preinscrito para participar en:',
+	'missing_payment_2' => 'Pero aún falta un último paso para asegurar tu participación: ¡Confirmarla con tu donación!',
 	'missing_payment_3' => '¡Tenés tiempo hasta el ',
-	'missing_payment_4' => 'Para confirmar tu participación, haz click ',
+	'missing_payment_4' => 'Para confirmar tu lugar, simplemente haz click',
 	'confirm_by_donation' => '',
-	'missing_payment_5' => 'Te recordamos que el monto mínimo sugerido para abonar es de ',
-	'missing_payment_6' => ' esto contribuye a desarrollar nuestro trabajo en comunidad.	',
-	'missing_payment_7' => 'En el caso que no puedas abonar, no queremos que dejes de participar, ',
-	'missing_payment_8' => 'ponete en contacto con el coodinador de la actividad para gestionar una BECA ',
+	'missing_payment_5' => 'Recuerda que el monto mínimo sugerido para donar es de ',
+	'missing_payment_6' => ', y esto contribuirá al desarrollo de nuestro trabajo en comunidad.',
+	'missing_payment_7' => 'En caso de que no puedas realizar la donación, no queremos que te quedes fuera. Puedes ',
+	'missing_payment_8' => 'ponerte en contacto con el coodinador de la actividad para gestionar una BECA ',
 
 	// inscripcionPagoFueraDeFecha
 	'payment_outdated_title' => 'TECHO Pago recibido fuera fecha',
