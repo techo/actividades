@@ -303,6 +303,7 @@ return [
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'CANCELAR MINHA INSCRIÇÃO',
 
+	'make_donation' => 'Faz pagamento ',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',
 	'ready_for_paying' => 'Pronto para pagar pela site!',

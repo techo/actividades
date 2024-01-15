@@ -295,6 +295,7 @@ return [
 	'cancel' => 'CANCEL',
 	'unenroll' => 'UN-ENROLL',
 
+'make_donation' => 'Make Payment ',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",
