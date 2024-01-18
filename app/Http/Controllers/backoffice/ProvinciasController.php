@@ -40,7 +40,7 @@ class ProvinciasController extends Controller
         return view(
             'backoffice.configuracion.provincias.create',
             compact(
-                'edicion',
+                'edicion'
             )
         );
     }
