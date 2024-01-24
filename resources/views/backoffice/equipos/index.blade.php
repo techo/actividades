@@ -22,7 +22,7 @@
                     api-url="/admin/ajax/equipos/"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre, apellido o documento"
+                    placeholder-text="Buscar por nombre o área"
                     detail-url="/admin/equipos/"
             ></equipos-datatable>
         </div>

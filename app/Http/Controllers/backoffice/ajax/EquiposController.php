@@ -15,8 +15,8 @@ class EquiposController extends Controller
     public function index(Request $request)
     {
         $filtros = [];
-        if($request->has('nombre')){
-            $filtros['nombre'] = $request->nombre;
+        if($request->has('equipo')){
+            $filtros['equipo'] = $request->equipo;
         }
         
         if($request->filled('sort')) {
