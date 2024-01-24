@@ -369,6 +369,9 @@ return [
 	'my_score_feedback' => 'Evalua ahora!',
 	'my_score_not_active' => ' Todavia no tienes la suficiente cantidad de evaluaciones para hacer el cálculo.',
 
+	// constancia voluntariado
+	'constancia_voluntario' => 'Descargar Constancia',
+
 
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Evalúa a tus compañeros',

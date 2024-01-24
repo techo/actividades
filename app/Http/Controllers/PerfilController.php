@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actividad;
 use App\Http\Resources\PerfilResource;
+use App\Inscripcion;
+use App\Integrante;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
 class PerfilController extends Controller
@@ -90,4 +94,25 @@ class PerfilController extends Controller
 
 		return redirect('/');
     }
+
+    public function get_constancia_voluntariado(Request $request){
+        
+		$persona = Auth::user();
+		$inscripciones = Inscripcion::where('idPersona', $persona->idPersona)
+			->with('actividad')
+			->where('presente')->get();
+		$integrantes = Integrante::where('idPersona', $persona->idPersona)
+			->with('equipo')
+			->get();
+
+		// Log::info($persona);
+		// Log::info($inscripciones);
+		Log::info($integrantes);
+
+		$pdf = app('dompdf.wrapper');
+        $pdf->loadView('pdf.constanciaVoluntariado', compact('persona', 'inscripciones', 'integrantes'));
+        
+        return $pdf->download('Constancia_Voluntariado_TECHO.pdf');
+	}
+
 }

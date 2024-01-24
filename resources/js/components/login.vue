@@ -201,6 +201,14 @@
                                 {{ $t('frontend.profile') }}
                             </button>
                             <button
+                                    class="dropdown-item"
+                                    id="btn-evaluacion"
+                                    type="button"
+                                    v-on:click="constancia_voluntariado"
+                            >
+                                {{ $t('frontend.constancia_voluntario') }}
+                            </button>
+                            <button
                                     v-show="this.verAdmin"
                                     class="dropdown-item"
                                     id="btn-admin" type="button"
@@ -313,6 +321,9 @@
             },
             perfil: function() {
               window.location.href = '/perfil';
+            },
+            constancia_voluntariado: function() {
+              window.location.href = '/perfil/constancia_voluntariado';
             },
             admin: function() {
               window.location.href = '/admin/actividades/usuario';
