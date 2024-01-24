@@ -65,7 +65,7 @@ return [
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
 
-	'welcome' => 'Bienvenido',
+	'welcome' => 'Bienvenidx',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',

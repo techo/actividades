@@ -46,7 +46,7 @@ class UsuarioController extends BaseController
         if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
-        // if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z0-9]{6,10}$/';
+        if($request->has('dni')) $rules['dni'] = 'required';
         $validatedData = $request->validate($rules);
         return ['success' => true, 'params' => array_keys($rules)];
     }
