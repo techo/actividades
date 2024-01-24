@@ -19,8 +19,8 @@ class IntegrantesController extends Controller
     public function index(Request $request, $idEquipo)
     {
         $filtros = [];
-        if($request->has('filter')){
-            $filtros['nombre'] = $request->filter;
+        if($request->has('integrante')){
+            $filtros['integrante'] = $request->integrante;
         }
 
 
