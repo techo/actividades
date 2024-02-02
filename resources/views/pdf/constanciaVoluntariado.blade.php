@@ -4,6 +4,14 @@
     CONSTANCIA DE VOLUNTARIADO
 @endsection
 
+@section('styles')
+    <style>
+        h4 {
+            font-family: 'MontserratRegular', sans-serif;
+        }
+    </style>
+@endsection
+
 @section('main_content')
     <div class="row d-flex justify-content-center">
         <img src="img/techo_logo_big.png" height="60" alt="logo techo">
@@ -32,11 +40,11 @@
                     @endif
                 @endforeach
             </ul>
-            
+            @if(count($integrantes) > 0)
             <p>
                 Destacamos su participación como miembro de nuestro voluntariado permanente en
             </p>
-            @if(count($integrantes) > 0)
+           
                 @foreach ($integrantes as $integrante)
                 <ul>
                 <li>

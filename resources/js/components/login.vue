@@ -200,14 +200,14 @@
                             >
                                 {{ $t('frontend.profile') }}
                             </button>
-                            <button
+                            <!-- <button
                                     class="dropdown-item"
                                     id="btn-evaluacion"
                                     type="button"
                                     v-on:click="constancia_voluntariado"
                             >
                                 {{ $t('frontend.constancia_voluntario') }}
-                            </button>
+                            </button> -->
                             <button
                                     v-show="this.verAdmin"
                                     class="dropdown-item"
