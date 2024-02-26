@@ -140,28 +140,28 @@ export default {
     ocultarLoadingAlert () {
         this.$refs.loading.justCloseSimplert();
     },
-    exportarEquipos: function() {
-			this.loading = true;
-			axios({
-				url: '/admin/equipos/exportar', 
-				params: null,
-				responseType: 'blob',
-				headers: { 
-					'Accept': 'application/octet-stream',
-					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
-				}
-			})
-			.then((response) => {
-				const url = window.URL.createObjectURL(new Blob([response.data]));
-				const link = document.createElement('a');
-				link.href = url;
-				link.setAttribute('download', 'Equipos.xlsx');
-				document.body.appendChild(link);
-				link.click();
-				this.loading = false;
-			})
-			.catch((error) => { debugger; });
-		},
+  //   exportarEquipos: function() {
+	// 		this.loading = true;
+	// 		axios({
+	// 			url: '/admin/equipos/exportar', 
+	// 			params: null,
+	// 			responseType: 'blob',
+	// 			headers: { 
+	// 				'Accept': 'application/octet-stream',
+	// 				'content-type': 'application/vnd.ms-excel;charset=UTF-8',
+	// 			}
+	// 		})
+	// 		.then((response) => {
+	// 			const url = window.URL.createObjectURL(new Blob([response.data]));
+	// 			const link = document.createElement('a');
+	// 			link.href = url;
+	// 			link.setAttribute('download', 'Equipos.xlsx');
+	// 			document.body.appendChild(link);
+	// 			link.click();
+	// 			this.loading = false;
+	// 		})
+	// 		.catch((error) => { debugger; });
+	// 	},
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
@@ -171,7 +171,7 @@ export default {
   events: {
     'filter-set' (filterText) {
       this.moreParams = {
-        usuario: filterText,
+        equipo: filterText,
       };
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     },

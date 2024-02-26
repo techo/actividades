@@ -50,6 +50,7 @@
                                 <select v-model="form.despliegue" name="despliegue" class="form-control" required>
                                     <option value="Oficina" :selected="form.despliegue == 'Oficina'">Oficina</option>
                                     <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">Comunidad</option>
+                                    <option value="Otras" :selected="form.despliegue == 'Otras'">Otras</option>
                                 </select>
                                 <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
                             </div>
@@ -60,6 +61,7 @@
                                 <select v-model="form.relacion" name="relacion" class="form-control" required>
                                     <option value="Rentado" :selected="form.relacion == 'Rentado'">Rentado</option>
                                     <option value="Voluntario" :selected="form.relacion == 'Voluntario'">Voluntario</option>
+                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">Pasante</option>
                                 </select>
                                 <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
                             </div>
@@ -74,7 +76,7 @@
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-6" v-if="form.estado==0">
+                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
                                 <label for="fechaFin">Fecha Fin</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
@@ -82,16 +84,36 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.archivo_carta_compromiso }">
+                                <label for="archivo_carta_compromiso">Carta de Compromiso</label>
+                                <a v-if="form.archivo_carta_compromiso != null" :href="'/'+form.archivo_carta_compromiso" target="_blank"> Ver Carta Cargada</a>
+                                <input ref="archivo_carta_compromiso" type="file" class="form-control">
+                                <span v-if="errors.archivo_carta_compromiso" v-text="errors.archivo_carta_compromiso[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.archivo_plan_de_trabajo }">
+                                <label for="archivo_plan_de_trabajo">Plan de Trabajo</label>
+                                <a v-if="form.archivo_plan_de_trabajo != null" :href="'/'+form.archivo_plan_de_trabajo" target="_blank"> Ver Plan Cargado</a>
+                                <input ref="archivo_plan_de_trabajo" type="file" class="form-control">
+                                <span v-if="errors.archivo_plan_de_trabajo" v-text="errors.archivo_plan_de_trabajo[0]"
+                                    class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-            <div class="modal-footer">
-                <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
-                <button ref="eliminar" v-show="editando" class="btn btn-danger"
-                    @click.prevent="confirmar()">Eliminar</button>
-                <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">Guardar</button>
-            </div>
+                <div class="modal-footer">
+                    <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
+                    <button ref="eliminar" v-show="editando" class="btn btn-danger"
+                        @click.prevent="confirmar()">Eliminar</button>
+                    <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">Guardar</button>
+                </div>
 
-        </div>
+            </div>
         </div>
     </div>
 </div></template>
@@ -109,6 +131,8 @@ export default {
         return {
             display: false,
             persona: null,
+            archivo_carta_compromiso: null,
+            archivo_plan_de_trabajo: null,
             personas: [],
             form: {
                 idEquipo: this.idEquipo,
@@ -152,18 +176,34 @@ export default {
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
                     location.reload();
+                    this.submitFiles(datos.data.idIntegrante);
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+
         },
+
         update() {
             axios.put('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
                     location.reload();
+                    this.submitFiles(datos.data.idIntegrante);
                     this.cancelar();
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+        },
+
+        submitFiles(idIntegrante) {
+            this.archivo_carta_compromiso = this.$refs.archivo_carta_compromiso.files[0];
+            this.archivo_plan_de_trabajo = this.$refs.archivo_plan_de_trabajo.files[0];
+            const formData = new FormData();
+            formData.append('archivo_carta_compromiso', this.archivo_carta_compromiso);
+            formData.append('archivo_plan_de_trabajo', this.archivo_plan_de_trabajo);
+            const headers = { 'Content-Type': 'multipart/form-data' };
+            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + idIntegrante + '/archivos', formData, { headers }).then(response => {
+            }).catch((error) => {
+            });
         },
         eliminar() {
             axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)

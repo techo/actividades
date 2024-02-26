@@ -57,6 +57,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'punto de encuentro',
             'grupo',
             'rol',
+            'roles Aplicados'
         ];
     }
 
@@ -101,6 +102,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->punto,
             $query->nombreGrupo,
             $query->nombreRol,
+            $query->roles_aplicados,
         ];
     }
 

@@ -20,7 +20,7 @@
                             fields="{{ $fields }}"
                             id-equipo="{{ $idEquipo }}"
                             sort-order="{{ $sortOrder }}"
-                            placeholder-text="Buscar por nombre, apellido o documento"
+                            placeholder-text="Buscar por nombre, rol, despliegue o relación"
                             detail-url="/admin/equipos/"
                         ></integrantes-datatable>
                         <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"

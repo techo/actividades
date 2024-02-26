@@ -14,6 +14,7 @@ use App\PuntoEncuentro;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class InscripcionesController extends BaseController
@@ -25,6 +26,9 @@ class InscripcionesController extends BaseController
      */
     public function confirmar(Request $request, $id)
     {
+        $request->validate([
+            'roles_aplicados' => 'json',
+        ]);
         $actividad = Actividad::find($id);
         $actividad->descripcion = clean_string($actividad->descripcion);
         $idPuntoEncuentro = $request->input('punto_encuentro');
@@ -33,6 +37,8 @@ class InscripcionesController extends BaseController
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $puntoEncuentro)
+            ->with('roles_aplicados', $request->input('roles_aplicados'))
+            ->with('aplica_rol', $request->input('aplica_rol'))
             ->with('tipo', $tipo);
 
     }
@@ -44,6 +50,9 @@ class InscripcionesController extends BaseController
      */
     public function create(Request $request, $id)
     {
+        $request->validate([
+            'roles_aplicados' => 'json',
+        ]);
         $actividad = Actividad::find($id);
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
@@ -59,6 +68,7 @@ class InscripcionesController extends BaseController
                 $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
                 $inscripcion->idPersona = Auth::user()->idPersona;
                 $inscripcion->fechaInscripcion = new Carbon();
+                $inscripcion->roles_aplicados = $request->input('roles_aplicados');
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 

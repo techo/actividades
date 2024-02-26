@@ -4,7 +4,7 @@
             <p class="text-muted mt-2">
                 {{ $t('frontend.acepta_terminos') }}
             </p>
-            <div class="row">
+            <div class="row" v-show="(!campos || campos.grupo_sanguinieo)">
                 <div class="col-md-4">
                     <label>{{ $t('frontend.grupo_sanguinieo') }}</label>
                     <select id="localidad" v-model="ficha.grupo_sanguinieo" class="form-control">
@@ -14,67 +14,71 @@
                     </select>
                 </div>
             </div>
-
-            <h6 class="mt-4">{{ $t('frontend.cobertura_medica') }}</h6>
-            <div class="row">
-                <div class="col-md-4">
-                    <label>{{ $t('frontend.cobertura_tipo') }}</label>
-                    <select id="cobertura_tipo" v-model="ficha.cobertura_tipo" class="form-control">
-                        <option v-for="cobertura_tipo in cobertura_tipos" v-bind:value="cobertura_tipo">
-                            {{ $t('frontend.'+cobertura_tipo) }}
-                        </option>
-                    </select>
+            <div v-show="(!campos || campos.cobertura_medica)">
+                <h6 class="mt-4">{{ $t('frontend.cobertura_medica') }}</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>{{ $t('frontend.cobertura_tipo') }}</label>
+                        <select id="cobertura_tipo" v-model="ficha.cobertura_tipo" class="form-control">
+                            <option v-for="cobertura_tipo in cobertura_tipos" v-bind:value="cobertura_tipo">
+                                {{ $t('frontend.'+cobertura_tipo) }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4" v-show="ficha.cobertura_tipo == 'cobertura_paga'">
+                        <label>{{ $t('frontend.cobertura_nombre') }}</label>
+                        <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
+                            v-model="ficha.cobertura_nombre">
+                    </div>
+                    <div class="col-md-4" v-show="ficha.cobertura_tipo == 'cobertura_paga'">
+                        <label>{{ $t('frontend.cobertura_numero') }}</label>
+                        <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
+                            v-model="ficha.cobertura_numero">
+                    </div>
                 </div>
-                <div class="col-md-4" v-show="ficha.cobertura_tipo == 'cobertura_paga'">
-                    <label>{{ $t('frontend.cobertura_nombre') }}</label>
-                    <input type="text" class="form-control" name="cobertura_nombre" id="cobertura_nombre"
-                        v-model="ficha.cobertura_nombre">
-                </div>
-                <div class="col-md-4" v-show="ficha.cobertura_tipo == 'cobertura_paga'">
-                    <label>{{ $t('frontend.cobertura_numero') }}</label>
-                    <input type="text" class="form-control" name="cobertura_numero" id="cobertura_numero"
-                        v-model="ficha.cobertura_numero">
-                </div>
-            </div>
-            <h6 class="mt-4">{{ $t('frontend.contacto_emergencia') }}</h6>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <label>{{ $t('frontend.name') }}</label>
-                    <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre"
-                        v-model="ficha.contacto_nombre">
-                </div>
-                <div class="col-md-4">
-                    <label>{{ $t('frontend.telephone') }}</label>
-                    <input type="text" class="form-control" name="contacto_telefono" id="contacto_telefono"
-                        v-model="ficha.contacto_telefono">
-                </div>
-                <div class="col-md-4">
-                    <label>{{ $t('frontend.contacto_relacion') }}</label>
-                    <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
-                        v-model="ficha.contacto_relacion">
-                </div>
-                
             </div>
 
-            <h6 class="mt-4">{{ $t('frontend.documents') }}</h6>
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <label >{{ $t('frontend.documento_identidad_frente') }}</label>
-                    <a v-if="ficha.documento_frente != null" :href="'/'+ficha.documento_frente" target="_blank"> {{ $t('frontend.ver_frente') }}</a>
-                    <button v-if="!(updateDocumentoFrente || ficha.documento_frente == null)" class="btn btn-light" @click="updateDocumentoFrente = true" ><i class="fa fa-edit"></i></button>
-                    <input v-if="(ficha.documento_frente == null || updateDocumentoFrente)" type="file" class="form-control" @change="guardar_documento_frente" ref="documento_frente">
+            <div v-show="(!campos || campos.contacto_emergencia)">
+                <h6 class="mt-4">{{ $t('frontend.contacto_emergencia') }}</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>{{ $t('frontend.name') }}</label>
+                        <input type="text" class="form-control" name="contacto_nombre" id="contacto_nombre"
+                            v-model="ficha.contacto_nombre">
+                    </div>
+                    <div class="col-md-4">
+                        <label>{{ $t('frontend.telephone') }}</label>
+                        <input type="text" class="form-control" name="contacto_telefono" id="contacto_telefono"
+                            v-model="ficha.contacto_telefono">
+                    </div>
+                    <div class="col-md-4">
+                        <label>{{ $t('frontend.contacto_relacion') }}</label>
+                        <input type="text" class="form-control" name="contacto_relacion" id="contacto_relacion"
+                            v-model="ficha.contacto_relacion">
+                    </div>                    
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-md-12">
-                    <label >{{ $t('frontend.documento_identidad_dorso') }}</label>
-                    <a v-if="ficha.documento_dorso != null" :href="ficha.documento_dorso" target="_blank"> {{ $t('frontend.ver_dorso') }}</a>
-                    <button  v-if="!(updateDocumentoDorso || ficha.documento_dorso == null)" class="btn btn-light" @click="updateDocumentoDorso = true" ><i class="fa fa-edit"></i></button>
-                    <input v-if="(ficha.documento_dorso == null || updateDocumentoDorso)" type="file" class="form-control" @change="guardar_documento_dorso" ref="documento_dorso">
+
+            <div v-show="(!campos || campos.documento_identidad)">
+                <h6 class="mt-4">{{ $t('frontend.documents') }}</h6>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label >{{ $t('frontend.documento_identidad_frente') }}</label>
+                        <a v-if="ficha.documento_frente != null" :href="'/'+ficha.documento_frente" target="_blank"> {{ $t('frontend.ver_frente') }}</a>
+                        <button v-if="!(updateDocumentoFrente || ficha.documento_frente == null)" class="btn btn-light" @click="updateDocumentoFrente = true" ><i class="fa fa-edit"></i></button>
+                        <input v-if="(ficha.documento_frente == null || updateDocumentoFrente)" type="file" class="form-control" @change="guardar_documento_frente" ref="documento_frente">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label >{{ $t('frontend.documento_identidad_dorso') }}</label>
+                        <a v-if="ficha.documento_dorso != null" :href="ficha.documento_dorso" target="_blank"> {{ $t('frontend.ver_dorso') }}</a>
+                        <button  v-if="!(updateDocumentoDorso || ficha.documento_dorso == null)" class="btn btn-light" @click="updateDocumentoDorso = true" ><i class="fa fa-edit"></i></button>
+                        <input v-if="(ficha.documento_dorso == null || updateDocumentoDorso)" type="file" class="form-control" @change="guardar_documento_dorso" ref="documento_dorso">
+                    </div>
                 </div>
             </div>
-            <div class="row mt-2">
+            <!-- <div class="row mt-2">
                 <div class="col-md-12">
                     <label>{{ $t('frontend.archivo_medico') }}</label>
                     <a v-if="ficha.archivo_medico != null" :href="ficha.archivo_medico" target="_blank"> {{ $t('frontend.ver_adjunto') }}</a>
@@ -86,19 +90,21 @@
                         @change="guardar_archivo" 
                         ref="archivo_medico">
                 </div>
-            </div>
+            </div> -->
+            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion))">
             
-            <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
-            <div class="row">
-                <div class="col-md-6">
-                    <label>{{ $t('frontend.ficha_alergias') }}</label>
-                    <input type="text" class="form-control" name="alergias" id="alergias"
-                        v-model="ficha.alergias">
-                </div>
-                <div class="col-md-6">
-                    <label>{{ $t('frontend.ficha_alimentacion') }}</label>
-                    <input type="text" class="form-control" name="alimentacion" id="alimentacion"
-                        v-model="ficha.alimentacion">
+                <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
+                <div class="row">
+                    <div class="col-md-6"  v-show="(!campos || campos.ficha_alergias)">
+                        <label>{{ $t('frontend.ficha_alergias') }}</label>
+                        <input type="text" class="form-control" name="alergias" id="alergias"
+                            v-model="ficha.alergias">
+                    </div>
+                    <div class="col-md-6" v-show="(!campos || campos.ficha_alimentacion)">
+                        <label>{{ $t('frontend.ficha_alimentacion') }}</label>
+                        <input type="text" class="form-control" name="alimentacion" id="alimentacion"
+                            v-model="ficha.alimentacion">
+                    </div>
                 </div>
             </div>
             <h6 class="mt-4">{{ $t('frontend.ficha_confirma_datos') }}</h6>
@@ -151,6 +157,7 @@ export default {
             },
             updateArchivo: false,
             updateDocumentoDorso:false,
+            updateDocumentoFrente:false,
             grupo_sanguineos: [
                 'A+', 'A-', 'B+', 'B-', '0+', '0-'
             ],
@@ -160,7 +167,7 @@ export default {
         }
         return data;
     },
-    props: ['fichaMedica'],
+    props: ['fichaMedica', 'campos'],
     created: function () {
         if (this.ficha == null){
             this.ficha = {
@@ -210,15 +217,12 @@ export default {
             });
         },
         guardar_archivo(event) {
-            console.log(this.$refs.archivo_medico.files[0]);
             this.archivo_medico = this.$refs.archivo_medico.files[0];
         },
         guardar_documento_frente(event) {
-            console.log(this.$refs.documento_frente.files[0]);
             this.documento_frente = this.$refs.documento_frente.files[0];
         },
         guardar_documento_dorso(event) {
-            console.log(this.$refs.documento_dorso.files[0]);
             this.documento_dorso = this.$refs.documento_dorso.files[0];
         },
 

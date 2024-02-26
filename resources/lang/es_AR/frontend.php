@@ -62,9 +62,10 @@ return [
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'online_events' => 'Virtual',
+	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
 
-	'welcome' => 'Bienvenido',
+	'welcome' => 'Bienvenidx',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',
@@ -125,8 +126,8 @@ return [
     'profile_text_2'  =>  'También podés',
     'profile_text_3'  =>  'cambiar tu dirección de email',
     'personal_data'  =>  'Datos personales',
-    'name'  =>  'NOMBRE',
-    'surname'  =>  'APELLIDO',
+    'name'  =>  'NOMBRE COMPLETO',
+    'surname'  =>  'APELLIDO COMPLETO',
     'birth_date'  =>  'NACIMIENTO',
     'gender'  =>  'GENERO',
     'gender_m'  =>  'Masc',
@@ -178,6 +179,7 @@ return [
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
  	'ver_adjunto' => 'Ver Adjunto',
  	'archivo_medico' => 'Archivo Médico',
+ 	'documento_identidad' => 'Documento de Identidad',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
 
@@ -273,6 +275,13 @@ return [
 	'select_a_meeting_point' => 'Elegir un punto de encuentro',
 	'whats_a_meeting_point' => 'Una actividad puede tener uno o más puntos de encuentro ¡Elegí el que encuentres más cómodo y nos vemos ahí!',
 
+	//seleccion rol
+	'apply_for_rol' => '¿Quieres ser parte del equipo organizador de esta actividad?',
+	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
+	'roles_aplicados' => 'Roles Aplicado',
+	'yes' => 'Si, aplicar a rol',
+	'no_apply_rol' => 'No deseo aplicar a rol',
+
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
 	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
@@ -359,6 +368,9 @@ return [
 	'my_score_contact' => 'Ante cualquier duda contactate con la coordinación de personas, de la sede en que participas ;)',
 	'my_score_feedback' => 'Evalua ahora!',
 	'my_score_not_active' => ' Todavia no tienes la suficiente cantidad de evaluaciones para hacer el cálculo.',
+
+	// constancia voluntariado
+	'constancia_voluntario' => 'Descargar Constancia',
 
 
 	// contenedorEvaluaciones.vue

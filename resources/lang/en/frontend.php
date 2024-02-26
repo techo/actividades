@@ -62,6 +62,7 @@ return [
 	'especial_events' => 'Special events',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Online',
+	'online_events_description' => 'Online Events',
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 
@@ -173,6 +174,7 @@ return [
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
  	'archivo_medico' => 'ID Photo',
+ 	'documento_identidad' => 'Document ID',
  	'ver_adjunto' => 'See File',
  	'confirma_datos' => 'I declare this information is valid',
 
@@ -266,6 +268,13 @@ return [
 	'select_a_meeting_point' => 'Select a location to meet',
 	'whats_a_meeting_point' => 'An activity might have more than one location to meet. Choose the most convenient for you!',
 
+	//seleccion rol
+	'apply_for_rol' => 'Do you want to be part of the organizing team of this activity?',
+	'whats_a_rol' => 'Select the roles you would like to apply for.',
+	'roles_aplicados' => 'Selected Roles',
+	'yes' => 'Yes, apply for a rol',
+	'no_apply_rol' => "No, I don't want to apply for a rol",
+
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
 	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',
@@ -286,6 +295,7 @@ return [
 	'cancel' => 'CANCEL',
 	'unenroll' => 'UN-ENROLL',
 
+'make_donation' => 'Make Payment ',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",

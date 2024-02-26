@@ -30,7 +30,8 @@
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
-                <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
+                <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
+
                 <div class="row">
                     <div class="col-md-12">
                         <p>
@@ -47,6 +48,25 @@
                         </p>
                     </div>
                 </div>
+                @php
+                    $rolesAplicados = json_decode($roles_aplicados, true);
+                @endphp
+                @if ($aplica_rol == 'true')
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ __('frontend.roles_aplicados') }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                    @foreach($rolesAplicados as $rol)
+                        <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+                            {{ $rol['text'] }}
+                        </span>
+                    @endforeach
+                    </div>
+                @endif
                 <hr>
                 <div class="row">
                     <div class="col-md-12">

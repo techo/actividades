@@ -7,9 +7,11 @@
     </p>
     <p>@lang('email.missing_payment_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
             @lang('email.begins_on')  
-            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
+            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>              
+            <strong>
                 {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
-            </strong> @lang('email.begins_at')
+            </strong> 
+            @lang('email.begins_at')
             <strong>
                 @if($inscripcion->actividad->idLocalidad)
                     {{$inscripcion->actividad->localidad->localidad}}, 

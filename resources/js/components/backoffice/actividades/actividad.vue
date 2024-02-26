@@ -19,16 +19,6 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
-                            <label for="oficina">Oficina</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
-                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
-                            </select>
-                            <span class="help-block">{{ errors.idOficina }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
                             <label for="pais">País</label>
                             <select name="idPais" class="form-control" v-model="actividad.idPais" required 
@@ -39,9 +29,16 @@
                             <span class="help-block">{{ errors.idPais }}</span>
                         </div>
                     </div>
-                    
-                    
-                   
+
+                    <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
+                            <label for="oficina">Oficina</label>
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idOficina }}</span>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -90,7 +87,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -101,7 +98,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -140,7 +137,7 @@
                     <div class="box-body">
 
                         <div class="row">                            
-                            <div class="col-md-3 ml-2">
+                            <div class="col-md-4 ml-2">
                                 <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -151,7 +148,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="fechaFinInscripciones">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
                                     <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -165,7 +162,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 ml-2">
+                            <div class="col-md-4 ml-2">
                                 <label for="fechaFin">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -176,7 +173,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="fechaFin">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
                                     <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -370,8 +367,7 @@
             <div class="box-body">
 
                 <div class="row">
-
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="require_ficha_medica">Requiere Ficha Medica</label>
                             <select name="requiere_ficha_medica" class="form-control" v-model="actividad.requiere_ficha_medica" required :disabled="!edicion">
@@ -382,47 +378,46 @@
                             <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
                         </div>
                     </div>
-                    <div class="row" v-show="actividad.requiere_ficha_medica == 1">
-                        <div class="col-md-2">
-                            <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
-                                <label for="">Monto</label>
-                                <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.montoMin }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="">Monto Max. (Opcional)</label>
-                                <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
-                                <label for="">Fecha límite de pago</label>
-                                <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
-                                <span class="help-block">{{ errors.fechaLimitePago }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                                <label for="">Link para el Pago</label>
-                                <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.linkPago }}</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
-                                <label for="">Link formulario de beca (Opcional) </label>
-                                <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
-                                <span class="help-block">{{ errors.beca }}</span>
+                    <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
+                        <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-4">
+                            <div class="row">
+                                <label>
+                                <input class="col-md-1" :name="valor" v-model="fichaMedicaCampos[index]" type="checkbox" :disabled="!edicion" />
+                                <span class="col-md-11 font-weight-light">{{ $t('frontend.'+ index) }}</span>
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Roles Aplicables</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar las opciones de roles al que el voluntariado puede aplicar para esta actividad.
+                                Presiona enter entre cada uno.
+                            </p>
+                            <vue-tags-input
+                                v-model="tag"
+                                :tags="rolesTags"
+                                :disabled="!edicion"
+                                placeholder=""
+                                @tags-changed="newTags => rolesTags = newTags"
+                            />
+
+                            <p class="help-block">
+                                De dejar este campo en blanco no se le mostrara la opcion de seleccion de rol.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
@@ -430,10 +425,7 @@
                             <p class="help-block">0 es "sin limite de inscriptos"</p>
                         </div>
                     </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="seguimiento_google">Codigo Seguimiento Google</label>
                             <input type="text" id="seguimiento_google" class="form-control" v-model="actividad.seguimiento_google"
@@ -441,7 +433,7 @@
                             <p class="help-block">En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad</p>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="linkEvaluacion">Link de evaluación</label>
                             <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
@@ -470,6 +462,7 @@
 
 <script>
     import editor from '@tinymce/tinymce-vue'
+    import vSwitch from 'vue-switches';
 
     import 'tinymce/tinymce'
 
@@ -483,13 +476,25 @@
     import 'tinymce/plugins/preview'
     import 'tinymce/plugins/paste'
     import 'tinymce/plugins/link'
+    import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
         name: "actividad",
         props: {'id': {}, 'disabled': {default: false, type: Boolean} },
-        components: { 'tinymce-editor': editor },
+        components: { 'tinymce-editor': editor, vSwitch, VueTagsInput },
         data() {
             return {
+                tag: '',
+                rolesTags: [],
+
+                fichaMedicaCampos:{
+                    'contacto_emergencia' : false,
+                    'grupo_sanguinieo' : false,
+                    'cobertura_medica': false,
+                    'ficha_alergias' : false,
+                    'ficha_alimentacion' : false,
+                    'documento_identidad' : false,
+                },
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -512,6 +517,10 @@
                     limiteInscripciones: 0,
                     inscripcionInterna: 0,
                     seguimiento_google: null,
+
+                    requiere_ficha_medica: 0,
+                    ficha_medica_campos: {},
+
 
                     tipo : {
                         idCategoria: 1
@@ -566,6 +575,19 @@
                 axios.get('/admin/ajax/actividades/' + this.id)
                     .then((datos) => { 
                         this.actividad = datos.data; 
+                        if (this.actividad.ficha_medica_campos)
+                            this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
+                        else
+                            this.fichaMedicaCampos =   {
+                                'contacto_emergencia' : false,
+                                'grupo_sanguinieo' : false,
+                                'cobertura_medica': false,
+                                'ficha_alergias' : false,
+                                'ficha_alimentacion' : false,
+                                'documento_identidad' : false
+                            };
+                        if (this.actividad.roles_tags)
+                            this.rolesTags = this.actividad.roles_tags;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -668,6 +690,11 @@
                 if (this.actividad.pago==1){
                     this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
                 }
+                
+                this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
+                this.actividad.roles_tags = this.rolesTags;
+                
+                
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)

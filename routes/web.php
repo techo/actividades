@@ -142,6 +142,7 @@ Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
     Route::get('/evaluacion', 'PerfilController@evaluacion');
     Route::get('/cambiar_email', 'PerfilController@cambiar_email');
     Route::post('/actualizar_email', 'PerfilController@actualizar_email');
+    Route::get('/constancia_voluntariado', 'PerfilController@get_constancia_voluntariado');
 });
 
 
@@ -202,6 +203,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
+            Route::post('/{idIntegrante}/archivos', 'backoffice\ajax\IntegrantesController@uploadArchivos');  
         });
     });
 

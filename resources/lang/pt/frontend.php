@@ -67,6 +67,7 @@ return [
 	'especial_events' => 'Eventos especiais',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Virtual',
+	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bem vindo',
 
@@ -180,6 +181,7 @@ return [
 	'cobertura_numero' => 'Número de Cobertura Médica',
 	'acepta_terminos' => 'Esta informação é muito valiosa para a sua saúde',
 	'archivo_medico' => 'Identidade',
+	'documento_identidad' => 'Documento de Identidade',
 	'ver_adjunto' => 'Ver Anexo',
 	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
@@ -274,6 +276,13 @@ return [
 	'select_a_meeting_point' => 'Selecione um lugar de encontro',
 	'whats_a_meeting_point' => 'Uma atividade pode ter mais de um lugar de encontro. Escolha o mais conveniente para você!',
 
+	//seleccion rol
+	'apply_for_rol' => 'Quer fazer parte da equipa organizadora desta atividade?',
+	'whats_a_rol' => 'Selecione as funções às quais você gostaria de se candidatar.',
+	'roles_aplicados' => 'Roles seleccionados',
+	'yes' => 'Si, aplicar a rol',
+	'no_apply_rol' => 'No deseo aplicar a rol',
+
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
 	'will_be_in_touch' => 'Entraremos em contato para avisar se sua inscrição foi aprovada. Você pode entrar em contato com o coordenador se tiver dúvidas.',
@@ -294,6 +303,7 @@ return [
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'CANCELAR MINHA INSCRIÇÃO',
 
+	'make_donation' => 'Faz pagamento ',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',
 	'ready_for_paying' => 'Pronto para pagar pela site!',

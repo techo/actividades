@@ -95,6 +95,8 @@ class InscripcionesSearch
                     'Actividad.idActividad',
                     'Grupo.nombre as nombreGrupo',
                     'Inscripcion.rol as nombreRol',
+                    'Inscripcion.roles_aplicados',
+                    'Persona.estadoPersona',
                     'PersonaModificacion.mail as modificado_por',
                     'Inscripcion.updated_at as modificado_en'
                 ]

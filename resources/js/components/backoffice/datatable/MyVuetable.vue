@@ -46,6 +46,8 @@
   import FilterBar from './FilterBar'
   import Pago from './Pago';
   import Asistencia from './Asistencia';
+  import tag_field from './TagField';
+  import estado_persona from './estadoPersona';
   import ActualizarInscripcion from './actualizarInscripcion';
   import EstadoInscripcion from './estadoInscripcion';
   import Simplert from 'vue2-simplert';
@@ -56,7 +58,9 @@
   Vue.component('my-detail-row', DetailRow);
   Vue.component('filter-bar', FilterBar);
   Vue.component('asistencia', Asistencia);
-  Vue.component('pago', Pago);
+  Vue.component('roles_asignados', tag_field);
+  Vue.component('estado_persona', estado_persona);
+  Vue.component('pago', Pago); 
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
 

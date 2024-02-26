@@ -45,7 +45,9 @@ class ActividadResource extends Resource
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),
             'seguimiento_google' => $this->seguimiento_google,
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
-            'requiere_ficha_medica' =>  $this->requiere_ficha_medica
+            'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
+            'ficha_medica_campos' =>  $this->ficha_medica_campos,
+            'roles_tags' =>  $this->roles_tags,
         ];
     }
 
