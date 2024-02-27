@@ -16,7 +16,7 @@ return [
 
 	// login.vue
     'login' => 'Ingresar',
-    'login_or_register' => 'Login / Registro',
+    'login_or_register' => 'LOGIN / REGISTRO',
     'login_to_account' => 'Ingresar a mi cuenta',
     'create_account' => '¡Quiero ser voluntario!',
     'forget_password' => 'Olvidé mi contraseña',
