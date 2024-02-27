@@ -26,12 +26,14 @@
 
         <!-- Begin page content -->
         @yield('main_image')
-        <div class="container pt-4 pb-5 mb-5">
-            @if (isset($requiere_auth))
-                <autenticar></autenticar>
-            @endif
-            @yield('main_content')
-                @yield('footer')
+        <div style="background-image: url('/img/background-actividades.png'); background-size: cover;">
+            <div class="container pt-4 pb-5 mb-5">
+                @if (isset($requiere_auth))
+                    <autenticar></autenticar>
+                @endif
+                @yield('main_content')
+                    @yield('footer')
+            </div>
         </div>
 
         </main>
