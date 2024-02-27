@@ -505,6 +505,13 @@ footer.inscripcion-bar .text-primary {
     }
 }
 
+
+body .list-group-pais {
+    background-color: #005ca9;
+    color: white;
+}
+
+
 @font-face {
     font-family: 'Granesta';
     src:  url('/fonts/vendor/Granesta.ttf') format('truetype');

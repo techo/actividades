@@ -20,7 +20,7 @@
         <div class="col-md-3">
             <div class="list-group">
                 @foreach ($paises as $pais)
-                    <a href="{{$pais->abreviacion}}" class="list-group-item list-group-item-action bg-secondary-blue">{{$pais->nombre}}</a>
+                    <a href="{{$pais->abreviacion}}" class="list-group-item list-group-item-action bg-secondary-blue list-group-pais">{{$pais->nombre}}</a>
                 @endforeach
                 
             </div>
