@@ -1,6 +1,6 @@
 <template>
   <div class="col-md-4">
-    <div class="card tarjeta p-3" v-on:click="ir_a_actividad">
+    <div class="card tarjeta p-2 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
         <div class="img-tarjeta">
             <div class="card-top" v-bind:style="{backgroundColor:actividad.tipo.color}" ></div>
             <span
@@ -24,7 +24,7 @@
         
       <div class="card-body px-0 pt-1">
         <div style="width: 100%; border-bottom: #b7babf thin solid;">
-            <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
+            <img class="card-img-top px-2" :src="actividad.tipo.imagen" alt="imagen actividad" v-bind:style="{borderRadius:'6%'} ">
             <div class=" texto-encima centrado">
                 <span class="col-sm-6 techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
             </div>
@@ -94,6 +94,7 @@
     div.tarjeta {
         cursor: pointer;
         border: 0px;
+        border-radius: 8% 8%;
         text-align: center;
     }
 

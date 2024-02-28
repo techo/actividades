@@ -1,6 +1,6 @@
 <template>
     <span>
-        <div class="row">
+        <div class="row py-2">
             <tarjeta
                 v-for="act in actividades"
                 v-bind:actividad="act"

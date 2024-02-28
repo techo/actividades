@@ -1,7 +1,7 @@
 <template>
      <div class="col-sm-4">
          <simplert ref="confirmar"></simplert>
-        <div class="card tarjeta p-3">
+        <div class="card tarjeta p-3"  v-bind:style="{backgroundColor:inscripcion.tipoColor}"> 
             <img class="card-img-top" v-on:click="ir_a_actividad" :src="inscripcion.img"
                  alt="Card image cap">
             <div class="card-body px-0">
@@ -26,7 +26,7 @@
                     </span>
                     <span v-else> <!-- la actividad ya terminó -->
                         <span v-if="periodoDeEvaluacionYaComenzo">
-                            <a
+                            <a 
                                     class="btn btn-info text-light font-weight-bold pull-right"
                                     v-show="inscripcion.presente === 1"
                                     @click="ir_a_evaluar"
@@ -129,7 +129,8 @@
 
 div.tarjeta {
     cursor: pointer;
-    border: 0;
+    border: 1;
+    border-radius: 8%;
     text-align: center;
 }
 
