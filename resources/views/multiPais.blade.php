@@ -12,12 +12,14 @@
     </div>
     @endif
 
+@endsection
 
-    <div style="background-image: url('/img/background-home.png'); background-size: cover;" class="row justify-content-center align-items-center py-4 px-4 h-auto">
+@section('main_content')
+<div class="row justify-content-center align-items-center py-4 px-4 h-auto">
         <div class="col-md-3 d-none d-md-block">
             <!-- <img src="/img/techo_logo_big.png" alt="Techo" width="80%"> -->
         </div>
-        <div class="col-md-3">
+        <div class="col-md-7">
             <div class="list-group">
                 @foreach ($paises as $pais)
                     <a href="{{$pais->abreviacion}}" class="list-group-item list-group-item-action bg-secondary-blue list-group-pais">{{$pais->nombre}}</a>
@@ -27,11 +29,18 @@
         </div>
     </div>
 
-    
-
 @endsection
 
-@section('main_content')
-    
 
+@push('additional_scripts')
+    <script>
+        // Define la URL de la imagen de fondo
+        var imagenFondo = '/img/background-actividades.png';
+        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+    </script>
+@endpush
+
+@section('footer')
+    @include('partials.footer')
 @endsection

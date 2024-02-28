@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div class="card" >
         <simplert ref="confirmar"></simplert>
-        <div>
+        <div class="card-body">
 
             <div class="row">
                 <div class="col-md-12">
-                    <h2>{{ $t('frontend.welcome') }}, {{ usernombre }} ({{ user.email }})</h2>
+                    <h2>{{ $t('frontend.welcome_'+user.genero ) }} {{ usernombre }}</h2>
                 </div>
             </div>
             <div class="row">

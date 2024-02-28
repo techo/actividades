@@ -26,7 +26,7 @@
 
         <!-- Begin page content -->
         @yield('main_image')
-        <div style="background-image: url('/img/background-actividades.png'); background-size: cover;">
+        <div id="main-background" style="background-image: url(''); background-size: contain;">
             <div class="container pt-4 pb-5 mb-5">
                 @if (isset($requiere_auth))
                     <autenticar></autenticar>

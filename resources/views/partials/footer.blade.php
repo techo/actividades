@@ -30,7 +30,7 @@
         </div>
         <div class="col-sm-3 col-lg-2">
             <p class="pt-2 mb-1">
-                &copy; 2022 TECHO
+                &copy; 2024 TECHO
             </p>
         </div>
         <div class="col-sm-3 pt-1">

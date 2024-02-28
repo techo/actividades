@@ -261,6 +261,7 @@
 
     .img-tarjeta {
         margin-bottom: 1em;
+        width: 100%;
     }
 
     .prev h6 {

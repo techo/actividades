@@ -66,6 +66,10 @@ return [
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 
+	'welcome_M' => 'Welcome',
+	'welcome_F' => 'Welcome',
+	'welcome_X' => 'Welcome',
+
 	'empty_search' => 'Sorry! There are no open activity with those filters',
 	'suscribe_so_we_get_in_touch' => 'Suscribe to be the first on the next openings',
 	'suscribe' => 'Suscribe',

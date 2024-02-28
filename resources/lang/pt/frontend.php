@@ -70,6 +70,9 @@ return [
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
 	'welcome' => 'Bem vindo',
+	'welcome_M' => 'Bem vindo',
+	'welcome_F' => 'Bem vinda',
+	'welcome_X' => 'Bem vindo',
 
 	'empty_search' => 'Opa! Não há atividades disponiveis com esses filtros',
 	'suscribe_so_we_get_in_touch' => 'Inscreva-se para saber primeiro sobre as próximas atividades',

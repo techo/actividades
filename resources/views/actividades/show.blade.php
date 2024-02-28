@@ -7,15 +7,25 @@
 
 
 @section('main_image')
-    <div class="techo-hero actividades">
+    <!-- <div class="techo-hero actividades">
         {{--<img src="/img/hero-slim.jpg" alt="hero image">--}}
         <h2></h2>
-    </div>
+    </div> -->
 @endsection
 
+@push('additional_scripts')
+    <script>
+        // Define la URL de la imagen de fondo
+        var imagenFondo = '/img/background-perfil.png';
+        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+        document.getElementById('main-background').style.backgroundSize = 'cover';
+    </script>
+@endpush
+
 @section('main_content')
-		<div class="row">
-		</div>
+    <div class="card" >
+		<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
 				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre }}</h6>
@@ -92,6 +102,9 @@
 		      </div>
             @endif
 		@endforeach
+        </div>
+    </div>
+
 @endsection
 
 @section('footer')

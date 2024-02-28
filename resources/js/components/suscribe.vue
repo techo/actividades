@@ -19,7 +19,7 @@
             </a>
         </div> -->
         <a 
-            class="btn btn-secondary"  
+            class="btn btn-secondary text-wrap d-md-block m-2"  
             href="autotest">
             {{ $t('frontend.autotestTituloBoton') }} 
         </a>

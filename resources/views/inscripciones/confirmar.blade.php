@@ -9,6 +9,9 @@
 @endsection
 
 @section('main_content')
+
+<div class="container-fluid card" >
+    <div class="card-body">
     <div class="row">
         <div class="col-md-8">
             <div class="row">
@@ -98,7 +101,7 @@
         </div>
         <div class="col-md-4 prev">
             <div class="card d-none d-lg-block" style="border: none">
-                <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em;">
+                <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em; width: 100%;">
                 <div class="row">
                     <div class="col-md-12" >
                         <h6 style="color: {{$actividad->tipo->categoria->color}}; font-weight: 700 !important;" >{{ $actividad->tipo->nombre }}</h6>
@@ -135,8 +138,21 @@
             </div>
         </div>
     </div>
+    </div>
+    </div>
 
 @endsection
+
+@push('additional_scripts')
+    <script>
+        // Define la URL de la imagen de fondo
+        var imagenFondo = '/img/background-perfil.png';
+        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+        document.getElementById('main-background').style.backgroundSize = 'cover';
+    </script>
+@endpush
+
 @section('footer')
     @include('partials.footer')
 @endsection

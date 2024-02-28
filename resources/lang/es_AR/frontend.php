@@ -66,6 +66,9 @@ return [
 	'view_activities'  =>  'Anotame',
 
 	'welcome' => 'Bienvenidx',
+	'welcome_M' => 'Bienvenido',
+	'welcome_F' => 'Bienvenida',
+	'welcome_X' => 'Bienvenidx',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',

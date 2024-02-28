@@ -27,10 +27,9 @@
             <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad">
             <div class=" texto-encima centrado">
                 <span class="col-sm-6 techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
-                <span class="col-sm-6 techo-h6" style="color: white;">{{ actividad.ubicacion }}</span>
             </div>
         </div>
-        <!-- <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</p> -->
+        <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.ubicacion }}</p>
         <h5 class="card-title text-center">{{ actividad.nombreActividad }}</h5>
         <div style="width: 100%; border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
@@ -105,6 +104,7 @@
 
     .img-tarjeta {
         position: relative;
+        width: 100%;
     }
 
     .img-tarjeta .inscripto {
