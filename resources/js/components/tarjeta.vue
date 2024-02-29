@@ -2,7 +2,7 @@
   <div class="col-md-4">
     <div class="card tarjeta p-2 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
         <div class="img-tarjeta">
-            <div class="card-top" v-bind:style="{backgroundColor:actividad.tipo.color}" ></div>
+            <div class="card-top"></div>
             <span
                 v-show="actividad.estadoInscripcion"
                 :class="{ 
@@ -23,13 +23,13 @@
         </div>
         
       <div class="card-body px-0 pt-1">
-        <div style="width: 100%; border-bottom: #b7babf thin solid;">
-            <img class="card-img-top px-2" :src="actividad.tipo.imagen" alt="imagen actividad" v-bind:style="{borderRadius:'6%'} ">
+        <div style="width: 100%;">
+            <img class="card-img-top px-4" :src="actividad.tipo.imagen" alt="imagen actividad" v-bind:style="{borderRadius:'15%'} ">
             <div class=" texto-encima centrado">
-                <span class="col-sm-6 techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
+                <span class=" techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
             </div>
         </div>
-        <p class="techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.ubicacion }}</p>
+        <p class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
         <h5 class="card-title text-center">{{ actividad.nombreActividad }}</h5>
         <div style="width: 100%; border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
@@ -94,18 +94,20 @@
     div.tarjeta {
         cursor: pointer;
         border: 0px;
-        border-radius: 8% 8%;
+        border-radius: 15%;
         text-align: center;
     }
 
     div.card-top {
-        height: 40px;
+        height: 25px;
         border-radius: 4px 4px 0 0;
     }
 
     .img-tarjeta {
         position: relative;
         width: 100%;
+        border: 0px;
+        border-radius: 25%;
     }
 
     .img-tarjeta .inscripto {
@@ -133,7 +135,7 @@
         position: absolute;
         top: 22em;
         right: 1em;
-        width: 80%;
+        width: 60%;
         border-radius: 10px 10px 10px 10px;
         -moz-border-radius: 10px 10px 10px 10px;
         -webkit-border-radius: 10px 10px 10px 10px;
