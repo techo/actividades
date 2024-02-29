@@ -15,7 +15,7 @@
 @endsection
 
 @section('main_content')
-<div class="row justify-content-center align-items-center py-4 px-4 h-auto">
+<div class="row justify-content-center h-auto">
         <div class="col-md-3 d-none d-md-block">
             <!-- <img src="/img/techo_logo_big.png" alt="Techo" width="80%"> -->
         </div>
@@ -35,7 +35,7 @@
 @push('additional_scripts')
     <script>
         // Define la URL de la imagen de fondo
-        var imagenFondo = '/img/background-actividades.png';
+        var imagenFondo = '/img/background-paises.png';
         // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
         document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
     </script>
