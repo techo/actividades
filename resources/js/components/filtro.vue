@@ -256,6 +256,7 @@
     .cont-check {
         padding-left: 0;
         padding-right: 0;
+        border-radius: 30px;
     }
     .techo-btn-azul {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);

@@ -9,7 +9,7 @@ html {
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
-    font-family: 'Granesta', 'Montserrat', sans-serif;
+    font-family: Fredoka, 'Montserrat', sans-serif !important;
 }
 
 /* Custom page CSS
@@ -17,7 +17,7 @@ body {
 /* Not required for template or sticky footer method. */
 
 label {
-  font-family: Montserrat, sans-serif;
+  font-family: Fredoka, Montserrat, sans-serif;
   font-size: 12px;
   font-weight: bold;
   font-style: normal;
@@ -124,7 +124,7 @@ code {
 }
 
 .techo-h6 {
-    font-family: 'Granesta', Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     text-transform: uppercase;
     font-size: 17px;
     font-weight: 500;
@@ -166,7 +166,7 @@ code {
 
 
 .techo-footer-suscribe {
-    font-family: 'Granesta', Montserrat, sans-serif;
+    font-family: Granesta, Montserrat, sans-serif;
     font-size: 18px;
     font-weight: bold;
     font-style: normal;
@@ -188,7 +188,7 @@ code {
     background: #392f28;
     position: relative;
     color: #ffffff;
-    font-family: 'Granesta', Montserrat, sans-serif;
+    font-family: Granesta, Fredoka, sans-serif;
     flex-flow: column;
 }
 
@@ -197,7 +197,7 @@ a {
 }
 
 #login-modal h2 {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 22px;
     font-weight: bold;
     font-style: normal;
@@ -212,7 +212,7 @@ a {
 
 #login-modal label {
     height: 16px;
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: bold;
     font-style: normal;
@@ -224,7 +224,7 @@ a {
 }
 
 #login-modal .cerrar {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: bold;
     font-style: normal;
@@ -239,7 +239,7 @@ a {
 }
 
 #login-modal .forget {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: 600;
     font-style: normal;
@@ -349,7 +349,8 @@ a {
     height: auto;
 }
 .techo-hero.actividades h2 {
-    font-size: 2.5vw;
+    font-size: 3.5vw;
+    font-family: Granesta, Fredoka;
     /*padding: 0;*/
     position: relative;
 }
@@ -509,13 +510,26 @@ footer.inscripcion-bar .text-primary {
 body .list-group-pais {
     background-color: #005ca9;
     color: white;
+    
 }
 
 
 @font-face {
-    font-family: 'Granesta';
+    font-family: Granesta;
     src:  url('/fonts/vendor/Granesta.ttf') format('truetype');
   }
+
+@font-face {
+font-family: Fredoka;
+src:  url('/fonts/fredoka/Fredoka-Regular.ttf') format('truetype');
+}
+
+
+#main-content-container {
+    max-height: 100vh; /* Establece una altura máxima del 100% del viewport height */
+    overflow-y: auto; /* Agrega una barra de desplazamiento vertical si el contenido excede la altura máxima */
+}
+
 
 
 /*.flex-container {

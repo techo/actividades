@@ -1,7 +1,7 @@
 <template>
   <div class="col-md-4">
     <div class="card tarjeta p-2 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
-        <div class="img-tarjeta">
+        <div class="img-tarjeta mx-3">
             <div class="card-top"></div>
             <span
                 v-show="actividad.estadoInscripcion"
@@ -30,13 +30,13 @@
             </div>
         </div>
         <p class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h5 class="card-title text-center">{{ actividad.nombreActividad }}</h5>
-        <div style="width: 100%; border-bottom: #b7babf thin solid; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+        <h5 class="card-title text-center px-2">{{ actividad.nombreActividad }}</h5>
+        <div style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
             <!-- <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.ubicacion }}</span> -->
         </div>
-        <p class="card-text text-left">{{ actividad.descripcion | truncate(100) }}</p>
+        <!-- <p class="card-text text-left px-3">{{ actividad.descripcion | truncate(30) }}</p> -->
       </div>
     </div>
   </div>

@@ -30,3 +30,14 @@ div[aria-label="Insert link"] .mce-btn.mce-open {
         margin-bottom: 120px;
     }
 }
+
+@font-face {
+    font-family: 'MontserratRegular';
+    src: url('../fonts/montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: Fredoka, 'Montserrat', sans-serif;
+}
