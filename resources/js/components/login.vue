@@ -104,7 +104,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <a class="navbar-brand" href="/">
-                            <img class="techo-logo" src="/img/techo-logo_269x83.png" alt="Techo">
+                            <img class="techo-logo" src="/img/logo_b.png" alt="Techo">
                         </a> 
                     </div>
                 </div>

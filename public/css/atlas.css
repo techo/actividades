@@ -188,7 +188,7 @@ code {
     background: #392f28;
     position: relative;
     color: #ffffff;
-    font-family: Granesta, Fredoka, sans-serif;
+    font-family: Fredoka, sans-serif;
     flex-flow: column;
 }
 
@@ -349,8 +349,8 @@ a {
     height: auto;
 }
 .techo-hero.actividades h2 {
-    font-size: 3.5vw;
-    font-family: Granesta, Fredoka;
+    font-size: 3vw;
+    font-family: Fredoka;
     /*padding: 0;*/
     position: relative;
 }

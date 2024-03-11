@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-lg-2">
-            <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo" style="padding-top: 5px;" align="left">
+            <img src="{{ asset('/img/logo_n.png') }}" alt="Techo" style="padding-top: 5px;" align="left">
         </div>
         <div class="col-sm-3 col-lg-5" style="padding-top:10px">
             <a class="mx-1"
