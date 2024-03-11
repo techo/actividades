@@ -89,7 +89,7 @@
         margin-right: -1px;
     }
     .acordion a {
-        color: #494848;
+        color: white;
         display: inline-block;
         height: 100%;
         padding-top: 11px;
@@ -113,7 +113,7 @@
         color: #fff;
     }
     .acordion a svg {
-        color: #494848;
+        color: #fff;
         float: right;
         margin-right: 15px;
     }

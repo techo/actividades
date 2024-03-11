@@ -61,7 +61,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row h-100 align-items-center">
+                                            <div class="row align-items-center">
                                                 
                                                 <div class="col-6 text-left" style="font-size:0.5em" >
                                                     <a v-if="showMailLogin" href="/password/reset" class="forget">{{ $t('frontend.forget_password') }}</a>
@@ -115,7 +115,7 @@
                 </button>
                 <div class="collapse navbar-collapse text-right" id="navbarCollapse">
                     <div class="btn-group " role="group" ref="paises" v-if="this.showpaises==0">
-                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold"></button>
+                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold; color: white;"></button>
                         <div class="dropdown-menu">
                             <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
                         </div>
@@ -154,7 +154,7 @@
 
 
                 <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block" >
-                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle text-secondary bg-black pr-0" @change="onChangeLocalization($event)">
+                    <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle text-white bg-black pr-0" @change="onChangeLocalization($event)">
                         <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                             {{ lang[1] }}
                         </option>
@@ -166,7 +166,7 @@
                     <div class="btn-group" role="group">
                         <button
                                 type="button"
-                                class="btn text-secondary bg-black dropdown-toggle"
+                                class="btn text-white bg-black dropdown-toggle"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false"
@@ -237,9 +237,9 @@
                     </div>
                 </div>
                 <!-- Si no esta autenticado -->
-                <form class="form-inline" v-else>
+                <form class="form-inline" style="display: contents;" v-else>
                     <button
-                            class="btn text-secondary bg-black"
+                            class="btn text-white bg-black"
                             type="button"
                             data-toggle="modal"
                             data-target="#login-modal"
@@ -465,12 +465,12 @@
 
     .registro h1{
         vertical-align: middle;
-        font-family: Montserrat, sans-serif;
+        font-family: Fredoka,  Montserrat, sans-serif;
         font-size: 2rem;
     }
 
     .dropdown-item {
-        font-family: Montserrat, sans-serif;
+        font-family: Fredoka, Montserrat, sans-serif;
         text-transform: uppercase;
         font-weight: bold;
         font-size: 12px;

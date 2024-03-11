@@ -26,7 +26,7 @@
     }
 </style>
 
-<table class="wrapper" width="100%" cellpadding="0" cellspacing="0" style="font-family: Montserrat, sans-serif">
+<table class="wrapper" width="100%" cellpadding="0" cellspacing="0" style="font-family: Fredoka, Montserrat, sans-serif">
     <tr>
         <td align="center">
             <table class="content" width="100%" cellpadding="0" cellspacing="0" border="0">

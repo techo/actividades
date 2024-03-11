@@ -201,7 +201,7 @@
 
 <style scoped>
     * {
-        font-family: Montserrat, sans-serif;
+        font-family: Fredoka, Montserrat, sans-serif;
         font-size: 12px;
         font-weight: bold;
         font-style: normal;
@@ -257,6 +257,7 @@
         padding-left: 0;
         padding-right: 0;
         border-radius: 30px;
+        background-color: #009fe3;
     }
     .techo-btn-azul {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);

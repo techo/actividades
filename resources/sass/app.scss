@@ -19,7 +19,7 @@ html, body {
 }
 
 body * {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
 }
 
 main {
@@ -118,6 +118,7 @@ h1.text-primary {
 }
 div.dropdown-toggle::after {
     display: none;
+    color: #ea6d4f;
 }
 
 @media screen and (max-width: 768) {

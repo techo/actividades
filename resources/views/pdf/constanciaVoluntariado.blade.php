@@ -7,7 +7,7 @@
 @section('styles')
     <style>
         h4 {
-            font-family: 'MontserratRegular', sans-serif;
+            font-family: Fredoka, 'MontserratRegular', sans-serif;
         }
     </style>
 @endsection
