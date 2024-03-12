@@ -282,12 +282,7 @@
                 dataGeneros: [
                     {id: "M", genero: "Masculino"},
                     {id: "F", genero: "Femenino"},
-                    {id: "O", genero: "Prefiero no decirlo"},
-                ],
-                dataCanalesDeContacto: [
-                    {id: "M", canal_contacto: "Masculino"},
-                    {id: "F", canal_contacto: "Femenino"},
-                    {id: "O", canal_contacto: "Prefiero no decirlo"},
+                    {id: "X", genero: "Otro"},
                 ],
                 dataEstados: [
                     "Habilitado",
