@@ -25,7 +25,7 @@
             <a class="mx-1" href="https://twitter.com/techo"
                target="_blank"
                >
-               <i class="fab fa-twitter"></i>
+               <i class="fa-brands fa-x-twitter"></i>
             </a>
         </div>
         <div class="col-sm-3 col-lg-2">

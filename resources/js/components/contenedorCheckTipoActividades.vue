@@ -101,7 +101,7 @@
         color: #fff;
     }
     .acordion a svg {
-        color: #f7d547;
+        color: #fdc533;
         float: right;
         margin-right: 15px;
     }

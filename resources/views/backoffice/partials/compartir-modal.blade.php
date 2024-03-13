@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" href="{{ $medias['twitter'] }}" target="_blank">
-                            <i class="fa fa-twitter fa-2x" style="color:black"></i>
+                            <i class="fa-brands fa-x-twitter fa-2x" style="color:black"></i>
                             <br>
                             <h3>Twitter</h3>
                         </a>
