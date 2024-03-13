@@ -30,7 +30,7 @@
             </div>
         </div>
         <p class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h5 class="card-title text-center px-2">{{ actividad.nombreActividad }}</h5>
+        <h5 class="card-title text-center text-white px-2">{{ actividad.nombreActividad }}</h5>
         <div style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>

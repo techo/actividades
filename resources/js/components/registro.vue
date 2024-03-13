@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="card">
+    <div class="card-body">
         <div v-show="paso('email')">
             <div class="row">
                 <div class="col-md-12">
@@ -382,6 +383,7 @@
             </div>
             <hr>
         </div>
+    </div>
   </div>
 </template>
 

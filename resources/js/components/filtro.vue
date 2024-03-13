@@ -225,7 +225,7 @@
         padding-top: 12px;
     }
     .boton-filtro {
-        border: 1px solid #a9a9a9;
+        border: 1px solid #0092dd;
         color: #0092dd;
         height: 40px;
         line-height: normal;

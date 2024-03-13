@@ -142,8 +142,8 @@
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
 
-                        <li class="nav-item active d-block d-md-none locale-changer " v-show="langs.length>0" >
-                            <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none" @change="onChangeLocalization($event)">
+                        <li class="nav-item active d-block d-md-none ml-auto" v-show="langs.length>0" >
+                            <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none bg-black" @change="onChangeLocalization($event)">
                                 <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                                     {{ lang[1] }}
                                 </option>
@@ -494,7 +494,6 @@
     }
     .btnUser {
         border: none;
-        background: #0092dd;
         text-transform: capitalize;
         color: #fff !important;
     }
