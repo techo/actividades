@@ -81,7 +81,13 @@
                                     value="1"
                                     required
                             >
-                            {{ __('frontend.accept') }} <a href="/carta-voluntariado" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
+                            {{ __('frontend.accept') }} 
+                            @if($actividad->idPais == 33)
+                            <a href="/carta-voluntariado-brasil" target="_blank">
+                            @else
+                            <a href="/carta-voluntariado" target="_blank">
+                            @endif
+                                {{ __('frontend.terms_and_conditions') }}</a>
                         </label>
                         @if($mensaje = Session::get('status'))
                             <p class="text-danger">{{ $mensaje }}</p>

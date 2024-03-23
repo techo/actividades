@@ -15,6 +15,7 @@ Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
 Route::get('/carta-voluntariado', function (){ return view('terminos.actividades.show');  });
+Route::get('/carta-voluntariado-brasil', function (){ return view('terminos.actividades.show_brasil');  });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
 Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
