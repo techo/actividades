@@ -103,11 +103,20 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <a class="navbar-brand" href="/">
+                        <a v-if="this.pais==33" class="navbar-brand" href="/">
+                            <img class="techo-logo"  src="/img/logo_b_pt.png" alt="Techo">
+                        </a> 
+
+                        <a v-else-if="this.pais==46" class="navbar-brand" href="/">
+                            <img class="techo-logo"  src="/img/logo_b_cl.png" alt="Techo">
+                        </a> 
+
+                        <a v-else class="navbar-brand" href="/">
                             <img class="techo-logo" src="/img/logo_b.png" alt="Techo">
                         </a> 
+
                     </div>
-                </div>
+                </div>  
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
