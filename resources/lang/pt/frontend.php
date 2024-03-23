@@ -186,6 +186,8 @@ return [
 	'archivo_medico' => 'Identidade',
 	'documento_identidad' => 'Documento de Identidade',
 	'ver_adjunto' => 'Ver Anexo',
+	'ver_dorso' => 'See Verso',
+	'ver_frente' => 'See Frente',
 	'confirma_datos' => 'Declaro que estes dados são verdadeiros',
 
 

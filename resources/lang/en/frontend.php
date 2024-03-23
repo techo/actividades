@@ -180,6 +180,8 @@ return [
  	'archivo_medico' => 'ID Photo',
  	'documento_identidad' => 'Document ID',
  	'ver_adjunto' => 'See File',
+ 	'ver_dorso' => 'See Back',
+ 	'ver_frente' => 'See Front',
  	'confirma_datos' => 'I declare this information is valid',
 
 	// perfil / educacion
