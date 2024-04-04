@@ -1,6 +1,6 @@
 <template>
     <div>
-        <section>
+        <section class="m-3">
             <p class="text-muted mt-2">
                 {{ $t('frontend.acepta_terminos') }}
             </p>
@@ -62,35 +62,28 @@
             <div v-show="(!campos || campos.documento_identidad)">
                 <h6 class="mt-4">{{ $t('frontend.documents') }}</h6>
                 <div class="row mt-2">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label >{{ $t('frontend.documento_identidad_frente') }}</label>
-                        <a v-if="ficha.documento_frente != null" :href="'/'+ficha.documento_frente" target="_blank"> {{ $t('frontend.ver_frente') }}</a>
-                        <button v-if="!(updateDocumentoFrente || ficha.documento_frente == null)" class="btn btn-light" @click="updateDocumentoFrente = true" ><i class="fa fa-edit"></i></button>
-                        <input v-if="(ficha.documento_frente == null || updateDocumentoFrente)" type="file" class="form-control" @change="guardar_documento_frente" ref="documento_frente">
+                        <a v-if="ficha.documento_frente != null" :href="'/'+ficha.documento_frente" target="_blank"> 
+                            <img class="imagen-miniatura-redonda" :src="'/'+ficha.documento_frente" alt="Foto">
+                        </a>
+                        <button class="btn btn-light" @click="selectFilesFrente" ><i class="fa fa-edit"></i></button>
+                        <input hidden type="file" class="form-control" @change="guardar_documento_frente" ref="documento_frente">
+                        <span class="text-secondary">{{ nombre_documento_frente }}</span>
+                        
                     </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label >{{ $t('frontend.documento_identidad_dorso') }}</label>
-                        <a v-if="ficha.documento_dorso != null" :href="ficha.documento_dorso" target="_blank"> {{ $t('frontend.ver_dorso') }}</a>
-                        <button  v-if="!(updateDocumentoDorso || ficha.documento_dorso == null)" class="btn btn-light" @click="updateDocumentoDorso = true" ><i class="fa fa-edit"></i></button>
-                        <input v-if="(ficha.documento_dorso == null || updateDocumentoDorso)" type="file" class="form-control" @change="guardar_documento_dorso" ref="documento_dorso">
+                        <a v-if="ficha.documento_dorso != null" :href="ficha.documento_dorso" target="_blank"> 
+                            <img class="imagen-miniatura-redonda" :src="'/'+ficha.documento_dorso" alt="Foto">
+                        </a>
+                        <button class="btn btn-light" @click="selectFilesDorso" ><i class="fa fa-edit"></i></button>
+                        <input hidden type="file" class="form-control" @change="guardar_documento_dorso" ref="documento_dorso">
+                        <span class="text-secondary">{{ nombre_documento_dorso }}</span>
+                        
                     </div>
                 </div>
             </div>
-            <!-- <div class="row mt-2">
-                <div class="col-md-12">
-                    <label>{{ $t('frontend.archivo_medico') }}</label>
-                    <a v-if="ficha.archivo_medico != null" :href="ficha.archivo_medico" target="_blank"> {{ $t('frontend.ver_adjunto') }}</a>
-                    <button v-if="!(updateArchivo || ficha.archivo_medico == null)" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                    <input 
-                        v-if="(ficha.archivo_medico == null || updateArchivo)" 
-                        type="file" 
-                        class="form-control" 
-                        @change="guardar_archivo" 
-                        ref="archivo_medico">
-                </div>
-            </div> -->
             <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion))">
             
                 <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
@@ -149,6 +142,8 @@ export default {
             archivo_medico: null,
             documento_frente: null,
             documento_dorso: null,
+            nombre_documento_frente: '',
+            nombre_documento_dorso: '',
             formDirty: false,
             error: false,
             message: {
@@ -216,14 +211,22 @@ export default {
             }).catch((error) => {
             });
         },
+        selectFilesFrente: function () {
+            this.$refs.documento_frente.click();
+        },
+        selectFilesDorso: function () {
+            this.$refs.documento_dorso.click();
+        },
         guardar_archivo(event) {
             this.archivo_medico = this.$refs.archivo_medico.files[0];
         },
         guardar_documento_frente(event) {
             this.documento_frente = this.$refs.documento_frente.files[0];
+            this.nombre_documento_frente = this.$refs.documento_frente.files[0].name;
         },
         guardar_documento_dorso(event) {
             this.documento_dorso = this.$refs.documento_dorso.files[0];
+            this.nombre_documento_dorso = this.$refs.documento_dorso.files[0].name;
         },
 
     },

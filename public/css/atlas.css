@@ -43,7 +43,7 @@ code {
 }
 
 .bg-techo-blue {
-    background-color: #0092dd;
+    background-color: #009fe3;
 }
 
 .bg-black {
@@ -52,11 +52,22 @@ code {
 
 
 .bg-secondary-blue {
-    background-color: #005CA9;
+    background-color: #005ca9;
 }
 
 .bg-techo-pink {
-    background-color: #e94362;
+    background-color: #e94362 !important;
+    color: white;
+}
+
+.bg-techo-yellor {
+    background-color: #fdc533 !important;
+    color: white;
+}
+
+.bg-techo-violet {
+    background-color: #954B97 !important;
+    color: white;
 }
 
 .card {
@@ -95,6 +106,16 @@ code {
 .techo-logo {
     width: 122px;
     height: 37.6px;
+}
+
+.imagen-miniatura-redonda {
+    width: 100%; /* La imagen ocupará el ancho completo de su contenedor */
+    height: 100%; /* La imagen ocupará el ancho completo de su contenedor */
+    max-width: 120px; /* Establece un ancho máximo para la imagen */
+    max-height: 120px; /* Establece un ancho máximo para la imagen */
+    height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+    border-radius: 50%; /* Esto hará que la imagen sea redonda */
+    overflow: hidden; /* Para recortar cualquier parte de la imagen que se extienda más allá del círculo */
 }
 
 .techo-blue {
@@ -249,6 +270,10 @@ a {
     text-align: left;
     color: #0092dd;
     text-transform: uppercase;
+}
+
+.opacidad-90 {
+    opacity: 0.9;
 }
 
 .techo-btn-azul {

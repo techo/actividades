@@ -195,6 +195,26 @@ return [
 	'disciplina_academica' => 'Disciplina académica',
 	'descripcion_educacion' => 'Descripción',
 
+
+	// perfil/ equipos
+	'equipos' => 'Equipos',
+	'rol' => 'rol',
+	'estado'    => 'estado',
+	'despliegue'    => 'despliegue',
+	'relacion'    => 'relación',
+	'fechaInicio' => 'fecha inicio',
+	'fechaFin' => 'fecha fin',
+	'descripcion_rol'    => 'descripción rol',
+	'hitos'    => 'hitos',
+	'meta'    => 'meta',
+	'dia_hora_reunion'    => 'día y hora de reunión',
+	'periodicidad_reunion' => 'periodicidad reunión',
+	'ver' => 'Ver',
+	'archivo_carta_compromiso' => 'Carta de Compromiso',
+	'semanal' => 'Semanal',
+	'quincenal' => 'Quincenal',
+	'mensual' => 'Mensual',
+
 	// perfil / otros datos
 	'otros_datos' => 'Otros Datos', 
 

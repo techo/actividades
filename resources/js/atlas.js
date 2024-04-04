@@ -37,6 +37,10 @@ import EstadisticasPublicas from './components/estadisticas-publicas';
 import QuizTechero from './components/perfil/quizTechero';
 import fichaMedica from './components/perfil/fichaMedica';
 import estudios from './components/perfil/estudios';
+import equipos from './components/perfil/equipos';
+Vue.component('equipos', equipos);
+import cardEquiposPerfil from './components/perfil/cardEquiposPerfil';
+Vue.component('cardEquiposPerfil', cardEquiposPerfil);
 import cardEditDelete from './components/common/cardEditDelete.vue';
 import avisoModal from './components/aviso-modal'
 Vue.component('aviso-modal', avisoModal);

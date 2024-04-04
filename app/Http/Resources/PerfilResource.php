@@ -48,6 +48,7 @@ class PerfilResource extends Resource
             'pass'          => '',
             'fichaMedica'          => $fichaMedica,
             'estudios'          => $this->estudios,
+            'integrantes'          => IntegranteResource::collection($this->integrantes()->with('equipo')->get()),
         ];
     }
 }

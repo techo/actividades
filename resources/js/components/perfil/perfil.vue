@@ -1,5 +1,5 @@
 <template>
-    <div class="card" >
+    <div class="card opacidad-90" >
         <simplert ref="confirmar"></simplert>
         <div class="card-body">
 
@@ -20,10 +20,10 @@
             <hr>
 
             <div>
-                <b-tabs content-class="mt-3" v-model="tabIndex">
+                <b-tabs content-class="mt-3" v-model="paso_actual">
                     <b-tab :title="$t('frontend.personal_data')" href="#datos">
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.name') }}</label>
@@ -43,7 +43,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.surname') }}</label>
@@ -63,8 +63,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.birth_date') }}</label>
@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.gender') }}</label>
@@ -112,8 +112,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.passport') }}</label>
@@ -131,7 +131,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.country') }}</label>
@@ -153,8 +153,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.state') }}</label>
@@ -176,7 +176,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.municipality') }}</label>
@@ -199,8 +199,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label>{{ $t('frontend.telephone') }}</label>
@@ -220,18 +220,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-5">
+                        <div class="row mx-2">
+                            <div class="col-md-6">
                                 <h5>{{ $t('frontend.password') }}</h5>
                             </div>
                         </div>
-                        <p v-if="loginSocial" class="text-muted">
+                        <p v-if="loginSocial" class="text-muted mx-2 px-2">
                             {{ $t('frontend.account_rrss_text_1') }}
                             <a href="#" @click="this.logout">{{ $t('frontend.logout') }}</a>
                             {{ $t('frontend.account_rrss_text_2') }}
                             <em>{{ $t('frontend.forget_password') }}</em>
                         </p>
-                        <div class="col-md-5" v-else>
+                        <div class="col-md-5 mx-2" v-else>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label>{{ $t('frontend.actual_password') }}</label>
@@ -293,7 +293,7 @@
 
                         </div>
 
-                        <div class="row">
+                        <div class="row mx-2">
                             <div class="col-md-12">
                                 <div class="form-check">
                                     <input v-model="user.recibirMails" class="form-check-input" type="checkbox"
@@ -304,7 +304,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mx-2">
                             <div class="col-md-12">
                                 <div class="form-check">
                                     <input v-model="user.acepta_marketing" class="form-check-input" type="checkbox"
@@ -315,20 +315,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row alert alert-success" v-show='guardo'>
+                        <div class="row alert alert-success m-2" v-show='guardo'>
                             <strong>{{ $t('frontend.changes_success') }}</strong>
                         </div>
-                        <div class="row">
+                        <div class="row m-2">
                             <div class="col-md-12">
                                 <span v-show='volver'>
-                                    <button @click="cancelar()" class="btn btn-link" :disabled="!formDirty">
+                                    <button @click="cancelar()" class="btn btn-link m-2" :disabled="!formDirty">
                                         {{ $t('frontend.cancel') }}
                                     </button>
                                 </span>
-                                <button class="btn btn-primary" href="#" @click="guardar()" :disabled="!formDirty">{{
+                                <button class="btn btn-primary m-2" href="#" @click="guardar()" :disabled="!formDirty">
+                                    {{
                                         $t('frontend.save')
                                 }}</button>
-                                <button class="btn btn-danger" href="#" @click="eliminar()">{{
+                                <button class="btn btn-danger m-2" href="#" @click="eliminar()">{{
                                         $t('frontend.delete_account')
                                 }}</button>
                             </div>
@@ -336,11 +337,15 @@
                         <hr>
 
                     </b-tab>
-                    <b-tab href="#ficha" class="w-100" :title="$t('frontend.ficha_medica')">
+                    <b-tab href="#ficha" class="w-100 text-uppercase" :title="$t('frontend.ficha_medica')">
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
                     <b-tab href="#estudios" :title="$t('frontend.estudios')">
                         <estudios ref="estudios" :estudios="user.estudios" :idPersona="user.id"/>
+                    </b-tab>
+
+                    <b-tab href="#equipos" :title="$t('frontend.equipos')">
+                        <equipos ref="equipos" :equipos="user.integrantes" :idPersona="user.id"/>
                     </b-tab>
 
                     <!-- <b-tab href="#otros" :title="$t('frontend.otros_datos')">
@@ -373,7 +378,7 @@ export default {
                 text: ''
             }
         }
-        data.tabIndex = 0,
+        data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
         data.usernombre = data.user.nombre;
 
@@ -403,6 +408,8 @@ export default {
         this.traer_provincias()
         this.traer_localidades()
         this.formDirty = false
+
+        this.paso_actual = (window.location.href.split('#')[1]);
     },
     watch: {
         'user.email': function () {

@@ -48,6 +48,11 @@ Route::prefix('ajax')->group(function () {
 		Route::delete('/{id}', 'ajax\EstudiosController@delete');
 	});
 
+    Route::prefix('equipos')->group(function () {
+		Route::put('', 'ajax\EquiposController@update');
+		Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
+	});
+
 	Route::prefix('usuario')->group(
 	    function(){
 		Route::get('', function(){

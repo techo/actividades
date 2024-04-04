@@ -191,6 +191,25 @@ return [
 	'disciplina_academica' => 'Accademy disipline',
 	'descripcion_educacion' => 'Description',
 
+	// perfil / equipos
+	'equipos' => 'Teams', 
+	'rol' => 'role', 
+	'estado' => 'status', 
+	'despliegue' => 'deployment', 
+	'relacion' => 'relationship', 
+	'fechaInicio' => 'start date', 
+	'fechaFin' => 'end date', 
+	'descripcion_rol' => 'role description', 
+	'hitos' => 'milestones', 
+	'meta' => 'goal', 
+	'dia_hora_reunion' => 'meeting day and time', 
+	'periodicidad_reunion' => 'meeting frequency',	
+	'ver' => 'open',
+	'archivo_carta_compromiso' => 'Letter of Commitment',
+	'semanal' => 'Weekly', 
+	'quincenal' => 'Fortnightly', 
+	'mensual' => 'Monthly',
+
  	// perfil/index.blade.php
  	'profile' => 'Profile',
 

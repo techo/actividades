@@ -198,6 +198,26 @@ return [
 	'disciplina_academica' => 'Disciplina académica',
 	'descripcion_educacion' => 'Descrição',
 
+	// perfil / equipos
+
+	'equipos' => 'Equipas', 
+	'rol' => 'papel', 
+	'estado' => 'estado', 
+	'despliegue' => 'implementação', 
+	'relacion' => 'relação', 
+	'fechaInicio' => 'data de início', 
+	'fechaFin' => 'data de término', 
+	'descripcion_rol' => 'descrição do papel', 
+	'hitos' => 'marcos', 
+	'meta' => 'meta', 
+	'dia_hora_reunion' => 'dia e hora da reunião', 
+	'periodicidad_reunion' => 'frequência da reunião',
+	'ver' => 'olhar',
+	'archivo_carta_compromiso' => 'Carta de Compromisso',
+	'semanal' => 'Semanal', 
+	'quincenal' => 'Quinzenal', 
+	'mensual' => 'Mensal',
+	
 	// perfil/index.blade.php
 	'profile' => 'Perfil',
 
