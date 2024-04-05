@@ -73,10 +73,32 @@
                     </div>
                 </div>
                 <div class="row" >
-                    <div class="col-md-12">
-                        <div class="form-group" v-if="(usuario.archivo_medico != null)">
-                            <label for="archivo_medico">Archivo Medico</label>
-                            <a :href="'/'+usuario.archivo_medico" target="_blank"> Ver Archivo </a>
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.alergias != null)">
+                            <label for="alergias">Alergias</label>
+                            <input id="alergias" type="text" class="form-control"
+                                        v-model="usuario.alergias" :disabled="readonly">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.alimentacion != null)">
+                            <label for="alimentacion">Alimentación</label>
+                            <input id="alimentacion" type="text" class="form-control"
+                                        v-model="usuario.alimentacion" :disabled="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.documento_frente != null)">
+                            <label for="documento_frente">Documento Frente</label>
+                            <a :href="'/'+usuario.documento_frente" target="_blank"> Ver Frente </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.documento_dorso != null)">
+                            <label for="documento_dorso">Documento Dorso</label>
+                            <a :href="'/'+usuario.documento_dorso" target="_blank"> Ver Dorso </a>
                         </div>
                     </div>
                 </div>
@@ -99,6 +121,10 @@ export default {
                 contacto_nombre: "",
                 contacto_relacion: "",
                 contacto_telefono: "",
+                alergias: "",
+                alimentacion: "",
+                documento_frente: "",
+                documento_dorso: "",
                 archivo_medico: "",
             },
             readonly: !this.edicion,
@@ -108,9 +134,7 @@ export default {
         }
     },
     created() {
-        if (this.propUsuario.grupo_sanguineo) {
-            this.usuario = JSON.parse(this.propUsuario);
-        }
+        this.usuario = JSON.parse(this.propUsuario);
     },
 }
 </script>
