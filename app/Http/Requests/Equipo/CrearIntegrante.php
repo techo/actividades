@@ -30,6 +30,13 @@ class CrearIntegrante extends FormRequest
             'estado' => 'required|boolean',
             'despliegue' => 'required',
             'relacion' => 'required',
+            'descripcion_rol' => 'nullable',
+            'meta' => 'nullable',
+            'hitos' => 'nullable',
+            'dia_hora_reunion' => 'nullable',
+            'periodicidad_reunion' => 'nullable',
+            'impacto' => 'nullable',
+            'capacidades' => 'nullable',
             'fechaInicio' => 'required|date',
             'fechaFin' => 'nullable|date',
         ];

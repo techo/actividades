@@ -104,7 +104,74 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div :class="{ 'form-group': true, 'has-error': errors.descripcion_rol }">
+                                <label for="descripcion_rol">Descripcion Rol</label>
+                                <input v-model="form.descripcion_rol" name="descripcion_rol" type="text" class="form-control"
+                                    required>
+                                <span v-if="errors.descripcion_rol" v-text="errors.descripcion_rol[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.hitos }">
+                                <label for="hitos">Hitos</label>
+                                <input v-model="form.hitos" name="hitos" type="text" class="form-control"
+                                    required>
+                                <span v-if="errors.hitos" v-text="errors.hitos[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.meta }">
+                                <label for="meta">Meta</label>
+                                <input v-model="form.meta" name="meta" type="text" class="form-control" required>
+                                <span v-if="errors.meta" v-text="errors.meta[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.dia_hora_reunion }">
+                                <label for="dia_hora_reunion">Día y hora Reunión</label>
+                                <input v-model="form.dia_hora_reunion" name="dia_hora_reunion" type="text" class="form-control"
+                                    required>
+                                <span v-if="errors.dia_hora_reunion" v-text="errors.dia_hora_reunion[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.periodicidad_reunion }">
+                                <label for="periodicidad_reunion">Periodicidad Reunión</label>
+                                <input v-model="form.periodicidad_reunion" name="periodicidad_reunion" type="text" class="form-control" required>
+                                <span v-if="errors.periodicidad_reunion" v-text="errors.periodicidad_reunion[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.impacto }">
+                                <label for="impacto">Impacto</label>
+                                <input v-model="form.impacto" name="impacto" type="text" class="form-control"
+                                    required>
+                                <span v-if="errors.impacto" v-text="errors.impacto[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.capacidades }">
+                                <label for="capacidades">Capacidades</label>
+                                <input v-model="form.capacidades" name="capacidades" type="text" class="form-control" required>
+                                <span v-if="errors.capacidades" v-text="errors.capacidades[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                
 
                 <div class="modal-footer">
                     <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
