@@ -19,6 +19,8 @@ class AgregaCamposTablaIntegrantes extends Migration
             $table->string('hitos', 300)->nullable();
             $table->string('dia_hora_reunion')->nullable();
             $table->string('periodicidad_reunion')->nullable();
+            $table->string('impacto', 300)->nullable();
+            $table->string('capacidades', 300)->nullable();
         });
     }
 
@@ -35,6 +37,8 @@ class AgregaCamposTablaIntegrantes extends Migration
             $table->dropColumn('hitos');
             $table->dropColumn('dia_hora_reunion');
             $table->dropColumn('periodicidad_reunion');
+            $table->dropColumn('impacto');
+            $table->dropColumn('capacidades');
         });
     }
 }

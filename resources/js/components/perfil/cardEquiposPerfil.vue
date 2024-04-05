@@ -67,6 +67,31 @@
                         </textarea>
                     </div>
                 </div>
+
+                <div class="row m-1 text-center">
+                    <div class="col-md-12">
+                        <label class="text-uppercase mx-2">{{ $t('frontend.impacto') }}</label>
+                        <p v-if="!editando" class="col-md-12">
+                            {{ integrante.impacto }}
+                        </p>
+                        <textarea v-else class="form-control text-center" v-model="integrante.impacto">
+                            {{ integrante.impacto }}
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="row m-1 text-center">
+                    <div class="col-md-12">
+                        <label class="text-uppercase mx-2">{{ $t('frontend.capacidades') }}</label>
+                        <p v-if="!editando" class="col-md-12">
+                            {{ integrante.capacidades }}
+                        </p>
+                        <textarea v-else class="form-control text-center" v-model="integrante.capacidades">
+                            {{ integrante.capacidades }}
+                        </textarea>
+                    </div>
+                </div>
+
                 <div v-if="integrante.archivo_carta_compromiso != null || editando" class="row m-1 text-center">
                     <div class="col-md-12">
                         <label class="text-uppercase mx-2">{{ $t('frontend.archivo_carta_compromiso') }}</label>

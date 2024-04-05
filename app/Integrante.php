@@ -25,7 +25,9 @@ class Integrante extends Model
         'meta',
         'hitos',
         'dia_hora_reunion',
-        'periodicidad_reunion'
+        'periodicidad_reunion',
+        'impacto',
+        'capacidades'
     ];
 
     protected $dates =

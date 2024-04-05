@@ -209,6 +209,8 @@ return [
 	'meta'    => 'meta',
 	'dia_hora_reunion'    => 'día y hora de reunión',
 	'periodicidad_reunion' => 'periodicidad reunión',
+	'impacto' => 'Redacta tu impacto',
+	'capacidades' => 'Capacidades que deseo fortalecer',
 	'ver' => 'Ver',
 	'archivo_carta_compromiso' => 'Carta de Compromiso',
 	'semanal' => 'Semanal',

@@ -204,6 +204,8 @@ return [
 	'meta' => 'goal', 
 	'dia_hora_reunion' => 'meeting day and time', 
 	'periodicidad_reunion' => 'meeting frequency',	
+	'impacto' => 'Write your impact', 
+	'capacidades' => 'Skills I want to strengthen',
 	'ver' => 'open',
 	'archivo_carta_compromiso' => 'Letter of Commitment',
 	'semanal' => 'Weekly', 

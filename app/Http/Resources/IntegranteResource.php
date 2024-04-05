@@ -29,6 +29,8 @@ class IntegranteResource extends Resource
             'meta'    => $this->meta,
             'dia_hora_reunion'    => $this->dia_hora_reunion,
             'periodicidad_reunion'    => $this->periodicidad_reunion,
+            'impacto'    => $this->impacto,
+            'capacidades'    => $this->capacidades,
             'archivo_carta_compromiso'          => $this->archivo_carta_compromiso,
         ];
     }

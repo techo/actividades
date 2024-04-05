@@ -15,12 +15,14 @@ class EquiposController extends Controller
     public function update(Request $request) {
         $persona = Auth::user();
         $validados = $request->validate([
-            'idIntegrante' => 'required',
-            'descripcion_rol' => 'required',
-            'meta' => 'required',
-            'hitos' => 'required',
-            'dia_hora_reunion' => 'required',
-            'periodicidad_reunion' => 'required',
+            'idIntegrante' => 'nullable',
+            'descripcion_rol' => 'nullable',
+            'meta' => 'nullable',
+            'hitos' => 'nullable',
+            'dia_hora_reunion' => 'nullable',
+            'periodicidad_reunion' => 'nullable',
+            'impacto' => 'nullable',
+            'capacidades' => 'nullable',
         ]);
 
         $integrante = Integrante::find($validados['idIntegrante']);
