@@ -129,5 +129,6 @@ class IntegrantesController extends Controller
             $integrante->archivo_plan_de_trabajo = str_replace('public', 'storage', $path);
             $integrante->save();
         }
+        return response()->json($integrante);
   }
 }
