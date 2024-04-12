@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="email">Email</label>
+                                    <label for="email">{{ $t('frontend.email') }}</label>
                                     <input id="email"
                                            type="email"
                                            class="form-control"
