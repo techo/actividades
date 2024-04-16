@@ -21,8 +21,8 @@ class EquiposResource extends Resource
             'nombre'    => $this->nombre,
             'estado'    => $this->activo?"Activo":"Inactivo",
             'area'      => $this->area,
-            'fechaInicio' => ($this->fechaInicio)?$this->created_at->format('d/m/Y'):'',
-            'fechaFin' => ($this->fechaFin)?$this->created_at->format('d/m/Y'):'',
+            'fechaInicio' => ($this->fechaInicio)?$this->fechaInicio->format('d/m/Y'):'',
+            'fechaFin' => ($this->fechaFin)?$this->fechaFin->format('d/m/Y'):'',
         ];
     }
 }

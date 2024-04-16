@@ -185,7 +185,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     // panel Equipos
 
-    Route::prefix('/equipos')->middleware(['role:admin'])->group(function() {
+    Route::prefix('/equipos')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\EquiposController@index');
         Route::get('/crear', 'backoffice\EquiposController@create');
         Route::post('/registrar', 'backoffice\EquiposController@store');
@@ -196,20 +196,27 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::get('', 'backoffice\IntegrantesController@index');
         });
 
-        Route::prefix('/{idEquipo}/coordinadores')->group(function() {
+        Route::prefix('/{idEquipo}/coordinacion')->group(function() {
             Route::get('', 'backoffice\CoordinadorEquipoController@index');
         });
+
     });
-    Route::prefix('ajax/equipos')->middleware(['role:admin'])->group(function() {
-        Route::get('', 'backoffice\ajax\EquiposController@index')->middleware('permission:ver_usuarios');
+    Route::prefix('ajax/equipos')->middleware(['role:admin|coordinador'])->group(function() {
+        Route::get('', 'backoffice\ajax\EquiposController@index');
         
         Route::prefix('/{idEquipo}/integrante')->group(function() {
-            Route::get('', 'backoffice\ajax\IntegrantesController@index')->middleware('permission:ver_usuarios'); 
+            Route::get('', 'backoffice\ajax\IntegrantesController@index'); 
             Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
             Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
             Route::post('/{idIntegrante}/archivos', 'backoffice\ajax\IntegrantesController@uploadArchivos');  
+        });
+
+        Route::prefix('/{idEquipo}/coordinacion')->group(function() {
+            Route::get('', 'backoffice\ajax\CoordinadorEquipoController@index');
+            Route::post('/{idPersona}', 'backoffice\ajax\CoordinadorEquipoController@store');
+            Route::delete('/{idCoordinador}', 'backoffice\ajax\CoordinadorEquipoController@delete');
         });
     });
 

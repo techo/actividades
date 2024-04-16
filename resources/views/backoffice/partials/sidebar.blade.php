@@ -73,7 +73,20 @@
                         <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">Registrar Usuario</a></li>
                     </ul>
                 </li>
+            @elseif (Auth::user()->hasRole('coordinador'))
+                <li class="treeview {{ (request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
+                    <a href="#"><i class="fa fa-user"></i> <span>Personas</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                    </a>
+                    <ul class="treeview-menu">                        
+                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">Ver Equipos</a></li>
+                    </ul>
+                </li>
             @endif
+
+
 
             @if (Auth::user()->hasRole('admin'))
 

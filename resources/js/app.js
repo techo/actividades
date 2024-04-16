@@ -52,6 +52,7 @@ import IntegranteModal from './components/backoffice/equipos/integrante-modal';
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 import EquiposForm from './components/backoffice/equipos/equipos-form';
+import CoordinadoresEquipo from './components/backoffice/equipos/coordinadores-equipo';
 import HomeHeaderForm from './components/backoffice/homeHeader/home-header-form';
 import UsuariosFichaTab from './components/backoffice/usuarios/usuario-ficha-tab';
 import UsuariosEstudiosTab from './components/backoffice/usuarios/usuarios-estudios-tab';
@@ -64,6 +65,7 @@ import TiposActividadForm from './components/backoffice/tiposActividad/tipos-act
 Vue.component('tipos-actividad-datatable', TiposActividadDatatable);
 Vue.component('tipos-actividad-filter-bar', TiposActividadFilterBar);
 Vue.component('tipos-actividad-form', TiposActividadForm);
+Vue.component('coordinadores-equipo', CoordinadoresEquipo);
 
 import OficinasDatatable from './components/backoffice/datatable/OficinasDatatable';
 import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterBar';

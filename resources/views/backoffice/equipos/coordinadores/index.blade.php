@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $equipo->nombre . ' - Coordinadores')
+@section('page_title', $equipo->nombre . ' - Coordinación')
 
 @section('content')
     @if (Session::has('mensaje'))
@@ -9,11 +9,14 @@
         </div>
     @endif
     <div class="nav-tabs-custom">
-        @include('backoffice.equipos.tabs' , [ 'tab' => 'coordinadores' , 'idEquipo' => $idEquipo])
+        @include('backoffice.equipos.tabs' , [ 'tab' => 'coordinadores' , 'idEquipo' => $id])
     
         <div class="tab-content">
             <div class="tab-pane active" id="coordinadores">
-                <coordinadores-equipo />
+                <coordinadores-equipo
+                    equipo="{{ $equipo }}"
+                    id = "{{ $id }}"
+                />
             </div>
         </div>
     </div>
