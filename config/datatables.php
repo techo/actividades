@@ -463,32 +463,32 @@ return [
             [
                 'name' => 'idPersona',
                 'sortField' => 'idPersona',
-                'title' => 'Persona'
+                'title' => $translate['person']
             ],
             [
                 'name' => 'email',
                 'sortField' => 'email',
-                'title' => 'Mail'
+                'title' => $translate['email']
             ],
             [
                 'name' => 'perfil_seleccionado',
                 'sortField' => 'perfil_seleccionado',
-                'title' => 'Perfil'
+                'title' => $translate['profile']
             ],
             [
                 'name' => 'tematica',
                 'sortField' => 'tematica',
-                'title' => 'Temática'
+                'title' => $translate['thematic']
             ],
             [
                 'name' => 'tiempo_disponible',
                 'sortField' => 'tiempo_disponible',
-                'title' => 'Tiempo Disponible'
+                'title' => $translate['available_time']
             ],
             [
                 'name' => 'created_at',
                 'sortField' => 'created_at',
-                'title' => 'Fecha Creación'
+                'title' => $translate['created_at']
             ],
         ],
         'sortOrder' => [

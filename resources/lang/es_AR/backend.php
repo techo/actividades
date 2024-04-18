@@ -27,6 +27,11 @@ return [
     'document' => 'Documento',
     'email' => 'Correo',
     'created_at' => 'Fecha Creación',
+    'person' => 'Persona',
+    'profile' => 'Perfil',
+    // Usuarios/Columnas
+    'thematic' => 'Temática',
+    'available_time' => 'Tiempo Disponible',
 
     // Botones
     'save'   => 'Guardar',
