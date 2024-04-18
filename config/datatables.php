@@ -337,27 +337,27 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => $translate['name']
             ],
             [
                 'name' => 'area',
                 'sortField' => 'area',
-                'title' => 'Area'
+                'title' => $translate['area']
             ],
             [
                 'name' => 'oficina',
                 'sortField' => 'oficina',
-                'title' => 'Oficina'
+                'title' => $translate['office']
             ],
             [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
-                'title' => 'Fecha de Inicio'
+                'title' => $translate['start_date']
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'estado',
-                'title' => 'Estado'
+                'title' => $translate['state']
             ],
         ],
         'sortOrder' => [

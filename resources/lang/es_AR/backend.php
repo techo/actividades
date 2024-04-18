@@ -32,6 +32,9 @@ return [
     // Usuarios/Columnas
     'thematic' => 'Temática',
     'available_time' => 'Tiempo Disponible',
+    'area' => 'Area',
+    'office' => 'Oficina',
+    'start_date' => 'Fecha de inicio',
 
     // Botones
     'save'   => 'Guardar',
