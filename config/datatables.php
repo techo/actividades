@@ -1,5 +1,8 @@
 <?php
 
+$lang = app()->getLocale();
+$translate = include 'resources/lang/' . $lang . '/backend.php';
+
 return [
     'actividades' => [
 
@@ -293,27 +296,27 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombres',
-                'title' => 'Nombre'
+                'title' => $translate['name']
             ],
             [
                 'name' => 'apellido',
                 'sortField' => 'apellidoPaterno',
-                'title' => 'Apellido'
+                'title' => $translate['last_name']
             ],
             [
                 'name' => 'dni',
                 'sortField' => 'dni',
-                'title' => 'Documento'
+                'title' => $translate['document']
             ],
             [
                 'name' => 'email',
                 'sortField' => 'mail',
-                'title' => 'Email'
+                'title' => $translate['email']
             ],
             [
                 'name' => 'created_at',
                 'sortField' => 'created_at',
-                'title' => 'Fecha Creación'
+                'title' => $translate['created_at']
             ],
         ],
         'sortOrder' => [

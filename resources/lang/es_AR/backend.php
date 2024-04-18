@@ -24,6 +24,9 @@ return [
     'location' => 'Localidad',
     'contact_channel' => 'Canal de Contacto',
     'verification' => 'Verificación',
+    'document' => 'Documento',
+    'email' => 'Correo',
+    'created_at' => 'Fecha Creación',
 
     // Botones
     'save'   => 'Guardar',
@@ -35,6 +38,6 @@ return [
     'select' => 'Seleccione',
     'select_date' => 'Seleccionar fecha',
 
-    // Titulos
+    // Titulos / Opciones
     'create_person' => 'Crear Persona',
 ];
