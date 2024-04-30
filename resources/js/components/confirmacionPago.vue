@@ -1,7 +1,7 @@
 <template>
     <div >
             <div class="row m-2 justify-content-center">
-                <a v-if="voucher != null" :href="'/'+voucher" target="_blank" class="col-md-4 text-center"> 
+                <a v-if="voucher != ''" :href="'/'+voucher" target="_blank" class="col-md-4 text-center"> 
                     <img class="imagen-miniatura-redonda" :src="'/'+voucher" alt="Foto">
                 </a>
                 <button class="btn btn-light col-md-8" @click="selectVoucher" ><i class="fa fa-upload p-1"></i>{{ $t('frontend.upload_voucher') }}</button>
