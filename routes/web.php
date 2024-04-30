@@ -127,8 +127,11 @@ Route::get('/actividades/{id}', 'ActividadesController@show')->middleware('pais'
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
+    
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
+
+Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
