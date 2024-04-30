@@ -327,11 +327,22 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">Link para el Pago</label>
-                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
-                            <span class="help-block">{{ errors.linkPago }}</span>
+                    <div class="col-md-12">
+                        <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
+                            <label for="">Pasos para realizar el pago </label>
+                            <tinymce-editor 
+                                v-model="actividad.descripcionPago" 
+                                :init="{
+                                    menubar: 'false',
+                                    file_picker_callback: tiny_mce_filemanager_callback,
+                                    relative_urls: false,
+                                    resize: true,
+                                }"
+                                toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
+                                plugins="paste autoresize image preview paste link"
+                                :disabled="!edicion"
+                            ></tinymce-editor>
+                            <span class="help-block">{{ errors.descripcionPago }}</span>
                         </div>
                     </div>
 
@@ -342,6 +353,14 @@
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
                     </div>
+
+                    <!-- <div class="col-md-6">
+                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
+                            <label for="">Link para el Pago</label>
+                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkPago }}</span>
+                        </div>
+                    </div> -->
                 </div>
 
                 <br>
@@ -521,6 +540,8 @@
                     requiere_ficha_medica: 0,
                     ficha_medica_campos: {},
 
+                    descripcionPago: null,
+                    linkPago: null,
 
                     tipo : {
                         idCategoria: 1

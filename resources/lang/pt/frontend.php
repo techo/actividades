@@ -317,8 +317,8 @@ return [
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Só mais um passo!',
 	'you_are_pre_registered' => 'Você já está pré-registrado/a',
-	'mail_sended' => 'E também enviamos um e-mail com todas as informações da atividade! Confira!',
-	'complete_registration' => 'Mas primeiro: confirme seu lugar!',
+	'mail_sended' => 'Enviamos um e-mail com todas as informações da atividade',
+	'complete_registration' => 'Confirme seu lugar!',
 	'donation_ammount' => 'VALOR PARA DOAR',
 	'suggested_donation' => 'Doação sugerida: ',
 	'suggested_donation_between' => 'Doação sugerida: Entre ',
@@ -329,8 +329,11 @@ return [
 	'continue' => 'PRÓXIMO',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'CANCELAR MINHA INSCRIÇÃO',
-
 	'make_donation' => 'Faz pagamento ',
+	'upload_voucher' => 'Anexe Voucher',
+	'data_uploaded' => 'Voucher Subido',
+	'payment_in_process' => 'Recebemos seu voucher. Estamos verificando seu pagamento',
+
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',
 	'ready_for_paying' => 'Pronto para pagar pela site!',

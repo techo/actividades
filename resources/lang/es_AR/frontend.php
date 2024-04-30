@@ -315,8 +315,8 @@ return [
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => '¡Sólo queda un paso!',
-	'you_are_pre_registered' => 'Ya estás pre inscripto a',
-	'mail_sended' => 'Y también te mandamos un mail con toda la información de la actividad! Chequealo!',
+	'you_are_pre_registered' => 'Estás pre inscripto a',
+	'mail_sended' => 'Te mandamos un mail con toda esta información.',
 	'complete_registration' => 'Pero antes: Confirmá tu lugar!',
 	'donation_ammount' => 'MONTO A DONAR',
 	'suggested_donation' => 'Donación sugerida: ',
@@ -328,7 +328,10 @@ return [
 	'continue' => 'SIGUIENTE',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
-	'make_donation' => 'Hace tu donación por el siguiente ',
+	'make_donation' => 'Pasos para confirmar',
+	'upload_voucher' => 'Adjunta Voucher',
+	'data_uploaded' => 'Voucher Subido',
+	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

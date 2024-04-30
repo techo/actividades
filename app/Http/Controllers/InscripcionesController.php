@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class InscripcionesController extends BaseController
 {
@@ -93,6 +94,7 @@ class InscripcionesController extends BaseController
 
                 return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
+                    ->with('inscripcion', $inscripcion)
                     ->with('payment', $payment);
             }
 
@@ -134,6 +136,30 @@ class InscripcionesController extends BaseController
         return view('inscripciones.seleccionar_puntos_encuentro',
              compact('actividad'));
     }
+    
+    public function voucherPago(Request $request){
+
+        $validated = $request->validate([
+            'idInscripcion' => 'required',
+            'voucher' => 'required',
+        ]);
+
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+        ->where('idInscripcion', $request->idInscripcion)
+        ->firstOrFail();
+
+        $archivo = $request->file('voucher');
+        $path = $archivo->store('public/voucherInscipcion/'.auth()->user()->idPersona);
+        $oldPath = str_replace('storage', 'public', $inscripcion->voucherURL);
+        if(Storage::exists($oldPath))
+            Storage::delete($oldPath);
+    
+        $inscripcion->voucherURL = str_replace('public', 'storage', $path);
+        $inscripcion->save();
+        
+        return $inscripcion;
+      
+    }
 
     public function confirmarDonacion($id)
     {
@@ -152,6 +178,7 @@ class InscripcionesController extends BaseController
 
         return view('inscripciones.pagar-paso-1')
             ->with('actividad', $actividad)
+            ->with('inscripcion', $inscripcion)
             ->with('payment', $payment);
 
     }

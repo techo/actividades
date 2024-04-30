@@ -90,6 +90,7 @@ class InscripcionesSearch
                     'Inscripcion.idInscripcion AS id',
                     'Inscripcion.presente',
                     'Inscripcion.pago',
+                    'Inscripcion.voucherUrl',
                     'Inscripcion.confirma',
                     'PuntoEncuentro.punto',
                     'atl_pais.nombre as puntoPais',

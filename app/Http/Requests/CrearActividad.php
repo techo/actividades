@@ -60,6 +60,7 @@ class CrearActividad extends FormRequest
             'fechaLimitePago' => 'sometimes',
             'beca' => 'sometimes|nullable|url',
             'linkPago' => 'sometimes|nullable|url',
+            'descripcionPago' => 'sometimes|nullable',
             'linkEvaluacion' => 'sometimes|nullable|url',
             'seguimiento_google' => 'sometimes|nullable',
             'requiere_ficha_medica' => 'required',

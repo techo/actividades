@@ -309,8 +309,8 @@ return [
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Last Step!',
 	'you_are_pre_registered' => "Now you're pre enroll to the activity:",
-	'mail_sended' => 'And we also send an email to you with all the info about the activity',
-	'complete_registration' => 'But First: Confirm your place!',
+	'mail_sended' => 'We also send an email to you with all the info about the activity',
+	'complete_registration' => 'Confirm your place!',
 	'donation_ammount' => 'Donation Ammount',
 	'suggested_donation' => 'Suggested Donation: ',
 	'suggested_donation_between' => 'Suggested Donation: between ',
@@ -322,7 +322,10 @@ return [
 	'cancel' => 'CANCEL',
 	'unenroll' => 'UN-ENROLL',
 
-'make_donation' => 'Make Payment ',
+	'make_donation' => 'Make Payment ',
+	'upload_voucher' => 'Upload Voucher',
+	'data_uploaded' => 'Voucher Uploaded',
+	'payment_in_process' => "We've received your voucher. We are verifying your payment",
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label>Fecha de Inscripción: </label>
                 <span>{{ fechaInscripcion }}</span>
                 <br>
@@ -14,6 +14,18 @@
                 <label>Email: </label>
                 <span>{{ rowData.mail }}</span>
             </div>
+            <div class="col-md-6">
+                <label>Provincia: </label>
+                <span>{{ rowData.pProvincia }}</span>
+                <br>
+                <label>Localidad: </label>
+                <span>{{ rowData.pLocalidad }}</span>
+                <br>
+                <div v-if="rowData.voucherUrl">
+                  <label>Archivo Pago: </label>
+                  <a target="_blank" :href="'/'+rowData.voucherUrl"> Voucher</a>
+                </div>
+            </div> 
         </div>
         <hr>
         <div class="row">
