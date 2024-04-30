@@ -79,6 +79,7 @@ class InscripcionesSearch
                     'ficha.contacto_telefono',
                     'ficha.contacto_relacion',
                     'ficha.alergias',
+                    'ficha.vacunacion_covid',
                     'ficha.alimentacion',
                     'ficha.archivo_medico',
                     'ficha.documento_frente',

@@ -171,6 +171,7 @@ return [
 	'documento_identidad_dorso' => 'Documento Verso',
 	'ficha_otros' => 'Outras Informações',
 	'ficha_alergias' => 'Alergias',
+	'vacunacion_covid' => 'Certificado Nacional de Vacinação COVID', 
 	'ficha_alimentacion' => 'Restrições Alimentares',
 	'ficha_confirma_datos' => 'Confirmar Dados',
 	'documents' => 'Documentos',
@@ -307,9 +308,11 @@ return [
 	'apply_for_rol' => 'Quer fazer parte da equipa organizadora desta atividade?',
 	'whats_a_rol' => 'Selecione as funções às quais você gostaria de se candidatar.',
 	'roles_aplicados' => 'Roles seleccionados',
-	'yes' => 'Si, aplicar a rol',
-	'no_apply_rol' => 'No deseo aplicar a rol',
+	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
+	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
+	'yes' => 'Sim',
+	'no' => 'Não',
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
 	'will_be_in_touch' => 'Entraremos em contato para avisar se sua inscrição foi aprovada. Você pode entrar em contato com o coordenador se tiver dúvidas.',

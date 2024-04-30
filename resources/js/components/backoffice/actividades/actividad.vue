@@ -513,6 +513,7 @@
                     'ficha_alergias' : false,
                     'ficha_alimentacion' : false,
                     'documento_identidad' : false,
+                    'vacunacion_covid' : false,
                 },
                 actividad: {
                     nombreActividad: null,
@@ -605,7 +606,8 @@
                                 'cobertura_medica': false,
                                 'ficha_alergias' : false,
                                 'ficha_alimentacion' : false,
-                                'documento_identidad' : false
+                                'documento_identidad' : false,
+                                'vacunacion_covid' : false
                             };
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.actividad.roles_tags;

@@ -26,6 +26,7 @@ class FichaMedicaController extends Controller
               'cobertura_nombre' => 'nullable',
               'cobertura_numero' => 'nullable',
               'alergias' => 'nullable',
+              'vacunacion_covid' => 'nullable',
               'alimentacion' => 'nullable',
               'confirma_datos' => 'required',
               ]);
@@ -45,6 +46,7 @@ class FichaMedicaController extends Controller
       $fichaMedica->cobertura_nombre = $request->cobertura_nombre;
       $fichaMedica->cobertura_numero = $request->cobertura_numero;
       $fichaMedica->alergias = $request->alergias;
+      $fichaMedica->vacunacion_covid = $request->vacunacion_covid;
       $fichaMedica->alimentacion = $request->alimentacion;
       $fichaMedica->confirma_datos = $request->confirma_datos;
 

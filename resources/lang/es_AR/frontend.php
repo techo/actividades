@@ -166,9 +166,9 @@ return [
  	'documento_identidad_dorso' => 'Documento Dorso',
  	'ficha_otros' => 'Otros Datos',
  	'ficha_alergias' => 'Alergias',
+	'vacunacion_covid' => 'Vacuna Covid', 
  	'ficha_alimentacion' => 'Restricciones o dieta',
  	'ficha_confirma_datos' => 'Confirmacion de datos',
- 	'contacto_emergencia' => 'Contacto de Emergencia',
  	'documents' => 'Documentos',
  	'cobertura_paga' => 'Cobertura Paga',
  	'salud_publica' => 'Salud Pública',
@@ -306,9 +306,11 @@ return [
 	'apply_for_rol' => '¿Quieres ser parte del equipo organizador de esta actividad?',
 	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
 	'roles_aplicados' => 'Roles Aplicado',
-	'yes' => 'Si, aplicar a rol',
+	'yes_apply_rol' => 'Si, aplicar a rol',
 	'no_apply_rol' => 'No deseo aplicar a rol',
 
+	'yes' => 'Si',
+	'no' => 'No',
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
 	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
