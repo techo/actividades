@@ -19,4 +19,9 @@ class Provincia extends Model
     {
         return $this->belongsTo(Pais::class, 'id_pais', 'id');
     }
+
+    public function oficina()
+    {
+        return $this->belongsTo(Oficina::class, 'idOficina', 'id');
+    }
 }

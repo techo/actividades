@@ -74,6 +74,7 @@ class ProvinciasController extends Controller
         $provincia = Provincia::findOrFail($id);
         // $validado = $validado = $request->validated();
         $provincia->provincia = $request->nombre;
+        $provincia->idOficina = $request->idOficina;
         $provincia->save();
 
         return response()->json($provincia);

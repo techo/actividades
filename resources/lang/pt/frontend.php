@@ -69,6 +69,10 @@ return [
 	'online_events' => 'Virtual',
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
+
+
+	'ciclo_voluntariado' => 'Ciclo de voluntariado',
+	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
 	'welcome' => 'Bem vindo',
 	'welcome_M' => 'Bem vindo',
 	'welcome_F' => 'Bem vinda',

@@ -425,6 +425,10 @@ return [
                 'sortField' => 'provincia',
                 'title' => 'Nombre'
             ],
+            [
+                'name' => 'oficina.nombre',
+                'title' => 'Oficina'
+            ],
         ],
         'sortOrder' => [
             [
