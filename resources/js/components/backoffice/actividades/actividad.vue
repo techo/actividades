@@ -87,7 +87,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -96,9 +96,7 @@
                                 <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -107,28 +105,31 @@
                                 <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
-                            
-                </div>
 
-                
+                        <div  v-show="edicion">
+                            <label>
+                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
+                            </label>
+                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                        </div>
+                    </div>  
+                    
+                    <div class="col-md-6 text-center m-2">
+                        <div v-if="estadoInscripcion" class="alert alert-info" role="alert" >
+                            Inscripciones Abiertas
+                        </div>
+                        <div v-else class="alert alert-danger" role="alert" >
+                            Inscripciones Cerradas
+                        </div>
 
-                <!-- <ul v-show="fechas.length > 0" style="color: #dd4b39;">
-                    <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
-                </ul> -->
+                        <div v-if="estadoEvaluaciones" class="alert alert alert-warning" role="alert" >
+                            Evaluaciones Abiertas
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <br>
-                    <div class="col-md-12">
-                        <label>
-                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
-                        </label>
-                    </div>
-                </div>
+                        <div v-if="(!estadoPago && actividad.pago)" class="alert alert alert-danger" role="alert" >
+                            Fecha de Pago Vencida!!
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <div class="col-md-12" style="clear:both">
-                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
                     </div>
                 </div>
 
@@ -515,6 +516,9 @@
                     'documento_identidad' : false,
                     'vacunacion_covid' : false,
                 },
+                estadoInscripcion: false,
+                estadoEvaluaciones: false,
+                estadoPago: false,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -688,7 +692,22 @@
                             this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
                             this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
                         }
+                        
+
                     }
+                    this.estadoInscripcion = moment().isBetween(
+                        this.fechas.fechaInicioInscripciones +' '+ this.horas.fechaInicioInscripciones,
+                        this.fechas.fechaFinInscripciones +' '+ this.horas.fechaFinInscripciones
+                        );
+
+                    this.estadoEvaluaciones = moment().isBetween(
+                        this.fechas.fechaInicioEvaluaciones +' '+ this.horas.fechaInicioEvaluaciones,
+                        this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
+                        );
+
+                    this.estadoPago = moment().isBefore(
+                        this.fechas.fechaLimitePago,
+                        );
             },
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
