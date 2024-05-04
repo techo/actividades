@@ -1,12 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Personas')
+@section('page_title', __('backend.people'))
 
 @section('add-new')
 
     <span class="pull-right">
         <a href="/admin/usuarios/registrar" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Crear Persona
+            <i class="fa fa-plus"></i> {{ __('backend.create_person') }}
         </a>
     </span>
 @endsection
@@ -23,7 +23,7 @@
                     api-url="/admin/ajax/usuarios/"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre, apellido o documento"
+                    placeholder-text="{{ __('backend.search_by_name_lastName_document') }}"
                     detail-url="/admin/usuarios/"
             ></usuarios-datatable>
         </div>

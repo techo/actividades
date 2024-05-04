@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Suscriptas')
+@section('page_title', __('backend.subscribed'))
 
 
 @section('content')
@@ -15,7 +15,7 @@
                     api-url="/admin/ajax/suscriptos/"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre, apellido o documento"
+                    placeholder-text="{{ __('backend.search_by_name_lastName_document') }}"
                     detail-url="/admin/usuarios/"
             ></suscriptos-datatable>
         </div>

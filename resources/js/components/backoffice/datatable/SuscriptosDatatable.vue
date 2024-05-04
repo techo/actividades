@@ -3,7 +3,7 @@
     <simple-alert ref="loading"></simple-alert>
 
     <div style="text-align: right">
-				<button class="btn btn-default" @click="exportarSuscriptos()" >Descargar<i class="fa fa-download"></i></button>
+				<button class="btn btn-default" @click="exportarSuscriptos()" >{{ $t('backend.download') }} <i class="fa fa-download"></i></button>
 			</div>
     <usuarios-filter-bar v-bind:placeholder-text="dataPlaceholderText"></usuarios-filter-bar>
 
