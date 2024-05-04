@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="email">Email</label>
+                                    <label for="email">{{ $t('frontend.email') }}</label>
                                     <input id="email"
                                            type="email"
                                            class="form-control"
@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>DNI / Pasaporte</label>
+                                    <label>{{ $t('backend.identifications') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="usuario.dni"
@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label>{{ $t('backend.name') }}</label>
                                     <input id="nombre"
                                            type="text"
                                            class="form-control"
@@ -63,7 +63,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="apellido">Apellido</label>
+                                    <label>{{ $t('backend.last_name') }}</label>
                                     <input id="apellido"
                                            type="text"
                                            class="form-control"
@@ -76,7 +76,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nacimiento">Fecha de nacimiento</label>
+                                    <label>{{ $t('backend.birthdate') }}</label>
                                     <br>
                                     <p v-if="readonly">{{ fechaNacimiento }}</p>
                                     <date-picker v-else
@@ -85,18 +85,19 @@
                                             id="nacimiento"
                                             lang="es"
                                             format="DD/MM/YYYY"
+                                            :placeholder="$t('backend.select_date')"
                                     ></date-picker>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="genero">Género</label>
+                                    <label>{{ $t('backend.gender') }}</label>
                                     <br>
                                     <v-select
                                             :options="dataGeneros"
                                             label="genero"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="genero"
                                             id="genero"
                                             v-model="usuario.genero"
@@ -111,7 +112,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="telefono">Teléfono</label>
+                                    <label>{{ $t('backend.phone') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name="telefono"
@@ -127,11 +128,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="rol">Rol</label>
+                                    <label>{{ $t('backend.role') }}</label>
                                     <v-select
                                             :options="dataRoles"
                                             label="rol"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="rol"
                                             id="rol"
                                             v-model="usuario.rol"
@@ -143,11 +144,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estadoPersona">Estado</label>
+                                    <label for="estadoPersona">{{ $t('backend.state') }}</label>
                                     <v-select
                                             :options="dataEstados"
                                             label="estadoPersona"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="estadoPersona"
                                             id="estadoPersona"
                                             v-model="usuario.estadoPersona"
@@ -161,11 +162,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pais">País</label>
+                                    <label for="pais">{{ $t('backend.country') }}</label>
                                     <v-select
                                             :options="dataPaises"
                                             label="nombre"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="pais"
                                             id="pais"
                                             v-model="paisSeleccionado"
@@ -179,11 +180,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="provincia">Provincia</label>
+                                    <label for="provincia">{{ $t('backend.province') }}</label>
                                     <v-select
                                             :options="dataProvincias"
                                             label="provincia"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="provincia"
                                             id="provincia"
                                             v-model="provinciaSeleccionada"
@@ -197,11 +198,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="localidad">Localidad</label>
+                                    <label for="localidad">{{ $t('backend.location') }}</label>
                                     <v-select
                                             :options="dataLocalidades"
                                             label="localidad"
-                                            placeholder="Seleccione"
+                                            :placeholder="$t('backend.select')"
                                             name="localidad"
                                             id="localidad"
                                             v-model="localidadSeleccionada"
@@ -215,8 +216,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="canal_contacto">Canal de Contacto</label>
-                                    <select  placeholder="Seleccione" :disabled="this.readonly" id="canal_contacto" v-model="usuario.canal_contacto" class="form-control">
+                                    <label for="canal_contacto">{{ $t('backend.contact_channel') }}</label>
+                                    <select  :placeholder="$t('backend.select')" :disabled="this.readonly" id="canal_contacto" v-model="usuario.canal_contacto" class="form-control">
                                         <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
                                         <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
                                         <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
@@ -232,7 +233,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="localidad">Verificación</label>
+                                    <label>{{ $t('backend.verification') }}</label>
                                     <br>
                                     <v-switch
                                         theme="bootstrap" 
