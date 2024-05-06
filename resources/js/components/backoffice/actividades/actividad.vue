@@ -115,7 +115,7 @@
                     </div>  
                     
                     <div class="col-md-6 text-center m-2">
-                        <div v-if="estadoInscripcion" class="alert alert-info" role="alert" >
+                        <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
                             Inscripciones Abiertas
                         </div>
                         <div v-else class="alert alert-danger" role="alert" >
@@ -411,7 +411,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="require_ficha_medica">Roles Aplicables</label>
                             <p class="help-block">
@@ -431,8 +431,25 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-10">
-                        
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Tipo de Inscripción</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar los canales de inscripcion (secundario, universitario, voluntario corporativo, pasante).
+                            </p>
+                            <vue-tags-input
+                                v-model="tag2"
+                                :tags="tipoInscriptosTags"
+                                :disabled="!edicion"
+                                :autocompleteItems="filteredTipoInscriptosTags"
+                                :add-only-from-autocomplete="true"
+                                placeholder=""
+                                @tags-changed="newTags => tipoInscriptosTags = newTags"
+                            />
+                            <p class="help-block">
+                                De dejar este campo en blanco no se mostrara al inscribir esta opcion.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -505,7 +522,20 @@
         data() {
             return {
                 tag: '',
+                tag2: '',
                 rolesTags: [],
+                tipoInscriptosTags:  [],
+                autocompleteTipoInscriptos: [{
+                        text: 'Secundario',
+                    }, {
+                        text: 'Voluntario Corporativo',
+                    }, {
+                        text: 'Pasante',
+                    }, {
+                        text: 'Universitario',
+                    }, {
+                        text: 'Voluntario',
+                }],
 
                 fichaMedicaCampos:{
                     'contacto_emergencia' : false,
@@ -615,6 +645,10 @@
                             };
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.actividad.roles_tags;
+
+
+                        if (this.actividad.tipo_inscriptos_tag)
+                            this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -626,7 +660,11 @@
 
         },
         computed: {
-     
+            filteredTipoInscriptosTags() {
+                return this.autocompleteTipoInscriptos.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
         },
         filters: {},
         watch: {
@@ -695,6 +733,9 @@
                         
 
                     }
+                    if(!this.actividad.pago)
+                        this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
+
                     this.estadoInscripcion = moment().isBetween(
                         this.fechas.fechaInicioInscripciones +' '+ this.horas.fechaInicioInscripciones,
                         this.fechas.fechaFinInscripciones +' '+ this.horas.fechaFinInscripciones
@@ -735,6 +776,7 @@
                 
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 this.actividad.roles_tags = this.rolesTags;
+                this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
                 
                 
 

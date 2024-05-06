@@ -113,6 +113,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->nombreGrupo,
             $query->nombreRol,
             $query->roles_aplicados,
+            $query->inscripciones_aplicadas,
         ];
     }
 

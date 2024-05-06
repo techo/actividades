@@ -47,6 +47,7 @@
   import Pago from './Pago';
   import Asistencia from './Asistencia';
   import tag_field from './TagField';
+  import TipoInscripcionTagField from './TipoInscripcionTagField';
   import estado_persona from './estadoPersona';
   import ActualizarInscripcion from './actualizarInscripcion';
   import EstadoInscripcion from './estadoInscripcion';
@@ -59,6 +60,7 @@
   Vue.component('filter-bar', FilterBar);
   Vue.component('asistencia', Asistencia);
   Vue.component('roles_asignados', tag_field);
+  Vue.component('inscripciones_aplicadas', TipoInscripcionTagField);
   Vue.component('estado_persona', estado_persona);
   Vue.component('pago', Pago); 
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);

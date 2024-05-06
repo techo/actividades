@@ -29,6 +29,7 @@ class InscripcionesController extends BaseController
     {
         $request->validate([
             'roles_aplicados' => 'json',
+            'inscripciones_aplicadas' => 'json',
         ]);
         $actividad = Actividad::find($id);
         $actividad->descripcion = clean_string($actividad->descripcion);
@@ -39,6 +40,7 @@ class InscripcionesController extends BaseController
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
+            ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
             ->with('aplica_rol', $request->input('aplica_rol'))
             ->with('tipo', $tipo);
 
@@ -53,6 +55,7 @@ class InscripcionesController extends BaseController
     {
         $request->validate([
             'roles_aplicados' => 'json',
+            'inscripciones_aplicadas' => 'json',
         ]);
         $actividad = Actividad::find($id);
         $actividad->load('pais','provincia','localidad');
@@ -70,6 +73,7 @@ class InscripcionesController extends BaseController
                 $inscripcion->idPersona = Auth::user()->idPersona;
                 $inscripcion->fechaInscripcion = new Carbon();
                 $inscripcion->roles_aplicados = $request->input('roles_aplicados');
+                $inscripcion->inscripciones_aplicadas = $request->input('inscripciones_aplicadas');
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
             }
 

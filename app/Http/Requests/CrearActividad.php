@@ -66,6 +66,7 @@ class CrearActividad extends FormRequest
             'requiere_ficha_medica' => 'required',
             'ficha_medica_campos' => 'sometimes',
             'roles_tags' => 'sometimes|nullable',
+            'tipo_inscriptos_tag' => 'sometimes|nullable',
         ];
     }
 }

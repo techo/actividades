@@ -23,7 +23,8 @@ class Actividad extends Model
         ];
     protected $casts = [
         'ficha_medica_campos' => 'array',
-        'roles_tags' => 'array'
+        'roles_tags' => 'array',
+        'tipo_inscriptos_tag' => 'array'
     ];
 
     const CREATED_AT = 'fechaCreacion';
