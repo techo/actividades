@@ -526,15 +526,15 @@
                 rolesTags: [],
                 tipoInscriptosTags:  [],
                 autocompleteTipoInscriptos: [{
-                        text: 'Secundario',
+                        text: 'Secundaria',
                     }, {
-                        text: 'Voluntario Corporativo',
+                        text: 'Voluntariado Corporativo',
                     }, {
                         text: 'Pasante',
                     }, {
-                        text: 'Universitario',
+                        text: 'Universidad',
                     }, {
-                        text: 'Voluntario',
+                        text: 'Voluntariado',
                 }],
 
                 fichaMedicaCampos:{

@@ -316,7 +316,7 @@ return [
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
 	'type_of_inscription' => 'Tipo de Inscrição',
-	'whats_a_type_inscription' => 'Selecione os tipos aos quais gostaria de se candidatar. Comece a digitar para ver as opções.',
+	'whats_a_type_inscription' => 'Selecione o tipo de voluntariado que você está realizando ou representando durante esta atividade',
 
 	'yes' => 'Sim',
 	'no' => 'Não',
@@ -343,6 +343,7 @@ return [
 	'upload_voucher' => 'Anexe Voucher',
 	'data_uploaded' => 'Voucher Subido',
 	'payment_in_process' => 'Recebemos seu voucher. Estamos verificando seu pagamento',
+	'confirm_later' => 'Confirmar Mais Tarde',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',

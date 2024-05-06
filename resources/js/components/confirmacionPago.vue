@@ -23,8 +23,8 @@
                   </div>
                 </div>
 
-                <div class="row my-2" v-if="guardo">
-                  <div class="col-md-12">
+                <div class="row my-2" >
+                  <div class="col-md-12" v-if="guardo">
                     <button type="button" disable
                         class="btn btn-success form-control" 
                         @click="submitVoucher" >
@@ -32,6 +32,14 @@
                             {{ $t('frontend.changes_success') }}
                         </span>
                     </button>
+                  </div><div class="col-md-12">
+                    <button type="button" disable
+                      class="btn btn-secundary form-control" 
+                      @click="redirectToIndex">
+                      <span aria-hidden="true">
+                          {{ $t('frontend.confirm_later') }}
+                      </span>
+                  </button>
                   </div>
                 </div>
     </div>
@@ -70,6 +78,9 @@
               this.voucher = response.data.voucherURL;
             }).catch((error) => {
             });
+          },
+          redirectToIndex() {
+              window.location.href = '/';
           },
         }
     }

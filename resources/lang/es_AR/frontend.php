@@ -315,7 +315,7 @@ return [
 
 
 	'type_of_inscription' => 'Tipo de Inscripción',
-	'whats_a_type_inscription' => 'Selecciona los tipos a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
+	'whats_a_type_inscription' => 'Selecciona el tipo de voluntariado que estas realizando o representando durante esta actividad.',
 
 
 	'yes' => 'Si',
@@ -343,6 +343,7 @@ return [
 	'upload_voucher' => 'Adjunta Voucher',
 	'data_uploaded' => 'Voucher Subido',
 	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
+	'confirm_later' => 'Confirmar Luego',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

@@ -307,7 +307,7 @@ return [
 	'no_apply_rol' => "No, I don't want to apply for a rol",
 
 	'type_of_inscription' => 'Type of Inscription',
-	'whats_a_type_inscription' => 'Select the types you would like to apply to. Start typing to see the options.',
+	'whats_a_type_inscription' => 'Select the type of volunteering you are doing or representing during this activity.',
 
 	'yes' => 'Yes',
 	'no' => 'No',
@@ -335,6 +335,7 @@ return [
 	'upload_voucher' => 'Upload Voucher',
 	'data_uploaded' => 'Voucher Uploaded',
 	'payment_in_process' => "We've received your voucher. We are verifying your payment",
+	'confirm_later' => 'Confirm Later',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",
