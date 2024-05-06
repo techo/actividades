@@ -313,6 +313,11 @@ return [
 	'yes_apply_rol' => 'Si, aplicar a rol',
 	'no_apply_rol' => 'No deseo aplicar a rol',
 
+
+	'type_of_inscription' => 'Tipo de Inscripción',
+	'whats_a_type_inscription' => 'Selecciona los tipos a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
+
+
 	'yes' => 'Si',
 	'no' => 'No',
 	// confirmar-paso-1

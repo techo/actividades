@@ -315,6 +315,9 @@ return [
 	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
+	'type_of_inscription' => 'Tipo de Inscrição',
+	'whats_a_type_inscription' => 'Selecione os tipos aos quais gostaria de se candidatar. Comece a digitar para ver as opções.',
+
 	'yes' => 'Sim',
 	'no' => 'Não',
 	// confirmar-paso-1

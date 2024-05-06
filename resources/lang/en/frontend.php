@@ -306,6 +306,9 @@ return [
 	'yes_apply_rol' => 'Yes, apply for a rol',
 	'no_apply_rol' => "No, I don't want to apply for a rol",
 
+	'type_of_inscription' => 'Type of Inscription',
+	'whats_a_type_inscription' => 'Select the types you would like to apply to. Start typing to see the options.',
+
 	'yes' => 'Yes',
 	'no' => 'No',
 	// confirmar-paso-1
