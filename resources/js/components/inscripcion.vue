@@ -98,7 +98,7 @@
                         </div>
                         </div>
                 </div>
-                <div v-else class="col-md-8">
+                <div v-else-if="!tipoInscriptoAplicado" class="col-md-8">
                         <h2 class="card-title">{{ $t('frontend.type_of_inscription') }}</h2>
 
                         <p>{{ $t('frontend.whats_a_type_inscription') }}</p>     
@@ -148,7 +148,7 @@
                 <div class="col-md-12 px-4">
                     <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
                 </div>
-            </div>
+            </div> 
         </div>
         <hr>
         <div class="col-md-4 prev" >
@@ -228,7 +228,7 @@
             if(self.actividad.roles_tags == null || self.actividad.roles_tags.length == 0)
                 self.rolAplicado = true;
             if(self.actividad.tipo_inscriptos_tag == null || self.actividad.tipo_inscriptos_tag.length == 0)
-                self.tipoInscriptosAplicado = true;
+                self.tipoInscriptoAplicado = true;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
