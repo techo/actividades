@@ -15,6 +15,10 @@ class Inscripcion extends Model
     protected $primaryKey = 'idInscripcion';
     protected $dates = ['fechaInscripcion', 'deleted_at'];
     protected $guarded = ['idInscripcion'];
+    protected $casts = [
+        'roles_aplicados' => 'array',
+        'inscripciones_aplicadas' => 'array',
+    ];
 
     public function actividad()
     {

@@ -28,6 +28,10 @@
                 <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
             </li>
             @endrole
+
+            <li>
+                <a href="#estudios" data-toggle="tab" aria-expanded="true">Estudios</a>
+            </li>
         </ul>
         <div class="tab-content" style="background-color: #ECF0F1;">
             <div class="tab-pane active" id="general">
@@ -37,6 +41,15 @@
                     edicion="{{ $edicion }}"
                 ></usuario-form>
 
+                @role('admin')
+                    <crud-footer
+                            cancelar-url="/admin/usuarios"
+                            edicion="{{ $edicion }}"
+                            can-editar="true"
+                            can-fusionar="true"
+                            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
+                    ></crud-footer>
+                @endrole
             </div>
             <div class="tab-pane" id="ficha">
 
@@ -58,19 +71,8 @@
 
             </div>
             @endrole
+            <div class="tab-pane" id="estudios">
+                <usuarios-estudios-tab persona="{{ $usuario->idPersona }}" > </usuarios-estudios-tab>
+            </div>
         </div>
-        <br/>
-        <br/>
-@endsection
-
-@section('footer')
-    @role('admin')
-    <crud-footer
-            cancelar-url="/admin/usuarios"
-            edicion="{{ $edicion }}"
-            can-editar="true"
-            can-fusionar="true"
-            can-borrar="{{Auth::user()->hasPermissionTo('borrar_usuarios')}}"
-    ></crud-footer>
-    @endrole
 @endsection

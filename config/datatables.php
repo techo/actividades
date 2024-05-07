@@ -56,18 +56,18 @@ return [
                 'title' => 'Estado',
             ],
             [
-               'name' => 'pais',
+                'name' => 'pais',
                 'sortField' => 'pais',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Pais',
             ],
-//            [
-//                'name' => '__component:mis-actividades',
-//                'title' => 'Acciones',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ]
+            //            [
+            //                'name' => '__component:mis-actividades',
+            //                'title' => 'Acciones',
+            //                'titleClass' => 'text-center',
+            //                'dataClass' => 'text-center'
+            //            ]
         ],
         'sortOrder' => [
             [
@@ -157,7 +157,7 @@ return [
                 'title' => 'Estado',
             ],
             [
-               'name' => 'pais',
+                'name' => 'pais',
                 'sortField' => 'pais',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
@@ -169,12 +169,12 @@ return [
             //   callback' => 'allcap'
             // ],
             // [
-//            [
-//                'name' => '__component:mis-actividades',
-//                'title' => 'Acciones',
-//                'titleClass' => 'text-center',
-//                'dataClass' => 'text-center'
-//            ]
+            //            [
+            //                'name' => '__component:mis-actividades',
+            //                'title' => 'Acciones',
+            //                'titleClass' => 'text-center',
+            //                'dataClass' => 'text-center'
+            //            ]
         ],
         'sortOrder' => [
             [
@@ -221,6 +221,21 @@ return [
                 'title' => 'Rol'
             ],
             [
+                'name' => '__component:roles_asignados',
+                'sortField' => 'roles_aplicados',
+                'title' => 'Roles Aplicado'
+            ],
+            [
+                'name' => '__component:inscripciones_aplicadas',
+                'sortField' => 'inscripciones_aplicadas',
+                'title' => 'Tipo Inscripción'
+            ],
+            [
+                'name' => '__component:estado_persona',
+                'sortField' => 'estadoPersona',
+                'title' => 'Estado Voluntariado'
+            ],
+            [
                 'name' => '__component:asistencia',
                 'title' => 'Asistencia',
                 'titleClass' => 'text-center',
@@ -240,15 +255,15 @@ return [
     ],
     'miembros' => [
         'fields' => [
-             [
-               'name' => '__checkbox',
-               'titleClass' => 'text-center',
-               'dataClass' => 'text-center',
-             ],
-             [
-               'name' => 'tipo',
-               'callback' => 'getIcon'
-             ],
+            [
+                'name' => '__checkbox',
+                'titleClass' => 'text-center',
+                'dataClass' => 'text-center',
+            ],
+            [
+                'name' => 'tipo',
+                'callback' => 'getIcon'
+            ],
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
@@ -310,6 +325,141 @@ return [
             [
                 'field' => 'nombres',
                 'sortField' => 'nombres',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+    'equipos' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idEquipo',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'area',
+                'sortField' => 'area',
+                'title' => 'Area'
+            ],
+            [
+                'name' => 'oficina',
+                'sortField' => 'oficina',
+                'title' => 'Oficina'
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'title' => 'Fecha de Inicio'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+    'integrantes' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idIntegrante',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol'
+            ],
+            [
+                'name' => 'despliegue',
+                'sortField' => 'despliegue',
+                'title' => 'Despliegue'
+            ],
+
+            [
+                'name' => 'relacion',
+                'sortField' => 'relacion',
+                'title' => 'Relación'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'title' => 'Fecha de Inicio'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'estado',
+                'sortField' => 'estado',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+
+    'provincias' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idProvincia',
+                'visible' => false
+            ],
+            [
+                'name' => 'provincia',
+                'sortField' => 'provincia',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'oficina.nombre',
+                'title' => 'Oficina'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'provincia',
+                'sortField' => 'provincia',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+    'localidades' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idLocalidad',
+                'visible' => false
+            ],
+            [
+                'name' => 'localidad',
+                'sortField' => 'localidad',
+                'title' => 'Nombre'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'localidad',
+                'sortField' => 'localidad',
                 'direction' => 'asc'
             ],
         ]

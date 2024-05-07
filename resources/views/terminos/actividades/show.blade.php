@@ -48,10 +48,6 @@
                 <li>Resguardar y mantener la debida confidencialidad respecto de su información personal conforme a la normativa vigente.</li>
             </ol>
 
-            <b><p>Considerando la especial situación a nivel global en el marco de la pandemia por el nuevo coronavirus COVID19 y el impacto que ha tenido en el desarrollo de ciertas actividades como la de TECHO que tiene como objeto el soporte, acompañamiento y desarrollo de las comunidades más vulnerables.</p>
- 
-            <p>Por lo expuesto la persona voluntaria al aceptar la presente carta manifiesta que conoce los riesgos de la actividad y declara que no posee ninguno de los síntomas anexados a continuación. Por otro lado la persona voluntaria declara poseer el permiso de circulación si fuera necesario de acuerdo a cada jurisdicción, normativa local y relación con las excepciones dictadas en el marco del Decreto Nacional 297/2020.</p>
- 
             <p>Finalmente TECHO declara poseer todos los permisos y autorizaciones necesarias para la realización de su tarea en los barrios.</p></b>
             <br>
 

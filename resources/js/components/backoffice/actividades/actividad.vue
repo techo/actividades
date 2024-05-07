@@ -10,7 +10,7 @@
                 
                 <div class="row">
 
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.nombreActividad }" >
                             <label for="nombreActividad">Nombre</label>
                             <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required :disabled="!edicion"> 
@@ -18,23 +18,25 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="estado">Estado</label>
-                            <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
-                                <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
-                                <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
+                    <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
+                            <label for="pais">País</label>
+                            <select name="idPais" class="form-control" v-model="actividad.idPais" required 
+                            @change="getProvincias($event);getOficinas($event);actividad.idProvincia=null;actividad.idOficina=null; actividad.idLocalidad=null;" 
+                            :disabled="!edicion" >
+                                <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idPais }}</span>
                         </div>
                     </div>
 
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="inscripcionInterna">Visibilidad</label>
-                            <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
-                                <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
-                                <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
+                    <div class="col-md-3">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
+                            <label for="oficina">Oficina</label>
+                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
+                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
+                            <span class="help-block">{{ errors.idOficina }}</span>
                         </div>
                     </div>
 
@@ -62,23 +64,22 @@
                     </div>
 
                     <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
-                            <label for="pais">País</label>
-                            <select name="idPais" class="form-control" v-model="actividad.idPais" required 
-                            @change="getProvincias($event);getOficinas($event);actividad.idProvincia=null;actividad.idOficina=null; actividad.idLocalidad=null;" 
-                            :disabled="!edicion" >
-                                <option v-text="pais.nombre" v-bind:value="pais.id" v-for="pais in paises" ></option>
+                        <div class="form-group">
+                            <label for="estado">Estado</label>
+                            <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
+                                <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
+                                <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
                             </select>
-                            <span class="help-block">{{ errors.idPais }}</span>
                         </div>
                     </div>
+
                     <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
-                            <label for="oficina">Oficina</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
-                                <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
+                        <div class="form-group">
+                            <label for="inscripcionInterna">Visibilidad</label>
+                            <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
+                                <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
+                                <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
                             </select>
-                            <span class="help-block">{{ errors.idOficina }}</span>
                         </div>
                     </div>
 
@@ -86,7 +87,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -95,9 +96,7 @@
                                 <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -106,28 +105,31 @@
                                 <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
-                            
-                </div>
 
-                
+                        <div  v-show="edicion">
+                            <label>
+                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
+                            </label>
+                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                        </div>
+                    </div>  
+                    
+                    <div class="col-md-6 text-center m-2">
+                        <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
+                            Inscripciones Abiertas
+                        </div>
+                        <div v-else class="alert alert-danger" role="alert" >
+                            Inscripciones Cerradas
+                        </div>
 
-                <!-- <ul v-show="fechas.length > 0" style="color: #dd4b39;">
-                    <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
-                </ul> -->
+                        <div v-if="estadoEvaluaciones" class="alert alert alert-warning" role="alert" >
+                            Evaluaciones Abiertas
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <br>
-                    <div class="col-md-12">
-                        <label>
-                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
-                        </label>
-                    </div>
-                </div>
+                        <div v-if="(!estadoPago && actividad.pago)" class="alert alert alert-danger" role="alert" >
+                            Fecha de Pago Vencida!!
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <div class="col-md-12" style="clear:both">
-                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
                     </div>
                 </div>
 
@@ -135,10 +137,9 @@
 
                     <div class="box-body">
 
-                        <div class="row">
-
-                            <div class="col-md-4">
-                                <label for="fechaInicioInscripciones">Inscripciones</label>
+                        <div class="row">                            
+                            <div class="col-md-4 ml-2">
+                                <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
@@ -162,8 +163,7 @@
                         </div>
 
                         <div class="row">
-
-                            <div class="col-md-4">
+                            <div class="col-md-4 ml-2">
                                 <label for="fechaFin">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
@@ -328,11 +328,22 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6" v-show="actividad.idPais != 13">
-                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">Link para el Pago</label>
-                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
-                            <span class="help-block">{{ errors.linkPago }}</span>
+                    <div class="col-md-12">
+                        <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
+                            <label for="">Pasos para realizar el pago </label>
+                            <tinymce-editor 
+                                v-model="actividad.descripcionPago" 
+                                :init="{
+                                    menubar: 'false',
+                                    file_picker_callback: tiny_mce_filemanager_callback,
+                                    relative_urls: false,
+                                    resize: true,
+                                }"
+                                toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
+                                plugins="paste autoresize image preview paste link"
+                                :disabled="!edicion"
+                            ></tinymce-editor>
+                            <span class="help-block">{{ errors.descripcionPago }}</span>
                         </div>
                     </div>
 
@@ -343,6 +354,14 @@
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
                     </div>
+
+                    <!-- <div class="col-md-6">
+                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
+                            <label for="">Link para el Pago</label>
+                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkPago }}</span>
+                        </div>
+                    </div> -->
                 </div>
 
                 <br>
@@ -363,13 +382,79 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Extras</h3>
+                <h3 class="box-title">Otros</h3>
             </div>
             <div class="box-body">
 
                 <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Requiere Ficha Medica</label>
+                            <select name="requiere_ficha_medica" class="form-control" v-model="actividad.requiere_ficha_medica" required :disabled="!edicion">
+                                <option value="1" :selected="actividad.requiere_ficha_medica == 1" >Si</option>
+                                <option value="0" :selected="actividad.requiere_ficha_medica == 0" >No</option>
+                            </select>
 
-                    <div class="col-md-5">
+                            <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
+                        </div>
+                    </div>
+                    <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
+                        <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-4">
+                            <div class="row">
+                                <label>
+                                <input class="col-md-1" :name="valor" v-model="fichaMedicaCampos[index]" type="checkbox" :disabled="!edicion" />
+                                <span class="col-md-11 font-weight-light">{{ $t('frontend.'+ index) }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Roles Aplicables</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar las opciones de roles al que el voluntariado puede aplicar para esta actividad.
+                                Presiona enter entre cada uno.
+                            </p>
+                            <vue-tags-input
+                                v-model="tag"
+                                :tags="rolesTags"
+                                :disabled="!edicion"
+                                placeholder=""
+                                @tags-changed="newTags => rolesTags = newTags"
+                            />
+
+                            <p class="help-block">
+                                De dejar este campo en blanco no se le mostrara la opcion de seleccion de rol.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Tipo de Inscripción</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar los canales de inscripcion (secundario, universitario, voluntario corporativo, pasante).
+                            </p>
+                            <vue-tags-input
+                                v-model="tag2"
+                                :tags="tipoInscriptosTags"
+                                :disabled="!edicion"
+                                :autocompleteItems="filteredTipoInscriptosTags"
+                                :add-only-from-autocomplete="true"
+                                placeholder=""
+                                @tags-changed="newTags => tipoInscriptosTags = newTags"
+                            />
+                            <p class="help-block">
+                                De dejar este campo en blanco no se mostrara al inscribir esta opcion.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="limiteInscripciones">Cupos</label>
                             <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
@@ -377,7 +462,15 @@
                             <p class="help-block">0 es "sin limite de inscriptos"</p>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="seguimiento_google">Codigo Seguimiento Google</label>
+                            <input type="text" id="seguimiento_google" class="form-control" v-model="actividad.seguimiento_google"
+                            :disabled="!edicion" >
+                            <p class="help-block">En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="linkEvaluacion">Link de evaluación</label>
                             <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
@@ -386,7 +479,6 @@
                             <p class="help-block">Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)</p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -407,6 +499,7 @@
 
 <script>
     import editor from '@tinymce/tinymce-vue'
+    import vSwitch from 'vue-switches';
 
     import 'tinymce/tinymce'
 
@@ -420,13 +513,42 @@
     import 'tinymce/plugins/preview'
     import 'tinymce/plugins/paste'
     import 'tinymce/plugins/link'
+    import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
         name: "actividad",
         props: {'id': {}, 'disabled': {default: false, type: Boolean} },
-        components: { 'tinymce-editor': editor },
+        components: { 'tinymce-editor': editor, vSwitch, VueTagsInput },
         data() {
             return {
+                tag: '',
+                tag2: '',
+                rolesTags: [],
+                tipoInscriptosTags:  [],
+                autocompleteTipoInscriptos: [{
+                        text: 'Secundaria',
+                    }, {
+                        text: 'Voluntariado Corporativo',
+                    }, {
+                        text: 'Pasante',
+                    }, {
+                        text: 'Universidad',
+                    }, {
+                        text: 'Voluntariado',
+                }],
+
+                fichaMedicaCampos:{
+                    'contacto_emergencia' : false,
+                    'grupo_sanguinieo' : false,
+                    'cobertura_medica': false,
+                    'ficha_alergias' : false,
+                    'ficha_alimentacion' : false,
+                    'documento_identidad' : false,
+                    'vacunacion_covid' : false,
+                },
+                estadoInscripcion: false,
+                estadoEvaluaciones: false,
+                estadoPago: false,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -448,6 +570,13 @@
 
                     limiteInscripciones: 0,
                     inscripcionInterna: 0,
+                    seguimiento_google: null,
+
+                    requiere_ficha_medica: 0,
+                    ficha_medica_campos: {},
+
+                    descripcionPago: null,
+                    linkPago: null,
 
                     tipo : {
                         idCategoria: 1
@@ -502,6 +631,24 @@
                 axios.get('/admin/ajax/actividades/' + this.id)
                     .then((datos) => { 
                         this.actividad = datos.data; 
+                        if (this.actividad.ficha_medica_campos)
+                            this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
+                        else
+                            this.fichaMedicaCampos =   {
+                                'contacto_emergencia' : false,
+                                'grupo_sanguinieo' : false,
+                                'cobertura_medica': false,
+                                'ficha_alergias' : false,
+                                'ficha_alimentacion' : false,
+                                'documento_identidad' : false,
+                                'vacunacion_covid' : false
+                            };
+                        if (this.actividad.roles_tags)
+                            this.rolesTags = this.actividad.roles_tags;
+
+
+                        if (this.actividad.tipo_inscriptos_tag)
+                            this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -513,7 +660,11 @@
 
         },
         computed: {
-     
+            filteredTipoInscriptosTags() {
+                return this.autocompleteTipoInscriptos.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
         },
         filters: {},
         watch: {
@@ -579,7 +730,25 @@
                             this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
                             this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
                         }
+                        
+
                     }
+                    if(!this.actividad.pago)
+                        this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
+
+                    this.estadoInscripcion = moment().isBetween(
+                        this.fechas.fechaInicioInscripciones +' '+ this.horas.fechaInicioInscripciones,
+                        this.fechas.fechaFinInscripciones +' '+ this.horas.fechaFinInscripciones
+                        );
+
+                    this.estadoEvaluaciones = moment().isBetween(
+                        this.fechas.fechaInicioEvaluaciones +' '+ this.horas.fechaInicioEvaluaciones,
+                        this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
+                        );
+
+                    this.estadoPago = moment().isBefore(
+                        this.fechas.fechaLimitePago,
+                        );
             },
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
@@ -604,6 +773,12 @@
                 if (this.actividad.pago==1){
                     this.actividad.fechaLimitePago = this.fechas.fechaLimitePago;
                 }
+                
+                this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
+                this.actividad.roles_tags = this.rolesTags;
+                this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
+                
+                
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)

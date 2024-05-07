@@ -7,6 +7,7 @@ use App\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Actividad;
+use App\HomeHeader;
 
 class actividadesController extends Controller
 {
@@ -20,12 +21,13 @@ class actividadesController extends Controller
         $idCategoria = $request->categoria ?? null;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
-
+        $homeHeader = homeHeader::where('idPais', \Session::get('pais'))->first();
         return view('actividades.index')
             ->with(
                 [
                     'categoriaSeleccionada' => $categoriaSeleccionada,
                     'categorias' => $categorias,
+                    'homeHeader' => $homeHeader,
                 ]
             );
     }

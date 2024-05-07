@@ -46,6 +46,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="pais">Imagen</label>
+                                    <div>
+                                        <img v-if="tipoActividad.imagen != null" :src="tipoActividad.imagen" alt="imagen actividad">          
+                                    </div>
+                                    <button v-if="!readonly" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
+                                    <p v-if="(tipoActividad.imagen == null || updateArchivo)" class="help-block ml-2">La imagen debe ser de exactamente 380 x 248.</p>
+                                    <input v-if="(tipoActividad.imagen == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,10 +80,13 @@
                     idTipo: null,
                     nombre: "",
                     idCategoria: null,
+                    imagen: null,
+                    imagenNew: null,
                 },
                 readonly: !this.edicion,
                 guardado: false,
                 mensajeGuardado: '',
+                updateArchivo: false,
                 validationErrors: {},
                 dataCategorias: [],
                 categoriaSeleccionado: {},
@@ -140,8 +156,18 @@
                 } else {
                     url = `/admin/ajax/configuracion/tipos-actividad/${encodeURI(this.tipoActividad.idTipo)}/editar`;
                 }
-                this.tipoActividad.idCategoria = (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null;
-                axios.post(url, this.tipoActividad)
+                const data = new FormData();
+
+                data.append('idTipo', this.tipoActividad.idTipo);
+                data.append('nombre', this.tipoActividad.nombre);
+                data.append('idCategoria', (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null);
+
+                if (this.tipoActividad.imagenNew != null)
+                    data.append('imagen', this.tipoActividad.imagenNew);
+
+                const headers = { 'Content-Type': 'multipart/form-data' };
+
+                axios.post(url, data, { headers })
                     .then((respuesta) => {
                         this.tipoActividad = respuesta.data;
                         this.mensajeGuardado = 'Registro guardado correctamente';
@@ -149,7 +175,7 @@
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
                         this.readonly = true;
-                        window.location.replace('/admin/configuracion/tipos-actividad');
+                        window.location.replace('/admin/configuracion/tipos-actividad/'+this.tipoActividad.idTipo);
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();
@@ -160,6 +186,9 @@
                                
                             }
                         }});
+            },
+            guardar_archivo(event) {
+                this.tipoActividad.imagenNew = this.$refs.imagen.files[0];
             },
             eliminar(){
                 let form = document.getElementById('formDelete');

@@ -16,7 +16,9 @@ use App\Exports\InscripcionesGeneralExport;
 use App\Exports\MisActividadesExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
 class ReportController extends Controller
 {
@@ -35,7 +37,11 @@ class ReportController extends Controller
     public function exportarInscripcionesActividad($id, Request $request)
     {
         $filtros['idActividad'] = $id;
-
+        $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos para ver ese perfil.');
+            return redirect()->back();
+        }
         if($request->filter){
             $filtros['HotFilter'] = $request->filter;
             unset($filtros['filter']);
@@ -78,6 +84,10 @@ class ReportController extends Controller
     public function exportarEvaluacionesPersonas($id)
     {
         $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos.');
+            return redirect()->back();
+        }
         $evaluaciones = new EvaluacionesPersonasExport($actividad);
 
         //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
@@ -88,6 +98,10 @@ class ReportController extends Controller
     public function exportarEvaluacionesActividad($id)
     {
         $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos.');
+            return redirect()->back();
+        }
         $evaluaciones = new EvaluacionesActividadExport($actividad);
 
         //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación

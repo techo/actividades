@@ -15,6 +15,7 @@ Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
 Route::get('/carta-voluntariado', function (){ return view('terminos.actividades.show');  });
+Route::get('/carta-voluntariado-brasil', function (){ return view('terminos.actividades.show_brasil');  });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
 Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 
@@ -40,6 +41,17 @@ Route::prefix('ajax')->group(function () {
 
     Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
     Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
+
+    Route::prefix('estudios')->group(function () {
+        Route::post('', 'ajax\EstudiosController@create');
+		Route::put('', 'ajax\EstudiosController@update');
+		Route::delete('/{id}', 'ajax\EstudiosController@delete');
+	});
+
+    Route::prefix('equipos')->group(function () {
+		Route::put('', 'ajax\EquiposController@update');
+		Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
+	});
 
 	Route::prefix('usuario')->group(
 	    function(){
@@ -115,10 +127,13 @@ Route::get('/actividades/{id}', 'ActividadesController@show')->middleware('pais'
 Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
+    
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
 
-Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro')->middleware('verified');
+Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
+
+Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 
@@ -136,6 +151,7 @@ Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
     Route::get('/evaluacion', 'PerfilController@evaluacion');
     Route::get('/cambiar_email', 'PerfilController@cambiar_email');
     Route::post('/actualizar_email', 'PerfilController@actualizar_email');
+    Route::get('/constancia_voluntariado', 'PerfilController@get_constancia_voluntariado');
 });
 
 
@@ -169,6 +185,47 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::delete('/usuarios/{id}', 'backoffice\UsuariosController@delete')->middleware('permission:borrar_usuarios');
     Route::post('/usuarios/{persona}/fusionar', 'backoffice\ajax\UsuariosController@fusionar')->middleware('role:admin');
 
+
+    // panel Equipos
+
+    Route::prefix('/equipos')->middleware(['role:admin|coordinador'])->group(function() {
+        Route::get('', 'backoffice\EquiposController@index');
+        Route::get('/crear', 'backoffice\EquiposController@create');
+        Route::post('/registrar', 'backoffice\EquiposController@store');
+        Route::get('/{idEquipo}', 'backoffice\EquiposController@show');
+        Route::put('/{idEquipo}', 'backoffice\EquiposController@update');
+        Route::delete('/{idEquipo}', 'backoffice\EquiposController@destroy');
+        Route::prefix('/{idEquipo}/integrantes')->group(function() {
+            Route::get('', 'backoffice\IntegrantesController@index');
+        });
+
+        Route::prefix('/{idEquipo}/coordinacion')->group(function() {
+            Route::get('', 'backoffice\CoordinadorEquipoController@index');
+        });
+
+    });
+    Route::prefix('ajax/equipos')->middleware(['role:admin|coordinador'])->group(function() {
+        Route::get('', 'backoffice\ajax\EquiposController@index');
+        
+        Route::prefix('/{idEquipo}/integrante')->group(function() {
+            Route::get('', 'backoffice\ajax\IntegrantesController@index'); 
+            Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
+            Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
+            Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
+            Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
+            Route::post('/{idIntegrante}/archivos', 'backoffice\ajax\IntegrantesController@uploadArchivos');  
+        });
+
+        Route::prefix('/{idEquipo}/coordinacion')->group(function() {
+            Route::get('', 'backoffice\ajax\CoordinadorEquipoController@index');
+            Route::post('/{idPersona}', 'backoffice\ajax\CoordinadorEquipoController@store');
+            Route::delete('/{idCoordinador}', 'backoffice\ajax\CoordinadorEquipoController@delete');
+        });
+    });
+
+
+    
+    
     //panel de usuario
     Route::get('/ajax/usuarios/{id}/inscripciones', 'backoffice\ajax\UsuariosController@inscripciones')
         ->middleware('permission:ver_usuarios');
@@ -180,6 +237,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         ->middleware('role:admin');
     Route::get('/usuarios/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesUsuario')
         ->middleware('role:admin');
+    Route::get('/ajax/usuarios/{id}/estudios', 'backoffice\ajax\UsuariosController@estudios')
+        ->middleware('permission:ver_usuarios');
 
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:ver_usuarios'); //TODO: Mejorar la nomenclatura de la ruta
@@ -309,6 +368,37 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/configuracion/tipos-actividad', 'backoffice\TiposActividadController@index')->middleware('role:admin');
     Route::get('/configuracion/tipos-actividad/registrar', 'backoffice\TiposActividadController@create')->middleware('role:admin');
     Route::get('/configuracion/tipos-actividad/{id}', 'backoffice\TiposActividadController@show')->middleware('role:admin');
+
+    Route::get('/configuracion/home-header', 'backoffice\HomeHeaderController@show')->middleware('role:admin');
+    Route::post('/ajax/configuracion/home-header/registrar', 'backoffice\HomeHeaderController@store')->middleware('role:admin');
+    Route::post('/ajax/configuracion/home-header/{id}/editar', 'backoffice\HomeHeaderController@update')->middleware('role:admin');
+
+
+        // panel Equipos
+
+    Route::prefix('configuracion/provincias')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ProvinciasController@index');
+        Route::get('/crear', 'backoffice\ProvinciasController@create');
+        Route::post('/registrar', 'backoffice\ProvinciasController@store');
+        Route::get('/{idProvincia}', 'backoffice\ProvinciasController@show');
+        Route::put('/{idProvincia}', 'backoffice\ProvinciasController@update');
+        Route::delete('/{idProvincia}', 'backoffice\ProvinciasController@destroy');
+        Route::prefix('/{idProvincia}/localidades')->group(function() {
+            Route::get('', 'backoffice\LocalidadesController@index');
+        });
+    });
+    Route::prefix('ajax/configuracion/provincias')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ajax\ProvinciasController@index');
+        
+        Route::prefix('/{idProvincia}/localidades')->group(function() {
+            Route::get('', 'backoffice\ajax\LocalidadesController@index'); 
+            Route::post('/crear', 'backoffice\ajax\LocalidadesController@store');  
+            Route::put('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@update');
+            Route::delete('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@delete');
+            Route::get('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@get');  
+        });
+    });
+    
 
 });
 

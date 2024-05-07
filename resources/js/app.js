@@ -46,10 +46,16 @@ import EvaluacionesActividadChart from './components/backoffice/evaluaciones/Eva
 import EvaluacionesVoluntariosChart from './components/backoffice/evaluaciones/EvaluacionesVoluntariosChart';
 import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatable';
 import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDatatable';
+import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable';
+import IntegrantesDatatable from './components/backoffice/datatable/IntegrantesDatatable';
+import IntegranteModal from './components/backoffice/equipos/integrante-modal';
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
+import EquiposForm from './components/backoffice/equipos/equipos-form';
+import CoordinadoresEquipo from './components/backoffice/equipos/coordinadores-equipo';
+import HomeHeaderForm from './components/backoffice/homeHeader/home-header-form';
 import UsuariosFichaTab from './components/backoffice/usuarios/usuario-ficha-tab';
-
+import UsuariosEstudiosTab from './components/backoffice/usuarios/usuarios-estudios-tab';
 
 import TiposActividadDatatable from './components/backoffice/datatable/TiposActividadDatatable';
 import TiposActividadFilterBar from './components/backoffice/datatable/TiposActividadFilterBar';
@@ -59,11 +65,24 @@ import TiposActividadForm from './components/backoffice/tiposActividad/tipos-act
 Vue.component('tipos-actividad-datatable', TiposActividadDatatable);
 Vue.component('tipos-actividad-filter-bar', TiposActividadFilterBar);
 Vue.component('tipos-actividad-form', TiposActividadForm);
+Vue.component('coordinadores-equipo', CoordinadoresEquipo);
 
 import OficinasDatatable from './components/backoffice/datatable/OficinasDatatable';
 import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterBar';
 import OficinasForm from './components/backoffice/oficinas/oficina-form';
 
+import ProvinciasDatatable from './components/backoffice/datatable/configuracion/ProvinciasDatatable';
+import ProvinciaForm from './components/backoffice/configuracion/provincias/provincia-form';
+
+
+
+import LocalidadModal from './components/backoffice/configuracion/provincias/localidad-modal';
+import LocalidadesDatatable from './components/backoffice/datatable/configuracion/provincias/LocalidadesDatatable';
+
+Vue.component('provincias-datatable', ProvinciasDatatable);
+Vue.component('provincia-form', ProvinciaForm);
+Vue.component('localidad-modal', LocalidadModal);
+Vue.component('localidades-datatable', LocalidadesDatatable);
 
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
@@ -119,12 +138,21 @@ Vue.component('evaluaciones-actividad-chart', EvaluacionesActividadChart);
 Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
 Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('suscriptos-datatable', SuscriptosDatatable);
+Vue.component('equipos-datatable', EquiposDatatable);
+Vue.component('integrantes-datatable', IntegrantesDatatable);
+Vue.component('integrante-modal', IntegranteModal);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
+Vue.component('equipo-form', EquiposForm);
+Vue.component('home-header-form', HomeHeaderForm);
 Vue.component('usuario-ficha-tab', UsuariosFichaTab);
+Vue.component('usuarios-estudios-tab', UsuariosEstudiosTab);
 Vue.component('oficinas-datatable', OficinasDatatable);
 Vue.component('oficinas-filter-bar', OficinasFilterBar);
 Vue.component('oficina-form', OficinasForm);
+
+
+
 
 window.Event = new Vue();
 

@@ -3,7 +3,7 @@
         <p class="m-3">
             {{ $t('frontend.empty_search') }}
         </p>
-        <p class="mt-3 lead">
+        <!-- <p class="mt-3 lead">
             {{ $t('frontend.suscribe_so_we_get_in_touch') }}
         </p>
         <input v-show="!submited" class="mt-3 text-center" type="text" name="email" id="email" :placeholder="$t('frontend.email')" v-model="data.mail"
@@ -17,9 +17,9 @@
             <a class="btn btn-primary m-3" @click="suscribe" v-show="!submited">
                 <strong>{{ $t('frontend.suscribe') }} </strong>
             </a>
-        </div>
+        </div> -->
         <a 
-            class="btn btn-secondary"  
+            class="btn btn-secondary text-wrap d-md-block m-2"  
             href="autotest">
             {{ $t('frontend.autotestTituloBoton') }} 
         </a>

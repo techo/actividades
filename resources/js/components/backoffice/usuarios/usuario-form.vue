@@ -125,7 +125,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="rol">Rol</label>
                                     <v-select
@@ -135,6 +135,22 @@
                                             name="rol"
                                             id="rol"
                                             v-model="usuario.rol"
+                                            :disabled="this.readonly"
+                                    >
+                                    <span slot="no-options"></span>
+                                    </v-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="estadoPersona">Estado</label>
+                                    <v-select
+                                            :options="dataEstados"
+                                            label="estadoPersona"
+                                            placeholder="Seleccione"
+                                            name="estadoPersona"
+                                            id="estadoPersona"
+                                            v-model="usuario.estadoPersona"
                                             :disabled="this.readonly"
                                     >
                                     <span slot="no-options"></span>
@@ -199,6 +215,23 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label for="canal_contacto">Canal de Contacto</label>
+                                    <select  placeholder="Seleccione" :disabled="this.readonly" id="canal_contacto" v-model="usuario.canal_contacto" class="form-control">
+                                        <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
+                                        <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
+                                        <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
+                                        <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
+                                        <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
+                                        <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
+                                        <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
+                                        <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label for="localidad">Verificación</label>
                                     <br>
                                     <v-switch
@@ -240,14 +273,21 @@
                     pais: null,
                     provincia: null,
                     localidad: null,
+                    canal_contacto: "",
                     dni: "",
                     rol: null,
                     email_verified_at: null,
+                    canal_contacto: null,
                 },
                 dataGeneros: [
                     {id: "M", genero: "Masculino"},
                     {id: "F", genero: "Femenino"},
-                    {id: "O", genero: "Prefiero no decirlo"},
+                    {id: "X", genero: "Otro"},
+                ],
+                dataEstados: [
+                    "Habilitado",
+                    "Suspendido",
+                    "Desvinculado",
                 ],
                 dataPaises: [],
                 dataRoles: [],
@@ -299,7 +339,6 @@
         },
         watch: {
             paisSeleccionado: function (pais, paisAnterior) {
-                console.log(pais, paisAnterior);
                 if (pais !== null) {
                     this.axiosGet('/ajax/paises/' + pais.id + '/provincias',
                         function (data, self) {

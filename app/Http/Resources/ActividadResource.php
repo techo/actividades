@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\FichaMedica;
 use Illuminate\Http\Resources\Json\Resource;
 
 class ActividadResource extends Resource
@@ -12,8 +13,9 @@ class ActividadResource extends Resource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request) {
-        
+    public function toArray($request)
+    {
+
         $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
 
         return [
@@ -36,16 +38,23 @@ class ActividadResource extends Resource
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'ubicacion'     => $this->provincia->provincia,
             'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
+            'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
             'fechaLimitePago'      => empty($this->fechaLimitePago) ? '' : $this->fechaLimitePago->format('d-m-Y'),
             'cantInscriptos' => $this->inscripciones()->count(),
             'cuposRestantes' => (int)$this->limiteInscripciones - $this->inscripciones()->count(),
-            'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0
+            'seguimiento_google' => $this->seguimiento_google,
+            'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
+            'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
+            'ficha_medica_campos' =>  $this->ficha_medica_campos,
+            'roles_tags' =>  $this->roles_tags,
+            'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
         ];
     }
 
-    private static function convertirFecha($fecha){
-        if(is_null($fecha)) return '';
+    private static function convertirFecha($fecha)
+    {
+        if (is_null($fecha)) return '';
 
         return $fecha->format('d-m-Y');
     }

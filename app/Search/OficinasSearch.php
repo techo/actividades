@@ -40,6 +40,9 @@ class OficinasSearch
     private static function newQuery(){
 
         $query = (new Oficina())->newQuery();
+
+        // sumar validacion de seguridad
+        $query->where('atl_oficinas.id_pais', '=', auth()->user()->idPaisPermitido);
         $query->join('atl_pais', 'atl_oficinas.id_pais', '=', 'atl_pais.id')
         ->selectRaw('atl_oficinas.id as id, atl_oficinas.nombre as oficina, atl_pais.nombre as pais');
         return $query;

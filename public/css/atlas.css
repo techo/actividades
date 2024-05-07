@@ -8,8 +8,8 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    margin-bottom: 60px;
-    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 160px;
+    font-family: Fredoka, 'Montserrat', sans-serif !important;
 }
 
 /* Custom page CSS
@@ -17,10 +17,10 @@ body {
 /* Not required for template or sticky footer method. */
 
 label {
-  font-family: Montserrat, sans-serif;
+  font-family: Fredoka, Montserrat, sans-serif;
   font-size: 12px;
   font-weight: bold;
-  font-style: normal;
+  font-style: normal;   
   font-stretch: normal;
   line-height: 1.33;
   letter-spacing: normal;
@@ -43,7 +43,31 @@ code {
 }
 
 .bg-techo-blue {
-    background-color: #0092dd;
+    background-color: #009fe3;
+}
+
+.bg-black {
+    background-color: #212121;
+}
+
+
+.bg-secondary-blue {
+    background-color: #005ca9;
+}
+
+.bg-techo-pink {
+    background-color: #e94362 !important;
+    color: white;
+}
+
+.bg-techo-yellor {
+    background-color: #fdc533 !important;
+    color: white;
+}
+
+.bg-techo-violet {
+    background-color: #954B97 !important;
+    color: white;
 }
 
 .card {
@@ -84,6 +108,16 @@ code {
     height: 37.6px;
 }
 
+.imagen-miniatura-redonda {
+    width: 100%; /* La imagen ocupará el ancho completo de su contenedor */
+    height: 100%; /* La imagen ocupará el ancho completo de su contenedor */
+    max-width: 120px; /* Establece un ancho máximo para la imagen */
+    max-height: 120px; /* Establece un ancho máximo para la imagen */
+    height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+    border-radius: 50%; /* Esto hará que la imagen sea redonda */
+    overflow: hidden; /* Para recortar cualquier parte de la imagen que se extienda más allá del círculo */
+}
+
 .techo-blue {
     color: #0092dd;
 }
@@ -111,7 +145,7 @@ code {
 }
 
 .techo-h6 {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     text-transform: uppercase;
     font-size: 17px;
     font-weight: 500;
@@ -153,7 +187,7 @@ code {
 
 
 .techo-footer-suscribe {
-    font-family: Montserrat, sans-serif;
+    font-family: Granesta, Montserrat, sans-serif;
     font-size: 18px;
     font-weight: bold;
     font-style: normal;
@@ -175,7 +209,7 @@ code {
     background: #392f28;
     position: relative;
     color: #ffffff;
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, sans-serif;
     flex-flow: column;
 }
 
@@ -184,7 +218,7 @@ a {
 }
 
 #login-modal h2 {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 22px;
     font-weight: bold;
     font-style: normal;
@@ -199,7 +233,7 @@ a {
 
 #login-modal label {
     height: 16px;
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: bold;
     font-style: normal;
@@ -211,7 +245,7 @@ a {
 }
 
 #login-modal .cerrar {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: bold;
     font-style: normal;
@@ -226,7 +260,7 @@ a {
 }
 
 #login-modal .forget {
-    font-family: Montserrat, sans-serif;
+    font-family: Fredoka, Montserrat, sans-serif;
     font-size: 12px;
     font-weight: 600;
     font-style: normal;
@@ -236,6 +270,10 @@ a {
     text-align: left;
     color: #0092dd;
     text-transform: uppercase;
+}
+
+.opacidad-90 {
+    opacity: 0.9;
 }
 
 .techo-btn-azul {
@@ -329,7 +367,6 @@ a {
 }
 
 .techo-hero.actividades {
-    background: url('/img/hero-slim.jpg');
     background-size: cover;
     /*height: 210px;*/
     padding-top: 8vh;
@@ -337,7 +374,8 @@ a {
     height: auto;
 }
 .techo-hero.actividades h2 {
-    font-size: 2.5vw;
+    font-size: 3vw;
+    font-family: Fredoka;
     /*padding: 0;*/
     position: relative;
 }
@@ -491,6 +529,30 @@ footer.inscripcion-bar .text-primary {
         height: 30vh;
         padding-top: 0;
     }
+}
+
+
+body .list-group-pais {
+    background-color: #005ca9;
+    color: white;
+    
+}
+
+
+@font-face {
+    font-family: Granesta;
+    src:  url('/fonts/vendor/Granesta.ttf') format('truetype');
+  }
+
+@font-face {
+font-family: Fredoka;
+src:  url('/fonts/fredoka/Fredoka-Regular.ttf') format('truetype');
+}
+
+
+#main-content-container {
+    max-height: 100vh; /* Establece una altura máxima del 100% del viewport height */
+    overflow-y: auto; /* Agrega una barra de desplazamiento vertical si el contenido excede la altura máxima */
 }
 
 

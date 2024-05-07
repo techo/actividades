@@ -9,6 +9,9 @@
 @endsection
 
 @section('main_content')
+
+<div class="container-fluid card" >
+    <div class="card-body">
     <div class="row">
         <div class="col-md-8">
             <div class="row">
@@ -30,7 +33,9 @@
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
-                <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
+                <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
+                <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas }}">
+
                 <div class="row">
                     <div class="col-md-12">
                         <p>
@@ -47,6 +52,46 @@
                         </p>
                     </div>
                 </div>
+                @php
+                    $rolesAplicados = json_decode($roles_aplicados, true);
+                    $inscripcionesAplicadas = json_decode($inscripciones_aplicadas, true);
+                @endphp
+                @if ($inscripcionesAplicadas)
+                
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ __('frontend.type_of_inscription') }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                    @foreach($inscripcionesAplicadas as $rol)
+                        <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+                            {{ $rol['text'] }}
+                        </span>
+                    @endforeach
+                    </div>
+                @endif
+               
+                @if ($aplica_rol == 'true')
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ __('frontend.roles_aplicados') }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                    @foreach($rolesAplicados as $rol)
+                        <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+                            {{ $rol['text'] }}
+                        </span>
+                    @endforeach
+                    </div>
+                @endif
+
+                
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
@@ -58,7 +103,13 @@
                                     value="1"
                                     required
                             >
-                            {{ __('frontend.accept') }} <a href="/carta-voluntariado" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
+                            {{ __('frontend.accept') }} 
+                            @if($actividad->idPais == 33)
+                            <a href="/carta-voluntariado-brasil" target="_blank">
+                            @else
+                            <a href="/carta-voluntariado" target="_blank">
+                            @endif
+                                {{ __('frontend.terms_and_conditions') }}</a>
                         </label>
                         @if($mensaje = Session::get('status'))
                             <p class="text-danger">{{ $mensaje }}</p>
@@ -78,7 +129,7 @@
         </div>
         <div class="col-md-4 prev">
             <div class="card d-none d-lg-block" style="border: none">
-                <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em;">
+                <img src="{{ $actividad->tipo->imagen }}" style="margin-bottom: 1em; width: 100%;">
                 <div class="row">
                     <div class="col-md-12" >
                         <h6 style="color: {{$actividad->tipo->categoria->color}}; font-weight: 700 !important;" >{{ $actividad->tipo->nombre }}</h6>
@@ -115,8 +166,21 @@
             </div>
         </div>
     </div>
+    </div>
+    </div>
 
 @endsection
+
+@push('additional_scripts')
+    <script>
+        // Define la URL de la imagen de fondo
+        var imagenFondo = '/img/background-perfil.png';
+        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+        document.getElementById('main-background').style.backgroundSize = 'cover';
+    </script>
+@endpush
+
 @section('footer')
     @include('partials.footer')
 @endsection

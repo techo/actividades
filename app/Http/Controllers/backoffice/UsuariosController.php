@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice;
 
+use App\Estudios;
 use App\Persona;
 use App\FichaMedica;
 use Illuminate\Http\Request;
@@ -28,7 +29,12 @@ class UsuariosController extends Controller
     public function show(Request $request, $id)
     {
         $usuario = Persona::find($id);
+        if ($usuario->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos para ver ese perfil.');
+            return redirect()->back();
+        }
         $ficha = FichaMedica::where('idPersona', $id)->first();
+        $estudios = Estudios::where('idPersona', $id)->first();
         $rol = $usuario->roles->toArray();
         if(!empty($rol)){
             $rol = array_shift($rol);
@@ -50,10 +56,12 @@ class UsuariosController extends Controller
             'dni' => $usuario->dni,
             'rol' => $rol,
             'email_verified_at' => $usuario->email_verified_at,
+            'canal_contacto' => $usuario->canal_contacto,
+            'estadoPersona' => $usuario->estadoPersona,
         ];
 
         $edicion = false;
-        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario', 'ficha'));
+        return view('backoffice.usuarios.show', compact('edicion', 'arrUsuario', 'usuario', 'ficha', 'estudios'));
     }
 
     public function delete(Persona $id)

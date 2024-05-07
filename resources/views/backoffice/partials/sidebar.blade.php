@@ -52,18 +52,20 @@
                 </ul>
             </li>
             @if (Auth::user()->hasRole('admin'))
-                <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos')) ? 'active menu-open' : ''}}">
+                <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos') || request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
                     <a href="#"><i class="fa fa-user"></i> <span>Personas</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                   </span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver todas</a></li>
-                        <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">Ver Suscriptas</a></li>
+                    <ul class="treeview-menu">                        
                         <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}">
                             <a href="/admin/usuarios/registrar"><i class="fa fa-plus"></i>Crear Persona</a>
                         </li>
+                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">Ver todas</a></li>
+                        <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">Ver Suscriptas</a></li>
+                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">Ver Equipos</a></li>
+
                     </ul>
                 </li>
                     <ul class="treeview-menu">
@@ -71,7 +73,20 @@
                         <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">Registrar Usuario</a></li>
                     </ul>
                 </li>
+            @elseif (Auth::user()->hasRole('coordinador'))
+                <li class="treeview {{ (request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
+                    <a href="#"><i class="fa fa-user"></i> <span>Personas</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                    </a>
+                    <ul class="treeview-menu">                        
+                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">Ver Equipos</a></li>
+                    </ul>
+                </li>
             @endif
+
+
 
             @if (Auth::user()->hasRole('admin'))
 
@@ -94,6 +109,12 @@
                     <li class="{{request()->is('admin/estadisticas/coordinadores') ? 'active' : ''}}">
                         <a href="/admin/estadisticas/coordinadores">Coordinadores</a>
                     </li>
+                    <li>
+                        <a href="https://lookerstudio.google.com/s/lGVoxRKcZZg" target="_blank">
+                            <span>Looker Studio</span>
+                            <i class="fa fa-external-link"></i> 
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -110,6 +131,12 @@
                     <li class="{{request()->is('admin/configuracion/tipos-actividad') ? 'active' : ''}}">
                         <a href="/admin/configuracion/tipos-actividad">Tipos de Actividades</a>
                     </li>
+                    <li class="{{request()->is('admin/configuracion/provincias') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/provincias">Divisiones Geográficas</a>
+                    </li>
+                    <li class="{{request()->is('admin/configuracion/home-header') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/home-header">Header</a>
+                    </li>
                 </ul>
             </li>
             @endif
@@ -124,10 +151,10 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
-                        <a href="https://github.com/techo/voluntariado-eventual/wiki" target="_blank">Wiki</a>
+                        <a href="https://github.com/techo/voluntariado-eventual/wiki" target="_blank">Wiki <i class="fa fa-external-link"></i> </a>
                     </li>
                     <li class="{{request()->is('admin/ayuda') ? 'active' : ''}}">
-                        <a href="https://github.com/techo/voluntariado-eventual/issues/new/choose" target="_blank">Soporte</a>
+                        <a href="https://github.com/techo/voluntariado-eventual/issues/new/choose" target="_blank">Soporte <i class="fa fa-external-link"></i> </a>
                     </li>
                 </ul>
             </li>

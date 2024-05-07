@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <div>
-            <div class="card"  style="width: 100%">
+            <div class="card"  style="">
 
                 <div id="cardEvaluacion" class="collapse show" aria-labelledby="headingOne">
                     <div class="card-body">
@@ -58,8 +56,6 @@
 
                 </div>
             </div>
-        </div>
-    </div>
 </template>
 
 <script>

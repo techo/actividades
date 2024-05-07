@@ -9,6 +9,7 @@ use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\MisActividadesResource;
 use App\Http\Resources\PerfilResource;
 use App\Inscripcion;
+use App\Pais;
 use App\Persona;
 use App\Rules\PassExiste;
 use App\Search\CoordinadoresSearch;
@@ -45,7 +46,7 @@ class UsuarioController extends BaseController
         if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
-        // if($request->has('dni')) $rules['dni'] = 'required|regex:/^[A-Za-z0-9]{6,10}$/';
+        if($request->has('dni')) $rules['dni'] = 'required';
         $validatedData = $request->validate($rules);
         return ['success' => true, 'params' => array_keys($rules)];
     }
@@ -59,16 +60,20 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
+      if (!empty($request->google_id) || !empty($request->facebook_id)){
+        $persona->email_verified_at = now(); 
+      } else {
+        $persona->notify(new \App\Notifications\RegistroUsuario);
+      }
       $persona->save();
-
-      $persona->notify(new \App\Notifications\RegistroUsuario);
-
      // event(new RegistroUsuario($persona));
 
+      $pais = Pais::find($persona->idPais);
       $request->session()->regenerate();
+      Auth::login($persona, true);
       $request->session()->flash('mensaje', __('messages.account_created'));
 
-      return ['login_callback' =>  '/', 'user' => null];
+      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (empty($request->google_id) || empty($request->facebook_id))];
   }
 
   public function update(Request $request) {
@@ -98,6 +103,9 @@ class UsuarioController extends BaseController
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;
       $persona->acepta_marketing = $request->acepta_marketing;
+      $persona->canal_contacto = $request->canal_contacto;
+      $persona->estadoPersona = $request->estadoPersona;
+
       return $persona;
   }
 

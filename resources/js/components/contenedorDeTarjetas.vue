@@ -1,6 +1,6 @@
 <template>
     <span>
-        <div class="row">
+        <div class="row py-2">
             <tarjeta
                 v-for="act in actividades"
                 v-bind:actividad="act"
@@ -12,7 +12,7 @@
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
-        <div v-show="vacio" class="loading" style="text-align: center">
+        <div v-show="vacio" class="loading card card-box" style="text-align: center">
             <Suscribe :filtros="filtros" />
         </div>
     </span>

@@ -5,16 +5,27 @@
 @endsection
 
 
+
 @section('main_image')
-    <div class="techo-hero actividades">
+    <!-- <div class="techo-hero actividades">
         {{--<img src="/img/hero-slim.jpg" alt="hero image">--}}
         <h2></h2>
-    </div>
+    </div> -->
 @endsection
 
+@push('additional_scripts')
+    <script>
+        // Define la URL de la imagen de fondo
+        var imagenFondo = '/img/background-perfil.png';
+        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+        document.getElementById('main-background').style.backgroundSize = 'contain';
+    </script>
+@endpush
+
 @section('main_content')
-		<div class="row">
-		</div>
+    <div class="card" >
+		<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
 				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre }}</h6>
@@ -91,6 +102,9 @@
 		      </div>
             @endif
 		@endforeach
+        </div>
+    </div>
+
 @endsection
 
 @section('footer')
@@ -125,9 +139,23 @@
 
 @section('aditional_html')
 	@include('partials.compartir-modal', ['url' => Request::url(), 'title' => $actividad->nombreActividad])
+
+    
 @endsection
 
 @push('additional_scripts')
+
+    @if(!empty($actividad->seguimiento_google))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $actividad->seguimiento_google }}"></script> 
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '{{ $actividad->seguimiento_google }}');
+        </script>
+    @endif
+
 	<script>
         function mostrarTooltip(){
             $("#copiar_url").tooltip({trigger: 'manual'});

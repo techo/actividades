@@ -16,6 +16,7 @@ return [
 
 	// login.vue
     'login' => 'Ingresar',
+    'login_or_register' => 'LOGIN / REGISTRO',
     'login_to_account' => 'Ingresar a mi cuenta',
     'create_account' => '¡Quiero ser voluntario!',
     'forget_password' => 'Olvidé mi contraseña',
@@ -27,7 +28,7 @@ return [
 	'mail_placeholder' => 'Ingresá tu Mail',
 	'password' => 'Contraseña',
 	'password_placeholder' => 'Ingresá tu contraseña',
-	'not_a_volunteer' => 'Inicia sesión o registrate con',
+	'not_a_volunteer' => 'Continuar con',
 	'volunteer_me' => 'Registrate con mail',
 	'hello' => 'Hola',
 	'activities' => 'Actividades',
@@ -38,6 +39,7 @@ return [
 	'logout' => 'Salir',
 	'welcome_techo' => 'BIENVENIDX A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
+	'use_mail_login' => 'Login con mail',
 
 
 	//loginController
@@ -60,9 +62,17 @@ return [
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'online_events' => 'Virtual',
+	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
 
-	'welcome' => 'Bienvenido',
+
+	'ciclo_voluntariado' => 'Ciclo de voluntariado',
+	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
+
+	'welcome' => 'Bienvenidx',
+	'welcome_M' => 'Bienvenido',
+	'welcome_F' => 'Bienvenida',
+	'welcome_X' => 'Bienvenidx',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',
@@ -90,11 +100,23 @@ return [
     'i_accept_the' => 'Acepto la ' ,
     'privacy_policy' => 'Politica de Privacidad',
     'error_privacy_policy' => 'Debe aceptar las políticas de privacidad para continuar',
-	'already_register' => 'Ya estás registrado/a como voluntario/a, te esperamos!! ;)',
+	'already_register' => "¡Genial, ya estás registrado! Comienza explorando nuestras actividades. Cuando encuentres algo que te guste, te pediremos que inicies sesión por última vez. ¡Nos emociona ver qué vas a elegir!",
+	'already_register_continue_inscription' => "¡Genial, ya estás registrado! Ahora si, continua con tu inscripción!",
+	'last_step_is_to_cerfy_your_mail' => '¡Genial, ya estás registrado! Te hemos enviado un correo para verificar tu dirección de email. Si no lo ves, puedes pedir otro siguiendo el enlace. ',
 	'search_activities' => 'BUSCAR ACTIVIDADES',
 	'link_to_rrss' => 'Confimar Link Red Social',
 	'link_rrss_techo' => 'Relacionar la cuenta de techo con tu cuenta de red social',
 	'confirm' => 'Confirmar',	
+
+    'how_did_you_meet_techo' => '¿CÓMO CONOCISTE A TECHO?',
+	'social_networks' => 'Redes sociales',
+    'advertisement_traditional_media' => 'Publicidad en medios tradicionales',
+    'outdoor_advertising' => 'Publicidad en vía pública',
+    'website' => 'Página web',
+    'known_person' => 'Por una persona conocida',
+    'email_campaign' => 'Por un envío de correo electrónico',
+    'street_intervention' => 'Por una intervención en la calle',
+    'event_collection_volunteer_campaign' => 'Por un evento: Colecta, Campaña de Voluntariado',
 
 	// verify.blade.php
 	'confirm_your_email' => 'Verificar dirección de email',
@@ -106,12 +128,13 @@ return [
 
 	// perfil/perfil.vue
 	'changes_success'  =>  'Los cambios fueron guardados con éxito.',
+	'changes_required_error'  =>  'Todos los campos son requeridos.',
 	'profile_text_1'  =>  'Aquí podrás realizar cambios en tu pérfil. Modifica tu contraseña y datos personales.',
     'profile_text_2'  =>  'También podés',
     'profile_text_3'  =>  'cambiar tu dirección de email',
     'personal_data'  =>  'Datos personales',
-    'name'  =>  'NOMBRE',
-    'surname'  =>  'APELLIDO',
+    'name'  =>  'NOMBRE COMPLETO',
+    'surname'  =>  'APELLIDO COMPLETO',
     'birth_date'  =>  'NACIMIENTO',
     'gender'  =>  'GENERO',
     'gender_m'  =>  'Masc',
@@ -140,16 +163,66 @@ return [
 
  	// perfil / ficha medica
  	'ficha_medica' => 'Ficha Médica',
+ 	'cobertura_medica' => 'Cobertura de Salud',
+ 	'cobertura_tipo' => 'Tipo de Cobertura',
+ 	'contacto_emergencia' => 'Contacto de Emergencia',
+ 	'documento_identidad_frente' => 'Documento Frente',
+ 	'documento_identidad_dorso' => 'Documento Dorso',
+ 	'ficha_otros' => 'Otros Datos',
+ 	'ficha_alergias' => 'Alergias',
+	'vacunacion_covid' => 'Vacuna Covid', 
+ 	'ficha_alimentacion' => 'Restricciones o dieta',
+ 	'ficha_confirma_datos' => 'Confirmacion de datos',
+ 	'documents' => 'Documentos',
+ 	'cobertura_paga' => 'Cobertura Paga',
+ 	'salud_publica' => 'Salud Pública',
+ 	'ficha_medica_requerida' => 'Esta actividad requiere que tu ficha médica, cargala o verificala aquí!',
  	'contacto_nombre' => 'Nombre Contacto Emergencia',
  	'contacto_telefono' => 'Telefono Contacto Emergencia',
  	'contacto_relacion' => 'Relacion Contacto Emergencia',
  	'grupo_sanguinieo' => 'Grupo Sanguineo',
- 	'cobertura_nombre' => 'Nombre de Cobertura Médica',
- 	'cobertura_numero' => 'Número de Cobertura Médica',
+ 	'cobertura_nombre' => 'Nombre',
+ 	'cobertura_numero' => 'Número',
  	'acepta_terminos' => 'Esta información es muy valiosa por tu salud',
+ 	'ver_adjunto' => 'Ver Archivo',
+ 	'ver_dorso' => 'Ver Dorso',
+ 	'ver_frente' => 'Ver Frente',
  	'archivo_medico' => 'Archivo Médico',
+ 	'documento_identidad' => 'Documento de Identidad',
  	'confirma_datos' => 'Declaro que estos datos son veridicos',
 
+
+	// perfil / educacion
+	'estudios' => 'Educación',
+	'institucion_educativa' => 'Institución educativa',
+	'titulo_educacion' => 'Título',
+	'disciplina_academica' => 'Disciplina académica',
+	'descripcion_educacion' => 'Descripción',
+
+
+	// perfil/ equipos
+	'equipos' => 'Equipos',
+	'rol' => 'rol',
+	'estado'    => 'estado',
+	'despliegue'    => 'despliegue',
+	'relacion'    => 'relación',
+	'fechaInicio' => 'fecha inicio',
+	'fechaFin' => 'fecha fin',
+	'descripcion_rol'    => 'descripción rol',
+	'hitos'    => 'hitos',
+	'meta'    => 'meta',
+	'dia_hora_reunion'    => 'día y hora de reunión',
+	'periodicidad_reunion' => 'periodicidad reunión',
+	'impacto' => 'Redacta tu impacto',
+	'capacidades' => 'Capacidades que deseo fortalecer',
+	'ver' => 'Ver',
+	'archivo_carta_compromiso' => 'Carta de Compromiso',
+	'semanal' => 'Semanal',
+	'quincenal' => 'Quincenal',
+	'mensual' => 'Mensual',
+
+	// perfil / otros datos
+	'otros_datos' => 'Otros Datos', 
 
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
@@ -194,6 +267,7 @@ return [
 	'filter_by' => 'Filtrar por',
 	'filter' => 'Filtrar',
 	'delete' => 'Borrar',
+	'new' => 'Agregar',
 
 	// components/datatable.vue
 	'empty_records' => "No hay registros para mostrar",
@@ -232,14 +306,28 @@ return [
 	'select_a_meeting_point' => 'Elegir un punto de encuentro',
 	'whats_a_meeting_point' => 'Una actividad puede tener uno o más puntos de encuentro ¡Elegí el que encuentres más cómodo y nos vemos ahí!',
 
+	//seleccion rol
+	'apply_for_rol' => '¿Quieres ser parte del equipo staff de esta actividad?',
+	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
+	'roles_aplicados' => 'Roles Aplicado',
+	'yes_apply_rol' => 'Si, aplicar a rol',
+	'no_apply_rol' => 'No deseo aplicar a rol',
+
+
+	'type_of_inscription' => 'Tipo de Inscripción',
+	'whats_a_type_inscription' => 'Selecciona el tipo de voluntariado que estas realizando o representando durante esta actividad.',
+
+
+	'yes' => 'Si',
+	'no' => 'No',
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
 	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => '¡Sólo queda un paso!',
-	'you_are_pre_registered' => 'Ya estás pre inscripto a',
-	'mail_sended' => 'Y también te mandamos un mail con toda la información de la actividad! Chequealo!',
+	'you_are_pre_registered' => 'Estás pre inscripto a',
+	'mail_sended' => 'Te mandamos un mail con toda esta información.',
 	'complete_registration' => 'Pero antes: Confirmá tu lugar!',
 	'donation_ammount' => 'MONTO A DONAR',
 	'suggested_donation' => 'Donación sugerida: ',
@@ -251,7 +339,11 @@ return [
 	'continue' => 'SIGUIENTE',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
-	'make_donation' => 'Hace tu donación por el siguiente ',
+	'make_donation' => 'Pasos para confirmar',
+	'upload_voucher' => 'Adjunta Voucher',
+	'data_uploaded' => 'Voucher Subido',
+	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
+	'confirm_later' => 'Confirmar Luego',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',
@@ -315,9 +407,12 @@ return [
 	//perfil/evaluacion.vue
 	'my_score' => 'Mi Evaluación',
 	'my_score_description' => 'Esta evaluación es un promedio sobre todas las actividades en las que participaste',
-	'my_score_contact' => 'Ante cualquier duda contactate con el coordinador de personas, de la sede en que participas ;)',
+	'my_score_contact' => 'Ante cualquier duda contactate con la coordinación de personas, de la sede en que participas ;)',
 	'my_score_feedback' => 'Evalua ahora!',
 	'my_score_not_active' => ' Todavia no tienes la suficiente cantidad de evaluaciones para hacer el cálculo.',
+
+	// constancia voluntariado
+	'constancia_voluntario' => 'Descargar Constancia',
 
 
 	// contenedorEvaluaciones.vue

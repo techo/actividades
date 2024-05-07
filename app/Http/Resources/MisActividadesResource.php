@@ -17,6 +17,7 @@ class MisActividadesResource extends Resource
         return [
             'idActividad' => $this->idActividad,
             'tipo' => $this->tipo->nombre,
+            'tipoColor' => $this->tipo->color,
             'fecha' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d/m/Y'),
             'hora' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('H:i'),
             'fechaInicio' => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d/m/Y H:i'),

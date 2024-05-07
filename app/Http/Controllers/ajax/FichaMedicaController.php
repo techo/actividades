@@ -17,16 +17,18 @@ class FichaMedicaController extends Controller
   public function upsert(Request $request) {
       $url = $request->session()->get('login_callback','');
 
-      Log::info("hoals");
       $request->validate([
               'contacto_nombre' => 'nullable',
               'contacto_telefono' => 'nullable',
               'contacto_relacion' => 'nullable',
               'grupo_sanguinieo' => 'nullable',
+              'cobertura_tipo' => 'nullable',
               'cobertura_nombre' => 'nullable',
               'cobertura_numero' => 'nullable',
-              'confirma_datos' => 'nullable',
-
+              'alergias' => 'nullable',
+              'vacunacion_covid' => 'nullable',
+              'alimentacion' => 'nullable',
+              'confirma_datos' => 'required',
               ]);
       $persona = Auth::user();
       $countFichas = FichaMedica::where('idPersona', $persona->idPersona)->count();
@@ -40,8 +42,12 @@ class FichaMedicaController extends Controller
       $fichaMedica->contacto_telefono = $request->contacto_telefono;
       $fichaMedica->contacto_relacion = $request->contacto_relacion;
       $fichaMedica->grupo_sanguinieo = $request->grupo_sanguinieo;
+      $fichaMedica->cobertura_tipo = $request->cobertura_tipo;
       $fichaMedica->cobertura_nombre = $request->cobertura_nombre;
       $fichaMedica->cobertura_numero = $request->cobertura_numero;
+      $fichaMedica->alergias = $request->alergias;
+      $fichaMedica->vacunacion_covid = $request->vacunacion_covid;
+      $fichaMedica->alimentacion = $request->alimentacion;
       $fichaMedica->confirma_datos = $request->confirma_datos;
 
       $fichaMedica->save();
@@ -50,23 +56,48 @@ class FichaMedicaController extends Controller
   public function uploadArchivoMedico(Request $request)
   {
     $this->validate($request, array(
-        'archivo_medico' => 'required',
+        'archivo_medico' => 'nullable',
+        'documento_frente' => 'nullable',
+        'documento_dorso' => 'nullable',
     ));
-    $archivoMedico = $request->file('archivo_medico');
+
     $fichaMedica = Auth::user()->fichaMedica;
-    if($archivoMedico){
-      $path = $request->file('archivo_medico')->store('public/perfil');
+
+    if ($request->file('archivo_medico')){
+      $archivo = $request->file('archivo_medico');
+      $path = $archivo->store('public/perfil');
       $oldPath = str_replace('storage', 'public', $fichaMedica->archivo_medico);
       if(Storage::exists($oldPath))
           Storage::delete($oldPath);
 
       $fichaMedica->archivo_medico = str_replace('public', 'storage', $path);
       $fichaMedica->save();
-      
     }
+
+    if ($request->file('documento_frente')){
+      $archivo = $request->file('documento_frente');
+      $path = $archivo->store('public/perfil');
+      $oldPath = str_replace('storage', 'public', $fichaMedica->documento_frente);
+      if(Storage::exists($oldPath))
+          Storage::delete($oldPath);
+
+      $fichaMedica->documento_frente = str_replace('public', 'storage', $path);
+      $fichaMedica->save();
+    }
+
+    if ($request->file('documento_dorso')){
+      $archivo = $request->file('documento_dorso');
+      $path = $archivo->store('public/perfil');
+      $oldPath = str_replace('storage', 'public', $fichaMedica->documento_dorso);
+      if(Storage::exists($oldPath))
+          Storage::delete($oldPath);
+
+      $fichaMedica->documento_dorso = str_replace('public', 'storage', $path);
+      $fichaMedica->save();
+    }
+  }
 }
 
-  }
 
 
 

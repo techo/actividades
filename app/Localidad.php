@@ -9,6 +9,7 @@ class Localidad extends Model
     protected $table = 'atl_localidades';
     protected $primaryKey = 'id';
     public $timestamps = false;
+    protected $fillable = ['idProvincia'];
 
     public function provincia()
     {

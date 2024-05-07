@@ -16,6 +16,7 @@ import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
 import Inscripcion from './components/inscripcion';
+import ConfirmacionPago from './components/confirmacionPago';
 import Autenticar from './components/autenticar';
 import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
@@ -36,6 +37,12 @@ import CookiesBar from './components/cookies-bar';
 import EstadisticasPublicas from './components/estadisticas-publicas';
 import QuizTechero from './components/perfil/quizTechero';
 import fichaMedica from './components/perfil/fichaMedica';
+import estudios from './components/perfil/estudios';
+import equipos from './components/perfil/equipos';
+Vue.component('equipos', equipos);
+import cardEquiposPerfil from './components/perfil/cardEquiposPerfil';
+Vue.component('cardEquiposPerfil', cardEquiposPerfil);
+import cardEditDelete from './components/common/cardEditDelete.vue';
 import avisoModal from './components/aviso-modal'
 Vue.component('aviso-modal', avisoModal);
 
@@ -64,6 +71,7 @@ Vue.component('login', Login);
 Vue.component('autenticar', Autenticar);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
 Vue.component('inscripcion', Inscripcion);
+Vue.component('confirmacionPago', ConfirmacionPago);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('perfil', Perfil);
@@ -80,6 +88,8 @@ Vue.component('cookies-bar', CookiesBar);
 Vue.component('estadisticas-publicas', EstadisticasPublicas);
 Vue.component('quiz-techero', QuizTechero);
 Vue.component('ficha-medica', fichaMedica);
+Vue.component('estudios', estudios);
+Vue.component('cardEditDelete', cardEditDelete);
 
 window.Event = new Vue();
 

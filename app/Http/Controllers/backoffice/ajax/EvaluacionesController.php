@@ -12,12 +12,16 @@ use App\Persona;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class EvaluacionesController extends BaseController
 {
     public function enviar($id, Request $request)
     {
         $actividad = Actividad::findOrFail($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            return "No tiene permisos";
+        }
         $inscripciones = Inscripcion::where('Inscripcion.idActividad', '=', $id)
             ->where('Inscripcion.presente', '=', '1')
             ->get();

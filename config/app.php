@@ -177,6 +177,7 @@ return [
         Chencha\Share\ShareServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -228,7 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Share' => Chencha\Share\ShareFacade::class,
         'Socialite' => Laravel\Socialite\SocialiteServiceProvider::class,
-
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

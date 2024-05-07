@@ -201,7 +201,7 @@
 
 <style scoped>
     * {
-        font-family: Montserrat, sans-serif;
+        font-family: Fredoka, Montserrat, sans-serif;
         font-size: 12px;
         font-weight: bold;
         font-style: normal;
@@ -225,7 +225,7 @@
         padding-top: 12px;
     }
     .boton-filtro {
-        border: 1px solid #a9a9a9;
+        border: 1px solid #0092dd;
         color: #0092dd;
         height: 40px;
         line-height: normal;
@@ -256,6 +256,8 @@
     .cont-check {
         padding-left: 0;
         padding-right: 0;
+        border-radius: 30px;
+        background-color: #009fe3;
     }
     .techo-btn-azul {
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.17);

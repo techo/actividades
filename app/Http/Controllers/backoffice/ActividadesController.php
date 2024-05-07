@@ -13,6 +13,8 @@ use App\Pais;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Coordinador;
+use App\Http\Requests\CrearCoordinador;
+use App\Http\Resources\ActividadResource;
 use App\Rules\FechaFinActividad;
 use App\UnidadOrganizacional;
 use Carbon\Carbon;
@@ -153,7 +155,7 @@ class ActividadesController extends Controller
         return response()->json($id);
     }
 
-    public function eliminarCoordinador(Actividad $actividad, Coordinador $coordinador)
+    public function eliminarCoordinador(CrearCoordinador $request, Actividad $actividad, Coordinador $coordinador)
     {    
         if ($actividad->idPersonaCreacion != $coordinador->idPersona){
             $coordinador->delete();
@@ -164,7 +166,7 @@ class ActividadesController extends Controller
         return response()->json($mensaje);
     }
 
-    public function guardarCoordinador(Actividad $actividad, Persona $persona)
+    public function guardarCoordinador(CrearCoordinador $request, Actividad $actividad, Persona $persona)
     {    
         $coordinador = new Coordinador();
         $coordinador->idPersona = $persona->idPersona;
@@ -321,7 +323,10 @@ class ActividadesController extends Controller
         //     Session::flash('error', 'No se puede eliminar una actividad que ya ha concluido.');
         //     return redirect()->back();
         // }
-
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos para eliminar esta actividad.');
+            return redirect()->back();
+        }
 
         try {
             $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
@@ -333,7 +338,7 @@ class ActividadesController extends Controller
             return response($exception->getMessage(), 500);
         }
         Session::flash('mensaje', 'La actividad se eliminó correctamente');
-        return redirect()->to('/admin/actividades/usuario');
+        return redirect()->to('/admin/actividades');
     }
 
 
@@ -377,6 +382,10 @@ class ActividadesController extends Controller
      */
     private function crearGrupo(Actividad $actividad)
     {
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos para crear grupos en esta actividad.');
+            return redirect()->back();
+        }
         $grupo = new Grupo();
         $grupo->idActividad = $actividad->idActividad;
         $grupo->idPadre = 0;

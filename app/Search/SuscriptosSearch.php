@@ -42,7 +42,8 @@ class SuscriptosSearch
         $query = (new Suscribe())->newQuery();
 
 
-        $query->where('idPais', '=', auth()->user()->idPais);
+        // cambiar validacion de seguridad
+        $query->where('idPais', '=', auth()->user()->idPaisPermitido);
 
         return $query;
     }

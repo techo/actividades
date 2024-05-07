@@ -13,7 +13,7 @@ class OficinasController extends Controller
 {
     public function getOficinas()
     {
-        return Oficina::with('pais')->get();
+        return Oficina::with('pais')->where('id_pais', auth()->user()->idPaisPermitido)->get();
     }
     public function getOficinasPais($idpais)
     {

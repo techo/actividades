@@ -2,7 +2,7 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Coordinadores de la actividad</h3>
+                <h3 class="box-title">Coordinación de la actividad</h3>
                 <p class="help-block">
                     <ul>
                         <li>Todas estas Personas tienen acceso a editar la actividad.</li>

@@ -108,7 +108,7 @@
                 this.readonly = false;
             },
             getPaises: function () {
-                axios.get("/ajax/paises")
+                axios.get("/ajax/paises/propios")
                     .then((respuesta) => {this.dataPaises = respuesta.data})
                     .catch(() => {debugger});
             },
@@ -151,7 +151,6 @@
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
                         this.readonly = true;
-                        window.location.replace('/admin/configuracion/oficinas');
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();

@@ -40,7 +40,7 @@
 		<div class="box" >
 			<div class="box-header" >
 				<h2 class="box-title">
-					<strong>Inscripciones del usuario</strong>
+					<strong>Inscripciones de la persona</strong>
 				</h2>
 				<span class="pull-right">
 				<a :href="urlDescarga" class="btn btn-primary">

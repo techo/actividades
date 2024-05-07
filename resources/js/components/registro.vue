@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="card">
+    <div class="card-body">
         <div v-show="paso('email')">
             <div class="row">
                 <div class="col-md-12">
@@ -206,8 +207,8 @@
                     <span v-bind:class="{'d-none':!validacion.pais.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
-                <div class="col-md-5">
-                    <div class="form-group">
+                <div class="col-md-5" >
+                    <div class="form-group" v-if="(user.pais != '' && provincias.length > 0)">
                         <label>{{ $t('frontend.state') }}</label>
                         <select id="provincia" v-model="user.provincia" class="form-control">
                             <option v-for="provincia in provincias" v-bind:value="provincia.id">
@@ -227,7 +228,7 @@
 
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
-                    <div class="form-group">
+                    <div class="form-group" v-if="(user.provincia != '' && localidades.length > 0)">
                         <label>{{ $t('frontend.municipality') }}</label>
                         <select id="localidad" v-model="user.localidad" class="form-control">
                             <option v-for="localidad in localidades" v-bind:value="localidad.id">
@@ -243,15 +244,34 @@
                     <span v-bind:class="{'d-none':!validacion.localidad.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
+            
+            </div>
+            <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-
+                        <label>{{ $t('frontend.how_did_you_meet_techo') }}</label>
+                        <select id="canal_contacto" v-model="user.canal_contacto" class="form-control">
+                            <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
+                            <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
+                            <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
+                            <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
+                            <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
+                            <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
+                            <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
+                            <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-1">
-
+                    <span v-bind:class="{'d-none':!validacion.canal_contacto.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.canal_contacto.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+                <div class="col-md-6">
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-check">
@@ -292,23 +312,55 @@
                     <strong>{{ $t('frontend.register') }}</strong>  > <strong> {{ $t('frontend.personal_data') }} </strong>> <strong>{{ $t('frontend.finish') }} </strong>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-6">
-                    <h2>{{ $t('frontend.welcome') }} TECHO</h2>
+                    <h2>{{ $t('frontend.welcome') }} - TECHO</h2>
                 </div>
                 <div class="col-md-6">
                     <label>{{ $t('frontend.step_3') }}</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    {{ $t('frontend.already_register')  }} <a href="/login">{{ $t('frontend.login') }}</a>
+            <div v-if="!this.loginSocial">
+                <div class="row"> 
+                    <div class="col-md-8">
+                        {{ $t('frontend.last_step_is_to_cerfy_your_mail')  }}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="/email/verify" class="btn btn-primary btn-lg">{{ $t('frontend.confirm_your_email') }}</a>
+                    </div>
                 </div>
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="/actividades" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+            <div v-else>
+                <div v-if="!this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register')  }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a :href="'/'+this.abreviacionPais" class="btn btn-primary btn-lg">{{ $t('frontend.search_activities') }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="this.login_callback">
+                    <div class="row"> 
+                        <div class="col-md-8">
+                            {{ $t('frontend.already_register_continue_inscription')  }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row" >
+                        <div class="col-md-12">
+                            <a :href="this.login_callback" class="btn btn-primary btn-lg">{{ $t('frontend.apply_now') }}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -331,6 +383,7 @@
             </div>
             <hr>
         </div>
+    </div>
   </div>
 </template>
 
@@ -341,6 +394,8 @@
       data: function(){
         var data = {
           user: {},
+          loginSocial: false,
+          abreviacionPais: '',
           validacion: {},
           paso_actual: 'email',
           volver: true,
@@ -352,7 +407,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad', 'canal_contacto'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -383,13 +438,14 @@
         'user.apellido': function() { this.validar_data('apellido') },
         'user.nacimiento': function() { this.validar_data('nacimiento') },
         'user.genero': function() { this.validar_data('genero') },
-        // 'user.dni': function() { this.validar_data('dni') },
+        'user.dni': function() { this.validar_data('dni') },
         'user.telefono': function() { this.validar_data('telefono') },
         'user.pais': function() { 
             this.validar_data('pais') 
             this.traer_provincias() 
         },
         'user.provincia': function() { this.traer_localidades() },
+        'user.canal_contacto': function() { this.validar_data('canal_contacto')},
         'user.privacidad': function() { this.validar_data('privacidad')}
       },
       methods: {
@@ -408,6 +464,10 @@
             case 'personales':
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
+                this.loginSocial = response.data.loginSocial
+                this.abreviacionPais = response.data.abreviacionPais
+                this.login_callback = response.data.login_callback
+                console.log(response.data.login_callback)
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
@@ -482,6 +542,8 @@
           if(this.user.pais) {
             axios.get('/ajax/paises/'+this.user.pais+'/provincias').then(response => {
               this.provincias = response.data
+              this.provinciaSeleccionada = null
+              this.localidades = []
             })
           }
         },
@@ -489,6 +551,7 @@
           if(this.user.pais && this.user.provincia) {
             axios.get('/ajax/paises/'+this.user.pais+'/provincias/'+this.user.provincia+'/localidades').then(response => {
               this.localidades = response.data
+              this.localidadSeleccionada = null
             })
           }
         }

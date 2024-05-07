@@ -23,7 +23,7 @@
                     </td>
                     <td style="display:inline-block;padding-right:0px;padding-top:5px;line-height:0px" valign="middle">
                         <a href="https://twitter.com/techo" target="_blank">
-                            <i class="fab fa-twitter"></i>
+                            <i class="fa-brands fa-x-twitter"></i>
                         </a>
                     </td>
                 </tr>

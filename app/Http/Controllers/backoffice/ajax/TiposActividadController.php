@@ -45,16 +45,26 @@ class TiposActividadController extends Controller
         return response()->json($tipoActividad);
     }
 
-      public function update(Request $request) {
+    public function update(Request $request) {
         $validados = $request->validate([
             'idTipo' => 'required',
             'nombre' => 'required',
             'idCategoria' => 'required',
+            'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
         ]);
 
         $tipoActividad = Tipo::find($validados['idTipo']);
-        $tipoActividad->update($validados);
+        
 
+        $imagen = $request->file('imagen');
+        if($imagen){
+            $path = $request->file('imagen')->store('public/tipos');
+            $tipoActividad->imagen = str_replace('public', 'storage', '/'.$path);
+        }
+        $tipoActividad->nombre = $validados['nombre'];
+        $tipoActividad->idCategoria = $validados['idCategoria'];
+        
+        $tipoActividad->save();
 
         return response()->json($validados);
     }
