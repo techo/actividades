@@ -79,6 +79,7 @@ class InscripcionesSearch
                     'ficha.contacto_telefono',
                     'ficha.contacto_relacion',
                     'ficha.alergias',
+                    'ficha.vacunacion_covid',
                     'ficha.alimentacion',
                     'ficha.archivo_medico',
                     'ficha.documento_frente',
@@ -90,6 +91,7 @@ class InscripcionesSearch
                     'Inscripcion.idInscripcion AS id',
                     'Inscripcion.presente',
                     'Inscripcion.pago',
+                    'Inscripcion.voucherUrl',
                     'Inscripcion.confirma',
                     'PuntoEncuentro.punto',
                     'atl_pais.nombre as puntoPais',
@@ -100,6 +102,7 @@ class InscripcionesSearch
                     'Grupo.nombre as nombreGrupo',
                     'Inscripcion.rol as nombreRol',
                     'Inscripcion.roles_aplicados',
+                    'Inscripcion.inscripciones_aplicadas',
                     'Persona.estadoPersona',
                     'PersonaModificacion.mail as modificado_por',
                     'Inscripcion.updated_at as modificado_en'

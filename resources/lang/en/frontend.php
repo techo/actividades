@@ -63,6 +63,9 @@ return [
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Online',
 	'online_events_description' => 'Online Events',
+
+	'ciclo_voluntariado' => 'Ciclo de voluntariado',
+	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
 	'view_activities'  =>  'Apply!',
 	'welcome' => 'Welcome',
 
@@ -165,6 +168,7 @@ return [
 	'documento_identidad_dorso' => 'Back of ID Document', 
 	'ficha_otros' => 'Other Information', 
 	'ficha_alergias' => 'Allergies', 
+	'vacunacion_covid' => 'Covid Vaccine', 
 	'ficha_alimentacion' => 'Dietary Restrictions', 
 	'ficha_confirma_datos' => 'Confirm Data',
 	'documents' => 'Documents',
@@ -173,7 +177,7 @@ return [
  	'contacto_nombre' => 'Emergency Contact Name',
  	'contacto_telefono' => 'Emergency Contact Phone',
  	'contacto_relacion' => 'Emergency Contact Relation',
- 	'grupo_sanguinieo' => 'Bloon Type',
+ 	'grupo_sanguinieo' => 'Blood Type',
  	'cobertura_nombre' => 'Medical Assurance Name',
  	'cobertura_numero' => 'Medical Assurance Number',
  	'acepta_terminos' => 'This information would be used only for your own safety',
@@ -299,9 +303,14 @@ return [
 	'apply_for_rol' => 'Do you want to be part of the organizing team of this activity?',
 	'whats_a_rol' => 'Select the roles you would like to apply for.',
 	'roles_aplicados' => 'Selected Roles',
-	'yes' => 'Yes, apply for a rol',
+	'yes_apply_rol' => 'Yes, apply for a rol',
 	'no_apply_rol' => "No, I don't want to apply for a rol",
 
+	'type_of_inscription' => 'Type of Inscription',
+	'whats_a_type_inscription' => 'Select the type of volunteering you are doing or representing during this activity.',
+
+	'yes' => 'Yes',
+	'no' => 'No',
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => 'Please wait for confirmation from us',
 	'will_be_in_touch' => 'Will be in touch to let you know if your enrollment is approved. You can contact the coordinator if you have questions.',
@@ -309,8 +318,8 @@ return [
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => 'Last Step!',
 	'you_are_pre_registered' => "Now you're pre enroll to the activity:",
-	'mail_sended' => 'And we also send an email to you with all the info about the activity',
-	'complete_registration' => 'But First: Confirm your place!',
+	'mail_sended' => 'We also send an email to you with all the info about the activity',
+	'complete_registration' => 'Confirm your place!',
 	'donation_ammount' => 'Donation Ammount',
 	'suggested_donation' => 'Suggested Donation: ',
 	'suggested_donation_between' => 'Suggested Donation: between ',
@@ -322,7 +331,11 @@ return [
 	'cancel' => 'CANCEL',
 	'unenroll' => 'UN-ENROLL',
 
-'make_donation' => 'Make Payment ',
+	'make_donation' => 'Make Payment ',
+	'upload_voucher' => 'Upload Voucher',
+	'data_uploaded' => 'Voucher Uploaded',
+	'payment_in_process' => "We've received your voucher. We are verifying your payment",
+	'confirm_later' => 'Confirm Later',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",

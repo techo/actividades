@@ -19,6 +19,7 @@ class ProvinciasResource extends Resource
             'idPais'    => $this->pais_id,
             'nombre'    => $this->provincia,
             'provincia'    => $this->provincia,
+            'oficina'    => $this->oficina,
         ];
     }
 }

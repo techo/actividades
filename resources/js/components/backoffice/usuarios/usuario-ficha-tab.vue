@@ -87,6 +87,13 @@
                                         v-model="usuario.alimentacion" :disabled="readonly">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.vacunacion_covid != null)">
+                            <label for="vacunacion_covid">Vacunacion Covid</label>
+                            <input id="vacunacion_covid" type="text" class="form-control"
+                                        v-model="usuario.vacunacion_covid" :disabled="readonly">
+                        </div>
+                    </div>
                 </div>
                 <div class="row" >
                     <div class="col-md-6">
@@ -122,6 +129,7 @@ export default {
                 contacto_relacion: "",
                 contacto_telefono: "",
                 alergias: "",
+                vacunacion_covid: "",
                 alimentacion: "",
                 documento_frente: "",
                 documento_dorso: "",

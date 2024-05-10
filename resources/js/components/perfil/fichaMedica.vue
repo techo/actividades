@@ -84,19 +84,30 @@
                     </div>
                 </div>
             </div>
-            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion))">
+            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion || campos.vacunacion_covid))">
             
                 <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
                 <div class="row">
-                    <div class="col-md-6"  v-show="(!campos || campos.ficha_alergias)">
+                    <div class="col-md-4"  v-show="(!campos || campos.ficha_alergias)">
                         <label>{{ $t('frontend.ficha_alergias') }}</label>
                         <input type="text" class="form-control" name="alergias" id="alergias"
                             v-model="ficha.alergias">
                     </div>
-                    <div class="col-md-6" v-show="(!campos || campos.ficha_alimentacion)">
+                    <div class="col-md-4" v-show="(!campos || campos.ficha_alimentacion)">
                         <label>{{ $t('frontend.ficha_alimentacion') }}</label>
                         <input type="text" class="form-control" name="alimentacion" id="alimentacion"
                             v-model="ficha.alimentacion">
+                    </div>
+                    <div class="col-md-4" v-show="(!campos || campos.vacunacion_covid)">
+                        <label>{{ $t('frontend.vacunacion_covid') }}</label>
+                        <select id="vacunacion_covid" v-model="ficha.vacunacion_covid" class="form-control">
+                            <option value="Si">
+                                {{ $t('frontend.yes') }}
+                            </option>
+                            <option value="No">
+                                {{ $t('frontend.no') }}
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -175,6 +186,7 @@ export default {
               'cobertura_nombre' : "",
               'cobertura_numero' : "",
               'alergias' : "",
+              'vacunacion_covid': "",
               'alimentacion' : "",
               'confirma_datos' : "",
               'archivo_medico' : null,

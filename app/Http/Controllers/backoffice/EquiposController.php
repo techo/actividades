@@ -21,7 +21,6 @@ class EquiposController extends Controller
      */
     public function index(Request $request)
     {
-
         $datatableConfig = config('datatables.equipos');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);

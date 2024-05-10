@@ -226,6 +226,11 @@ return [
                 'title' => 'Roles Aplicado'
             ],
             [
+                'name' => '__component:inscripciones_aplicadas',
+                'sortField' => 'inscripciones_aplicadas',
+                'title' => 'Tipo Inscripción'
+            ],
+            [
                 'name' => '__component:estado_persona',
                 'sortField' => 'estadoPersona',
                 'title' => 'Estado Voluntariado'
@@ -424,6 +429,10 @@ return [
                 'name' => 'provincia',
                 'sortField' => 'provincia',
                 'title' => 'Nombre'
+            ],
+            [
+                'name' => 'oficina.nombre',
+                'title' => 'Oficina'
             ],
         ],
         'sortOrder' => [

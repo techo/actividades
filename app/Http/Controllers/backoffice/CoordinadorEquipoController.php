@@ -17,11 +17,9 @@ class CoordinadorEquipoController extends Controller
      */
     public function index(Request $request, $idEquipo)
     {
-        $equipo = Equipo::findOrFail($idEquipo);
-        $datatableConfig = config('datatables.integrantes');
-        $fields = json_encode($datatableConfig['fields']);
-        $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.equipos.personas.index', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
+        $id = $idEquipo;
+        $equipo = Equipo::where('idEquipo', $idEquipo)->first();
+        return view('backoffice.equipos.coordinadores.index', compact('id', 'equipo'));
     }
 
 }

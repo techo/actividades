@@ -87,7 +87,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="fechaInicio">Empieza</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -96,9 +96,7 @@
                                 <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
 
-                    <div class="col-md-4">
                         <label for="fechaFin">Termina</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -107,28 +105,31 @@
                                 <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
                         </div>
-                    </div>
-                            
-                </div>
 
-                
+                        <div  v-show="edicion">
+                            <label>
+                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
+                            </label>
+                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                        </div>
+                    </div>  
+                    
+                    <div class="col-md-6 text-center m-2">
+                        <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
+                            Inscripciones Abiertas
+                        </div>
+                        <div v-else class="alert alert-danger" role="alert" >
+                            Inscripciones Cerradas
+                        </div>
 
-                <!-- <ul v-show="fechas.length > 0" style="color: #dd4b39;">
-                    <li v-for="(f) in fechas" v-text="f[0] + ': ' + f[1]" ></li>
-                </ul> -->
+                        <div v-if="estadoEvaluaciones" class="alert alert alert-warning" role="alert" >
+                            Evaluaciones Abiertas
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <br>
-                    <div class="col-md-12">
-                        <label>
-                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
-                        </label>
-                    </div>
-                </div>
+                        <div v-if="(!estadoPago && actividad.pago)" class="alert alert alert-danger" role="alert" >
+                            Fecha de Pago Vencida!!
+                        </div>
 
-                <div class="row" v-show="edicion">
-                    <div class="col-md-12" style="clear:both">
-                        <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
                     </div>
                 </div>
 
@@ -327,11 +328,22 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">Link para el Pago</label>
-                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
-                            <span class="help-block">{{ errors.linkPago }}</span>
+                    <div class="col-md-12">
+                        <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
+                            <label for="">Pasos para realizar el pago </label>
+                            <tinymce-editor 
+                                v-model="actividad.descripcionPago" 
+                                :init="{
+                                    menubar: 'false',
+                                    file_picker_callback: tiny_mce_filemanager_callback,
+                                    relative_urls: false,
+                                    resize: true,
+                                }"
+                                toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
+                                plugins="paste autoresize image preview paste link"
+                                :disabled="!edicion"
+                            ></tinymce-editor>
+                            <span class="help-block">{{ errors.descripcionPago }}</span>
                         </div>
                     </div>
 
@@ -342,6 +354,14 @@
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
                     </div>
+
+                    <!-- <div class="col-md-6">
+                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
+                            <label for="">Link para el Pago</label>
+                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <span class="help-block">{{ errors.linkPago }}</span>
+                        </div>
+                    </div> -->
                 </div>
 
                 <br>
@@ -391,7 +411,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="require_ficha_medica">Roles Aplicables</label>
                             <p class="help-block">
@@ -411,8 +431,25 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-10">
-                        
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="require_ficha_medica">Tipo de Inscripción</label>
+                            <p class="help-block">
+                                Aquí puedes ingresar los canales de inscripcion (secundario, universitario, voluntario corporativo, pasante).
+                            </p>
+                            <vue-tags-input
+                                v-model="tag2"
+                                :tags="tipoInscriptosTags"
+                                :disabled="!edicion"
+                                :autocompleteItems="filteredTipoInscriptosTags"
+                                :add-only-from-autocomplete="true"
+                                placeholder=""
+                                @tags-changed="newTags => tipoInscriptosTags = newTags"
+                            />
+                            <p class="help-block">
+                                De dejar este campo en blanco no se mostrara al inscribir esta opcion.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
@@ -485,7 +522,20 @@
         data() {
             return {
                 tag: '',
+                tag2: '',
                 rolesTags: [],
+                tipoInscriptosTags:  [],
+                autocompleteTipoInscriptos: [{
+                        text: 'Secundaria',
+                    }, {
+                        text: 'Voluntariado Corporativo',
+                    }, {
+                        text: 'Pasante',
+                    }, {
+                        text: 'Universidad',
+                    }, {
+                        text: 'Voluntariado',
+                }],
 
                 fichaMedicaCampos:{
                     'contacto_emergencia' : false,
@@ -494,7 +544,11 @@
                     'ficha_alergias' : false,
                     'ficha_alimentacion' : false,
                     'documento_identidad' : false,
+                    'vacunacion_covid' : false,
                 },
+                estadoInscripcion: false,
+                estadoEvaluaciones: false,
+                estadoPago: false,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -521,6 +575,8 @@
                     requiere_ficha_medica: 0,
                     ficha_medica_campos: {},
 
+                    descripcionPago: null,
+                    linkPago: null,
 
                     tipo : {
                         idCategoria: 1
@@ -584,10 +640,15 @@
                                 'cobertura_medica': false,
                                 'ficha_alergias' : false,
                                 'ficha_alimentacion' : false,
-                                'documento_identidad' : false
+                                'documento_identidad' : false,
+                                'vacunacion_covid' : false
                             };
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.actividad.roles_tags;
+
+
+                        if (this.actividad.tipo_inscriptos_tag)
+                            this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -599,7 +660,11 @@
 
         },
         computed: {
-     
+            filteredTipoInscriptosTags() {
+                return this.autocompleteTipoInscriptos.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
         },
         filters: {},
         watch: {
@@ -665,7 +730,25 @@
                             this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
                             this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
                         }
+                        
+
                     }
+                    if(!this.actividad.pago)
+                        this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
+
+                    this.estadoInscripcion = moment().isBetween(
+                        this.fechas.fechaInicioInscripciones +' '+ this.horas.fechaInicioInscripciones,
+                        this.fechas.fechaFinInscripciones +' '+ this.horas.fechaFinInscripciones
+                        );
+
+                    this.estadoEvaluaciones = moment().isBetween(
+                        this.fechas.fechaInicioEvaluaciones +' '+ this.horas.fechaInicioEvaluaciones,
+                        this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
+                        );
+
+                    this.estadoPago = moment().isBefore(
+                        this.fechas.fechaLimitePago,
+                        );
             },
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
@@ -693,6 +776,7 @@
                 
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 this.actividad.roles_tags = this.rolesTags;
+                this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
                 
                 
 

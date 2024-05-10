@@ -123,7 +123,7 @@ export default {
     },
     onCellClicked (data, field, event) {
         if (this.detailUrl !== undefined) {
-            window.location.href = this.detailUrl + data.idProvincia + '/localidades';
+            window.location.href = this.detailUrl + data.idProvincia;
         }
       this.$refs.vuetable.toggleDetailRow(data.id)
     },

@@ -14,6 +14,7 @@ class FichaMedica extends Model
         'cobertura_nombre', 
         'cobertura_numero', 
         'alergias',
+        'vacunacion_covid',
         'alimentacion',
         'confirma_datos', 
         'idPersona',

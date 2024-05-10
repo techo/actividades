@@ -2,10 +2,10 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Coordinación de la actividad</h3>
+                <h3 class="box-title">Coordinación del equipo</h3>
                 <p class="help-block">
                     <ul>
-                        <li>Todas estas Personas tienen acceso a editar la actividad.</li>
+                        <li>Todas estas Personas tienen acceso a editar el equipo.</li>
                     </ul>
                 </p>
             </div>
@@ -26,18 +26,18 @@
                                 <template slot="no-options">Escribe el nombre, apellido o DNI</template>
                             </v-select>
                             <span class="input-group-btn">
-                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="deshabilitado || enviado" @click="guardar()" v-text="(enviado)?'Enviado':'Guardar'"></button>
+                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="enviado" @click="guardar()" v-text="(enviado)?'Enviado':'Guardar'"></button>
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="m-2">
                     <ul>
-                        <li v-for="coordinador in coordinadores" :key='coordinador.idPersona'>
-                            {{ coordinador.nombre }} 
+                        <li v-for="(coordinador, index) in coordinadores" :key='coordinador.idCoordinadorEquipo'>
+                            {{ coordinador.persona.nombres + ' ' + coordinador.persona.apellidoPaterno + ' (' + coordinador.persona.mail + ')' }}
                             <span class="input-group-btn">          
-                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="'Eliminar'" v-if="idPersonaCreacion !=  coordinador.idPersona"></button>
+                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinadorEquipo)" v-text="'Eliminar'"></button>
                             </span>
                         </li>
                     </ul>
@@ -52,8 +52,8 @@
     import vSelect from 'vue-select';
 
     export default {
-        name: "accesos",
-        props: ['id','idPersonaCreacion'],
+        name: "coordinadoresEquipo",
+        props: ['id'],
         components: { vSelect },
         data() {
             return {
@@ -72,33 +72,28 @@
             nombre() {
                 if(this.persona)
                     return this.persona.nombres + ' ' + this.persona.apellidoPaterno + ' (' + this.persona.mail + ')'
-            },
-            deshabilitado() {
-                if(this.persona)
-                    if(this.persona.hasOwnProperty('idPersona'))
-                        return false;
-                return true;
             }
         },
         filters: {},
         watch: {},
         methods: {
             guardar(){
-                axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + this.persona.idPersona)
+                axios.post('/admin/ajax/equipos/' + this.id + '/coordinacion/' + this.persona.idPersona)
                     .then((datos) => { 
                         this.persona = null;
                         this.enviado = true;
-                        this.coordinadores = this.getPersona();
+                        this.getPersona();
+                        this.enviado = false;
                     })
                     .catch((error) => { debugger; });
             },
             getPersona(){
-                axios.get('/admin/ajax/actividades/' + this.id + '/accesos')
+                axios.get('/admin/ajax/equipos/' + this.id  + '/coordinacion')
                     .then((datos) => { this.coordinadores = datos.data; })
                     .catch((error) => { debugger; });
             },
             eliminar(idCoordinador){
-                axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + idCoordinador + '/borrar')
+                axios.delete('/admin/ajax/equipos/' + this.id + '/coordinacion/' + idCoordinador)
                     .then((datos) => { this.mensaje = datos.data; this.getPersona(); })
                     .catch((error) => { debugger; });
             },

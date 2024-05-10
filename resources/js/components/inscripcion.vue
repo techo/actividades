@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-8" v-if="!mostrarFichaMedica">
-          <div v-if="rolAplicado">
+          <div v-if="rolAplicado && tipoInscriptoAplicado">
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -27,6 +27,8 @@
                     <input type="hidden" name="roles_aplicados" v-bind:value="convertToJSON()">
 
                     <input type="hidden" name="aplica_rol" v-bind:value="aplicaRol">
+                   
+                    <input type="hidden" name="inscripciones_aplicadas" v-bind:value="convertToJSONInscripciones()">
 
                 <div class="row" v-for="(item, index) in puntosActivos">
                     <div class="col-md-12">
@@ -52,13 +54,10 @@
                 </div>
                 </form>
             </div>
-            <div v-else>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="card-title">{{ $t('frontend.apply_for_rol') }}</h2>
-                    </div>
-                </div>
-                <hr>
+            <div v-else-if="!rolAplicado" class="col-md-8">
+
+                <h2 class="card-title">{{ $t('frontend.apply_for_rol') }}</h2>
+
                 <div class=" pl-0 form-check form-inline mb-2">
                     <input v-model="aplicaRol" class="form-check-input pl-0" type="checkbox"
                         id="aplica-rol">
@@ -66,25 +65,10 @@
                         {{ $t('frontend.yes') }}
                     </label>
                 </div>
-                <div v-if="!aplicaRol" class=" pl-0 form-check form-inline mb-2">
-                    <input class="form-check-input pl-0" checked type="checkbox"
-                        >
-                    <label class="form-check-label" for="aplica-rol">
-                        {{ $t('frontend.no_apply_rol') }}
-                    </label>
-                </div>
-                
+            
 
-                <div v-if="aplicaRol" class="row">
-                    <div class="col-md-12">
-                        <p>{{ $t('frontend.whats_a_rol') }}</p>
-                    </div>
-                </div>
-                <hr>
-                <div v-if="aplicaRol" class="row">
-                    <div class="col-md-7 mb-5">
-                        <input type="text" v-model="dummyInput" style="display: none;"> <!-- Campo de texto invisible -->
-        
+                <div v-if="aplicaRol" >
+                        <p>{{ $t('frontend.whats_a_rol') }}</p>            
                         <vue-tags-input
                             v-model="tag"
                             :tags="rolesAplicado"
@@ -94,42 +78,77 @@
                             :autocomplete-items="actividad.roles_tags"
                             @tags-changed="newTags => rolesAplicado = newTags"
                         />
-                    </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-3 text-primary">
-                        <p>
-                            <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
-                        </p>
-                  </div>
-                  <div class="col-md-3">
-                    <button type="button" 
-                        class="btn btn-primary" 
-                        data-dismiss="modal" 
-                        aria-label="Close" 
-                        @click="rolAplicado=true" >
-                        <span aria-hidden="true">
-                            {{ $t('frontend.continue') }}
-                        </span>
-                    </button>
-                  </div>
+                        <div class="row">
+                        <div class="col-md-3 text-primary">
+                                <p>
+                                    <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
+                                </p>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-primary" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="rolAplicado=true" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.continue') }}
+                                </span>
+                            </button>
+                        </div>
+                        </div>
                 </div>
-          </div>
+                <div v-else-if="!tipoInscriptoAplicado" class="col-md-8">
+                        <h2 class="card-title">{{ $t('frontend.type_of_inscription') }}</h2>
 
-        </div>
+                        <p>{{ $t('frontend.whats_a_type_inscription') }}</p>     
+                        <div class="card-body">
+                            <vue-tags-input
+                                v-model="tag2"
+                                :tags="tipoInscriptoTags"
+                                placeholder=""
+                                autocomplete="new-password"
+                                add-only-from-autocomplete
+                                :open-on-focus="true"
+                                :autocomplete-items="actividad.tipo_inscriptos_tag"
+                                @tags-changed="newTags => tipoInscriptoTags = newTags"
+                            />
+                        </div>
+                        <div class="card-footer">
+                           <div class="row">
+                                <div class="col-md-3 text-primary">
+                                    <p>
+                                        <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" 
+                                        class="btn btn-primary" 
+                                        data-dismiss="modal" 
+                                        aria-label="Close" 
+                                        @click="tipoInscriptoAplicado=true" >
+                                        <span aria-hidden="true">
+                                            {{ $t('frontend.continue') }}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         <div v-else class="col-md-8" >
-          <div class="row">
-              <div class="col-md-12">
-                  <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
-                  <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
-              </div>
-          </div>
-          <hr>
-          <div class="row">
-              <div class="col-md-12 px-4">
-                <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
-              </div>
-          </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
+                    <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12 px-4">
+                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
+                </div>
+            </div> 
         </div>
         <hr>
         <div class="col-md-4 prev" >
@@ -186,8 +205,11 @@
             },
             aplicaRol: false,
             rolAplicado: false,
+            tipoInscriptoAplicado: false,
             tag: "",
+            tag2: "",
             rolesAplicado: [],
+            tipoInscriptoTags: [],
             mostrarFichaMedica: false,
             localidad: {},
             imagen: '',
@@ -205,6 +227,8 @@
                 self.mostrarFichaMedica = true;
             if(self.actividad.roles_tags == null || self.actividad.roles_tags.length == 0)
                 self.rolAplicado = true;
+            if(self.actividad.tipo_inscriptos_tag == null || self.actividad.tipo_inscriptos_tag.length == 0)
+                self.tipoInscriptoAplicado = true;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
@@ -249,7 +273,10 @@
           },
             convertToJSON: function() {
                 return JSON.stringify(this.rolesAplicado);
-            }
+            },
+            convertToJSONInscripciones: function() {
+                return JSON.stringify(this.tipoInscriptoTags);
+            },
         }
     }
 </script>

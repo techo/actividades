@@ -65,6 +65,10 @@ return [
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
 
+
+	'ciclo_voluntariado' => 'Ciclo de voluntariado',
+	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
+
 	'welcome' => 'Bienvenidx',
 	'welcome_M' => 'Bienvenido',
 	'welcome_F' => 'Bienvenida',
@@ -166,9 +170,9 @@ return [
  	'documento_identidad_dorso' => 'Documento Dorso',
  	'ficha_otros' => 'Otros Datos',
  	'ficha_alergias' => 'Alergias',
+	'vacunacion_covid' => 'Vacuna Covid', 
  	'ficha_alimentacion' => 'Restricciones o dieta',
  	'ficha_confirma_datos' => 'Confirmacion de datos',
- 	'contacto_emergencia' => 'Contacto de Emergencia',
  	'documents' => 'Documentos',
  	'cobertura_paga' => 'Cobertura Paga',
  	'salud_publica' => 'Salud Pública',
@@ -306,17 +310,24 @@ return [
 	'apply_for_rol' => '¿Quieres ser parte del equipo organizador de esta actividad?',
 	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
 	'roles_aplicados' => 'Roles Aplicado',
-	'yes' => 'Si, aplicar a rol',
+	'yes_apply_rol' => 'Si, aplicar a rol',
 	'no_apply_rol' => 'No deseo aplicar a rol',
 
+
+	'type_of_inscription' => 'Tipo de Inscripción',
+	'whats_a_type_inscription' => 'Selecciona el tipo de voluntariado que estas realizando o representando durante esta actividad.',
+
+
+	'yes' => 'Si',
+	'no' => 'No',
 	// confirmar-paso-1
 	'last_step_waiting_for_confirmation' => '¡Quedás a la espera de que te confirmemos!',
 	'will_be_in_touch' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
 
 	// pagar-paso-1
 	'last_step_confirm_by_donation' => '¡Sólo queda un paso!',
-	'you_are_pre_registered' => 'Ya estás pre inscripto a',
-	'mail_sended' => 'Y también te mandamos un mail con toda la información de la actividad! Chequealo!',
+	'you_are_pre_registered' => 'Estás pre inscripto a',
+	'mail_sended' => 'Te mandamos un mail con toda esta información.',
 	'complete_registration' => 'Pero antes: Confirmá tu lugar!',
 	'donation_ammount' => 'MONTO A DONAR',
 	'suggested_donation' => 'Donación sugerida: ',
@@ -328,7 +339,11 @@ return [
 	'continue' => 'SIGUIENTE',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
-	'make_donation' => 'Hace tu donación por el siguiente ',
+	'make_donation' => 'Pasos para confirmar',
+	'upload_voucher' => 'Adjunta Voucher',
+	'data_uploaded' => 'Voucher Subido',
+	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
+	'confirm_later' => 'Confirmar Luego',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

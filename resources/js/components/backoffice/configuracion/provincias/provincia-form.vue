@@ -23,7 +23,19 @@
                                         :disabled="this.readonly">
                                 </div>
                             </div>
-                        </div>                       
+                        </div>    
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="idOficina">Oficina</label>
+                                    <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
+                                        name="oficina" id="oficina" v-model="oficinaSeleccionado"
+                                        >
+                                        <span slot="no-options"></span>
+                                    </v-select>
+                                </div>
+                            </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -43,15 +55,19 @@ export default {
         return {
             data: {
                 nombre: "",
+                idOficina: null,
             },
             guardado: false,
             mensajeGuardado: '',
             validationErrors: {},
+            dataOficinas: [],
+            oficinaSeleccionado: {},
             readonly: !this.edicion,
             errors: {},
         }
     },
     created() {
+        this.getOficinas();
         if (this.provincia) {
             this.data = this.provincia;
             this.data.nombre = this.provincia.provincia
@@ -65,9 +81,30 @@ export default {
             return (this.validationErrors.length > 0);
         },
     },
+
+    watch: {
+        oficinaSeleccionado: function () {
+            if (this.oficinaSeleccionado)
+                this.data.idOficina = this.oficinaSeleccionado.id;
+        },
+    },
+
     methods: {
         editar() {
+            this.oficinaSeleccionado = Object.values(this.dataOficinas).find(oficina => oficina.id === this.data.idOficina);
             this.readonly = false;
+        },
+        getOficinas: function () {
+            axios.get("/admin/ajax/oficinas")
+                .then((respuesta) => {
+                    this.dataOficinas = respuesta.data
+                    for (let [i, o] of this.dataOficinas.entries()) {
+                        this.dataOficinas[i].descripcion = o.nombre
+                    }
+                    if (this.data.idOficina)
+                     this.oficinaSeleccionado = Object.values(this.dataOficinas).find(oficina => oficina.id === this.data.idOficina);
+                })
+                .catch(() => { debugger });
         },
         mostrarLoadingAlert() {
             this.$refs.loading.openSimplert({

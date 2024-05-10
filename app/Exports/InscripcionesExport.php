@@ -49,6 +49,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'contacto numero',
             'contacto relacion',
             'alergias',
+            'vacunacion_covid',
             'alimentacion',
             'Documento Frente',
             'Documento Dorso',
@@ -56,6 +57,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'cantidad de actividades (según filtro previo)',
             'presente',
             'pago',
+            'voucherUrl',
             'confirma',
             'punto de encuentro',
             'grupo',
@@ -97,6 +99,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->contacto_telefono,
             $query->contacto_relacion,
             $query->alergias,
+            $query->vacunacion_covid,
             $query->alimentacion,
             env("APP_URL").'/'.$query->documento_frente,
             env("APP_URL").'/'.$query->documento_dorso,
@@ -104,11 +107,13 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->cantActividades,
             (is_null($query->presente) || $query->presente == 0) ? 'No' : 'Si',
             (is_null($query->pago) || $query->pago == 0) ? 'No' : 'Si',
+            $query->voucherUrl,
             (is_null($query->confirma) || $query->confirma == 0) ? 'No' : 'Si',
             $query->punto,
             $query->nombreGrupo,
             $query->nombreRol,
             $query->roles_aplicados,
+            $query->inscripciones_aplicadas,
         ];
     }
 

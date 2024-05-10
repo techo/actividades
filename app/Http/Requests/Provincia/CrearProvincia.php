@@ -25,6 +25,7 @@ class CrearProvincia extends FormRequest
     {
         return [
             'nombre' => 'required',
+            'idOficina' => 'required',
         ];
     }
 }

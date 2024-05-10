@@ -4,6 +4,7 @@ namespace App\Search;
 
 use App\Equipo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class EquiposSearch
 {
@@ -38,9 +39,16 @@ class EquiposSearch
     }
 
     private static function newQuery(){
-        $query = (new Equipo())->newQuery();
+        $query = (new Equipo())->newQuery();        
 
-        $query->where('idPais', '=', auth()->user()->idPaisPermitido);
+        if(auth()->user()->hasRole("admin")){
+            $query->where('idPais', '=', auth()->user()->idPaisPermitido);
+        } else if(auth()->user()->hasRole("coordinador")){
+            $query
+            ->join('coordinadores_equipos','coordinadores_equipos.idEquipo','=','Equipo.idEquipo')
+            ->where('idPersona', auth()->user()->idPersona)
+            ->get();
+        }
 
         return $query;
     }

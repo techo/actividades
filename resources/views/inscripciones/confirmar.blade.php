@@ -34,6 +34,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
+                <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas }}">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -53,7 +54,26 @@
                 </div>
                 @php
                     $rolesAplicados = json_decode($roles_aplicados, true);
+                    $inscripcionesAplicadas = json_decode($inscripciones_aplicadas, true);
                 @endphp
+                @if ($inscripcionesAplicadas)
+                
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ __('frontend.type_of_inscription') }}</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                    
+                    @foreach($inscripcionesAplicadas as $rol)
+                        <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+                            {{ $rol['text'] }}
+                        </span>
+                    @endforeach
+                    </div>
+                @endif
+               
                 @if ($aplica_rol == 'true')
                     <hr>
                     <div class="row">
@@ -70,6 +90,8 @@
                     @endforeach
                     </div>
                 @endif
+
+                
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
