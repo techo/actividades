@@ -113,7 +113,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-                            <a href="{{ action('ActividadesController@show', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
+                            <a href="/" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                             @else
                             <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}" class="btn btn-link">{{ __('frontend.go_back') }}</a>
                             @endif
