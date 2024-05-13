@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Webpatser\Uuid\Uuid;
 
@@ -109,6 +110,25 @@ class UsuarioController extends BaseController
       return $persona;
   }
 
+  public function cambiar_photo(Request $request)
+	{
+		$persona = Auth::user();
+		$this->validate($request, array(
+			'photo' => 'nullable',
+		));
+	
+		if ($request->file('photo')){
+			$archivo = $request->file('photo');
+			$path = $archivo->store('public/perfil/img');
+			$oldPath = str_replace('storage', 'public', $persona->photo);
+			if(Storage::exists($oldPath))
+				Storage::delete($oldPath);
+	
+			$persona->photo = str_replace('public', 'storage', $path);
+			$persona->save();
+		}
+  
+	}
   public function validar_nuevo_mail(Request $request) {
   	return Persona::where('mail', $request->email)->get()->count();
   }

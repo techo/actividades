@@ -63,6 +63,7 @@ Route::prefix('ajax')->group(function () {
 		});
         Route::get('validar/{verbo}', 'ajax\UsuarioController@validar');
         Route::get('perfil', 'ajax\UsuarioController@perfil');
+        Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
         Route::post('', 'ajax\UsuarioController@create');
         Route::put('', 'ajax\UsuarioController@update');
         Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario

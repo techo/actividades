@@ -118,6 +118,21 @@ code {
     overflow: hidden; /* Para recortar cualquier parte de la imagen que se extienda más allá del círculo */
 }
 
+.imagen-perfil-redonda {
+    border:1px solid;
+    border-radius:50%;
+    width:150px;
+    height:150px;
+    
+  }
+
+.imagen-perfil-mini {
+    border:1px solid;
+    border-radius:50%;
+    width: 50px;
+    height: 50px;
+    
+  }
 .techo-blue {
     color: #0092dd;
 }

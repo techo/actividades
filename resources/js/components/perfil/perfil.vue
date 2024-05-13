@@ -3,30 +3,35 @@
         <simplert ref="confirmar"></simplert>
         <div class="card-body">
 
-            <div class="row">
-                <div class="col-md-4 text-right text-buttom">
-                    <img v-if="(user.photo!=null)" src="user.photo" class="rounded-circle" alt="img" />
-                    <button class="btn btn-light align-center" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                </div>
-                <div class="col-md-8">
-                    <h3>{{ $t('frontend.welcome_'+user.genero ) }}, {{ usernombre }}</h3>
-                    <h4>({{ user.email }})</h4>
-                </div>
-            </div>
+            <div class="row align-items-center">
+  <div class="col-md-4 text-center">
+    <div class="position-relative">
+      <img v-if="user.photo != null" class="imagen-perfil-redonda" :src="'/' + user.photo" alt="Foto">
+      <button class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
+        <i class="fa fa-edit"></i>
+      </button>
+      <input type="file" hidden class="form-control" @change="submitFile" ref="photo">
+    </div>
+  </div>
+  <div class="col-md-8">
+    <h3>{{ $t('frontend.welcome_'+user.genero ) }}, {{ usernombre }}</h3>
+    <h4>({{ user.email }})</h4>
+  </div>
+</div>
+
             <div class="row">
                 <div class="col-md-12">
-                    <p>{{ $t('frontend.profile_text_1') }}</p>
-                    <p>{{ $t('frontend.profile_text_2') }}
+                    <p class="text-center m-2">{{ $t('frontend.profile_text_1') }}</p>
+                    <p class="text-center m-2">{{ $t('frontend.profile_text_2') }}
                         <a href="/perfil/cambiar_email">
                             {{ $t('frontend.profile_text_3') }}</a>.
                     </p>
                 </div>
             </div>
-            <hr>
 
             <div>
-                <b-tabs content-class="mt-3" v-model="paso_actual">
-                    <b-tab :title="$t('frontend.personal_data')" href="#datos">
+                <b-tabs content-class="mt-3" fill v-model="paso_actual">
+                    <b-tab class="m-3" :title="$t('frontend.personal_data')" href="#personales">
                         <div class="row mx-2">
                             <div class="col-md-6">
                                 <div class="row">
@@ -378,6 +383,8 @@ export default {
             provincias: [],
             localidades: [],
             formDirty: false,
+            photo: null,
+            nombre_photo: '',
             message: {
                 danger: false,
                 text: ''
@@ -488,6 +495,26 @@ export default {
                 this.validar_data()
             });
         },
+
+        submitFile: function () {
+            this.guardo = false;
+            this.photo = this.$refs.photo.files[0];
+            this.nombre_photo = this.$refs.photo.files[0].name;
+            const formData = new FormData();
+            formData.append('photo', this.photo);
+            const headers = { 'Content-Type': 'multipart/form-data' };
+            axios.post('/ajax/usuario/perfil/cambiar_photo', formData, { headers }).then(response => {
+                this.guardo = true;
+                this.formDirty = false;
+            }).catch((error) => {
+            });
+        },
+        selectPhoto: function () {
+            this.$refs.photo.click();
+        },
+
+
+
         confirma_linkear: function () {
             var media = '';
             var id = '';
