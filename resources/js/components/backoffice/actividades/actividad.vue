@@ -65,7 +65,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="estado">Estado</label>
+                            <label for="estado">Estado de la Actividad</label>
                             <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
                                 <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
                                 <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
@@ -75,7 +75,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="inscripcionInterna">Visibilidad</label>
+                            <label for="inscripcionInterna">Visibilidad de la Actividad</label>
                             <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
                                 <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
                                 <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
@@ -88,7 +88,7 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <label for="fechaInicio">Empieza</label>
+                        <label for="fechaInicio">Fecha de Inicio de la actividad que se convoca</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaInicio }}</span>
@@ -97,7 +97,7 @@
                             </span>
                         </div>
 
-                        <label for="fechaFin">Termina</label>
+                        <label for="fechaFin">Fecha fin de la actividad que se convoca</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaFin }}</span>
@@ -107,9 +107,7 @@
                         </div>
 
                         <div  v-show="edicion">
-                            <label>
-                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
-                            </label>
+                            
                             <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
                         </div>
                     </div>  
@@ -133,7 +131,7 @@
                     </div>
                 </div>
 
-                <div class="box" style="border-top: 12px;" v-show="!edicion || calculaFechas">
+                <div class="box" style="border-top: 12px;">
 
                     <div class="box-body">
 
@@ -141,28 +139,31 @@
                             <div class="col-md-4 ml-2">
                                 <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
-                                    <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
+                                    <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
+                                        <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <label for="fechaFinInscripciones">Terminan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
-                                    <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
+                                    <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                                     <span class="help-block">{{ errors.fechaFinInscripciones }}</span>
                                     <span class="input-group-addon">
-                                        <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
+                                        <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                                     </span>
                                 </div>
                             </div>       
                                     
                         </div>
 
-                        <div class="row">
+                        <div  v-show="edicion"  class="row m-2">
+                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Programar fecha de Evaluaciones
+                        </div>
+
+                        <div class="row"  v-show="!edicion || calculaFechas">
                             <div class="col-md-4 ml-2">
                                 <label for="fechaFin">Evaluaciones empiezan</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
@@ -221,7 +222,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Ubicación</h3>
                 <span class="help-block" v-show="virtual==true">En este espacio podes poner tanto el medio donde se realizará (ej, ZOOM, HANHOUTS) o directemente poner la url de la reunión. Tener en cuenta que la misma sería pública en tal caso</span>
-                <span class="help-block" v-show="virtual==false">La ubicación es el lugar físico donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
+                <span class="help-block" v-show="virtual==false">La ubicación es el lugar físico donde transcurrirá la actividad. Una actividad tiene un solo lugar físico donde los movilizamos desde el punto de encuentro al que se convoca.</span>
             </div>
             <div class="box-body">
 
@@ -269,10 +270,10 @@
                 <h3 class="box-title">Confirmación</h3>
                 <p class="help-block">Una actividad puede o no requerir que sus inscriptos confirmen su participación. Hay cuatro opciones:
                     <ul>
-                        <li><b>Automática</b>: al inscribirse están automáticamente confirmados</li>
-                        <li><b>Por donación</b>: se pre-inscriben y tienen que realizar una donación para estar confirmados</li>
-                        <li><b>Manual</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad</li>
-                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, tiene que confirmarlo un coordinador y recién ahí confirmar con una donación.</li>
+                        <li><b>Automática</b>: al inscribirse están automáticamente confirmados. Para esto Desactiva “Por pago” y “Manual”</li>
+                        <li><b>Por donación</b>: se pre-inscriben y tienen que realizar una donacion y adjuntar su voucher, el coordinador debe verificar su pago en “Inscriptos” para que la inscripcion finalice.</li>
+                        <li><b>Manual</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad para que la inscripcion finalice. Esta accion es recomendada por si necesitas verificar que el voluntariado llene de forma correcta la información solicitada en los campos de actividad o tenga algún otro pre-requisito.</li>
+                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, y la coordinacion debe confirmar la inscripcion para que el usuario pueda realizar su pago y asi su habilite el recibo de donación. </li>
                     </ul>
                 </p>
             </div>
@@ -324,6 +325,9 @@
                         <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
                             <label for="">Fecha límite de pago</label>
                             <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
+                            <p class="help-block">
+                                Verifica siempre esta fecha en el transcurso de la temporada de inscripcion, ya que al llegar a esta fecha limite las incripciones se cerraran automáticamente
+                            </p>
                             <span class="help-block">{{ errors.fechaLimitePago }}</span>
                         </div>
                     </div>
@@ -382,7 +386,7 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Otros</h3>
+                <h3 class="box-title">Ficha Médica</h3>
             </div>
             <div class="box-body">
 
@@ -409,7 +413,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Otros</h3>
+            </div>
+            <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">

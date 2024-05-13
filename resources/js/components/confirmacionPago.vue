@@ -32,14 +32,15 @@
                             {{ $t('frontend.changes_success') }}
                         </span>
                     </button>
-                  </div><div class="col-md-12">
+                  </div>
+                  <div class="col-md-12" v-if="guardo">
                     <button type="button" disable
                       class="btn btn-secundary form-control" 
                       @click="redirectToIndex">
                       <span aria-hidden="true">
                           {{ $t('frontend.confirm_later') }}
                       </span>
-                  </button>
+                    </button>
                   </div>
                 </div>
     </div>
