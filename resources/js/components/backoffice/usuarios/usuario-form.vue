@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.name') }}</label>
+                                    <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre"
                                            type="text"
                                            class="form-control"
@@ -63,7 +63,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.last_name') }}</label>
+                                    <label for="apellido">{{ $t('backend.last_name') }}</label>
                                     <input id="apellido"
                                            type="text"
                                            class="form-control"
@@ -76,7 +76,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.birthdate') }}</label>
+                                    <label for="nacimiento">{{ $t('backend.birthdate') }}</label>
                                     <br>
                                     <p v-if="readonly">{{ fechaNacimiento }}</p>
                                     <date-picker v-else
@@ -92,7 +92,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.gender') }}</label>
+                                    <label for="genero">{{ $t('backend.gender') }}</label>
                                     <br>
                                     <v-select
                                             :options="dataGeneros"
@@ -112,7 +112,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.phone') }}</label>
+                                    <label for="telefono">{{ $t('backend.phone') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name="telefono"
@@ -128,7 +128,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.role') }}</label>
+                                    <label for="rol">{{ $t('backend.role') }}</label>
                                     <v-select
                                             :options="dataRoles"
                                             label="rol"
@@ -233,7 +233,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>{{ $t('backend.verification') }}</label>
+                                    <label for="localidad">{{ $t('backend.verification') }}</label>
                                     <br>
                                     <v-switch
                                         theme="bootstrap" 
