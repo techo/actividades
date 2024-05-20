@@ -165,7 +165,7 @@ export default {
             updateDocumentoDorso:false,
             updateDocumentoFrente:false,
             grupo_sanguineos: [
-                'A+', 'A-', 'B+', 'B-', '0+', '0-'
+                'A+', 'A-', 'AB+', 'AB-','B+', 'B-', '0+', '0-'
             ],
             cobertura_tipos: [
                 'cobertura_paga', 'salud_publica'
