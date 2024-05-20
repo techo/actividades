@@ -1,26 +1,37 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-6">
-                <label>Fecha de Inscripción: </label>
-                <span>{{ fechaInscripcion }}</span>
-                <br>
-                <label>Punto de Encuentro: </label>
-                <span>{{ puntoEncuentro }}</span>
+            <div class="col-md-3 text-center">
+
+              <img v-if="rowData.photo" class="imagen-perfil-redonda" :src="'/'+rowData.photo" alt="Foto">
+              <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
+            </div>
+              
+            <div class="col-md-4">
+                <label>DNI/Pasaporte: </label>
+                <span>{{ rowData.dni }}</span>
                 <br>
                 <label>Móvil: </label>
                 <span>{{ rowData.telefonoMovil }}</span>
                 <br>
                 <label>Email: </label>
                 <span>{{ rowData.mail }}</span>
+                
+               
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label>Provincia: </label>
                 <span>{{ rowData.pProvincia }}</span>
                 <br>
                 <label>Localidad: </label>
                 <span>{{ rowData.pLocalidad }}</span>
                 <br>
+                <label>Fecha de Inscripción: </label>
+                <span>{{ fechaInscripcion }}</span>
+                <br>
+                <label>Punto de Encuentro: </label>
+                <span>{{ rowData.punto }}</span>
+
                 <div v-if="rowData.voucherUrl">
                   <label>Archivo Pago: </label>
                   <a target="_blank" :href="'/'+rowData.voucherUrl"> Voucher</a>

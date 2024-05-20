@@ -196,9 +196,14 @@ return [
                 'visible' => false
             ],
             [
+                'name' => '__component:photoPerfil',
+                'title' => '',
+            ],
+            [
                 'name' => 'dni',
                 'sortField' => 'dni',
                 'title' => 'DNI/Pasaporte',
+                'visible' => false
             ],
             [
                 'name' => 'nombres',
@@ -316,9 +321,8 @@ return [
                 'title' => 'Email'
             ],
             [
-                'name' => 'created_at',
-                'sortField' => 'created_at',
-                'title' => 'Fecha Creación'
+                'name' => 'telefono',
+                'title' => 'Teléfono'
             ],
         ],
         'sortOrder' => [

@@ -20,6 +20,7 @@ class UsuariosResource extends Resource
             'nombre'    => $this->nombres,
             'apellido'    => $this->apellidoPaterno,
             'email'    => $this->mail,
+            'telefono'    => $this->telefonoMovil,
             'created_at' => ($this->created_at)?$this->created_at->format('d/m/Y'):'',
         ];
     }

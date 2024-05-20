@@ -41,3 +41,18 @@ div[aria-label="Insert link"] .mce-btn.mce-open {
 body {
     font-family: Fredoka, 'Montserrat', sans-serif;
 }
+
+.imagen-perfil-redonda {
+    border:0px solid;
+    border-radius:50%;
+    width:150px;
+    height:150px;
+  }
+
+.imagen-perfil-mini {
+    border:1px solid;
+    border-radius:50%;
+    width: 30px;
+    height: 30px;
+    
+  }

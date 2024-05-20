@@ -180,12 +180,14 @@
                                 aria-haspopup="true"
                                 aria-expanded="false"
                         >
-                               {{ $t('frontend.hello') }}, {{ user.nombres }}
+                                <img v-if="usuario.photo != null" class="imagen-perfil-redonda" :src="'/' + usuario.photo" alt="Foto">
+                               {{ $t('frontend.hello') }}, {{ user.nombres }} {{ usuario.photo }}
                         </button>
                         <div
                                 class="dropdown-menu"
                                 aria-labelledby="btnUser"
                         >
+                                <img v-if="user.photo != null" class="imagen-perfil-redonda" :src="'/' + user.photo" alt="Foto">
                             <button
                                     class="dropdown-item"
                                     id="btn-mis-actividades"

@@ -72,6 +72,7 @@ class InscripcionesSearch
                     'Persona.mail',
                     'Persona.fechaNacimiento',
                     'Persona.genero',
+                    'Persona.photo',
                     'ficha.grupo_sanguinieo',
                     'ficha.cobertura_nombre',
                     'ficha.cobertura_numero',

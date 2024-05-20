@@ -19,7 +19,8 @@ class PersonaResource extends Resource
             'nombres' => $this->nombres,
             'apellido' => $this->apellido,
             'telefonoMovil' => $this->telefonoMovil,
-            'mail' => $this->mail
+            'mail' => $this->mail,
+            'photo' => $this->photo
         ];
     }
 }

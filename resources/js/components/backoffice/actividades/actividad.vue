@@ -273,7 +273,7 @@
                         <li><b>Automática</b>: al inscribirse están automáticamente confirmados. Para esto Desactiva “Por pago” y “Manual”</li>
                         <li><b>Por donación</b>: se pre-inscriben y tienen que realizar una donacion y adjuntar su voucher, el coordinador debe verificar su pago en “Inscriptos” para que la inscripcion finalice.</li>
                         <li><b>Manual</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad para que la inscripcion finalice. Esta accion es recomendada por si necesitas verificar que el voluntariado llene de forma correcta la información solicitada en los campos de actividad o tenga algún otro pre-requisito.</li>
-                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, y la coordinacion debe confirmar la inscripcion para que el usuario pueda realizar su pago y asi su habilite el recibo de donación. </li>
+                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, y la coordinacion debe confirmar la inscripcion para que el usuario pueda realizar su pago y asi se habilita el recibo de donación. </li>
                     </ul>
                 </p>
             </div>

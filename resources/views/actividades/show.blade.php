@@ -72,10 +72,22 @@
 			</div>
 		</div>
 			<div class="row">
-				<div class="col-md-12">
-                    @foreach($actividad->coordinadores as $coordinador)
-                        <li> {{$coordinador->persona->nombres}} {{$coordinador->persona->apellidoPaterno }} </li>
-                    @endforeach
+				<div class="col-md-12 p-1 ">
+                    <ul style="list-style-type:none;">
+                        @foreach($actividad->coordinadores as $coordinador)
+                            <li>
+                            @if ($coordinador->persona->photo)
+                                <img class="imagen-perfil-mini" src="{{ '/'.$coordinador->persona->photo }}" alt="Foto">
+                            @else
+                                <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
+                            @endif
+                                <span>
+                                    {{$coordinador->persona->nombres}} {{$coordinador->persona->apellidoPaterno }}
+                                </span>
+                            </li>
+                        @endforeach
+                    </ul>
+                    
 				</div>
 			</div>
 		<hr>
@@ -97,7 +109,19 @@
 
                 </div>
                 <div class="col-md-4">
-                    <strong>{{ __('frontend.referring') }}:</strong> {{isset($puntoEncuentro->responsable) ? $puntoEncuentro->responsable->nombreCompleto :  __('frontend.not_defined') }}
+                    <strong>{{ __('frontend.referring') }}:</strong>
+                        @if ($puntoEncuentro->responsable)
+                            @if ($puntoEncuentro->responsable->photo)
+                                <img class="imagen-perfil-mini" src="{{ '/'.$puntoEncuentro->responsable->photo }}" alt="Foto">
+                            @else
+                                <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
+                            @endif
+                            {{ $puntoEncuentro->responsable->nombreCompleto }}
+                        @else
+                            {{  __('frontend.not_defined') }}
+                        @endif
+
+                    </ul>
                 </div>
 		      </div>
             @endif
