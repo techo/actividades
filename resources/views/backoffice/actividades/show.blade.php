@@ -29,7 +29,8 @@
                 <actividad :disabled="true" id="{{ $actividad->idActividad }}"></actividad>
 
                 <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
-                    cancelar-url="/admin/actividades/usuario"
+                    cancelar-url="/admin/actividades/{{ $actividad->idActividad }}"
+                    watch-url="/actividades/{{ $actividad->idActividad }}"
                     edicion="{{ $edicion }}"
                     compartir="{{ $compartir }}"
                     can-editar="{{ Auth::user()->hasPermissionTo('editar_actividad') &&

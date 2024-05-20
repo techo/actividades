@@ -434,6 +434,7 @@
                                 v-model="tag"
                                 :tags="rolesTags"
                                 :disabled="!edicion"
+                                :autocompleteItems="filteredRolesTags"
                                 placeholder=""
                                 @tags-changed="newTags => rolesTags = newTags"
                             />
@@ -548,6 +549,25 @@
                     }, {
                         text: 'Voluntariado',
                 }],
+                autocompleteRoles: [{
+                        text: 'Liderazgo de Cuadrilla',
+                    }, {
+                        text: 'Co-Liderazgo de Cuadrilla',
+                    }, {
+                        text: 'Liderazgo de Construcción',
+                    }, {
+                        text: 'Monitor/a',
+                    }, {
+                        text: 'Intendencia',
+                    }, {
+                            text: 'Camioneta',
+                    }, {
+                            text: 'Logistica',
+                    }, {
+                            text: 'Delegación de Comunicaciones',
+                }],
+
+                
 
                 fichaMedicaCampos:{
                     'contacto_emergencia' : false,
@@ -674,6 +694,11 @@
         computed: {
             filteredTipoInscriptosTags() {
                 return this.autocompleteTipoInscriptos.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
+            filteredRolesTags() {
+                return this.autocompleteRoles.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
                 });
             },

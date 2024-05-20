@@ -10,6 +10,9 @@
             </div>
 
             <div class="col-sm-12 col-md-8" style="display: flex; justify-content: flex-end;">
+                <a class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && watchUrl" :href="watchUrl" target="_blank">
+                    <i class="fa fa-eye"></i>  Ver
+                </a>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
                     <i class="fa fa-share-alt"></i>  Compartir
                 </button>
@@ -87,7 +90,7 @@
 <script>
     export default {
         name: "crudFooter",
-        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar', 'canFusionar'],
+        props: ['edicion', 'compartir', 'cancelarUrl', 'canEditar', 'canBorrar', 'canClonar', 'canFusionar', 'watchUrl'],
         data: function () {
             return {
                 readonly: (this.edicion != "1")
