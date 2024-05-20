@@ -108,7 +108,7 @@
 
                         <div  v-show="edicion">
                             
-                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad.</p>
                         </div>
                     </div>  
                     
@@ -732,12 +732,9 @@
                         }
                         if (this.fechas.fechaInicioEvaluaciones != moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD')) {
                             this.fechas.fechaInicioEvaluaciones = moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD');
-                            this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(11, 'd').format('YYYY-MM-DD');
+                            this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(30, 'd').format('YYYY-MM-DD');
                         }
-                        if (this.horas.fechaFinInscripciones != this.horas.fechaInicio ) {
-                            this.horas.fechaInicioInscripciones = this.horas.fechaInicio;
-                            this.horas.fechaFinInscripciones = this.horas.fechaInicio;
-                        }
+                        
                         if (this.horas.fechaInicioEvaluaciones != this.horas.fechaFin) {
                             this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
                             this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
@@ -745,6 +742,14 @@
                         
 
                     }
+                    if (this.fechas.fechaFinInscripciones != this.fechas.fechaInicio ) {
+                            this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(90, 'd').format('YYYY-MM-DD');
+                            this.fechas.fechaFinInscripciones = this.fechas.fechaInicio;
+                        }
+                    if (this.horas.fechaFinInscripciones != this.horas.fechaInicio ) {
+                        this.horas.fechaInicioInscripciones = this.horas.fechaInicio;
+                        this.horas.fechaFinInscripciones = this.horas.fechaInicio;
+                    }    
                     if(!this.actividad.pago)
                         this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
 

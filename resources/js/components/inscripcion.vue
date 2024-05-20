@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row  align-middle">
+                <div class="row justify-content-center">
                     <input type="hidden" name="_token" v-bind:value="csrf_token">
                     <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
                     <div class="col-md-2 text-primary">
@@ -54,32 +54,27 @@
                 </div>
                 </form>
             </div>
-            <div v-else-if="!rolAplicado" class="col-md-8">
+            <div v-else-if="!rolAplicado">
 
-                <h2 class="card-title">{{ $t('frontend.apply_for_rol') }}</h2>
-
-                <div class=" pl-0 form-check form-inline mb-2">
-                    <input v-model="aplicaRol" class="form-check-input pl-0" type="checkbox"
-                        id="aplica-rol">
-                    <label class="form-check-label" for="aplica-rol">
-                        {{ $t('frontend.yes') }}
-                    </label>
-                </div>
+                <h2 class="card-title text-center">{{ $t('frontend.apply_for_rol') }}</h2>
             
-
-                <div v-if="aplicaRol" >
-                        <p>{{ $t('frontend.whats_a_rol') }}</p>            
-                        <vue-tags-input
-                            v-model="tag"
-                            :tags="rolesAplicado"
-                            placeholder=""
-                            autocomplete="new-password"
-                            add-only-from-autocomplete
-                            :autocomplete-items="actividad.roles_tags"
-                            @tags-changed="newTags => rolesAplicado = newTags"
-                        />
+                <div class="card-body"> 
+                    <p>{{ $t('frontend.whats_a_rol') }}</p>    
+                    
+                    <vue-tags-input
+                        v-model="tag"
+                        :tags="rolesAplicado"
+                        placeholder=""
+                        class="h-100"
+                        autocomplete="new-password"
+                        add-only-from-autocomplete
+                        :autocomplete-items="actividad.roles_tags"
+                        @tags-changed="newTags => rolesAplicado = newTags"
+                    />
                 </div>
-                        <div class="row">
+
+                <div class="card-footer">
+                        <div class="row justify-content-center">
                         <div class="col-md-3 text-primary">
                                 <p>
                                     <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
@@ -97,12 +92,13 @@
                             </button>
                         </div>
                         </div>
+                    </div>
                 </div>
-                <div v-else-if="!tipoInscriptoAplicado" class="col-md-8">
-                        <h2 class="card-title">{{ $t('frontend.type_of_inscription') }}</h2>
-
-                        <p>{{ $t('frontend.whats_a_type_inscription') }}</p>     
+                <div v-else-if="!tipoInscriptoAplicado"x>
+                        <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
+  
                         <div class="card-body">
+                        <p>{{ $t('frontend.whats_a_type_inscription') }}</p>   
                             <vue-tags-input
                                 v-model="tag2"
                                 :tags="tipoInscriptoTags"
@@ -115,11 +111,17 @@
                             />
                         </div>
                         <div class="card-footer">
-                           <div class="row">
-                                <div class="col-md-3 text-primary">
-                                    <p>
-                                        <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
-                                    </p>
+                           <div class="row justify-content-center">
+                                <div class="col-md-3">
+                                    <button type="button" 
+                                        class="btn btn-link" 
+                                        data-dismiss="modal" 
+                                        aria-label="Close" 
+                                        @click="rolAplicado=false" >
+                                        <span aria-hidden="true">
+                                            {{ $t('frontend.go_back') }}
+                                        </span>
+                                    </button>
                                 </div>
                                 <div class="col-md-3">
                                     <button type="button" 

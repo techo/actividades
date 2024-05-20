@@ -3,21 +3,19 @@
         <simplert ref="confirmar"></simplert>
         <div class="card-body">
 
-            <div class="row align-items-center">
-                <div class="col-md-4 text-center">
-                    <div class="position-relative">
+            <div class="row align-items-center m-2  text-center">
+                <div class="col-md-6 ">
                         <img v-if="user.photo != null" class="imagen-perfil-redonda" :src="'/' + user.photo" alt="Foto">
                         <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
                     <button class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
                         <i class="fa fa-edit"></i>
                     </button>
-                    </div>
                 </div>
                 <input type="file" hidden class="form-control" @change="submitFile" ref="photo">
-                <div class="col-md-8">
+                <div class="col-md-6 ">
                     <h3>{{ $t('frontend.welcome_'+user.genero ) }}, {{ usernombre }}</h3>
                     <h4>({{ user.email }})</h4>
-  </div>
+                </div>
 </div>
 
             <div class="row">
