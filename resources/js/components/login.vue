@@ -180,14 +180,14 @@
                                 aria-haspopup="true"
                                 aria-expanded="false"
                         >
-                                <img v-if="usuario.photo != null" class="imagen-perfil-redonda" :src="'/' + usuario.photo" alt="Foto">
-                               {{ $t('frontend.hello') }}, {{ user.nombres }} {{ usuario.photo }}
+                                <img v-if="user.photo" class="imagen-perfil-mini" :src="'/'+user.photo" alt="Foto">
+                                <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image">
+                               {{ $t('frontend.hello') }}, {{ user.nombres }}
                         </button>
                         <div
                                 class="dropdown-menu"
                                 aria-labelledby="btnUser"
                         >
-                                <img v-if="user.photo != null" class="imagen-perfil-redonda" :src="'/' + user.photo" alt="Foto">
                             <button
                                     class="dropdown-item"
                                     id="btn-mis-actividades"
@@ -290,6 +290,7 @@
                 let user = JSON.parse(this.usuario);
                 data.user.nombres = user.nombres;
                 data.user.id = user.idPersona;
+                data.user.photo = user.photo;
             }
             return data
         },
