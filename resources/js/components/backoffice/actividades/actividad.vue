@@ -556,6 +556,8 @@
                     }, {
                         text: 'Liderazgo de Construcción',
                     }, {
+                        text: 'Liderazgo de Escuela',
+                    }, {
                         text: 'Monitor/a',
                     }, {
                         text: 'Intendencia',
