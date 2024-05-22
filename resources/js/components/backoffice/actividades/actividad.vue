@@ -12,7 +12,7 @@
 
                     <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.nombreActividad }" >
-                            <label for="nombreActividad">Nombre</label>
+                            <label for="nombreActividad">{{ $t('backend.name') }}</label>
                             <input name="nombreActividad" type="text" class="form-control" v-model="actividad.nombreActividad"required :disabled="!edicion"> 
                             <span class="help-block">{{ errors.nombreActividad }}</span>
                         </div>
@@ -20,7 +20,7 @@
 
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
-                            <label for="pais">País</label>
+                            <label for="pais">{{ $t('backend.country') }}</label>
                             <select name="idPais" class="form-control" v-model="actividad.idPais" required 
                             @change="getProvincias($event);getOficinas($event);actividad.idProvincia=null;actividad.idOficina=null; actividad.idLocalidad=null;" 
                             :disabled="!edicion" >
@@ -32,7 +32,7 @@
 
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
-                            <label for="oficina">Oficina</label>
+                            <label for="oficina">{{ $t('backend.office') }}</label>
                             <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
                                 <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
@@ -46,7 +46,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="categoria">Categoría</label>
+                            <label for="categoria">{{ $t('backend.category') }}</label>
                             <select name="idCategoria" @change="getTipos($event.target.value)"  required class="form-control" :disabled="!edicion" >
                                 <option v-bind:value="categoria.id" v-for="categoria in categorias" :selected="actividad.tipo.idCategoria == categoria.id">{{ $t('frontend.' + categoria.nombre) }}</option>
                             </select>
@@ -55,7 +55,7 @@
 
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idTipo }" >
-                            <label for="tipo">Tipo</label>
+                            <label for="tipo">{{ $t('backend.type') }}</label>
                             <select name="idTipo" class="form-control" v-model="actividad.idTipo" required :disabled="!edicion" >
                                 <option v-text="tipo.nombre" v-bind:value="tipo.idTipo" v-for="tipo in tipos" ></option>
                             </select>
@@ -65,20 +65,20 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="estado">Estado</label>
+                            <label for="estado">{{ $t('backend.state') }}</label>
                             <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
-                                <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >Abierta</option>
-                                <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >Cerrada</option>
+                                <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >{{ $t('backend.open') }}</option>
+                                <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >{{ $t('backend.closed') }}</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="inscripcionInterna">Visibilidad</label>
+                            <label for="inscripcionInterna">{{ $t('backend.visibility') }}</label>
                             <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
-                                <option value="1" :selected="actividad.inscripcionInterna == 1" >Privada</option>
-                                <option value="0" :selected="actividad.inscripcionInterna == 0" >Pública</option>
+                                <option value="1" :selected="actividad.inscripcionInterna == 1" >{{ $t('backend.private') }}</option>
+                                <option value="0" :selected="actividad.inscripcionInterna == 0" >{{ $t('backend.public') }}</option>
                             </select>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <label for="fechaInicio">Empieza</label>
+                        <label for="fechaInicio">{{ $t('backend.start') }}</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaInicio }}</span>
@@ -97,7 +97,7 @@
                             </span>
                         </div>
 
-                        <label for="fechaFin">Termina</label>
+                        <label for="fechaFin">{{ $t('backend.end') }}</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaFin }}</span>
@@ -108,26 +108,26 @@
 
                         <div  v-show="edicion">
                             <label>
-                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Especificar fechas de inscripción/evaluación manualmente
+                                <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> {{ $t('backend.manually_specify_registration/evaluation_dates') }}
                             </label>
-                            <p class="help-block">Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad. <br> Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.</p>
+                            <p class="help-block">{{ $t('backend.an_activity_needs_a_registration_range_text') }} <br> {{ $t('backend.if_not_specified_these_ranges_text') }}</p>
                         </div>
                     </div>  
                     
                     <div class="col-md-6 text-center m-2">
                         <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
-                            Inscripciones Abiertas
+                            {{ $t('backend.open_registrations') }}
                         </div>
                         <div v-else class="alert alert-danger" role="alert" >
-                            Inscripciones Cerradas
+                            {{ $t('backend.closed_registrations') }}
                         </div>
 
                         <div v-if="estadoEvaluaciones" class="alert alert alert-warning" role="alert" >
-                            Evaluaciones Abiertas
+                            {{ $t('backend.open_evaluations') }}
                         </div>
 
                         <div v-if="(!estadoPago && actividad.pago)" class="alert alert alert-danger" role="alert" >
-                            Fecha de Pago Vencida!!
+                            {{ $t('backend.payment_date_expired') }}
                         </div>
 
                     </div>
@@ -139,7 +139,7 @@
 
                         <div class="row">                            
                             <div class="col-md-4 ml-2">
-                                <label for="fechaInicioInscripciones">Inscripciones empiezan</label>
+                                <label for="fechaInicioInscripciones">{{ $t('backend.registrations_start') }}</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
                                     <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
@@ -150,7 +150,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="fechaFinInscripciones">Terminan</label>
+                                <label for="fechaFinInscripciones">{{ $t('backend.ending') }}</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
                                     <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaFinInscripciones }}</span>
@@ -164,7 +164,7 @@
 
                         <div class="row">
                             <div class="col-md-4 ml-2">
-                                <label for="fechaFin">Evaluaciones empiezan</label>
+                                <label for="fechaFin">{{ $t('backend.evaluations_start') }}</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
                                     <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaInicioEvaluaciones }}</span>
@@ -175,7 +175,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label for="fechaFin">Terminan</label>
+                                <label for="fechaFin">{{ $t('backend.ending') }}</label>
                                 <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
                                     <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
                                     <span class="help-block">{{ errors.fechaFinEvaluaciones }}</span>
@@ -196,7 +196,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.descripcion }" >
-                            <label for="descripcion">Descripción</label>
+                            <label for="descripcion">{{ $t('backend.description') }}</label>
                             <tinymce-editor 
                                 v-model="actividad.descripcion" 
                                 :init="{
@@ -219,9 +219,9 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Ubicación</h3>
-                <span class="help-block" v-show="virtual==true">En este espacio podes poner tanto el medio donde se realizará (ej, ZOOM, HANHOUTS) o directemente poner la url de la reunión. Tener en cuenta que la misma sería pública en tal caso</span>
-                <span class="help-block" v-show="virtual==false">La ubicación es el lugar físico donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.</span>
+                <h3 class="box-title">{{ $t('backend.location') }}</h3>
+                <span class="help-block" v-show="virtual==true">{{ $t('backend.meeting_location') }}</span>
+                <span class="help-block" v-show="virtual==false">{{ $t('backend.activity_location') }}</span>
             </div>
             <div class="box-body">
 
@@ -229,7 +229,7 @@
 
                     <div class="col-md-4">
                         <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
-                            <label for="lugar">Lugar / Medio </label>
+                            <label for="lugar">{{ $t('backend.location_medium') }} </label>
                             <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.lugar }}</span>
@@ -248,7 +248,7 @@
 
                     <div class="col-md-4" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
-                            <label for="localidad">Localidad</label>
+                            <label for="localidad">{{ $t('backend.location') }}</label>
                             <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
                                 <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
                             </select>
@@ -266,13 +266,13 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Confirmación</h3>
-                <p class="help-block">Una actividad puede o no requerir que sus inscriptos confirmen su participación. Hay cuatro opciones:
+                <h3 class="box-title">{{ $t('backend.confirmation') }}</h3>
+                <p class="help-block">{{ $t('backend.activity_confirmation') }}
                     <ul>
-                        <li><b>Automática</b>: al inscribirse están automáticamente confirmados</li>
-                        <li><b>Por donación</b>: se pre-inscriben y tienen que realizar una donación para estar confirmados</li>
-                        <li><b>Manual</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad</li>
-                        <li><b>Manual y por donación</b>: combina las dos anteriores. Se pre-inscribe, tiene que confirmarlo un coordinador y recién ahí confirmar con una donación.</li>
+                        <li><b>{{ $t('backend.automatic') }}</b>: {{ $t('backend.auto_confirm_on_registration') }}</li>
+                        <li><b>{{ $t('backend.by_donation') }}</b>: {{ $t('backend.pre_register_and_donate') }}</li>
+                        <li><b>{{ $t('backend.manual') }}</b>: {{ $t('backend.manual_confirmation') }}</li>
+                        <li><b>{{ $t('backend.manual_and_donation') }}</b>: {{ $t('backend.combined_confirmation') }}</li>
                     </ul>
                 </p>
             </div>
@@ -283,20 +283,20 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="pago">Por pago</label>
+                            <label for="pago">{{ $t('backend.by_payment') }}</label>
                             <select name="pago" class="form-control" v-model="actividad.pago" required :disabled="!edicion">
-                                <option value="1" :selected="actividad.pago == 1" >Activado</option>
-                                <option value="0" :selected="actividad.pago == 0" >Desactivado</option>
+                                <option value="1" :selected="actividad.pago == 1" >{{ $t('backend.activated') }}</option>
+                                <option value="0" :selected="actividad.pago == 0" >{{ $t('backend.deactivated') }}</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="confirmacion">Manual</label>
+                            <label for="confirmacion">{{ $t('backend.manual') }}</label>
                             <select name="confirmacion" class="form-control" v-model="actividad.confirmacion" required :disabled="!edicion">
-                                <option value="1" :selected="actividad.confirmacion == 1" >Activado</option>
-                                <option value="0" :selected="actividad.confirmacion == 0" >Desactivado</option>
+                                <option value="1" :selected="actividad.confirmacion == 1" >{{ $t('backend.activated') }}</option>
+                                <option value="0" :selected="actividad.confirmacion == 0" >{{ $t('backend.deactivated') }}</option>
                             </select>
                         </div>
                     </div>
@@ -307,7 +307,7 @@
 
                     <div class="col-md-2">
                         <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
-                            <label for="">Monto</label>
+                            <label for="">{{ $t('backend.amount') }}</label>
                             <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
                             <span class="help-block">{{ errors.montoMin }}</span>
                         </div>
@@ -315,14 +315,14 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Monto Max. (Opcional)</label>
+                            <label for="">{{ $t('backend.max_amount_optional') }}</label>
                             <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
-                            <label for="">Fecha límite de pago</label>
+                            <label for="">{{ $t('backend.payment_deadline') }}</label>
                             <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaLimitePago }}</span>
                         </div>
@@ -330,7 +330,7 @@
 
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
-                            <label for="">Pasos para realizar el pago </label>
+                            <label for="">{{ $t('backend.payment_steps') }} </label>
                             <tinymce-editor 
                                 v-model="actividad.descripcionPago" 
                                 :init="{
@@ -349,7 +349,7 @@
 
                     <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
-                            <label for="">Link formulario de beca (Opcional) </label>
+                            <label for="">{{ $t('backend.scholarship_form_link_optional') }} </label>
                             <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
                             <span class="help-block">{{ errors.beca }}</span>
                         </div>
@@ -369,9 +369,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div :class="{ 'form-group': true, 'has-error': errors.mensajeInscripcion }" >
-                            <label for="mensajeInscripcion">Mensaje *</label>
-                            <p class="help-block">Este mensaje llegar al inscripto al confirmarse su participación.</p>
-                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" >Has sido Confirmado para la Actividad!</textarea>
+                            <label for="mensajeInscripcion">{{ $t('backend.message') }} *</label>
+                            <p class="help-block">{{ $t('backend.confirmation_message') }}</p>
+                            <textarea name="mensajeInscripcion" v-model="actividad.mensajeInscripcion" class="form-control" required :disabled="!edicion" >{{ $t('backend.activity_confirmation_message') }}</textarea>
                             <span class="help-block">{{ errors.mensajeInscripcion }}</span>
                         </div>
                     </div>
@@ -382,20 +382,20 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Otros</h3>
+                <h3 class="box-title">{{ $t('backend.others') }}</h3>
             </div>
             <div class="box-body">
 
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="require_ficha_medica">Requiere Ficha Medica</label>
+                            <label for="require_ficha_medica">{{ $t('backend.medical_form_required') }}</label>
                             <select name="requiere_ficha_medica" class="form-control" v-model="actividad.requiere_ficha_medica" required :disabled="!edicion">
-                                <option value="1" :selected="actividad.requiere_ficha_medica == 1" >Si</option>
-                                <option value="0" :selected="actividad.requiere_ficha_medica == 0" >No</option>
+                                <option value="1" :selected="actividad.requiere_ficha_medica == 1" >{{ $t('backend.yes') }}</option>
+                                <option value="0" :selected="actividad.requiere_ficha_medica == 0" >{{ $t('backend.no') }}</option>
                             </select>
 
-                            <p class="help-block">En caso afirmativo la persona será dirigida a cargar su ficha al momento de la inscripción</p>
+                            <p class="help-block">{{ $t('backend.medical_form_upload_instruction') }}</p>
                         </div>
                     </div>
                     <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
@@ -413,10 +413,10 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="require_ficha_medica">Roles Aplicables</label>
+                            <label for="require_ficha_medica">{{ $t('backend.applicable_roles') }}</label>
                             <p class="help-block">
-                                Aquí puedes ingresar las opciones de roles al que el voluntariado puede aplicar para esta actividad.
-                                Presiona enter entre cada uno.
+                                {{ $t('backend.applicable_roles_description') }}
+                                {{ $t('backend.press_enter_between_each') }}
                             </p>
                             <vue-tags-input
                                 v-model="tag"
@@ -427,15 +427,15 @@
                             />
 
                             <p class="help-block">
-                                De dejar este campo en blanco no se le mostrara la opcion de seleccion de rol.
+                                {{ $t('backend.blank_role_field_message') }}
                             </p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="require_ficha_medica">Tipo de Inscripción</label>
+                            <label for="require_ficha_medica">{{ $t('backend.registration_type') }}</label>
                             <p class="help-block">
-                                Aquí puedes ingresar los canales de inscripcion (secundario, universitario, voluntario corporativo, pasante).
+                                {{ $t('backend.registration_channels_description') }}
                             </p>
                             <vue-tags-input
                                 v-model="tag2"
@@ -447,7 +447,7 @@
                                 @tags-changed="newTags => tipoInscriptosTags = newTags"
                             />
                             <p class="help-block">
-                                De dejar este campo en blanco no se mostrara al inscribir esta opcion.
+                                {{ $t('backend.blank_channel_field_message') }}
                             </p>
                         </div>
                     </div>
@@ -456,27 +456,27 @@
                 <div class="row mb-2">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="limiteInscripciones">Cupos</label>
+                            <label for="limiteInscripciones">{{ $t('backend.slots') }}</label>
                             <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
                             :disabled="!edicion" >
-                            <p class="help-block">0 es "sin limite de inscriptos"</p>
+                            <p class="help-block">{{ $t('backend.unlimited_slots') }}</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="seguimiento_google">Codigo Seguimiento Google</label>
+                            <label for="seguimiento_google">{{ $t('backend.google_tracking_code') }}</label>
                             <input type="text" id="seguimiento_google" class="form-control" v-model="actividad.seguimiento_google"
                             :disabled="!edicion" >
-                            <p class="help-block">En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad</p>
+                            <p class="help-block">{{ $t('backend.google_tracking_code_description') }}</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="linkEvaluacion">Link de evaluación</label>
+                            <label for="linkEvaluacion">{{ $t('backend.evaluation_link') }}</label>
                             <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.linkEvaluacion }}</span>
-                            <p class="help-block">Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)</p>
+                            <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
                         </div>
                     </div>
                 </div>
@@ -485,11 +485,11 @@
 
         <div class="box" v-show="edicion == false">
             <div class="box-header with-border">
-                <h3 class="box-title">Auditoría</h3>
+                <h3 class="box-title">{{ $t('backend.audit') }}</h3>
             </div>
             <div class="box-body">
                 <p class="text-muted">
-                    Última modificación: {{ actividad.fechaModificacion }}&nbsp;<a class="btn btn-primary btn-sm" @click="cargarAuditoria(actividad.idActividad)">Ver auditoría</a>
+                    {{ $t('backend.last_modified') }}: {{ actividad.fechaModificacion }}&nbsp;<a class="btn btn-primary btn-sm" @click="cargarAuditoria(actividad.idActividad)">{{ $t('backend.view_audit') }}</a>
                 </p>
             </div>
         </div>
