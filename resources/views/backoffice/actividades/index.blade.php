@@ -1,12 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Actividades')
+@section('page_title', __('backend.activities'))
 
 @section('add-new')
 
     <span class="pull-right">
         <a href="/admin/actividades/crear" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Crear Actividad
+            <i class="fa fa-plus"></i> {{ __('backend.create_activity') }}
         </a>
     </span>
 @endsection
@@ -25,7 +25,7 @@
                         api-url="/admin/ajax/actividades"
                         fields="{{ $fields }}"
                         sort-order="{{ $sortOrder }}"
-                        placeholder-text="Buscar por nombre, oficina o tipo"
+                        placeholder-text="{{ __('backend.search_by_name_office_or_type') }}"
                         detail-url="/admin/actividades/"
                 ></datatable>
             </div>
