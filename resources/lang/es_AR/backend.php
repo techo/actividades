@@ -72,6 +72,12 @@ return [
     'audit' => 'Auditoría',
     'last_modified' => 'Última modificación',
     'view_audit' => 'Ver auditoría',
+    'activity_status' => 'Estado de la Actividad',
+    'activity_visibility' => 'Visibilidad de la Actividad',
+    'activity_start_date' => 'Fecha de Inicio de la actividad que se convoca',
+    'activity_end_date' => 'Fecha fin de la actividad que se convoca',
+    'schedule_evaluation_date' => 'Programar fecha de Evaluaciones',
+    'medical_form' => 'Ficha Médica',
 
     // Usuarios/Columnas
     'thematic' => 'Temática',
@@ -122,6 +128,12 @@ return [
     'blank_channel_field_message' => 'De dejar este campo en blanco no se mostrara al inscribir esta opcion.',
     'google_tracking_code_description' => 'En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad.',
     'evaluation_link_description' => 'Este link llega al momento de mandar evaluaciones (se suma a las ya pedidas por el sistema)',
+    'activity_location_description' => 'La ubicación es el lugar físico donde transcurrirá la actividad. Una actividad tiene un solo lugar físico donde los movilizamos desde el punto de encuentro al que se convoca.',
+    'auto_confirm_instruction' => 'Al inscribirse están automáticamente confirmados. Para esto Desactiva “Por pago” y “Manual”',
+    'payment_verification_instruction' => 'se pre-inscriben y tienen que realizar una donación y adjuntar su voucher, el coordinador debe verificar su pago en “Inscriptos” para que la inscripcion finalice.',
+    'manual_confirmation_instruction' => 'se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad para que la inscripcion finalice. Esta acción es recomendada por si necesitas verificar que el voluntariado llene de forma correcta la información solicitada en los campos de actividad o tenga algún otro pre-requisito.',
+    'combined_confirmation_instruction' => 'combina las dos anteriores. Se pre-inscribe, y la coordinación debe confirmar la inscripción para que el usuario pueda realizar su pago y así se habilita el recibo de donación.',
+    'registration_deadline_instruction' => 'Verifica siempre esta fecha en el transcurso de la temporada de inscripción, ya que al llegar a esta fecha límite las inscripciones se cerrarán automáticamente.',
 
 
     // Titulos / Opciones

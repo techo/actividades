@@ -69,6 +69,12 @@ return [
     'unlimited_slots' => '0 é "sem limite de inscrições"',
     'google_tracking_code' => 'Código de Rastreamento do Google',
     'evaluation_link' => 'Link de avaliação',
+    'activity_status' => 'Estado da Atividade',
+    'activity_visibility' => 'Visibilidade da Atividade',
+    'activity_start_date' => 'Data de Início da atividade convocada',
+    'activity_end_date' => 'Data de término da atividade convocada',
+    'schedule_evaluation_date' => 'Agendar data de avaliações',
+    'medical_form' => 'Ficha Médica',
 
     // Usuarios/Columnas
     'thematic' => 'Tema',
@@ -121,6 +127,12 @@ return [
     'blank_channel_field_message' => 'Se deixar este campo em branco, esta opção não será mostrada ao se inscrever.',
     'google_tracking_code_description' => 'Caso queira fazer um acompanhamento específico, este código de rastreamento será executado ao acessar a inscrição da atividade.',
     'evaluation_link_description' => 'Este link é enviado quando as avaliações são enviadas (adiciona-se às já solicitadas pelo sistema)',
+    'activity_location_description' => 'A localização é o local físico onde ocorrerá a atividade. Uma atividade tem apenas um local físico onde nos deslocamos do ponto de encontro para o qual ela é convocada.',
+    'auto_confirm_instruction' => 'Ao se inscreverem, eles são automaticamente confirmados. Para isso, desative "Por pagamento" e "Manual"',
+    'payment_verification_instruction' => 'eles se pré-inscrevem e devem fazer uma doação e anexar seu comprovante, o coordenador deve verificar seu pagamento em “Inscritos” para que a inscrição seja concluída.',
+    'manual_confirmation_instruction' => 'eles se pré-inscrevem e devem ser confirmados manualmente por um coordenador de atividade para que a inscrição seja concluída. Esta ação é recomendada caso você precise verificar se o voluntariado preenche corretamente as informações solicitadas nos campos de atividade ou tenha qualquer outro pré-requisito.',
+    'combined_confirmation_instruction' => 'combina as duas anteriores. Ele se pré-inscreve, e a coordenação deve confirmar a inscrição para que o usuário possa fazer seu pagamento e assim habilitar o recibo de doação.',
+    'registration_deadline_instruction' => 'Sempre verifique esta data durante a temporada de inscrições, pois quando atingir esta data limite, as inscrições serão fechadas automaticamente.',
 
     // Títulos / Opciones
     'create_person' => 'Criar Pessoa',

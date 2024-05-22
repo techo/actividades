@@ -65,7 +65,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="estado">Estado de la Actividad</label>
+                            <label for="estado">{{ $t('backend.activity_status') }}</label>
                             <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
                                 <option value="Abierta" :selected="actividad.estadoConstruccion == 'Abierta'" >{{ $t('backend.open') }}</option>
                                 <option value="Cerrada" :selected="actividad.estadoConstruccion == 'Cerrada'" >{{ $t('backend.closed') }}</option>
@@ -75,7 +75,7 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="inscripcionInterna">Visibilidad de la Actividad</label>
+                            <label for="inscripcionInterna">{{ $t('backend.activity_visibility') }}</label>
                             <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
                                 <option value="1" :selected="actividad.inscripcionInterna == 1" >{{ $t('backend.private') }}</option>
                                 <option value="0" :selected="actividad.inscripcionInterna == 0" >{{ $t('backend.public') }}</option>
@@ -88,7 +88,7 @@
                 <div class="row">
 
                     <div class="col-md-6">
-                        <label for="fechaInicio">Fecha de Inicio de la actividad que se convoca</label>
+                        <label for="fechaInicio">{{ $t('backend.activity_start_date') }}</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaInicio }}</span>
@@ -97,7 +97,7 @@
                             </span>
                         </div>
 
-                        <label for="fechaFin">Fecha fin de la actividad que se convoca</label>
+                        <label for="fechaFin">{{ $t('backend.activity_end_date') }}</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
                             <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
                             <span class="help-block">{{ errors.fechaFin }}</span>
@@ -162,7 +162,7 @@
                         </div>
 
                         <div  v-show="edicion"  class="row m-2">
-                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> Programar fecha de Evaluaciones
+                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> {{ $t('backend.schedule_evaluation_date') }}
                         </div>
 
                         <div class="row"  v-show="!edicion || calculaFechas">
@@ -224,7 +224,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">{{ $t('backend.location') }}</h3>
                 <span class="help-block" v-show="virtual==true">{{ $t('backend.meeting_location') }}</span>
-                <span class="help-block" v-show="virtual==false">La ubicación es el lugar físico donde transcurrirá la actividad. Una actividad tiene un solo lugar físico donde los movilizamos desde el punto de encuentro al que se convoca.</span>
+                <span class="help-block" v-show="virtual==false">{{ $t('backend.activity_location_description') }}</span>
             </div>
             <div class="box-body">
 
@@ -241,7 +241,7 @@
 
                     <div class="col-md-4" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
-                            <label for="provincia">Provincia</label>
+                            <label for="provincia">{{ $t('backend.province') }}</label>
                             <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
                                 <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                             </select>
@@ -272,10 +272,10 @@
                 <h3 class="box-title">{{ $t('backend.confirmation') }}</h3>
                 <p class="help-block">{{ $t('backend.activity_confirmation') }}
                     <ul>
-                        <li><b>{{ $t('backend.automatic') }}</b>: al inscribirse están automáticamente confirmados. Para esto Desactiva “Por pago” y “Manual”</li>
-                        <li><b>{{ $t('backend.by_donation') }}</b>: se pre-inscriben y tienen que realizar una donacion y adjuntar su voucher, el coordinador debe verificar su pago en “Inscriptos” para que la inscripcion finalice.</li>
-                        <li><b>{{ $t('backend.manual') }}</b>: se pre-inscriben y los tiene que confirmar manualmente un coordinador de actividad para que la inscripcion finalice. Esta accion es recomendada por si necesitas verificar que el voluntariado llene de forma correcta la información solicitada en los campos de actividad o tenga algún otro pre-requisito.</li>
-                        <li><b>{{ $t('backend.manual_and_donation') }}</b>: combina las dos anteriores. Se pre-inscribe, y la coordinacion debe confirmar la inscripcion para que el usuario pueda realizar su pago y asi se habilita el recibo de donación. </li>
+                        <li><b>{{ $t('backend.automatic') }}</b>: {{ $t('backend.auto_confirm_instruction') }}</li>
+                        <li><b>{{ $t('backend.by_donation') }}</b>: {{ $t('backend.payment_verification_instruction') }}</li>
+                        <li><b>{{ $t('backend.manual') }}</b>: {{ $t('backend.manual_confirmation_instruction') }}</li>
+                        <li><b>{{ $t('backend.manual_and_donation') }}</b>: {{ $t('backend.combined_confirmation_instruction') }} </li>
                     </ul>
                 </p>
             </div>
@@ -328,7 +328,7 @@
                             <label for="">{{ $t('backend.payment_deadline') }}</label>
                             <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
                             <p class="help-block">
-                                Verifica siempre esta fecha en el transcurso de la temporada de inscripcion, ya que al llegar a esta fecha limite las incripciones se cerraran automáticamente
+                                {{ $t('backend.registration_deadline_instruction') }}
                             </p>
                             <span class="help-block">{{ errors.fechaLimitePago }}</span>
                         </div>
@@ -388,7 +388,7 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Ficha Médica</h3>
+                <h3 class="box-title">{{ $t('backend.medical_form') }}</h3>
             </div>
             <div class="box-body">
 
@@ -421,7 +421,7 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Otros</h3>
+                <h3 class="box-title">{{ $t('backend.others') }}</h3>
             </div>
             <div class="box-body">
                 <div class="row">
