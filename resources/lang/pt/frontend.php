@@ -313,6 +313,7 @@ return [
 	//seleccion rol
 	'apply_for_rol' => 'Quer fazer parte da equipa organizadora desta atividade?',
 	'whats_a_rol' => 'Selecione as funções às quais você gostaria de se candidatar.',
+	'leave_blank' => 'Opcional',
 	'roles_aplicados' => 'Roles seleccionados',
 	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',

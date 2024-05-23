@@ -59,7 +59,7 @@
                 <h2 class="card-title text-center">{{ $t('frontend.apply_for_rol') }}</h2>
             
                 <div class="card-body"> 
-                    <p>{{ $t('frontend.whats_a_rol') }}</p>    
+                    <p>{{ $t('frontend.whats_a_rol') }}</p>   
                     
                     <vue-tags-input
                         v-model="tag"
@@ -70,7 +70,8 @@
                         add-only-from-autocomplete
                         :autocomplete-items="actividad.roles_tags"
                         @tags-changed="newTags => rolesAplicado = newTags"
-                    />
+                    /> 
+                    <b>{{ $t('frontend.leave_blank') }}</b>    
                 </div>
 
                 <div class="card-footer">

@@ -109,7 +109,7 @@ return [
     'create_team' => 'Crear Equipo',
     'manually_specify_registration/evaluation_dates' => 'Especificar fechas de inscripción/evaluación manualmente',
     'an_activity_needs_a_registration_range_text' => 'Una actividad necesita un rango de inscripción previo a la actividad y uno de evaluación posterior a la actividad.',
-    'if_not_specified_these_ranges_text' => 'Si no se especifican se calculan estos rangos 10 días antes y después de la actividad respectivamente.',
+    'if_not_specified_these_ranges_text' => 'Si no se especifican se calculan automáticamente.',
     'meeting_location' => 'En este espacio podes poner tanto el medio donde se realizará (ej, ZOOM, HANHOUTS) o directemente poner la url de la reunión. Tener en cuenta que la misma sería pública en tal caso',
     'activity_location' => 'La ubicación es el lugar físico donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.',
     'activity_confirmation' => 'Una actividad puede o no requerir que sus inscriptos confirmen su participación. Hay cuatro opciones:',

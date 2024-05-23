@@ -311,7 +311,8 @@ return [
 
 	//seleccion rol
 	'apply_for_rol' => '¿Quieres ser parte del staff de esta actividad?',
-	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones. <b>Deja en blanco si no quieres.</b>',
+	'whats_a_rol' => 'Comienza a escribir para ver las opciones de roles disponibles para esta actividad.',
+	'leave_blank' => 'Opcional',
 	'roles_aplicados' => 'Roles Aplicado',
 	'yes_apply_rol' => 'Si, aplicar a rol',
 	'no_apply_rol' => 'No deseo aplicar a rol',

@@ -303,6 +303,7 @@ return [
 	//seleccion rol
 	'apply_for_rol' => 'Do you want to be part of the organizing team of this activity?',
 	'whats_a_rol' => 'Select the roles you would like to apply for.',
+	'leave_blank' => 'Optional',
 	'roles_aplicados' => 'Selected Roles',
 	'yes_apply_rol' => 'Yes, apply for a rol',
 	'no_apply_rol' => "No, I don't want to apply for a rol",

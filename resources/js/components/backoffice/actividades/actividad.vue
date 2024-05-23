@@ -106,12 +106,12 @@
                             </span>
                         </div>
 
-                        <div  v-show="edicion">
+                        <!-- <div  v-show="edicion">
                             <label>
                                 <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> {{ $t('backend.manually_specify_registration/evaluation_dates') }}
                             </label>
                             <p class="help-block">{{ $t('backend.an_activity_needs_a_registration_range_text') }} <br> {{ $t('backend.if_not_specified_these_ranges_text') }}</p>
-                        </div>
+                        </div> -->
                     </div>  
                     
                     <div class="col-md-6 text-center m-2">
@@ -163,6 +163,7 @@
 
                         <div  v-show="edicion"  class="row m-2">
                             <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> {{ $t('backend.schedule_evaluation_date') }}
+                            <p class="help-block">{{ $t('backend.an_activity_needs_a_registration_range_text') }} <br> {{ $t('backend.if_not_specified_these_ranges_text') }}</p>
                         </div>
 
                         <div class="row"  v-show="!edicion || calculaFechas">
