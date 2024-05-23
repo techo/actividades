@@ -120,18 +120,13 @@
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <img v-if="user.photo" class="imagen-perfil-mini" :src="'/'+user.photo" alt="Foto">
+                        <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse text-right" id="navbarCollapse">
-                    <div class="btn-group " role="group" ref="paises" v-if="this.showpaises==0">
-                        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold; color: white;"></button>
-                        <div class="dropdown-menu">
-                            <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
-                        </div>
-                    </div>
-                        <br>
                     <!-- <a class="btnUser d-inline d-md-none" v-on:click="perfil" v-if="authenticated">{{ $t('frontend.hello') }}, {{ user.nombres }}</a> -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto text-center">
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="misactividades">{{ $t('frontend.my_activities') }}</a>
                         </li>
@@ -151,12 +146,26 @@
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
 
-                        <li class="nav-item active d-block d-md-none ml-auto" v-show="langs.length>0" >
-                            <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none bg-black" @change="onChangeLocalization($event)">
-                                <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
-                                    {{ lang[1] }}
-                                </option>
-                            </select>
+                        <li class="nav-item active d-block d-md-none" v-show="langs.length>0" >
+                            <div class="text-center">
+                                <div class="btn-group" role="group" ref="paises" v-if="this.showpaises==0">
+                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-white dropdown-toggle" v-for="(p, i) in paises" v-if="p.id == pais" v-text="paises[i].nombre" style="text-transform: uppercase; font-weight: bold; color: white;"></button>
+                                    <div class="dropdown-menu">
+                                        <button v-for="p in paises" v-text="p.nombre" class="dropdown-item" type="button" v-on:click="ir_a_pais(p.id)"></button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            
+                        </li>
+                        <li class="nav-item active d-block d-md-none ml-auto mx-auto" v-show="langs.length>0" >
+                                    <select v-model="_i18n.locale" class="btnUser nav-item active d-block d-md-none bg-black" @change="onChangeLocalization($event)">
+                                        <option class="btn dropdown-item btnUser dropdown-toggle"  v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
+                                            {{ lang[1] }}
+                                        </option>
+                                    </select>
+                            
                         </li>
                     </ul>
                 </div>
