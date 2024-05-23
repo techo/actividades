@@ -48,6 +48,7 @@
         "tinymce": "^5.1.4",
         "vue-axios": "^2.1.1",
         "vue-chartjs": "^3.3.2",
+        "vue-cropperjs": "^4.2.0",
         "vue-i18n": "^8.15.0",
         "vue-loader": "^14.2.2",
         "vue-router": "^3.0.1",

@@ -58,6 +58,7 @@ class UsuariosController extends Controller
             'email_verified_at' => $usuario->email_verified_at,
             'canal_contacto' => $usuario->canal_contacto,
             'estadoPersona' => $usuario->estadoPersona,
+            'photo' => $usuario->photo,
         ];
 
         $edicion = false;

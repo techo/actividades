@@ -160,6 +160,9 @@ return [
  	'date_placeholder' => 'Seleccione una fecha',	
  	'email_succesfully_updated' => 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!',
 
+	'crop' => 'Recortar',
+	'upload_new' => 'Subir nueva',
+
 
  	// perfil / ficha medica
  	'ficha_medica' => 'Ficha Médica',
@@ -307,8 +310,8 @@ return [
 	'whats_a_meeting_point' => 'Una actividad puede tener uno o más puntos de encuentro ¡Elegí el que encuentres más cómodo y nos vemos ahí!',
 
 	//seleccion rol
-	'apply_for_rol' => '¿Quieres ser parte del equipo staff de esta actividad?',
-	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones. Deja en blanco si no quieres.',
+	'apply_for_rol' => '¿Quieres ser parte del staff de esta actividad?',
+	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones. <b>Deja en blanco si no quieres.</b>',
 	'roles_aplicados' => 'Roles Aplicado',
 	'yes_apply_rol' => 'Si, aplicar a rol',
 	'no_apply_rol' => 'No deseo aplicar a rol',

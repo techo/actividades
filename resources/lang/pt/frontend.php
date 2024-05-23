@@ -164,6 +164,8 @@ return [
 	'delete_account_confirm_button' => 'SIM, EXCLUIR',
 	'date_placeholder' => 'Selecione uma data',
 	'email_succesfully_updated' => 'Endereço de e-mail atualizado com sucesso. Verifique sua caixa de correio para verificar!',
+	'crop' => 'Recortar', 
+	'upload_new' => 'Carregar novo',
 
 	// perfil / ficha medica
 	'ficha_medica' => 'Registro médico',

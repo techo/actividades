@@ -115,17 +115,26 @@ class UsuarioController extends BaseController
 		$persona = Auth::user();
 		$this->validate($request, array(
 			'photo' => 'nullable',
-		));
-	
+		));        
+
 		if ($request->file('photo')){
 			$archivo = $request->file('photo');
 			$path = $archivo->store('public/perfil/img');
 			$oldPath = str_replace('storage', 'public', $persona->photo);
 			if(Storage::exists($oldPath))
 				Storage::delete($oldPath);
-	
+
 			$persona->photo = str_replace('public', 'storage', $path);
-			$persona->save();
+			$success = $persona->save();
+
+      return response(
+        [
+            'success' => $success,
+            'newUrl' => $persona->photo,
+            'mensaje' => "Imagen subida OK"
+        ],
+        200
+    );
 		}
   
 	}

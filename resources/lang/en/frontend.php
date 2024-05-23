@@ -157,7 +157,8 @@ return [
  	'delete_account_confirm_button' => "DELETE ACCOUNT",
  	'date_placeholder' => 'Select a date',
  	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
-
+	'crop' => 'Crop', 
+	'upload_new' => 'Upload new',
  	// perfil / ficha medica
  	'ficha_medica' => 'Medical Data',
  	'ficha_medica_requerida' => 'This activity requires your medical record, upload or verify it here!',

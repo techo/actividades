@@ -21,6 +21,32 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
+                            <div class="col-md-5 text-center">
+                                <img v-if="usuario.photo" class="imagen-perfil-redonda" :src="'/'+usuario.photo" alt="Foto">
+                                <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input id="nombre"
+                                           type="text"
+                                           class="form-control"
+                                           v-model="usuario.nombre"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="apellido">Apellido</label>
+                                    <input id="apellido"
+                                           type="text"
+                                           class="form-control"
+                                           v-model="usuario.apellido"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="email">Email</label>
@@ -31,10 +57,6 @@
                                            :disabled="readonly"
                                     >
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>DNI / Pasaporte</label>
                                     <input type="text"
@@ -42,32 +64,6 @@
                                            v-model="usuario.dni"
                                            name="dni"
                                            id="dni"
-                                           :disabled="readonly"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input id="nombre"
-                                           type="text"
-                                           class="form-control"
-                                           v-model="usuario.nombre"
-                                           :disabled="readonly"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="apellido">Apellido</label>
-                                    <input id="apellido"
-                                           type="text"
-                                           class="form-control"
-                                           v-model="usuario.apellido"
                                            :disabled="readonly"
                                     >
                                 </div>

@@ -2,26 +2,32 @@
     <div class="card opacidad-90" >
         <simplert ref="confirmar"></simplert>
         <div class="card-body">
-
-            <div class="row align-items-center m-2  text-center">
+            <div class="row justify-content-center m-2  text-center">
+                   
+            </div>
+            <div  class="row align-items-center m-2  text-center">
                 <div class="col-md-1 ">
                 </div>
 
                 <div class="col-md-5 ">
+                    <div v-show="!openPhotoEdit">
                         <img v-if="user.photo != null" class="imagen-perfil-redonda" :src="'/' + user.photo" alt="Foto">
                         <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
-                    <button class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
-                        <i class="fa fa-edit"></i>
-                    </button>
+                    
+                        <button class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    </div>
+                    <photoEdit :openPhotoEdit="openPhotoEdit" :photoPerfil="user.photo" @updatePhoto="updatePhoto">
+                    </photoEdit >
                 </div>
-                <input type="file" hidden class="form-control" @change="submitFile" ref="photo">
-                <div class="col-md-5 ">
+                <div class="col-md-5">
                     <h3>{{ $t('frontend.welcome_'+user.genero ) }}, {{ usernombre }}</h3>
                     <h4>({{ user.email }})</h4>
                 </div>
                 <div class="col-md-1 ">
                 </div>
-</div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -373,8 +379,10 @@
 
 <script>
 import _ from 'lodash'
+import photoEdit from './photoEdit';
 
 export default {
+    components: {photoEdit},
     name: 'perfil',
     data: function () {
         var data = {
@@ -392,7 +400,8 @@ export default {
             message: {
                 danger: false,
                 text: ''
-            }
+            },
+            openPhotoEdit: false,
         }
         data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
@@ -500,21 +509,25 @@ export default {
             });
         },
 
-        submitFile: function () {
-            this.guardo = false;
-            this.photo = this.$refs.photo.files[0];
-            this.nombre_photo = this.$refs.photo.files[0].name;
-            const formData = new FormData();
-            formData.append('photo', this.photo);
-            const headers = { 'Content-Type': 'multipart/form-data' };
-            axios.post('/ajax/usuario/perfil/cambiar_photo', formData, { headers }).then(response => {
-                this.guardo = true;
-                this.formDirty = false;
-            }).catch((error) => {
-            });
+        // submitFile: function () {
+        //     this.guardo = false;
+        //     this.photo = this.$refs.photo.files[0];
+        //     this.nombre_photo = this.$refs.photo.files[0].name;
+        //     const formData = new FormData();
+        //     formData.append('photo', this.photo);
+        //     const headers = { 'Content-Type': 'multipart/form-data' };
+        //     axios.post('/ajax/usuario/perfil/cambiar_photo', formData, { headers }).then(response => {
+        //         this.guardo = true;
+        //         this.formDirty = false;
+        //     }).catch((error) => {
+        //     });
+        // },
+        updatePhoto: function (photo) {
+            this.user.photo = photo;
+            this.openPhotoEdit = false;
         },
         selectPhoto: function () {
-            this.$refs.photo.click();
+            this.openPhotoEdit = !this.openPhotoEdit;
         },
 
 
