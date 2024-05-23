@@ -22,7 +22,7 @@
                 </button>
                 <button class="btn btn-secondary" style="margin-right: 4px;" v-show="!readonly" @click="cancelar">
                     <i class="fa fa-ban"></i>
-                    Cancelar
+                    {{ $t('backend.cancel') }}
                 </button>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canFusionar" @click="fusionar">
                     <i class="fa fa-random"></i>
@@ -38,7 +38,7 @@
                 </button>
                 <button class="btn btn-success" style="margin-right: 4px;" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
-                    Guardar
+                    {{ $t('backend.save') }}
                 </button>
             </div>
         </div>
