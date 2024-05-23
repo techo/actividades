@@ -347,7 +347,7 @@ return [
 	'upload_voucher' => 'Adjunta Voucher',
 	'data_uploaded' => 'Voucher Subido',
 	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
-	'confirm_later' => 'Confirmar Luego',
+	'confirm_later' => 'Guardar inscripción, finalizar después',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

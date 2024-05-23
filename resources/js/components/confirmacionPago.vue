@@ -33,7 +33,7 @@
                         </span>
                     </button>
                   </div>
-                  <div class="col-md-12" v-if="!guardo && !(nombre_voucher==null)">
+                  <div class="col-md-12" v-if="!guardo && nombre_voucher==null">
                     <button type="button" disable
                       class="btn btn-secundary form-control" 
                       @click="redirectToIndex">

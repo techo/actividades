@@ -22,7 +22,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <h3 class="card-title">
                     <br>
                     {{ __('frontend.you_are_pre_registered') }}
@@ -55,7 +55,7 @@
 
                                     <p>
                                     
-                                    <div class="border p-1">
+                                    <div class=" p-1">
                                     @if ($actividad->montoMax === '0.00')
                                     {{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}$)
                                     @else
