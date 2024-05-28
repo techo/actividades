@@ -235,7 +235,8 @@
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
-          })
+          });
+          this.validateForm();
         },
         filters: {
           format_time: function(hora) {
@@ -259,7 +260,7 @@
         methods: {
           validateForm: function(event) {
             if(!this.$parent.$refs.login.authenticated) {
-              event.preventDefault();
+              // event.preventDefault();
               this.mostrarLogin();
             }
             return true;
