@@ -426,9 +426,9 @@
             </div>
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="require_ficha_medica">{{ $t('backend.applicable_roles') }}</label>
+                            <label for="applicable_roles">{{ $t('backend.applicable_roles') }}</label>
                             <p class="help-block">
                                 {{ $t('backend.applicable_roles_description') }}
                                 {{ $t('backend.press_enter_between_each') }}
@@ -447,9 +447,9 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="require_ficha_medica">{{ $t('backend.registration_type') }}</label>
+                            <label for="registration_type">{{ $t('backend.registration_type') }}</label>
                             <p class="help-block">
                                 {{ $t('backend.registration_channels_description') }}
                             </p>
@@ -462,6 +462,21 @@
                                 placeholder=""
                                 @tags-changed="newTags => tipoInscriptosTags = newTags"
                             />
+                            <p class="help-block">
+                                {{ $t('backend.blank_channel_field_message') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="requiere_estudios">{{ $t('frontend.estudios') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.estudios_description') }}
+                            </p>
+                            <select name="requiere_estudios" class="form-control" v-model="actividad.requiere_estudios" required :disabled="!edicion">
+                                <option value="1" :selected="actividad.requiere_estudios == 1" >{{ $t('backend.yes') }}</option>
+                                <option value="0" :selected="actividad.requiere_estudios == 0" >{{ $t('backend.no') }}</option>
+                            </select>
                             <p class="help-block">
                                 {{ $t('backend.blank_channel_field_message') }}
                             </p>
@@ -611,6 +626,7 @@
 
                     requiere_ficha_medica: 0,
                     ficha_medica_campos: {},
+                    requiere_estudios: 0,
 
                     descripcionPago: null,
                     linkPago: null,

@@ -64,6 +64,7 @@ class CrearActividad extends FormRequest
             'linkEvaluacion' => 'sometimes|nullable|url',
             'seguimiento_google' => 'sometimes|nullable',
             'requiere_ficha_medica' => 'required',
+            'requiere_estudios' => 'required',
             'ficha_medica_campos' => 'sometimes',
             'roles_tags' => 'sometimes|nullable',
             'tipo_inscriptos_tag' => 'sometimes|nullable',
