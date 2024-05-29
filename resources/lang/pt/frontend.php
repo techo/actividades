@@ -204,7 +204,8 @@ return [
 	'institucion_educativa' => 'Instituição de Ensino *',
 	'titulo_educacion' => 'Curso *',
 	'disciplina_academica' => 'Disciplina académica *',
-	'descripcion_educacion' => 'Descrição',
+	'descripcion_educacion' => 'Descrição *',
+	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
 
 	// perfil / equipos
 

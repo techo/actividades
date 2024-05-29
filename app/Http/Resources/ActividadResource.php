@@ -42,7 +42,7 @@ class ActividadResource extends Resource
             'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
             'estudios'    => ($this->requiere_estudios == 1) ? Estudios::where('idPersona', $idPersona)->get() : 0,
             'requiere_estudios' =>  $this->requiere_estudios,
-            'idPersona'    => ($this->requiere_ficha_medica == 1) ? $idPersona : 0,
+            'idPersona'    => ($this->requiere_estudios == 1) ? $idPersona : 0,
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
             'fechaLimitePago'      => empty($this->fechaLimitePago) ? '' : $this->fechaLimitePago->format('d-m-Y'),
             'cantInscriptos' => $this->inscripciones()->count(),

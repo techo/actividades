@@ -195,7 +195,8 @@ return [
 	'institucion_educativa' => 'Educational Institute *',
 	'titulo_educacion' => 'Title *',
 	'disciplina_academica' => 'Accademy disipline *',
-	'descripcion_educacion' => 'Description',
+	'descripcion_educacion' => 'Description *',
+	'complete_education' => 'Add at least one study to continue',
 
 	// perfil / equipos
 	'equipos' => 'Teams', 

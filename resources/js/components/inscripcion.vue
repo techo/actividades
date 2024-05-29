@@ -147,6 +147,9 @@
 
                 </div>
                 <div class="card-footer">
+                    <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
+                            <strong>{{ $t('frontend.complete_education') }}</strong>
+                        </div>
                     <div class="row justify-content-center  text-center">
                         <!-- <div class="col-md-3">
                             <button type="button" 
@@ -164,7 +167,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="estudiosAplicado=true" >
+                                @click="estudiosRevisados()" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -245,6 +248,7 @@
             rolAplicado: false,
             tipoInscriptoAplicado: false,
             estudiosAplicado: true,
+            showCompleteEstudios: false,
             tag: "",
             tag2: "",
             rolesAplicado: [],
@@ -252,7 +256,7 @@
             mostrarFichaMedica: false,
             localidad: {},
             imagen: '',
-            dummyInput: ''
+            dummyInput: '',
           }
         },
         mounted: function() {
@@ -296,29 +300,40 @@
             },
         },
         methods: {
-          validateForm: function(event) {
-            if(!this.$parent.$refs.login.authenticated) {
-              // event.preventDefault();
-              this.mostrarLogin();
-            }
-            return true;
-          },
-          mostrarLogin: function () {
-            $('#btnShowModal').trigger('click')
-          },
-          es_inscripto: function (idActividad) {
-            axios.get('/inscripciones/actividad/'+idActividad+'/inscripto').then(response => {
-              if(response.data.idActividad) {
-                window.location.href = '/actividades/' + response.data.idActividad
-              }
-            });
-          },
+            validateForm: function(event) {
+                if(!this.$parent.$refs.login.authenticated) {
+                // event.preventDefault();
+                this.mostrarLogin();
+                }
+                return true;
+            },
+            mostrarLogin: function () {
+                $('#btnShowModal').trigger('click')
+            },
+            es_inscripto: function (idActividad) {
+                axios.get('/inscripciones/actividad/'+idActividad+'/inscripto').then(response => {
+                if(response.data.idActividad) {
+                    window.location.href = '/actividades/' + response.data.idActividad
+                }
+                });
+            },
             convertToJSON: function() {
                 return JSON.stringify(this.rolesAplicado);
             },
             convertToJSONInscripciones: function() {
                 return JSON.stringify(this.tipoInscriptoTags);
             },
+            estudiosRevisados: function () {
+                axios.get('/admin/ajax/usuarios/'+this.actividad.idPersona+'/estudios').then(response => {
+                    if(response.data) {
+                        if(response.data.total>0)
+                            this.estudiosAplicado = true;
+                        else
+                            this.showCompleteEstudios = true;
+                    }
+                });
+            },
+            
         }
     }
 </script>
