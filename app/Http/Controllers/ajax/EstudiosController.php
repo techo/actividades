@@ -29,7 +29,7 @@ class EstudiosController extends Controller
     }
 
     public function update(Request $request) {
-        $persona = Auth::user();
+        
         $validados = $request->validate([
             'id' => 'required',
             'institucion_educativa' => 'required',
@@ -37,10 +37,10 @@ class EstudiosController extends Controller
             'disciplina_academica' => 'required',
             'descripcion_educacion' => 'required',
         ]);
+        $idPersona = Auth::user()->idPersona;
+        $estudio = Estudios::findOrFail($validados['id']);
 
-        $estudio = Estudios::find($validados['id']);
-
-        if($estudio->idPersona == $persona->idPersona)
+        if($estudio->persona->idPersona == $idPersona)
             $estudio->update($validados);
 
 

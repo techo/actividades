@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-8" v-if="!mostrarFichaMedica">
-          <div v-if="rolAplicado && tipoInscriptoAplicado">
+          <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado">
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -138,7 +138,42 @@
                     </div>
                 </div>
             </div>
+            <div v-else-if="!estudiosAplicado">
+                <h2 class="card-title text-center">{{ $t('frontend.estudios') }}</h2>
+
+                <div class="card-body">
+                    <p>{{ $t('frontend.review_estudios') }}</p>   
+                    <estudios ref="estudios" :estudios="actividad.estudios" :idPersona="actividad.idPersona"/>
+
+                </div>
+                <div class="card-footer">
+                    <div class="row justify-content-center">
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-link" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="tipoInscriptoAplicado=false" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.go_back') }}
+                                </span>
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-primary" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="estudiosAplicado=true" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.continue') }}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
         <div v-else class="col-md-8" >
             <div class="row">
                 <div class="col-md-12">
@@ -209,6 +244,7 @@
             aplicaRol: false,
             rolAplicado: false,
             tipoInscriptoAplicado: false,
+            estudiosAplicado: true,
             tag: "",
             tag2: "",
             rolesAplicado: [],
@@ -232,6 +268,8 @@
                 self.rolAplicado = true;
             if(self.actividad.tipo_inscriptos_tag == null || self.actividad.tipo_inscriptos_tag.length == 0)
                 self.tipoInscriptoAplicado = true;
+            if(self.actividad.requiere_estudios)
+                self.estudiosAplicado = false;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;

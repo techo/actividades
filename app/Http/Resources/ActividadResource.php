@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Estudios;
 use App\FichaMedica;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -39,6 +40,8 @@ class ActividadResource extends Resource
             'ubicacion'     => $this->provincia->provincia,
             'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
             'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
+            'estudios'    => ($this->requiere_ficha_medica == 1) ? Estudios::where('idPersona', $idPersona)->get() : 0,
+            'idPersona'    => ($this->requiere_ficha_medica == 1) ? $idPersona : 0,
             'limiteInscripciones'       => (int)$this->limiteInscripciones,
             'fechaLimitePago'      => empty($this->fechaLimitePago) ? '' : $this->fechaLimitePago->format('d-m-Y'),
             'cantInscriptos' => $this->inscripciones()->count(),

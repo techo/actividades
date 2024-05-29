@@ -10,4 +10,9 @@ class Estudios extends Model
 
     protected $table = 'estudios';
     protected $primaryKey = 'idEstudio';
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
 }

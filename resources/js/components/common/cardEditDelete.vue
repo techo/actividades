@@ -2,22 +2,22 @@
     <div>
         <div class="card-header">
             <div class="row" v-if="!editando">
-                <h5 class="col-md-9">
+                <h5 class="col-md-8">
                     {{ data.header }}
                 </h5>
 
-                <div class="col-md-3 text-right">
+                <div class="col-md-4 text-right">
                     <span>
                         <a @click="editCard" class="btn btn-light m-1">
                             <i class="fa fa-edit"></i>
                         </a>
-                        <a @click="deleteCard" class="btn btn-light m-1">
+                        <a v-if="data.id" @click="deleteCard" class="btn btn-light m-1">
                             <i class="fa fa-trash"></i>
                         </a>
                     </span>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="p-1">
                 <label>{{ data.headerLabel }}</label>
                 <input class="form-control" v-model="data.header" />
             </div>
@@ -46,7 +46,7 @@
                         </textarea>
                     </div>
                 </div>
-                <div class="row justify-content-center mt-2">
+                <div class="row justify-content-center ">
                     <span v-if="(editando && !newCard)">
                         <a @click="saveCard" class="btn btn-primary text-white p-1 m-1">
                             <i class="fa fa-save"></i>
@@ -69,7 +69,7 @@
 <script>
 
 export default {
-    name: 'perfil',
+    name: 'cardEditDelete',
     data: function () {
         var data = {
             editando: this.newCard,
