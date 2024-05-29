@@ -2,10 +2,10 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Coordinación de la actividad</h3>
+                <h3 class="box-title">{{ $t('backend.activity_coordination') }}</h3>
                 <p class="help-block">
                     <ul>
-                        <li>Todas estas Personas tienen acceso a editar el equipo.</li>
+                        <li>{{ $t('backend.all_these_people_can_edit_the_team') }}</li>
                     </ul>
                 </p>
             </div>
@@ -16,17 +16,17 @@
                             <v-select 
                                 :options="personas" 
                                 @search="onSearch" 
-                                label="nombre"
+                                label="{{ $t('backend.name') }}"
                                 v-model="persona" 
                                 :filterable="false"
                                 :selectOnTab="true"
                                 @input="enviado = false;"
                                 class="select_persona"
                             >
-                                <template slot="no-options">Escribe el nombre, apellido o DNI</template>
+                                <template slot="no-options">{{ $t('backend.enter_name_surname_or_dni') }}</template>
                             </v-select>
                             <span class="input-group-btn">
-                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="deshabilitado || enviado" @click="guardar()" v-text="(enviado)?'Enviado':'Guardar'"></button>
+                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="deshabilitado || enviado" @click="guardar()" v-text="(enviado)? $t('backend.sent') : $t('backend.save')"></button>
                             </span>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                         <li v-for="coordinador in coordinadores" :key='coordinador.idPersona'>
                             {{ coordinador.nombre }} 
                             <span class="input-group-btn">          
-                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="'Eliminar'" v-if="idPersonaCreacion !=  coordinador.idPersona"></button>
+                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="$t('backend.eliminate')" v-if="idPersonaCreacion !=  coordinador.idPersona"></button>
                             </span>
                         </li>
                     </ul>

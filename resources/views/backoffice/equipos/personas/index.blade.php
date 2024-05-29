@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $equipo->nombre . ' - Integrantes')
+@section('page_title', $equipo->nombre . ' - ' . __('backend.members'))
 
 @section('content')
     @if (Session::has('mensaje'))
@@ -20,7 +20,7 @@
                             fields="{{ $fields }}"
                             id-equipo="{{ $idEquipo }}"
                             sort-order="{{ $sortOrder }}"
-                            placeholder-text="Buscar por nombre, rol, despliegue o relación"
+                            placeholder-text="{{ __('backend.search_by_name_role_deployment_or_relationship') }}"
                             detail-url="/admin/equipos/"
                         ></integrantes-datatable>
                         <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"

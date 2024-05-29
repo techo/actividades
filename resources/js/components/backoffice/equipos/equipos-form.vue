@@ -6,7 +6,7 @@
         <simplert ref="loading"></simplert>
 
         <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
+            <h4>{{ $t('backend.errors') }}:</h4>
             <ul>
                 <li v-for="error in validationErrors">{{ error[0] }}</li>
             </ul>
@@ -18,14 +18,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre" type="text" class="form-control" v-model="data.nombre"
                                         :disabled="this.readonly">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="pais">Oficina</label>
+                                    <label for="pais">{{ $t('backend.office') }}</label>
                                     <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
                                         name="oficina" id="oficina" v-model="oficinaSeleccionado"
                                         >
@@ -37,34 +37,34 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estado">Area</label>
+                                    <label for="estado">{{ $t('backend.area') }}</label>
                                     <select name="estado" class="form-control" v-model="data.area" required
                                         :disabled="this.readonly">
-                                        <option value="Administración y Finanzas">Administración y Finanzas</option>
-                                        <option value="Comunicaciones">Comunicaciones</option>
-                                        <option value="Construcción y Logística">Construcción y Logística</option>
-                                        <option value="Desarrollo de Fondos">Desarrollo de Fondos</option>
-                                        <option value="Vivienda y Hábitat">Vivienda y Hábitat</option>
-                                        <option value="Detección y Asignación">Detección y Asignación</option>
-                                        <option value="Dirección General">Dirección General</option>
-                                        <option value="Formación y Voluntariado">Formación y Voluntariado</option>
-                                        <option value="Legal">Legal</option>
-                                        <option value="Personas">Personas</option>
-                                        <option value="Gestión Comunitaria">Gestión Comunitaria</option>
-                                        <option value="Programas y Proyectos">Programas y Proyectos</option>
-                                        <option value="Equipos">Equipos</option>
-                                        <option value="Centro de Investigación Social">Centro de Investigación Social</option>
-                                        <option value="Procesos Comunitarios">Procesos Comunitarios</option>
+                                        <option value="Administración y Finanzas">{{ $t('backend.administration_and_finance') }}</option>
+                                        <option value="Comunicaciones">{{ $t('backend.communications') }}</option>
+                                        <option value="Construcción y Logística">{{ $t('backend.construction_and_logistics') }}</option>
+                                        <option value="Desarrollo de Fondos">{{ $t('backend.fund_development') }}</option>
+                                        <option value="Vivienda y Hábitat">{{ $t('backend.housing_and_habitat') }}</option>
+                                        <option value="Detección y Asignación">{{ $t('backend.detection_and_assignment') }}</option>
+                                        <option value="Dirección General">{{ $t('backend.general_management') }}</option>
+                                        <option value="Formación y Voluntariado">{{ $t('backend.training_and_volunteering') }}</option>
+                                        <option value="Legal">{{ $t('backend.legal') }}</option>
+                                        <option value="Personas">{{ $t('backend.people') }}</option>
+                                        <option value="Gestión Comunitaria">{{ $t('backend.community_management') }}</option>
+                                        <option value="Programas y Proyectos">{{ $t('backend.programs_and_projects') }}</option>
+                                        <option value="Equipos">{{ $t('backend.teams') }}</option>
+                                        <option value="Centro de Investigación Social">{{ $t('backend.social_research_center') }}</option>
+                                        <option value="Procesos Comunitarios">{{ $t('backend.community_processes') }}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estado">Estado</label>
+                                    <label for="estado">{{ $t('backend.state') }}</label>
                                     <select name="estado" class="form-control" v-model="data.activo" required
                                         :disabled="this.readonly">
-                                        <option value="1" :selected="data.activo">Activo</option>
-                                        <option value="0" :selected="data.activo">Finalizado</option>
+                                        <option value="1" :selected="data.activo">{{ $t('backend.active') }}</option>
+                                        <option value="0" :selected="data.activo">{{ $t('backend.finished') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="fechaInicio">Fecha Inicio</label>
+                                <label for="fechaInicio">{{ $t('backend.start_date') }}</label>
                                 <div :class="{  'has-error': errors.fechaInicio }">
                                     <input name="fechaInicio" v-model="data.fechaInicio" type="date" class="form-control"
                                         required style="line-height: inherit;" :disabled="this.readonly">
@@ -82,7 +82,7 @@
                             </div>
                             <div class="col-md-6" v-if="data.activo==0">
                                 <div class="form-group">
-                                <label for="fechaFin">Fecha Fin</label>
+                                <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <div :class="{ 'has-error': errors.fechaFin }">
                                     <input name="fechaFin" v-model="data.fechaFin" type="date" class="form-control"
                                         required style="line-height: inherit;" :disabled="this.readonly">
