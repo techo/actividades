@@ -200,9 +200,10 @@ return [
 
 	// perfil / educacion
 	'estudios' => 'Grau de Estudo',
-	'institucion_educativa' => 'Instituição de Ensino',
-	'titulo_educacion' => 'Curso',
-	'disciplina_academica' => 'Disciplina académica',
+	'review_estudios' => 'Completa o revisa tus estudios',
+	'institucion_educativa' => 'Instituição de Ensino *',
+	'titulo_educacion' => 'Curso *',
+	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descrição',
 
 	// perfil / equipos

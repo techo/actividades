@@ -197,9 +197,10 @@ return [
 
 	// perfil / educacion
 	'estudios' => 'Educación',
-	'institucion_educativa' => 'Institución educativa',
-	'titulo_educacion' => 'Título',
-	'disciplina_academica' => 'Disciplina académica',
+	'review_estudios' => 'Completa o revisa tus estudios',
+	'institucion_educativa' => 'Institución educativa *',
+	'titulo_educacion' => 'Título *',
+	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descripción',
 
 

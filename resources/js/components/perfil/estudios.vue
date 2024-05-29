@@ -27,7 +27,7 @@
                 />
             </div>
             <div v-else class="row justify-content-center">
-                <a @click="(creandoEstudio = true)" class="btn btn-primary text-white">
+                <a @click="(creandoEstudio = true)" class="btn btn-secondary text-white">
                     <i class="fa fa-plus"></i>
                     {{ $t('frontend.new') }}
                 </a>
@@ -43,7 +43,7 @@
 import _ from 'lodash'
 
 export default {
-    name: 'perfil',
+    name: 'estudios',
     data: function () {
         var data = {
             guardo: false,

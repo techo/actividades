@@ -42,14 +42,14 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row justify-content-center">
+                <div class="row text-center justify-content-center">
                     <input type="hidden" name="_token" v-bind:value="csrf_token">
                     <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
-                    <div class="col-md-2 text-primary">
+                    <!-- <div class="col-md-2 text-primary">
                         <p>
                             <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
                         </p>
-                    </div>
+                    </div> -->
                     <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary"></div>
                 </div>
                 </form>
@@ -75,12 +75,12 @@
                 </div>
 
                 <div class="card-footer">
-                    <div class="row justify-content-center">
-                        <div class="col-md-3 text-primary">
+                    <div class="row justify-content-center  text-center">
+                        <!-- <div class="col-md-3 text-primary">
                             <p>
                                 <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
                             </p>
-                        </div>
+                        </div> -->
                         <div class="col-md-3">
                             <button type="button" 
                                 class="btn btn-primary" 
@@ -112,9 +112,9 @@
                     />
                 </div>
                 <div class="card-footer">
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center  text-center">
                         <div class="col-md-3">
-                            <button type="button" 
+                            <!-- <button type="button" 
                                 class="btn btn-link" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
@@ -122,7 +122,7 @@
                                 <span aria-hidden="true">
                                     {{ $t('frontend.go_back') }}
                                 </span>
-                            </button>
+                            </button> -->
                         </div>
                         <div class="col-md-3">
                             <button type="button" 
@@ -147,8 +147,8 @@
 
                 </div>
                 <div class="card-footer">
-                    <div class="row justify-content-center">
-                        <div class="col-md-3">
+                    <div class="row justify-content-center  text-center">
+                        <!-- <div class="col-md-3">
                             <button type="button" 
                                 class="btn btn-link" 
                                 data-dismiss="modal" 
@@ -158,7 +158,7 @@
                                     {{ $t('frontend.go_back') }}
                                 </span>
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-md-3">
                             <button type="button" 
                                 class="btn btn-primary" 

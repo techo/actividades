@@ -35,7 +35,7 @@ class EstudiosController extends Controller
             'institucion_educativa' => 'required',
             'titulo' => 'required',
             'disciplina_academica' => 'required',
-            'descripcion_educacion' => 'required',
+            'descripcion_educacion' => 'nullable',
         ]);
         $idPersona = Auth::user()->idPersona;
         $estudio = Estudios::findOrFail($validados['id']);

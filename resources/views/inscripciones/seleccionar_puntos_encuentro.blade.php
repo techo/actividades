@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    {{ __('frontend.meeting_points') }}
+    {{ __('frontend.finish_registration') }}
 @endsection
 
 

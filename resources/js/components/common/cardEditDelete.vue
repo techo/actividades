@@ -2,11 +2,11 @@
     <div>
         <div class="card-header">
             <div class="row" v-if="!editando">
-                <h5 class="col-md-8">
+                <h5 class="col-8">
                     {{ data.header }}
                 </h5>
 
-                <div class="col-md-4 text-right">
+                <div class="col-4 text-right">
                     <span>
                         <a @click="editCard" class="btn btn-light m-1">
                             <i class="fa fa-edit"></i>
@@ -46,7 +46,7 @@
                         </textarea>
                     </div>
                 </div>
-                <div class="row justify-content-center ">
+                <div class="row justify-content-center mt-1">
                     <span v-if="(editando && !newCard)">
                         <a @click="saveCard" class="btn btn-primary text-white p-1 m-1">
                             <i class="fa fa-save"></i>
