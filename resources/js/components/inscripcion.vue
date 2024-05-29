@@ -75,11 +75,11 @@
                 </div>
 
                 <div class="card-footer">
-                        <div class="row justify-content-center">
+                    <div class="row justify-content-center">
                         <div class="col-md-3 text-primary">
-                                <p>
-                                    <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
-                                </p>
+                            <p>
+                                <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
+                            </p>
                         </div>
                         <div class="col-md-3">
                             <button type="button" 
@@ -92,52 +92,52 @@
                                 </span>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="!tipoInscriptoAplicado"x>
+                <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
+
+                <div class="card-body">
+                    <p>{{ $t('frontend.whats_a_type_inscription') }}</p>   
+                    <vue-tags-input
+                        v-model="tag2"
+                        :tags="tipoInscriptoTags"
+                        placeholder=""
+                        autocomplete="new-password"
+                        add-only-from-autocomplete
+                        :open-on-focus="true"
+                        :autocomplete-items="actividad.tipo_inscriptos_tag"
+                        @tags-changed="newTags => tipoInscriptoTags = newTags"
+                    />
+                </div>
+                <div class="card-footer">
+                    <div class="row justify-content-center">
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-link" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="rolAplicado=false" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.go_back') }}
+                                </span>
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-primary" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="tipoInscriptoAplicado=true" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.continue') }}
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div v-else-if="!tipoInscriptoAplicado"x>
-                        <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
-  
-                        <div class="card-body">
-                        <p>{{ $t('frontend.whats_a_type_inscription') }}</p>   
-                            <vue-tags-input
-                                v-model="tag2"
-                                :tags="tipoInscriptoTags"
-                                placeholder=""
-                                autocomplete="new-password"
-                                add-only-from-autocomplete
-                                :open-on-focus="true"
-                                :autocomplete-items="actividad.tipo_inscriptos_tag"
-                                @tags-changed="newTags => tipoInscriptoTags = newTags"
-                            />
-                        </div>
-                        <div class="card-footer">
-                           <div class="row justify-content-center">
-                                <div class="col-md-3">
-                                    <button type="button" 
-                                        class="btn btn-link" 
-                                        data-dismiss="modal" 
-                                        aria-label="Close" 
-                                        @click="rolAplicado=false" >
-                                        <span aria-hidden="true">
-                                            {{ $t('frontend.go_back') }}
-                                        </span>
-                                    </button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="button" 
-                                        class="btn btn-primary" 
-                                        data-dismiss="modal" 
-                                        aria-label="Close" 
-                                        @click="tipoInscriptoAplicado=true" >
-                                        <span aria-hidden="true">
-                                            {{ $t('frontend.continue') }}
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                </div>
+            </div>
             </div>
         <div v-else class="col-md-8" >
             <div class="row">
