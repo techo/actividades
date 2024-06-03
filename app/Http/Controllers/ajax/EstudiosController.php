@@ -15,9 +15,9 @@ class EstudiosController extends Controller
     public function create(Request $request) {
         $estudio = $request->validate([
             'institucion_educativa' => 'required',
-            'titulo' => 'required',
-            'disciplina_academica' => 'required',
-            'descripcion_educacion' => 'required',
+            'titulo' => 'nullable',
+            'disciplina_academica' => 'nullable',
+            'descripcion_educacion' => 'nullable',
             'idPersona' => 'required',
         ]);
 
@@ -33,8 +33,8 @@ class EstudiosController extends Controller
         $validados = $request->validate([
             'id' => 'required',
             'institucion_educativa' => 'required',
-            'titulo' => 'required',
-            'disciplina_academica' => 'required',
+            'titulo' => 'nullable',
+            'disciplina_academica' => 'nullable',
             'descripcion_educacion' => 'nullable',
         ]);
         $idPersona = Auth::user()->idPersona;
