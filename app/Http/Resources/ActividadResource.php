@@ -53,6 +53,8 @@ class ActividadResource extends Resource
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
             'roles_tags' =>  $this->roles_tags,
             'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
+            'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
+            'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
         ];
     }
 

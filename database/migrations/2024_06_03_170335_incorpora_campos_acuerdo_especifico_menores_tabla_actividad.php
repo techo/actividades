@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class IncluyeCampoRequiereEstudiosTablaActividad extends Migration
+class IncorporaCamposAcuerdoEspecificoMenoresTablaActividad extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class IncluyeCampoRequiereEstudiosTablaActividad extends Migration
     public function up()
     {
         Schema::table('Actividad', function (Blueprint $table) {
-            $table->boolean('requiere_estudios')->default(false);
+            $table->string('acuerdo_especifico_url')->nullable();
+            $table->string('acuerdo_menores_url')->nullable();
         });
     }
 
@@ -26,7 +27,8 @@ class IncluyeCampoRequiereEstudiosTablaActividad extends Migration
     public function down()
     {
         Schema::table('Actividad', function (Blueprint $table) {
-            $table->dropColumn('requiere_estudios');
+            $table->dropColumn('acuerdo_especifico_url');
+            $table->dropColumn('acuerdo_menores_url');
         });
     }
 }

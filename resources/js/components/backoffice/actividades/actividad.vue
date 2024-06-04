@@ -407,7 +407,7 @@
                     </div>
                     <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
                         <div v-for="(valor, index) in fichaMedicaCampos " class="col-md-4">
-                            <div class="row">
+                            <div class="">
                                 <label>
                                 <input class="col-md-1" :name="valor" v-model="fichaMedicaCampos[index]" type="checkbox" :disabled="!edicion" />
                                 <span class="col-md-11 font-weight-light">{{ $t('frontend.'+ index) }}</span>
@@ -508,6 +508,39 @@
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.linkEvaluacion }}</span>
                             <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="requiere_acuerdo_especifico">{{ $t('backend.requiere_acuerdo_especifico') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.requiere_acuerdo_especifico_description') }}
+                            </p>
+                            <input class="form-control" v-model="actividad.acuerdo_especifico_url" type="text" :disabled="!edicion" />
+                            <p class="help-block">
+                                {{ $t('backend.blank_channel_field_message') }}
+                            </p>
+        
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="requiere_acuerdo_menores">{{ $t('backend.requiere_acuerdo_menores') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.requiere_acuerdo_menores_description') }}
+                            </p>
+                            <input class="form-control" v-model="actividad.acuerdo_menores_url" type="text" :disabled="!edicion" />
+                            <p class="help-block">
+                                {{ $t('backend.blank_channel_field_message') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            
                         </div>
                     </div>
                 </div>
@@ -627,6 +660,9 @@
                     requiere_ficha_medica: 0,
                     ficha_medica_campos: {},
                     requiere_estudios: 0,
+
+                    acuerdo_especifico_url: null,
+                    acuerdo_menores_url: null,
 
                     descripcionPago: null,
                     linkPago: null,

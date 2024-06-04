@@ -116,6 +116,51 @@
                         @endif
                     </div>
                 </div>
+                @if($actividad->acuerdo_especifico_url)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="acuerdo_especifico_url">
+                                <input
+                                        type="checkbox"
+                                        name="acuerdo_especifico_url"
+                                        id="acuerdo_especifico_url"
+                                        required
+                                >
+                                {{ __('frontend.accept') }} 
+                                
+                                <a href="{{ $actividad->acuerdo_especifico_url }}" target="_blank">
+                                    {{ __('frontend.acuerdo_especifico') }}</a>
+                            </label>
+                            @if($mensaje = Session::get('status'))
+                                <p class="text-danger">{{ $mensaje }}</p>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if($actividad->acuerdo_menores_url)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="acuerdo_menores_url">
+                                <input
+                                        type="checkbox"
+                                        name="acuerdo_menores_url"
+                                        id="acuerdo_menores_url"
+                                        required
+                                >
+                                {{ __('frontend.accept') }} 
+                                
+                                <a href="{{ $actividad->acuerdo_menores_url }}" target="_blank">
+                                    {{ __('frontend.acuerdo_menores') }}</a>
+
+                            </label>
+                            @if($mensaje = Session::get('status'))
+                                <p class="text-danger">{{ $mensaje }}</p>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
                 <hr>
                 <div class="row  align-middle">
                     <div class="col-md-2 text-primary">

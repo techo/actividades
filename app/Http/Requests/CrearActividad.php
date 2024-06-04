@@ -68,6 +68,10 @@ class CrearActividad extends FormRequest
             'ficha_medica_campos' => 'sometimes',
             'roles_tags' => 'sometimes|nullable',
             'tipo_inscriptos_tag' => 'sometimes|nullable',
+
+
+            'acuerdo_especifico_url' => 'sometimes|nullable|url',
+            'acuerdo_menores_url' => 'sometimes|nullable|url',
         ];
     }
 }
