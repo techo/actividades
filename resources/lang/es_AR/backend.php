@@ -186,7 +186,11 @@ return [
     'combined_confirmation_instruction' => 'combina las dos anteriores. Se pre-inscribe, y la coordinación debe confirmar la inscripción para que el usuario pueda realizar su pago y así se habilita el recibo de donación.',
     'registration_deadline_instruction' => 'Verifica siempre esta fecha en el transcurso de la temporada de inscripción, ya que al llegar a esta fecha límite las inscripciones se cerrarán automáticamente.',
 
-
+    'requiere_acuerdo_especifico' => 'Carta de acuerdo para la actividad',
+    'requiere_acuerdo_especifico_description' => 'Si la actividad requiere que el voluntariado acepte condiciones específicas, escriba aqui la URL del documento.',
+    'requiere_acuerdo_menores' => 'Carta de acuerdo para menores de edad',
+    'requiere_acuerdo_menores_description' => 'Al activar este campo, al menor de edad se le mostrará un documento de carta de acuerdo para menores.',
+    
     // Titulos / Opciones
     'create_person' => 'Crear Persona',
     'create_activity' => 'Crear Actividad',

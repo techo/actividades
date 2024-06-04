@@ -151,7 +151,9 @@
                                 {{ __('frontend.accept') }} 
                                 
                                 <a href="{{ $actividad->acuerdo_menores_url }}" target="_blank">
-                                    {{ __('frontend.acuerdo_menores') }}</a>
+                                    {{ __('frontend.acuerdo_menores') }}
+                                </a>
+                                {{ __('frontend.compromiso_firma') }}
 
                             </label>
                             @if($mensaje = Session::get('status'))

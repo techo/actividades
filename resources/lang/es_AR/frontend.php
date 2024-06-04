@@ -363,6 +363,9 @@ return [
 	'at' => 'A las',
 	'accept' => 'Aceptar',
 	'terms_and_conditions' => 'carta de voluntariado',
+	'acuerdo_especifico' => 'terminos y condiciones de la actividad ',
+	'acuerdo_menores' => 'terminos y condiciones para menores',
+	'compromiso_firma' => ' y me comprometo a llevarla impresa el día de la actividad',
 
 	//gracias.blade.php
     'activity_detail' => 'Detalle de Actividad',
