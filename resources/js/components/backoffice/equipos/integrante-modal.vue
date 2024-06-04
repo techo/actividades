@@ -6,7 +6,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Nuevo Integrante</h4>
+                    <h4 class="modal-title">{{ $t('backend.new_member') }}</h4>
                 </div>
                 <div class="modal-body">
 
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
-                                <label for="idPersona">Persona</label>
+                                <label for="idPersona">{{ $t('backend.person') }}</label>
                                 <v-select :options="personas" @search="onSearch" label="nombre" v-model="persona"
                                     :filterable="false" :selectOnTab="true"></v-select>
                                 <span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block"></span>
@@ -27,17 +27,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
-                                <label for="rol">Rol</label>
+                                <label for="rol">{{ $t('backend.role') }}</label>
                                 <input v-model="form.rol" name="rol" type="text" class="form-control" required>
                                 <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.estado }">
-                                <label for="estado">Estado</label>
+                                <label for="estado">{{ $t('backend.state') }}</label>
                                 <select v-model="form.estado" name="estado" class="form-control" required>
-                                    <option value="1" :selected="form.estado == 1">Activo</option>
-                                    <option value="0" :selected="form.estado == 0">Inactivo</option>
+                                    <option value="1" :selected="form.estado == 1">{{ $t('backend.active') }}</option>
+                                    <option value="0" :selected="form.estado == 0">{{ $t('backend.inactive') }}</option>
                                 </select>
                                 <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block"></span>
                             </div>
@@ -46,22 +46,22 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
-                                <label for="despliegue">Despliegue</label>
+                                <label for="despliegue">{{ $t('backend.deployment') }}</label>
                                 <select v-model="form.despliegue" name="despliegue" class="form-control" required>
-                                    <option value="Oficina" :selected="form.despliegue == 'Oficina'">Oficina</option>
-                                    <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">Comunidad</option>
-                                    <option value="Otras" :selected="form.despliegue == 'Otras'">Otras</option>
+                                    <option value="Oficina" :selected="form.despliegue == 'Oficina'">{{ $t('backend.office') }}</option>
+                                    <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">{{ $t('backend.community') }}</option>
+                                    <option value="Otras" :selected="form.despliegue == 'Otras'">{{ $t('backend.other') }}</option>
                                 </select>
                                 <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.relacion }">
-                                <label for="relacion">Relación</label>
+                                <label for="relacion">{{ $t('backend.relationship') }}</label>
                                 <select v-model="form.relacion" name="relacion" class="form-control" required>
-                                    <option value="Rentado" :selected="form.relacion == 'Rentado'">Rentado</option>
-                                    <option value="Voluntario" :selected="form.relacion == 'Voluntario'">Voluntario</option>
-                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">Pasante</option>
+                                    <option value="Rentado" :selected="form.relacion == 'Rentado'">{{ $t('backend.rented') }}</option>
+                                    <option value="Voluntario" :selected="form.relacion == 'Voluntario'">{{ $t('backend.volunteer') }}</option>
+                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">{{ $t('backend.intern') }}</option>
                                 </select>
                                 <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
                             </div>
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaInicio }">
-                                <label for="fechaInicio">Fecha Inicio</label>
+                                <label for="fechaInicio">{{ $t('backend.start_date') }}</label>
                                 <input v-model="form.fechaInicio" name="fechaInicio" type="date" class="form-control"
                                     required>
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
@@ -78,7 +78,7 @@
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
-                                <label for="fechaFin">Fecha Fin</label>
+                                <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
                                 <span v-if="errors.fechaFin" v-text="errors.fechaFin[0]" class="help-block"></span>
                             </div>
@@ -88,8 +88,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.archivo_carta_compromiso }">
-                                <label for="archivo_carta_compromiso">Carta de Compromiso</label>
-                                <a v-if="form.archivo_carta_compromiso != null" :href="'/'+form.archivo_carta_compromiso" target="_blank"> Ver Carta Cargada</a>
+                                <label for="archivo_carta_compromiso">{{ $t('backend.commitment_letter') }}</label>
+                                <a v-if="form.archivo_carta_compromiso != null" :href="'/'+form.archivo_carta_compromiso" target="_blank"> {{ $t('backend.view_uploaded_letter') }}</a>
                                 <input type="file" hidden  style="display: none;" ref="archivo_carta_compromiso"  @change="guardarCartaCompromiso">
 
                                 <button  class="btn btn-light" @click="selectCarta" ><i class="fa fa-edit"></i></button>
@@ -111,7 +111,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.descripcion_rol }">
-                                <label for="descripcion_rol">Descripcion Rol</label>
+                                <label for="descripcion_rol">{{ $t('backend.role_description') }}</label>
                                 <input v-model="form.descripcion_rol" name="descripcion_rol" type="text" class="form-control"
                                     required>
                                 <span v-if="errors.descripcion_rol" v-text="errors.descripcion_rol[0]" class="help-block"></span>
@@ -122,14 +122,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
-                                <label for="meta">Meta</label>
+                                <label for="meta">{{ $t('backend.goal') }}</label>
                                 <input v-model="form.meta" name="meta" type="text" class="form-control" required>
                                 <span v-if="errors.meta" v-text="errors.meta[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.hitos }">
-                                <label for="hitos">Hitos</label>
+                                <label for="hitos">{{ $t('backend.milestones') }}</label>
                                 <input v-model="form.hitos" name="hitos" type="text" class="form-control"
                                     required>
                                 <span v-if="errors.hitos" v-text="errors.hitos[0]" class="help-block"></span>
@@ -140,7 +140,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.dia_hora_reunion }">
-                                <label for="dia_hora_reunion">Día y hora Reunión</label>
+                                <label for="dia_hora_reunion">{{ $t('backend.meeting_day_and_time') }}</label>
                                 <input v-model="form.dia_hora_reunion" name="dia_hora_reunion" type="text" class="form-control"
                                     required>
                                 <span v-if="errors.dia_hora_reunion" v-text="errors.dia_hora_reunion[0]" class="help-block"></span>
@@ -148,7 +148,7 @@
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.periodicidad_reunion }">
-                                <label for="periodicidad_reunion">Periodicidad Reunión</label>
+                                <label for="periodicidad_reunion">{{ $t('backend.meeting_frequency') }}</label>
                                 <input v-model="form.periodicidad_reunion" name="periodicidad_reunion" type="text" class="form-control" required>
                                 <span v-if="errors.periodicidad_reunion" v-text="errors.periodicidad_reunion[0]" class="help-block"></span>
                             </div>
@@ -158,7 +158,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.impacto }">
-                                <label for="impacto">Impacto</label>
+                                <label for="impacto">{{ $t('backend.impact') }}</label>
                                 <input v-model="form.impacto" name="impacto" type="text" class="form-control"
                                     required>
                                 <span v-if="errors.impacto" v-text="errors.impacto[0]" class="help-block"></span>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.capacidades }">
-                                <label for="capacidades">Capacidades</label>
+                                <label for="capacidades">{{ $t('backend.skills') }}</label>
                                 <input v-model="form.capacidades" name="capacidades" type="text" class="form-control" required>
                                 <span v-if="errors.capacidades" v-text="errors.capacidades[0]" class="help-block"></span>
                             </div>
@@ -179,13 +179,13 @@
                 <div class="modal-footer text-center">
                     <div v-if="guardado" class="row  m-2">
                         <p class="text-center bg-success">
-                            Cambios guardados
+                            {{ $t('backend.changes_saved') }}
                         </p>
                     </div>
-                    <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
+                    <button ref="cancelar" class="btn" @click="cancelar()">{{ $t('backend.cancel') }}</button>
                     <button ref="eliminar" v-show="editando" class="btn btn-danger"
-                        @click.prevent="confirmar()">Eliminar</button>
-                    <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">Guardar</button>
+                        @click.prevent="confirmar()">{{ $t('backend.eliminate') }}</button>
+                    <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">{{ $t('backend.save') }}</button>
                 </div>
 
             </div>

@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $equipo->nombre . ' - Coordinación')
+@section('page_title', $equipo->nombre . ' - ' . __('backend.coordination'))
 
 @section('content')
     @if (Session::has('mensaje'))

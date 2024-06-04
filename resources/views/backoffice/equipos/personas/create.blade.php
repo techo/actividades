@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Agregar Integrante')
+@section('page_title', __('backend.add_member'))
 
 
 @section('content')

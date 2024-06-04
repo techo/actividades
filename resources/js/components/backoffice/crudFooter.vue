@@ -5,20 +5,20 @@
         <div class="row hidden-sm">
             <div class="col-sm-12 col-md-4">
                 <button class="btn btn-default" @click="cancelar">
-                    <i class="fa fa-arrow-circle-left"></i> Volver al listado
+                    <i class="fa fa-arrow-circle-left"></i> {{ $t('backend.back_to_list') }}
                 </button>
             </div>
 
             <div class="col-sm-12 col-md-8" style="display: flex; justify-content: flex-end;">
                 <a class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && watchUrl" :href="watchUrl" target="_blank">
-                    <i class="fa fa-eye"></i>  Ver
+                    <i class="fa fa-eye"></i>  {{ $t('backend.view') }}
                 </a>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
-                    <i class="fa fa-share-alt"></i>  Compartir
+                    <i class="fa fa-share-alt"></i>  {{ $t('backend.share') }}
                 </button>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canClonar" @click="clonar">
                     <i class="fa fa-clone"></i>
-                    Clonar Actividad
+                    {{ $t('backend.clone_activity') }}
                 </button>
                 <button class="btn btn-secondary" style="margin-right: 4px;" v-show="!readonly" @click="cancelar">
                     <i class="fa fa-ban"></i>
@@ -26,15 +26,15 @@
                 </button>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canFusionar" @click="fusionar">
                     <i class="fa fa-random"></i>
-                    Fusionar
+                    {{ $t('backend.fuse') }}
                 </button>
                 <button class="btn btn-primary" style="margin-right: 4px;" v-show="readonly && canEditar" @click="editar">
                     <i class="fa fa-edit"></i>
-                    Editar
+                    {{ $t('backend.edit') }}
                 </button>
                 <button class="btn btn-danger" style="margin-right: 4px;" v-show="readonly && canBorrar" @click="eliminar">
                     <i class="fa fa-trash"></i>
-                    Borrar
+                    {{ $t('backend.delete') }}
                 </button>
                 <button class="btn btn-success" style="margin-right: 4px;" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
@@ -45,42 +45,42 @@
         <div class="row show-sm">
             <div class="col-sm-12">
                 <button class="btn btn-default btn-sm btn-block" @click="cancelar">
-                    <i class="fa fa-arrow-circle-left"></i> Volver al listado
+                    <i class="fa fa-arrow-circle-left"></i> {{ $t('backend.back_to_list') }}
                 </button>
             </div>
             <div class="col-sm-12">
                 <button type="button" class="btn btn-sm btn-primary btn-block" v-show="readonly && compartir" data-toggle="modal" data-target="#compartirModal">
-                    <i class="fa fa-share-alt"></i>  Compartir
+                    <i class="fa fa-share-alt"></i>  {{ $t('backend.share') }}
                 </button>
             </div>
             <div class="col-sm-12">
                 <button class="btn btn-primary btn-sm btn-block" v-show="readonly && canClonar" @click="clonar">
                     <i class="fa fa-clone"></i>
-                    Clonar Actividad
+                    {{ $t('backend.clone_activity') }}
                 </button>
             </div>
             <div class="col-sm-12">
                 <button class="btn btn-primary btn-sm btn-block" v-show="readonly && canEditar" @click="editar">
                     <i class="fa fa-edit"></i>
-                    Editar
+                    {{ $t('backend.edit') }}
                 </button>
             </div>
             <div class="col-sm-12">
                 <button class="btn btn-danger btn-sm btn-block" v-show="readonly && canBorrar" @click="eliminar">
                     <i class="fa fa-trash"></i>
-                    Borrar
+                    {{ $t('backend.delete') }}
                 </button>
             </div>
             <div class="col-sm-12">
                 <button class="btn btn-success btn-sm btn-block" v-show="!readonly" @click="this.guardar">
                     <i class="fa fa-save"></i>
-                    Guardar
+                    {{ $t('backend.save') }}
                 </button>
             </div>
             <div class="col-sm-12">
               <button class="btn btn-secondary btn-sm btn-block" v-show="!readonly" @click="cancelar">
                   <i class="fa fa-ban"></i>
-                  Cancelar
+                  {{ $t('backend.cancel') }}
               </button>
             </div>
         </div>

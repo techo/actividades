@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Equipo')
+@section('page_title', __('backend.create_team'))
 
 
 @section('content')

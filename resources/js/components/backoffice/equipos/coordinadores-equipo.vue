@@ -2,10 +2,10 @@
     <div>
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Coordinación del equipo</h3>
+                <h3 class="box-title">{{ $t('backend.team_coordination') }}</h3>
                 <p class="help-block">
                     <ul>
-                        <li>Todas estas Personas tienen acceso a editar el equipo.</li>
+                        <li>{{ $t('backend.all_these_people_can_edit_the_team') }}</li>
                     </ul>
                 </p>
             </div>
@@ -23,10 +23,10 @@
                                 @input="enviado = false;"
                                 class="select_persona"
                             >
-                                <template slot="no-options">Escribe el nombre, apellido o DNI</template>
+                                <template slot="no-options">{{ $t('backend.enter_name_surname_or_dni') }}</template>
                             </v-select>
                             <span class="input-group-btn">
-                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="enviado" @click="guardar()" v-text="(enviado)?'Enviado':'Guardar'"></button>
+                                <button :class="{ 'btn': true, 'btn-primary': !enviado, 'btn-success': enviado }" :disabled="enviado" @click="guardar()" v-text="(enviado)?$t('backend.sent'):$t('backend.save')"></button>
                             </span>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                         <li v-for="(coordinador, index) in coordinadores" :key='coordinador.idCoordinadorEquipo'>
                             {{ coordinador.persona.nombres + ' ' + coordinador.persona.apellidoPaterno + ' (' + coordinador.persona.mail + ')' }}
                             <span class="input-group-btn">          
-                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinadorEquipo)" v-text="'Eliminar'"></button>
+                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinadorEquipo)" v-text="$t('backend.eliminate')"></button>
                             </span>
                         </li>
                     </ul>

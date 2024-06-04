@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $equipo->nombre . ' - General')
+@section('page_title', $equipo->nombre . ' - ' . __('backend.general'))
 
 @section('content')
     @if (Session::has('error'))
@@ -20,7 +20,7 @@
 
     <div class="nav-tabs-custom">
         
-        @include('backoffice.equipos.tabs' , [ 'tab' => 'general' , 'idEquipo' => $equipo->idEquipo])
+        @include('backoffice.equipos.tabs' , [ 'tab' => __('backend.general') , 'idEquipo' => $equipo->idEquipo])
 
         <div class="tab-content">
 
