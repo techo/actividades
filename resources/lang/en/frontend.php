@@ -354,7 +354,7 @@ return [
 	'terms_and_conditions' => 'terms and conditions',
 	'acuerdo_especifico' => 'specific terms and conditions of the activity', 
 	'acuerdo_menores' => 'terms and conditions for minors', 
-	'compromiso_firma' => ' and I commit to bring it printed on the day of the activity',
+	'compromiso_firma' => ' and I commit to bring it printed and signed on the day of the activity',
 
 	//gracias.blade.php
     'activity_detail' => 'Details of the activity',
