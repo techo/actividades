@@ -362,6 +362,9 @@ return [
 	'at' => 'at',
 	'accept' => 'Accept',
 	'terms_and_conditions' => 'Termos e Condições',
+	'acuerdo_especifico' => 'termos e condições da atividade', 
+	'acuerdo_menores' => 'termos e condições para menores', 
+	'compromiso_firma' => ' e comprometo-me a trazê-lo impresso no dia da atividade',
 
 	//gracias.blade.php
 	'activity_detail' => 'Detalhe da Actividade',
