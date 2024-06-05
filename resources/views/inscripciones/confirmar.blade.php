@@ -138,7 +138,7 @@
                     </div>
                 @endif
 
-                @if($actividad->acuerdo_menores_url)
+                @if($actividad->acuerdo_menores_url && $edad < 18)
                     <div class="row">
                         <div class="col-md-12">
                             <label for="acuerdo_menores_url">

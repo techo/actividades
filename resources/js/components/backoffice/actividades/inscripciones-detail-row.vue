@@ -16,6 +16,9 @@
                 <br>
                 <label>Email: </label>
                 <span>{{ rowData.mail }}</span>
+                <br>
+                <label>Edad: </label>
+                <span>{{ edad }}</span>
                 
                
             </div>
@@ -70,9 +73,22 @@ export default {
           return moment(this.rowData.fechaInscripcion).format("DD/MM/YYYY hh:mm");
       },
       puntoEncuentro: function () {
-        console.log(this.rowData)
           let localidad = (this.rowData.puntoLocalidad == null) ? "" : this.rowData.puntoLocalidad + ", ";
           return this.rowData.punto + ", " + localidad + this.rowData.puntoProvincia + ", " + this.rowData.puntoPais
+      },
+      edad() {
+        const fechaNacimiento = new Date(this.rowData.fechaNacimiento);
+        const fechaActual = new Date();
+        
+        let edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+        
+        if (fechaActual.getMonth() < fechaNacimiento.getMonth() || 
+            (fechaActual.getMonth() === fechaNacimiento.getMonth() && 
+            fechaActual.getDate() < fechaNacimiento.getDate())) {
+          edad--;
+        }
+        
+        return edad;
       }
   },
   methods: {

@@ -36,13 +36,18 @@ class InscripcionesController extends BaseController
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
         $tipo = $actividad->tipo;
+
+        $currentDate = Carbon::now();
+        $edad = $currentDate->diffInYears(Carbon::parse(Auth::user()->fechaNacimiento));
+
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
             ->with('aplica_rol', $request->input('aplica_rol'))
-            ->with('tipo', $tipo);
+            ->with('tipo', $tipo)
+            ->with('edad', $edad);
 
     }
 
