@@ -288,7 +288,7 @@
                 verAdmin: this.veradmin,
                 paises: [],
                 showMailLogin: false,
-                onInstagramBrowser: false,
+                onInstagramBrowser: navigator.userAgent.includes("Instagram"),
             };
             
             if(this.usuario) {
@@ -314,9 +314,6 @@
         mounted(){
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
-                if(navigator.userAgent.includes("Instagram")){
-                    this.onInstagramBrowser = true;
-                }
             }
             this.paises_habilitados();
             //Eventos
