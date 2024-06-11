@@ -2,11 +2,11 @@
     <div class="modal-dialog">
         <div class="modal-content text-center">
             <div class="modal-header">
-                <h4 class="modal-title">USO DESDE INSTAGRAM</h4>
+                <h4 class="modal-title"> {{ $t('frontend.hello') }}!  </h4>
             </div>
             <div class="modal-body text-center">
                 <p> 
-                    Para poder inscribirte a una actividad es necesario que entres a la plataforma usando un navegador como Chrome, Firefox o Safari
+                    {{ $t('frontend.use_regular_browser') }}
                 </p>
             </div>
         </div>

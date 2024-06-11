@@ -39,6 +39,8 @@ return [
 	'welcome_techo' => 'Welcome to TECHO',
 	'use_mail_login' => 'Use Mail Login',
 
+	'use_regular_browser' => 'To continue, open this link in your favorite browser (Chrome, Safari, etc.). This way, we ensure that everything works super well.',
+
 	'logout' => 'Logout',
 	'login_null' => 'The mail and password is required',
 

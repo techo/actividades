@@ -40,7 +40,7 @@ return [
 	'logout' => 'Sair',
 	'login_null' => 'O e-mail e a senha são obrigatórios',
 	'use_mail_login' => 'Usar E-mail',
-
+	'use_regular_browser' => 'Para continuar, abra este link em seu navegador favorito (Chrome, Safari, etc.). Assim, garantimos que tudo funciona super bem.',
 
 	'welcome_techo' => 'Bem-vindo a TETO',
 
