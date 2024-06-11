@@ -86,7 +86,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="rolAplicado=true" >
+                                @click="validateForm();rolAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -129,7 +129,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="tipoInscriptoAplicado=true" >
+                                @click="validateForm();tipoInscriptoAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -167,7 +167,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="estudiosRevisados()" >
+                                @click="validateForm();estudiosRevisados();" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -187,7 +187,7 @@
             <hr>
             <div class="row">
                 <div class="col-md-12 px-4">
-                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
+                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="validateForm();mostrarFichaMedica = false;"/>
                 </div>
             </div> 
         </div>

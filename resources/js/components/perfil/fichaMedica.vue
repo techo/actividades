@@ -201,6 +201,7 @@ export default {
     methods: {
         guardarFicha: function () {
             this.guardo = false;
+            this.validateForm();
             axios.post('/ajax/fichaMedica', this.ficha).then(response => {
                 this.submitFiles();
                 this.guardo = true;
@@ -209,6 +210,12 @@ export default {
             }).catch((error) => {
                 this.error = true;
             });
+        },
+        validateForm: function(event) {
+            if(!this.$root.$refs.login.authenticated) {
+                $('#btnShowModal').trigger('click')
+            }
+            return true;
         },
         submitFiles: function () {
             this.guardo = false;
