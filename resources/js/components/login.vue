@@ -3,7 +3,7 @@
         <!-- Modal begin-->
         <div class="modal fade" id="login-modal" role="dialog" aria-labelledby="exampleModalCenterTitle"
              aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div  v-if="!onInstagramBrowser" class="modal-dialog modal-dialog-centered modal-md" role="document">
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="">
@@ -96,6 +96,7 @@
                     </div>
                 </div>
             </div>
+            <aviso-modal v-else />
         </div>
         <!-- Modal End-->
 
@@ -287,6 +288,7 @@
                 verAdmin: this.veradmin,
                 paises: [],
                 showMailLogin: false,
+                onInstagramBrowser: false,
             };
             
             if(this.usuario) {
@@ -312,6 +314,9 @@
         mounted(){
             if(this.showlogin){
                 $('#btnShowModal').trigger('click');
+                if(navigator.userAgent.includes("Instagram")){
+                    this.onInstagramBrowser = true;
+                }
             }
             this.paises_habilitados();
             //Eventos
