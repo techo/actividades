@@ -170,6 +170,12 @@ return [
     'anonymous' => 'Anónimo',
     'view_previous_state' => 'Ver estado anterior',
     'new_second_division' => 'Nueva Segunda División',
+    'update' => 'Actualizar',
+    'uninterested' => 'Sin Interés',
+    'uncontacted' => 'Sin Contactar',
+    'pre_enrolled' => 'Pre-inscripto',
+    'import_from_excel' => 'Importar desde Excel',
+    'pending' => 'Pendiente',
 
 
     // Usuarios/Columnas

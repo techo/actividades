@@ -7,8 +7,8 @@
                 id="pago_"
                 name="pago"
                 type-bold="true"
-                text-enabled="Presente"
-                text-disabled="Ausente"
+                text-enabled="$t('backend.present')"
+                text-disabled="$t('backend.absent')"
         >
         </v-switch>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>

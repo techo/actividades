@@ -1,11 +1,11 @@
 <template>
     <span>
         <select name="estadoInscripcion" id="estadoInscripcion" v-model="estado">
-            <option value="Confirmado">Confirmado</option>
-            <option value="Sin Confirmar">Sin Confirmar</option>
-            <option value="Sin Interés">Sin Interés</option>
-            <option value="Sin Contactar">Sin Contactar</option>
-            <option v-if="esConstruccion" value="Pre-Inscripto">Pre-inscripto</option>
+            <option value="Confirmado">{{ $t('backend.confirmed') }}</option>
+            <option value="Sin Confirmar">{{ $t('backend.unconfirmed') }}</option>
+            <option value="Sin Interés">{{ $t('backend.uninterested') }}</option>
+            <option value="Sin Contactar">{{ $t('backend.uncontacted') }}</option>
+            <option v-if="esConstruccion" value="Pre-Inscripto">{{ $t('backend.pre_enrolled') }}</option>
         </select>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
     </span>
