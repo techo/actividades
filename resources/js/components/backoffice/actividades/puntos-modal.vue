@@ -6,7 +6,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()" >
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Punto</h4>
+                    <h4 class="modal-title">{{ $t('backend.point') }}</h4>
                 </div>
                 <div class="modal-body">
 
@@ -18,7 +18,7 @@
 
                         <div class="col-md-7">
                             <div :class="{ 'form-group': true, 'has-error': errors.punto }">
-                                <label for="punto" >Punto</label>
+                                <label for="punto" >{{ $t('backend.point') }}</label>
                                 <input v-model="form.punto" name="punto" type="text" class="form-control" required >
                                 <span v-if="errors.punto" v-text="errors.punto[0]" class="help-block" ></span>
                             </div>
@@ -26,7 +26,7 @@
 
                         <div class="col-md-3">
                             <div :class="{ 'form-group': true, 'has-error': errors.horario }">
-                                <label for="horario" >Horario</label>
+                                <label for="horario" >{{ $t('backend.schedule') }}</label>
                                 <input v-model="form.horario" name="horario" type="time" class="form-control" required >
                                 <span v-if="errors.horario" v-text="errors.horario[0]" class="help-block" ></span>
                             </div>
@@ -34,7 +34,7 @@
 
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }">
-                                <label for="idProvincia">Provincia</label>
+                                <label for="idProvincia">{{ $t('backend.province') }}</label>
                                 <select v-model="form.idProvincia" name="idProvincia" class="form-control" required @change="getLocalidades($event);actividad.idLocalidad=null;" >>
                                     <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
                                 </select>
@@ -44,7 +44,7 @@
 
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }">
-                                <label for="idLocalidad">Localidad</label>
+                                <label for="idLocalidad">{{ $t('backend.location') }}</label>
                                 <select v-model="form.idLocalidad" name="idLocalidad" class="form-control" required >
                                     <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
                                 </select>
@@ -54,7 +54,7 @@
 
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
-                                <label for="idPersona">Persona</label>
+                                <label for="idPersona">{{ $t('backend.person') }}</label>
                                 <v-select
                                     :options="personas" 
                                     @search="onSearch" 
@@ -69,10 +69,10 @@
 
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.estado }">
-                                <label for="estado">Estado</label>
+                                <label for="estado">{{ $t('backend.state') }}</label>
                                 <select v-model="form.estado" name="estado" class="form-control" required >
-                                    <option value="1" :selected="form.estado == 1 " >Activo</option>
-                                    <option value="0" :selected="form.estado == 0 " >Inactivo</option>
+                                    <option value="1" :selected="form.estado == 1 " >{{ $t('backend.active') }}</option>
+                                    <option value="0" :selected="form.estado == 0 " >{{ $t('backend.inactive') }}</option>
                                 </select>
                                 <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block" ></span>
                             </div>
@@ -81,9 +81,9 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
-                    <button ref="eliminar" v-show="editando" class="btn btn-danger" @click.prevent="confirmar()" >Eliminar</button>
-                    <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()" >Guardar</button>
+                    <button ref="cancelar" class="btn" @click="cancelar()">{{ $t('backend.cancel') }}</button>
+                    <button ref="eliminar" v-show="editando" class="btn btn-danger" @click.prevent="confirmar()" >{{ $t('backend.eliminate') }}</button>
+                    <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()" >{{ $t('backend.save') }}</button>
                 </div>
             </div>
         </div>

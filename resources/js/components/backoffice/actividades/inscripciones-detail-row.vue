@@ -8,36 +8,36 @@
             </div>
               
             <div class="col-md-4">
-                <label>DNI/Pasaporte: </label>
+                <label>{{ $t('backend.identifications') }}: </label>
                 <span>{{ rowData.dni }}</span>
                 <br>
-                <label>Móvil: </label>
+                <label>{{ $t('backend.mobile') }}: </label>
                 <span>{{ rowData.telefonoMovil }}</span>
                 <br>
-                <label>Email: </label>
+                <label>{{ $t('backend.email') }}: </label>
                 <span>{{ rowData.mail }}</span>
                 <br>
-                <label>Edad: </label>
+                <label>{{ $t('backend.age') }}: </label>
                 <span>{{ edad }}</span>
                 
                
             </div>
             <div class="col-md-4">
-                <label>Provincia: </label>
+                <label>{{ $t('backend.province') }}: </label>
                 <span>{{ rowData.pProvincia }}</span>
                 <br>
-                <label>Localidad: </label>
+                <label>{{ $t('backend.location') }}: </label>
                 <span>{{ rowData.pLocalidad }}</span>
                 <br>
-                <label>Fecha de Inscripción: </label>
+                <label>{{ $t('backend.registration_date') }}: </label>
                 <span>{{ fechaInscripcion }}</span>
                 <br>
-                <label>Punto de Encuentro: </label>
+                <label>{{ $t('backend.meeting_point') }}: </label>
                 <span>{{ rowData.punto }}</span>
 
                 <div v-if="rowData.voucherUrl">
-                  <label>Archivo Pago: </label>
-                  <a target="_blank" :href="'/'+rowData.voucherUrl"> Voucher</a>
+                  <label>{{ $t('backend.payment_file') }}: </label>
+                  <a target="_blank" :href="'/'+rowData.voucherUrl"> {{ $t('backend.voucher') }}</a>
                 </div>
             </div> 
         </div>
@@ -45,10 +45,10 @@
         <div class="row">
             <div class="col-md-12">
                 <a :href="'/admin/usuarios/'+rowData.idPersona" class="btn btn-primary btn-xs" target="_blank" >
-                  <i class="fa fa-user" ></i> &nbsp; Ver perfil
+                  <i class="fa fa-user" ></i> &nbsp; {{ $t('backend.view_profile') }}
                 </a>
-                <a @click="cargarAuditoria(rowData.id)" class="btn btn-default btn-xs" ><i class="fa fa-history" ></i> &nbsp; Ver auditoría</a>
-                <span style="color: #6d6d6d">Modificado por {{rowData.modificado_por}} @ {{rowData.modificado_en}}</span>
+                <a @click="cargarAuditoria(rowData.id)" class="btn btn-default btn-xs" ><i class="fa fa-history" ></i> &nbsp; {{ $t('backend.view_audit') }}</a>
+                <span style="color: #6d6d6d">{{ $t('backend.modified_by') }} {{rowData.modificado_por}} @ {{rowData.modificado_en}}</span>
             </div>
         </div>
     </div>

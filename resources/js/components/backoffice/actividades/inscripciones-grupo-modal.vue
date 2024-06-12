@@ -5,11 +5,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Asignar Grupo</h4>
+                    <h4 class="modal-title">{{ $t('backend.assign') }} {{ $t('backend.group') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="grupo">Grupo</label>
+                        <label for="grupo">{{ $t('backend.group') }}</label>
                         <v-select
                                 :options="dataGrupos"
                                 label="nombre"
@@ -23,8 +23,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Confirmar</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{{ $t('backend.close') }}</button>
+                    <button type="button" class="btn btn-primary" @click="this.confirmar">{{ $t('backend.confirm') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

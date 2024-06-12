@@ -5,11 +5,11 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="display = false" >
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Inscribir</h4>
+                    <h4 class="modal-title">{{ $t('backend.register') }}</h4>
 				</div>
 				<div class="modal-body">
 					<div :class="{ 'form-group': true, 'has-error': errors.idPersona }" >
-						<label>Persona</label>
+						<label>{{ $t('backend.person') }}</label>
 						<v-select 
 							:options="personas" 
 							@search="onSearch" 
@@ -19,13 +19,13 @@
 							:selectOnTab="true"
 							@search:focus="clear_error('idPersona')"
 						>
-							<template slot="no-options">Escribe el nombre, apellido o DNI</template>
+							<template slot="no-options">{{ $t('backend.enter_name_lastname_or_dni') }}</template>
 						</v-select>
 						<span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block" ></span>
 					</div>
 
 					<div :class="{ 'form-group': true, 'has-error': errors.idPuntoEncuentro }" >
-						<label>Punto</label>
+						<label>{{ $t('backend.point') }}</label>
 						<select 
 							v-model="form.idPuntoEncuentro" 
 							class="form-control" 
@@ -40,15 +40,15 @@
 						<div class="checkbox">
                             <label for="notificar">
                                 <input type="checkbox" name="notificar" v-model="form.notificar">
-                                Notificar a la persona
+                                {{ $t('backend.notify_person') }}
                             </label>
                         </div> 
 					</div>
 
 				</div>
 				<div class="modal-footer">
-					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;hide();personas=[];" >Cancelar</button>
-					<button ref="inscribir" class="btn btn-primary" @click="submit" >Inscribir</button>
+					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;hide();personas=[];" >{{ $t('backend.cancel') }}</button>
+					<button ref="inscribir" class="btn btn-primary" @click="submit" >{{ $t('backend.register') }}</button>
 				</div>
 			</div>
 		</div>

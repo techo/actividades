@@ -5,11 +5,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Asignar Rol</h4>
+                    <h4 class="modal-title">{{ $t('backend.assign') }} {{ $t('backend.role') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="rol">Rol</label>
+                        <label for="rol">{{ $t('backend.role') }}</label>
                         
                         <vue-tags-input
                             v-model="tag"
@@ -20,7 +20,7 @@
                             :max-tags="1"
                         />
                         <p class="help-block">
-                            Sólo 1 tag seleccionable por selección de inscripciones.
+                            {{ $t('backend.only_one_tag_selectable_per_registration_selection') }}
                         </p>
                         <input type="hidden"
                                id="rol"
@@ -32,8 +32,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Confirmar</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{{ $t('backend.close') }}</button>
+                    <button type="button" class="btn btn-primary" @click="this.confirmar">{{ $t('backend.confirm') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

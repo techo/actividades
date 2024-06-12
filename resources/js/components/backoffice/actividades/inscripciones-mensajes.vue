@@ -9,7 +9,7 @@
             <button type="button" class="close" @click="display = false" aria-hidden="true">×</button>
             <h4><i class="icon fa fa-warning"></i>{{ titulo }}</h4>
             {{ mensaje }}
-            <p v-show="link !== ''"><a :href="link">Descargar el registro de errores</a></p>
+            <p v-show="link !== ''"><a :href="link">{{ $t('backend.download_error_log') }}</a></p>
         </div>
 </template>
 

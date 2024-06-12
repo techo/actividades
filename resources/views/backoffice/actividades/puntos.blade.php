@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - Puntos de Encuentro')
+@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.meeting_points'))
 
 @section('content')
 <div class="nav-tabs-custom">

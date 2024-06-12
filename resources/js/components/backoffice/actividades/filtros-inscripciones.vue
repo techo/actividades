@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="campo">Campo</label>
+                    <label for="campo">{{ $t('backend.field') }}</label>
                     <v-select
                             :options="dataCampos"
                             label="campo"
@@ -14,12 +14,12 @@
                             :filterable=true
                     >
                     </v-select>
-                    <p class="text-danger" v-show="errorCampo"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorCampo"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="condicion">Condición</label>
+                    <label for="condicion">{{ $t('backend.condition') }}</label>
                     <v-select
                             :options="dataCondiciones"
                             label="label"
@@ -30,18 +30,18 @@
                             :filterable=true
                     >
                     </v-select>
-                    <p class="text-danger" v-show="errorCondicion"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorCondicion"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="valor">Valor</label>
+                    <label for="valor">{{ $t('backend.value') }}</label>
                     <input type="text" name="valor" id="valor" class="form-control" v-model="valorCondicion" placeholder="Escriba un valor">
                 </div>
             </div>
             <div class="col-md-3">
                 <br>
-                <button class="btn btn-primary" @click="this.agregar">Agregar condición</button>
+                <button class="btn btn-primary" @click="this.agregar">{{ $t('backend.add_condition') }}</button>
             </div>
         </div>
     </div>

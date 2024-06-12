@@ -1,42 +1,42 @@
 <template>
     <div>
         <div class="form-group">
-            <label>Acciones:</label>
+            <label>{{ $t('backend.actions') }}:</label>
             <div class="btn-group" role="group" aria-label="toolbar">
-                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarRolModal">Asignar Rol</button>
-                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarGrupoModal">Asignar Grupo</button>
-                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">Asignar Punto</button>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarRolModal">{{ $t('backend.assign') }} {{ $t('backend.role') }}</button>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarGrupoModal">{{ $t('backend.assign') }} {{ $t('backend.group') }}</button>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">{{ $t('backend.assign') }} {{ $t('backend.point') }}</button>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Cambiar Confirmación
+                        {{ $t('backend.change_confirmation') }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a @click="cambiarConfirmacion(1, $event)">Confirmado</a></li>
-                        <li><a @click="cambiarConfirmacion(0, $event)">Sin Confirmar</a></li>
+                        <li><a @click="cambiarConfirmacion(1, $event)">{{ $t('backend.confirmed') }}</a></li>
+                        <li><a @click="cambiarConfirmacion(0, $event)">{{ $t('backend.unconfirmed') }}</a></li>
                     </ul>
                 </div>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Cambiar Pago
+                        {{ $t('backend.change_payment') }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a @click="cambiarPago(1, $event)">Pagado</a></li>
-                        <li><a @click="cambiarPago(0, $event)">Sin Pagar</a></li>
+                        <li><a @click="cambiarPago(1, $event)">{{ $t('backend.paid') }}</a></li>
+                        <li><a @click="cambiarPago(0, $event)">{{ $t('backend.unpaid') }}</a></li>
                     </ul>
                 </div>
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Cambiar Asistencia
+                        {{ $t('backend.change_attendance') }}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a @click="cambiarAsistencia(1, $event)">Presente</a></li>
-                        <li><a @click="cambiarAsistencia(0, $event)">Ausente</a></li>
+                        <li><a @click="cambiarAsistencia(1, $event)">{{ $t('backend.present') }}</a></li>
+                        <li><a @click="cambiarAsistencia(0, $event)">{{ $t('backend.absent') }}</a></li>
                     </ul>
                 </div>
-                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="mostrarDesinscribirModal($event)">Desinscribir</button>
+                <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="mostrarDesinscribirModal($event)">{{ $t('backend.unsubscribe') }}</button>
                 <inscripciones-rol-modal></inscripciones-rol-modal>
                 <inscripciones-grupo-modal></inscripciones-grupo-modal>
                 <inscripciones-punto-modal></inscripciones-punto-modal>
