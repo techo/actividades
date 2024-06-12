@@ -173,6 +173,9 @@ return [
     'pre_enrolled' => 'Pré-inscrito',
     'import_from_excel' => 'Importar do Excel',
     'pending' => 'Pendente',
+    'year' => 'Ano',
+    'all' => 'Todas',
+    'all1' => 'Todos',
 
 
     // Usuarios/Columnas
@@ -295,5 +298,8 @@ return [
     'registrations' => 'Inscrições',
     'groups' => 'Grupos',
     'evaluations' => 'Avaliações',
+    'evaluators' => 'Evaluadores',
+    'social' => 'Sociais',
+    'technical' => 'Técnicas',
 
 ];

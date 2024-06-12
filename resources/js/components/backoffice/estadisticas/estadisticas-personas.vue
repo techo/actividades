@@ -12,7 +12,7 @@
 							data-toggle="tab" 
 							@click.prevent="tab('inscripciones')"
 						>
-						Inscripciones
+						{{ $t('backend.registrations') }}
 						</a>
 					</li>
 					<li :class="{'active': tabs.evaluaciones_sociales} " >
@@ -21,7 +21,7 @@
 							data-toggle="tab" 
 							@click.prevent="tab('evaluaciones_sociales')"
 						>
-						Evaluaciones Sociales
+						{{ $t('backend.evaluations') }} {{ $t('backend.social') }}
 						</a>
 					</li>
 					<li :class="{'active': tabs.evaluaciones_tecnicas} " >
@@ -30,7 +30,7 @@
 							data-toggle="tab" 
 							@click.prevent="tab('evaluaciones_tecnicas')"
 						>
-						Evaluaciones Técnicas
+						{{ $t('backend.evaluations') }} {{ $t('backend.technical') }}
 						</a>
 					</li>
 				</ul>

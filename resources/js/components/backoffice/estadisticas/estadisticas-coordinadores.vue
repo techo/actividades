@@ -12,7 +12,7 @@
 							data-toggle="tab" 
 							@click.prevent="tab('coordinadores')"
 						>
-						Coordinadores
+						{{ $t('backend.coordinators') }}
 						</a>
 					</li>
 				</ul>
