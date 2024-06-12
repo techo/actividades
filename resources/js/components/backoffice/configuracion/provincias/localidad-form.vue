@@ -6,7 +6,7 @@
         <simplert ref="loading"></simplert>
 
         <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
+            <h4>{{ $t('backend.errors') }}:</h4>
             <ul>
                 <li v-for="error in validationErrors">{{ error[0] }}</li>
             </ul>
@@ -18,14 +18,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre" type="text" class="form-control" v-model="data.nombre"
                                         :disabled="this.readonly">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="pais">Oficina</label>
+                                    <label for="pais">{{ $t('backend.office') }}</label>
                                     <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
                                         name="oficina" id="oficina" v-model="oficinaSeleccionado"
                                         >
@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="fechaInicio">Fecha Inicio</label>
+                                <label for="fechaInicio">{{ $t('backend.start_date') }}</label>
                                 <div :class="{  'has-error': errors.fechaInicio }">
                                     <input name="fechaInicio" v-model="data.fechaInicio" type="date" class="form-control"
                                         required style="line-height: inherit;" :disabled="this.readonly">
@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="fechaFin">Fecha Fin</label>
+                                <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <div :class="{ 'has-error': errors.fechaFin }">
                                     <input name="fechaFin" v-model="data.fechaFin" type="date" class="form-control"
                                         required style="line-height: inherit;" :disabled="this.readonly">
@@ -62,11 +62,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="estado">Estado</label>
+                                    <label for="estado">{{ $t('backend.state') }}</label>
                                     <select name="estado" class="form-control" v-model="data.activo" required
                                         :disabled="this.readonly">
-                                        <option value="1" :selected="data.activo">Activo</option>
-                                        <option value="0" :selected="data.activo">Finalizado</option>
+                                        <option value="1" :selected="data.activo">{{ $t('backend.active') }}</option>
+                                        <option value="0" :selected="data.activo">{{ $t('backend.finished') }}</option>
                                     </select>
                                 </div>
                             </div>

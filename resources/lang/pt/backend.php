@@ -160,6 +160,14 @@ return [
     'condition' => 'Condição',
     'value' => 'Valor',
     'add_condition' => 'Adicionar condição',
+    'registration_audit' => 'Auditoria do registro',
+    'type' => 'Tipo',
+    'user' => 'Usuário',
+    'date' => 'Data',
+    'anonymous' => 'Anônimo',
+    'view_previous_state' => 'Ver estado anterior',
+    'new_second_division' => 'Nova Segunda Divisão',
+
 
     // Usuarios/Columnas
     'thematic' => 'Tema',

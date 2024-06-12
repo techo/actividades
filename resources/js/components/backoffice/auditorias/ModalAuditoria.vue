@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Auditoria del registro #{{ info.id }} tipo {{ info.tabla }}</h4>
+                    <h4 class="modal-title">{{ $t('backend.registration_audit') }} #{{ info.id }} {{ $t('backend.type') }} {{ info.tabla }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -12,17 +12,17 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Usuario</th>
-                                        <th>Fecha</th>
+                                        <th>{{ $t('backend.user') }}</th>
+                                        <th>{{ $t('backend.date') }}</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <template v-for="registro in info.registros">
                                         <tr>
-                                            <td>{{ registro.persona ? registro.persona.nombres + ' ' + registro.persona.apellidoPaterno : 'Anónimo' }}</td>
+                                            <td>{{ registro.persona ? registro.persona.nombres + ' ' + registro.persona.apellidoPaterno : $t('backend.anonymous') }}</td>
                                             <td>{{ registro.fecha_creacion }}</td>
-                                            <td><a class="btn btn-small" @click="mostrar(registro)">Ver estado anterior</a></td>
+                                            <td><a class="btn btn-small" @click="mostrar(registro)">{{ $t('backend.view_previous_state') }}</a></td>
                                         </tr>
                                         <tr v-if="registro.visible">
                                             <td colspan="3">
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('backend.close') }}</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

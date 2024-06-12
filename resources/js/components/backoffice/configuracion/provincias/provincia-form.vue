@@ -6,7 +6,7 @@
         <simplert ref="loading"></simplert>
 
         <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
+            <h4>{{ $t('backend.errors') }}:</h4>
             <ul>
                 <li v-for="error in validationErrors">{{ error[0] }}</li>
             </ul>
@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre" type="text" class="form-control" v-model="data.nombre"
                                         :disabled="this.readonly">
                                 </div>
@@ -27,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="idOficina">Oficina</label>
+                                    <label for="idOficina">{{ $t('backend.office') }}</label>
                                     <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
                                         name="oficina" id="oficina" v-model="oficinaSeleccionado"
                                         >
