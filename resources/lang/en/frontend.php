@@ -199,6 +199,8 @@ return [
 	'disciplina_academica' => 'Accademy disipline *',
 	'descripcion_educacion' => 'Description *',
 	'complete_education' => 'Add at least one study to continue',
+	'other' => 'Other',
+	'ingrese_institucion_educativa' => 'Enter Name Manually',
 
 	// perfil / equipos
 	'equipos' => 'Teams', 

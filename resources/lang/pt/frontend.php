@@ -206,7 +206,8 @@ return [
 	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descrição *',
 	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
-
+	'other' => 'Outro',
+	'ingrese_institucion_educativa' => 'Insira o Nome Manualmente',
 	// perfil / equipos
 
 	'equipos' => 'Equipas', 

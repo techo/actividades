@@ -31,27 +31,36 @@ Route::prefix('ajax')->group(function () {
     Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
     Route::get('personas', 'ajax\UsuarioController@getPersonas');
 
+
     Route::prefix('paises')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
         Route::get('/habilitados', 'ajax\PaisesController@paisesHabilitados');
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
+        Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
+    Route::middleware(['requiere.auth'])->group(function () {
+        Route::prefix('institucionEducativa')->group(function() {
+            Route::get('', 'ajax\InstitucionEducativaController@index');
+            Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
+            Route::get('pais/{idPais}', 'ajax\InstitucionEducativaController@porPais');
+        });
+        
+        Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+        Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
-    Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
-    Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
+        Route::prefix('estudios')->group(function () {
+            Route::post('', 'ajax\EstudiosController@create');
+            Route::put('', 'ajax\EstudiosController@update');
+            Route::delete('/{id}', 'ajax\EstudiosController@delete');
+        });
 
-    Route::prefix('estudios')->group(function () {
-        Route::post('', 'ajax\EstudiosController@create');
-		Route::put('', 'ajax\EstudiosController@update');
-		Route::delete('/{id}', 'ajax\EstudiosController@delete');
-	});
-
-    Route::prefix('equipos')->group(function () {
-		Route::put('', 'ajax\EquiposController@update');
-		Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
-	});
+        Route::prefix('equipos')->group(function () {
+            Route::put('', 'ajax\EquiposController@update');
+            Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
+        });
+    });
 
 	Route::prefix('usuario')->group(
 	    function(){

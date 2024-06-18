@@ -7,11 +7,13 @@
                 :header="estudio.titulo"
                 :headerLabel="$t('frontend.titulo_educacion')"
                 :title="estudio.institucion_educativa"
+                :idInstitucionEducativa="estudio.idInstitucionEducativa"
                 :titleLabel="$t('frontend.institucion_educativa')"
                 :subTitle="estudio.disciplina_academica" 
                 :subTitleLabel="$t('frontend.disciplina_academica')" 
                 :text="estudio.descripcion_educacion" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
+                :paises="paisesConInstitucionesEducativas" 
                 @deleteCard="deleteEstudio(index)"
                 @saveCard="saveEstudio"
                 />
@@ -22,6 +24,7 @@
                 :titleLabel="$t('frontend.institucion_educativa')"
                 :subTitleLabel="$t('frontend.disciplina_academica')" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
+                :paises="paisesConInstitucionesEducativas" 
                 @createCard="createEstudio"
                 :newCard="true"
                 />
@@ -54,22 +57,30 @@ export default {
                 text: ''
             },
             creandoEstudio: false,
+            paisesConInstitucionesEducativas: [],
         }
         return data;
     },
     props: ['estudios', 'idPersona'],
     mounted: function () {
-        this.formDirty = false
+        this.formDirty = false;
+        this.traer_paises();
     },
     watch: {
 
     },
     methods: {
+        traer_paises: function () {
+            axios.get('/ajax/paises/conInstitucionesEducativas').then(response => {
+                this.paisesConInstitucionesEducativas = response.data
+            })
+        },
         createEstudio: function (data) {
             this.guardo = false;
             let form = {
                 titulo: data.header,
                 institucion_educativa: data.title,
+                idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
                 disciplina_academica: data.subTitle,
                 descripcion_educacion: data.text,
                 idPersona: this.idPersona,
@@ -89,6 +100,7 @@ export default {
                 titulo: data.header,
                 institucion_educativa: data.title,
                 disciplina_academica: data.subTitle,
+                idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
                 descripcion_educacion: data.text,
             }
             axios.put('/ajax/estudios', form).then(response => {
