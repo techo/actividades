@@ -399,6 +399,18 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::get('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@get');  
         });
     });
+
+     Route::prefix('configuracion/institucionEducativa')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\InstitucionEducativaController@index');
+        Route::get('/crear', 'backoffice\InstitucionEducativaController@create');
+        Route::post('/registrar', 'backoffice\InstitucionEducativaController@store');
+        Route::get('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@show');
+        Route::put('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@update');
+        Route::delete('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@destroy');
+    });
+    Route::prefix('ajax/configuracion/institucionEducativa')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ajax\InstitucionEducativaController@index');
+    });
     
 
 });

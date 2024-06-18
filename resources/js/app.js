@@ -84,6 +84,12 @@ Vue.component('provincia-form', ProvinciaForm);
 Vue.component('localidad-modal', LocalidadModal);
 Vue.component('localidades-datatable', LocalidadesDatatable);
 
+import InstitucionEducativaDatatable from './components/backoffice/datatable/configuracion/InstitucionEducativaDatatable';
+import InstitucionEducativaForm from './components/backoffice/configuracion/institucion-educativa-form';
+
+Vue.component('institucion-educativa-datatable', InstitucionEducativaDatatable);
+Vue.component('institucion-educativa-form', InstitucionEducativaForm);
+
 import UsuariosInscripcionesTab from './components/backoffice/usuarios/usuarios-inscripciones-tab';
 Vue.component('usuarios-inscripciones-tab', UsuariosInscripcionesTab);
 

@@ -468,6 +468,27 @@ return [
             ],
         ]
     ],
+    'institucionEducativa' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idInstitucionEducativa',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'suscriptos' => [
         'fields' => [
             [
