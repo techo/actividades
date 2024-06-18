@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col-md-12">
-                <h4>Evaluaciones registradas</h4>
+                <h4>{{ $t('backend.registered_evaluations') }}</h4>
             </div>
         </div>
         <div class="row">

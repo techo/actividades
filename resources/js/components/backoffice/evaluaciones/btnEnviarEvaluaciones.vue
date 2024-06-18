@@ -1,7 +1,7 @@
 <template>
     <span>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
-            <i class="fa fa-paper-plane"></i> Enviar Evaluaciones
+            <i class="fa fa-paper-plane"></i> {{ $t('backend.send_evaluations') }}
         </button>
 
         <div class="modal fade" tabindex="-1" role="dialog" id="modalConfirmar">
@@ -11,32 +11,31 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
                             @click="success = false; error= false;">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Confirmar Envío de Evaluaciones</h4>
+                        <h4 class="modal-title">{{ $t('backend.confirm_send_evaluations') }}</h4>
                     </div>
                     <div class="modal-body">
                         <span v-if="!error && !success">
-                            <p>Al hacer click en <strong>Enviar</strong> se enviará un correo electrónico a todos los inscriptos.</p>
+                            <p>{{ $t('backend.on_click') }} <strong>{{ $t('backend.send') }}</strong> {{ $t('backend.email_all_enrolled') }}</p>
                             <p>
-                                <b>El mail solo le llega a los inscriptos que están marcados como *PRESENTE*.</b>
+                                <b>{{ $t('backend.email_only_present') }}</b>
                             </p>
-                            <p>También podés <strong>Copiar el link</strong> a las evaluaciones para enviar por otros medios.</p>
+                            <p>{{ $t('backend.you_can_also') }} <strong>{{ $t('backend.copy_link') }}</strong> {{ $t('backend.evaluation_link_other_means') }}</p>
                             <input type="text" id="data-url-evaluaciones" tabindex="-1" aria-hidden="true" :value="urlEvaluaciones">
                         </span>
                         <span v-if="success">
                             <strong>
-                                Se enviaron notificaciones a {{ notificados }} inscriptos.
+                                {{ $t('backend.notifications_sent_to') }} {{ notificados }} {{ $t('backend.enrolled') }}.
                             </strong>
                         </span>
                         <span v-if="error">
-                            <p class="text-error">¡Ocurrió un error al enviar los correos! intentalo de nuevo o
-                                contacta al administrador del sistema para más información.</p>
+                            <p class="text-error">{{ $t('backend.error_sending_emails') }}</p>
                         </span>
                     </div>
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal"
                             @click="success = false; error= false;">
                             <i class="fa fa-ban"></i>
-                            Cerrar
+                            {{ $t('backend.close') }}
                         </button>
                         <button v-bind:class="getClass(copiarClicked)"
                              type="button"
@@ -46,11 +45,11 @@
                         </button>
                         <button type="button" class="btn btn-primary" @click="enviarEvaluaciones" v-if="!loading">
                             <i class="fa fa-paper-plane"></i>
-                            Enviar
+                            {{ $t('backend.send') }}
                         </button>
                         <button type="button" class="btn btn-default" v-else>
                             <i class="fa fa-spinner fa-spin fa-fw"></i>
-                            <span class="sr-only">Loading...</span> Espera
+                            <span class="sr-only">Loading...</span> {{ $t('backend.wait') }}
                         </button>
                   </div>
                 </div><!-- /.modal-content -->

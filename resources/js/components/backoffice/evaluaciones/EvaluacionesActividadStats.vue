@@ -2,10 +2,10 @@
     <div>
         <div class="row">
             <div class="col-md-6">
-                <h4>Personas que evaluaron</h4>
+                <h4>{{ $t('backend.evaluators') }}</h4>
             </div>
             <div class="col-md-6">
-                <h4 class="text-center">Porcentaje de evaluaciones</h4>
+                <h4 class="text-center">{{ $t('backend.evaluation_percentage') }}</h4>
             </div>
         </div>
         <div class="row">
@@ -13,16 +13,16 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12 col-xs-12">
                         <h1><strong>{{ evaluaron }}</strong></h1>
-                        <h4>Evaluaron</h4>
+                        <h4>{{ $t('backend.evaluated') }}</h4>
                     </div>
                     <div class="col-md-6 col-sm-12 col-xs-12">
                         <h1><strong>{{ pendientesEvaluar }}</strong></h1>
-                        <h4>Faltan evaluar</h4>
+                        <h4>{{ $t('backend.pending_evaluation') }}</h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Promedio evaluaciones</h4>
+                        <h4>{{ $t('backend.average_evaluations') }}</h4>
                         <h1 class="promedio"><strong>{{ promedio }}</strong></h1>
                     </div>
                 </div>
