@@ -199,6 +199,15 @@ return [
     'evaluations_between_enrolled' => 'Avaliações entre inscritos',
     'score' => 'Pontuação',
     'gender_perspective' => 'Perspectiva de Gênero',
+    'members_to_be_reassigned' => 'Os membros do grupo serão reatribuídos ao grupo raiz',
+    'include_and_add_new' => 'Incluir e Adicionar Novo',
+    'include_and_close' => 'Incluir e Fechar',
+    'registered_volunteer' => 'Voluntario Inscripto',
+    'unregistered_volunteer' => 'Voluntário Não Inscrito',
+    'already_belongs_to_team' => 'Esta pessoa já pertence à equipe',
+    'already_belongs_to_other_team' => 'Esta pessoa já pertence a outra equipe',
+    'personal_data' => 'Dados Pessoais',
+    'mobile_phone' => 'Telefone celular',
 
 
     // Usuarios/Columnas
@@ -329,5 +338,7 @@ return [
     'technical1' => 'Técnico',
     'absent' => 'Ausentes',
     'present' => 'Presentes',
+    'add_new' => 'Adicionar Novo',
+    'add' => 'Adicionar',
 
 ];

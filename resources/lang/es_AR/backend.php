@@ -202,6 +202,15 @@ return [
     'evaluations_between_enrolled' => 'Evaluaciones entre inscriptos',
     'score' => 'Puntaje',
     'gender_perspective' => 'Perspectiva de Género',
+    'members_to_be_reassigned' => 'Las personas integrantes del grupo van a ser re-asignadas al grupo raíz',
+    'include_and_add_new' => 'Incluir y Agregar Nuevo',
+    'include_and_close' => 'Incluir y Cerrar',
+    'registered_volunteer' => 'Voluntario Inscripto',
+    'unregistered_volunteer' => 'Voluntario No Inscripto',
+    'already_belongs_to_team' => 'Esta persona ya pertenece al equipo',
+    'already_belongs_to_other_team' => 'Esta persona ya pertenece a otro equipo',
+    'personal_data' => 'Datos Personales',
+    'mobile_phone' => 'Teléfono móvil',
 
 
     // Usuarios/Columnas
@@ -330,5 +339,8 @@ return [
     'technical1' => 'Técnico',
     'absent' => 'Ausentes',
     'present' => 'Presentes',
+    'add_new' => 'Agregar Nuevo',
+    'add' => 'Agregar',
+
 
 ];
