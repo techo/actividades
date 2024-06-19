@@ -6,7 +6,7 @@
         <simplert ref="loading"></simplert>
 
         <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
+            <h4>{{ $t('backend.errors') }}:</h4>
             <ul>
                 <li v-for="error in validationErrors">{{ error[0] }}</li>
             </ul>
@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="header">Header</label>
+                                    <label for="header">{{ $t('backend.header') }}</label>
                                     <input id="header"
                                            type="text"
                                            class="form-control"
@@ -42,12 +42,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pais">Imagen</label>
+                                    <label for="pais">{{ $t('backend.image') }}</label>
                                     <div>
                                         <img class="img-responsive" v-if="homeHeader.imagen != null" :src="homeHeader.imagen" alt="imagen actividad">          
                                     </div>
                                     <button v-if="!readonly" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                                    <p v-if="updateArchivo" class="help-block ml-2">La imagen debe ser de exactamente 1366 x 210.</p>
+                                    <p v-if="updateArchivo" class="help-block ml-2">{{ $t('backend.image_dimensions_exact') }} 1366 x 210.</p>
                                     
                                     <input v-if="updateArchivo" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
                                 </div>

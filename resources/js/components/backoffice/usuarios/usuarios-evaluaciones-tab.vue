@@ -2,24 +2,24 @@
 	<div class="box" >
 		<div class="box-header" >
 			<h2 class="box-title">
-				<strong>Promedios de evaluaciones recibidas</strong>
+				<strong>{{ $t('backend.average_evaluations_received') }}</strong>
 			</h2>
 			<span class="pull-right">
 				<a :href="urlDescarga" class="btn btn-primary">
 					<i class="fa fa-download" ></i>
-					Descargar detalle
+					{{ $t('backend.download_details') }}
 				</a>
 			</span>
 			<div class="row">
 				<div class="col-md-12">
 					<p>
-						<b>Puntaje técnico</b>: conocimientos sobre la tarea a desarrollar.
+						<b>{{ $t('backend.technical_score') }}</b>: {{ $t('backend.task_knowledge') }}.
 					</p>
 					<p>
-						<b>Puntaje social</b>: habilidades para comuncicarse y empatizar con otros.
+						<b>{{ $t('backend.social_score') }}</b>: {{ $t('backend.communication_empathy_skills') }}.
 					</p>
 					<p>
-						<b>Puntaje perspectiva de género</b>: Promoción de un entorno seguro y de igualdad.
+						<b>{{ $t('backend.gender_perspective_score') }}</b>: {{ $t('backend.promote_safe_equal_environment') }}.
 					</p>
 				</div>
 			</div>

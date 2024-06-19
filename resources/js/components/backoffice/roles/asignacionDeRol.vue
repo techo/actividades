@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="usuario">Usuario</label>
+                                <label for="usuario">{{ $t('backend.user') }}</label>
                                 <v-select
                                         :options="dataUsuarios"
                                         label="nombre"
@@ -26,11 +26,11 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="rol">Rol</label>
+                                <label for="rol">{{ $t('backend.role') }}</label>
                                 <v-select
                                         :options="dataRoles"
                                         label="rol"
-                                        placeholder="Seleccione"
+                                        placeholder="$t('backend.select')"
                                         name="rol"
                                         id="rol"
                                         v-model="rolSeleccionado"
@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-md-4">
                             <br>
-                            <button class="btn btn-primary btn-lg" @click="this.actualizar">Actualizar</button>
+                            <button class="btn btn-primary btn-lg" @click="this.actualizar">{{ $t('backend.update') }}</button>
                         </div>
                     </div>
                 <!--</form>-->

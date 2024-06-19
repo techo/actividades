@@ -5,11 +5,11 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="display = false" >
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Fusionar con otra cuenta</h4>
+                    <h4 class="modal-title">{{ $t('backend.merge_with_another_account') }}</h4>
 				</div>
 				<div class="modal-body">
 					<div :class="{ 'form-group': true, 'has-error': errors.idPersona }" >
-						<label>Cuenta de donde se quieren tomar los datos</label>
+						<label>{{ $t('backend.source_account_for_data') }}</label>
 						<v-select 
 							:options="personas" 
 							@search="onSearch" 
@@ -19,15 +19,15 @@
 							:selectOnTab="true"
 							@search:focus="clear_error('idPersona')"
 						>
-							<template slot="no-options">Escribe el nombre, apellido o DNI</template>
+							<template slot="no-options">{{ $t('backend.enter_name_surname_or_dni') }}</template>
 						</v-select>
 						<span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block" ></span>
 					</div>
 
 				</div>
 				<div class="modal-footer">
-					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;hide();personas=[];" >Cancelar</button>
-					<button ref="inscribir" class="btn btn-primary" @click="submit" >Fusionar</button>
+					<button ref="cancelar" class="btn" @click="reset();personaSeleccionada=null;hide();personas=[];" >{{ $t('backend.cancel') }}</button>
+					<button ref="inscribir" class="btn btn-primary" @click="submit" >{{ $t('backend.fuse') }}</button>
 				</div>
 			</div>
 		</div>
