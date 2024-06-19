@@ -627,6 +627,8 @@
                 estadoInscripcion: false,
                 estadoEvaluaciones: false,
                 estadoPago: false,
+                showDates: true,
+                showLocation: true,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
