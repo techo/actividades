@@ -4,13 +4,11 @@
             <div class="card w-100 m-2" v-for="(estudio, index) in estudios_persona">
                 <cardEditDelete 
                 :identifier="estudio.idEstudio"
-                :header="estudio.titulo"
-                :headerLabel="$t('frontend.titulo_educacion')"
+                :header="estudio.disciplina_academica"
+                :headerLabel="$t('frontend.disciplina_academica')"
                 :title="estudio.institucion_educativa"
                 :idInstitucionEducativa="estudio.idInstitucionEducativa"
                 :titleLabel="$t('frontend.institucion_educativa')"
-                :subTitle="estudio.disciplina_academica" 
-                :subTitleLabel="$t('frontend.disciplina_academica')" 
                 :text="estudio.descripcion_educacion" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
                 :paises="paisesConInstitucionesEducativas" 
@@ -20,11 +18,11 @@
             </div>
             <div class="card w-100 m-2" v-if="creandoEstudio">
                 <cardEditDelete 
-                :headerLabel="$t('frontend.titulo_educacion')"
+                :headerLabel="$t('frontend.disciplina_academica')" 
                 :titleLabel="$t('frontend.institucion_educativa')"
-                :subTitleLabel="$t('frontend.disciplina_academica')" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
                 :paises="paisesConInstitucionesEducativas" 
+                :idInstitucionEducativa="-1"
                 @createCard="createEstudio"
                 :newCard="true"
                 />
@@ -78,10 +76,9 @@ export default {
         createEstudio: function (data) {
             this.guardo = false;
             let form = {
-                titulo: data.header,
                 institucion_educativa: data.title,
                 idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
-                disciplina_academica: data.subTitle,
+                disciplina_academica: data.header,
                 descripcion_educacion: data.text,
                 idPersona: this.idPersona,
             }
@@ -97,9 +94,8 @@ export default {
             this.guardo = false;
             let form = {
                 id: data.id,
-                titulo: data.header,
                 institucion_educativa: data.title,
-                disciplina_academica: data.subTitle,
+                disciplina_academica: data.header,
                 idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
                 descripcion_educacion: data.text,
             }

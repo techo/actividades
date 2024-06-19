@@ -15,7 +15,6 @@ class EstudiosController extends Controller
         $estudio = $request->validate([
             'institucion_educativa' => 'required',
             'idInstitucionEducativa' => 'nullable',
-            'titulo' => 'required',
             'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
             'idPersona' => 'required',
@@ -34,7 +33,6 @@ class EstudiosController extends Controller
             'id' => 'required',
             'institucion_educativa' => 'required',
             'idInstitucionEducativa' => 'nullable',
-            'titulo' => 'required',
             'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
         ]);

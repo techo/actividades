@@ -25,41 +25,43 @@
         <div class="card-body">
 
             <div class="card-title">
-                <h5 v-if="!editando"> {{ data.title }} - {{ data.subTitle }}
+                <h5 v-if="!editando"> {{ data.title }}
                 </h5>
                 <div v-else>
                     <div>
-                    <label>{{ data.titleLabel }} *</label>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <select id="pais" v-model="idPaisSeleccionado" class="form-control m-1">
-                                <option v-bind:value="0">
-                                    {{ $t('frontend.other') }}
-                                </option>
-                                <option v-for="pais in paises" v-bind:value="pais.id">
-                                    {{ pais.nombre }}
-                                </option>
-                            </select>
+                        <label>{{ data.titleLabel }} *</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <select id="pais" v-model="idPaisSeleccionado" class="form-control m-1">
+                                    <option disabled selected value="-1">{{ $t('backend.country') }}</option>
+                                    <option v-bind:value="0">
+                                        {{ $t('frontend.other') }}
+                                    </option>
+                                    <option v-for="pais in paises" v-bind:value="pais.id">
+                                        {{ pais.nombre }}
+                                    </option>
+                                </select>
+
+        
+                            </div>
+                            <div v-if="idPaisSeleccionado" class="col-md-8">
+                                <select id="institucionEducativa" v-model="data.idInstitucionEducativaSeleccionada" 
+                                class="form-control m-1">
+                                    <option disabled selected value="-1">{{ data.titleLabel }}</option>
+                                    <option v-for="institucionEducativa in instituciones_educativas" v-bind:value="institucionEducativa.idInstitucionEducativa">
+                                        {{ institucionEducativa.nombre }}
+                                    </option>
+                                    <option v-bind:value="0">
+                                        {{ $t('frontend.other') }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                        <div v-if="idPaisSeleccionado" class="col-md-8">
-                            <select id="institucionEducativa" v-model="data.idInstitucionEducativaSeleccionada" 
-                            class="form-control m-1">
-                                <option v-for="institucionEducativa in instituciones_educativas" v-bind:value="institucionEducativa.idInstitucionEducativa">
-                                    {{ institucionEducativa.nombre }}
-                                </option>
-                                <option v-bind:value="0">
-                                    {{ $t('frontend.other') }}
-                                </option>
-                            </select>
+                        <div v-if="idPaisSeleccionado == 0 || data.idInstitucionEducativaSeleccionada == 0" >
+                            <label> {{ $t('frontend.ingrese_institucion_educativa') }} </label>
+                            <input class="form-control" v-model="data.title" />
                         </div>
                     </div>
-                    <div v-if="idPaisSeleccionado == 0 || data.idInstitucionEducativaSeleccionada == 0" >
-                        <label> {{ $t('frontend.ingrese_institucion_educativa') }} </label>
-                        <input class="form-control" v-model="data.title" />
-                    </div>
-                </div>
-                    <label>{{ data.subTitleLabel }}</label>
-                    <input class="form-control" v-model="data.subTitle" />
                 </div>
             </div>
             <div class="card-text">
@@ -108,14 +110,12 @@ export default {
                 title: this.title,
                 titleLabel: this.titleLabel,
                 idInstitucionEducativaSeleccionada: this.idInstitucionEducativa,
-                subTitle: this.subTitle,
-                subTitleLabel: this.subTitleLabel,
                 text: this.text,
                 textLabel: this.textLabel,
 
             },
             instituciones_educativas: [],
-            idPaisSeleccionado: null,
+            idPaisSeleccionado: -1,
         }
         return data;
     },
@@ -136,10 +136,6 @@ export default {
             type: String,
             default: ""
         },
-        subTitle: {
-            type: String,
-            default: ""
-        },
         text: {
             type: String,
             default: ""
@@ -149,10 +145,6 @@ export default {
             default: ""
         },
         titleLabel: {
-            type: String,
-            default: ""
-        },
-        subTitleLabel: {
             type: String,
             default: ""
         },

@@ -45,7 +45,6 @@
 			return {
 				url: "",
 				fields: [
-					{ title: 'Título', name: 'titulo', sortField: 'titulo', },
 					{ title: 'Institución',  name: 'institucion_educativa', sortField: 'institucion_educativa', },
 					{ title: 'Disciplina', name: 'disciplina_academica', sortField: 'disciplina_academica', },
 					{ title: 'Descripción', name: 'descripcion_educacion', sortField: 'descripcion_educacion',  },
