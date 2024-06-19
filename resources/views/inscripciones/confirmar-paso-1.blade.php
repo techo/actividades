@@ -33,9 +33,20 @@
                     </p>
                     <p>
                         <h5>{{ __('frontend.coordinator') }}</h5>
-                        @foreach($actividad->coordinadores as $coordinador)
-                                {{ $coordinador->persona->nombres }} {{ $coordinador->persona->apellidoPaterno }} 
-                        @endforeach
+                        <ul style="list-style-type:none;">
+                            @foreach($actividad->coordinadores as $coordinador)
+                                <li>
+                                @if ($coordinador->persona->photo)
+                                    <img class="imagen-perfil-mini" src="{{ '/'.$coordinador->persona->photo }}" alt="Foto">
+                                @else
+                                    <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
+                                @endif
+                                    <span>
+                                        {{$coordinador->persona->nombres}} {{$coordinador->persona->apellidoPaterno }}
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
                     </p>
                     
                 </div>
