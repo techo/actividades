@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
                     <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
@@ -220,6 +221,58 @@
             </div>
         </div>
 
+        <!-- Ubicacion -->
+        <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('backend.location') }}</h3>
+                <input class="bg-primary" type="checkbox" v-model="showLocation" :disabled="!edicion"> 
+                    {{ $t('backend.show_location') }}
+                </input>
+            </div>
+            <div class="box-body">
+
+                <span class="help-block" v-show="virtual==true">{{ $t('backend.meeting_location') }}</span>
+                <span class="help-block" v-show="virtual==false">{{ $t('backend.activity_location_description') }}</span>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
+                            <label for="lugar">{{ $t('backend.location_medium') }} </label>
+                            <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
+                            :disabled="!edicion" >
+                            <span class="help-block">{{ errors.lugar }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" v-show="virtual==false">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
+                            <label for="provincia">{{ $t('backend.province') }}</label>
+                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
+                                <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idProvincia }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4" v-show="virtual==false">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
+                            <label for="localidad">{{ $t('backend.location') }}</label>
+                            <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
+                                <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idLocalidad }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+           <!--  <div class="box-footer">
+                <span class="help-block text-light-blue"><i class="fa  fa-exclamation"></i> El sistema carga automáticamente un punto de encuentro que coincide con la ubicación de la actividad. En caso de ser necesario, se puede editar o borrar y cargar otros puntos de encuentro según la lógica de la actividad.</span>
+            </div> -->
+        </div>
+
+        <!-- confirmacion y pago -->
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.confirmation') }}</h3>
@@ -340,6 +393,7 @@
             </div>
         </div>
 
+        <!-- ficha medica -->
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.medical_form') }}</h3>
@@ -372,6 +426,7 @@
             </div>
         </div>
 
+        <!-- Voluntario y datos pedidos -->
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.volunteer') }}</h3>
@@ -440,6 +495,7 @@
             </div>
         </div>
 
+        <!-- terminos y condiciones -->
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.terms_and_conditions') }}</h3>
@@ -483,60 +539,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="box">
-            <div class="box-header with-border bg-primary">
-                <h3 class="box-title bg-primary">{{ $t('backend.location') }}</h3>
-                <input class="bg-primary" type="checkbox" v-model="showLocation" :disabled="!edicion"> 
-                    {{ $t('backend.show_location') }}
-                </input>
-            </div>
-            <div class="box-body">
-
-                <span class="help-block" v-show="virtual==true">{{ $t('backend.meeting_location') }}</span>
-                <span class="help-block" v-show="virtual==false">{{ $t('backend.activity_location_description') }}</span>
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
-                            <label for="lugar">{{ $t('backend.location_medium') }} </label>
-                            <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
-                            :disabled="!edicion" >
-                            <span class="help-block">{{ errors.lugar }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" v-show="virtual==false">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
-                            <label for="provincia">{{ $t('backend.province') }}</label>
-                            <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
-                                <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
-                            </select>
-                            <span class="help-block">{{ errors.idProvincia }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4" v-show="virtual==false">
-                        <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
-                            <label for="localidad">{{ $t('backend.location') }}</label>
-                            <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
-                                <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
-                            </select>
-                            <span class="help-block">{{ errors.idLocalidad }}</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-           <!--  <div class="box-footer">
-                <span class="help-block text-light-blue"><i class="fa  fa-exclamation"></i> El sistema carga automáticamente un punto de encuentro que coincide con la ubicación de la actividad. En caso de ser necesario, se puede editar o borrar y cargar otros puntos de encuentro según la lógica de la actividad.</span>
-            </div> -->
-        </div>
-
-        
-
-
 
         <div class="box" v-show="edicion == false">
             <div class="box-header with-border">
