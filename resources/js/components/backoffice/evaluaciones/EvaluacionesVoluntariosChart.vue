@@ -2,15 +2,15 @@
     <div>
         <div class="row">
             <div class="col-md-12">
-                <h4>Evaluaciones registradas</h4>
+                <h4>{{ $t('backend.download_excel') }}Evaluaciones registradas</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group btn-group-justified" role="group" aria-label="gráfico de puntajes">
-                    <a role="button" v-bind:class="getClass(btnPuntajeSocialClicked)" @click.prevent="verChartSocial">Puntaje Social</a>
-                    <a role="button" v-bind:class="getClass(btnPuntajeTecnicoClicked)" @click.prevent="verChartTecnico">Puntaje Técnico</a>
-                    <a role="button" v-bind:class="getClass(btnPuntajeGeneroClicked)" @click.prevent="verChartGenero">Puntaje Género</a>
+                    <a role="button" v-bind:class="getClass(btnPuntajeSocialClicked)" @click.prevent="verChartSocial">{{ $t('backend.score') }} {{ $t('backend.social1') }}</a>
+                    <a role="button" v-bind:class="getClass(btnPuntajeTecnicoClicked)" @click.prevent="verChartTecnico">{{ $t('backend.score') }} {{ $t('backend.technical1') }}</a>
+                    <a role="button" v-bind:class="getClass(btnPuntajeGeneroClicked)" @click.prevent="verChartGenero">{{ $t('backend.score') }} {{ $t('backend.gender') }}</a>
                 </div>
             </div>
         </div>

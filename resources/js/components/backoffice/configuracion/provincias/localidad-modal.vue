@@ -6,7 +6,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Nueva Segunda División</h4>
+                    <h4 class="modal-title">{{ $t('backend.new_second_division') }}</h4>
                 </div>
                 <div class="modal-body">
 
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
-                                <label for="nombre">Nombre</label>
+                                <label for="nombre">{{ $t('backend.name') }}</label>
                                 <input v-model="form.nombre" name="nombre" id="nombre"  type="text" class="form-control" required>
                                 <span v-if="errors.nombre" v-text="errors.nombre[0]" class="help-block"></span>
                             </div>
@@ -26,10 +26,10 @@
                 </div>
 
             <div class="modal-footer">
-                <button ref="cancelar" class="btn" @click="cancelar()">Cancelar</button>
+                <button ref="cancelar" class="btn" @click="cancelar()">{{ $t('backend.cancel') }}</button>
                 <button ref="eliminar" v-show="editando" class="btn btn-danger"
-                    @click.prevent="confirmar()">Eliminar</button>
-                <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">Guardar</button>
+                    @click.prevent="confirmar()">{{ $t('backend.eliminate') }}</button>
+                <button ref="guardar" class="btn btn-primary" @click.prevent="guardar()">{{ $t('backend.save') }}</button>
             </div>
 
         </div>

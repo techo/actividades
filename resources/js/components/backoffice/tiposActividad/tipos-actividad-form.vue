@@ -6,7 +6,7 @@
         <simplert ref="loading"></simplert>
 
         <div v-show="tieneErrores" class="callout callout-danger">
-            <h4>Errores:</h4>
+            <h4>{{ $t('backend.errors') }}:</h4>
             <ul>
                 <li v-for="error in validationErrors">{{ error[0] }}</li>
             </ul>
@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
+                                    <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre"
                                            type="text"
                                            class="form-control"
@@ -31,7 +31,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pais">Categoría</label>
+                                    <label for="pais">{{ $t('backend.category') }}</label>
                                     <v-select
                                             :options="dataCategorias"
                                             label="traduccion"
@@ -49,12 +49,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pais">Imagen</label>
+                                    <label for="pais">{{ $t('backend.image') }}</label>
                                     <div>
                                         <img v-if="tipoActividad.imagen != null" :src="tipoActividad.imagen" alt="imagen actividad">          
                                     </div>
                                     <button v-if="!readonly" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                                    <p v-if="(tipoActividad.imagen == null || updateArchivo)" class="help-block ml-2">La imagen debe ser de exactamente 380 x 248.</p>
+                                    <p v-if="(tipoActividad.imagen == null || updateArchivo)" class="help-block ml-2">{{ $t('backend.image_dimensions_exact') }} 380 x 248.</p>
                                     <input v-if="(tipoActividad.imagen == null || updateArchivo)" type="file" class="form-control" @change="guardar_archivo" ref="imagen">
                                 </div>
                             </div>

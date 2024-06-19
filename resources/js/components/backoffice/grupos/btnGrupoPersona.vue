@@ -3,18 +3,18 @@
         <p class="alert alert-danger" v-if="mensajeError !== ''">{{ mensajeError }}</p>
         <simplert ref="loading"></simplert>
         <div class="btn-group" v-show="edit">
-            <a class="btn btn-primary btn-sm" @click="verFormGrupo">Grupo</a>
-            <a class="btn btn-primary btn-sm" @click="verFormInscripto">Voluntario</a>
+            <a class="btn btn-primary btn-sm" @click="verFormGrupo">{{ $t('backend.group') }}</a>
+            <a class="btn btn-primary btn-sm" @click="verFormInscripto">{{ $t('backend.volunteer') }}</a>
             
         </div>
         <div  v-if="formGrupo" class="panel panel-info">
-            <div class="panel-heading">Agregar Nuevo Grupo</div>
+            <div class="panel-heading">{{ $t('backend.add_new') }}</div>
             <div class="panel-body">
                 <form>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group" :class="{'has-error': nombreGrupoError}">
-                                <label for="nombre">Nombre </label>
+                                <label for="nombre">{{ $t('backend.name') }} </label>
                                 <input
                                         type="text"
                                         class="form-control"
@@ -23,7 +23,7 @@
                                         v-model="nombreGrupo"
 
                                 >
-                                <p class="red" v-show="nombreGrupoError">Este campo es requerido</p>
+                                <p class="red" v-show="nombreGrupoError">{{ $t('backend.this_field_is_required') }}</p>
                             </div>
                         </div>
                         <div class="col-md-6" style="padding-top: 1.5em">
@@ -32,21 +32,21 @@
                                     class="btn btn-default pull-right  btnSeparador"
                                     @click="cancelar"
                             >
-                                <i class="fa fa-ban"></i> Cancelar
+                                <i class="fa fa-ban"></i> {{ $t('backend.cancel') }}
                             </button>
                             <button
                                     type="button"
                                     class="btn btn-primary pull-right btnSeparador"
                                     @click="guardarGrupo"
                             >
-                                <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                                <i class="fa fa-plus"></i> {{ $t('backend.include_and_add_new') }}
                             </button>
                             <button
                                     type="button"
                                     class="btn btn-primary pull-right btnSeparador"
                                     @click="guardarGrupoCerrar"
                             >
-                                <i class="fa fa-check"></i> Incluir y Cerrar
+                                <i class="fa fa-check"></i> {{ $t('backend.include_and_close') }}
                             </button>
                         </div>
                     </div>
@@ -54,12 +54,12 @@
             </div>
         </div>
         <div v-if="formInscripto" class="panel panel-info">
-            <div class="panel-heading">Agregar Voluntario Inscripto</div>
+            <div class="panel-heading">{{ $t('backend.add') }} {{ $t('backend.registered_volunteer') }}</div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group" :class="{'has-error': inscriptoNombreError }">
-                            <label for="nombre">Nombre </label>
+                            <label for="nombre">{{ $t('backend.name') }} </label>
                             <v-select
                                     :options="listadoInscriptos"
                                     label="nombre"
@@ -72,41 +72,41 @@
                             >
                             <span slot="no-options"></span>
                             </v-select>
-                            <p class="red" v-show="inscriptoNombreError">Este campo es requerido</p>
+                            <p class="red" v-show="inscriptoNombreError">{{ $t('backend.this_field_is_required') }}</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="rol">Rol </label>
+                            <label for="rol">{{ $t('backend.role') }} </label>
                             <input type="text" class="form-control" v-model="rol" id="rol">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 ">
                             <button type="button" class="btn btn-default pull-right  btnSeparador" @click="cancelar">
-                                <i class="fa fa-ban"></i> Cancelar
+                                <i class="fa fa-ban"></i> {{ $t('backend.cancel') }}
                             </button>
                             <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarInscripto">
-                                <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                                <i class="fa fa-plus"></i> {{ $t('backend.include_and_add_new') }}
                             </button>
                             <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarInscriptoCerrar">
-                                <i class="fa fa-check"></i> Incluir y Cerrar
+                                <i class="fa fa-check"></i> {{ $t('backend.include_and_close') }}
                             </button>
                         </div>
                     </div>
                 </div>
                 <p class="text-danger" v-if="yaInscripto">
-                    <i>Esta persona ya pertenece al equipo: {{ this.yaInscriptoGrupo }}.</i>
+                    <i>{{ $t('backend.already_belongs_to_team') }}: {{ this.yaInscriptoGrupo }}.</i>
                 </p>
             </div>
         </div>
         <div v-if="formNoInscripto" class="panel panel-info">
-            <div class="panel-heading">Agregar Voluntario No Inscripto</div>
+            <div class="panel-heading">{{ $t('backend.add') }} {{ $t('backend.unregistered_volunteer') }}</div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-error': noInscriptoNombreError}">
-                            <label for="nombre">Nombre </label>
+                            <label for="nombre">{{ $t('backend.name') }} </label>
                             <v-select
                                     :options="listadoNoInscriptos"
                                     label="nombre"
@@ -119,40 +119,40 @@
                             >
                             <span slot="no-options"></span>
                             </v-select>
-                            <p class="red" v-show="noInscriptoNombreError">Este campo es requerido</p>
+                            <p class="red" v-show="noInscriptoNombreError">{{ $t('backend.this_field_is_required') }}</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="rol">Rol </label>
+                            <label for="rol">{{ $t('backend.role') }} </label>
                             <input type="text" class="form-control" v-model="rol" id="rol">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group" :class="{'has-error': noInscriptoPuntoError}">
-                            <label for="puntoEncuentro">Punto de Encuentro </label>
+                            <label for="puntoEncuentro">{{ $t('backend.meeting_point') }} </label>
                             <select class="form-control" v-model="idPuntoSeleccionado" id="puntoEncuentro">
                                 <option v-for="punto in puntosEncuentro" :value="punto.id">{{ punto.punto }}, {{ punto.localidad}}</option>
                             </select>
-                            <p class="red" v-show="noInscriptoPuntoError">Este campo es requerido</p>
+                            <p class="red" v-show="noInscriptoPuntoError">{{ $t('backend.this_field_is_required') }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 ">
                         <button type="button" class="btn btn-default pull-right btnSeparador" @click="cancelar">
-                            <i class="fa fa-ban"></i> Cancelar
+                            <i class="fa fa-ban"></i> {{ $t('backend.cancel') }}
                         </button>
                         <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarNoInscripto">
-                            <i class="fa fa-plus"></i> Incluir y Agregar Nuevo
+                            <i class="fa fa-plus"></i> {{ $t('backend.include_and_add_new') }}
                         </button>
                         <button type="button" class="btn btn-primary pull-right btnSeparador" @click="guardarNoInscriptoCerrar">
-                            <i class="fa fa-check"></i> Incluir y Cerrar
+                            <i class="fa fa-check"></i> {{ $t('backend.include_and_close') }}
                         </button>
                     </div>
                 </div>
                 <p class="text-danger" v-if="yaInscripto">
-                    <i>Esta persona ya pertenece a otro equipo.</i>
+                    <i>{{ $t('backend.already_belongs_to_other_team') }}.</i>
                 </p>
             </div>
         </div>

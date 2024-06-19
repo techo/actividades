@@ -5,14 +5,14 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Desinscribir</h4>
+                    <h4 class="modal-title">{{ $t('backend.unsubscribe') }}</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Se van a eliminar las inscripciones seleccionadas de esta actividad ¿está SEGURO?</p>
+                    <p>{{ $t('backend.selected_registrations_will_be_deleted_from_this_activity_are_you_sure') }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" @click="this.confirmar">Desinscribir</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{{ $t('backend.cancel') }}</button>
+                    <button type="button" class="btn btn-danger" @click="this.confirmar">{{ $t('backend.unsubscribe') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

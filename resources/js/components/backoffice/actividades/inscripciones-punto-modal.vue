@@ -5,11 +5,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Asignar Punto de Encuentro</h4>
+                    <h4 class="modal-title">{{ $t('backend.assign') }} {{ $t('backend.meeting_point') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <h4>Se enviará un email a los inscriptos notificandolos por este cambio</h4>
+                        <h4>{{ $t('backend.email_will_be_sent_to_subscribers_notifying_them_of_this_change') }}</h4>
                         <div class="row">
                             <div class="col-md-12"  v-for="(punto, index) in puntos">
                                 <div class="radio">
@@ -24,8 +24,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" @click="this.confirmar">Confirmar</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">{{ $t('backend.close') }}</button>
+                    <button type="button" class="btn btn-primary" @click="this.confirmar">{{ $t('backend.confirm') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

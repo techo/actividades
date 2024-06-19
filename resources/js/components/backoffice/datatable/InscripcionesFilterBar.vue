@@ -14,8 +14,8 @@
                                 :placeholder="dataPlaceholderText"
                                 style="width: 18em"
                         >
-                        <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
-                        <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
+                        <button class="btn btn-primary" @click.prevent="doFilter">{{ $t('backend.search') }}</button>
+                        <button class="btn btn-default" @click.prevent="resetFilter">{{ $t('backend.delete') }}</button>
                     </div>
                 </form>
             </div>
@@ -24,13 +24,13 @@
             <inscripciones-inscribir-modal :idActividad="idActividad" ></inscripciones-inscribir-modal>
             <div class="col-md-6" style="text-align: right">
                 <button class="btn btn-primary" @click.prevent="mostrarModalInscribir">
-                    <i class="fa fa-plus"></i> inscribir
+                    <i class="fa fa-plus"></i> {{ $t('backend.register') }}
                 </button>
                 <button class="btn btn-default" @click.prevent="mostrarModalImportar">
-                    <i class="glyphicon glyphicon-upload"></i> Importar desde Excel
+                    <i class="glyphicon glyphicon-upload"></i> {{ $t('backend.import_from_excel') }}
                 </button>
                 <button class="btn btn-default" @click.prevent="exportar">
-                    <i class="glyphicon glyphicon-save-file"></i> Exportar a Excel
+                    <i class="glyphicon glyphicon-save-file"></i> {{ $t('backend.export_to_excel') }}
                 </button>
             </div>
         </div>

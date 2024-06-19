@@ -4,10 +4,10 @@
         <div class="box">
             <div class="box-header">
                 <p class="help-block">
-                    Los puntos de encuentro son lugares físicos en donde se pueden encontrar los voluntarios antes de ir a la actividad.
+                    {{ $t('backend.meeting_points_description') }}
                 </p>
                 <p class="help-block">
-                    Para que una actividad se muestre en el sitio <b>tiene que tener uno (o más) puntos de encuentro activos.</b>
+                    {{ $t('backend.activity_to_show_on_site') }} <b>{{ $t('backend.must_have_active_meeting_points') }}</b>
                 </p>
             </div>
 
@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <span class="pull-right">
-                            <button class="btn btn-primary" @click.prevent="desplegarModal()">Crear <i class="fa fa-plus"></i></button>
+                            <button class="btn btn-primary" @click.prevent="desplegarModal()">{{ $t('backend.create') }} <i class="fa fa-plus"></i></button>
                         </span>
                     </div>
                 </div>

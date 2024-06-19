@@ -8,16 +8,16 @@
 
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
-					<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true; display.evaluaciones = false;">Actividades</a></li>
-					<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;display.evaluaciones = false;">Inscriptos</a></li>
-					<li :class="{'active': display.evaluaciones}"><a href="#evaluaciones" data-toggle="tab" @click.prevent="display.inscriptos = false; display.evaluaciones = true; display.actividades = false;">Evaluaciones</a></li>
+					<li :class="{'active': display.actividades}"><a href="#actividades" data-toggle="tab" @click.prevent="display.inscriptos = false; display.actividades = true; display.evaluaciones = false;">{{ $t('backend.activities') }}</a></li>
+					<li :class="{'active': display.inscriptos}"><a href="#inscriptos" data-toggle="tab" @click.prevent="display.inscriptos = true; display.actividades = false;display.evaluaciones = false;">{{ $t('backend.enrolled') }}</a></li>
+					<li :class="{'active': display.evaluaciones}"><a href="#evaluaciones" data-toggle="tab" @click.prevent="display.inscriptos = false; display.evaluaciones = true; display.actividades = false;">{{ $t('backend.evaluations') }}</a></li>
 				</ul>
 			</div>
 
 			<div class="tab-content" style="min-height: 500px">
 				<div id="inscriptos" class="tab-pane" :class="{'active': display.inscriptos}" >
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarInscriptos()" >Descargar Inscriptos <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarInscriptos()" >{{ $t('backend.download') }} {{ $t('backend.enrolled') }} <i class="fa fa-download"></i></button>
 					</div>
 
 					<div style="height: 200px" >
@@ -26,7 +26,7 @@
 				</div>
 				<div id="actividades" class="tab-pane" :class="{'active': display.actividades}">
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarActividades()" >Descargar Actividades <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarActividades()" >{{ $t('backend.download') }} {{ $t('backend.activities') }} <i class="fa fa-download"></i></button>
 					</div>
 					<div style="height: 200px" >
 						<line-chart ref="graficoactividades" v-if="loaded.actividades" :chartData="dataActividades" :options="options"></line-chart>
@@ -34,8 +34,8 @@
 				</div>
 				<div id="evaluaciones" class="tab-pane" :class="{'active': display.evaluaciones}" >
 					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarEvaluaciones()" >Descargar Evaluaciones <i class="fa fa-download"></i></button>
-						<button class="btn btn-default" @click="exportarEvaluadores()" >Descargar Evaluadores <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarEvaluaciones()" >{{ $t('backend.download') }} {{ $t('backend.evaluations') }} <i class="fa fa-download"></i></button>
+						<button class="btn btn-default" @click="exportarEvaluadores()" >{{ $t('backend.download') }} {{ $t('backend.evaluators') }} <i class="fa fa-download"></i></button>
 					</div>
 
 					<div style="height: 200px" >

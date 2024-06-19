@@ -7,10 +7,10 @@
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs">
 					<li :class="{'active': tabs.inscripciones}" >
-						<a href="#inscripciones" data-toggle="tab" @click.prevent="tab('inscripciones')">Inscripciones</a>
+						<a href="#inscripciones" data-toggle="tab" @click.prevent="tab('inscripciones')">{{ $t('backend.registrations') }}</a>
 					</li>
 					<li :class="{'active': tabs.evaluaciones} " >
-						<a href="#evaluaciones" data-toggle="tab" @click.prevent="tab('evaluaciones')">Evaluaciones</a>
+						<a href="#evaluaciones" data-toggle="tab" @click.prevent="tab('evaluaciones')">{{ $t('backend.evaluations') }}</a>
 					</li>
 				</ul>
 			</div>

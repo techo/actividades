@@ -1,11 +1,11 @@
 <template>
     <div class="box">
         <div class="box-header with-border">
-            <h2 class="box-title"><strong>Evaluaciones entre inscriptos</strong></h2>
+            <h2 class="box-title"><strong>{{ $t('backend.evaluations_between_enrolled') }}</strong></h2>
             <span class="pull-right">
                 <a  class="btn btn-primary" :href="urlExportar">
                     <i class="fa fa-download"></i>
-                    Descargar Excel
+                    {{ $t('backend.download_excel') }}
                 </a>
             </span>
         </div>

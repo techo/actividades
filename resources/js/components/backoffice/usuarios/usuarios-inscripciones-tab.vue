@@ -8,7 +8,7 @@
 					</span>
 					<div class="info-box-content text-center">
 						<span class="info-box-number"><h3>{{ inscripciones }}</h3></span>
-						<span class="info-box-text">Inscripciones</span>
+						<span class="info-box-text">{{ $t('backend.registrations') }}</span>
 					</div>
 				</div>
 			</div>
@@ -20,7 +20,7 @@
 					</span>
 					<div class="info-box-content text-center">
 						<span class="info-box-number"><h3>{{ presentes }}</h3></span>
-						<span class="info-box-text">Presentes</span>
+						<span class="info-box-text">{{ $t('backend.present') }}</span>
 					</div>
 				</div>
 			</div>
@@ -32,7 +32,7 @@
 					</span>
 					<div class="info-box-content text-center">
 						<span class="info-box-number"><h3>{{ ausentes }}</h3></span>
-						<span class="info-box-text">Ausentes</span>
+						<span class="info-box-text">{{ $t('backend.absent') }}</span>
 					</div>
 				</div>
 			</div>
@@ -40,12 +40,12 @@
 		<div class="box" >
 			<div class="box-header" >
 				<h2 class="box-title">
-					<strong>Inscripciones de la persona</strong>
+					<strong>{{ $t('backend.person_registrations') }}</strong>
 				</h2>
 				<span class="pull-right">
 				<a :href="urlDescarga" class="btn btn-primary">
 					<i class="fa fa-download" ></i>
-					Descargar
+					{{ $t('backend.download') }}
 				</a>
 			</span>
 			</div>

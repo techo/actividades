@@ -7,21 +7,21 @@
                     class="btn btn-sm btn-default"
                     :class="{'disabled': disabled}"
                     @click="mostrarRolModal">
-                Asignar Rol
+                    {{ $t('backend.assign') }} {{ $t('backend.role') }}
             </button>
             <button
                     type="button"
                     class="btn btn-sm btn-default"
                     :class="{'disabled': disabled}"
                     @click="mostrarGrupoModal">
-                Asignar Grupo
+                    {{ $t('backend.assign') }} {{ $t('backend.group') }}
             </button>
             <button
                     type="button"
                     class="btn btn-sm btn-default"
                     :class="{'disabled': disabled}"
                     @click="mostrarEliminarModal">
-                Borrar
+                {{ $t('backend.delete') }}
             </button>
             <rol-modal></rol-modal>
             <grupo-modal></grupo-modal>

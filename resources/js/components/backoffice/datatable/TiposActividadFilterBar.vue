@@ -11,8 +11,8 @@
                         :placeholder="dataPlaceholderText"
                         style="width: 20em"
                 >
-                <button class="btn btn-primary" @click.prevent="doFilter">Buscar</button>
-                <button class="btn btn-default" @click.prevent="resetFilter">Borrar</button>
+                <button class="btn btn-primary" @click.prevent="doFilter">{{ $t('backend.search') }}</button>
+                <button class="btn btn-default" @click.prevent="resetFilter">{{ $t('backend.delete') }}</button>
             </div>
         </form>
     </span>

@@ -7,13 +7,13 @@
                     @click="verFormulario=true"
                     v-show="!readonly && !verFormulario"
             >
-                <i class="fa fa-map-marker"></i>  Agregar Punto de Encuentro
+                <i class="fa fa-map-marker"></i>  {{ $t('backend.add_meeting_point') }}
             </button>
         </div>
         <div class="row" v-show="!readonly && verFormulario">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="punto">Punto de Encuentro</label>
+                    <label for="punto">{{ $t('backend.meeting_point') }}</label>
                     <input
                             type="text"
                             id="punto"
@@ -21,19 +21,19 @@
                             required
                             v-model="punto"
                     >
-                    <p class="text-danger" v-show="errorPunto"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorPunto"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="horario">Horario</label> <br>
+                    <label for="horario">{{ $t('backend.schedule') }}</label> <br>
                     <vue-timepicker v-model="objHora" id="horario"></vue-timepicker>
-                    <p class="text-danger" v-show="errorHorario"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorHorario"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="coordinador">Responsable del punto de encuentro</label>
+                    <label for="coordinador">{{ $t('backend.meeting_point_responsible') }}</label>
                     <v-select
                             :options="dataCoordinadores"
                             label="nombre"
@@ -47,7 +47,7 @@
                     >
                     <span slot="no-options"></span>
                     </v-select>
-                    <p class="text-danger" v-show="errorCoordinador"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorCoordinador"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="provincia">Provincia</label>
+                    <label for="provincia">{{ $t('backend.province') }}</label>
                     <v-select
                             :options="dataProvincias"
                             label="provincia"
@@ -72,12 +72,12 @@
                     >
                     <span slot="no-options"></span>
                     </v-select>
-                    <p class="text-danger" v-show="errorProvincia"><small>Este campo es requerido</small></p>
+                    <p class="text-danger" v-show="errorProvincia"><small>{{ $t('backend.this_field_is_required') }}</small></p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="localidad">Localidad (opcional)</label>
+                    <label for="localidad">{{ $t('backend.location') }} ({{ $t('backend.optional') }})</label>
                     <v-select
                             :options="dataLocalidades"
                             label="localidad"
@@ -100,7 +100,7 @@
                             class="btn btn-default pull-right"
                             @click="cancelar"
                     >
-                        <i class="fa fa-ban"></i>  Cancelar
+                        <i class="fa fa-ban"></i>  {{ $t('backend.cancel') }}
                     </button>
                     <button
                             ref="botonIncluirEditar"
@@ -108,19 +108,19 @@
                             class="btn btn-primary pull-right"
                             @click="incluirPunto"
                     >
-                        <i class="fa fa-plus"></i>  Incluir
+                        <i class="fa fa-plus"></i>  {{ $t('backend.include') }}
                     </button>
                 </div>
             </div>
         </div>
         <table class="table table-striped table-hover table-condensed" v-if="puntosEncuentro.length > 0">
             <thead class="thead-light">
-                <th scope="col">Punto</th>
-                <th scope="col">Lugar</th>
-                <th scope="col">Horario</th>
-                <th scope="col">Responsable</th>
-                <th scope="col">Estado</th>
-                <th scope="col"><span v-show="!readonly">Acciones</span></th>
+                <th scope="col">{{ $t('backend.point') }}</th>
+                <th scope="col">{{ $t('backend.place') }}</th>
+                <th scope="col">{{ $t('backend.schedule') }}</th>
+                <th scope="col">{{ $t('backend.responsible') }}</th>
+                <th scope="col">{{ $t('backend.state') }}</th>
+                <th scope="col"><span v-show="!readonly">{{ $t('backend.actions') }}</span></th>
             </thead>
             <tbody>
                 <tr v-for="punto in dataPuntos" :key="punto.idPuntoEncuentro">
@@ -164,7 +164,7 @@
             </tbody>
         </table>
 
-        <p v-else class="text-muted text-center">No hay puntos de encuentro en esta actividad</p>
+        <p v-else class="text-muted text-center">{{ $t('backend.no_meeting_points_in_activity') }}</p>
     </div>
 </template>
 <script>

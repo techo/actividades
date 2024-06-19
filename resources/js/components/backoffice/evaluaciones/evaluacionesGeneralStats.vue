@@ -7,7 +7,7 @@
 
                     <div class="info-box-content text-center">
                         <span class="info-box-number"><h3>{{ this.inscriptos }}</h3></span>
-                        <span class="info-box-text">Inscriptos</span>
+                        <span class="info-box-text">{{ $t('backend.enrolled') }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -18,7 +18,7 @@
 
                     <div class="info-box-content text-center">
                         <span class="info-box-number"><h3>{{ this.presentes }}</h3></span>
-                        <span class="info-box-text">Presentes</span>
+                        <span class="info-box-text">{{ $t('backend.present') }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>
@@ -29,7 +29,7 @@
 
                     <div class="info-box-content text-center">
                         <span class="info-box-number"><h3>{{ this.ausentes }}</h3></span>
-                        <span class="info-box-text">Ausentes</span>
+                        <span class="info-box-text">{{ $t('backend.absent') }}</span>
                     </div>
                     <!-- /.info-box-content -->
                 </div>

@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-12">
           <span class="pull-right">
-              <button class="btn btn-primary" @click.prevent="desplegarModal()">Crear <i class="fa fa-plus"></i></button>
+              <button class="btn btn-primary" @click.prevent="desplegarModal()">{{ $t('backend.create') }} <i class="fa fa-plus"></i></button>
           </span>
       </div>
     </div>

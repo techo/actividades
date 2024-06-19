@@ -5,13 +5,13 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Borrar Persona / Grupo</h4>
+                    <h4 class="modal-title">{{ $t('backend.delete') }} {{ $t('backend.person') }} / {{ $t('backend.group') }}</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                Las personas integrantes del grupo van a ser re-asignadas al grupo raíz
+                                {{ $t('backend.members_to_be_reassigned') }}
                             </p>
                         </div>
                     </div>
@@ -22,14 +22,14 @@
                             class="btn btn-default pull-left"
                             data-dismiss="modal"
                     >
-                        Cerrar
+                    {{ $t('backend.close') }}
                     </button>
                     <button
                             type="button"
                             class="btn btn-danger"
                             @click.prevent="confirmar"
                     >
-                        Confirmar
+                    {{ $t('backend.confirm') }}
                     </button>
                 </div>
             </div>

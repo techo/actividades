@@ -2,7 +2,7 @@
     <span>
         <button class="btn btn-sm btn-default" @click="this.actualizar">
             <i class="fa fa-spinner fa-spin" v-show="loadingIcon"></i>
-            Actualizar
+            {{ $t('backend.update') }}
         </button>
 
         <i class="fa fa-check text-success" v-show="successIcon"></i>
