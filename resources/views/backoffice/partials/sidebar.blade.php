@@ -141,6 +141,9 @@
                     <li class="{{request()->is('admin/configuracion/home-header') ? 'active' : ''}}">
                         <a href="/admin/configuracion/home-header">{{ __('backend.header') }}</a>
                     </li>
+                    <li class="{{request()->is('admin/configuracion/institucionEducativa') ? 'active' : ''}}">
+                        <a href="/admin/configuracion/institucionEducativa">{{ __('frontend.institucion_educativa') }}</a>
+                    </li>
                 </ul>
             </li>
             @endif

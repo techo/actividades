@@ -201,7 +201,7 @@ return [
 	// perfil / educacion
 	'estudios' => 'Grau de Estudo',
 	'review_estudios' => 'Completa o revisa tus estudios',
-	'institucion_educativa' => 'Instituição de Ensino *',
+	'institucion_educativa' => 'Instituição de Ensino',
 	'titulo_educacion' => 'Curso *',
 	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descrição *',

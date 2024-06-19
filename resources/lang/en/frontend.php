@@ -194,7 +194,7 @@ return [
 	// perfil / educacion
 	'educacion' => 'Education',
 	'review_estudios' => 'Complete your education',
-	'institucion_educativa' => 'Educational Institute *',
+	'institucion_educativa' => 'Educational Institute',
 	'titulo_educacion' => 'Title *',
 	'disciplina_academica' => 'Accademy disipline *',
 	'descripcion_educacion' => 'Description *',
