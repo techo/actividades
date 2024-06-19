@@ -29,7 +29,7 @@
                 </h5>
                 <div v-else>
                     <div>
-                    <label>{{ data.titleLabel }}</label>
+                    <label>{{ data.titleLabel }} *</label>
                     <div class="row">
                         <div class="col-md-4">
                             <select id="pais" v-model="idPaisSeleccionado" class="form-control m-1">
