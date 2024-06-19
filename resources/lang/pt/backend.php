@@ -73,7 +73,7 @@ return [
     'show_dates' => 'Mostrar Datas na Inscrição', 
     'show_location' => 'Mostrar localização na Inscrição',
     'terms_and_conditions' => 'Termos e Condições', 
-    'estudios_description' => 'Requere/Pede estudos do usuário',
+    'estudios_description' => 'Ative esta opção para coletar informações sobre os campos de estudo dos voluntários.',
     'activity_status' => 'Estado da Atividade',
     'activity_visibility' => 'Visibilidade da Atividade',
     'activity_start_date' => 'Data de Início da atividade convocada',

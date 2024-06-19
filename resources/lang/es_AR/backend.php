@@ -73,7 +73,7 @@ return [
     'show_dates' => 'Muestra Fechas al inscribir',
     'show_location' => 'Muestra ubicación al inscribir',
     'terms_and_conditions' => 'Terminos y Condiciones',
-    'estudios_description' => 'Requiere/Pide estudios del usuario',
+    'estudios_description' => 'Habilita esta opción para recolectar información sobre los campos de estudio de los voluntarios.',
     'audit' => 'Auditoría',
     'last_modified' => 'Última modificación',
     'view_audit' => 'Ver auditoría',

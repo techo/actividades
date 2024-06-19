@@ -486,9 +486,9 @@
                                 <option value="1" :selected="actividad.requiere_estudios == 1" >{{ $t('backend.yes') }}</option>
                                 <option value="0" :selected="actividad.requiere_estudios == 0" >{{ $t('backend.no') }}</option>
                             </select>
-                            <p class="help-block">
+                            <!-- <p class="help-block">
                                 {{ $t('backend.blank_channel_field_message') }}
-                            </p>
+                            </p> -->
                         </div>
                     </div>
                 </div>
