@@ -259,6 +259,29 @@
             dummyInput: '',
           }
         },
+        
+        watch: {
+            rolAplicado: function(newVal, oldVal) {
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            tipoInscriptoAplicado: function(newVal, oldVal) {
+                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            estudiosAplicado: function(newVal, oldVal) {
+                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            mostrarFichaMedica: function(newVal, oldVal) {
+                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado){
+                    this.checkSubmit();
+                }
+            }
+        },
         mounted: function() {
           var self = this;
           window.addEventListener('loggedIn', (event) => {
@@ -306,6 +329,26 @@
                 this.mostrarLogin();
                 }
                 return true;
+            },
+            checkSubmit: function() {
+                if(this.actividad.puntosEncuentro.length == 1){
+                    const formData = new FormData();
+                    formData.append('roles_aplicados', this.convertToJSON());
+                    formData.append('aplica_rol', this.aplicaRol);
+                    formData.append('inscripciones_aplicadas', this.convertToJSONInscripciones());
+                
+                    formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+
+                    axios.post('/inscripciones/actividad/' + this.actividad.idActividad + '/confirmar', formData).then(response => {
+                        this.validateForm();
+                        document.getElementById('app').innerHTML = response.data; // Suponiendo que 'app' es el ID de tu contenedor principal en el que se muestra la vista
+                
+                    }).catch((error) => {
+                    });
+                }
+                
+                        
             },
             mostrarLogin: function () {
                 $('#btnShowModal').trigger('click')
