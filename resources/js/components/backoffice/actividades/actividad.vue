@@ -123,7 +123,7 @@
                             </span>
                         </div>
                         <div class="text-center">
-                            <input type="checkbox" v-model="showDates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
+                            <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
                         </div>
                     </div>
 
@@ -225,7 +225,7 @@
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.location') }}</h3>
-                <input class="bg-primary" type="checkbox" v-model="showLocation" :disabled="!edicion"> 
+                <input class="bg-primary" type="checkbox" v-model="actividad.show_location" :disabled="!edicion"> 
                     {{ $t('backend.show_location') }}
                 </input>
             </div>
@@ -627,8 +627,6 @@
                 estadoInscripcion: false,
                 estadoEvaluaciones: false,
                 estadoPago: false,
-                showDates: true,
-                showLocation: true,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -661,6 +659,9 @@
 
                     descripcionPago: null,
                     linkPago: null,
+
+                    show_dates: true,
+                    show_location: true,
 
                     tipo : {
                         idCategoria: 1

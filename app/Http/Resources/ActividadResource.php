@@ -55,6 +55,8 @@ class ActividadResource extends Resource
             'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
             'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
+            'show_dates' =>  $this->show_dates,
+            'show_location' =>  $this->show_location,
         ];
     }
 
