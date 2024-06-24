@@ -69,6 +69,8 @@ return [
 	'online_events' => 'Virtual',
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
+	'campaign' => 'Campainha',
+	'campaign_description' => 'Campainha',
 
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',

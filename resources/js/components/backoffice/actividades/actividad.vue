@@ -106,7 +106,7 @@
 
                 <div class="row border ">
                     <div class="col-md-4">
-                        <div class="text-center">
+                        <div class="text-left">
                             <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
                         </div>
                         <label for="fechaInicio">{{ $t('backend.activity_start_date') }}</label>

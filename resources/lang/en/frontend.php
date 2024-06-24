@@ -65,6 +65,8 @@ return [
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Online',
 	'online_events_description' => 'Online Events',
+	'campaign' => 'Campaing',
+	'campaign_description' => 'Campaing',
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
 	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
