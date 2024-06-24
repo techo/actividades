@@ -205,13 +205,15 @@
                         <h5>{{ actividad.nombreActividad }}</h5>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-4"><i class="far fa-calendar"></i>
+                
+                <div v-if="actividad.show_dates || actividad.show_location"  class="row">
+                    <hr>
+                    <div v-if="actividad.show_dates" class="col-md-4"><i class="far fa-calendar"></i>
                         <span>{{ actividad.fecha}}</span></div>
-                    <div class="col-md-4"><i class="far fa-clock"></i>
+                    <div v-if="actividad.show_dates" class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ actividad.hora }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
+                    <div v-if="actividad.show_location"  class="col-md-4">
+                        <i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
                     </div>
                 </div>
                 <hr>

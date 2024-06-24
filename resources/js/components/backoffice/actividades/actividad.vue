@@ -106,6 +106,9 @@
 
                 <div class="row border ">
                     <div class="col-md-4">
+                        <div class="text-center">
+                            <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
+                        </div>
                         <label for="fechaInicio">{{ $t('backend.activity_start_date') }}</label>
                         <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
                             <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
@@ -121,9 +124,6 @@
                             <span class="input-group-addon">
                                 <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
                             </span>
-                        </div>
-                        <div class="text-center">
-                            <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
                         </div>
                     </div>
 
