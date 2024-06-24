@@ -409,7 +409,7 @@
                                 <option value="0" :selected="actividad.requiere_ficha_medica == 0" >{{ $t('backend.no') }}</option>
                             </select>
 
-                            <p class="help-block">{{ $t('backend.medical_form_upload_instruction') }}</p>
+                            <p v-show="actividad.requiere_ficha_medica == 1" class="help-block">{{ $t('backend.medical_form_upload_instruction') }}</p>
                         </div>
                     </div>
                     <div v-show="actividad.requiere_ficha_medica == 1" class="col-md-10">
