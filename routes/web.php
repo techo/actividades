@@ -359,6 +359,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
 
     Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones')->middleware('role:admin');;
+    Route::get('/ajax/estadisticas/inscripciones/personas/exportar', 'backoffice\ReportController@exportarPersonasInscriptas')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales')->middleware('role:admin');;
 

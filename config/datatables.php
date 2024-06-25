@@ -221,14 +221,9 @@ return [
                 'title' => 'Grupo'
             ],
             [
-                'name' => 'nombreRol',
-                'sortField' => 'nombreRol',
-                'title' => 'Rol'
-            ],
-            [
-                'name' => '__component:roles_asignados',
-                'sortField' => 'roles_aplicados',
-                'title' => 'Roles Aplicado'
+                'name' => 'oficina',
+                'sortField' => 'oficina',
+                'title' => 'Oficina'
             ],
             [
                 'name' => '__component:inscripciones_aplicadas',

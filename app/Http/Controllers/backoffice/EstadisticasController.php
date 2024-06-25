@@ -199,18 +199,25 @@ class EstadisticasController extends Controller
         $per_page = 25;
         if($request->filled('per_page')) { $per_page = $request->per_page; }
 
-        $año = ($request->filled('año'))?$request->año:Carbon::now()->format('Y');
-        $pais = ($request->filled('pais'))?$request->pais:null;
+        $fecha_desde = ($request->filled('fecha_desde'))?$request->fecha_desde:Carbon::now()->startOfYear()->format('Y-m-d');
+        $fecha_hasta = ($request->filled('fecha_hasta'))?$request->fecha_hasta:Carbon::now()->format('Y-m-d');
+
+        $edad_desde = ($request->filled('edad_desde')) ? $request->edad_desde : 0;
+        $edad_hasta = ($request->filled('edad_hasta')) ? $request->edad_hasta : null;
+
         $oficina = ($request->filled('oficina'))?$request->oficina:null;
 
         $consulta = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
             ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
-            ->whereYear('Persona.created_at', $año) 
+            ->where('Actividad.idPais', auth()->user()->idPaisPermitido)
             ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
             ->orderByRaw($sort);
 
-        if($pais) $consulta->where('Actividad.idPais', $pais);
+        if($fecha_desde && $fecha_hasta)
+            $consulta->whereBetween('Inscripcion.created_at', [$fecha_desde, $fecha_hasta]);
+        if($edad_hasta)
+            $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ".$edad_desde." AND ". $edad_hasta);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
         
         $estadisticas = $consulta->paginate($per_page);

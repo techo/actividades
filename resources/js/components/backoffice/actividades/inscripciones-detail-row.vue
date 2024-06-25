@@ -19,6 +19,12 @@
                 <br>
                 <label>{{ $t('backend.age') }}: </label>
                 <span>{{ edad }}</span>
+                <br>
+                <label>{{ $t('backend.role') }}: </label>
+                <span>{{ rowData.nombreRol }}</span>
+                <br>
+                <label>{{ $t('backend.applicable_roles') }}: </label>
+                <span>{{ rowData.roles_aplicados }}</span>
                 
                
             </div>

@@ -14,6 +14,7 @@ use App\Exports\InscripcionesUsuarioExport;
 use App\Exports\InscripcionesExport;
 use App\Exports\InscripcionesGeneralExport;
 use App\Exports\MisActividadesExport;
+use App\Exports\PersonasInscriptasExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -67,6 +68,12 @@ class ReportController extends Controller
     {
         $inscripciones = new InscripcionesGeneralExport($request);
         return Excel::download($inscripciones, 'inscripciones.xlsx');
+    }
+
+    public function exportarPersonasInscriptas(Request $request)
+    {
+        $inscripciones = new PersonasInscriptasExport($request);
+        return Excel::download($inscripciones, 'personas inscriptas.xlsx');
     }
 
     public function exportarEvaluacionesGenerales(Request $request)
