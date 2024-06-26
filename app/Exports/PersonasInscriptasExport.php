@@ -47,8 +47,11 @@ class PersonasInscriptasExport implements FromCollection, WithHeadings, WithColu
                     'Persona.mail',
                     'Persona.telefonoMovil',
                     'Persona.fechaNacimiento',
+                    'oficina.nombre as oficina',
                 ]
             )
+            ->leftJoin('atl_provincias', 'Persona.idProvincia', '=', 'atl_provincias.id')
+            ->leftJoin('atl_oficinas as oficina', 'atl_provincias.idOficina', '=', 'oficina.id')
             ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']);
 
         if($fecha_desde && $fecha_hasta)
@@ -71,7 +74,7 @@ class PersonasInscriptasExport implements FromCollection, WithHeadings, WithColu
             'teléfono',
             'email',
             'fecha de nacimiento',
-            'fecha de nacimiento',
+            'oficina',
             'género',
             'inscripciones totales',
             'presentes totales',
@@ -102,8 +105,8 @@ class PersonasInscriptasExport implements FromCollection, WithHeadings, WithColu
             $query->apellidoPaterno,
             $query->telefonoMovil,
             $query->mail,
-            $query->fechaNacimiento,
             Date::dateTimeToExcel(Carbon::parse($query->fechaNacimiento)),
+            $query->oficina,
             $genero,
             $query->inscripciones,
             $query->presentes,

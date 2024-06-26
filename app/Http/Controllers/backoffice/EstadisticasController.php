@@ -209,7 +209,9 @@ class EstadisticasController extends Controller
 
         $consulta = \App\Persona::join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')
-            ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
+            ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
+            ->leftJoin('atl_oficinas as oficina', 'personaProvincia.idOficina', '=', 'oficina.id')
+            ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes, oficina.nombre as oficina'))
             ->where('Actividad.idPais', auth()->user()->idPaisPermitido)
             ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
             ->orderByRaw($sort);

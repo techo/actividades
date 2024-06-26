@@ -45,12 +45,12 @@
 							:fields="[
 								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
 				            	{'name': 'apellidoPaterno', 'sortField': 'apellidoPaterno', 'title': 'Apellido'},
+				            	{'name': 'oficina', 'sortField': 'oficina', 'title': 'Oficina'},
 				            	{'name': 'inscripciones', 'sortField': 'inscripciones', 'title': 'Inscripciones Totales'},
 				            	{'name': 'presentes', 'sortField': 'presentes', 'title': 'Presentes Totales'},
 				            ]"
 				            :sortOrder="[{field: 'inscripciones', direction: 'desc'}]"
 				            :moreParams="filtros"
-				            detailUrl="/admin/usuarios/"
 				        ></tabla-paginada>
 					</div>
 				</div>

@@ -19,6 +19,7 @@ class InscripcionesSearch
     {
         foreach ($filters as $filterName => $value) {
             $decorator = static::createFilterDecorator($filterName);
+
             if (static::isValidDecorator($decorator)) {
                 //hack para condicion Tipo de Actividad y Cantidad de actividades
                 if(in_array($decorator, array('App\Search\filters\inscripciones\IdActividad', 'App\Search\filters\inscripciones\CantidadActividades'))) {
