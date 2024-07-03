@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Estadísticas - Coordinadores')
+@section('page_title', __('backend.statistics') . ' - ' . __('backend.coordinators'))
 
 @section('content')
 

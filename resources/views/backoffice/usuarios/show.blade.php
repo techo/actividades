@@ -15,22 +15,22 @@
 <div class="nav-tabs-custom">
         <ul class="nav nav-tabs" style="border-bottom: 3px solid #d2d6de; padding-bottom: 2px;">
             <li class="active">
-                <a href="#general" data-toggle="tab" aria-expanded="true">General</a>
+                <a href="#general" data-toggle="tab" aria-expanded="true">{{ __('backend.general') }}</a>
             </li>
             <li>
-                <a href="#inscripciones" data-toggle="tab" aria-expanded="true">Inscripciones</a>
+                <a href="#inscripciones" data-toggle="tab" aria-expanded="true">{{ __('backend.registrations') }}</a>
             </li>
             <li>
-                <a href="#ficha" data-toggle="tab" aria-expanded="true">Ficha Medica</a>
+                <a href="#ficha" data-toggle="tab" aria-expanded="true">{{ __('backend.medical_form') }}</a>
             </li>
             @role('admin')
             <li>
-                <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">Evaluaciones</a>
+                <a href="#evaluaciones" data-toggle="tab" aria-expanded="true">{{ __('backend.evaluations') }}</a>
             </li>
             @endrole
 
             <li>
-                <a href="#estudios" data-toggle="tab" aria-expanded="true">Estudios</a>
+                <a href="#estudios" data-toggle="tab" aria-expanded="true">{{ __('backend.studies') }}</a>
             </li>
         </ul>
         <div class="tab-content" style="background-color: #ECF0F1;">

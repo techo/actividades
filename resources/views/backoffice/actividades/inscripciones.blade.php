@@ -13,7 +13,7 @@
             <div class="box box-primary collapsed-box">
 
                 <div class="box-header with-border">
-                    <h3 class="box-title">Búsqueda avanzada</h3>
+                    <h3 class="box-title">{{  __('backend.advanced_search') }}</h3>
                     <div class="box-tools pull-right">
                         <!-- Collapse Button -->
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">

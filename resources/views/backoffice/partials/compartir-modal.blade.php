@@ -7,14 +7,14 @@
                             type="button"
                             class="close"
                             data-dismiss="modal"
-                            aria-label="Cerrar"
+                            aria-label="{{__('backend.close')}}"
                             style="opacity: 1; margin-top: -1em; text-shadow: none; color: #fff">
-                        <span aria-hidden="true" class="cerrar">Cerrar &times;</span>
+                        <span aria-hidden="true" class="cerrar">{{__('backend.close')}} &times;</span>
                     </button>
                 </div>
                 <div class="row">
                     <div class="col-md-12"  style="padding: 1em 2em">
-                        <h4>COMPARTIR</h4>
+                        <h4>{{__('backend.share_mayus')}}</h4>
                         @php
                             $medias = Share::load($url, $title)->services('facebook','twitter','email');
                         @endphp
@@ -39,14 +39,14 @@
                         <a class="btn btn-lg" href="{{ $medias['email'] }}" target="_blank">
                             <i class="fa fa-envelope fa-2x" style="color:black"></i>
                             <br>
-                            <h3>Correo</h3>
+                            <h3>{{__('backend.email')}}</h3>
                         </a>
                     </div>
                     <div class="col-md-3 text-center">
                         <a class="btn btn-lg" data-toggle="tooltip" title="Link copiado" data-placement="top" onclick="mostrarTooltip()" href="#" id="copiar_url" data-clipboard-text="{{ $url }}">
                             <i class="fa fa-clipboard fa-2x" style="color:black"></i>
                             <br>
-                            <h3>Copiar link</h3>
+                            <h3>{{__('backend.copy_link')}}</h3>
                         </a>
                     </div>
                 </div>

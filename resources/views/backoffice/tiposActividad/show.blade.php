@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Tipo de Actividad: ' . $tipoActividad->nombre)
+@section('page_title', __('backend.activity_type') . ': ' . $tipoActividad->nombre)
 
 
 @section('content')

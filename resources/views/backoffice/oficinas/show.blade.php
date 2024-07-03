@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Oficina: ' . $oficina->nombre)
+@section('page_title', __('backend.office') . ': ' . $oficina->nombre)
 
 
 @section('content')

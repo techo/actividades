@@ -4,9 +4,9 @@
     <!-- Logo -->
     <a href="{{ URL::to('/') }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><img src="{{ asset('/img/logo_small.png') }}" alt="Techo" width="40"></span>
+        <span class="logo-mini"><img src="{{ asset('/img/logo_small.png') }}" alt="{{__('backend.ong')}}" width="40"></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ asset('/img/logo_large.png') }}" alt="Techo" width="140"></span>
+        <span class="logo-lg"><img src="{{ asset('/img/logo_large.png') }}" alt="{{__('backend.ong')}}" width="140"></span>
     </a>
 
     <!-- Header Navbar -->
@@ -51,7 +51,7 @@
                         <!-- <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="user-image" alt="User Image">
                          -->
                         @if (Auth::user()->photo)
-                                <img class="user-image imagen-perfil-mini" src="{{ '/'.Auth::user()->photo }}" alt="Foto">
+                                <img class="user-image imagen-perfil-mini" src="{{ '/'.Auth::user()->photo }}" alt="{{__('backend.photo')}}">
                             @else
                                 <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
                             @endif
@@ -63,7 +63,7 @@
                         <li class="user-header">
                             
                             @if (Auth::user()->photo)
-                                <img class="img-circle" src="{{ '/'.Auth::user()->photo }}" alt="Foto">
+                                <img class="img-circle" src="{{ '/'.Auth::user()->photo }}" alt="{{__('backend.photo')}}">
                             @else
                                 <img src="{{ asset('/bower_components/admin-lte/dist/img/user_avatar.png') }}" class="img-circle" alt="User Image"> 
                             @endif
@@ -92,12 +92,12 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="/perfil" class="btn btn-default btn-flat">Perfil</a>
+                                <a href="/perfil" class="btn btn-default btn-flat">{{__('backend.profile')}}</a>
                             </div>
                             <div class="pull-right">
                                 <form action="/logout" method="post">
                                     {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-default btn-flat">Salir</button>
+                                    <button type="submit" class="btn btn-default btn-flat">{{__('backend.logout')}}</button>
                                 </form>
                             </div>
                         </li>

@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Primera División')
+@section('page_title', __('backend.create_first_division'))
 
 
 @section('content')

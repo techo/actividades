@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - Grupos')
+@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.groups'))
 
 @section('content')
 <div class="nav-tabs-custom">
@@ -14,7 +14,7 @@
             <div class="box box-primary">
 
                 <div class="box-header with-border">
-                    <h3 class="box-title">Incluir en este Grupo</h3>
+                    <h3 class="box-title">{{ __('backend.include_in_this_group') }}</h3>
                 </div>
 
                 <div class="box-body">
@@ -36,7 +36,7 @@
                                     api-url={{ '/admin/ajax/grupos/'. $miembros['idRaiz'] .'/miembros' }}
                                     fields="{{ $fieldsMiembros }}"
                                     sort-order = "{{ $sortOrderMiembros }}"
-                                    placeholder-text="Buscar por Nombre o Rol"
+                                    placeholder-text="{{ __('backend.search_by_name_or_role') }}"
                                     id-grupo-raiz = "{{ $miembros['idRaiz'] }}"
                                     id-actividad = "{{ $actividad->idActividad }}"
                                     ref="miembrosTabla"

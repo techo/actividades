@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Asignación de Rol')
+@section('page_title', __('backend.role_assignment'))
 
 @section('content')
     <asignacion-de-rol

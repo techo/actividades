@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - Coordinadores')
+@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.evaluations'))
 
 @section('content')
 <div class="nav-tabs-custom">

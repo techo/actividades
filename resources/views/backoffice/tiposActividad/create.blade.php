@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Tipo de Actividad')
+@section('page_title', __('backend.create_activity_type'))
 
 
 @section('content')

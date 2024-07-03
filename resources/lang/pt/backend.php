@@ -10,6 +10,8 @@ return [
 	|
 	*/
 
+    'ong' => 'Teto',
+
     // Usuarios
     'identifications' => 'RG / Passaporte',
     'name' => 'Nome',
@@ -233,6 +235,24 @@ return [
     'merge_with_another_account' => 'Fundir com outra conta',
     'source_account_for_data' => 'Conta de onde se desejam tomar os dados',
     'person_registrations' => 'Inscrições da pessoa',
+    'include_in_this_group' => 'Incluir neste Grupo',
+    'advanced_search' => 'Pesquisa avançada',
+    'add_second_division' => 'Adicionar Segunda Divisão',
+    'create_first_division' => 'Criar Primeira Divisão',
+    'first_geo_division' => 'Primeira Divisão Geográfica',
+    'search_by_name_or_role' => 'Buscar por Nome ou Função',
+    'search_by_name' => 'Pesquisar por nome',
+    'argentina' => 'Argentina',
+    'copy_link' => 'Copiar link',
+    'about' => 'Sobre',
+    'volunteer_management_system' => 'Sistema de Gestão de Voluntários',
+    'photo' => 'Foto',
+    'logout' => 'Sair',
+    'divisions' => 'Divisões',
+    'role_assignment' => 'Atribuição de Função',
+    'create_activity_type' => 'Criar Tipo de Atividade',
+    'activity_type' => 'Tipo de Atividade',
+    'medical_form' => 'Ficha Médica',
 
 
     // Usuarios/Columnas
@@ -261,6 +281,7 @@ return [
     'view' => 'Ver',
     'sent' => 'Enviado',
     'share' => 'Compartilhar',
+    'share_mayus' => 'COMPARTILHAR',
     'clone_activity' => 'Clonar Atividade',
     'export_to_excel' => 'Exportar para Excel',
     'filter' => 'Filtrar',

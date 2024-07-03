@@ -6,7 +6,7 @@
 
     <span class="pull-right">
         <a href="/admin/configuracion/tipos-actividad/registrar" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Crear Tipo de Actividad
+            <i class="fa fa-plus"></i> {{ __('backend.create_activity_type') }}
         </a>
     </span>
 @endsection

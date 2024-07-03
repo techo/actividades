@@ -1,12 +1,12 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Oficinas')
+@section('page_title', __('backend.offices'))
 
 @section('add-new')
 
     <span class="pull-right">
         <a href="/admin/configuracion/oficinas/registrar" class="btn btn-primary btn-lg">
-            <i class="fa fa-plus"></i> Crear Oficina
+            <i class="fa fa-plus"></i> {{ __('backend.create') }} {{__('backend.office')}}
         </a>
     </span>
 @endsection
@@ -23,7 +23,7 @@
                     api-url="/admin/ajax/configuracion/oficinas"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre"
+                    placeholder-text="{{__('backend.search_by_name')}}"
                     detail-url="/admin/configuracion/oficinas/"
             ></oficinas-datatable>
         </div>

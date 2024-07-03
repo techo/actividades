@@ -10,6 +10,8 @@ return [
 	|
 	*/
 
+    'ong' => 'Techo',
+
     // Usuarios
     'identifications' => 'DNI / Pasaporte',
     'name' => 'Nombre',
@@ -236,6 +238,24 @@ return [
     'merge_with_another_account' => 'Fusionar con otra cuenta',
     'source_account_for_data' => 'Cuenta de donde se quieren tomar los datos',
     'person_registrations' => 'Inscripciones de la persona',
+    'include_in_this_group' => 'Incluir en este Grupo',
+    'advanced_search' => 'Búsqueda avanzada',
+    'add_second_division' => 'Agregar Segunda División',
+    'create_first_division' => 'Crear Primera División',
+    'first_geo_division' => 'Primera División Geográfica',
+    'search_by_name_or_role' => 'Buscar por Nombre o Rol',
+    'search_by_name' => 'Buscar por nombre',
+    'argentina' => 'Argentina',
+    'copy_link' => 'Copiar link',
+    'about' => 'Acerca',
+    'volunteer_management_system' => 'Sistema de Gestión de Voluntarios',
+    'photo' => 'Foto',
+    'logout' => 'Salir',
+    'divisions' => 'Divisiones',
+    'role_assignment' => 'Asignación de Rol',
+    'create_activity_type' => 'Crear Tipo de Actividad',
+    'activity_type' => 'Tipo de Actividad',
+    'medical_form' => 'Ficha Médica',
 
 
     // Usuarios/Columnas
@@ -262,6 +282,7 @@ return [
     'view' => 'Ver',
     'sent' => 'Enviado',
     'share' => 'Compartir',
+    'share_mayus' => 'COMPARTIR',
     'clone_activity' => 'Clonar Actividad',
     'export_to_excel' => 'Exportar a Excel',
     'filter' => 'Filtrar',

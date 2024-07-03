@@ -4,21 +4,21 @@
 			<form>
 				<div class="col-md-2">
 					<select class="form-control">
-						<option>Argentina</option>
+						<option>{{ __('backend.argentina') }}</option>
 					</select>
 				</div>
 				<div class="col-md-2">
 					<select class="form-control">
-						<option>Oficina</option>
+						<option>{{ __('backend.office') }}</option>
 					</select>
 				</div>
 				<div class="col-md-2">
 					<select class="form-control">
-						<option>Año</option>
+						<option>{{ __('backend.year') }}</option>
 					</select>
 				</div>
 				<div class="col-md-2">
-					<button class="form-control btn-primary">Filtrar</button>
+					<button class="form-control btn-primary">{{ __('backend.filter') }}</button>
 				</div>
 			</form>
 		</div>

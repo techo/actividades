@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Oficina')
+@section('page_title', __('backend.create') . ' ' . __('backend.office'))
 
 
 @section('content')

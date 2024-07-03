@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Generales')
+@section('page_title', __('backend.generals'))
 
 @section('content')
 
