@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-3">
-           <!--  <img :src="rowData.img" alt="rowData.tipo" width="120"> -->
+           <img :src="rowData.img" alt="rowData.tipo" width="120">
         </div>
         <div class="col-md-9">
             <div class="small-caps">
@@ -9,9 +9,9 @@
             </div>
             <div><a :href="urlDetalle">{{ rowData.nombreActividad }}</a></div>
 
-            <span class="small-text"><i class="fas fa-calendar-alt"></i> {{ rowData.fecha }}</span>
-            <span class="small-text"><i class="fas fa-clock"></i> {{ rowData.hora }}</span>
-            <span class="small-text"><i class="fas fa-map-marker-alt"></i> {{ rowData.lugar }}</span>
+            <span v-if="rowData.show_dates" class="small-text"><i class="fas fa-calendar-alt"></i> {{ rowData.fecha }}</span>
+            <span v-if="rowData.show_dates" class="small-text"><i class="fas fa-clock"></i> {{ rowData.hora }}</span>
+            <span v-if="rowData.show_location" class="small-text"><i class="fas fa-map-marker-alt"></i> {{ rowData.lugar }}</span>
             <button
                 v-if="actividadPasada && periodoDeEvaluacionYaComenzo && inscripcionPresente"
                 class="btn btn-sm btn-info"

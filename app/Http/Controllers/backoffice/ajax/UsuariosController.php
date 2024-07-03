@@ -156,7 +156,7 @@ class UsuariosController extends Controller
     public function estudios($persona, Request $request)
     {
         //orden de la consulta
-        $sort = 'estudios.titulo desc';
+        $sort = 'estudios.disciplina_academica desc';
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
                 $sort = join(" ",explode("|", $request->sort));

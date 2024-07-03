@@ -40,7 +40,7 @@ return [
 	'welcome_techo' => 'BIENVENIDX A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
 	'use_mail_login' => 'Login con mail',
-
+	'use_regular_browser' => 'Para seguir, abre este enlace en tu navegador favorito (Chrome, Safari, etc.). Así garantizamos que todo funcione súper bien.',
 
 	//loginController
 	'login_error' => 'El correo electrónico y/o la contraseña es incorrecta',
@@ -55,15 +55,17 @@ return [
 	'title' => 'Transformemos esta realidad',
 	'which_type_of_activity' => '¿En qué actividad querés participar?',
 	'activities_types' => 'Tipos de Actividad',
-	'to_act' => 'Actividades en Asentamientos',
+	'to_act' => 'Asentamientos',
 	'to_act_description' => 'Acompañanos y trabajemos junto a cientos de vecinos y voluntarios que luchan día a día para transformar la realidad de cientos de barrios de todo el país. No hace falta conocimientos previos, solo tu voluntad y ganas de participar.',
-	'to_reflect_and_learn' => 'Actividades de Oficina y Formación',
+	'to_reflect_and_learn' => 'Oficina y Formación',
 	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
 	'especial_events' => 'Eventos Especiales',
 	'especial_events_description' => 'Porque a veces nos disfrazamos, o corremos, o corremos disfrazados, o participamos de otros eventos que no encajan bien en ningún lado. Eventos que son tan especiales que tuvimos que hacer una sección especialmente para ellos.',
 	'online_events' => 'Virtual',
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
+	'campaign' => 'Campaña',
+	'campaign_description' => 'Campaña',
 
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
@@ -198,11 +200,13 @@ return [
 	// perfil / educacion
 	'estudios' => 'Educación',
 	'review_estudios' => 'Completa o revisa tus estudios',
-	'institucion_educativa' => 'Institución educativa *',
+	'institucion_educativa' => 'Institución educativa',
 	'titulo_educacion' => 'Título *',
 	'disciplina_academica' => 'Disciplina académica *',
-	'descripcion_educacion' => 'Descripción *',
+	'descripcion_educacion' => 'Descripción',
 	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
+	'other' => 'Otro',
+	'ingrese_institucion_educativa' => 'Ingrese Nombre Manualmente',
 
 
 	// perfil/ equipos

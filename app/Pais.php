@@ -34,5 +34,10 @@ class Pais extends Model
     {
         return $this->hasMany(Oficina::class);
     }
+
+    public function institucionEducativa()
+    {
+        return $this->hasMany(InstitucionEducativa::class, 'idPais', 'id');
+    }
     
 }

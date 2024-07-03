@@ -14,8 +14,6 @@ class CrearActividad extends FormRequest
      */
     public function authorize()
     {
-
-        Log::info(request());
         return request()->input('idPais') == auth()->user()->idPaisPermitido;
     }
 
@@ -72,6 +70,9 @@ class CrearActividad extends FormRequest
 
             'acuerdo_especifico_url' => 'sometimes|nullable|url',
             'acuerdo_menores_url' => 'sometimes|nullable|url',
+
+            'show_dates' => 'required',
+            'show_location' => 'required',
         ];
     }
 }

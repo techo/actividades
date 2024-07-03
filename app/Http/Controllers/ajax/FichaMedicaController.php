@@ -5,15 +5,11 @@ namespace App\Http\Controllers\ajax;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use App\FichaMedica;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FichaMedicaController extends Controller
 {
-  
-
   public function upsert(Request $request) {
       $url = $request->session()->get('login_callback','');
 

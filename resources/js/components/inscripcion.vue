@@ -86,7 +86,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="rolAplicado=true" >
+                                @click="validateForm();rolAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -129,7 +129,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="tipoInscriptoAplicado=true" >
+                                @click="validateForm();tipoInscriptoAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -167,7 +167,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="estudiosRevisados()" >
+                                @click="validateForm();estudiosRevisados();" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -187,7 +187,7 @@
             <hr>
             <div class="row">
                 <div class="col-md-12 px-4">
-                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="mostrarFichaMedica = false"/>
+                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="validateForm();mostrarFichaMedica = false;"/>
                 </div>
             </div> 
         </div>
@@ -205,13 +205,15 @@
                         <h5>{{ actividad.nombreActividad }}</h5>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-4"><i class="far fa-calendar"></i>
+                
+                <div v-if="actividad.show_dates || actividad.show_location"  class="row">
+                    <hr>
+                    <div v-if="actividad.show_dates" class="col-md-4"><i class="far fa-calendar"></i>
                         <span>{{ actividad.fecha}}</span></div>
-                    <div class="col-md-4"><i class="far fa-clock"></i>
+                    <div v-if="actividad.show_dates" class="col-md-4"><i class="far fa-clock"></i>
                         <span>{{ actividad.hora }}</span></div>
-                    <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
+                    <div v-if="actividad.show_location"  class="col-md-4">
+                        <i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
                     </div>
                 </div>
                 <hr>
@@ -258,6 +260,29 @@
             imagen: '',
             dummyInput: '',
           }
+        },
+        
+        watch: {
+            rolAplicado: function(newVal, oldVal) {
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            tipoInscriptoAplicado: function(newVal, oldVal) {
+                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            estudiosAplicado: function(newVal, oldVal) {
+                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica){
+                    this.checkSubmit();
+                }
+            },
+            mostrarFichaMedica: function(newVal, oldVal) {
+                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado){
+                    this.checkSubmit();
+                }
+            }
         },
         mounted: function() {
           var self = this;
@@ -306,6 +331,26 @@
                 this.mostrarLogin();
                 }
                 return true;
+            },
+            checkSubmit: function() {
+                if(this.actividad.puntosEncuentro.length == 1){
+                    const formData = new FormData();
+                    formData.append('roles_aplicados', this.convertToJSON());
+                    formData.append('aplica_rol', this.aplicaRol);
+                    formData.append('inscripciones_aplicadas', this.convertToJSONInscripciones());
+                
+                    formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+
+                    axios.post('/inscripciones/actividad/' + this.actividad.idActividad + '/confirmar', formData).then(response => {
+                        this.validateForm();
+                        document.getElementById('app').innerHTML = response.data; // Suponiendo que 'app' es el ID de tu contenedor principal en el que se muestra la vista
+                
+                    }).catch((error) => {
+                    });
+                }
+                
+                        
             },
             mostrarLogin: function () {
                 $('#btnShowModal').trigger('click')

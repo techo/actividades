@@ -31,27 +31,36 @@ Route::prefix('ajax')->group(function () {
     Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
     Route::get('personas', 'ajax\UsuarioController@getPersonas');
 
+
     Route::prefix('paises')->group(function () {
         Route::get('/', 'ajax\PaisesController@index');
 		Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
 		Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
         Route::get('/habilitados', 'ajax\PaisesController@paisesHabilitados');
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
+        Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
+    Route::middleware(['requiere.auth'])->group(function () {
+        Route::prefix('institucionEducativa')->group(function() {
+            Route::get('', 'ajax\InstitucionEducativaController@index');
+            Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
+            Route::get('pais/{idPais}', 'ajax\InstitucionEducativaController@porPais');
+        });
+        
+        Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+        Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
-    Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
-    Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
+        Route::prefix('estudios')->group(function () {
+            Route::post('', 'ajax\EstudiosController@create');
+            Route::put('', 'ajax\EstudiosController@update');
+            Route::delete('/{id}', 'ajax\EstudiosController@delete');
+        });
 
-    Route::prefix('estudios')->group(function () {
-        Route::post('', 'ajax\EstudiosController@create');
-		Route::put('', 'ajax\EstudiosController@update');
-		Route::delete('/{id}', 'ajax\EstudiosController@delete');
-	});
-
-    Route::prefix('equipos')->group(function () {
-		Route::put('', 'ajax\EquiposController@update');
-		Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
-	});
+        Route::prefix('equipos')->group(function () {
+            Route::put('', 'ajax\EquiposController@update');
+            Route::post('carta_compromiso', 'ajax\EquiposController@updateCartaCompromiso');
+        });
+    });
 
 	Route::prefix('usuario')->group(
 	    function(){
@@ -350,6 +359,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
 
     Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones')->middleware('role:admin');;
+    Route::get('/ajax/estadisticas/inscripciones/personas/exportar', 'backoffice\ReportController@exportarPersonasInscriptas')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales')->middleware('role:admin');;
 
@@ -398,6 +408,18 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::delete('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\LocalidadesController@get');  
         });
+    });
+
+     Route::prefix('configuracion/institucionEducativa')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\InstitucionEducativaController@index');
+        Route::get('/crear', 'backoffice\InstitucionEducativaController@create');
+        Route::post('/registrar', 'backoffice\InstitucionEducativaController@store');
+        Route::get('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@show');
+        Route::put('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@update');
+        Route::delete('/{idInstitucionEducativa}', 'backoffice\InstitucionEducativaController@destroy');
+    });
+    Route::prefix('ajax/configuracion/institucionEducativa')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ajax\InstitucionEducativaController@index');
     });
     
 

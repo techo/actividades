@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Estudios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 
@@ -15,8 +14,8 @@ class EstudiosController extends Controller
     public function create(Request $request) {
         $estudio = $request->validate([
             'institucion_educativa' => 'required',
-            'titulo' => 'nullable',
-            'disciplina_academica' => 'nullable',
+            'idInstitucionEducativa' => 'nullable',
+            'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
             'idPersona' => 'required',
         ]);
@@ -33,8 +32,8 @@ class EstudiosController extends Controller
         $validados = $request->validate([
             'id' => 'required',
             'institucion_educativa' => 'required',
-            'titulo' => 'nullable',
-            'disciplina_academica' => 'nullable',
+            'idInstitucionEducativa' => 'nullable',
+            'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
         ]);
         $idPersona = Auth::user()->idPersona;

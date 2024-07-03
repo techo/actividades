@@ -18,6 +18,7 @@ return [
               ['id' => 'dni', 'campo' => 'DNI/Pasaporte'],
               ['id' => 'email', 'campo' => 'e-mail'],
               ['id' => 'punto' , 'campo' =>  'Punto de Encuentro'],
+              ['id' => 'oficina' , 'campo' =>  'Oficina'],
               ['id' => 'rol' , 'campo' =>  'Rol'],
               ['id' => 'grupo' , 'campo' =>  'Grupo'],
               ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades'],

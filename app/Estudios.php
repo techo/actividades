@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estudios extends Model
 {
-    protected $fillable = ['institucion_educativa', 'titulo', 'disciplina_academica', 'descripcion_educacion',  'idPersona'];
+    protected $fillable = ['institucion_educativa', 'idInstitucionEducativa', 'disciplina_academica', 'descripcion_educacion',  'idPersona'];
 
     protected $table = 'estudios';
     protected $primaryKey = 'idEstudio';
@@ -14,5 +14,9 @@ class Estudios extends Model
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
+    public function institucionEducativa()
+    {
+        return $this->belongsTo(InstitucionEducativa::class, 'idInstitucionEducativa', 'idInstitucionEducativa');
     }
 }

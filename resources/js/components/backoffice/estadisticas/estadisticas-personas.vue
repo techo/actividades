@@ -1,7 +1,7 @@
 <template>
 	<div class="box">
 		<div class="box-header">
-			<estadisticas-filtros :value="filtros" @input="filtros = arguments[0]; filtrar()" ></estadisticas-filtros>
+			<estadisticas-inscriptos-filtros :value="filtros" @input="filtros = arguments[0]; filtrar()" ></estadisticas-inscriptos-filtros>
 		</div>
 		<div class="box-body" >
 			<div class="nav-tabs-custom">
@@ -15,7 +15,7 @@
 						{{ $t('backend.registrations') }}
 						</a>
 					</li>
-					<li :class="{'active': tabs.evaluaciones_sociales} " >
+					<!-- <li :class="{'active': tabs.evaluaciones_sociales} " >
 						<a 
 							href="#evaluaciones-sociales" 
 							data-toggle="tab" 
@@ -32,7 +32,7 @@
 						>
 						{{ $t('backend.evaluations') }} {{ $t('backend.technical') }}
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</div>
 
@@ -45,12 +45,12 @@
 							:fields="[
 								{'name': 'nombres', 'sortField': 'nombres', 'title': 'Nombre'},
 				            	{'name': 'apellidoPaterno', 'sortField': 'apellidoPaterno', 'title': 'Apellido'},
-				            	{'name': 'inscripciones', 'sortField': 'inscripciones', 'title': 'Inscripciones'},
-				            	{'name': 'presentes', 'sortField': 'presentes', 'title': 'Presentes'},
+				            	{'name': 'oficina', 'sortField': 'oficina', 'title': 'Oficina'},
+				            	{'name': 'inscripciones', 'sortField': 'inscripciones', 'title': 'Inscripciones Totales'},
+				            	{'name': 'presentes', 'sortField': 'presentes', 'title': 'Presentes Totales'},
 				            ]"
 				            :sortOrder="[{field: 'inscripciones', direction: 'desc'}]"
 				            :moreParams="filtros"
-				            detailUrl="/admin/usuarios/"
 				        ></tabla-paginada>
 					</div>
 				</div>
@@ -96,11 +96,12 @@
 
 <script>
 import EstadisticasFiltros from './estadisticas-filtros';
+import EstadisticasInscriptosFiltros from './estadisticas-inscriptos-filtros';
 import TablaPaginada from '../../plugins/TablaPaginada';
 
 export default {
 	components: { 
-		'estadisticas-filtros': EstadisticasFiltros, 
+		'estadisticas-inscriptos-filtros': EstadisticasInscriptosFiltros, 
 		'tabla-paginada': TablaPaginada,
 	},
 	data() {
@@ -108,8 +109,8 @@ export default {
 			loading: false,
 			filtros: {},
 			tabs: {
-				inscripciones: false,
-				evaluaciones_sociales: true,
+				inscripciones: true,
+				evaluaciones_sociales: false,
 				evaluaciones_tecnicas: false,
 			},
 		};

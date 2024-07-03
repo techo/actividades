@@ -40,7 +40,7 @@ return [
 	'logout' => 'Sair',
 	'login_null' => 'O e-mail e a senha são obrigatórios',
 	'use_mail_login' => 'Usar E-mail',
-
+	'use_regular_browser' => 'Para continuar, abra este link em seu navegador favorito (Chrome, Safari, etc.). Assim, garantimos que tudo funciona super bem.',
 
 	'welcome_techo' => 'Bem-vindo a TETO',
 
@@ -60,15 +60,17 @@ return [
 	'title' => 'Vamos transformar essa realidade',
 	'which_type_of_activity' => 'Em que atividade deseja participar?',
 	'activities_types' => 'Tipos de Atividades',
-	'to_act' => 'Going to informal settlements',
+	'to_act' => 'Assentamentos',
 	'to_act_description' => 'Junte-se a nós, trabalhando junto com centenas de vizinhos e voluntários que lutam de todas as formas para transformar centenas de comunidades informais em todo o país. Não é necessário conhecimento prévio, apenas vontade de participar.',
-	'to_reflect_and_learn' => 'Para refletir e aprender',
+	'to_reflect_and_learn' => 'Escritório e Treinamento',
 	'to_reflect_and_learn_description' => 'Procure uma de nossas sedes em todo o país, nos conheça e participe de atividades junto com toda nossa equipe. Venha tirar todas suas dúvidas. Te esperamos!',
 	'especial_events' => 'Eventos especiais',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Virtual',
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Me inscrever',
+	'campaign' => 'Campainha',
+	'campaign_description' => 'Campainha',
 
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
@@ -201,12 +203,13 @@ return [
 	// perfil / educacion
 	'estudios' => 'Grau de Estudo',
 	'review_estudios' => 'Completa o revisa tus estudios',
-	'institucion_educativa' => 'Instituição de Ensino *',
+	'institucion_educativa' => 'Instituição de Ensino',
 	'titulo_educacion' => 'Curso *',
 	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descrição *',
 	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
-
+	'other' => 'Outro',
+	'ingrese_institucion_educativa' => 'Insira o Nome Manualmente',
 	// perfil / equipos
 
 	'equipos' => 'Equipas', 

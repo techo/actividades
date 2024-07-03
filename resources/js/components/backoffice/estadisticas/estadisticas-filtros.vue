@@ -1,23 +1,26 @@
 <template>
 	<form>
-		<div class="col-md-2">
-			<select class="form-control" v-model="pais_seleccionado" >
-				 <option :value="null" selected >{{ $t('backend.all1') }}</option>
-				<option v-for="p in paises" :value="p.id">{{ p.nombre }}</option>
-			</select>
+		<div class="row">
+			<div class="col-md-2">
+				<select class="form-control" v-model="pais_seleccionado" >
+					<option :value="null" selected >{{ $t('backend.all1') }}</option>
+					<option v-for="p in paises" :value="p.id">{{ p.nombre }}</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<select class="form-control" v-model="oficina_seleccionada" >
+					<option :value="null" selected >{{ $t('backend.all') }}</option>
+					<option v-for="p in oficinas" :value="p.id">{{ p.nombre }}</option>
+				</select>
+			</div>
+			<div class="col-md-2">
+				<input class="form-control" placeholder="$t('backend.year')" v-model="año_seleccionado" >
+			</div>
+			<div class="col-md-2">
+				<button class="btn btn-primary" @click.prevent="filtrar()">{{ $t('backend.filter') }}</button>
+			</div>
 		</div>
-		<div class="col-md-2">
-			<select class="form-control" v-model="oficina_seleccionada" >
-				<option :value="null" selected >{{ $t('backend.all') }}</option>
-				<option v-for="p in oficinas" :value="p.id">{{ p.nombre }}</option>
-			</select>
-		</div>
-		<div class="col-md-2">
-			<input class="form-control" placeholder="$t('backend.year')" v-model="año_seleccionado" >
-		</div>
-		<div class="col-md-2">
-			<button class="btn btn-primary" @click.prevent="filtrar()">{{ $t('backend.filter') }}</button>
-		</div>
+		
 	</form>
 </template>
 

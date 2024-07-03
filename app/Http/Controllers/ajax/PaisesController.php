@@ -31,6 +31,11 @@ class PaisesController extends Controller
         return Pais::where('habilitado', true)->get();
     }
 
+    public function paisesConInstitucionesEducativas(Request $request)
+    {
+        return Pais::has('institucionEducativa')->orderBy('nombre')->get();
+    }
+
     public function paisesPropios() {
         return Pais::where('id', '=', auth()->user()->idPaisPermitido)->get();
     }

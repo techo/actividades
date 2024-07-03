@@ -39,6 +39,8 @@ return [
 	'welcome_techo' => 'Welcome to TECHO',
 	'use_mail_login' => 'Use Mail Login',
 
+	'use_regular_browser' => 'To continue, open this link in your favorite browser (Chrome, Safari, etc.). This way, we ensure that everything works super well.',
+
 	'logout' => 'Logout',
 	'login_null' => 'The mail and password is required',
 
@@ -55,14 +57,16 @@ return [
 	'title' => "Let's change this reality",
 	'which_type_of_activity' => 'In which activity do you wanna apply?',
 	'activities_types' => 'Types of activities',
-	'to_act' => 'Going to informal settlements',
+	'to_act' => 'informal settlements',
 	'to_act_description' => 'Join us working together with hundreds of neighbours and volunteers that fight every to to transform hundreds of informal settlements all around the country, No previous knowledge required, only willingness to participate.',
-	'to_reflect_and_learn' => 'To reflect and Learn',
+	'to_reflect_and_learn' => 'Office and Training',
 	'to_reflect_and_learn_description' => 'Acercate a nuestras oficinas en todo el país, conocenos y participá de actividades junto a todo el equipo. Vení a sacarte todas las dudas ¡Te esperamos!',
 	'especial_events' => 'Special events',
 	'especial_events_description' => 'Sometimes we just want to have fun or do things that does not fit in any other category. Events so special that we have to create a special section for them.',
 	'online_events' => 'Online',
 	'online_events_description' => 'Online Events',
+	'campaign' => 'Campaing',
+	'campaign_description' => 'Campaing',
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
 	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
@@ -192,11 +196,13 @@ return [
 	// perfil / educacion
 	'educacion' => 'Education',
 	'review_estudios' => 'Complete your education',
-	'institucion_educativa' => 'Educational Institute *',
+	'institucion_educativa' => 'Educational Institute',
 	'titulo_educacion' => 'Title *',
 	'disciplina_academica' => 'Accademy disipline *',
 	'descripcion_educacion' => 'Description *',
 	'complete_education' => 'Add at least one study to continue',
+	'other' => 'Other',
+	'ingrese_institucion_educativa' => 'Enter Name Manually',
 
 	// perfil / equipos
 	'equipos' => 'Teams', 
