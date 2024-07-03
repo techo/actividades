@@ -3,7 +3,7 @@
         <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
-                    <div v-if="estadoInscripcion && (actividad.estadoConstruccion == 'Abierta')" class="alert alert-info" role="alert" >
+                    <div v-if="estadoInscripcion && (actividad.estadoConstruccion == $t('backend.open'))" class="alert alert-info" role="alert" >
                         {{ $t('backend.open_registrations') }}
                     </div>
                     <div v-else class="alert alert-danger" role="alert" >

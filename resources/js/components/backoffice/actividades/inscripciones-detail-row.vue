@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-3 text-center">
 
-              <img v-if="rowData.photo" class="imagen-perfil-redonda" :src="'/'+rowData.photo" alt="Foto">
+              <img v-if="rowData.photo" class="imagen-perfil-redonda" :src="'/'+rowData.photo" alt="$t('backend.photo')">
               <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
             </div>
               

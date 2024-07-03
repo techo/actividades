@@ -261,6 +261,8 @@ return [
     'create_activity_type' => 'Crear Tipo de Actividad',
     'activity_type' => 'Tipo de Actividad',
     'medical_form' => 'Ficha Médica',
+    'unspecified' => 'Sin especificar',
+    'educational_institution' => 'Institución Educativa',
 
 
     // Usuarios/Columnas

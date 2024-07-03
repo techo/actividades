@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Tipos de Actividad')
+@section('page_title', __('backend.activity_type'))
 
 @section('add-new')
 
@@ -23,7 +23,7 @@
                     api-url="/admin/ajax/configuracion/tipos-actividad"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
-                    placeholder-text="Buscar por nombre"
+                    placeholder-text="{{__('backend.search_by_name')}}"
                     detail-url="/admin/configuracion/tipos-actividad/"
             ></tipos-actividad-datatable>
         </div>

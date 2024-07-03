@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $institucionEducativa->nombre . ' - General')
+@section('page_title', $institucionEducativa->nombre . ' - ' . __('backend.general'))
 
 @section('content')
     @if (Session::has('error'))

@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', 'Crear Insitución Educativa')
+@section('page_title', __('backend.create') . ' ' . __('backend.educational_institution'))
 
 
 @section('content')

@@ -258,6 +258,8 @@ return [
     'create_activity_type' => 'Criar Tipo de Atividade',
     'activity_type' => 'Tipo de Atividade',
     'medical_form' => 'Ficha Médica',
+    'unspecified' => 'Não especificado',
+    'educational_institution' => 'Instituição Educacional',
 
 
     // Usuarios/Columnas

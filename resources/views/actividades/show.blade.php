@@ -48,7 +48,7 @@
                         @if (!isset($actividad->localidad) || $actividad->localidad->localidad == "No definida")
                             {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
                         @elseif (!isset($actividad->provincia))
-                            Sin especificar
+                            {{ __('backend.unspecified') }}
                         @else
                             {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
                         @endif

@@ -12,7 +12,7 @@
         <div class="tab-pane active" id="evaluaciones">
             <div class="row vertical-align">
                 <div class="col-md-12">
-                    <h3 class="pull-left">Evaluaciones</h3>
+                    <h3 class="pull-left">{{ __('backend.evaluations') }}</h3>
                     <span class="pull-right">
                         <br>
                         <btn-enviar-evaluaciones :id="{{$actividad->idActividad}}"></btn-enviar-evaluaciones>
