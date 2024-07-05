@@ -7,8 +7,8 @@
                 id="pago"
                 name="pago"
                 type-bold="true"
-                text-enabled="$t('backend.paid')"
-                text-disabled="$t('backend.pending')"
+                :text-enabled="$t('backend.paid')"
+                :text-disabled="$t('backend.pending')"
         >
         </v-switch>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>

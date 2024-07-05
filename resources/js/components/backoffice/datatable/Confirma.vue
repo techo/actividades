@@ -5,8 +5,8 @@
                 theme="bootstrap"
                 color="primary"
                 type-bold="true"
-                text-enabled="$t('backend.confirmed')"
-                text-disabled="$t('backend.unconfirmed')"
+                :text-enabled="$t('backend.confirmed')"
+                :text-disabled="$t('backend.unconfirmed')"
         >
         </v-switch>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
