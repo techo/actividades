@@ -5,10 +5,10 @@
     <p style="font-size: larger">
          @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
-    <p>@lang('email.missing_payment_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-            @lang('email.begins_on')      
+    <p>@lang('email.missing_payment_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>  
 
             @if($inscripcion->actividad->show_dates)
+                @lang('email.begins_on')    
                 <strong> {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} </strong> 
             @endif
 
