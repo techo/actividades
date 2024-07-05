@@ -6,18 +6,21 @@
          @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
     <p>@lang('email.missing_payment_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-            @lang('email.begins_on')  
-            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>              
-            <strong>
-                {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
-            </strong> 
-            @lang('email.begins_at')
-            <strong>
-                @if($inscripcion->actividad->idLocalidad)
-                    {{$inscripcion->actividad->localidad->localidad}}, 
-                @endif
-                {{$inscripcion->actividad->provincia->provincia}}
-            </strong>
+            @lang('email.begins_on')      
+
+            @if($inscripcion->actividad->show_dates)
+                <strong> {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} </strong> 
+            @endif
+
+            @if($inscripcion->actividad->show_location)
+                @lang('email.begins_at')
+                <strong>
+                    @if($inscripcion->actividad->idLocalidad)
+                        {{$inscripcion->actividad->localidad->localidad}}, 
+                    @endif
+                    {{$inscripcion->actividad->provincia->provincia}}
+                </strong>
+            @endif
     </p>
 
         <p>
@@ -26,7 +29,9 @@
             </strong>
         </p>
         <p>
-            @lang('email.missing_payment_3')            @if($inscripcion->actividad->fechaLimitePago)
+            @lang('email.missing_payment_3')            
+            
+            @if($inscripcion->actividad->fechaLimitePago)
                 <b>{{$inscripcion->actividad->fechaLimitePago->format('d/m/Y')}}</b>!
             @else
                 <b>{{$inscripcion->actividad->fechaFinInscripciones->format('d/m/Y')}}</b>!
@@ -69,7 +74,7 @@
         </p>
     @endif
 
-    @if($inscripcion->punto_encuentro)
+    @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
         <p>
           <strong>
               @lang('frontend.meeting_points')

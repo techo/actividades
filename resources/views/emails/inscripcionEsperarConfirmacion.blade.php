@@ -6,16 +6,22 @@
         @lang('frontend.hello') {{$inscripcion->persona->nombres}}
     </p>
     <p>@lang('email.pre_enroll_1') <strong>{{$inscripcion->actividad->nombreActividad}}</strong>
-        @lang('email.begins_on')
-            <strong>{{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}</strong>               <strong>
+        @if($inscripcion->actividad->show_dates)
+            @lang('email.begins_on')
+            <strong>
                 {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}}
-            </strong> @lang('email.begins_at')
+            </strong> 
+        @endif
+        
+        @if($inscripcion->actividad->show_location)
+            @lang('email.begins_at')
             <strong>
                 @if($inscripcion->actividad->idLocalidad)
                     {{$inscripcion->actividad->localidad->localidad}}, 
                 @endif
                 {{$inscripcion->actividad->provincia->provincia}}
             </strong>
+        @endif
     </p>
 
     <p>
@@ -35,7 +41,7 @@
         </p>
     @endif
 
-    @if($inscripcion->punto_encuentro)
+    @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
         <p>
           <strong>
               @lang('frontend.meeting_points'):

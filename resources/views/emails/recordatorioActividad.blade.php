@@ -10,12 +10,20 @@
         @lang('email.activity_reminder_1')
         <strong>{{$inscripcion->actividad->nombreActividad}}</strong> - TECHO
         - {{$inscripcion->actividad->pais->nombre}}
-        @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} @lang('email.begins_at') 
-        {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.           @if($inscripcion->actividad->idLocalidad)
-            {{$inscripcion->actividad->localidad->localidad}}, 
+        @if($inscripcion->actividad->show_dates)
+            @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y H:i')}} 
         @endif
-        {{$inscripcion->actividad->provincia->provincia}}, 
-        {{$inscripcion->actividad->pais->nombre}}.
+
+        @if($inscripcion->actividad->show_location)
+            @lang('email.begins_at') 
+            {{$inscripcion->actividad->localidad->localidad}}, {{$inscripcion->actividad->provincia->provincia}}.           
+            @if($inscripcion->actividad->idLocalidad)
+                {{$inscripcion->actividad->localidad->localidad}}, 
+            @endif
+            {{$inscripcion->actividad->provincia->provincia}}, 
+            {{$inscripcion->actividad->pais->nombre}}.
+        @endif
+
     </p>
 
     @if($inscripcion->actividad->coordinador)
@@ -35,7 +43,7 @@
     <p>
         <strong>@lang('email.greetings')</strong>
     </p>
-    @if($inscripcion->punto_encuentro)
+    @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
         <p>
             <strong>
                 @lang('frontend.meeting_points')

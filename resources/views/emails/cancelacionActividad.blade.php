@@ -6,8 +6,14 @@
     </p>
     <p>
         @lang('email.activity_canceled_1') <strong>{{$actividad->nombreActividad}}</strong> de
-        TECHO - {{$pais->nombre}}  @lang('email.begins_on')
-        {{$actividad->fechaInicio->format('d/m/Y')}}, @lang('email.has_been') <strong>@lang('email.cancelada')</strong>
+        TECHO - {{$pais->nombre}}  
+
+        @if($inscripcion->actividad->show_dates)
+            @lang('email.begins_on')
+            {{$actividad->fechaInicio->format('d/m/Y')}}, 
+        @endif
+        
+        @lang('email.has_been') <strong>@lang('email.cancelada')</strong>
     </p>
     <p>
         @lang('email.activity_canceled_2')

@@ -14,8 +14,13 @@
        
        - {{$inscripcion->actividad->pais->nombre}},
        
-        @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} 
-        @lang('email.begins_at') {{$inscripcion->actividad->provincia->provincia}}.
+        @if($inscripcion->actividad->show_dates)
+            @lang('email.begins_on') {{$inscripcion->actividad->fechaInicio->format('d/m/Y')}} 
+        @endif
+
+        @if($inscripcion->actividad->show_location)
+            @lang('email.begins_at') {{$inscripcion->actividad->provincia->provincia}}.
+        @endif
     </p>
 
     @if($inscripcion->actividad->coordinador)
@@ -35,7 +40,7 @@
     <p>
         <strong>@lang('email.greetings')</strong>
     </p>
-    @if($inscripcion->punto_encuentro)
+    @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
         <p>
             <strong>
                 @lang('frontend.meeting_points')
