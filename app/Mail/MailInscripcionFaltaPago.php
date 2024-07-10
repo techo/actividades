@@ -13,6 +13,7 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
 
     public $inscripcion;
     public $persona;
+    public $actividad;
 
     /**
      * Create a new message instance.
@@ -23,6 +24,7 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
+        $this->actividad = $inscripcion->actividad;
     }
 
     /**

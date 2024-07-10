@@ -51,7 +51,7 @@ return [
 	'missing_payment_1' => 'You are pre enrolled to: ',
 	'missing_payment_2' => 'CONFIRM BY DONATION',
 	'missing_payment_3' => 'You have time untill the ',
-	'missing_payment_4' => 'To confirm now, click on the next link ',
+	'missing_payment_4' => 'To confirm now:',
 	'confirm_by_donation' => 'DONATE NOW',
 	'missing_payment_5' => 'The minimun ammount is ',
 	'missing_payment_6' => 'this donation will be used to pay insurance for you, transportation and food during the activity.',

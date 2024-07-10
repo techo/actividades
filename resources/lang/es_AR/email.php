@@ -57,7 +57,7 @@ return [
 	'missing_payment_1' => '¡Estás a punto de embarcarte en una experiencia increíble! Te has preinscrito para participar en:',
 	'missing_payment_2' => 'Pero aún falta un último paso para asegurar tu participación: ¡Confirmarla con tu donación!',
 	'missing_payment_3' => '¡Tenés tiempo hasta el ',
-	'missing_payment_4' => 'Para confirmar tu lugar, simplemente haz click',
+	'missing_payment_4' => 'Para confirmar tu lugar:',
 	'confirm_by_donation' => '',
 	'missing_payment_5' => 'Recuerda que el monto mínimo sugerido para donar es de ',
 	'missing_payment_6' => ', y esto contribuirá al desarrollo de nuestro trabajo en comunidad.',
