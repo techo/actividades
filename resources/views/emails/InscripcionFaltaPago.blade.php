@@ -41,8 +41,8 @@
             @lang('email.missing_payment_4')
             <strong>@lang('email.confirm_by_donation')</strong>
             
-            @if($inscripcion->actividad->linkPago)
-                <a href="{{ $inscripcion->actividad->linkPago }}" > 
+            @if($inscripcion->actividad->descripcionPago)
+                <p href="{{ $inscripcion->actividad->descripcionPago }}" > </p>
             @else
                 <a href="{{ url('/actividades/' . $inscripcion->actividad->idActividad ) }}" > 
             @endif
