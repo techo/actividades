@@ -45,6 +45,8 @@ class UsuarioController extends BaseController
         if($request->has('apellido')) $rules['apellido'] = 'required';
         if($request->has('genero')) $rules['genero'] = 'required';
         if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
+        if($request->has('provincia')) $rules['provincia'] = 'required|exists:atl_provincias,id';
+        if($request->has('localidad')) $rules['localidad'] = 'required|exists:atl_localidades,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
         if($request->has('dni')) $rules['dni'] = 'required';
