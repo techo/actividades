@@ -22,6 +22,15 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $dates = ['deleted_at'];
     protected $appends = array('estado_voluntario');
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($persona) {
+            $persona->integrantes()->delete();
+        });
+    }
+
     public function routeNotificationForMail($notification)
     {
         return $this->mail;
