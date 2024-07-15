@@ -10,14 +10,13 @@
         @lang('email.evaluation_1') 
         <strong>{{$actividad->nombreActividad}}</strong> - TECHO
         - {{$actividad->pais->nombre}}
-        @if($inscripcion->actividad->show_dates)
-
+        @if($actividad->show_dates)
             @lang('email.begins_on') {{$actividad->fechaInicio->format('d/m/Y')}} 
         @endif
             
-        @if($inscripcion->actividad->show_location)
+        @if($actividad->show_location)
             @lang('email.begins_at')
-        {{$actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}.
+            {{ $actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}.
         @endif
     </p>
 
