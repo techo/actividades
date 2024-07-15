@@ -12,18 +12,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class InvitacionEvaluacion extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    public $persona;
+    public $persona; 
     public $actividad;
+    public $linkEvaluacionGrupal;   
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Persona $persona, Actividad $actividad)
+    public function __construct(Persona $persona, Actividad $actividad, $linkEvaluacionGrupal)
     {
         $this->persona = $persona;
         $this->actividad = $actividad;
+        $this->linkEvaluacionGrupal = $linkEvaluacionGrupal;
     }
 
     /**
