@@ -34,12 +34,10 @@
         </p>
     @endif
 
-    @if($actividad->linkEvaluacion)
         <p> @lang('email.evaluation_2_1') <a href="{{ $actividad->linkEvaluacion }}">
                 @lang('frontend.here')  
             </a>
         </p>
-    @endif
     <p>
        @lang('email.evaluation_3') 
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
