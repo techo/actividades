@@ -27,7 +27,7 @@
         </a>
     </p>
 
-    @if($grupo->linkEvaluacion)
+    @if($grupo->linkEvaluacion != '')
         <p> @lang('email.evaluation_2_2') <a href="{{ ($grupo->linkEvaluacion }}">
                 @lang('frontend.here') 
             </a>
