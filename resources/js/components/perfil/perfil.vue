@@ -238,6 +238,7 @@
                                         @country-changed="handleCountryChange"
                                         :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
                                         placeholder="Enter phone number"
+                                        :disabledFetchingCountry="true"
                                         ref="telInput">
                                     </VueTelInput>
                                     <small class="form-text text-danger">{{ validacion.telefono.texto }}&nbsp;<br></small>
@@ -416,7 +417,7 @@ export default {
             },
             openPhotoEdit: false,
             phoneNumber: '',
-
+            previousCountry: '',
         }
         data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
@@ -524,10 +525,20 @@ export default {
 
         },
         handleCountryChange(countryData) {
-            // Aquí puedes actualizar el código de área u otras propiedades según sea necesario
-            console.log('País seleccionado:', countryData);
-            // Ejemplo de cómo podrías actualizar manualmente el campo `telefono`
-            this.user.telefono = '+' + countryData.dialCode + this.phoneNumber; // Agregar prefijo internacional
+            const currentDialCode = this.previousCountry ? this.previousCountry.dialCode : '';
+            const newDialCode = countryData.dialCode;
+
+            if (currentDialCode == '' && this.user.telefono.startsWith('+')) {
+                this.previousCountry =  countryData.dialCode;
+            } else {
+                // Extraer el número sin el código de país anterior
+                const phoneNumberWithoutCountryCode = this.phoneNumber.replace('+' + currentDialCode, '').trim();
+
+                // Actualizar el teléfono con el nuevo código de país
+                this.user.telefono = '+' + newDialCode + phoneNumberWithoutCountryCode;
+                this.phoneNumber = this.user.telefono;
+                this.previousCountry = newDialCode;
+            }
         },
         cancelar: function () {
             axios.get('/ajax/usuario/perfil').then(response => {
