@@ -16,11 +16,11 @@
             
         @if($actividad->show_location)
             @lang('email.begins_at')
-            {{ $actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}.
+            {{$actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}.
         @endif
     </p>
 
-    <p>@lang('email.evaluation_2') </p>
+    <p>@lang('email.evaluation_2')</p>
     <p>
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
             <img src="{{ asset('/img/boton_evaluar.png') }}" alt="Ir a evaluaciones">
@@ -28,18 +28,20 @@
     </p>
 
     @if($grupo->linkEvaluacion != '')
-        <p> @lang('email.evaluation_2_2') <a href="{{ ($grupo->linkEvaluacion }}">
+        <p>@lang('email.evaluation_2_2') <a href="{{ $grupo->linkEvaluacion }}">
                 @lang('frontend.here') 
             </a>
         </p>
     @endif
 
-        <p> @lang('email.evaluation_2_1') <a href="{{ $actividad->linkEvaluacion }}">
+    @if($actividad->linkEvaluacion)
+        <p>@lang('email.evaluation_2_1') <a href="{{ $actividad->linkEvaluacion }}">
                 @lang('frontend.here')  
             </a>
         </p>
+    @endif
     <p>
-       @lang('email.evaluation_3') 
+        @lang('email.evaluation_3') 
         <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}">
             {{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}
         </a>
