@@ -75,6 +75,7 @@ class InscripcionesSearch
                     'Persona.fechaNacimiento',
                     'Persona.genero',
                     'Persona.photo',
+                    'Persona.acepta_marketing',
                     'oficinaPersona.nombre as oficina',
                     'ficha.grupo_sanguinieo',
                     'ficha.cobertura_nombre',

@@ -12,6 +12,7 @@
                 <span>{{ rowData.dni }}</span>
                 <br>
                 <label>{{ $t('backend.mobile') }}: </label>
+                <a v-if="showWhatsapp" :href="'https://wa.me/' + rowData.telefonoMovil" target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
                 <span>{{ rowData.telefonoMovil }}</span>
                 <br>
                 <label>{{ $t('backend.email') }}: </label>
@@ -95,6 +96,12 @@ export default {
         }
         
         return edad;
+      },
+      showWhatsapp(){
+        if (this.rowData.telefonoMovil.startsWith('+') && this.rowData.acepta_marketing){
+          return true;
+        }
+        return false;
       }
   },
   methods: {
