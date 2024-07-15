@@ -8,7 +8,7 @@ class Grupo extends Model
 {
     protected $table = 'Grupo';
     protected $primaryKey = 'idGrupo';
-    protected $fillable = ['idGrupo', 'nombre', 'idPadre', 'idActividad'];
+    protected $fillable = ['idGrupo', 'nombre', 'idPadre', 'idActividad', 'linkEvaluacion'];
 
     public function actividad()
     {

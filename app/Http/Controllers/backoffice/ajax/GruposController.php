@@ -43,6 +43,7 @@ class GruposController extends BaseController
         $validate = $request->validate([
             'nombre'        => 'required|max:254',
             'idPadre'       => 'required',
+            'linkEvaluacion'=> 'url|sometimes',
             'idActividad'   => 'required',
         ]);
         $grupo = Grupo::create($request->all());

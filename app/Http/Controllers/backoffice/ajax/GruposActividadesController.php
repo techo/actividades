@@ -81,6 +81,41 @@ class GruposActividadesController extends BaseController
         return response('ok');
     }
 
+    public function updateLink($id, Request $request)
+    {
+        // Definir las reglas de validación en una variable
+        $rules = [
+            'linkSeleccionado' => 'required|url',
+            'miembros' => 'required|array',
+            'miembros.*.tipo' => 'required|string|in:grupo,persona',
+            'miembros.*.id' => 'required|integer',
+        ];
+
+        // Validar los datos entrantes
+        $validatedData = $request->validate($rules);
+
+        $grupoArray = [];
+
+        try {
+            foreach ($validatedData['miembros'] as $item) {
+                if ($item['tipo'] === 'grupo') {
+                    $grupoArray[] = $item['id'];
+                }
+            }
+
+            if (count($grupoArray) > 0) {
+                Grupo::whereIn('idGrupo', $grupoArray)
+                    ->where('idActividad', '=', (int)$id)
+                    ->update(['linkEvaluacion' => $validatedData['linkSeleccionado']]);
+            }
+
+        } catch (\Exception $exception) {
+            return response('Error al actualizar los links: ' . $exception->getMessage(), 500);
+        }
+
+        return response('ok');
+    }
+
     public function delete($id, Request $request)
     {
         $idsGrupo = [];

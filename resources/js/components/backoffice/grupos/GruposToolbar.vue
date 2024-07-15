@@ -20,12 +20,20 @@
                     type="button"
                     class="btn btn-sm btn-default"
                     :class="{'disabled': disabled}"
+                    @click="mostrarGrupoEditModal">
+                    {{ $t('backend.evaluation_link') }}
+            </button>
+            <button 
+                    type="button"
+                    class="btn btn-sm btn-default"
+                    :class="{'disabled': disabled}"
                     @click="mostrarEliminarModal">
                 {{ $t('backend.delete') }}
             </button>
             <rol-modal></rol-modal>
             <grupo-modal></grupo-modal>
             <borrar-modal></borrar-modal>
+            <grupo-edit-modal></grupo-edit-modal>
         </div>
 
     </div>
@@ -61,6 +69,10 @@
             mostrarEliminarModal: function () {
                 if(this.disabled) return;
                 Event.$emit('GruposToolbar:show-borrar-modal');
+            },
+            mostrarGrupoEditModal: function () {
+                if(this.disabled) return;
+                Event.$emit('GruposToolbar:show-grupo-edit-modal');
             },
             actualizarSeleccionados: function (data) {
                 if (data.status) {

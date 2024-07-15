@@ -270,6 +270,11 @@ return [
                 'title' => 'Nombre',
             ],
             [
+                'name' => 'linkEvaluacion',
+                'sortField' => 'linkEvaluacion',
+                'title' => 'Link de Evaluación',
+            ],
+            [
                 'name' => 'rol',
                 'sortField' => 'rol',
                 'title' => 'Rol',

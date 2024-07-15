@@ -12,7 +12,7 @@
             <div class="panel-body">
                 <form>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group" :class="{'has-error': nombreGrupoError}">
                                 <label for="nombre">{{ $t('backend.name') }} </label>
                                 <input
@@ -24,6 +24,22 @@
 
                                 >
                                 <p class="red" v-show="nombreGrupoError">{{ $t('backend.this_field_is_required') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group" :class="{'has-error': nombreGrupoError}">
+                                <label for="linkEvaluacion">{{ $t('backend.evaluation_link') }} </label>
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        id="linkEvaluacion"
+                                        v-model="linkEvaluacion"
+
+                                >
+                                <!-- <span class="help-block">{{ errors.linkEvaluacion }}</span> -->
+                                <!-- <p class="help-block">{{ $t('backend.this_will_be_send_to_evaluate') }}</p> -->
+
+                                <p class="red" v-show="nombreURLError">{{ $t('backend.this_field_is_required') }}</p>
                             </div>
                         </div>
                         <div class="col-md-6" style="padding-top: 1.5em">
@@ -165,7 +181,7 @@
         props: {
           actividad: {
               default: ''
-          }
+          },
         },
         data: function () {
             return {
@@ -175,6 +191,7 @@
                 formNoInscripto: false,
                 loading: false,
                 nombreGrupo: '',
+                linkEvaluacion: '',
                 listadoInscriptos: [],
                 listadoNoInscriptos: [],
                 inscripto: null,
@@ -202,7 +219,7 @@
                 if (this.nombreGrupo.length > 0) {
                     this.nombreGrupoError = false;
                     this.mostrarLoadingAlert();
-                    Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo);
+                    Event.$emit('btnGrupoPersona:guardar-grupo', this.nombreGrupo, this.linkEvaluacion);
                 } else {
                     this.nombreGrupoError = true;
                 }
@@ -291,6 +308,7 @@
             },
             inicializar: function() {
                 this.nombreGrupo = '';
+                this.linkEvaluacion = '',
                 this.nombreGrupoError = false;
                 this.rol = '';
                 this.inscripto = null;

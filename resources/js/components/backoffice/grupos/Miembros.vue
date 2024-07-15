@@ -7,7 +7,12 @@
                     <a v-if="breadcrumb.indexOf(item) !== breadcrumb.length-1" @click="actualizarTabla(item)">
                         {{ item.nombre }}
                     </a>
-                    <span v-else>{{ item.nombre }}</span>
+                    <span v-else>
+                        {{ item.nombre }}
+                        <a v-if="item.linkEvaluacion" :href="item.linkEvaluacion" target="_blank">
+                            {{ $t('backend.evaluation_link') }} 
+                        </a>
+                    </span>
                 </li>
             </ol>
         </div>
@@ -66,9 +71,10 @@
                 this.breadcrumb.push(item);
                 this.idGrupoActual = item.id;
             },
-            guardarGrupo(payload){
+            guardarGrupo(nombre, linkEvaluacion){
                 let grupo = {
-                    nombre: payload,
+                    nombre: nombre,
+                    linkEvaluacion: linkEvaluacion,
                     idActividad: this.dataActividad.idActividad,
                     idPadre: this.idGrupoActual
                 };

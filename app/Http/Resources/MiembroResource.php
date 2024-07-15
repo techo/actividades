@@ -18,6 +18,7 @@ class MiembroResource extends Resource
             'id'        => ($this->idPersona) ? $this->idPersona : $this->idGrupo,
             'tipo'      => ($this->idPersona) ? 'persona' : 'grupo',
             'nombre'    => ($this->idPersona) ? $this->nombres . ' ' . $this->apellidoPaterno : $this->nombre,
+            'linkEvaluacion'    => $this->linkEvaluacion,
             'dni'       => $this->when($this->dni, $this->dni),
             'rol'       => ($this->idPersona) ?  $this->rol : '-',
             'cantidad'  => ($this->idPersona) ?  '-' : $this->cantidadMiembros

@@ -116,6 +116,10 @@ Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);
 
+import GrupoEditModal from './components/backoffice/grupos/grupo-edit-modal'
+Vue.component('grupo-edit-modal', GrupoEditModal);
+
+
 Vue.component('actividad', Actividad);
 Vue.component('puntos', Puntos);
 Vue.component('accesos', Accesos);
