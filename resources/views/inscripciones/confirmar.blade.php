@@ -200,8 +200,8 @@
                             <span>{{ $actividad->fechaInicio->format('d/m/y') }}</span></div>
                         <div class="col-md-4"><i class="far fa-clock"></i>
                             <span>{{ $actividad->fechaInicio->format('h:m') }}</span></div>
-                        <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> 
                             @if($actividad->show_location) 
+                            <div class="col-md-4"><i class="fas fa-map-marker-alt"></i> 
                                 <span>
                                     @if ($actividad->idLocalidad)
                                         {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
@@ -209,8 +209,8 @@
                                         {{ $actividad->provincia->provincia }}
                                     @endif
                                 </span>
+                            </div>
                             @endif
-                        </div>
                     </div>
                     <hr>
                 @endif
