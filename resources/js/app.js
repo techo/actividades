@@ -62,6 +62,11 @@ import TiposActividadFilterBar from './components/backoffice/datatable/TiposActi
 import TiposActividadForm from './components/backoffice/tiposActividad/tipos-actividad-form';
 
 
+import VueTelInput from 'vue-tel-input';
+import 'vue-tel-input/dist/vue-tel-input.css';
+
+Vue.component('vue-tel-input', VueTelInput);
+
 Vue.component('tipos-actividad-datatable', TiposActividadDatatable);
 Vue.component('tipos-actividad-filter-bar', TiposActividadFilterBar);
 Vue.component('tipos-actividad-form', TiposActividadForm);
