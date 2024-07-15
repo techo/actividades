@@ -10,9 +10,6 @@ use App\Inscripcion;
 use App\Mail\InvitacionEvaluacion;
 use App\Persona;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 
 class EvaluacionesController extends BaseController
 {
@@ -28,8 +25,8 @@ class EvaluacionesController extends BaseController
             ->get();
 
         foreach ($inscripciones as $i) {
-            $linkEvaluacionGrupal = $i->persona->grupoAsignadoEnActividad($id)->grupo->linkEvaluacion;
-            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad, $linkEvaluacionGrupal), $i->persona);
+            $grupo = $i->persona->grupoAsignadoEnActividad($id)->grupo;
+            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad, $grupo), $i->persona);
         }
         return $inscripciones->count();
     }
