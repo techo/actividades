@@ -25,7 +25,9 @@
                 <span>{{ rowData.nombreRol }}</span>
                 <br>
                 <label>{{ $t('backend.applicable_roles') }}: </label>
-                <span>{{ rowData.roles_aplicados }}</span>
+                <span v-for="item in items" class="label label-primary">
+                    {{ item.text }}
+                </span>
                 
                
             </div>
@@ -73,7 +75,8 @@ export default {
     },
     rowIndex: {
       type: Number
-    }
+    },
+    items: [],
   },
   computed: {
       fechaInscripcion: function () {
@@ -103,6 +106,13 @@ export default {
         }
         return false;
       }
+  },
+  mounted() {
+    if(this.rowData.roles_aplicados){
+        var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
+        var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
+        this.items = JSON.parse(cadenaJSONSinEscape);
+    }
   },
   methods: {
     onClick (event) {
