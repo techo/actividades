@@ -24,10 +24,12 @@ class EvaluacionesController extends BaseController
         }
         $inscripciones = Inscripcion::where('Inscripcion.idActividad', '=', $id)
             ->where('Inscripcion.presente', '=', '1')
+            ->with('Persona')
             ->get();
 
         foreach ($inscripciones as $i) {
-            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad), $i->persona);
+            $linkEvaluacionGrupal = $i->persona->grupoAsignadoEnActividad($id)->grupo->linkEvaluacion;
+            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad, $linkEvaluacionGrupal), $i->persona);
         }
         return $inscripciones->count();
     }

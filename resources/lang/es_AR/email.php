@@ -75,6 +75,7 @@ return [
 	'evaluation_1' => 'Queremos saber cómo te fue en ',
 	'evaluation_2' => 'Para darnos tu opinión, haz click en el enlace ',
 	'evaluation_2_1' => 'Si quieres darnos una mayor devolución puedes hacerlo ',
+	'evaluation_2_2' => 'Por tu rol en esta actividad hemos creado una evaluacion particular ',
 	'evaluation_3' => 'Si no puedes usar el enlace, copia y pega esta dirección en tu navegador: ',
 
 

@@ -28,9 +28,16 @@
         </a>
     </p>
 
+    @if($linkEvaluacionGrupal)
+        <p> @lang('email.evaluation_2_2') <a href="{{ $linkEvaluacionGrupal }}">
+                @lang('frontend.here') 
+            </a>
+        </p>
+    @endif
+
     @if($actividad->linkEvaluacion)
         <p> @lang('email.evaluation_2_1') <a href="{{ $actividad->linkEvaluacion }}">
-                aquí 
+                @lang('frontend.here')  
             </a>
         </p>
     @endif

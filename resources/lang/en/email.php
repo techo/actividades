@@ -64,9 +64,13 @@ return [
 	'payment_outdated_3' => "Ask the cordinator to have your money back!",
 
 	// InvitacionEvaluacion
-	'evaluation_1' => 'We want to know hoy you felt at ',
-	'evaluation_2' => 'Give us your feedback on the next link ',
-	'evaluation_3' => "If you can't use the link, copy and paste on your browser the next url:",
+	'evaluation_title' => 'TECHO Your opinion is important',
+	'evaluation_1' => 'We want to know how you did in ',
+	'evaluation_2' => 'To give us your feedback, click on the link ',
+	'evaluation_2_1' => 'If you want to give us more detailed feedback, you can do it ',
+	'evaluation_2_2' => 'Due to your role in this activity, we have created a specific evaluation ',
+	'evaluation_3' => 'If you cannot use the link, copy and paste this address into your browser: ',
+	
 
 
 	// notificacionRegistracionUsuario
