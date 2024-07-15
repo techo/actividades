@@ -55,6 +55,7 @@
         "vue-select": "^3.1.0",
         "vue-slider-component": "^2.7.2",
         "vue-switches": "^2.0.1",
+        "vue-tel-input": "^5.15.0",
         "vue-template-compiler": "^2.5.16",
         "vue2-datepicker": "^1.9.7",
         "vue2-simplert": "^0.8.0",

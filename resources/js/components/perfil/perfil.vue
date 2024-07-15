@@ -228,14 +228,24 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" name="telefono" id="telefono"
-                                            v-model="user.telefono">
-                                        <small class="form-text text-danger">{{ validacion.telefono.texto
-                                        }}&nbsp;<br></small>
+                                    <!-- <vue-tel-input
+                                        v-model="user.telefono"
+                                        @input="validatePhoneNumber"
+                                        :preferred-countries="['us', 'ca', 'mx', 'ar', 'es', 'fr', 'uk', 'in']"
+                                        placeholder="Enter phone number"
+                                    /> -->
+                                    <VueTelInput v-model="phoneNumber" @input="validatePhoneNumber"
+                                        @country-changed="handleCountryChange"
+                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
+                                        placeholder="Enter phone number"
+                                        ref="telInput">
+                                    </VueTelInput>
+                                    <small class="form-text text-danger">{{ validacion.telefono.texto }}&nbsp;<br></small>
                                     </div>
                                     <div class="col-md-2">
-                                        <span v-bind:class="{ 'd-none': !validacion.telefono.invalido }"><i
-                                                class="fas fa-times text-danger"></i></span>
+                                    <span v-bind:class="{ 'd-none': !validacion.telefono.invalido }">
+                                        <i class="fas fa-times text-danger"></i>
+                                    </span>
                                     </div>
                                 </div>
                             </div>
@@ -380,9 +390,12 @@
 <script>
 import _ from 'lodash'
 import photoEdit from './photoEdit';
+import { VueTelInput } from 'vue-tel-input';
+import 'vue-tel-input/dist/vue-tel-input.css';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default {
-    components: {photoEdit},
+    components: {photoEdit, VueTelInput},
     name: 'perfil',
     data: function () {
         var data = {
@@ -402,6 +415,8 @@ export default {
                 text: ''
             },
             openPhotoEdit: false,
+            phoneNumber: '',
+
         }
         data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
@@ -433,8 +448,12 @@ export default {
         this.traer_provincias()
         this.traer_localidades()
         this.formDirty = false
-
+        this.phoneNumber = this.user.telefono;
         this.paso_actual = (window.location.href.split('#')[1]);
+        this.removeUndefinedText();
+    },
+    updated() {
+        this.removeUndefinedText();
     },
     watch: {
         'user.email': function () {
@@ -455,7 +474,8 @@ export default {
         'user.dni': function () {
             this.validar_data('dni')
         },
-        'user.telefono': function () {
+        'phoneNumber': function () {
+            this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');
             this.validar_data('telefono')
         },
         'user.pass': function () {
@@ -466,6 +486,8 @@ export default {
         },
         'user.pais': function () {
             this.traer_provincias();
+            this.user.provincia = null;
+            this.validar_data('provincia')
             this.formDirty = true;
         },
         'user.provincia': function () {
@@ -484,6 +506,29 @@ export default {
 
     },
     methods: {
+        validatePhoneNumber() {
+            // try {
+            //     const phoneNumber = parsePhoneNumberFromString(this.user.telefono);
+            //     if (phoneNumber && phoneNumber.isValid()) {
+            //     this.validacion.telefono.invalido = false;
+            //     this.validacion.telefono.texto = '';
+            //     } else {
+            //    // this.validacion.telefono.invalido = true;
+            //     this.validacion.telefono.texto = 'Invalid phone number';
+            //     }
+            //     console.log('telefono seleccionado:', phoneNumber);
+            // } catch (e) {
+            //     this.validacion.telefono.invalido = true;
+            //     this.validacion.telefono.texto = 'Invalid phone number';
+            // }
+
+        },
+        handleCountryChange(countryData) {
+            // Aquí puedes actualizar el código de área u otras propiedades según sea necesario
+            console.log('País seleccionado:', countryData);
+            // Ejemplo de cómo podrías actualizar manualmente el campo `telefono`
+            this.user.telefono = '+' + countryData.dialCode + this.phoneNumber; // Agregar prefijo internacional
+        },
         cancelar: function () {
             axios.get('/ajax/usuario/perfil').then(response => {
                 this.user = response.data.data
@@ -649,7 +694,18 @@ export default {
                     })
                 }
             })
-        }
+        },
+        removeUndefinedText() {
+      const telInput = this.$refs.telInput.$el;
+      const selectionSpan = telInput.querySelector('.vti__selection');
+      if (selectionSpan) {
+        selectionSpan.childNodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE && (node.nodeValue.trim() === 'undefined' || node.nodeValue.trim() === '')) {
+            node.nodeValue = '';
+          }
+        });
+      }
+    }
 
     },
     computed: {

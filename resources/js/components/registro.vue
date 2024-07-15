@@ -230,7 +230,7 @@
                 <div class="col-md-5">
                     <div class="form-group" v-if="(user.provincia != '' && localidades.length > 0)">
                         <label>{{ $t('frontend.municipality') }}</label>
-                        <select id="localidad" v-model="user.localidad" class="form-control">
+                        <select id="localidad" v-model="user.localidad" class="form-control" required>
                             <option v-for="localidad in localidades" v-bind:value="localidad.id">
                                 {{localidad.localidad}}
                             </option>
@@ -444,7 +444,9 @@
             this.validar_data('pais') 
             this.traer_provincias() 
         },
-        'user.provincia': function() { this.traer_localidades() },
+        'user.provincia': function() { 
+            this.validar_data('provincia')  
+        this.traer_localidades() },
         'user.canal_contacto': function() { this.validar_data('canal_contacto')},
         'user.privacidad': function() { this.validar_data('privacidad')}
       },

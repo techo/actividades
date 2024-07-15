@@ -48,7 +48,7 @@ class UsuarioController extends BaseController
         if($request->has('provincia')) $rules['provincia'] = 'required|exists:atl_provincias,id';
         if($request->has('localidad')) $rules['localidad'] = 'required|exists:atl_localidades,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
-        if($request->has('telefono')) $rules['telefono'] = 'required|numeric';
+        if($request->has('telefono')) $rules['telefono'] = 'required|regex:/^\+\d{1,3}\d{9,15}$/';
         if($request->has('dni')) $rules['dni'] = 'required';
         $validatedData = $request->validate($rules);
         return ['success' => true, 'params' => array_keys($rules)];
