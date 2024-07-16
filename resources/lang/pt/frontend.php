@@ -204,12 +204,16 @@ return [
 	'estudios' => 'Grau de Estudo',
 	'review_estudios' => 'Completa o revisa tus estudios',
 	'institucion_educativa' => 'Instituição de Ensino',
+	'nivel_de_estudios' => 'Nível de Educação',
+	'secundario' => 'Ensino Médio',
+	'universitario' => 'Ensino Superior (Graduação Bacharelado, Engenharia, Técnico, etc.)',
+	'posgrado' => 'Pós-graduação (Mestrado, Doutorado, etc.)',
 	'titulo_educacion' => 'Curso *',
 	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descrição *',
 	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
 	'other' => 'Outro',
-	'ingrese_institucion_educativa' => 'Insira o Nome Manualmente',
+	'ingrese_institucion_educativa' => 'Insira o nome da instituição manualmente',
 	// perfil / equipos
 
 	'equipos' => 'Equipas', 

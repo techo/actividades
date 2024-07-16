@@ -194,15 +194,19 @@ return [
  	'confirma_datos' => 'I declare this information is valid',
 
 	// perfil / educacion
-	'educacion' => 'Education',
-	'review_estudios' => 'Complete your education',
-	'institucion_educativa' => 'Educational Institute',
+	'estudios' => 'Education',
+	'review_estudios' => 'Complete or review your education',
+	'nivel_de_estudios' => 'Education Level',
+	'secundario' => 'High School',
+	'universitario' => 'University (Bachelor’s, Engineering, Technician, etc.)',
+	'posgrado' => 'Postgraduate (Master’s, PhD, etc.)',
+	'institucion_educativa' => 'Educational Institution',
 	'titulo_educacion' => 'Title *',
-	'disciplina_academica' => 'Accademy disipline *',
-	'descripcion_educacion' => 'Description *',
-	'complete_education' => 'Add at least one study to continue',
+	'disciplina_academica' => 'Academic Discipline *',
+	'descripcion_educacion' => 'Description',
+	'complete_education' => 'To continue, you must add at least one study',
 	'other' => 'Other',
-	'ingrese_institucion_educativa' => 'Enter Name Manually',
+	'ingrese_institucion_educativa' => 'Enter institution name manually',
 
 	// perfil / equipos
 	'equipos' => 'Teams', 

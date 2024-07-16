@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estudios extends Model
 {
-    protected $fillable = ['institucion_educativa', 'idInstitucionEducativa', 'disciplina_academica', 'descripcion_educacion',  'idPersona'];
+    protected $fillable = [
+        'institucion_educativa', 
+        'idInstitucionEducativa', 
+        'disciplina_academica', 
+        'descripcion_educacion',  
+        'idPersona',
+        'nivelDeEstudios',
+        'idPaisInstitucion'
+    ];
 
     protected $table = 'estudios';
     protected $primaryKey = 'idEstudio';

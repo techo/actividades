@@ -1,8 +1,11 @@
 <template>
     <div>
         <div class="card-header">
-            <div class="row" v-if="!editando">
-                <h5 class="col-8">
+            <div class="row align-items-center text-center" v-if="!editando">
+                <h5 v-if="data.nivelDeEstudios == 'secundario'" class="col-8">
+                    {{ $t('frontend.secundario') }}
+                </h5>
+                <h5 v-else class="col-8">
                     {{ data.header }}
                 </h5>
 
@@ -18,12 +21,32 @@
                 </div>
             </div>
             <div v-else class="p-1">
-                <label>{{ data.headerLabel }}</label>
-                <input class="form-control" v-model="data.header" />
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>{{ $t('frontend.nivel_de_estudios') }}</label>
+                        <select id="nivelDeEstudios" v-model="data.nivelDeEstudios" class="form-control">
+                            <option value="secundario">
+                                {{ $t('frontend.secundario') }}
+                            </option>
+                            <option value="universitario">
+                                {{ $t('frontend.universitario') }}
+                            </option>
+                            <option value="posgrado">
+                                {{ $t('frontend.posgrado') }}
+                            </option>
+                        </select>
+                    </div>
+                    <div v-if="data.nivelDeEstudios && data.nivelDeEstudios != 'secundario'" class="col-md-9">
+                        <label>{{ data.headerLabel }}</label>
+                        <input class="form-control" v-model="data.header" />
+                    </div>
+                </div>
+                
+                
             </div>
         </div>
         <div class="card-body">
-
+             <!-- institucion_educativa -->
             <div class="card-title">
                 <h5 v-if="!editando"> {{ data.title }}
                 </h5>
@@ -56,6 +79,14 @@
                                     </option>
                                 </select>
                             </div>
+                            <div v-else class="col-md-8">
+                                <select id="pais" v-model="idPaisOtrosSeleccionado" class="form-control m-1">
+                                    <option disabled selected value="-1">{{ $t('backend.country') }}</option>
+                                    <option v-for="pais in paisesTodos" v-bind:value="pais.id">
+                                        {{ pais.nombre }}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                         <div v-if="idPaisSeleccionado == 0 || data.idInstitucionEducativaSeleccionada == 0" >
                             <label> {{ $t('frontend.ingrese_institucion_educativa') }} </label>
@@ -64,6 +95,7 @@
                     </div>
                 </div>
             </div>
+             <!-- descripcion_educacion -->
             <div class="card-text">
                 <div class="row">
                     <p v-if="!editando" class="col-md-10">
@@ -112,10 +144,13 @@ export default {
                 idInstitucionEducativaSeleccionada: this.idInstitucionEducativa,
                 text: this.text,
                 textLabel: this.textLabel,
-
+                nivelDeEstudios: this.nivelDeEstudios,
+                idPaisInstitucion: -1,
             },
             instituciones_educativas: [],
             idPaisSeleccionado: -1,
+            paisesTodos: [],
+            idPaisOtrosSeleccionado: -1,
         }
         return data;
     },
@@ -159,11 +194,24 @@ export default {
         paises: {
             type: Array
         },
+        nivelDeEstudios: {
+            type: String,
+            default: ''
+        },
+        idPaisInstitucion: {
+            type: Number,
+            default: null
+        },
     },
     mounted: function () {
         this.formDirty = false;
-        if(this.idInstitucionEducativa == 0)
-            this.idPaisSeleccionado = 0
+        if(this.idInstitucionEducativa == null){
+            this.idPaisSeleccionado = 0;
+            this.idPaisOtrosSeleccionado = this.idPaisInstitucion;
+        }
+        if(this.idInstitucionEducativa == 0){
+            this.idPaisSeleccionado = this.idPaisInstitucion;
+        }
         if (this.idInstitucionEducativa && this.idInstitucionEducativa > 0)
             this.traer_institucion_educativa_selccionada();
     },
@@ -173,6 +221,7 @@ export default {
                 this.traer_instituciones_educativas();
             } else { 
                 this.idInstitucionEducativaSeleccionada = 0;
+                this.traer_paises_todos();
             }
         },
         'data.idInstitucionEducativaSeleccionada': function () {
@@ -197,10 +246,25 @@ export default {
                 this.idPaisSeleccionado = response.data.idPais
             })
         },
+        traer_paises_todos: function () {
+            axios.get('/ajax/paises').then(response => {
+                this.paisesTodos = response.data
+            })
+        },
         editCard: function () {
             this.editando = true;
         },
         saveCard: function () {
+            if (this.idPaisSeleccionado == 0){
+                this.data.idPaisInstitucion = this.idPaisOtrosSeleccionado
+                this.data.idInstitucionEducativaSeleccionada = null
+            } else
+                this.data.idPaisInstitucion = this.idPaisSeleccionado
+
+            if(this.data.nivelDeEstudios == 'secundario')
+                this.data.header = 'secundario';
+
+
             if (this.data.id){
                 this.$emit('saveCard', this.data);
             } else {

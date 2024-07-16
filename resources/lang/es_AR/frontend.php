@@ -200,13 +200,17 @@ return [
 	// perfil / educacion
 	'estudios' => 'Educación',
 	'review_estudios' => 'Completa o revisa tus estudios',
+	'nivel_de_estudios' => 'Nivel de Estudios',
+	'secundario' => 'Secundario',
+	'universitario' => 'Universitario (Licenciatura, Ingenierica, Tecnico etc.)',
+	'posgrado' => 'Posgrado Universitario (Maestria, Doctorado etc.)',
 	'institucion_educativa' => 'Institución educativa',
 	'titulo_educacion' => 'Título *',
 	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descripción',
 	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
 	'other' => 'Otro',
-	'ingrese_institucion_educativa' => 'Ingrese Nombre Manualmente',
+	'ingrese_institucion_educativa' => 'Ingresar nombre de la institución manualmente',
 
 
 	// perfil/ equipos

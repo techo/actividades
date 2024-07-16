@@ -17,6 +17,8 @@ class EstudiosController extends Controller
             'idInstitucionEducativa' => 'nullable',
             'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
+            'nivelDeEstudios' => 'nullable',
+            'idPaisInstitucion' => 'nullable',
             'idPersona' => 'required',
         ]);
 
@@ -35,6 +37,8 @@ class EstudiosController extends Controller
             'idInstitucionEducativa' => 'nullable',
             'disciplina_academica' => 'required',
             'descripcion_educacion' => 'nullable',
+            'nivelDeEstudios' => 'nullable',
+            'idPaisInstitucion' => 'nullable',
         ]);
         $idPersona = Auth::user()->idPersona;
         $estudio = Estudios::findOrFail($validados['id']);

@@ -4,11 +4,13 @@
             <div class="card w-100 m-2" v-for="(estudio, index) in estudios_persona">
                 <cardEditDelete 
                 :identifier="estudio.idEstudio"
+                :nivelDeEstudios = "estudio.nivelDeEstudios"
                 :header="estudio.disciplina_academica"
                 :headerLabel="$t('frontend.disciplina_academica')"
                 :title="estudio.institucion_educativa"
                 :idInstitucionEducativa="estudio.idInstitucionEducativa"
                 :titleLabel="$t('frontend.institucion_educativa')"
+                :idPaisInstitucion="estudio.idPaisInstitucion"
                 :text="estudio.descripcion_educacion" 
                 :textLabel="$t('frontend.descripcion_educacion')" 
                 :paises="paisesConInstitucionesEducativas" 
@@ -80,6 +82,8 @@ export default {
                 idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
                 disciplina_academica: data.header,
                 descripcion_educacion: data.text,
+                nivelDeEstudios: data.nivelDeEstudios,
+                idPaisInstitucion: data.idPaisInstitucion,
                 idPersona: this.idPersona,
             }
             axios.post('/ajax/estudios', form).then(response => {
@@ -98,6 +102,8 @@ export default {
                 disciplina_academica: data.header,
                 idInstitucionEducativa: data.idInstitucionEducativaSeleccionada,
                 descripcion_educacion: data.text,
+                nivelDeEstudios: data.nivelDeEstudios,
+                idPaisInstitucion: data.idPaisInstitucion,
             }
             axios.put('/ajax/estudios', form).then(response => {
                 this.guardo = true;
