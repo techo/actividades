@@ -32,15 +32,30 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <ul>
-                        <li v-for="coordinador in coordinadores" :key='coordinador.idPersona'>
-                            {{ coordinador.nombre }} 
-                            <span class="input-group-btn">          
-                                <button :class="{ 'btn': true, 'btn-danger': true }" @click="eliminar(coordinador.idCoordinador)" v-text="$t('backend.eliminate')" v-if="idPersonaCreacion !=  coordinador.idPersona"></button>
-                            </span>
-                        </li>
-                    </ul>
+                <div class="row align-items-center" style="margin: 1em" v-for="coordinador in coordinadores" :key="coordinador.idPersona">
+                    <div class="coordinador-item">
+                        <div class="whatsapp-icon col-md-1 text-center">
+                            <i class="fa fa-whatsapp fa-lg text-success" aria-hidden="true"></i>
+                            <v-switch
+                                theme="bootstrap"
+                                color="success"
+                                :key="coordinador.idPersona"
+                                @input="activaWhatsapp(coordinador.idCoordinador)"
+                                v-model="coordinador.activaWhatsapp"
+                                style="display: inline-flex"
+                            >
+                            </v-switch>
+                        </div>
+                        <div class="coordinador-nombre col-md-3">
+                            {{ coordinador.nombre }}
+                        </div>
+                        <button
+                            :class="{ 'btn': true, 'btn-danger': true } "
+                            @click="eliminar(coordinador.idCoordinador)"
+                            v-text="$t('backend.eliminate')"
+                            v-if="idPersonaCreacion !== coordinador.idPersona"
+                        ></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,8 +75,10 @@
                 persona: null,
                 personas: [],
                 coordinadores: [],
+                coordinadoresOrigin: [],
                 enviado: false,
                 mensaje: null,
+                initialLoad: true,
             }
         },
         created() {},
@@ -94,13 +111,32 @@
             },
             getPersona(){
                 axios.get('/admin/ajax/actividades/' + this.id + '/accesos')
-                    .then((datos) => { this.coordinadores = datos.data; })
+                    .then((datos) => { 
+                        this.coordinadoresOrigin = JSON.parse(JSON.stringify(datos.data));
+                        this.coordinadores = datos.data; 
+                        this.initialLoad = false;
+                    })
                     .catch((error) => { debugger; });
             },
             eliminar(idCoordinador){
                 axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + idCoordinador + '/borrar')
                     .then((datos) => { this.mensaje = datos.data; this.getPersona(); })
                     .catch((error) => { debugger; });
+            },
+            activaWhatsapp(idCoordinador, data){
+                const coordinadorActivaWhatsapp = this.coordinadores.find(c => c.idCoordinador === idCoordinador).activaWhatsapp;
+                const coordinadorOriginActivaWhatsapp = this.coordinadoresOrigin.find(co => co.idCoordinador === idCoordinador).activaWhatsapp;
+
+                if (coordinadorActivaWhatsapp != coordinadorOriginActivaWhatsapp) {
+                    axios.post('/admin/ajax/actividades/' + this.id + '/accesos/' + idCoordinador + '/activaWhatsapp')
+                        .then((datos) => { 
+                            this.mensaje = datos.data;
+                            // this.getPersona(); 
+                            })
+                        .catch((error) => { debugger; });
+                } else {
+                    console.error(`No se encontró ningún coordinador con idCoordinador ${idCoordinador}`);
+                }
             },
             onSearch: _.debounce( function (text, loading) {
                 if(text.length > 3) {

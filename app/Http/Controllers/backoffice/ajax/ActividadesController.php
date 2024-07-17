@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
+use App\Coordinador;
 use App\Exports\ActividadesExport;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\CrearCoordinador;
 use App\PuntoEncuentro;
 use Illuminate\Http\Request;
 
@@ -55,4 +57,10 @@ class ActividadesController extends BaseController
            ->get();
     }
 
+    public function activaWhatsappAccesos(CrearCoordinador $request, Actividad $actividad, Coordinador $coordinador)
+    {    
+        $coordinador->activaWhatsapp = ! $coordinador->activaWhatsapp;
+        $coordinador->save();
+        return response()->json($coordinador);
+    }
 }
