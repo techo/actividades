@@ -260,6 +260,8 @@ return [
     'medical_form' => 'Ficha Médica',
     'unspecified' => 'Não especificado',
     'educational_institution' => 'Instituição Educacional',
+    'whatsapp_group_chat' => 'Chat de grupo no WhatsApp',
+    'whatsapp_group_chat_url' => 'Inclua aqui o URL do chat de grupo do WhatsApp. Só será mostrado para os confirmados.',
 
 
     // Usuarios/Columnas

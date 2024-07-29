@@ -60,6 +60,7 @@ class CrearActividad extends FormRequest
             'linkPago' => 'sometimes|nullable|url',
             'descripcionPago' => 'sometimes|nullable',
             'linkEvaluacion' => 'sometimes|nullable|url',
+            'chat_grupal_whatsapp' => 'sometimes|nullable|url',
             'seguimiento_google' => 'sometimes|nullable',
             'requiere_ficha_medica' => 'required',
             'requiere_estudios' => 'required',

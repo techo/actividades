@@ -77,6 +77,7 @@ class actividadesController extends Controller
         $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
         $habilitado = false;
         $payment = '';
+        $chatGrupalWhatsapp = false;
 
         if (auth()->check() && auth()->user()->estadoInscripcion($id)) {
             
@@ -118,6 +119,7 @@ class actividadesController extends Controller
                     $mensaje = __('frontend.confirmed');
                     $clase = 'btn-success disabled';
                     $habilitado = false;
+                    $chatGrupalWhatsapp = true;
                     break;
             }
         }
@@ -159,7 +161,7 @@ class actividadesController extends Controller
             }
         }
 
-        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'chatGrupalWhatsapp'));
     }
 
     /**
