@@ -23,7 +23,9 @@ return [
               ['id' => 'grupo' , 'campo' =>  'Grupo'],
               ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades'],
               ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior'],
-              ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
+              ['id' => 'confirmado' , 'campo' =>  'Confirmado'],
+              ['id' => 'presente' , 'campo' =>  'Presente']
+              //   ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
           ],
           'condiciones' => [
               ['value' => '>', 'label' => 'mayor que'],
