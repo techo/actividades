@@ -13,11 +13,13 @@
                         <input type="text"
                                id="rol"
                                name="rol"
-                               class="input form-control"
+                               class="form-control"
                                placeholder="Escriba link"
                                v-model="linkSeleccionado"
                         />
                         <small class="form-text text-danger">{{ textoError }}&nbsp;<br> </small>
+
+                        <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
                     </div>
                 </div>
                 <div class="modal-footer">

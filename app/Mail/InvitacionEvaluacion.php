@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Actividad;
-use App\Grupo;
 use App\Persona;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -15,18 +14,16 @@ class InvitacionEvaluacion extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
     public $persona; 
     public $actividad;
-    public $grupo;   
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Persona $persona, Actividad $actividad, Grupo $grupo)
+    public function __construct(Persona $persona, Actividad $actividad)
     {
         $this->persona = $persona;
         $this->actividad = $actividad;
-        $this->grupo = $grupo;
     }
 
     /**

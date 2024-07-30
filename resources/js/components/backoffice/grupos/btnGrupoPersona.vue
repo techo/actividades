@@ -37,7 +37,8 @@
 
                                 >
                                 <!-- <span class="help-block">{{ errors.linkEvaluacion }}</span> -->
-                                <!-- <p class="help-block">{{ $t('backend.this_will_be_send_to_evaluate') }}</p> -->
+                                
+                                <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
 
                                 <p class="red" v-show="nombreURLError">{{ $t('backend.this_field_is_required') }}</p>
                             </div>

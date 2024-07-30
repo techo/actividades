@@ -412,6 +412,7 @@ return [
 	'send' => 'Enviar',
 	'feedback_date_expired' => 'La fecha de fin de las evaluaciones ya pasó',
 	'unable_to_sent_feeback' => 'No se pudo guardar la evaluación. Intentalo de nuevo más tarde.',
+	'continue_with_feedback' => 'Continúa Evaluación',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Puntaje Técnico',

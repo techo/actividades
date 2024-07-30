@@ -25,8 +25,7 @@ class EvaluacionesController extends BaseController
             ->get();
 
         foreach ($inscripciones as $i) {
-            $grupo = $i->persona->grupoAsignadoEnActividad($id)->grupo;
-            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad, $grupo), $i->persona);
+            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad), $i->persona);
         }
         return $inscripciones->count();
     }

@@ -404,6 +404,7 @@ return [
 	'send' => 'Send',
 	'feedback_date_expired' => 'The time to give feedback expired :(',
 	'unable_to_sent_feeback' => 'Unable to send. Try again later.',
+	'continue_with_feedback' => 'Continue Feedback',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Technical Score',
