@@ -246,9 +246,9 @@ return [
         ],
         'sortOrder' => [
             [
-                'field' => 'nombres',
-                'sortField' => 'nombres',
-                'direction' => 'asc'
+                'field' => 'fechaInscripcion',
+                'sortField' => 'fechaInscripcion',
+                'direction' => 'desc'
             ]
         ],
 
