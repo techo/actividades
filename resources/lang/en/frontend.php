@@ -396,7 +396,7 @@ return [
 
 	// evaluarActividad.vue
 	'feedback_text' => 'Your feedback help us improve as an organization and make our activities more reewarding to you.',
-	'activity_feedback' => 'Give feedback about',
+	'activity_feedback' => '1 . Give feedback about',
 	'general_score' => 'General Score',
 	'doesn_not_apply' => 'Does not apply / No comment',
 	'comments' => 'Comments',
@@ -404,7 +404,7 @@ return [
 	'send' => 'Send',
 	'feedback_date_expired' => 'The time to give feedback expired :(',
 	'unable_to_sent_feeback' => 'Unable to send. Try again later.',
-	'continue_with_feedback' => 'Continue Feedback',
+	'continue_with_feedback' => '2 . Continue Feedback',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Technical Score',

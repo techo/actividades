@@ -135,6 +135,9 @@ class ActividadesController extends Controller
         
         $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
 
+        if (!empty($validado['linkEvaluacion'])) {
+            $validado['linkEvaluacion'] = rtrim(strstr($validado['linkEvaluacion'], '/viewform', true), '/') . '/';
+        }
         $actividad->fill($validado);
         $actividad->save();
 

@@ -104,6 +104,9 @@ class GruposActividadesController extends BaseController
             }
 
             if (count($grupoArray) > 0) {
+                if (!empty($validatedData['linkSeleccionado'])) {
+                    $validatedData['linkSeleccionado'] = rtrim(strstr($validatedData['linkSeleccionado'], '/viewform', true), '/') . '/';
+                }
                 Grupo::whereIn('idGrupo', $grupoArray)
                     ->where('idActividad', '=', (int)$id)
                     ->update(['linkEvaluacion' => $validatedData['linkSeleccionado']]);

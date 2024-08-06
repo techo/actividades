@@ -187,8 +187,10 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="linkEvaluacion">{{ $t('backend.evaluation_link') }}</label>
-                            <input type="text" class="form-control" v-model="actividad.linkEvaluacion" required
+                            <label for="linkEvaluacion">{{ $t('backend.evaluation_link') }}
+                            <a v-if="actividad.linkEvaluacion" :href="actividad.linkEvaluacion+'viewform'" target="_blank"> {{ $t('backend.view') }} </a>
+                            </label>
+                            <input v-if="edicion"  type="text" class="form-control" v-model="actividad.linkEvaluacion" required
                             :disabled="!edicion" >
                             <span class="help-block">{{ errors.linkEvaluacion }}</span>
                             <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>

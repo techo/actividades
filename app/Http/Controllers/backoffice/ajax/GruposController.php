@@ -46,7 +46,10 @@ class GruposController extends BaseController
             'linkEvaluacion'=> 'url|nullable',
             'idActividad'   => 'required',
         ]);
-        $grupo = Grupo::create($request->all());
+        if (!empty($validate['linkEvaluacion'])) {
+            $validate['linkEvaluacion'] = rtrim(strstr($validate['linkEvaluacion'], '/viewform', true), '/') . '/';
+        }
+        $grupo = Grupo::create($validate);
         return new MiembroResource($grupo);
     }
 
