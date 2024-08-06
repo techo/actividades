@@ -1,7 +1,11 @@
 <template>
     <span>
-        <span  class="label " :class="color">
-            {{ estado }}
+        <span class="badge badge-pill m-2 text-center " :class="color">
+        {{ estado }}
+        </span>
+
+        <span v-if="esDeLasUltimas24Horas" class="badge badge-pill bg-techo-violet m-2 text-center">
+        {{ $t('backend.new_inscription') }}
         </span>
     </span>
 </template>
@@ -40,6 +44,12 @@
                 this.color = "label-default";
             }
         },
+        computed: {
+            esDeLasUltimas24Horas() {
+                return new Date() - new Date(this.rowData.fechaInscripcion) <= 24 * 60 * 60 * 1000;
+
+            }
+        }
     }
 </script>
 

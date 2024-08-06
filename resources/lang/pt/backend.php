@@ -67,6 +67,7 @@ return [
     'no' => 'Não',
     'applicable_roles' => 'Funções Aplicáveis',
     'registration_type' => 'Tipo de Inscrição',
+    'new_inscription' => 'Novo!',
     'slots' => 'Vagas',
     'unlimited_slots' => '0 é "sem limite de inscrições"',
     'google_tracking_code' => 'Código de Rastreamento do Google',
