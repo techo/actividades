@@ -410,7 +410,9 @@ return [
 	'send' => 'Enviar',
 	'feedback_date_expired' => 'A Data final das avaliações já expirou',
 	'unable_to_sent_feeback' => 'Não é possivel gravar a avaliação, Tente novamente mais tarde.',
-	'continue_with_feedback' => '2 . Continue Avaliações',
+	'continue_with_feedback' => 'Avaliação específica, ajude-nos a oferecer uma experiência melhor.',
+	'continue_with_group_feedback' => 'Feedback da equipe',
+
 
 	// evaluarPersona.vue
 	'technical_score' => 'Pontuação Técnica',

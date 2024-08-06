@@ -412,8 +412,8 @@ return [
 	'send' => 'Enviar',
 	'feedback_date_expired' => 'La fecha de fin de las evaluaciones ya pasó',
 	'unable_to_sent_feeback' => 'No se pudo guardar la evaluación. Intentalo de nuevo más tarde.',
-	'continue_with_feedback' => 'Ayudanos a seguir mejorando la experiencia',
-	'continue_with_group_feedback' => 'Evaluación especifica por el Rol que desempeñaste',
+	'continue_with_feedback' => ' Evaluacion especifica, ayudanos a ofrecer una mejor experiencia.',
+	'continue_with_group_feedback' => 'Evalua tu equipo',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Puntaje Técnico',

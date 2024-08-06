@@ -31,7 +31,7 @@
             <i class="fa fa-star" style="margin-right: 0.5em"></i>
             {{ $t('frontend.cannot_find_peer') }}
         </p>
-        <h4 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h4>
+        <h5 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h5>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
