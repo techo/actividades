@@ -21,8 +21,10 @@
                 <label>{{ $t('backend.age') }}: </label>
                 <span>{{ edad }}</span>
                 <br>
-                <label>{{ $t('backend.role') }}: </label>
-                <span>{{ rowData.nombreRol }}</span>
+                <label>{{ $t('backend.registration_type') }}: </label>
+                <span v-for="tipoInscripcion in tiposInscripcion" class="label label-primary">
+                    {{ tipoInscripcion.text }}
+                </span>
                 <br>
                 <label>{{ $t('backend.applicable_roles') }}: </label>
                 <span v-for="item in items" class="label label-primary">
@@ -77,6 +79,7 @@ export default {
       type: Number
     },
     items: [],
+    tiposInscripcion: [],
   },
   computed: {
       fechaInscripcion: function () {
@@ -109,9 +112,14 @@ export default {
   },
   mounted() {
     if(this.rowData.roles_aplicados){
-        var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
-        var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
+        let cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
+        let cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
         this.items = JSON.parse(cadenaJSONSinEscape);
+    }
+    if(this.rowData.inscripciones_aplicadas){
+      let cadenaJSONSinComillas = this.rowData.inscripciones_aplicadas.replace(/^"|"$/g, '');
+      let cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
+      this.tiposInscripcion = JSON.parse(cadenaJSONSinEscape);
     }
   },
   methods: {

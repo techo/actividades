@@ -323,7 +323,7 @@ return [
     'registration_channels_description' => 'Aquí puedes ingresar los canales de inscripcion (secundario, universitario, voluntario corporativo, pasante).',
     'blank_channel_field_message' => 'De dejar este campo en blanco no se mostrara al inscribir esta opcion.',
     'google_tracking_code_description' => 'En caso de querer hacer un seguimiento particular, este codigo de seguimento será el que se ejecute al momento de ingresar a la inscripcion de la actividad.',
-    'evaluation_link_description' => 'Este link llega al momento de mandar evaluaciones, debe ser un GOOGLE FORM',
+    'evaluation_link_description' => 'Este link llega al momento de mandar evaluaciones, debe ser un GOOGLE FORM, pega la URL sin acortar',
     'activity_location_description' => 'La ubicación es el lugar físico donde transcurrirá la actividad. Una actividad tiene un solo lugar físico donde los movilizamos desde el punto de encuentro al que se convoca.',
     'auto_confirm_instruction' => 'Al inscribirse están automáticamente confirmados. Para esto Desactiva “Por pago” y “Manual”',
     'payment_verification_instruction' => 'se pre-inscriben y tienen que realizar una donación y adjuntar su voucher, el coordinador debe verificar su pago en “Inscriptos” para que la inscripcion finalice.',

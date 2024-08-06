@@ -11,7 +11,7 @@
                                 :aria-controls="'cardEvaluacionPersona_'+ persona.idPersona"
                                 @click="cambiarIcono"
                         >
-                            {{ $t('frontend.feedback_of') }} {{ nombre }} - {{ persona.rol }}
+                            {{ $t('frontend.feedback_of') }} {{ nombre }} <span v-if="persona.rol"> - {{ persona.rol }} </span>
                             <span v-show="abierto" class="pull-right"><i class="fa fa-chevron-down"></i></span>
                             <span v-show="!abierto" class="pull-right"><i class="fa fa-chevron-up"></i></span>
                         </h6>
@@ -280,12 +280,13 @@
 
     .infoPuntaje {
         border-radius: 50%;
-        width: 20px;
-        height: 20px;
+        width: 40px;
+        height: 40px;
         background: gray;
-        display: inline-block;
+        display: table-cell;
         text-align: center;
         vertical-align: middle;
+        font-size: medium;
         padding-top: 3px;
         margin-left: 3px;
     }

@@ -404,7 +404,7 @@ return [
 
 	// evaluarActividad.vue
 	'feedback_text' => 'Tu opinión nos ayuda a mejorar como organización y a hacer que las actividades sean cada vez más provechosas.',
-	'activity_feedback' => 'Evalúa la actividad',
+	'activity_feedback' => '1 . Evalúa la actividad',
 	'general_score' => 'Puntaje General',
 	'doesn_not_apply' => 'No Aplica / No tengo opinión',
 	'comments' => 'Comentarios',
@@ -412,13 +412,14 @@ return [
 	'send' => 'Enviar',
 	'feedback_date_expired' => 'La fecha de fin de las evaluaciones ya pasó',
 	'unable_to_sent_feeback' => 'No se pudo guardar la evaluación. Intentalo de nuevo más tarde.',
-	'continue_with_feedback' => 'Continúa Evaluación',
+	'continue_with_feedback' => 'Ayudanos a seguir mejorando la experiencia',
+	'continue_with_group_feedback' => 'Evaluación especifica por el Rol que desempeñaste',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Puntaje Técnico',
 	'technical_score_description' => 'Conocimientos sobre la tarea a desarrollar',
 	'social_score' => 'Puntaje Social',
-	'social_score_description' => 'Habilidades para comunicarse y empatizar con otros.',
+	'social_score_description' => 'Habilidades para comunicarse y empatizar con otras personas.',
 	'gender_score' => 'Puntaje perspectiva de género',
 	'gender_score_description' => 'Promoción de un entorno seguro y de igualdad.',
 
@@ -434,7 +435,7 @@ return [
 
 
 	// contenedorEvaluaciones.vue
-	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
+	'feedback_to_your_peers' => '2 . Evalúa a participantes',
 	'peers_already_received_feedback' => 'Compañeros ya evaluados',
 	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla',
 	'search_volunteer' => 'Nombre, apellido o DNI del voluntario',

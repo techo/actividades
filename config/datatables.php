@@ -220,16 +220,22 @@ return [
                 'sortField' => 'nombreGrupo',
                 'title' => 'Grupo'
             ],
+
+            [
+                'name' => 'nombreRol',
+                'sortField' => 'nombreRol',
+                'title' => 'Rol'
+            ],
             [
                 'name' => 'oficina',
                 'sortField' => 'oficina',
                 'title' => 'Oficina'
             ],
-            [
-                'name' => '__component:inscripciones_aplicadas',
-                'sortField' => 'inscripciones_aplicadas',
-                'title' => 'Tipo Inscripción'
-            ],
+            // [
+            //     'name' => '__component:inscripciones_aplicadas',
+            //     'sortField' => 'inscripciones_aplicadas',
+            //     'title' => 'Tipo Inscripción'
+            // ],
             [
                 'name' => '__component:estado_persona',
                 'sortField' => 'estadoPersona',

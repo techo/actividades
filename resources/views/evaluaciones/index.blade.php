@@ -23,19 +23,23 @@
     >
     </contenedor-evaluaciones>
 
-    @if($miGrupo->linkEvaluacion != '')
-        <br>
-        <h4 class="subtitle">{{ __('frontend.continue_with_feedback') }}</h4>
-        <iframe src="{{ $miGrupo->linkEvaluacion }}/viewform?embedded=true" 
-            width="100%" height="1048" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+    @if($actividad->linkEvaluacion)
+        <div>
+            <h4 class="subtitle">3 . {{ __('frontend.continue_with_feedback') }}</h4>
+            <iframe src="{{ $actividad->linkEvaluacion }}/viewform?embedded=true" 
+                width="100%" height="1048" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+        </div>
+
     @endif
 
-    @if($actividad->linkEvaluacion)
-        <br>
-        <h4 class="subtitle">{{ __('frontend.continue_with_feedback') }}</h4>
-        <iframe src="{{ $actividad->linkEvaluacion }}/viewform?embedded=true" 
-            width="100%" height="1048" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+    @if($miGrupo->linkEvaluacion != '')
+        <div>
+            <h4 class="subtitle">4 . {{ __('frontend.continue_with_group_feedback') }}</h4>
+            <iframe src="{{ $miGrupo->linkEvaluacion }}/viewform?embedded=true" 
+                width="100%" height="1048" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+        </div>
     @endif
+
 @endsection
 
 @section('additional_scripts')

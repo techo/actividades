@@ -4,15 +4,6 @@
         <div v-for="persona in listadoParaEvaluar" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
         </div>
-        <h4 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h4>
-        <div v-for="persona in evaluados" class="mt-2">
-            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
-        </div>
-        <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
-            <i class="fa fa-star" style="margin-right: 0.5em"></i>
-            {{ $t('frontend.cannot_find_peer') }}
-        </p>
-
         <div class="row"  v-if="!evaluacionPasada">
             <div class="col-md-8">
                 <div class="form-group">
@@ -36,6 +27,17 @@
                 </div>
             </div>
         </div>
+        <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
+            <i class="fa fa-star" style="margin-right: 0.5em"></i>
+            {{ $t('frontend.cannot_find_peer') }}
+        </p>
+        <h4 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h4>
+        <div v-for="persona in evaluados" class="mt-2">
+            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
+        </div>
+        
+
+
     </span>
 </template>
 

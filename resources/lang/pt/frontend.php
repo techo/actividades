@@ -402,7 +402,7 @@ return [
 
 	// evaluarActividad.vue
 	'feedback_text' => 'Tua opnião nos ajuda a melhorar e fazer com que as atividades sejam cada vez melhores. ',
-	'activity_feedback' => 'Avalie a Atividade',
+	'activity_feedback' => '1 . Avalie a Atividade',
 	'general_score' => 'Pontuação Geral',
 	'doesn_not_apply' => 'Não se Aplica / Não quero opinar',
 	'comments' => 'Comentários',
@@ -410,7 +410,7 @@ return [
 	'send' => 'Enviar',
 	'feedback_date_expired' => 'A Data final das avaliações já expirou',
 	'unable_to_sent_feeback' => 'Não é possivel gravar a avaliação, Tente novamente mais tarde.',
-	'continue_with_feedback' => 'Continue Avaliações',
+	'continue_with_feedback' => '2 . Continue Avaliações',
 
 	// evaluarPersona.vue
 	'technical_score' => 'Pontuação Técnica',

@@ -15,6 +15,9 @@
                     <h3 class="pull-left">{{ __('backend.evaluations') }}</h3>
                     <span class="pull-right">
                         <br>
+                        <a class="btn btn-primary" style="margin-right: 4px;" href="/actividades/{{$actividad->idActividad}}/evaluaciones" target="_blank">
+                            <i class="fa fa-eye"></i>  {{ __('backend.view') }}
+                        </a>
                         <btn-enviar-evaluaciones :id="{{$actividad->idActividad}}"></btn-enviar-evaluaciones>
                     </span>
                 </div>
