@@ -216,10 +216,10 @@
                         <i class="fas fa-map-marker-alt"></i> <span>{{ actividad.ubicacion }}</span>
                     </div>
                 </div>
-                <hr>
+                <!-- <hr>
                 <div class="row">
                     <div class="col-md-12">{{ actividad.descripcion }}</div>
-                </div>
+                </div> -->
 
             </div>
         </div>
