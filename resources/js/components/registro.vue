@@ -178,7 +178,14 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <label>{{ $t('frontend.telephone') }} *</label>
-                        <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono">
+                        <VueTelInput v-model="phoneNumber"
+                                        @country-changed="handleCountryChange"
+                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
+                                        placeholder="Enter phone number"
+                                        :disabledFetchingCountry="true"
+                                        ref="telInput">
+                                    </VueTelInput>
+                        <!-- <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono"> -->
                         <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
                     </div>
                 </div>
@@ -389,8 +396,11 @@
 
 <script>
     import _ from 'lodash'
+    import { VueTelInput } from 'vue-tel-input';
+    import 'vue-tel-input/dist/vue-tel-input.css';
     export default {
       name: 'registro',
+        components: {VueTelInput},
       data: function(){
         var data = {
           user: {},
@@ -402,6 +412,8 @@
           paises: [],
           provincias: [],
           localidades: [],
+            phoneNumber: '',
+            previousCountry: '',
           message: {
             danger: false,
             text: ''
@@ -429,7 +441,8 @@
       },
       props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear'],
       mounted: function(){
-        this.traer_paises()
+        this.traer_paises();
+        this.removeUndefinedText();
       },
       watch: {
         'user.email': function() { this.validar_data('email') },
@@ -439,7 +452,10 @@
         'user.nacimiento': function() { this.validar_data('nacimiento') },
         'user.genero': function() { this.validar_data('genero') },
         'user.dni': function() { this.validar_data('dni') },
-        // 'user.telefono': function() { this.validar_data('telefono') },
+        'phoneNumber': function () {
+            this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');
+            this.validar_data('telefono')
+        },
         'user.pais': function() { 
             this.validar_data('pais') 
             this.traer_provincias() 
@@ -556,7 +572,35 @@
               this.localidadSeleccionada = null
             })
           }
-        }
+        },
+        removeUndefinedText() {
+            const telInput = this.$refs.telInput.$el;
+            const selectionSpan = telInput.querySelector('.vti__selection');
+            if (selectionSpan) {
+                selectionSpan.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE && (node.nodeValue.trim() === 'undefined' || node.nodeValue.trim() === '')) {
+                    node.nodeValue = '';
+                }
+                });
+            }
+        },
+        handleCountryChange(countryData) {
+            const currentDialCode = this.previousCountry ? this.previousCountry.dialCode : '';
+            const newDialCode = countryData.dialCode;
+
+            if (currentDialCode == '' && this.user.telefono.startsWith('+')) {
+                this.previousCountry =  countryData.dialCode;
+            } else {
+                // Extraer el número sin el código de país anterior
+                const phoneNumberWithoutCountryCode = this.phoneNumber.replace('+' + currentDialCode, '').trim();
+
+                // Actualizar el teléfono con el nuevo código de país
+                this.user.telefono = '+' + newDialCode + phoneNumberWithoutCountryCode;
+                this.phoneNumber = this.user.telefono;
+                this.previousCountry = newDialCode;
+            }
+        },
+
       }
     }
 </script>
