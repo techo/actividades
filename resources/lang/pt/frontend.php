@@ -433,7 +433,7 @@ return [
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Avalie seus colegas',
 	'peers_already_received_feedback' => 'Colegas já avaliados',
-	'cannot_find_peer' => 'Não encontras a pessoa que você quer avaliar? Use esta busca para incluir-lá',
+	'cannot_find_peer' => 'Não encontras a pessoa que você quer avaliar? clique para incluir-lá',
 	'search_volunteer' => 'Nome, Sobrenome o CPF do voluntário',
 	'type_to_search' => 'Comece a escrever para buscar.',
 	'include_peer' => 'Incluir na mesma avaliação',

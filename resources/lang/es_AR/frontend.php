@@ -438,7 +438,7 @@ return [
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => '2 . Evalúa a participantes',
 	'peers_already_received_feedback' => 'Compañeros ya evaluados',
-	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla',
+	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Haz click aqui para incluirla',
 	'search_volunteer' => 'Nombre, apellido o DNI del voluntario',
 	'type_to_search' => 'Empezá a escribir para buscar.',
 	'include_peer' => 'Incluir en mis evaluaciones',

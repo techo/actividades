@@ -27,9 +27,8 @@
         <div>
             <h4 class="subtitle">3 . {{ __('frontend.continue_with_feedback') }}</h4>
             <iframe src="{{ $actividad->linkEvaluacion }}/viewform?embedded=true" 
-                width="100%" height="1048" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+                width="100%" height="500" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
         </div>
-
     @endif
 
     @if($miGrupo->linkEvaluacion != '')

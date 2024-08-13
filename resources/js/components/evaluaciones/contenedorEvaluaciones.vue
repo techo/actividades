@@ -1,10 +1,12 @@
 <template>
     <span>
         <h4>{{ $t('frontend.feedback_to_your_peers') }}</h4>
-        <div v-for="persona in listadoParaEvaluar" class="mt-2">
-            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
-        </div>
-        <div class="row"  v-if="!evaluacionPasada">
+        <p class="alert alert-info mt-3" v-if="!evaluacionPasada" @click="showSearcher = !showSearcher">
+            <i class="fa fa-star" style="margin-right: 0.5em"></i>
+            {{ $t('frontend.cannot_find_peer') }}
+        </p>
+        
+        <div class="row"  v-if="!evaluacionPasada && showSearcher">
             <div class="col-md-8">
                 <div class="form-group">
                     <label for="listadoInscriptos">{{ $t('frontend.search_volunteer') }}</label>
@@ -26,11 +28,12 @@
                     <button class="btn btn-primary" @click="incluirPersona">{{ $t('frontend.include_peer') }}</button>
                 </div>
             </div>
+            
+            
         </div>
-        <p class="alert alert-info mt-3" v-if="!evaluacionPasada">
-            <i class="fa fa-star" style="margin-right: 0.5em"></i>
-            {{ $t('frontend.cannot_find_peer') }}
-        </p>
+        <div v-for="persona in listadoParaEvaluar" class="mt-2">
+            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
+        </div>
         <h5 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h5>
         <div v-for="persona in evaluados" class="mt-2">
             <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
@@ -67,7 +70,8 @@
                 miGrupo: {},
                 gruposSubordinados: [],
                 personasNoEvaluadas: [],
-                evaluados: []
+                evaluados: [],
+                showSearcher: false,
             }
         },
         created: function () {
