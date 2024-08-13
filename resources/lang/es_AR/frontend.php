@@ -302,6 +302,7 @@ return [
     'meeting_points' => 'Puntos de encuentro / URL de Conexión',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
+    'group_chat' => 'Chat Grupal',
 
     // actividadesController
     'error' => 'ERROR',

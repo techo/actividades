@@ -302,6 +302,7 @@ return [
 	'meeting_points' => 'Onde nos encontramos?',
 	'referring' => 'Liderança',
 	'share' => 'COMPARTILHAR',
+    'group_chat' => 'Chat em Grupo',
 
 	// actividadesController
 	'error' => 'ERRO',

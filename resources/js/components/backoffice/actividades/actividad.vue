@@ -437,7 +437,7 @@
 
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="applicable_roles">{{ $t('backend.applicable_roles') }}</label>
                             <p class="help-block">
@@ -458,7 +458,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="registration_type">{{ $t('backend.registration_type') }}</label>
                             <p class="help-block">
@@ -478,7 +478,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="requiere_estudios">{{ $t('frontend.estudios') }}</label>
                             <p class="help-block">
@@ -491,6 +491,17 @@
                             <!-- <p class="help-block">
                                 {{ $t('backend.blank_channel_field_message') }}
                             </p> -->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="chatWhatsapp">{{ $t('backend.whatsapp_group_chat') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.whatsapp_group_chat_url') }}
+                            </p>
+                            <input type="text" class="form-control" v-model="actividad.chat_grupal_whatsapp" 
+                            :disabled="!edicion" id="chatWhatsapp">
+                            <span class="help-block">{{ errors.chat_grupal_whatsapp }}</span>
                         </div>
                     </div>
                 </div>
@@ -667,7 +678,10 @@
 
                     tipo : {
                         idCategoria: 1
-                    }
+                    },
+
+                    chat_grupal_whatsapp: null,
+
                 },
                 fechas: {
                     fechaInicio: null,
