@@ -69,6 +69,11 @@ class Actividad extends Model
         return $this->hasMany(Grupo::class, 'idActividad')->orderBy('nombre');
     }
 
+    public function jornadas()
+    {
+        return $this->hasMany(Jornada::class, 'idActividad')->orderBy('nombre');
+    }
+
     public function getGrupoRaizAttribute()
     {
         return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->first();

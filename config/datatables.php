@@ -299,6 +299,32 @@ return [
         ],
 
     ],
+    'jornadas' => [
+        'fields' => [
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre',
+            ],
+            [
+                'name' => 'activo',
+                'sortField' => 'activo',
+                'title' => 'Activo',
+            ],
+            [
+                'name' => 'inscriptos',
+                'title' => 'Inscriptos',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ]
+        ],
+
+    ],
     'usuarios' => [
         'fields' => [
             [

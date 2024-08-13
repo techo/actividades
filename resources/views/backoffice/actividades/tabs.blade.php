@@ -11,6 +11,9 @@
     <li class="{{ ($tab == 'grupos')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/grupos" aria-expanded="true">{{__('backend.groups')}}</a>
     </li>
+    <li class="{{ ($tab == 'jornadas')?'active':'' }}">
+        <a href="/admin/actividades/{{ $actividad->idActividad }}/jornadas" aria-expanded="true">{{__('backend.jornadas')}}</a>
+    </li>
     <li class="{{ ($tab == 'evaluaciones')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/evaluaciones" aria-expanded="true">{{__('backend.evaluations')}}</a>
     </li>

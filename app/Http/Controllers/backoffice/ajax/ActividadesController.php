@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 use App\Actividad;
 use App\Coordinador;
 use App\Exports\ActividadesExport;
+use App\Exports\JornadasExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\CrearCoordinador;
 use App\PuntoEncuentro;
@@ -34,6 +35,19 @@ class ActividadesController extends BaseController
     {
         $actividad = Actividad::findorFail($id);
         return $actividad->grupos;
+    }
+
+    public function jornadas(Request $request, $id)
+    {
+        $per_page = 25;
+        if($request->filled('per_page')) {
+            $per_page = $request->per_page;
+        }
+
+        $export = new JornadasExport($request->filter, $request->sort, $id);
+        $collection = $export->collection();
+        $result = $this->paginate($collection, $per_page);
+        return $result;
     }
 
     public function puntos(Actividad $id)

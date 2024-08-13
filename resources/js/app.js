@@ -135,6 +135,10 @@ Vue.component('inscripciones-importar-modal', InscripcionesImportarModal);
 Vue.component('asignacion-de-rol', asignacionDeRol);
 Vue.component('crud-footer', CrudFooter);
 Vue.component('datatable', VueTable);
+
+import GenericDatatable from './components/backoffice/datatable/GenericDatatable';
+Vue.component('generic-datatable', GenericDatatable);
+
 Vue.component('inscripciones-table', InscripcionesTable);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);

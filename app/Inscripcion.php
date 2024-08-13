@@ -68,4 +68,9 @@ class Inscripcion extends Model
         return $query->where('presente', '=', '0' );
     }
 
+    public function jornadas()
+    {
+        return $this->belongsToMany(Jornada::class, 'InscripcionJornada', 'idInscripcion', 'idJornada');
+    }
+
 }

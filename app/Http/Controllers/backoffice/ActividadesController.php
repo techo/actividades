@@ -256,6 +256,24 @@ class ActividadesController extends Controller
         );
     }
 
+    public function jornadas(Actividad $id)
+    {
+        $actividad = $id;
+
+        $fieldsJornadas = json_encode(config('datatables.jornadas.fields'));
+        $sortOrderJornadas = json_encode(config('datatables.jornadas.sortOrder'));
+        $jornadas = $actividad->jornadas;
+
+        return view('backoffice.actividades.jornadas', 
+            compact(
+                'actividad',
+                'fieldsJornadas',
+                'sortOrderJornadas',
+                'jornadas'
+            ) 
+        );
+    }
+
     public function evaluaciones(Actividad $id)
     {
         $actividad = $id;
