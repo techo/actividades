@@ -15,6 +15,7 @@ const i18n = new VueInternationalization({
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
+import CarouselDeTarjetas from './components/carouselDeTarjetas.vue';
 import Inscripcion from './components/inscripcion';
 import ConfirmacionPago from './components/confirmacionPago';
 import Autenticar from './components/autenticar';
@@ -70,6 +71,7 @@ Vue.component('filtro', Filtro);
 Vue.component('login', Login);
 Vue.component('autenticar', Autenticar);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
+Vue.component('carousel-de-tarjetas', CarouselDeTarjetas);
 Vue.component('inscripcion', Inscripcion);
 Vue.component('confirmacionPago', ConfirmacionPago);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);

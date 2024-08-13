@@ -1,12 +1,7 @@
 <template>
     <span>
         <div class="row py-2">
-            <tarjeta
-                v-for="act in actividades"
-                v-bind:actividad="act"
-                v-bind:key="Math.random() + '_' + act.idActividad"
-            >
-            </tarjeta>
+            <carousel-de-tarjetas :actividades="actividades"/>
         </div>
 
         <div v-show="loading" class="loading" style="text-align: center">
@@ -22,6 +17,7 @@
     import axios from 'axios';
     import Tarjeta from './tarjeta';
     import Suscribe from './suscribe';
+    import CarouselDeTarjetas from './carouselDeTarjetas.vue';
 
     export default {
         name: "contenedor-de-tarjetas",
@@ -125,5 +121,4 @@
 </script>
 
 <style scoped>
-
 </style>
