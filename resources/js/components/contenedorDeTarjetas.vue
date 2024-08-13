@@ -1,8 +1,8 @@
 <template>
     <span>
-        <div class="row py-2">
+        <!-- <div class="row py-2"> -->
             <carousel-de-tarjetas :actividades="actividades"/>
-        </div>
+        <!-- </div> -->
 
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
