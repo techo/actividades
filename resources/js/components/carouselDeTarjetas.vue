@@ -1,18 +1,7 @@
 <template>
-    <!-- <div class="carousel-container">
-        <div class="carousel">
-            <tarjeta
-                v-for="act in actividades"
-                v-bind:actividad="act"
-                v-bind:key="Math.random() + '_' + act.idActividad"
-            >
-            </tarjeta>
-        </div>
-    </div> -->
-
     <div class="peliculas-recomendadas">
         <div class="contenedor-titulo-controles">
-            <h3>peliculas</h3>
+            <h3>Los más visitados esta semana 🔥</h3>
             <div class="indicadores"></div>
         </div>
 
@@ -23,69 +12,13 @@
 
             <div class="contenedor-carousel">
                 <div class="carousel">
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
-                    <div class="pelicula">
-                        <a href="#"><img src="https://www.cronista.com/files/image/390/390945/617737dd5a01a.jpg" alt=""></a>
-                    </div>
+                    <tarjeta
+                        class="pelicula"
+                        v-for="act in actividades"
+                        v-bind:actividad="act"
+                        v-bind:key="Math.random() + '_' + act.idActividad"
+                    >
+                    </tarjeta>
                 </div>
             </div>
 
@@ -139,29 +72,30 @@
 .peliculas-recomendadas .contenedor-principal .flecha-derecha {
     position: absolute;
     border: none;
-    background: rgba(0,0,0,0.3);
-    font-size: 40px;
+    background: rgba(0,0,0,0);
+    font-size: 45px;
     height: 50%;
     top: calc(50% - 25%);
     line-height: 40px;
     width: 50px;
-    color: #fff;
+    color: black;
     cursor: pointer;
     z-index: 500;
     transition: .2s ease all;
+    outline: none;
 }
 
-.peliculas-recomendadas .contenedor-principal .flecha-izquierda:hover,
+/* .peliculas-recomendadas .contenedor-principal .flecha-izquierda:hover,
 .peliculas-recomendadas .contenedor-principal .flecha-derecha:hover {
     background: rgba(0,0,0, .9);
-}
+} */
 
 .peliculas-recomendadas .contenedor-principal .flecha-izquierda {
-    left: 0;
+    left: -26px;
 }
 
 .peliculas-recomendadas .contenedor-principal .flecha-derecha {
-    right: 0;
+    right: -26px;
 }
 
 /*-------------- Carousel -----------------*/
@@ -190,7 +124,12 @@
 
 /*-------------- Media Queries -----------------*/
 @media screen and (max-width: 800px) {
-    .peliculas-recomendadas .contenedor-carousel {
+    .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
+        min-width: 50%;
+    }
+
+
+    /* .peliculas-recomendadas .contenedor-carousel {
         overflow: visible;
     }
 
@@ -204,6 +143,12 @@
     .peliculas-recomendadas .flecha-izquierda,
     .peliculas-recomendadas .flecha-derecha {
         display: none;
+    } */
+}
+
+@media screen and (max-width: 425px) {
+    .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
+        min-width: 100%;
     }
 }
 
