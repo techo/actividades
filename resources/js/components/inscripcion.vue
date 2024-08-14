@@ -50,7 +50,7 @@
                             <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
                         </p>
                     </div> -->
-                    <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary"></div>
+                    <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary" v-if="validateForm()"></div>
                 </div>
                 </form>
             </div>
@@ -86,7 +86,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="validateForm();rolAplicado=true;" >
+                                @click="if(validateForm())rolAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -129,7 +129,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="validateForm();tipoInscriptoAplicado=true;" >
+                                @click="if(validateForm()) tipoInscriptoAplicado=true" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -167,7 +167,7 @@
                                 class="btn btn-primary" 
                                 data-dismiss="modal" 
                                 aria-label="Close" 
-                                @click="validateForm();estudiosRevisados();" >
+                                @click="if(validateForm())  estudiosRevisados();" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -329,6 +329,7 @@
                 if(!this.$parent.$refs.login.authenticated) {
                 // event.preventDefault();
                 this.mostrarLogin();
+                return false
                 }
                 return true;
             },

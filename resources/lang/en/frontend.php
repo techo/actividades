@@ -424,7 +424,7 @@ return [
 	// contenedorEvaluaciones.vue
 	'feedback_to_your_peers' => 'Give feedback to your peers',
 	'peers_already_received_feedback' => 'Already received feedback',
-	'cannot_find_peer' => 'If you cannot see the peer your looking for use the search field to look it up',
+	'cannot_find_peer' => 'If you cannot see the peer your looking click here to look it up',
 	'search_volunteer' => 'Name or surname',
 	'type_to_search' => 'Start typing to search.',
 	'include_peer' => 'Include peer in my feedback',

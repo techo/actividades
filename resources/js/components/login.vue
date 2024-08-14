@@ -7,10 +7,10 @@
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
+                            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
                                     style="opacity: 1; margin-top: -1em">
                                 <span aria-hidden="true" class="cerrar">{{ $t('frontend.close') }} &times;</span>
-                            </button>
+                            </button> -->
                         </div>
                         <div class="row">
                             <div class="col-md-12">

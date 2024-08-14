@@ -150,6 +150,12 @@
             </div>
             <div class="col-md-6">
                 <div style="text-align: right">
+                    @if ($chatGrupalWhatsapp && $actividad->chat_grupal_whatsapp != null)
+                        <a class="btn rounded-pill text-white bg-success" href="{{ $actividad->chat_grupal_whatsapp }}" target="_blank">
+                            <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
+                            <span>{{ __('frontend.group_chat') }}</span>
+                        </a>
+                    @endif
                     <a class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
                         <i class="fas fa-share-alt"></i>{{ __('frontend.share') }}
                     </a>

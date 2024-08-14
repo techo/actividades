@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div class="accordion" :id="'evaluacionPersona_' + persona.idPersona">
             <div class="card"  style="width: 100%">
                 <div class="card-header" id="headingOne">
