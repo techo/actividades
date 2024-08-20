@@ -171,10 +171,36 @@
         },
         mounted() {
             const fila = document.querySelector(".contenedor-carousel");
-            const peliculas = document.querySelector(".pelicula");
-
             const flechaIzquierda = document.getElementById("flecha-izquierda");
             const flechaDerecha = document.getElementById("flecha-derecha");
+
+            // Función para actualizar la visibilidad de las flechas
+            const actualizarFlechas = () => {
+                // Verificar si el scroll está al inicio
+                if (fila.scrollLeft === 0) {
+                    flechaIzquierda.classList.add('text-muted');
+                    flechaIzquierda.style.cursor = 'default';
+                } else {
+                    flechaIzquierda.classList.remove('text-muted');
+                    flechaIzquierda.style.cursor = 'pointer';
+                }
+
+                // Verificar si el scroll está al final
+                const maxScrollLeft = fila.scrollWidth - fila.clientWidth;
+                if (fila.scrollLeft >= maxScrollLeft && maxScrollLeft != 0) {
+                    flechaDerecha.classList.add('text-muted');
+                    flechaDerecha.style.cursor = 'default';
+                } else {
+                    flechaDerecha.classList.remove('text-muted');
+                    flechaDerecha.style.cursor = 'pointer';
+                }
+            };
+
+            // Inicializar la visibilidad de las flechas
+            actualizarFlechas();
+
+            // Listener para el scroll horizontal
+            fila.addEventListener('scroll', actualizarFlechas);
 
             /*-------------- Event listener para flecha derecha -----------------*/
             flechaDerecha.addEventListener("click", () => {
@@ -183,7 +209,7 @@
 
             /*-------------- Event listener para flecha izquierda -----------------*/
             flechaIzquierda.addEventListener("click", () => {
-            fila.scrollLeft -= fila.offsetWidth;
+                fila.scrollLeft -= fila.offsetWidth;
             });
         },
     }
