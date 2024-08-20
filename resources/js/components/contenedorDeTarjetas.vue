@@ -1,7 +1,7 @@
 <template>
     <span>
         <!-- <div class="row py-2"> -->
-            <carousel-de-tarjetas v-show="!vacio && !loading" :actividades="actividades"/>
+            <carousel-de-tarjetas v-show="!vacio && !loading" :actividades="actividades" :title="'Los más visitados esta semana 🔥'"/>
         <!-- </div> -->
 
         <div v-show="loading" class="loading" style="text-align: center">

@@ -1,7 +1,7 @@
 <template>
     <div class="peliculas-recomendadas">
         <div class="contenedor-titulo-controles">
-            <h3>Los más visitados esta semana 🔥</h3>
+            <h3>{{title}}</h3>
             <div class="indicadores"></div>
         </div>
 
@@ -163,7 +163,11 @@
             actividades: {
                 type: Array,
                 required: true
-            }
+            },
+            title: {
+                type: String,
+                required: true
+            },
         },
         mounted() {
             const fila = document.querySelector(".contenedor-carousel");
