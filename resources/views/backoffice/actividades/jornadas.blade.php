@@ -10,26 +10,15 @@
     <div class="tab-content">
 
         <div class="tab-pane active" id="jornadas">
-
-           
-            <div class="box box-primary">
-
-                <div class="box-header with-border">
-                    hola    </div>
-
-                <div class="box-body">
-                    <generic-datatable  
-                        api-url="{{ '/admin/ajax/actividades/'. $actividad->idActividad .'/jornadas'}}"
-                        fields="{{ $fieldsJornadas }}"
-                        sort-order = "{{ $sortOrderJornadas }}"
-                        placeholder-text="{{ __('backend.search_by_name_or_role') }}"
-                        ref="jornadasTabla"
-                    ></generic-datatable>
-                    </div>
-                </div>
-
-            </div>
-
+            <jornadas 
+                actividad="{{ json_encode($actividad) }}"
+                id-actividad="{{ $actividad->idActividad }}" 
+                actividad-inicio="{{ $actividad->fechaInicio }}" 
+                actividad-fin="{{ $actividad->fechasFin }}" 
+                fields="{{ $fieldsJornadas }}" 
+                sort-order="{{ $sortOrderJornadas }}"
+                api-url="{{ '/admin/ajax/actividades/'. $actividad->idActividad .'/jornadas'}}" >
+            </jornadas>
         </div>
 
     </div>

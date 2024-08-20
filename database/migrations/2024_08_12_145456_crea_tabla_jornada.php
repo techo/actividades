@@ -16,6 +16,7 @@ class CreaTablaJornada extends Migration
         Schema::create('Jornada', function (Blueprint $table) {
             $table->increments('idJornada');
             $table->integer('idActividad');
+            $table->integer('idPersona');
             
             $table->string('nombre');
             $table->dateTime('fechaInicio')->nullable();
@@ -25,7 +26,7 @@ class CreaTablaJornada extends Migration
             $table->timestamps();
 
             $table->foreign('idActividad', 'Jornada_ibfk_1')->references('idActividad')->on('Actividad')->onDelete('CASCADE');
-
+            $table->foreign('idPersona', 'Jornada_ibfk_persona')->references('idPersona')->on('Persona')->onDelete('CASCADE');
         });
     }
 

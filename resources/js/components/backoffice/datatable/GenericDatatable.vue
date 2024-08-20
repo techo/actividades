@@ -118,7 +118,8 @@ export default {
         if (this.detailUrl !== undefined) {
             window.location.href = this.detailUrl + data.id;
         }
-      this.$refs.vuetable.toggleDetailRow(data.id)
+      // this.$refs.vuetable.toggleDetailRow(data.id);
+      this.$emit('onClickRow', data);
     },
     mostrarLoadingAlert () {
         this.$refs.loading.openSimplert({

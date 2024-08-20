@@ -15,6 +15,7 @@ import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
+import Jornadas from './components/backoffice/actividades/jornadas'
 import Accesos from './components/backoffice/actividades/accesos'
 import ModalAuditoria from './components/backoffice/auditorias/ModalAuditoria';
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
@@ -23,6 +24,7 @@ import InscripcionesMensajes from './components/backoffice/actividades/inscripci
 import InscripcionesGrupoModal from './components/backoffice/actividades/inscripciones-grupo-modal'
 import InscripcionesRolModal from './components/backoffice/actividades/inscripciones-rol-modal'
 import InscripcionesPuntoModal from './components/backoffice/actividades/inscripciones-punto-modal'
+import InscripcionesJornadaModal from './components/backoffice/actividades/inscripciones-jornada-modal'
 import InscripcionesDesinscribirModal from './components/backoffice/actividades/inscripciones-desinscribir-modal'
 import InscripcionesImportarModal from './components/backoffice/actividades/inscripciones-importar-modal'
 import asignacionDeRol from './components/backoffice/roles/asignacionDeRol'
@@ -122,6 +124,7 @@ Vue.component('grupo-edit-modal', GrupoEditModal);
 
 Vue.component('actividad', Actividad);
 Vue.component('puntos', Puntos);
+Vue.component('jornadas', Jornadas);
 Vue.component('accesos', Accesos);
 Vue.component('modal-auditoria', ModalAuditoria);
 Vue.component('filtros-inscripciones', FiltrosInscripciones);
@@ -130,6 +133,7 @@ Vue.component('inscripciones-mensajes', InscripcionesMensajes);
 Vue.component('inscripciones-rol-modal', InscripcionesRolModal);
 Vue.component('inscripciones-grupo-modal', InscripcionesGrupoModal);
 Vue.component('inscripciones-punto-modal', InscripcionesPuntoModal);
+Vue.component('inscripciones-jornada-modal', InscripcionesJornadaModal);
 Vue.component('inscripciones-desinscribir-modal', InscripcionesDesinscribirModal);
 Vue.component('inscripciones-importar-modal', InscripcionesImportarModal);
 Vue.component('asignacion-de-rol', asignacionDeRol);

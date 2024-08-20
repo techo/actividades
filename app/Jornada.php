@@ -10,7 +10,7 @@ class Jornada extends Model
     use SoftDeletes;
     protected $table = 'Jornada';
     protected $primaryKey = 'idJornada';
-    protected $fillable = ['idOficina', 'nombre', 'idPais', 'activo', 'fechaInicio', 'fechaFin', 'idEquipoPadre', 'area'];
+    protected $fillable = ['nombre', 'idActividad', 'idPersona', 'fechaInicio', 'fechaFin', 'activo'];
     protected $guarded = [ 'idJornada' ];
 
     public function actividad()

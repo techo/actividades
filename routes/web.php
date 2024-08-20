@@ -276,6 +276,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
     Route::get('/actividades/{id}/jornadas', 'backoffice\ActividadesController@jornadas')->middleware('can:ver,App\Actividad,id');
     Route::get('/ajax/actividades/{id}/jornadas', 'backoffice\ajax\ActividadesController@jornadas');
+
+    Route::post('ajax/actividades/{id}/jornadas', 'backoffice\ajax\JornadasController@store')->middleware('can:ver,App\Actividad,id');;
+
+
+    Route::put('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@update');
+    Route::delete('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@delete');
     
     Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
     Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinadores');
