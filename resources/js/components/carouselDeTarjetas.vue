@@ -146,11 +146,11 @@
     } */
 }
 
-@media screen and (max-width: 425px) {
+/* @media screen and (max-width: 425px) {
     .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
         min-width: 100%;
     }
-}
+} */
 
 </style>
 
@@ -195,6 +195,7 @@
                     flechaDerecha.style.cursor = 'pointer';
                 }
             };
+            this.actualizarNumeroDeActividades();
 
             // Inicializar la visibilidad de las flechas
             actualizarFlechas();
@@ -212,6 +213,42 @@
                 fila.scrollLeft -= fila.offsetWidth;
             });
         },
+        methods: {
+            actualizarNumeroDeActividades() {
+                // Contar el número de elementos en el array actividades
+                const numeroDeActividades = this.actividades.length;
+            }
+        },
+        watch: {
+            actividades: function(newVal) {
+                // Reaccionar a los cambios en `actividades`
+                this.actualizarNumeroDeActividades();
+
+                const desktop = window.matchMedia('(min-width: 801px)').matches;
+                const tablet = window.matchMedia('(max-width: 800px)').matches;
+                const flechaIzquierda = document.getElementById("flecha-izquierda");
+                const flechaDerecha = document.getElementById("flecha-derecha");
+
+                if (desktop) {
+                    if (this.actividades.length <= 3) {
+                        flechaIzquierda.style.display = 'none';
+                        flechaDerecha.style.display = 'none';
+                    } else {
+                        flechaIzquierda.style.display = 'block';
+                        flechaDerecha.style.display = 'block';
+                    }
+                }
+                if (tablet) {
+                    if (this.actividades.length <= 2) {
+                        flechaIzquierda.style.display = 'none';
+                        flechaDerecha.style.display = 'none';
+                    } else {
+                        flechaIzquierda.style.display = 'block';
+                        flechaDerecha.style.display = 'block';
+                    }
+                } 
+            }
+        }
     }
 </script>
 
