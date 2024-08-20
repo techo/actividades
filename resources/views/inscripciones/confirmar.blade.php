@@ -38,6 +38,7 @@
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
                 <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas }}">
+                <input type="hidden" name="jornadas" value="{{ $jornadas }}">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -78,7 +79,36 @@
                     @endforeach
                     </div>
                 @endif
+                @if (is_array($jornadasSelected) && count($jornadasSelected) > 0)
+                    @php
+                        $hasSelected = false;
+                        foreach ($jornadasSelected as $jornada) {
+                            if (isset($jornada['selected']) && $jornada['selected'] === true) {
+                                $hasSelected = true;
+                                break;
+                            }
+                        }
+                    @endphp
+                    @if ($hasSelected)
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>{{ __('frontend.jornadas') }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            @foreach($jornadasSelected as $jornada)
+                                @if($jornada['selected'])
+                                    <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
+                                        {{ $jornada['nombre'] }}
+                                    </span>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                
+                @endif
+
                 @if ($rolesAplicados)
                     <hr>
                     <div class="row">
@@ -214,11 +244,11 @@
                     </div>
                     <hr>
                 @endif
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-12">
                         {!! $actividad->descripcion !!}
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>

@@ -30,6 +30,7 @@ class InscripcionesController extends BaseController
         $request->validate([
             'roles_aplicados' => 'json',
             'inscripciones_aplicadas' => 'json',
+            'jornadas' => 'json',
         ]);
         $actividad = Actividad::find($id);
         $actividad->descripcion = clean_string($actividad->descripcion);
@@ -39,13 +40,15 @@ class InscripcionesController extends BaseController
 
         $currentDate = Carbon::now();
         $edad = $currentDate->diffInYears(Carbon::parse(Auth::user()->fechaNacimiento));
-
+        $jornadas = json_decode($request->input('jornadas'), true);
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
             ->with('aplica_rol', $request->input('aplica_rol'))
+            ->with('jornadas', $request->input('jornadas'))
+            ->with('jornadasSelected', json_decode($request->input('jornadas'), true))
             ->with('tipo', $tipo)
             ->with('edad', $edad);
 
@@ -61,6 +64,7 @@ class InscripcionesController extends BaseController
         $request->validate([
             'roles_aplicados' => 'json',
             'inscripciones_aplicadas' => 'json',
+            'jornadas' => 'json',
         ]);
         $actividad = Actividad::find($id);
         $actividad->load('pais','provincia','localidad');
@@ -79,8 +83,25 @@ class InscripcionesController extends BaseController
                 $inscripcion->fechaInscripcion = new Carbon();
                 $inscripcion->roles_aplicados = $request->input('roles_aplicados');
                 $inscripcion->inscripciones_aplicadas = $request->input('inscripciones_aplicadas');
+
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
+
+                
             }
+
+            
+
+
+
+            $jornadas = json_decode($request->input('jornadas'), true);
+            if(count($jornadas)>0){
+                $inscripcion->save();
+                foreach ($jornadas as $jornada) {
+                    if($jornada['selected'])
+                        $inscripcion->jornadas()->attach($jornada['idJornada']);
+                }
+            }
+            
 
             if ($actividad->confirmacion == 1) {
                 $inscripcion->save();

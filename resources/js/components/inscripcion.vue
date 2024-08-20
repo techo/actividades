@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-8" v-if="!mostrarFichaMedica">
-          <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado">
+          <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado">
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -29,6 +29,8 @@
                     <input type="hidden" name="aplica_rol" v-bind:value="aplicaRol">
                    
                     <input type="hidden" name="inscripciones_aplicadas" v-bind:value="convertToJSONInscripciones()">
+
+                    <input type="hidden" name="jornadas" v-bind:value="convertToJSONJornadas()">
 
                 <div class="row" v-for="(item, index) in puntosActivos">
                     <div class="col-md-12">
@@ -95,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div v-else-if="!tipoInscriptoAplicado"x>
+            <div v-else-if="!tipoInscriptoAplicado">
                 <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
 
                 <div class="card-body">
@@ -168,6 +170,40 @@
                                 data-dismiss="modal" 
                                 aria-label="Close" 
                                 @click="if(validateForm())  estudiosRevisados();" >
+                                <span aria-hidden="true">
+                                    {{ $t('frontend.continue') }}
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="!jornadasAplicado">
+                <h2 class="card-title text-center">{{ $t('frontend.jornadas') }}</h2>
+
+                <div class="card-body">
+                    <p>{{ $t('frontend.review_jornadas') }}</p>   
+                    <ul class="list-unstyled">
+                        <li class="listItems" v-for="jornada in jornadas">
+                            <input v-model="jornada.selected" :id="jornada.idJornada" :value="jornada.nombre" type="checkbox"> 
+                            {{ jornada.nombre }} - 
+                            {{ new Date(jornada.fechaInicio).toLocaleDateString('es-ES', 
+                                { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) }}
+                            </input>
+                        </li> 
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
+                            <strong>{{ $t('frontend.sign_up_jornada') }}</strong>
+                        </div>
+                    <div class="row justify-content-center  text-center">
+                        <div class="col-md-3">
+                            <button type="button" 
+                                class="btn btn-primary" 
+                                data-dismiss="modal" 
+                                aria-label="Close" 
+                                @click="if(validateForm())  jornadasAplicado=true;" >
                                 <span aria-hidden="true">
                                     {{ $t('frontend.continue') }}
                                 </span>
@@ -249,12 +285,14 @@
             aplicaRol: false,
             rolAplicado: false,
             tipoInscriptoAplicado: false,
+            jornadasAplicado: false,
             estudiosAplicado: true,
             showCompleteEstudios: false,
             tag: "",
             tag2: "",
             rolesAplicado: [],
             tipoInscriptoTags: [],
+            jornadas: [],
             mostrarFichaMedica: false,
             localidad: {},
             imagen: '',
@@ -264,22 +302,27 @@
         
         watch: {
             rolAplicado: function(newVal, oldVal) {
-                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
                     this.checkSubmit();
                 }
             },
             tipoInscriptoAplicado: function(newVal, oldVal) {
-                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica){
+                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
                     this.checkSubmit();
                 }
             },
             estudiosAplicado: function(newVal, oldVal) {
-                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica){
+                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
                     this.checkSubmit();
                 }
             },
             mostrarFichaMedica: function(newVal, oldVal) {
-                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado){
+                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && this.jornadasAplicado){
+                    this.checkSubmit();
+                }
+            },
+            jornadasAplicado: function(newVal, oldVal) {
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && !this.mostrarFichaMedica){
                     this.checkSubmit();
                 }
             }
@@ -299,9 +342,17 @@
                 self.tipoInscriptoAplicado = true;
             if(self.actividad.requiere_estudios)
                 self.estudiosAplicado = false;
+            if(self.actividad.jornadas.length == 0)
+                self.jornadasAplicado = true;
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
+            self.jornadas = self.actividad.jornadas.map(jornada => {
+                return {
+                    ...jornada,
+                    selected: false
+                };
+            });
           });
           this.validateForm();
         },
@@ -339,6 +390,7 @@
                     formData.append('roles_aplicados', this.convertToJSON());
                     formData.append('aplica_rol', this.aplicaRol);
                     formData.append('inscripciones_aplicadas', this.convertToJSONInscripciones());
+                    formData.append('jornadas', this.convertToJSONJornadas());
                 
                     formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);
                     const headers = { 'Content-Type': 'multipart/form-data' };
@@ -368,6 +420,9 @@
             },
             convertToJSONInscripciones: function() {
                 return JSON.stringify(this.tipoInscriptoTags);
+            },
+            convertToJSONJornadas: function() {
+                return JSON.stringify(this.jornadas);
             },
             estudiosRevisados: function () {
                 axios.get('/admin/ajax/usuarios/'+this.actividad.idPersona+'/estudios').then(response => {
