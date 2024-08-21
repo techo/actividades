@@ -328,6 +328,11 @@ return [
 	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
+	'jornada' => 'Sessão',
+	'jornadas' => 'Sessões',
+	'review_jornadas' => 'Inscreva-se na(s) sessão(ões) em que deseja participar',
+
+
 	'type_of_inscription' => 'Tipo de Inscrição',
 	'whats_a_type_inscription' => 'Selecione o tipo de voluntariado que você está realizando ou representando durante esta atividade',
 

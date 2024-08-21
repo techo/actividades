@@ -320,6 +320,11 @@ return [
 	'yes_apply_rol' => 'Yes, apply for a rol',
 	'no_apply_rol' => "No, I don't want to apply for a rol",
 
+	'jornada' => 'Session',
+	'jornadas' => 'Sessions',
+	'review_jornadas' => 'Sign up for the session(s) you wish to participate in',
+
+
 	'type_of_inscription' => 'Type of Inscription',
 	'whats_a_type_inscription' => 'Select the type of volunteering you are doing or representing during this activity.',
 

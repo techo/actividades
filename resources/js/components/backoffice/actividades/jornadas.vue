@@ -3,12 +3,6 @@
         <jornadas-modal :actividad="actividad_" ></jornadas-modal>
         <div class="box">
             <div class="box-header">
-                <p class="help-block">
-                    {{ $t('backend.meeting_points_description') }}
-                </p>
-                <p class="help-block">
-                    {{ $t('backend.activity_to_show_on_site') }} <b>{{ $t('backend.must_have_active_meeting_points') }}</b>
-                </p>
             </div>
 
             <div class="box-body">

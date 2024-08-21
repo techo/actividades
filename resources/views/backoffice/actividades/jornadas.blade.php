@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.jornadas'))
+@section('page_title', $actividad->nombreActividad . ' - ' . __('frontend.jornadas'))
 
 @section('content')
 <div class="nav-tabs-custom">
