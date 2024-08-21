@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Search\InscripcionesSearch;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -63,7 +64,9 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'punto de encuentro',
             'grupo',
             'rol',
-            'roles Aplicados'
+            'roles Aplicados',
+            'Tipo de Inscripcion',
+            'Jornadas'
         ];
     }
 
@@ -80,6 +83,20 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
                 $genero = 'Sin Especificar';
                 break;
         }
+
+            // Obtener las jornadas relacionadas con la inscripción
+            $jornadas = DB::table('InscripcionJornada')
+            ->join('Jornada', 'InscripcionJornada.idJornada', '=', 'Jornada.idJornada')
+            ->where('InscripcionJornada.idInscripcion', $query->id)
+            ->select('Jornada.nombre', 'Jornada.fechaInicio')
+            ->get()
+            ->map(function ($jornada) {
+                return $jornada->nombre . ' (' . Carbon::parse($jornada->fechaInicio)->format('d/m/Y H:i') . ')';
+            })
+            ->toArray();
+
+            // Combinar las jornadas en un solo string, separadas por comas
+            $jornadasString = implode(' | ', $jornadas);
 
         return [
             //$query->idPersona,
@@ -116,6 +133,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->nombreRol,
             $query->roles_aplicados,
             $query->inscripciones_aplicadas,
+            $jornadasString,
         ];
     }
 
