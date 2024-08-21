@@ -114,6 +114,10 @@ export default {
     onChangePage (page) {
       this.$refs.vuetable.changePage(page)
     },
+    reset (page) {
+      this.$refs.vuetable.resetData();
+      this.$nextTick( () => this.$refs.vuetable.refresh());
+    },
     onCellClicked (data, field, event) {
         if (this.detailUrl !== undefined) {
             window.location.href = this.detailUrl + data.id;

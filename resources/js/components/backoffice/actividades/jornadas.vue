@@ -74,13 +74,11 @@
                 Event.$emit('jornadas:crear');
             },
             editJornada(p) {
-                console.log("holas")
                 Event.$emit('jornadas:editar', p);
 
             },
             refrescar() {
-                this.$refs.jornadasTabla.resetData();
-                this.$nextTick( () => this.$refs.jornadasTabla.refresh());
+                this.$refs.jornadasTabla.reset();
             },
             editar(p) {
                 Event.$emit('jornadas:editar', p);

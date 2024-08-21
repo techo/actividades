@@ -34,11 +34,17 @@ class JornadasExport implements FromCollection, WithHeadings, WithColumnFormatti
                 [
                     'idActividad AS idActividad',
                     'nombre',
+                    'idJornada',
+                    'Persona.idPersona',
+                    'Persona.nombres',
+                    'Persona.apellidoPaterno',
+                    'Persona.mail',
                     'fechaInicio',
                     'fechaFin',
                     'activo',
                 ]
             )
+            ->join('Persona','Persona.idPersona', '=','Jornada.idPersona')
             ->where('idActividad', '=', $this->idActividad)
             ->orderBy($sortField, $sortOrder);
 

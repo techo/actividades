@@ -35,7 +35,7 @@ class JornadasController extends Controller
 
 	public function update(CrearJornada $request, $id, Jornada $jornada)
 	{
-		$jornada->fill($request);
+		$jornada->fill($request->validated());
 		$jornada->save();
 
 		return response()->json($jornada->fresh());

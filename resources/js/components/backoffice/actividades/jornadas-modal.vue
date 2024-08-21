@@ -66,13 +66,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <div :class="{ 'form-group': true, 'has-error': errors.estado }">
-                                <label for="estado">{{ $t('backend.state') }}</label>
-                                <select v-model="form.estado" name="estado" class="form-control" required >
-                                    <option value="1" :selected="form.estado == 1 " >{{ $t('backend.active') }}</option>
-                                    <option value="0" :selected="form.estado == 0 " >{{ $t('backend.inactive') }}</option>
+                            <div :class="{ 'form-group': true, 'has-error': errors.activo }">
+                                <label for="activo">{{ $t('backend.state') }}</label>
+                                <select v-model="form.activo" name="activo" class="form-control" required >
+                                    <option value="1" :selected="form.activo == 1 " >{{ $t('backend.active') }}</option>
+                                    <option value="0" :selected="form.activo == 0 " >{{ $t('backend.inactive') }}</option>
                                 </select>
-                                <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block" ></span>
+                                <span v-if="errors.activo" v-text="errors.activo[0]" class="help-block" ></span>
                             </div>
                         </div>
                     </div>
@@ -165,8 +165,8 @@ export default {
         update () {
             axios.put('/admin/ajax/actividades/' + this.actividad.idActividad + '/jornadas/' + this.form.idJornada, this.form)
                 .then((datos) => { 
-                    Event.$emit('jornadas:refrescar'); 
-                    this.cancelar(); 
+                    Event.$emit('jornadas:refrescar');
+                    this.cancelar();  
                 })
                 .catch((error) => {this.errors = this.errors = error.response.data.errors; });
         },
@@ -181,13 +181,12 @@ export default {
         editar(p) {
             this.show();
             this.form = p; 
-            // this.fechas.fechaInicio = moment(p.fechaInicio).format('YYYY-MM-DD');
-            // this.horas.fechaInicio = moment(p.fechaInicio).format('HH:mm:ss');
-            // this.fechas.fechaFin = moment(p.fechaFin).format('YYYY-MM-DD');
-            // this.horas.fechaFin = moment(p.fechaFin).format('HH:mm:ss');
 
-            this.persona = datos.data.persona
-        },
+            this.persona = {
+                nombre: p.nombres + ' ' + p.apellidoPaterno + ' (' + p.mail + ')',
+                idPersona: p.idPersona  // Asumiendo que `idPersona` debe ser un identificador único
+            };
+        }, 
         show: function () {
             $('#jornadas-modal').modal('show'); //sino pasan cosas raras con el scroll
         },
@@ -208,8 +207,7 @@ export default {
             }
         },
         cancelar() {
-            this.reset();
-            this.reset_errors();
+          //  this.reset();
             this.hide();
         },
         confirmar () {

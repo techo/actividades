@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 
 use App\Actividad;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class CrearJornada extends FormRequest
 {
