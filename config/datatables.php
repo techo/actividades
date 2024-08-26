@@ -312,15 +312,19 @@ return [
                 'title' => 'Activo',
             ],
             [
-                'name' => 'inscriptos',
-                'title' => 'Inscriptos',
+                'name' => 'fechaInicio',
+                'title' => 'Fecha Inicio',
+            ],
+            [
+                'name' => 'fechaFin',
+                'title' => 'Fecha Fin',
             ],
         ],
         'sortOrder' => [
             [
-                'field' => 'nombre',
-                'sortField' => 'nombre',
-                'direction' => 'asc'
+                'field' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'direction' => 'desc'
             ]
         ],
 

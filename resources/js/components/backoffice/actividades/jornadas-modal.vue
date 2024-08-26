@@ -153,7 +153,7 @@ export default {
         },
         store(){
             this.form.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
-                this.form.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
+            this.form.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
               
             axios.post('/admin/ajax/actividades/' + this.actividad.idActividad + '/jornadas', this.form)
                 .then((datos) => { 
@@ -163,6 +163,8 @@ export default {
                 .catch((error) => {this.errors = this.errors = error.response.data.errors; });
         },
         update () {
+            this.form.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
+            this.form.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
             axios.put('/admin/ajax/actividades/' + this.actividad.idActividad + '/jornadas/' + this.form.idJornada, this.form)
                 .then((datos) => { 
                     Event.$emit('jornadas:refrescar');
