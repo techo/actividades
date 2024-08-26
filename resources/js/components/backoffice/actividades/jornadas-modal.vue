@@ -171,7 +171,7 @@ export default {
                 .catch((error) => {this.errors = this.errors = error.response.data.errors; });
         },
         eliminar () {
-            axios.delete('/admin/ajax/actividades/' + this.id + '/jornadas/' + this.form.idJornada, this.form)
+            axios.delete('/admin/ajax/actividades/' + this.actividad.idActividad + '/jornadas/' + this.form.idJornada, this.form)
                 .then((datos) => { 
                     Event.$emit('jornadas:refrescar'); 
                     this.cancelar(); 

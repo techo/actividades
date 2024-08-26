@@ -73,6 +73,7 @@
             },
             refrescar() {
                 this.$refs.jornadasTabla.reset();
+                window.location.reload();
             },
             editar(p) {
                 Event.$emit('jornadas:editar', p);
