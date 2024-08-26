@@ -146,11 +146,11 @@
     } */
 }
 
-/* @media screen and (max-width: 425px) {
+@media screen and (max-width: 425px) {
     .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
         min-width: 100%;
     }
-} */
+}
 
 </style>
 
@@ -226,6 +226,7 @@
 
                 const desktop = window.matchMedia('(min-width: 801px)').matches;
                 const tablet = window.matchMedia('(max-width: 800px)').matches;
+                const mobile = window.matchMedia('(max-width: 425px)').matches;
                 const flechaIzquierda = document.getElementById("flecha-izquierda");
                 const flechaDerecha = document.getElementById("flecha-derecha");
 
@@ -240,6 +241,15 @@
                 }
                 if (tablet) {
                     if (this.actividades.length <= 2) {
+                        flechaIzquierda.style.display = 'none';
+                        flechaDerecha.style.display = 'none';
+                    } else {
+                        flechaIzquierda.style.display = 'block';
+                        flechaDerecha.style.display = 'block';
+                    }
+                }
+                if (mobile) {
+                    if (this.actividades.length <= 1) {
                         flechaIzquierda.style.display = 'none';
                         flechaDerecha.style.display = 'none';
                     } else {
