@@ -1,5 +1,5 @@
 <template>
-    <div class="peliculas-recomendadas">
+    <div class="tarjetas-agrupadas">
         <div class="contenedor-titulo-controles">
             <h3>{{title}}</h3>
             <div class="indicadores"></div>
@@ -13,7 +13,7 @@
             <div class="contenedor-carousel">
                 <div class="carousel">
                     <tarjeta
-                        class="pelicula"
+                        class="tarjeta"
                         v-for="act in actividades"
                         v-bind:actividad="act"
                         v-bind:key="Math.random() + '_' + act.idActividad"
@@ -58,18 +58,18 @@
 }
 
 /*-------------- Contenedor principal -----------------*/
-.peliculas-recomendadas {
+.tarjetas-agrupadas {
     margin-bottom: 70px;
 }
 
-.peliculas-recomendadas .contenedor-principal {
+.tarjetas-agrupadas .contenedor-principal {
     display: flex;
     align-items: center;
     position: relative;
 }
 
-.peliculas-recomendadas .contenedor-principal .flecha-izquierda,
-.peliculas-recomendadas .contenedor-principal .flecha-derecha {
+.tarjetas-agrupadas .contenedor-principal .flecha-izquierda,
+.tarjetas-agrupadas .contenedor-principal .flecha-derecha {
     position: absolute;
     border: none;
     background: rgba(0,0,0,0);
@@ -85,69 +85,69 @@
     outline: none;
 }
 
-/* .peliculas-recomendadas .contenedor-principal .flecha-izquierda:hover,
-.peliculas-recomendadas .contenedor-principal .flecha-derecha:hover {
+/* .tarjetas-agrupadas .contenedor-principal .flecha-izquierda:hover,
+.tarjetas-agrupadas .contenedor-principal .flecha-derecha:hover {
     background: rgba(0,0,0, .9);
 } */
 
-.peliculas-recomendadas .contenedor-principal .flecha-izquierda {
+.tarjetas-agrupadas .contenedor-principal .flecha-izquierda {
     left: -26px;
 }
 
-.peliculas-recomendadas .contenedor-principal .flecha-derecha {
+.tarjetas-agrupadas .contenedor-principal .flecha-derecha {
     right: -26px;
 }
 
 /*-------------- Carousel -----------------*/
-.peliculas-recomendadas .contenedor-carousel {
+.tarjetas-agrupadas .contenedor-carousel {
     width: 100%;
     padding: 20px 0px;
     overflow: hidden;
     scroll-behavior: smooth;
 }
 
-.peliculas-recomendadas .contenedor-carousel .carousel {
+.tarjetas-agrupadas .contenedor-carousel .carousel {
     display: flex;
     flex-wrap: nowrap;
 }
 
 /* Ajusta la cantidad de tarjetas */
-.peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
+.tarjetas-agrupadas .contenedor-carousel .carousel .tarjeta {
     min-width: 25%;
     transition: .3 ease all;
 }
 
-.peliculas-recomendadas .contenedor-carousel .carousel .pelicula img {
+.tarjetas-agrupadas .contenedor-carousel .carousel .tarjeta img {
     width: 100%;
     vertical-align: top;
 }
 
 /*-------------- Media Queries -----------------*/
 @media screen and (max-width: 800px) {
-    .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
+    .tarjetas-agrupadas .contenedor-carousel .carousel .tarjeta {
         min-width: 50%;
     }
 
 
-    /* .peliculas-recomendadas .contenedor-carousel {
+    /* .tarjetas-agrupadas .contenedor-carousel {
         overflow: visible;
     }
 
-    .peliculas-recomendadas .contenedor-carousel .carousel {
+    .tarjetas-agrupadas .contenedor-carousel .carousel {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
 
-    .peliculas-recomendadas .indicadores,
-    .peliculas-recomendadas .flecha-izquierda,
-    .peliculas-recomendadas .flecha-derecha {
+    .tarjetas-agrupadas .indicadores,
+    .tarjetas-agrupadas .flecha-izquierda,
+    .tarjetas-agrupadas .flecha-derecha {
         display: none;
     } */
 }
 
 @media screen and (max-width: 425px) {
-    .peliculas-recomendadas .contenedor-carousel .carousel .pelicula {
+    .tarjetas-agrupadas .contenedor-carousel .carousel .tarjeta {
         min-width: 100%;
     }
 }
