@@ -245,7 +245,7 @@ return [
     'source_account_for_data' => 'Cuenta de donde se quieren tomar los datos',
     'person_registrations' => 'Inscripciones de la persona',
     'include_in_this_group' => 'Incluir en este Grupo',
-    'advanced_search' => 'Búsqueda avanzada',
+    'advanced_search' => 'Filtros avanzados',
     'add_second_division' => 'Agregar Segunda División',
     'create_first_division' => 'Crear Primera División',
     'first_geo_division' => 'Primera División Geográfica',
