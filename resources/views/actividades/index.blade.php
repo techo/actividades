@@ -39,6 +39,10 @@
         </div>
         <div class="row">
             <div class="col-md-12">
+                {{-- En home new... --}}
+                {{-- Selección por tipo --}}
+                {{-- Banners --}}
+                {{-- Carousel de tarjeta por categoria --}}
                 <contenedor-de-tarjetas ref="contenedor"></contenedor-de-tarjetas>
             </div>
         </div>

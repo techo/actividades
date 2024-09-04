@@ -151,5 +151,27 @@
         transform: translate(-50%, -50%);
     }
 
+    @media screen and (max-width: 767px) {
+        .card-body img {
+            aspect-ratio: 23 / 10;
+        }
+    }
 
+    @media screen and (max-width: 576px) {
+        .card-body img {
+            aspect-ratio: 24 / 10;
+        }
+    }
+
+    @media screen and (max-width: 410px) {
+        .card-body img {
+            aspect-ratio: 16 / 10;
+        }
+    }
+
+    @media screen and (max-width: 350px) {
+        .card-body img {
+            aspect-ratio: 14 / 10;
+        }
+    }
 </style>
