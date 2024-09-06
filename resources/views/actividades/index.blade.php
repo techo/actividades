@@ -43,7 +43,7 @@
                 {{-- Selección por tipo --}}
                 {{-- Banners --}}
                 {{-- Carousel de tarjeta por categoria --}}
-                <contenedor-de-tarjetas ref="contenedor"></contenedor-de-tarjetas>
+                <contenedor-de-tarjetas ref="contenedor" :categorias="[1,2,3]"/>
             </div>
         </div>
     </div>

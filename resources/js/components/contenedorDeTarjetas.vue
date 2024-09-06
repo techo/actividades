@@ -26,10 +26,8 @@
 
     export default {
         name: "contenedor-de-tarjetas",
-
         data () {
             return {
-                categorias: [1,2,3,4],
                 actividadesPorCategoria: {},
                 loading: false,
                 next_page: '',
@@ -39,6 +37,11 @@
                 totalTarjetas: 0,
                 vacio: false,
                 filtros: {}
+            }
+        },
+        props: {
+            categorias: {
+                type: Array
             }
         },
         components: { Suscribe, tarjeta: Tarjeta, CarouselDeTarjetas },
