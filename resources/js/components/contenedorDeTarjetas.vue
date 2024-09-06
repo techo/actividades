@@ -1,32 +1,17 @@
 <template>
     <span>
-        <!-- <div class="row py-2"> -->
-            <div v-show="loading" class="loading" style="text-align: center">
-                <i class="fas fa-sync fa-spin fa-3x"></i>
-            </div>
-            <div v-show="!loading">
-                <div v-for="categoria in categorias" :key="categoria">
-                    <carousel-de-tarjetas
-                        v-show="actividadesPorCategoria[categoria] && actividadesPorCategoria[categoria].length > 0"
-                        :actividades="actividadesPorCategoria[categoria] || []"
-                        :title="'Actividades para la categoría ' + categoria"
-                    />
-                </div>
-            </div>
-            <!-- <carousel-de-tarjetas v-show="!vacio && !loading.cat1"  :actividades="actividades" :title="'Con el pie en territorio, todas las actividades en comunidad.'"/>
-            <div v-show="loading.cat1" class="loading" style="text-align: center">
-                <i class="fas fa-sync fa-spin fa-3x"></i>
-            </div>
-
-            <carousel-de-tarjetas v-show="!vacio && !loading.cat2"  :actividades="actividades2" :title="'Fortalece tus capacidades Capacitaciones, Espacios formativos y Talleres'"/>
-            <div v-show="loading.cat2" class="loading" style="text-align: center">
-                <i class="fas fa-sync fa-spin fa-3x"></i>
-            </div> -->
-        <!-- </div> -->
-
-        <!-- <div v-show="loading" class="loading" style="text-align: center">
+        <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
-        </div> -->
+        </div>
+        <div v-show="!loading">
+            <div v-for="categoria in categorias" :key="categoria">
+                <carousel-de-tarjetas
+                    v-show="actividadesPorCategoria[categoria] && actividadesPorCategoria[categoria].length > 0"
+                    :actividades="actividadesPorCategoria[categoria] || []"
+                    :title="'Actividades para la categoría ' + categoria"
+                />
+            </div>
+        </div>
         <div v-show="vacio" class="loading card card-box" style="text-align: center">
             <Suscribe :filtros="filtros" />
         </div>
@@ -44,7 +29,7 @@
 
         data () {
             return {
-                categorias: [1,2,3, 4],
+                categorias: [1,2,3,4],
                 actividadesPorCategoria: {},
                 loading: false,
                 next_page: '',
@@ -78,27 +63,16 @@
                 return bottomOfPage || pageHeight < visible;
             },
             inicializarActividadesPorCategoria() {
-                // Inicializar actividadesPorCategoria según categorias
                 this.categorias.forEach(categoria => {
                     this.$set(this.actividadesPorCategoria, categoria, []);
-                    // this.$set(this.loading, `cat${categoria}`, false);
                 });
             },
             async agregarTarjetas(url, filtros, refresh, categoria) {
-                // Evitar concurrencia
-                // if (this.loading[`cat${categoria}`]) { return; }
-
-                // this.loading[`cat${categoria}`] = true;
                 this.vacio = false;
                 filtros.categoria = categoria;
 
                 try {
                     const response = await axios.get(url, { params: filtros });
-
-                    // if (typeof response.data.data === "undefined" || response.data.data.length === 0) {
-                    //     // this.loading[`cat${categoria}`] = false;
-                    //     this.vacio = true;
-                    // }
 
                     if (refresh) {
                         this.actividadesPorCategoria[categoria] = [];
@@ -109,8 +83,6 @@
                     this.next_page = response.data.next_page_url;
                     this.ultimaTarjeta = response.data.to;
                     this.totalTarjetas = response.data.total;
-
-                    // this.checkLoadingGlobal();
                 } catch (error) {
                     console.error('Error en contenedor de tarjetas', error);
                 }
