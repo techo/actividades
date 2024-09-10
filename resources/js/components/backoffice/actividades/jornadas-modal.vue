@@ -107,8 +107,8 @@ export default {
                     fechaFin: null,
                 },
             horas: {
-                    fechaInicio: "19:00:00",
-                    fechaFin: "21:00:00",
+                    fechaInicio: "00:00:00",
+                    fechaFin: "00:00:00",
             },
             form: {
                 nombre: null,
@@ -122,11 +122,13 @@ export default {
         }
     },
     created() {
-        this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
-        this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
-        this.fechas.fechaFin = moment(this.actividad.fechaFin).format('YYYY-MM-DD');
-        this.horas.fechaFin = moment(this.actividad.fechaFin).format('HH:mm:ss');
-        this.form.idActividad = this.actividad.idActividad;
+        if (this.fechas.fechaInicio == null){
+            this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
+            this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
+            this.fechas.fechaFin = moment(this.actividad.fechaFin).format('YYYY-MM-DD');
+            this.horas.fechaFin = moment(this.actividad.fechaFin).format('HH:mm:ss');
+            this.form.idActividad = this.actividad.idActividad;
+        }
     },
     mounted() {
         Event.$on('jornadas:crear', this.show);
@@ -182,7 +184,11 @@ export default {
         },
         editar(p) {
             this.show();
-            this.form = p; 
+            this.form = p;
+            this.fechas.fechaInicio = moment(p.fechaInicio).format('YYYY-MM-DD');
+            this.horas.fechaInicio = moment(p.fechaInicio).format('HH:mm:ss');
+            this.fechas.fechaFin = moment(p.fechaFin).format('YYYY-MM-DD');
+            this.horas.fechaFin = moment(p.fechaFin).format('HH:mm:ss');
 
             this.persona = {
                 nombre: p.nombres + ' ' + p.apellidoPaterno + ' (' + p.mail + ')',

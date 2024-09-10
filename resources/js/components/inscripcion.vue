@@ -185,11 +185,12 @@
                     <p>{{ $t('frontend.review_jornadas') }}</p>   
                     <ul class="list-unstyled">
                         <li class="listItems" v-for="jornada in jornadas">
-                            <input v-model="jornada.selected" :id="jornada.idJornada" :value="jornada.nombre" type="checkbox"> 
-                            {{ jornada.nombre }} - 
-                            {{ new Date(jornada.fechaInicio).toLocaleDateString('es-ES', 
-                                { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) }}
-                            </input>
+                            <div v-if="jornada.activo">
+                                <input v-model="jornada.selected" :id="jornada.idJornada" :value="jornada.nombre" type="checkbox"> 
+                                {{ jornada.nombre }} - 
+                                {{ formatFecha(jornada.fechaInicio) }}
+                                </input>
+                            </div>
                         </li> 
                     </ul>
                 </div>
@@ -434,6 +435,23 @@
                     }
                 });
             },
+            formatFecha(fecha) {
+                const date = new Date(fecha);
+                const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit' };
+                
+                // Obtiene la parte de la fecha en el formato deseado
+                const fechaFormateada = date.toLocaleDateString('es-ES', opcionesFecha);
+                // Obtiene la parte de la hora en el formato deseado
+                const horaFormateada = date.toLocaleTimeString('es-ES', opcionesHora);
+                
+                // Comprueba si la hora es "00:00"
+                if (horaFormateada === '00:00') {
+                    return fechaFormateada; // Devuelve solo la fecha si es "00:00"
+                } else {
+                    return `${fechaFormateada}, ${horaFormateada}`; // Devuelve la fecha con la hora si no es "00:00"
+                }
+            }
             
         }
     }

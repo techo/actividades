@@ -232,6 +232,13 @@ return [
 	'message_2' => ' se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?',
 	'unenroll_button' => 'SI, DESINSCRIBIRME',
 
+
+	'jornada' => 'Jornada',
+	'jornadas' => 'Jornadas',
+	'review_jornadas' => 'Anotate a la/las jornadas a las cuales quieras participar',
+
+	'type_of_inscription' => 'Tipo de Inscripción',
+	'whats_a_type_inscription' => 'Selecciona el tipo de voluntariado que estas realizando o representando durante esta actividad.',
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filtrar por',
 	'filter' => 'Filtrar',
@@ -279,7 +286,8 @@ return [
 	'apply_for_rol' => '¿Quieres ser parte del equipo organizador de esta actividad?',
 	'whats_a_rol' => 'Selecciona los roles a los que te gustaría aplicar. Comienza a escribir para ver las opciones.',
 	'roles_aplicados' => 'Roles Aplicado',
-	'yes' => 'Si, aplicar a rol',
+	'yes' => 'Si',
+	'no' => 'No',
 	'no_apply_rol' => 'No deseo aplicar a rol',
 
 	// confirmar-paso-1

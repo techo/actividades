@@ -309,7 +309,7 @@ return [
             [
                 'name' => 'activo',
                 'sortField' => 'activo',
-                'title' => 'Activo',
+                'title' => 'Estado',
             ],
             [
                 'name' => 'fechaInicio',

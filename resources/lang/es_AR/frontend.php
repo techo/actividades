@@ -332,10 +332,6 @@ return [
 	'jornadas' => 'Jornadas',
 	'review_jornadas' => 'Anotate a la/las jornadas a las cuales quieras participar',
 
-	
-
-
-
 	'type_of_inscription' => 'Tipo de Inscripción',
 	'whats_a_type_inscription' => 'Selecciona el tipo de voluntariado que estas realizando o representando durante esta actividad.',
 
