@@ -30,7 +30,7 @@
             </div>
         </div>
         <p v-if="actividad.show_location" class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h5 class="card-title text-center text-white px-2">{{ actividad.nombreActividad }}</h5>
+        <h5 class="card-title text-center text-white px-2">{{ nombreActividadRecortado }}</h5>
         <div v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
@@ -69,6 +69,9 @@
             let hoy = moment(moment().format("MM-DD-YYYY"),"MM-DD-YYYY");
             let fecha_limite = moment(this.actividad.fechaLimitePago, "DD-MM-YYYY");
             return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite < hoy;
+          },
+          nombreActividadRecortado() {
+            return this.actividad.nombreActividad.length > 60 ? this.actividad.nombreActividad.substring(0, 57) + '...' : this.actividad.nombreActividad;
           }
         },
         filters: {
@@ -96,6 +99,7 @@
         border: 0px;
         border-radius: 15%;
         text-align: center;
+        height: 355px;
     }
 
     div.card-top {
@@ -147,5 +151,27 @@
         transform: translate(-50%, -50%);
     }
 
+    @media screen and (max-width: 767px) {
+        .card-body img {
+            aspect-ratio: 23 / 10;
+        }
+    }
 
+    @media screen and (max-width: 576px) {
+        .card-body img {
+            aspect-ratio: 24 / 10;
+        }
+    }
+
+    @media screen and (max-width: 410px) {
+        .card-body img {
+            aspect-ratio: 16 / 10;
+        }
+    }
+
+    @media screen and (max-width: 350px) {
+        .card-body img {
+            aspect-ratio: 14 / 10;
+        }
+    }
 </style>
