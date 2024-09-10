@@ -5,14 +5,14 @@
     <li class="{{ ($tab == 'puntos')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/puntos" aria-expanded="true">{{__('backend.meeting_points')}}</a>
     </li>
+    <li class="{{ ($tab == 'jornadas')?'active':'' }}">
+        <a href="/admin/actividades/{{ $actividad->idActividad }}/jornadas" aria-expanded="true">{{__('frontend.jornadas')}}</a>
+    </li>
     <li class="{{ ($tab == 'inscripciones')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/inscripciones" aria-expanded="true">{{__('backend.registrations')}}</a>
     </li>
     <li class="{{ ($tab == 'grupos')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/grupos" aria-expanded="true">{{__('backend.groups')}}</a>
-    </li>
-    <li class="{{ ($tab == 'jornadas')?'active':'' }}">
-        <a href="/admin/actividades/{{ $actividad->idActividad }}/jornadas" aria-expanded="true">{{__('frontend.jornadas')}}</a>
     </li>
     <li class="{{ ($tab == 'evaluaciones')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/evaluaciones" aria-expanded="true">{{__('backend.evaluations')}}</a>
