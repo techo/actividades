@@ -61,12 +61,14 @@ class InscripcionesSearch
             ->leftJoin('ficha_medicas as ficha', 'Persona.idPersona', '=', 'ficha.idPersona')
             ->leftJoin('Grupo_Persona as Rol', function ($join) {
                 $join->on('Rol.idPersona', '=', 'Persona.idPersona');
-                $join->on('Rol.idActividad', '=', 'Inscripcion.idActividad');
-            })
-            ->leftJoin('Grupo', 'Rol.idGrupo', '=', 'Grupo.idGrupo')
-            ->select(
-                [
-                    'Inscripcion.idPersona',
+        $join->on('Rol.idActividad', '=', 'Inscripcion.idActividad');
+    })
+    ->leftJoin('Grupo', 'Rol.idGrupo', '=', 'Grupo.idGrupo')
+    ->leftJoin('InscripcionJornada', 'InscripcionJornada.idInscripcion', '=', 'Inscripcion.idInscripcion')
+    ->leftJoin('Jornada', 'Jornada.idJornada', '=', 'InscripcionJornada.idJornada')
+    ->select(
+        [
+            'Inscripcion.idPersona',
                     'Persona.dni',
                     'Persona.nombres',
                     'Persona.apellidoPaterno',
@@ -107,13 +109,15 @@ class InscripcionesSearch
                     'Grupo.nombre as nombreGrupo',
                     'Inscripcion.rol as nombreRol',
                     'Inscripcion.roles_aplicados',
-                    'Inscripcion.inscripciones_aplicadas',
-                    'Persona.estadoPersona',
-                    'PersonaModificacion.mail as modificado_por',
-                    'Inscripcion.updated_at as modificado_en'
-                ]
-            )
-            ->whereNull('Inscripcion.deleted_at');
+            'Inscripcion.inscripciones_aplicadas',
+            'Persona.estadoPersona',
+            'PersonaModificacion.mail as modificado_por',
+            'Inscripcion.updated_at as modificado_en',
+            'Jornada.nombre as jornadas'
+        ]
+    )
+    ->whereNull('Inscripcion.deleted_at');
+    
         return $query;
     }
 }

@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="form-group">
+                <div class="form-group" v-show="showCondiciones">
                     <label for="condicion">{{ $t('backend.condition') }}</label>
                     <v-select
                             :options="dataCondiciones"
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="form-group">
+                <div class="form-group" v-show="showCondiciones">
                     <label for="valor">{{ $t('backend.value') }}</label>
                     <input type="text" name="valor" id="valor" class="form-control" v-model="valorCondicion" placeholder="Escriba un valor">
                 </div>
@@ -58,8 +58,23 @@
                 dataCondiciones: [],
                 condicionSeleccionada: "",
                 valorCondicion: "",
-                validacion: true
+                validacion: true,
+                showCondiciones: false
             }
+        },
+        watch: {
+            campoSeleccionado: function (nuevo, viejo) {
+                console.log(nuevo);
+                if(!nuevo.condiciones){
+                    this.condicionSeleccionada = {label:"contiene", value:"like"};
+                    this.valorCondicion = 1;
+                    this.showCondiciones = false;
+                } else {
+                    this.condicionSeleccionada = "";
+                    this.valorCondicion = "";
+                    this.showCondiciones = true;
+                }
+            },
         },
         created(){
             this.dataCampos = JSON.parse(this.campos);

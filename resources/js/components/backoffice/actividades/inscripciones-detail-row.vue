@@ -22,7 +22,7 @@
                 <span>{{ edad }}</span>
                 <br>
                 <label>{{ $t('backend.registration_type') }}: </label>
-                <span v-for="tipoInscripcion in tiposInscripcion" class="label label-primary">
+                <span v-for="tipoInscripcion in tiposInscripcionSinComillas" class="label label-primary">
                     {{ tipoInscripcion.text }}
                 </span>
                 <br>
@@ -45,7 +45,9 @@
                 <br>
                 <label>{{ $t('backend.meeting_point') }}: </label>
                 <span>{{ rowData.punto }}</span>
-
+                <br>
+                <label>{{ $t('frontend.jornada') }}: </label>
+                <span>{{ rowData.jornadas }}</span>
                 <div v-if="rowData.voucherUrl">
                   <label>{{ $t('backend.payment_file') }}: </label>
                   <a target="_blank" :href="'/'+rowData.voucherUrl"> {{ $t('backend.voucher') }}</a>
@@ -80,6 +82,11 @@ export default {
     },
     items: [],
     tiposInscripcion: [],
+  },
+  data() {
+    return {
+      tiposInscripcionSinComillas: [],
+    }
   },
   computed: {
       fechaInscripcion: function () {
@@ -119,7 +126,7 @@ export default {
     if(this.rowData.inscripciones_aplicadas){
       let cadenaJSONSinComillas = this.rowData.inscripciones_aplicadas.replace(/^"|"$/g, '');
       let cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
-      this.tiposInscripcion = JSON.parse(cadenaJSONSinEscape);
+      this.tiposInscripcionSinComillas = JSON.parse(cadenaJSONSinEscape);
     }
   },
   methods: {

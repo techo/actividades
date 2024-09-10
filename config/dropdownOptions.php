@@ -13,18 +13,20 @@ return [
   'actividad' => [
       'filtroInscripciones' => [
           'campos' => [
-              ['id' => 'nombre','campo' => 'Nombre'],
-              ['id' => 'apellido', 'campo' => 'Apellido'],
-              ['id' => 'dni', 'campo' => 'DNI/Pasaporte'],
-              ['id' => 'email', 'campo' => 'e-mail'],
-              ['id' => 'punto' , 'campo' =>  'Punto de Encuentro'],
-              ['id' => 'oficina' , 'campo' =>  'Oficina'],
-              ['id' => 'rol' , 'campo' =>  'Rol'],
-              ['id' => 'grupo' , 'campo' =>  'Grupo'],
-              ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades'],
-              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior'],
-              ['id' => 'confirmado' , 'campo' =>  'Confirmado'],
-              ['id' => 'presente' , 'campo' =>  'Presente']
+            //   ['id' => 'nombre','campo' => 'Nombre', 'condiciones' => true],
+            //   ['id' => 'apellido', 'campo' => 'Apellido', 'condiciones' => true],
+            //   ['id' => 'dni', 'campo' => 'DNI/Pasaporte', 'condiciones' => true],
+            //   ['id' => 'email', 'campo' => 'e-mail', 'condiciones' => true],
+              ['id' => 'punto' , 'campo' =>  'Punto de Encuentro', 'condiciones' => true],
+              ['id' => 'oficina' , 'campo' =>  'Oficina', 'condiciones' => true],
+              ['id' => 'pendiente_confirmacion' , 'campo' =>  'Pendiente confirmación', 'condiciones' => false],
+              ['id' => 'confirmado' , 'campo' =>  'Confirmado', 'condiciones' => false],
+              ['id' => 'presente' , 'campo' =>  'Presente', 'condiciones' => false],
+              ['id' => 'jornada' , 'campo' =>  'Jornada', 'condiciones' => true],
+              ['id' => 'rol' , 'campo' =>  'Rol', 'condiciones' => true],
+              ['id' => 'grupo' , 'campo' =>  'Grupo', 'condiciones' => true],
+              ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades', 'condiciones' => true],
+              ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior', 'condiciones' => true],
               //   ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
           ],
           'condiciones' => [
