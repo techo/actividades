@@ -68,6 +68,11 @@ class CrearActividad extends FormRequest
             'roles_tags' => 'sometimes|nullable',
             'tipo_inscriptos_tag' => 'sometimes|nullable',
 
+            'actividades_tags' => 'sometimes|nullable',
+          //  'imagen_tarjeta' => 'sometimes|nullable',
+           // 'destacada' => 'sometimes|nullable',
+           // 'imagen_destacada' => 'sometimes|nullable',
+
 
             'acuerdo_especifico_url' => 'sometimes|nullable|url',
             'acuerdo_menores_url' => 'sometimes|nullable|url',

@@ -24,6 +24,7 @@ class Actividad extends Model
     protected $casts = [
         'ficha_medica_campos' => 'array',
         'roles_tags' => 'array',
+        'actividades_tags' => 'array',
         'tipo_inscriptos_tag' => 'array'
     ];
 

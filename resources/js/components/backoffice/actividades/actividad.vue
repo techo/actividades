@@ -508,6 +508,58 @@
             </div>
         </div>
 
+        <!-- Visualizacion -->
+        <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('backend.visualization') }}</h3>
+                
+            </div>
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="actividades_tags">{{ $t('backend.actividades_tags') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.tags_description') }}
+                                {{ $t('backend.press_enter_between_each') }}
+                            </p>
+                            <vue-tags-input
+                                v-model="actividadTagSelected"
+                                :tags="actividadesTags"
+                                :disabled="!edicion"
+                                :autocompleteItems="filteredActividadTags"
+                                :add-only-from-autocomplete="true"
+                                placeholder=""
+                                @tags-changed="newTags => actividadesTags = newTags"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="imagen_tarjeta">{{ $t('backend.imagen_tarjeta') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.imagen_tarjeta_description') }}
+                            </p>
+                            <input type="file" class="form-control"  
+                            :disabled="!edicion" id="imagen_tarjeta">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="destacada">{{ $t('backend.destacada') }}</label>
+                            <p class="help-block">
+                                {{ $t('backend.destacada_description') }}
+                            </p>
+                            <input type="checkbox" class="form-control"  v-model="actividad.destacada"
+                            :disabled="!edicion" id="destacada">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
         <!-- terminos y condiciones -->
         <div class="box">
             <div class="box-header with-border bg-primary">
@@ -592,8 +644,10 @@
         data() {
             return {
                 tag: '',
+                actividadTagSelected: '',
                 tag2: '',
                 rolesTags: [],
+                actividadesTags: [],
                 tipoInscriptosTags:  [],
                 autocompleteTipoInscriptos: [{
                         text: 'Secundaria',
@@ -625,6 +679,14 @@
                     }, {
                             text: 'Delegación de Comunicaciones',
                 }],
+
+                autocompleteActividadTags: [{
+                        text: 'Nuevos Voluntarios',
+                    }, {
+                        text: 'Hito Anual',
+                    }, {
+                        text: 'Equipos',
+                    }],
 
                 
 
@@ -747,6 +809,8 @@
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.actividad.roles_tags;
 
+                        if (this.actividad.actividades_tags)
+                            this.actividadesTags = this.actividad.actividades_tags;
 
                         if (this.actividad.tipo_inscriptos_tag)
                             this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
@@ -768,6 +832,11 @@
             },
             filteredRolesTags() {
                 return this.autocompleteRoles.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
+            filteredActividadTags() {
+                return this.autocompleteActividadTags.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
                 });
             },
@@ -888,6 +957,7 @@
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 this.actividad.roles_tags = this.rolesTags;
                 this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
+                this.actividad.actividades_tags  = this.actividadesTags;
                 
                 
 

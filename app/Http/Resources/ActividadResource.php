@@ -52,6 +52,7 @@ class ActividadResource extends Resource
             'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
             'roles_tags' =>  $this->roles_tags,
+            'actividades_tags' =>  $this->actividades_tags,
             'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
             'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
