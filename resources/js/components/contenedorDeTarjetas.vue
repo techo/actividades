@@ -1,16 +1,16 @@
 <template>
     <span>
+        <div class="row py-2">
+            <tarjeta
+                v-for="act in actividades"
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+            >
+            </tarjeta>
+        </div>
+
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
-        </div>
-        <div v-show="!loading">
-            <div v-for="categoria in categorias" :key="categoria">
-                <carousel-de-tarjetas
-                    v-show="actividadesPorCategoria[categoria] && actividadesPorCategoria[categoria].length > 0"
-                    :actividades="actividadesPorCategoria[categoria] || []"
-                    :title="'Actividades para la categoría ' + categoria"
-                />
-            </div>
         </div>
         <div v-show="vacio" class="loading card card-box" style="text-align: center">
             <Suscribe :filtros="filtros" />
@@ -22,13 +22,13 @@
     import axios from 'axios';
     import Tarjeta from './tarjeta';
     import Suscribe from './suscribe';
-    import CarouselDeTarjetas from './carouselDeTarjetas.vue';
 
     export default {
         name: "contenedor-de-tarjetas",
+
         data () {
             return {
-                actividadesPorCategoria: {},
+                actividades: [],
                 loading: false,
                 next_page: '',
                 bottom: false,
@@ -39,25 +39,19 @@
                 filtros: {}
             }
         },
-        props: {
-            categorias: {
-                type: Array
-            }
-        },
-        components: { Suscribe, tarjeta: Tarjeta, CarouselDeTarjetas },
-
+        components: {Suscribe, tarjeta: Tarjeta},
         created () {
-            this.inicializarActividadesPorCategoria();
             window.addEventListener('scroll', () => {
-                this.bottom = this.bottomVisible();
+                this.bottom = this.bottomVisible()
             });
-            window.addEventListener('cargarTarjetas', async (event) => {
+            window.addEventListener('cargarTarjetas', (event) => {
                 this.filtros = event.detail;
-                await this.cargarTarjetas();
+                this.actividades = [];
+                this.agregarTarjetas(this.url, this.filtros, true);
             });
         },
-
         methods: {
+
             bottomVisible() {
                 const scrollY = window.scrollY;
                 const visible = document.documentElement.clientHeight;
@@ -65,45 +59,63 @@
                 const bottomOfPage = visible + scrollY >= pageHeight;
                 return bottomOfPage || pageHeight < visible;
             },
-            inicializarActividadesPorCategoria() {
-                this.categorias.forEach(categoria => {
-                    this.$set(this.actividadesPorCategoria, categoria, []);
-                });
-            },
-            async agregarTarjetas(url, filtros, refresh, categoria) {
-                this.vacio = false;
-                filtros.categoria = categoria;
+            agregarTarjetas(url, filtros, refresh) {
 
-                try {
-                    const response = await axios.get(url, { params: filtros });
+                //forma cabeza de evitar concurrencia
+                if(this.loading) {return;};
 
-                    if (refresh) {
-                        this.actividadesPorCategoria[categoria] = [];
-                    }
-
-                    this.actividadesPorCategoria[categoria].push(...response.data.data);
-
-                    this.next_page = response.data.next_page_url;
-                    this.ultimaTarjeta = response.data.to;
-                    this.totalTarjetas = response.data.total;
-                } catch (error) {
-                    console.error('Error en contenedor de tarjetas', error);
-                }
-            },
-            async cargarTarjetas() {
+                let self = this;
                 this.loading = true;
-                for (let categoria of this.categorias) {
-                    await this.agregarTarjetas(this.url, this.filtros, true, categoria);
-                }
-                this.loading = false;
-                this.vacio = !Object.values(this.actividadesPorCategoria).some(actividades => actividades.length > 0);
-            }
+                this.vacio = false;
+                axios.get(url, { params:  filtros })
+                    .then(response => {
+                        if(typeof response.data.data == "undefined" || response.data.data.length == 0) {
+                            this.loading = false;
+                            this.vacio = true;
+                        }
+                        
+                        if (refresh) {
+                            self.actividades = [];
+                        }
+
+                        for (let element in response.data.data) {
+                            self.actividades.push(response.data.data[element]);
+                        }
+                        this.next_page = response.data.next_page_url;
+                        this.ultimaTarjeta = response.data.to;
+                        this.totalTarjetas = response.data.total;
+
+                        this.loading = false;
+
+                    })
+                    .catch((error) => {
+                        // Error
+                        console.error('error en contenedor de tarjetas');
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log('Error', error.message);
+                        }
+                        console.log(error.config);
+                    });
+            },
+
         },
 
         watch: {
             bottom(bottom) {
                 if (bottom && this.ultimaTarjeta && this.totalTarjetas) {
-                    if (this.ultimaTarjeta < this.totalTarjetas) {
+                    if (this.ultimaTarjeta < this.totalTarjetas ) {
                         this.agregarTarjetas(this.next_page, this.filtros, false);
                     }
                 }
@@ -113,4 +125,5 @@
 </script>
 
 <style scoped>
+
 </style>

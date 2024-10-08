@@ -10,7 +10,9 @@ const i18n = new VueInternationalization({
     messages: Locale
 });
 
+import Index from './components/index.vue';
 
+Vue.component('index', Index);
 // import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';

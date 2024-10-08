@@ -447,13 +447,14 @@ Route::get('locale/{locale}', function($locale){
 });
 
 
-    Route::get('/home', 'HomeController@index');
+    // Route::get('/home', 'HomeController@home');
     Route::get('/', 'HomeController@multiPais');
     // Route::get('/', 'ActividadesController@index');
-    Route::get('/actividades', 'ActividadesController@index');
+    // Route::get('/actividades', 'ActividadesController@index');
 
 Route::get('/autotest', 'PerfilController@quiz_techero');
 
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
-    Route::get('/', 'ActividadesController@index');
+    Route::get('/', 'HomeController@index');
+    Route::get('/actividades', 'ActividadesController@index');
 });
