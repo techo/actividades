@@ -7,7 +7,7 @@
 
     <div class="contenedor-principal">
         <button ref="flechaIzquierda" role="button" class="flecha-izquierda">
-        <i class="fa-solid fa-chevron-left"></i>
+            <
         </button>
 
         <div ref="contenedorCarousel" class="contenedor-carousel">
@@ -22,7 +22,7 @@
         </div>
 
         <button ref="flechaDerecha" role="button" class="flecha-derecha">
-        <i class="fa-solid fa-chevron-right"></i>
+            >
         </button>
     </div>
     </div>

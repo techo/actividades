@@ -34,15 +34,11 @@
                     categoria_seleccionada="{{ ($categoriaSeleccionada) ? $categoriaSeleccionada->id : null }}"
                     categorias="{{ $categorias }}"
                 >
-                </filtro>asdsadsdsa
+                </filtro>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                {{-- En home new... --}}
-                {{-- Selección por tipo --}}
-                {{-- Banners --}}
-                {{-- Carousel de tarjeta por categoria --}}
                 <index ref="contenedor" :categorias="[1,2,3]"/>
             </div>
         </div>

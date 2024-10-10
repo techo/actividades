@@ -25,6 +25,7 @@ class ActividadResource extends Resource
             'pago'          => $this->pago,
             'fecha'         => $this->fechaInicio->format('d/m'),
             'hora'          => $this->fechaInicio->format('H:i'),
+            'fechaCreacion'   => empty($this->fechaCreacion) ? '' : $this->fechaCreacion->format('d-m-Y'),
             'fechaInicio'   => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y'),
             'fechaFin'      => empty($this->fechaFin) ? '' : $this->fechaFin->format('d-m-Y'),
             'fechaInicioInscripciones'  => empty($this->fechaInicioInscripciones) ? '' : $this->fechaInicioInscripciones->format('d-m-Y'),
