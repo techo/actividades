@@ -67,6 +67,15 @@ return [
     'no' => 'Não',
     'applicable_roles' => 'Funções Aplicáveis',
     'registration_type' => 'Tipo de Inscrição',
+
+    'visualization' => 'Visualização na Home',
+    'actividades_tags' => 'Tags da Atividade',
+    'tags_description' => 'Use isso para chamar a atenção sobre algumas atividades',
+    'imagen_tarjeta' => 'Imagem da Atividade',
+    'imagen_tarjeta_description' => 'Se não inserir, será exibida a imagem padrão por categoria',
+    'destacada' => 'Destacar Atividade',
+    'destacada_description' => 'Esta atividade será exibida com um banner e é obrigatória a carga do mesmo',
+
     'new_inscription' => 'Novo!',
     'slots' => 'Vagas',
     'unlimited_slots' => '0 é "sem limite de inscrições"',

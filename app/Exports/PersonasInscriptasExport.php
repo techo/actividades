@@ -60,7 +60,15 @@ class PersonasInscriptasExport implements FromCollection, WithHeadings, WithColu
             $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ".$edad_desde." AND ". $edad_hasta);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
         
-        //Log::info($consulta);
+        // Aquí obtenemos la consulta SQL sin bindings
+$sql = $consulta->toSql();
+
+// Y aquí obtenemos los bindings (parámetros) que serán usados en la consulta
+$bindings = $consulta->getBindings();
+
+Log::info($sql);
+Log::info($bindings);
+
         return $consulta->get();
     }
 

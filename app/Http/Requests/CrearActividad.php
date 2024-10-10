@@ -69,7 +69,7 @@ class CrearActividad extends FormRequest
             'tipo_inscriptos_tag' => 'sometimes|nullable',
 
             'actividades_tags' => 'sometimes|nullable',
-          //  'imagen_tarjeta' => 'sometimes|nullable',
+
            // 'destacada' => 'sometimes|nullable',
            // 'imagen_destacada' => 'sometimes|nullable',
 

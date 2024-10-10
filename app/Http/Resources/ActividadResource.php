@@ -60,6 +60,7 @@ class ActividadResource extends Resource
             'show_dates' =>  $this->show_dates,
             'show_location' =>  $this->show_location,
             'jornadas'           => $this->jornadas,
+            'imagen_tarjeta'           => $this->imagen_tarjeta,
         ];
     }
 

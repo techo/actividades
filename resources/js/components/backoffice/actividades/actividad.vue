@@ -541,8 +541,15 @@
                             <p class="help-block">
                                 {{ $t('backend.imagen_tarjeta_description') }}
                             </p>
-                            <input type="file" class="form-control"  
-                            :disabled="!edicion" id="imagen_tarjeta">
+                            <div>
+                                <img v-if="actividad.imagen_tarjeta != null" :src="actividad.imagen_tarjeta" 
+                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
+                                 alt="imagen actividad">          
+                            </div>
+
+                            <button v-if="edicion" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
+                            <input v-if="(actividad.imagen_tarjeta == null || updateArchivo)" type="file" class="form-control"  @change="guardar_archivo" 
+                            :disabled="!edicion" ref="imagen_tarjeta">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -743,6 +750,7 @@
                     },
 
                     chat_grupal_whatsapp: null,
+                    imagenNew: null,
 
                 },
                 fechas: {
@@ -779,6 +787,7 @@
                 calculaFechas: false,
                 edicion: false,
                 virtual: false,
+                updateArchivo: false,
             }
         },
         created() {
@@ -964,6 +973,7 @@
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
                         .then((datos) => { 
+                            this.guardarImagenTarjeta();
                             this.actividad = datos.data;
                             Event.$emit('success');
                             this.edicion = false;
@@ -971,7 +981,7 @@
 
                         })
                         .catch((error) => { 
-                            this.errors = error.response.data.errors;
+                            this.errors = error;
                             Event.$emit('error');
                         });
                 }
@@ -990,6 +1000,32 @@
                     this.errors[field] = null;
                     delete this.errors[field];
                 }
+            },
+            guardarImagenTarjeta(){
+                let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-tarjeta`;
+                
+                const data = new FormData();
+
+                if (this.actividad.imagenNew != null)
+                    data.append('imagen_tarjeta', this.actividad.imagenNew);
+
+                const headers = { 'Content-Type': 'multipart/form-data' };
+                axios.post(url, data, { headers })
+                    .then((respuesta) => {
+                       // this.tipoActividad = respuesta.data;
+                    })
+                    .catch((error) => { 
+                        this.ocultarLoadingAlert();
+                        if (error.response) {
+                            if (error.response.status === 422) {
+                                this.validationErrors = Object.values(error.response.data.errors);
+                                Event.$emit('error');
+                               
+                            }
+                        }});
+            },
+            guardar_archivo(event) {
+                this.actividad.imagenNew = this.$refs.imagen_tarjeta.files[0];
             },
             getRelaciones(){
                 this.getPaises();                

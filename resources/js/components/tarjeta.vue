@@ -24,20 +24,23 @@
         
       <div class="card-body px-0 pt-1">
         <div style="width: 100%;">
-            <img class="card-img-top px-4" :src="actividad.tipo.imagen" alt="imagen actividad" v-bind:style="{borderRadius:'15%'} ">
+            
+            <img class="card-img-top px-4"  :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad" 
+            v-bind:style="{borderRadius:'15%' , maxWidth:'15rem', maxHeight:'6rem', minWidth:'12rem', minHeight:'4rem'} ">
             <div class=" texto-encima centrado">
                 <span class=" techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
             </div>
         </div>
         <p v-if="actividad.show_location" class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h5 class="card-title text-center text-white px-2">{{ nombreActividadRecortado }}</h5>
-        <div v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+        <h6 class="card-title pt-1 text-center text-white px-2">{{ nombreActividadRecortado }}</h6>
+        
+        <!-- <p class="card-text text-left px-3">{{ actividad.descripcion | truncate(30) }}</p> -->
+      </div>
+      <div class="card-footer px-0 pt-1 border-0" v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
             <!-- <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.ubicacion }}</span> -->
         </div>
-        <!-- <p class="card-text text-left px-3">{{ actividad.descripcion | truncate(30) }}</p> -->
-      </div>
     </div>
   </div>
 
@@ -71,7 +74,7 @@
             return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite < hoy;
           },
           nombreActividadRecortado() {
-            return this.actividad.nombreActividad.length > 60 ? this.actividad.nombreActividad.substring(0, 57) + '...' : this.actividad.nombreActividad;
+            return this.actividad.nombreActividad.length > 50 ? this.actividad.nombreActividad.substring(0, 48) + '..' : this.actividad.nombreActividad;
           }
         },
         filters: {
@@ -93,14 +96,20 @@
 </script>
 
 <style>
+div.tarjeta {
+    cursor: pointer;
+    border: 0px;
+    border-radius: 15%;
+    text-align: center;
+    height: 355px;
+    background-color: var(--card-color); /* Esto aplica el color base */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
 
-    div.tarjeta {
-        cursor: pointer;
-        border: 0px;
-        border-radius: 15%;
-        text-align: center;
-        height: 355px;
-    }
+div.tarjeta:hover {
+    filter: brightness(1.2); /* Aumenta el brillo al pasar el mouse */
+}
+
 
     div.card-top {
         height: 25px;
