@@ -26,7 +26,7 @@
             >
             </contenedor-check-provincias>
         </div>
-        <div id="filtro-tipos" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
+        <div v-show="!tipo_seleccionada" id="filtro-tipos" class="boton-filtro cont-check col-xs-12 col-md-3 col-lg-2 mr-md-3">
             <contenedor-check-tipos
                 v-bind:propdatos="this.tiposDeActividad"
             >
@@ -49,7 +49,7 @@
 
     export default {
         name: "filtro",
-        props: ['categoria_seleccionada', 'categorias'],
+        props: ['categoria_seleccionada', 'categorias', 'tipo_seleccionada'],
         components: {
             'contenedor-check-provincias': ContenedorCheckProvincias,
             'contenedor-check-tipos': ContenedorCheckTipoActividades
@@ -80,7 +80,7 @@
                 let filtros = {
                     provincias: this.dataProvincias,
                     localidades: this.dataLocalidades,
-                    tipos: this.dataTiposActividad,
+                    tipos: (this.tipo_seleccionada)?[this.tipo_seleccionada]:this.dataTiposActividad,
                     busqueda: this.dataBusqueda
                 };
 
