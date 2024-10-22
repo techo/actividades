@@ -1,9 +1,12 @@
 <template>
     <span>
+
+        <imgButtonGroup />
         <div v-show="loading" class="loading" style="text-align: center">
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="!loading">
+            <!-- filtros por tipo de actividad -->
             <carousel-de-tarjetas
                 v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
                 :actividades="actividadesPorCategoria[1] || []"
@@ -40,6 +43,7 @@
             <Suscribe :filtros="filtros" />
         </div>
     </span>
+
 </template>
 
 <script>
@@ -64,7 +68,7 @@
                 ultimaTarjeta: 0,
                 totalTarjetas: 0,
                 vacio: false,
-                filtros: {}
+                filtros: {},
             }
         },
         props: {
@@ -97,6 +101,14 @@
                 this.categorias.forEach(categoria => {
                     this.$set(this.actividadesPorCategoria, categoria, []);
                 });
+            },
+            scrollLeft() {
+                const container = this.$el.querySelector('.scroll-container');
+                container.scrollBy({ left: -200, behavior: 'smooth' });
+            },
+            scrollRight() {
+                const container = this.$el.querySelector('.scroll-container');
+                container.scrollBy({ left: 200, behavior: 'smooth' });
             },
             async agregarTarjetas(url, filtros, refresh, categoria) {
                 this.vacio = false;

@@ -28,7 +28,13 @@
 
 @section('main_content')
     <div class="container-fluid" >
+     
         <div class="row">
+            <div class="col-md-12">
+                <index ref="contenedor" :categorias="[1,2,3]"/>
+            </div>
+        </div>
+        <div class="row" style="display: none;">
             <div class="col-md-12">
                 <filtro
                     categoria_seleccionada="{{ ($categoriaSeleccionada) ? $categoriaSeleccionada->id : null }}"
@@ -36,12 +42,7 @@
                 >
                 </filtro>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <index ref="contenedor" :categorias="[1,2,3]"/>
-            </div>
-        </div>
+        </div> 
     </div>
     <!-- <aviso-modal></aviso-modal> -->
 
