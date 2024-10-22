@@ -300,6 +300,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@puntos')->middleware('can:editar,App\Actividad,id');
 
     Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta');
+    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada');
 
     Route::get('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@show');
     Route::post('/ajax/actividades/{id}/puntos', 'backoffice\ajax\PuntosController@store')->middleware('can:editar,App\Actividad,id');

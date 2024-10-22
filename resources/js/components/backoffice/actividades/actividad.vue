@@ -554,12 +554,21 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="destacada">{{ $t('backend.destacada') }}</label>
+                            <label for="imagen_destacada">{{ $t('backend.destacada') }}</label>
                             <p class="help-block">
                                 {{ $t('backend.destacada_description') }}
                             </p>
-                            <input type="checkbox" class="form-control"  v-model="actividad.destacada"
-                            :disabled="!edicion" id="destacada">
+                            <div>
+                                <img v-if="actividad.imagen_destacada != null" :src="actividad.imagen_destacada" 
+                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
+                                 alt="imagen actividad">          
+                            </div>
+
+                            <button v-if="edicion && actividad.imagen_destacada != null" class="btn btn-light" @click="updateDestacada = true" ><i class="fa fa-edit"></i></button>
+                            <input v-if="(actividad.imagen_destacada == null || updateDestacada)" type="file" class="form-control"  @change="guardar_destacada" 
+                            :disabled="!edicion" ref="imagen_destacada">
+
+                            <span class="help-block">{{ errors.imagen_destacada }}</span>
                         </div>
                     </div>
                     
@@ -751,6 +760,7 @@
 
                     chat_grupal_whatsapp: null,
                     imagenNew: null,
+                    imagenDestacada: null,
 
                 },
                 fechas: {
@@ -788,6 +798,7 @@
                 edicion: false,
                 virtual: false,
                 updateArchivo: false,
+                updateDestacada: false,
             }
         },
         created() {
@@ -974,6 +985,7 @@
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
                         .then((datos) => { 
                             this.guardarImagenTarjeta();
+                            this.guardarImagenDestacada();
                             this.actividad = datos.data;
                             Event.$emit('success');
                             this.edicion = false;
@@ -1006,26 +1018,44 @@
                 
                 const data = new FormData();
 
-                if (this.actividad.imagenNew != null)
+                if (this.actividad.imagenNew != null){
                     data.append('imagen_tarjeta', this.actividad.imagenNew);
 
-                const headers = { 'Content-Type': 'multipart/form-data' };
-                axios.post(url, data, { headers })
-                    .then((respuesta) => {
-                       // this.tipoActividad = respuesta.data;
-                    })
-                    .catch((error) => { 
-                        this.ocultarLoadingAlert();
-                        if (error.response) {
-                            if (error.response.status === 422) {
-                                this.validationErrors = Object.values(error.response.data.errors);
-                                Event.$emit('error');
-                               
-                            }
-                        }});
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+                    axios.post(url, data, { headers })
+                        .then((respuesta) => {
+                        // this.tipoActividad = respuesta.data;
+                        })
+                        .catch((error) => { 
+                            
+                            this.errors = error;
+                        });
+                }
             },
             guardar_archivo(event) {
                 this.actividad.imagenNew = this.$refs.imagen_tarjeta.files[0];
+            },
+            guardarImagenDestacada(){
+                let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-destacada`;
+                
+                const data = new FormData();
+
+                if (this.actividad.imagenDestacada != null){
+                    data.append('imagen_destacada', this.actividad.imagenDestacada);
+
+                    const headers = { 'Content-Type': 'multipart/form-data' };
+                    axios.post(url, data, { headers })
+                        .then((respuesta) => {
+                        // this.tipoActividad = respuesta.data;
+                        })
+                        .catch((error) => { 
+                           
+                            this.errors = error.errors;
+                        });
+                }
+            },
+            guardar_destacada(event) {
+                this.actividad.imagenDestacada = this.$refs.imagen_destacada.files[0];
             },
             getRelaciones(){
                 this.getPaises();                
