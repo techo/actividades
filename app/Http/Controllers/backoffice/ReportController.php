@@ -78,8 +78,18 @@ class ReportController extends Controller
 
             $inscripciones = new PersonasInscriptasExport($request);
             Log::info('ya tnego las inscripciones');
-            Log::info($inscripciones);
-            return Excel::download($inscripciones, 'personasInscriptas.xlsx');
+            $data = $inscripciones->collection(); // Obtener la colección de datos
+
+        // Verificar si hay datos en la colección
+        if ($data->isEmpty()) {
+            Log::warning('No hay datos para exportar');
+            return response()->json(['error' => 'No hay datos para exportar'], 400);
+        }
+
+        // Loguear algunos de los datos que se van a exportar
+        Log::info('Datos a exportar:', $data->toArray());
+
+        return Excel::download($inscripciones, 'personas_inscriptas.xlsx');
 
             Log::info('Exportación completada exitosamente');
         } catch (\Exception $e) {
