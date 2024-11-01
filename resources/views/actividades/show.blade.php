@@ -98,7 +98,7 @@
             </div>
         </div>
 		<hr>
-        @if (isset($QRCode))
+        @isset($qrCode)
         <div class="row">
 			<div class="col-md-12">
                 <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
@@ -106,10 +106,10 @@
 			</div>
 		</div>
         <div class="m-2">
-            {!! $QRCode !!}
+            {!! $qrCode !!}
         </div>
-        @endif
         <hr>
+        @endif
         @if ($actividad->show_location)
             <div  class="row">
                 <div class="col-md-12">

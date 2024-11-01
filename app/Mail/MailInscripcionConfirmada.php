@@ -35,6 +35,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
-            ->view('emails.inscripcionConfirmada');
+            ->view('emails.inscripcionConfirmada')
+            ->with('QRCode', $this->inscripcion->QRCode);
     }
 }
