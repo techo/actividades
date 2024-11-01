@@ -105,19 +105,17 @@ Log::info($bindings);
                 $genero = 'Sin Especificar';
                 break;
         }
-
         return [
-            //$query->idPersona,
-            $query->dni,
-            $query->nombres,
-            $query->apellidoPaterno,
-            $query->telefonoMovil,
-            $query->mail,
+            $query->dni ?? '', // Proteger contra valores nulos
+            $query->nombres ?? '',
+            $query->apellidoPaterno ?? '',
+            $query->telefonoMovil ?? '',
+            $query->mail ?? '',
             Date::dateTimeToExcel(Carbon::parse($query->fechaNacimiento)),
-            $query->oficina,
+            $query->oficina ?? '',
             $genero,
-            $query->inscripciones,
-            $query->presentes,
+            $query->inscripciones ?? 0,
+            $query->presentes ?? 0,
         ];
     }
 
