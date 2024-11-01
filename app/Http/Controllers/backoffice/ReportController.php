@@ -77,6 +77,8 @@ class ReportController extends Controller
             Log::info('Iniciando la exportación de Excel');
 
             $inscripciones = new PersonasInscriptasExport($request);
+            Log::info('ya tnego las inscripciones');
+            Log::info($inscripciones);
             return Excel::download($inscripciones, 'personasInscriptas.xlsx');
 
             Log::info('Exportación completada exitosamente');
