@@ -17,6 +17,7 @@ use App\Exports\MisActividadesExport;
 use App\Exports\PersonasInscriptasExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
@@ -71,9 +72,18 @@ class ReportController extends Controller
     }
 
     public function exportarPersonasInscriptas(Request $request)
-    {
-        $inscripciones = new PersonasInscriptasExport($request);
-        return Excel::download($inscripciones, 'personas inscriptas.xlsx');
+    { 
+        try {
+            Log::info('Iniciando la exportación de Excel');
+
+            $inscripciones = new PersonasInscriptasExport($request);
+            return Excel::download($inscripciones, 'personasInscriptas.xlsx');
+
+            Log::info('Exportación completada exitosamente');
+        } catch (\Exception $e) {
+            Log::error('Error en la exportación de Excel: ' . $e->getMessage());
+            return response()->json(['error' => 'Error en la exportación'], 500);
+        }
     }
 
     public function exportarEvaluacionesGenerales(Request $request)
