@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Request;
 
 //Frontoffice
 #Route::get('/', 'HomeController@index')->name('home');
-Route::get('/login', 'HomeController@index')->name('home');
 
 
 
@@ -456,6 +455,8 @@ Route::get('locale/{locale}', function($locale){
     Route::get('/', 'HomeController@multiPais');
     // Route::get('/', 'ActividadesController@index');
     // Route::get('/actividades', 'ActividadesController@index');
+
+Route::get('/login', 'HomeController@index')->name('home');
 
 Route::get('/autotest', 'PerfilController@quiz_techero');
 

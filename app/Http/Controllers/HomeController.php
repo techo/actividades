@@ -23,7 +23,8 @@ class HomeController extends Controller
         $idCategoria = $request->categoria ?? null;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
-        $homeHeader = HomeHeader::where('idPais', \Session::get('pais'))->first();
+        $homeHeader = HomeHeader::where('idPais', \Session::get('pais', env('APP_PAIS_DEFAULT')))->first();
+
         return view('index')
             ->with(
                 [

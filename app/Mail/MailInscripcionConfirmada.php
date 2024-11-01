@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MailInscripcionConfirmada extends Mailable implements ShouldQueue
 {
@@ -13,6 +14,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
 
     public $inscripcion;
     public $persona;
+    public $QRCode;
 
     /**
      * Create a new message instance.
@@ -23,6 +25,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
+        $this->QRCode = $this->generateQRCode();
     }
 
     /**
@@ -30,12 +33,19 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
      *
      * @return $this
      */
+
+    public function generateQRCode()
+    {
+        $url = env("APP_URL").'/admin/actividades/'.$this->inscripcion->actividad->idActividad.'/inscripcion/'.$this->inscripcion->idInscripcion.'/persona/'.$this->persona->idPersona; 
+        return QrCode::size(200)->generate($url);
+    }
+ 
     public function build()
     {
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
             ->view('emails.inscripcionConfirmada')
-            ->with('QRCode', $this->inscripcion->QRCode);
+            ->with('QRCode', $this->QRCode);
     }
 }

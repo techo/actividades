@@ -98,17 +98,17 @@
             </div>
         </div>
 		<hr>
-        @isset($qrCode)
-        <div class="row">
-			<div class="col-md-12">
-                <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
-                <span>{{ __('frontend.show_on_arrival') }}</span>
-			</div>
-		</div>
-        <div class="m-2">
-            {!! $qrCode !!}
-        </div>
-        <hr>
+        @if(filled($qrCode) && $qrCode != false)
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
+                    <span>{{ __('frontend.show_on_arrival') }}</span>
+                </div>
+            </div>
+            <div class="m-2">
+                {!! $qrCode !!}
+            </div>
+            <hr>
         @endif
         @if ($actividad->show_location)
             <div  class="row">

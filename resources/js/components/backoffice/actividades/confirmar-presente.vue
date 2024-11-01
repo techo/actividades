@@ -13,7 +13,7 @@
                 <div class="row text-center mb-2">
                     <div v-if="inscripto.photo" class="col-12 col-md-4 mb-3">
                         <img class="imagen-miniatura-redonda" :src="'/'+inscripto.photo" alt="Foto">
-                    <a :href="'/admin/usuarios/'+persona.idPersona" class="btn btn-primary btn-xs" target="_blank" >
+                    <a :href="'/admin/usuarios/'+inscripto.idPersona" class="btn btn-primary btn-xs" target="_blank" >
                        <i class="fa fa-user" ></i> &nbsp; {{ $t('backend.view_profile') }}
                     </a>
                     </div>
@@ -61,7 +61,7 @@
         methods: {
             confirmParticipation() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.inscripcion['idInscripcion'];
+                let url = '/admin/ajax/actividades/' +  this.inscripcion['idActividad'] + '/inscripciones/' + this.inscripcion['idInscripcion'];
                 let params = {
                     'presente': true,
                 };
