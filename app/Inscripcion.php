@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Inscripcion extends Model
 {
@@ -71,6 +71,14 @@ class Inscripcion extends Model
     public function jornadas()
     {
         return $this->belongsToMany(Jornada::class, 'InscripcionJornada', 'idInscripcion', 'idJornada');
+    }
+
+    public function QRCode()
+    {
+        $url = env("APP_URL").'/admin/actividades/'.$this->actividad->idActividad.'/inscripcion/'.$this->idInscripcion.'/persona/'.$this->persona->idPersona; 
+        $qrCode = QrCode::size(200)->generate($url);
+
+        return $qrCode;
     }
 
 }

@@ -270,6 +270,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones')->middleware('can:ver,App\Actividad,id');
+    Route::get('/actividades/{actividad}/inscripcion/{inscripcion}/persona/{persona}', 'backoffice\ActividadesController@confirmarInscripcion')->middleware('can:ver,App\Actividad,actividad');
     Route::get('/actividades/{id}/grupos', 'backoffice\ActividadesController@grupos')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/evaluaciones', 'backoffice\ActividadesController@evaluaciones')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/accesos', 'backoffice\ActividadesController@accesos')->middleware('can:ver,App\Actividad,id');

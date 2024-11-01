@@ -15,7 +15,8 @@ import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
-import Jornadas from './components/backoffice/actividades/jornadas'
+import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
+import Jornadas from './components/backoffice/actividades/jornadas' 
 import Accesos from './components/backoffice/actividades/accesos'
 import ModalAuditoria from './components/backoffice/auditorias/ModalAuditoria';
 import FiltrosInscripciones from './components/backoffice/actividades/filtros-inscripciones'
@@ -123,6 +124,7 @@ Vue.component('grupo-edit-modal', GrupoEditModal);
 
 Vue.component('actividad', Actividad);
 Vue.component('puntos', Puntos);
+Vue.component('confirmar-presente', confirmarPresente);
 Vue.component('jornadas', Jornadas);
 Vue.component('accesos', Accesos);
 Vue.component('modal-auditoria', ModalAuditoria);

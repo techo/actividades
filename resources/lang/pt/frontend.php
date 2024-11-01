@@ -328,6 +328,8 @@ return [
 	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
+	'confirm_inscription_with_qr' => 'QR para confirmar sua presença',
+	'show_on_arrival' => 'Para mostrar ao chegar na atividade',
 	'jornada' => 'Sessão',
 	'jornadas' => 'Sessões',
 	'review_jornadas' => 'Inscreva-se na(s) sessão(ões) em que deseja participar',

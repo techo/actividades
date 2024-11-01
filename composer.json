@@ -17,6 +17,7 @@
         "maatwebsite/excel": "^3.0",
         "rap2hpoutre/fast-excel": "^1.2.2",
         "sentry/sentry-laravel": "^0.11.0",
+        "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^2.11",
         "unisharp/laravel-filemanager": "~1.8",
         "webpatser/laravel-uuid": "^3.0"

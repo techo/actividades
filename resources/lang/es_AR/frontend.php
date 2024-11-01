@@ -299,6 +299,8 @@ return [
     'description' => '',
     'not_defined' => 'No definido',
     'coordinator' => 'Coordina',
+	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 
+	'show_on_arrival' => 'Para mostrar al llegar a la actividad',
     'meeting_points' => 'Puntos de encuentro / URL de Conexión',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',

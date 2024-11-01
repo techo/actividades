@@ -15,6 +15,7 @@ use App\PuntoEncuentro;
 use App\Coordinador;
 use App\Http\Requests\CrearCoordinador;
 use App\Http\Resources\ActividadResource;
+use App\Inscripcion;
 use App\Rules\FechaFinActividad;
 use App\UnidadOrganizacional;
 use Carbon\Carbon;
@@ -229,6 +230,39 @@ class ActividadesController extends Controller
 
         return view('backoffice.actividades.inscripciones', 
             compact(
+                'actividad',
+                'fields',
+                'sortOrder',
+                'camposInscripciones',
+                'condiciones'
+            ) 
+        );
+    }
+
+    public function confirmarInscripcion(Actividad $actividad, Inscripcion $inscripcion, $idPersona)
+    {
+        $fields = config('datatables.inscripciones.fields');
+
+        if ($actividad->confirmacion == 1) {
+            $checkConfirma = [[ 'name' => '__component:confirma', 'title' => 'Confirma', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
+            array_splice($fields, count($fields) - 1, 0, $checkConfirma);
+        }
+        if ($actividad->pago == 1) {
+            $checkPago = [[ 'name' => '__component:pago', 'title' => 'Pago', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
+            array_splice($fields, count($fields) - 1, 0, $checkPago);
+        }
+
+        $fields = json_encode($fields);
+        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+
+        $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
+        $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));
+        $persona = Persona::findOrFail($idPersona);
+
+        return view('backoffice.actividades.inscripciones', 
+            compact(
+                'inscripcion',
+                'persona',
                 'actividad',
                 'fields',
                 'sortOrder',

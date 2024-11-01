@@ -34,7 +34,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     {
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from('noreply.actividades@techo.org')
+            ->from('noreplyactividades@techo.org')
             ->view('emails.inscripcionConfirmada');
     }
 }

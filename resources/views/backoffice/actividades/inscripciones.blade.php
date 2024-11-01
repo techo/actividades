@@ -9,7 +9,12 @@
 
     <div class="tab-content">
         <div class="tab-pane active" id="inscripciones">
-            
+            @if(isset($inscripcion))
+                    <confirmar-presente
+                            inscripcion="{{ $inscripcion }}"
+                            persona="{{ $persona }}"
+                    ></confirmar-presente>
+            @endif
             <div class="box box-primary collapsed-box">
 
                 <div class="box-header with-border bg-success">

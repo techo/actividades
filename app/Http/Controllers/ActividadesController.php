@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Actividad;
 use App\HomeHeader;
 use App\Tipo;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class actividadesController extends Controller
 {
@@ -60,6 +61,14 @@ class actividadesController extends Controller
         //
     }
 
+    public function generateQRCode($persona, $actividad, $inscripcion)
+    {
+        $url = env("APP_URL").'/admin/actividades/'.$actividad->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$persona->idPersona; 
+        $qrCode = QrCode::size(200)->generate($url);
+
+        return $qrCode;
+    }
+    
     /**
      * Display the specified resource.
      *
@@ -85,6 +94,7 @@ class actividadesController extends Controller
         $habilitado = false;
         $payment = '';
         $chatGrupalWhatsapp = false;
+        $qrCode = false;
 
         if (auth()->check() && auth()->user()->estadoInscripcion($id)) {
             
@@ -127,6 +137,10 @@ class actividadesController extends Controller
                     $clase = 'btn-success disabled';
                     $habilitado = false;
                     $chatGrupalWhatsapp = true;
+                    $persona = Persona::find(auth()->user()->idPersona);
+                    $inscripcion = $persona->inscripcionActividad($id);
+
+                    $qrCode = $this->generateQRCode(auth()->user(), $actividad, $inscripcion);
                     break;
             }
         }
@@ -168,7 +182,7 @@ class actividadesController extends Controller
             }
         }
 
-        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'chatGrupalWhatsapp'));
+        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'chatGrupalWhatsapp', 'qrCode'));
     }
 
     /**

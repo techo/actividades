@@ -51,6 +51,17 @@
         </a>
     @endif
 
+    <hr>
+        <div class="row">
+			<div class="col-md-12">
+                <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
+                <span>{{ __('frontend.show_on_arrival') }}</span>
+			</div>
+		</div>
+        <div class="m-2">
+            {!! $inscripcion->QRCode !!}
+        </div>
+    <hr>
 
     @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
         <p>

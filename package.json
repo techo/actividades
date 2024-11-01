@@ -51,6 +51,7 @@
         "vue-cropperjs": "^4.2.0",
         "vue-i18n": "^8.15.0",
         "vue-loader": "^14.2.2",
+        "vue-qrcode-reader": "^5.5.11",
         "vue-router": "^3.0.1",
         "vue-select": "^3.1.0",
         "vue-slider-component": "^2.7.2",
