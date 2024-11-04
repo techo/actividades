@@ -10,7 +10,7 @@
                
             </div>
             <div class="box-body">
-                <div class="row text-center mb-2">
+                <div class="row text-center mb-4">
                     <div v-if="inscripto.photo" class="col-12 col-md-4 mb-3">
                         <img class="imagen-miniatura-redonda" :src="'/'+inscripto.photo" alt="Foto">
                     <a :href="'/admin/usuarios/'+inscripto.idPersona" class="btn btn-primary btn-xs" target="_blank" >
@@ -24,11 +24,19 @@
                         <h5>{{ $t('backend.phone') }}: {{ inscripto.telefonoMovil }}</h5>
                     </div>
                 </div>
-                <div class="text-center">
-                    <button @click="confirmParticipation" class="btn btn-success">
+                <div class="row text-center mt-4">
+                    <button
+                        v-if="!inscripcionConfirmada"
+                        @click="confirmParticipation"
+                        class="btn btn-success me-2"
+                    >
                         {{ $t('backend.confirm') }}
                     </button>
+                    <p v-else class="text-success">
+                        {{ $t('backend.confirmed') }}
+                    </p>
                 </div>
+
             </div>
         </div>
     
@@ -45,6 +53,8 @@
         data() {
             return {
                 inscripto: {},
+                inscripcionBD: {},
+                inscripcionConfirmada: false,
             }
         },
         created() {
@@ -52,6 +62,10 @@
         mounted() {
             
             this.inscripto = JSON.parse(this.persona);
+            this.inscripcionBD = JSON.parse(this.inscripcion);
+
+            if(this.inscripcionBD.presente)
+                this.inscripcionConfirmada = true;
         },
         computed: {
         },
@@ -61,7 +75,7 @@
         methods: {
             confirmParticipation() {
                 this.errorIcon = false;
-                let url = '/admin/ajax/actividades/' +  this.inscripcion['idActividad'] + '/inscripciones/' + this.inscripcion['idInscripcion'];
+                let url = '/admin/ajax/actividades/' +  this.inscripcionBD.idActividad + '/inscripciones/' + this.inscripcionBD.idInscripcion;
                 let params = {
                     'presente': true,
                 };
@@ -75,6 +89,7 @@
                 axios.post(url, params)
                     .then(response => {
                         fCallback(response.data, this)
+                        this.inscripcionConfirmada = true;
                     })
                     .catch((error) => {
                         // Error

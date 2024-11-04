@@ -1,6 +1,6 @@
 <template>
   <a :href="url" class="text-decoration-none">
-    <div class="d-flex flex-column align-items-center p-2" style="width: 160px;"> <!-- Ajuste del ancho del contenedor -->
+    <div class="d-flex flex-column align-items-center p-1" style="width: 150px;"> <!-- Ajuste del ancho del contenedor -->
       <img :src="img" :alt="text" class="img-fluid mb-2" />
       <span class="text-center text-black text-truncate text-wrap" style="width: 100%;">
         {{ text }}

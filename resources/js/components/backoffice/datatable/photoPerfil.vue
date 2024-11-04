@@ -24,11 +24,11 @@
         },
 
         mounted() {
-            if(this.rowData.photo){
-                var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
-                var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
-                this.items = JSON.parse(cadenaJSONSinEscape);
-            }
+            // if(this.rowData.photo){
+            //     var cadenaJSONSinComillas = this.rowData.roles_aplicados.replace(/^"|"$/g, '');
+            //     var cadenaJSONSinEscape = cadenaJSONSinComillas.replace(/\\\"/g, '"');
+            //     this.items = JSON.parse(cadenaJSONSinEscape);
+            // }
         },
     }
 </script>

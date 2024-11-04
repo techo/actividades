@@ -2,29 +2,29 @@
   <div class="col-md-4">
     <div class="card tarjeta p-2 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
         <div class="img-tarjeta mx-3">
-            <div class="card-top"></div>
-            <span
-                v-show="actividad.estadoInscripcion"
-                :class="{ 
-                    'inscripto': true, 
-                    'badge': true, 
-                    'badge-pill': true, 
-                    'badge-danger': actividad.estadoInscripcion == 'confirmation_date_is_closed', 
-                    'badge-primary': actividad.estadoInscripcion == 'confirm_by_paying', 
-                    'badge-warning': actividad.estadoInscripcion == 'waiting_for_confirmation',
-                    'badge-success': actividad.estadoInscripcion == 'confirmed',
-                }" >
-                {{ $t('frontend.' + actividad.estadoInscripcion) }}
-            </span>
-            <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
-            <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
-            <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
-            <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
+            <div class="card-top m-1">
+                <span
+                    v-show="actividad.estadoInscripcion"
+                    :class="{ 
+                        'inscripto': true, 
+                        'badge': true, 
+                        'badge-pill': true, 
+                        'badge-danger': actividad.estadoInscripcion == 'confirmation_date_is_closed', 
+                        'badge-primary': actividad.estadoInscripcion == 'confirm_by_paying', 
+                        'badge-warning': actividad.estadoInscripcion == 'waiting_for_confirmation',
+                        'badge-success': actividad.estadoInscripcion == 'confirmed',
+                    }" >
+                    {{ $t('frontend.' + actividad.estadoInscripcion) }}
+                </span>
+                <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
+                <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
+                <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
+                <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
+            </div>
         </div>
         
       <div class="card-body px-0 pt-1">
         <div style="width: 100%;">
-            
             <img class="card-img-top px-4"  :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad" 
             v-bind:style="{borderRadius:'15%' , maxWidth:'15rem', maxHeight:'6rem', minWidth:'12rem', minHeight:'4rem'} ">
             <div class=" texto-encima centrado">
@@ -32,7 +32,7 @@
             </div>
         </div>
         <p v-if="actividad.show_location" class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h6 class="card-title pt-1 text-center text-white px-2">{{ nombreActividadRecortado }}</h6>
+        <h6 class="pt-1 text-center text-white px-2">{{ nombreActividadRecortado }}</h6>
         
         <!-- <p class="card-text text-left px-3">{{ actividad.descripcion | truncate(30) }}</p> -->
       </div>
@@ -74,7 +74,7 @@
             return this.actividad.pago == 1 && this.actividad.fechaLimitePago != ''  && fecha_limite < hoy;
           },
           nombreActividadRecortado() {
-            return this.actividad.nombreActividad.length > 50 ? this.actividad.nombreActividad.substring(0, 48) + '..' : this.actividad.nombreActividad;
+            return this.actividad.nombreActividad.length > 50 ? this.actividad.nombreActividad.substring(0, 46) + '..' : this.actividad.nombreActividad;
           }
         },
         filters: {
@@ -155,7 +155,7 @@ div.tarjeta:hover {
     }
     
     .centrado{
-        top: 20%;
+        top: 25%;
         left: 50%;
         transform: translate(-50%, -50%);
     }

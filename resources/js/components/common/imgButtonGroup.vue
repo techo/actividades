@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="position-relative w-100 mb-4">
-      <button ref="flechaIzquierda" role="button" class="flecha-izquierda" @click="scrollLeft">
+      <button v-if="showArrows" ref="flechaIzquierda" role="button" class="flecha-izquierda" @click="scrollLeft">
         <
       </button>
         
@@ -11,7 +11,7 @@
         </div>
       </div>
       
-      <button ref="flechaDerecha" role="button" class="flecha-derecha"
+      <button v-if="showArrows" ref="flechaDerecha" role="button" class="flecha-derecha"
         @click="scrollRight">
             >
         </button>
@@ -61,7 +61,15 @@ export default {
           text: 'Eventos y Otros',
         },
       ],
+      showArrows: false,
     };
+  },
+  mounted() {
+    this.checkScrollArrows();
+    window.addEventListener('resize', this.checkScrollArrows);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScrollArrows);
   },
   methods: {
     scrollLeft() {
@@ -72,6 +80,10 @@ export default {
       const container = this.$el.querySelector('.scroll-container');
       container.scrollLeft += 100;
     },
+    checkScrollArrows() {
+      const container = this.$el.querySelector('.scroll-container');
+      this.showArrows = container.scrollWidth > container.clientWidth;
+    },
   },
 };
 </script>
@@ -80,6 +92,12 @@ export default {
 .scroll-container {
   overflow-x: auto;
   scroll-behavior: smooth;
+  -ms-overflow-style: none;  /* Ocultar barra en Internet Explorer y Edge */
+  scrollbar-width: none;      /* Ocultar barra en Firefox */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;              /* Ocultar barra en Chrome, Safari y Opera */
 }
 
 button {
