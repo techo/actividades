@@ -1,7 +1,7 @@
 <template>
     <div class="tarjetas-agrupadas">
     <div class="contenedor-titulo-controles">
-        <h3>{{ title }}</h3>
+        <h4>{{ title }}</h4>
         <div class="indicadores"></div>
     </div>
 

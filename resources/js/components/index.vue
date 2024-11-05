@@ -10,32 +10,32 @@
             <carousel-de-tarjetas
                 v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
                 :actividades="actividadesPorCategoria[1] || []"
-                :title="'Con el pie en territorio, todas las actividades en comunidad.'"
+                :title="'Con el pie en territorio 💙 todas las actividades en comunidad'"
             />
             <carousel-de-tarjetas
                 v-show="actividadesPorCategoria[2] && actividadesPorCategoria[2].length > 0"
                 :actividades="actividadesPorCategoria[2] || []"
-                :title="'Fortalece tus capacidades con Capacitaciones, Espacios formativos y Talleres.'"
+                :title="'Fortalece tus capacidades 🧠 Capacitaciones, Espacios formativos y Talleres.'"
             />
             <carousel-de-tarjetas
                 v-show="actividadesNuevas && actividadesNuevas.length > 0"
                 :actividades="actividadesNuevas || []"
-                :title="'Nuevas Actividades.'"
+                :title="'Nuevas Actividades. 🆕'"
             />
             <carousel-de-tarjetas
                 v-show="actividadesNuevosVoluntarios && actividadesNuevosVoluntarios.length > 0"
                 :actividades="actividadesNuevosVoluntarios || []"
-                :title="'Ideal para nuevo voluntario'"
+                :title="'Ideal para nuevo voluntario 🙋'"
             />
             <carousel-de-tarjetas
                 v-show="actividadesHitoAnual && actividadesHitoAnual.length > 0"
                 :actividades="actividadesHitoAnual || []"
-                :title="'Hitos Anuales solo 1 vez al año ¡No te los puedes perder!'"
+                :title="'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!'"
             />
             <carousel-de-tarjetas
                 v-show="actividadesEquipos && actividadesEquipos.length > 0"
                 :actividades="actividadesEquipos || []"
-                :title="'Para los equipos, encuentra tu actividad de reunion de equipo'"
+                :title="'Para los equipos 🤝 encuentra tu actividad de reunion de equipo'"
             /> 
                 
         </div>

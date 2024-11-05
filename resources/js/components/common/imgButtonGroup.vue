@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <h4 class="text-center fw-bold pb-2">¡Sumate y <span class="text-primary">transforma</span>!</h4>
+
     <div class="position-relative w-100 mb-4">
       <button v-if="showArrows" ref="flechaIzquierda" role="button" class="flecha-izquierda" @click="scrollLeft">
         <
