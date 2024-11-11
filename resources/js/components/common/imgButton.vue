@@ -1,8 +1,8 @@
 <template>
-  <a :href="url" class="text-decoration-none">
-    <div class="d-flex flex-column align-items-center p-1" style="width: 150px;"> <!-- Ajuste del ancho del contenedor -->
+  <a :href="url" class="text-decoration-none filtro-tipo">
+    <div class="d-flex flex-column align-items-center p-1" style="width: 148px;">
       <img :src="img" :alt="text" class="img-fluid mb-2" />
-      <span class="text-center text-black text-truncate text-wrap" style="width: 100%;">
+      <span class="text-center text-primary text-truncate text-wrap" style="width: 100%; line-height: 1.2;">
         {{ text }}
       </span>
     </div>
@@ -33,6 +33,10 @@ export default {
 img {
   max-width: 80px;
   max-height: 80px;
+}
+
+.filtro-tipo:hover {
+    filter: brightness(1.2);
 }
 
 span {

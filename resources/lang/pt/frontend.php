@@ -10,6 +10,17 @@ return [
 	|
 	*/
 
+	//nueva visual Home
+	'home_last_spots' => 'Últimas vagas! 🚨 não fique de fora',
+	'home_community' => 'Com os pés no território 💙 todas as atividades em comunidade',
+	'home_formation' => 'Fortaleça suas capacidades 🧠 Capacitações, Espaços formativos e Oficinas.',
+	'home_new' => 'Novas Atividades. 🆕',
+	'home_for_new_volunteers' => 'Ideal para novo voluntário 🙋',
+	'home_specials' => 'Marcos Anuais 👑 apenas 1 vez por ano! Não perca!',
+	'home_teams' => 'Para as equipes 🤝 encontre sua atividade de reunião de equipe',
+	'find_how' => '👉 Descubra como',
+	'to_be_part_of_team' => 'fazer parte da equipe',
+
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este site usa cookies para melhorar a experiência do usuário. Se você usar este site, estará aceitando nossa',
 	'cookie_policy' => 'politica de Cookies.',

@@ -99,16 +99,16 @@
         </div>
 		<hr>
         @if(filled($qrCode) && $qrCode != false)
-            <div class="row">
+            <div class="row justify-content-center text-center">
                 <div class="col-md-12">
                     <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
                     <span>{{ __('frontend.show_on_arrival') }}</span>
                 </div>
             </div>
-            <div class="m-2">
+            <div class="d-flex justify-content-center m-2">
                 {!! $qrCode !!}
             </div>
-            <hr>
+            <hr class="mx-auto" style="width: 80%;">
         @endif
         @if ($actividad->show_location)
             <div  class="row">

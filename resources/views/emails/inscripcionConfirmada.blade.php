@@ -24,7 +24,7 @@
             </strong>
         @endif
     </p>
-
+    <hr>
     @if($inscripcion->actividad->coordinador)
         <p>
             <strong>@lang('frontend.coordinator'):</strong>
@@ -34,7 +34,7 @@
             <a href="mailto:{{ $inscripcion->actividad->coordinador->mail }}" target="_blank">
                 {{ $inscripcion->actividad->coordinador->mail }}
             </a>
-        </p>
+        </p><hr>
     @endif
 
     <p>
@@ -43,7 +43,7 @@
       </strong>
         {{$inscripcion->actividad->mensajeInscripcion}}
     </p>
-
+    <hr>
     @if($inscripcion->actividad->chat_grupal_whatsapp)
         <a class="btn rounded-pill text-white bg-success" href="{{ $inscripcion->actividad->chat_grupal_whatsapp }}" target="_blank">
             <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
@@ -78,20 +78,23 @@
                     {{ $inscripcion->punto_encuentro->responsable->mail }}
                 </a></p>
             </p>
+            
         @endif
+        <hr>
     @endif
     
     @isset($QRCode)
-        <div class="row">
-			<div class="col-md-12">
-                <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
-                <span>{{ __('frontend.show_on_arrival') }}</span>
-			</div>
-		</div>
-        <div class="m-2">
-            {!! $QRCode !!}
-        </div>
-        <hr>
+    
+            <div class="row justify-content-center text-center">
+                <div class="col-md-12">
+                    <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
+                    <span>{{ __('frontend.show_on_arrival') }}</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center m-2">
+                {!! $QRCode !!}
+            </div>
+            <hr class="mx-auto" style="width: 80%;">
     @endif
     <p>
           @lang('email.greetings')

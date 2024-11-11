@@ -60,11 +60,25 @@ code {
     color: white;
 }
 
-.bg-techo-yellor {
+.bg-techo-pink-light {
+    background-color: #f06277 !important;
+    color: white;
+}
+
+
+.bg-techo-pink-light:hover {
+    background-color: #e94362 !important;
+}
+
+.bg-techo-yellow {
     background-color: #fdc533 !important;
     color: white;
 }
 
+
+.techo-violet {
+    color: #954B97 !important;
+}
 .bg-techo-violet {
     background-color: #954B97 !important;
     color: white;
@@ -133,7 +147,7 @@ code {
     padding:1px;
   }
 .techo-blue {
-    color: #0092dd;
+    color: #009fe3;
 }
 
 .techo-titulo-card {

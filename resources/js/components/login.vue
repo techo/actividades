@@ -118,7 +118,6 @@
 
                     </div>
                 </div>  
-                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                         aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <img v-if="user.photo && authenticated" class="imagen-perfil-mini" :src="'/'+user.photo" alt="Foto">
@@ -152,6 +151,11 @@
                             <a class="nav-link text-uppercase" v-on:click="ayuda">{{ $t('frontend.help') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                            <a href="/postulaciones" class="btn bg-techo-pink-light text-white" style="border-radius: 40px; transition: background-color 0.3s;">
+                                {{ $t('frontend.find_how') }} <span class="techo-violet">{{ $t('frontend.to_be_part_of_team') }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
                             <a class="nav-link text-uppercase" v-on:click="logout">{{ $t('frontend.logout') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none ml-auto mx-auto" v-show="langs.length>0" >
@@ -165,8 +169,11 @@
                     </ul>
                 </div>
 
-
-                <div class="locale-changer col-md-1 offset-md-2 d-none d-md-block" >
+                <a href="/postulaciones" class="btn bg-techo-pink-light text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
+                    {{ $t('frontend.find_how') }} <span class="techo-violet">{{ $t('frontend.to_be_part_of_team') }}</span>
+                </a>
+                <div class="locale-changer col-md-1 d-none d-md-block" >
+                    
                     <select v-if="langs.length>0" v-model="_i18n.locale" class="btn dropdown-toggle text-white bg-black pr-0" @change="onChangeLocalization($event)">
                         <option class="dropdown-item" v-for="(lang, i) in langs" :key="`Lang${i}`"  :value="lang[0]">
                             {{ lang[1] }}

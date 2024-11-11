@@ -10,6 +10,18 @@ return [
 	|
 	*/
 
+	//nueva visual Home
+    'home_last_spots' => '¡Úlitmos cupos! 🚨 no te quedes sin participar',
+    'home_community' => 'Con el pie en territorio 💙 todas las actividades en comunidad',
+    'home_formation' => 'Fortalece tus capacidades 🧠 Capacitaciones, Espacios formativos y Talleres.',
+    'home_new' => 'Nuevas Actividades. 🆕',
+    'home_for_new_volunteers' => 'Ideal para nuevo voluntario 🙋',
+    'home_specials' => 'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!',
+    'home_teams' => 'Para los equipos 🤝 encuentra tu actividad de reunion de equipo',
+    'find_how' => '👉 Descubre cómo',
+    'to_be_part_of_team' => 'ser parte del equipo',
+
+
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
 	'cookie_policy' => 'Politicas de Cookies',
@@ -299,8 +311,8 @@ return [
     'description' => '',
     'not_defined' => 'No definido',
     'coordinator' => 'Coordina',
-	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 
-	'show_on_arrival' => 'Para mostrar al llegar a la actividad',
+	'confirm_inscription_with_qr' => 'Confirmá tu presente', 
+	'show_on_arrival' => 'Mostralo al llegar a la actividad',
     'meeting_points' => 'Puntos de encuentro / URL de Conexión',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',

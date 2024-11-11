@@ -20,7 +20,6 @@
 
 <body>
     <div id="app">
-        @include('partials.cookies-bar')
         @include('partials.header')
         <main role="main">
 
@@ -38,6 +37,7 @@
 
         </main>
     </div>
+    @include('partials.cookies-bar')
     @yield('aditional_html')
     @include('partials.scripts')
     @stack('additional_scripts')

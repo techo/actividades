@@ -6,36 +6,40 @@
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="!loading">
-            <!-- filtros por tipo de actividad -->
+            <carousel-de-tarjetas
+                v-show="actividadesUltimosCupos && actividadesUltimosCupos.length > 0"
+                :actividades="actividadesUltimosCupos || []"
+                :title="$t('frontend.home_last_spots')"
+            />
             <carousel-de-tarjetas
                 v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
                 :actividades="actividadesPorCategoria[1] || []"
-                :title="'Con el pie en territorio 💙 todas las actividades en comunidad'"
+                :title="$t('frontend.home_community')"
             />
             <carousel-de-tarjetas
                 v-show="actividadesPorCategoria[2] && actividadesPorCategoria[2].length > 0"
                 :actividades="actividadesPorCategoria[2] || []"
-                :title="'Fortalece tus capacidades 🧠 Capacitaciones, Espacios formativos y Talleres.'"
+                :title="$t('frontend.home_formation')"
             />
             <carousel-de-tarjetas
                 v-show="actividadesNuevas && actividadesNuevas.length > 0"
                 :actividades="actividadesNuevas || []"
-                :title="'Nuevas Actividades. 🆕'"
+                :title="$t('frontend.home_new')"
             />
             <carousel-de-tarjetas
                 v-show="actividadesNuevosVoluntarios && actividadesNuevosVoluntarios.length > 0"
                 :actividades="actividadesNuevosVoluntarios || []"
-                :title="'Ideal para nuevo voluntario 🙋'"
+                :title="$t('frontend.home_for_new_volunteers')"
             />
             <carousel-de-tarjetas
                 v-show="actividadesHitoAnual && actividadesHitoAnual.length > 0"
                 :actividades="actividadesHitoAnual || []"
-                :title="'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!'"
+                :title="$t('frontend.home_specials')"
             />
             <carousel-de-tarjetas
                 v-show="actividadesEquipos && actividadesEquipos.length > 0"
                 :actividades="actividadesEquipos || []"
-                :title="'Para los equipos 🤝 encuentra tu actividad de reunion de equipo'"
+                :title="$t('frontend.home_teams')"
             /> 
                 
         </div>
@@ -59,6 +63,7 @@
                 actividadesPorCategoria: {},
                 actividadesNuevosVoluntarios: [],
                 actividadesHitoAnual: [],
+                actividadesUltimosCupos:[],
                 actividadesEquipos: [],
                 actividadesNuevas: [],
                 loading: false,
@@ -134,6 +139,9 @@
                                     } else if (item.text === "Hito Anual")  {
                                         console.log(`Este es ${item.text}`);
                                         this.actividadesHitoAnual.push(actividad);
+                                    } else if (item.text === "Últimos Cupos")  {
+                                        console.log(`Este es ${item.text}`);
+                                        this.actividadesUltimosCupos.push(actividad);
                                     }
                                 });
                             }

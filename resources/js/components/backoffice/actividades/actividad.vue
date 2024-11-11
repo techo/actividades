@@ -702,6 +702,8 @@
                         text: 'Hito Anual',
                     }, {
                         text: 'Equipos',
+                    }, {
+                        text: 'Últimos Cupos',
                     }],
 
                 

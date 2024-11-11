@@ -10,6 +10,18 @@ return [
 	|
 	*/
 
+	//nueva visual Home
+	'home_last_spots' => 'Last spots! 🚨 don’t miss out',
+	'home_community' => 'With feet on the ground 💙 all activities in community',
+	'home_formation' => 'Strengthen your skills 🧠 Trainings, Workshops, and Learning Spaces.',
+	'home_new' => 'New Activities. 🆕',
+	'home_for_new_volunteers' => 'Ideal for new volunteers 🙋',
+	'home_specials' => 'Annual Highlights 👑 only once a year! Don’t miss them!',
+	'home_teams' => 'For teams 🤝 find your team meeting activity',
+	'find_how' => '👉 Find out how',
+	'to_be_part_of_team' => 'to be part of the team',
+
+
 	// cookies-bar.vue
 	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',
 	'cookie_policy' => 'Cookies policy',

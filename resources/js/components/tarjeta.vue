@@ -1,8 +1,8 @@
 <template>
   <div class="col-md-4">
-    <div class="card tarjeta p-2 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
+    <div class="card tarjeta p-1 m-2" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:actividad.tipo.color}">
         <div class="img-tarjeta mx-3">
-            <div class="card-top m-1">
+            <div class="card-top m-1 p-0 ml-2">
                 <span
                     v-show="actividad.estadoInscripcion"
                     :class="{ 
@@ -19,27 +19,23 @@
                 <span v-show="!actividad.estadoInscripcion && !cuposLlenos && pocosCupos" class="pocos-cupos badge badge-pill badge-warning">{{ $t('frontend.limit_about_to_be_reached') }}</span>
                 <span v-show="!actividad.estadoInscripcion && cuposLlenos" class="sin-cupos badge badge-pill badge-danger">{{ $t('frontend.activity_full') }}</span>
                 <span v-show="!actividad.estadoInscripcion && fechaLimitePagoVencida" class="inscripto badge badge-pill badge-danger">{{ $t('frontend.confirmation_date_is_closed') }}</span>
-                <!-- <img class="card-img-top" :src="actividad.tipo.imagen" alt="imagen actividad"> -->
             </div>
         </div>
         
-      <div class="card-body px-0 pt-1">
+      <div class="card-body px-0 pt-1 pb-1">
         <div style="width: 100%;">
-            <img class="card-img-top px-4"  :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad" 
-            v-bind:style="{borderRadius:'15%' , maxWidth:'15rem', maxHeight:'6rem', minWidth:'12rem', minHeight:'4rem'} ">
+            <img class="card-img-top px-4" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
+                v-bind:style="{ borderRadius: '15%', width: '15rem', height: '6rem' }">
             <div class=" texto-encima centrado">
                 <span class=" techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
             </div>
         </div>
-        <p v-if="actividad.show_location" class="techo-titulo-card px-4" >{{ actividad.ubicacion }}</p>
-        <h6 class="pt-1 text-center text-white px-2">{{ nombreActividadRecortado }}</h6>
-        
-        <!-- <p class="card-text text-left px-3">{{ actividad.descripcion | truncate(30) }}</p> -->
+        <p v-if="actividad.show_location" class="techo-titulo-card text-center pt-1" >{{ actividad.ubicacion }}</p>
+        <h6 class="pt-1 text-center text-white px-1">{{ nombreActividadRecortado }}</h6>
       </div>
-      <div class="card-footer px-0 pt-1 border-0" v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+      <div class="card-footer px-0 pt-0 border-0" v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
-            <!-- <span class="col-sm-4"><i class="fas fa-map-marker-alt"></i> {{ actividad.ubicacion }}</span> -->
         </div>
     </div>
   </div>
@@ -101,7 +97,7 @@ div.tarjeta {
     border: 0px;
     border-radius: 15%;
     text-align: center;
-    height: 355px;
+    height: 320px;
     background-color: var(--card-color); /* Esto aplica el color base */
     transition: background-color 0.3s ease; /* Transición suave */
 }
