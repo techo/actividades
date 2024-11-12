@@ -72,7 +72,7 @@ return [
     'actividades_tags' => 'Tags de Actividad',
     'tags_description' => 'Usa esto para llamar la atencion sobre algunas actividades',
     'imagen_tarjeta' => 'Imagen de Actividad',
-    'imagen_tarjeta_description' => 'El tamaño debe de ser de 380x248 y tipo de imagen png - De no poner se mostrara la default por categoria',
+    'imagen_tarjeta_description' => 'El tamaño debe de ser de 380x248 y tipo de imagen PNG. De no ser así se mostrará por default la imagen de la categoria.',
     'destacada' => 'Destacar Actividad',
     'destacada_description' => 'Esta actividad se mostrara con Banner y es obligatoria la carga del mismo',
 

@@ -169,8 +169,8 @@
                     </ul>
                 </div>
 
-                <a href="/postulaciones" class="btn bg-techo-pink-light text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
-                    {{ $t('frontend.find_how') }} <span class="techo-violet">{{ $t('frontend.to_be_part_of_team') }}</span>
+                <a v-if="authenticated" href="/postulaciones" class="btn bg-techo-pink text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
+                    {{ $t('frontend.find_how') }} <span class="techo-yellow"><b>{{ $t('frontend.to_be_part_of_team') }}</b></span>
                 </a>
                 <div class="locale-changer col-md-1 d-none d-md-block" >
                     

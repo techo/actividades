@@ -61,7 +61,7 @@ code {
 }
 
 .bg-techo-pink-light {
-    background-color: #f06277 !important;
+    background-color: #f088b6 !important;
     color: white;
 }
 
@@ -70,9 +70,18 @@ code {
     background-color: #e94362 !important;
 }
 
+.bg-techo-pink:hover {
+    background-color: #f088b6 !important;
+}
+
+
 .bg-techo-yellow {
     background-color: #fdc533 !important;
     color: white;
+}
+
+.techo-yellow {
+    color: #fdc533 !important;
 }
 
 
