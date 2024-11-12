@@ -508,74 +508,6 @@
             </div>
         </div>
 
-        <!-- Visualizacion -->
-        <div class="box">
-            <div class="box-header with-border bg-primary">
-                <h3 class="box-title bg-primary">{{ $t('backend.visualization') }}</h3>
-                
-            </div>
-
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="actividades_tags">{{ $t('backend.actividades_tags') }}</label>
-                            <p class="help-block">
-                                {{ $t('backend.tags_description') }}
-                                {{ $t('backend.press_enter_between_each') }}
-                            </p>
-                            <vue-tags-input
-                                v-model="actividadTagSelected"
-                                :tags="actividadesTags"
-                                :disabled="!edicion"
-                                :autocompleteItems="filteredActividadTags"
-                                :add-only-from-autocomplete="true"
-                                placeholder=""
-                                @tags-changed="newTags => actividadesTags = newTags"
-                            />
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="imagen_tarjeta">{{ $t('backend.imagen_tarjeta') }}</label>
-                            <p class="help-block">
-                                {{ $t('backend.imagen_tarjeta_description') }}
-                            </p>
-                            <div>
-                                <img v-if="actividad.imagen_tarjeta != null" :src="actividad.imagen_tarjeta" 
-                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
-                                 alt="imagen actividad">          
-                            </div>
-
-                            <button v-if="edicion" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                            <input v-if="(actividad.imagen_tarjeta == null || updateArchivo)" type="file" class="form-control"  @change="guardar_archivo" 
-                            :disabled="!edicion" ref="imagen_tarjeta">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="imagen_destacada">{{ $t('backend.destacada') }}</label>
-                            <p class="help-block">
-                                {{ $t('backend.destacada_description') }}
-                            </p>
-                            <div>
-                                <img v-if="actividad.imagen_destacada != null" :src="actividad.imagen_destacada" 
-                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
-                                 alt="imagen actividad">          
-                            </div>
-
-                            <button v-if="edicion && actividad.imagen_destacada != null" class="btn btn-light" @click="updateDestacada = true" ><i class="fa fa-edit"></i></button>
-                            <input v-if="(actividad.imagen_destacada == null || updateDestacada)" type="file" class="form-control"  @change="guardar_destacada" 
-                            :disabled="!edicion" ref="imagen_destacada">
-
-                            <span class="help-block">{{ errors.imagen_destacada }}</span>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-
         <!-- terminos y condiciones -->
         <div class="box">
             <div class="box-header with-border bg-primary">
@@ -660,10 +592,8 @@
         data() {
             return {
                 tag: '',
-                actividadTagSelected: '',
                 tag2: '',
                 rolesTags: [],
-                actividadesTags: [],
                 tipoInscriptosTags:  [],
                 autocompleteTipoInscriptos: [{
                         text: 'Secundaria',
@@ -695,14 +625,6 @@
                     }, {
                             text: 'Delegación de Comunicaciones',
                 }],
-
-                autocompleteActividadTags: [{
-                        text: 'Nuevos Voluntarios',
-                    }, {
-                        text: 'Hito Anual',
-                    }, {
-                        text: 'Equipos',
-                    }],
 
                 
 
@@ -759,8 +681,6 @@
                     },
 
                     chat_grupal_whatsapp: null,
-                    imagenNew: null,
-                    imagenDestacada: null,
 
                 },
                 fechas: {
@@ -797,8 +717,6 @@
                 calculaFechas: false,
                 edicion: false,
                 virtual: false,
-                updateArchivo: false,
-                updateDestacada: false,
             }
         },
         created() {
@@ -829,8 +747,6 @@
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.actividad.roles_tags;
 
-                        if (this.actividad.actividades_tags)
-                            this.actividadesTags = this.actividad.actividades_tags;
 
                         if (this.actividad.tipo_inscriptos_tag)
                             this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
@@ -852,11 +768,6 @@
             },
             filteredRolesTags() {
                 return this.autocompleteRoles.filter(i => {
-                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
-                });
-            },
-            filteredActividadTags() {
-                return this.autocompleteActividadTags.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
                 });
             },
@@ -977,15 +888,12 @@
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 this.actividad.roles_tags = this.rolesTags;
                 this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
-                this.actividad.actividades_tags  = this.actividadesTags;
                 
                 
 
                 if(this.id) {
                     axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
                         .then((datos) => { 
-                            this.guardarImagenTarjeta();
-                            this.guardarImagenDestacada();
                             this.actividad = datos.data;
                             Event.$emit('success');
                             this.edicion = false;
@@ -993,7 +901,7 @@
 
                         })
                         .catch((error) => { 
-                            this.errors = error;
+                            this.errors = error.response.data.errors;
                             Event.$emit('error');
                         });
                 }
@@ -1012,50 +920,6 @@
                     this.errors[field] = null;
                     delete this.errors[field];
                 }
-            },
-            guardarImagenTarjeta(){
-                let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-tarjeta`;
-                
-                const data = new FormData();
-
-                if (this.actividad.imagenNew != null){
-                    data.append('imagen_tarjeta', this.actividad.imagenNew);
-
-                    const headers = { 'Content-Type': 'multipart/form-data' };
-                    axios.post(url, data, { headers })
-                        .then((respuesta) => {
-                        // this.tipoActividad = respuesta.data;
-                        })
-                        .catch((error) => { 
-                            
-                            this.errors = error;
-                        });
-                }
-            },
-            guardar_archivo(event) {
-                this.actividad.imagenNew = this.$refs.imagen_tarjeta.files[0];
-            },
-            guardarImagenDestacada(){
-                let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-destacada`;
-                
-                const data = new FormData();
-
-                if (this.actividad.imagenDestacada != null){
-                    data.append('imagen_destacada', this.actividad.imagenDestacada);
-
-                    const headers = { 'Content-Type': 'multipart/form-data' };
-                    axios.post(url, data, { headers })
-                        .then((respuesta) => {
-                        // this.tipoActividad = respuesta.data;
-                        })
-                        .catch((error) => { 
-                           
-                            this.errors = error.errors;
-                        });
-                }
-            },
-            guardar_destacada(event) {
-                this.actividad.imagenDestacada = this.$refs.imagen_destacada.files[0];
             },
             getRelaciones(){
                 this.getPaises();                

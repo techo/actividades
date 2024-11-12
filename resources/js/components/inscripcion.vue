@@ -231,7 +231,7 @@
         <hr>
         <div class="col-md-4 prev" >
             <div class="card d-none d-lg-block">
-                <img :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : imagen" class="img-tarjeta">
+                <img :src="imagen" class="img-tarjeta">
                 <div class="row">
                     <div class="col-md-12">
                         <h6 v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo ? actividad.tipo.nombre : '' }}</h6>

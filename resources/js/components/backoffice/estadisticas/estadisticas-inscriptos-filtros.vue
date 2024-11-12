@@ -35,7 +35,6 @@ export default {
 			fecha_hasta: moment().format('YYYY-MM-DD'),
 			edad_desde: 0,
 			edad_hasta: 90,
-			loading:false,
 		};
 	},
 	mounted () {
@@ -66,29 +65,24 @@ export default {
 		        'año': this.año_seleccionado,
 		      }
 			axios({
-				method: 'get',
-				url: '/admin/ajax/estadisticas/inscripciones/personas/exportar',
+				url: '/admin/ajax/estadisticas/inscripciones/personas/exportar', 
 				params: filtros,
 				responseType: 'blob',
-				headers: {
-					'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Cambiar según el tipo de archivo
-					'Content-Type': 'application/json', // Ajustar si es necesario
+				headers: { 
+					'Accept': 'application/octet-stream',
+					'content-type': 'application/vnd.ms-excel;charset=UTF-8',
 				}
 			})
 			.then((response) => {
 				const url = window.URL.createObjectURL(new Blob([response.data]));
 				const link = document.createElement('a');
 				link.href = url;
-				link.setAttribute('download', 'Inscritos.xlsx');
+				link.setAttribute('download', 'Insciptos.xlsx');
 				document.body.appendChild(link);
 				link.click();
-				link.remove(); 
 				this.loading = false;
 			})
-			.catch((error) => {
-				console.error('Error al descargar el archivo:', error);
-				this.loading = false; // Manejo de errores
-			});
+			.catch((error) => { debugger; });
 		},
 	},
 }

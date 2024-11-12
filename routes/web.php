@@ -298,10 +298,6 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/grupos/getInscriptos', 'backoffice\ajax\InscripcionesController@getInscriptos')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::get('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@puntos')->middleware('can:editar,App\Actividad,id');
-
-    Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta');
-    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada');
-
     Route::get('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@show');
     Route::post('/ajax/actividades/{id}/puntos', 'backoffice\ajax\PuntosController@store')->middleware('can:editar,App\Actividad,id');
     Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@update');
@@ -451,14 +447,13 @@ Route::get('locale/{locale}', function($locale){
 });
 
 
-    // Route::get('/home', 'HomeController@home');
+    Route::get('/home', 'HomeController@index');
     Route::get('/', 'HomeController@multiPais');
     // Route::get('/', 'ActividadesController@index');
-    // Route::get('/actividades', 'ActividadesController@index');
+    Route::get('/actividades', 'ActividadesController@index');
 
 Route::get('/autotest', 'PerfilController@quiz_techero');
 
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
-    Route::get('/home', 'HomeController@index');
     Route::get('/', 'ActividadesController@index');
 });

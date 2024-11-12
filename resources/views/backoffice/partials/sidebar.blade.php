@@ -108,7 +108,7 @@
                         <a href="/admin/estadisticas/actividades">{{ __('backend.activities') }}</a>
                     </li>
                     <li class="{{request()->is('admin/estadisticas/personas') ? 'active' : ''}}">
-                        <a href="/admin/estadisticas/personas?#">{{ __('backend.people') }}</a>
+                        <a href="/admin/estadisticas/personas">{{ __('backend.people') }}</a>
                     </li>
                     <li class="{{request()->is('admin/estadisticas/coordinadores') ? 'active' : ''}}">
                         <a href="/admin/estadisticas/coordinadores">{{ __('backend.coordinators') }}</a>

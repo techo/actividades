@@ -17,7 +17,6 @@ use App\Exports\MisActividadesExport;
 use App\Exports\PersonasInscriptasExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
@@ -72,30 +71,9 @@ class ReportController extends Controller
     }
 
     public function exportarPersonasInscriptas(Request $request)
-    { 
-        try {
-            Log::info('Iniciando la exportación de Excel');
-
-            $inscripciones = new PersonasInscriptasExport($request);
-            Log::info('ya tnego las inscripciones');
-            $data = $inscripciones->collection(); // Obtener la colección de datos
-
-        // Verificar si hay datos en la colección
-        if ($data->isEmpty()) {
-            Log::warning('No hay datos para exportar');
-            return response()->json(['error' => 'No hay datos para exportar'], 400);
-        }
-
-        // Loguear algunos de los datos que se van a exportar
-        Log::info('Datos a exportar:', $data->toArray());
-
-        return Excel::download($inscripciones, 'personas_inscriptas.xlsx');
-
-            Log::info('Exportación completada exitosamente');
-        } catch (\Exception $e) {
-            Log::error('Error en la exportación de Excel: ' . $e->getMessage());
-            return response()->json(['error' => 'Error en la exportación'], 500);
-        }
+    {
+        $inscripciones = new PersonasInscriptasExport($request);
+        return Excel::download($inscripciones, 'personas inscriptas.xlsx');
     }
 
     public function exportarEvaluacionesGenerales(Request $request)

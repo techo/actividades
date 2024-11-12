@@ -25,7 +25,6 @@ class ActividadResource extends Resource
             'pago'          => $this->pago,
             'fecha'         => $this->fechaInicio->format('d/m'),
             'hora'          => $this->fechaInicio->format('H:i'),
-            'fechaCreacion'   => empty($this->fechaCreacion) ? '' : $this->fechaCreacion->format('d-m-Y'),
             'fechaInicio'   => empty($this->fechaInicio) ? '' : $this->fechaInicio->format('d-m-Y'),
             'fechaFin'      => empty($this->fechaFin) ? '' : $this->fechaFin->format('d-m-Y'),
             'fechaInicioInscripciones'  => empty($this->fechaInicioInscripciones) ? '' : $this->fechaInicioInscripciones->format('d-m-Y'),
@@ -53,15 +52,12 @@ class ActividadResource extends Resource
             'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
             'roles_tags' =>  $this->roles_tags,
-            'actividades_tags' =>  $this->actividades_tags,
             'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
             'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
             'show_dates' =>  $this->show_dates,
             'show_location' =>  $this->show_location,
             'jornadas'           => $this->jornadas,
-            'imagen_tarjeta'           => $this->imagen_tarjeta,
-            'imagen_destacada'           => $this->imagen_destacada,
         ];
     }
 

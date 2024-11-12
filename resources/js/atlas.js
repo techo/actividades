@@ -10,18 +10,11 @@ const i18n = new VueInternationalization({
     messages: Locale
 });
 
-import Index from './components/index.vue';
 
-Vue.component('index', Index);
 // import VueRouter from 'vue-router';
 import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
-import imgButton from './components/common/imgButton.vue';
-Vue.component('imgButton', imgButton);
-import imgButtonGroup from './components/common/imgButtonGroup.vue';
-Vue.component('imgButtonGroup', imgButtonGroup);
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
-import CarouselDeTarjetas from './components/carouselDeTarjetas.vue';
 import Inscripcion from './components/inscripcion';
 import ConfirmacionPago from './components/confirmacionPago';
 import Autenticar from './components/autenticar';
@@ -77,7 +70,6 @@ Vue.component('filtro', Filtro);
 Vue.component('login', Login);
 Vue.component('autenticar', Autenticar);
 Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
-Vue.component('carousel-de-tarjetas', CarouselDeTarjetas);
 Vue.component('inscripcion', Inscripcion);
 Vue.component('confirmacionPago', ConfirmacionPago);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);

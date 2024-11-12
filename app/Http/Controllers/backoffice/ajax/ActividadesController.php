@@ -50,44 +50,6 @@ class ActividadesController extends BaseController
         return $result;
     }
 
-
-
-    public function storeImagenTarjeta(Request $request, $id){
-        
-        $validate = $request->validate([
-            'imagen_tarjeta' => 'nullable|file|image',
-        ]);
-
-        $imagen = $validate['imagen_tarjeta'];
-        
-        $actividad = Actividad::findorFail($id);
-
-        if($imagen){
-            $path = $request->file('imagen_tarjeta')->store('public/actividades');
-            $actividad->imagen_tarjeta = str_replace('public', 'storage', '/'.$path);
-            $actividad->save();
-        }
-        return $actividad->imagen_tarjeta;
-    }
-
-    public function storeImagenDestacada(Request $request, $id){
-        
-        $validate = $request->validate([
-            'imagen_destacada' => 'nullable|file|image',
-        ]);
-
-        $imagen = $validate['imagen_destacada'];
-        
-        $actividad = Actividad::findorFail($id);
-
-        if($imagen){
-            $path = $request->file('imagen_destacada')->store('public/actividades');
-            $actividad->imagen_destacada = str_replace('public', 'storage', '/'.$path);
-            $actividad->save();
-        }
-        return $actividad->imagen_destacada;
-    }
-
     public function puntos(Actividad $id)
     {
        $query = (new PuntoEncuentro)->newQuery();

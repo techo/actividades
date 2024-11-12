@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\CategoriaActividad;
-use App\HomeHeader;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -18,23 +17,12 @@ class HomeController extends Controller
         //$this->middleware('auth');
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(Request $request)
-    {
-        $idCategoria = $request->categoria ?? null;
-        $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
-        $categorias = CategoriaActividad::all();
-        $homeHeader = HomeHeader::where('idPais', \Session::get('pais'))->first();
-        return view('index')
-            ->with(
-                [
-                    'categoriaSeleccionada' => $categoriaSeleccionada,
-                    'categorias' => $categorias,
-                    'homeHeader' => $homeHeader,
-                ]
-            );
-    }
-
-    public function home(Request $request)
     {
         $showLogin = false;
 

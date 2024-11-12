@@ -8,7 +8,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Actividad;
 use App\HomeHeader;
-use App\Tipo;
 
 class actividadesController extends Controller
 {
@@ -22,18 +21,12 @@ class actividadesController extends Controller
         $idCategoria = $request->categoria ?? null;
         $categoriaSeleccionada = CategoriaActividad::find($idCategoria);
         $categorias = CategoriaActividad::all();
-        if ($request->query('tipo')) {
-            $tipoSeleccionada = Tipo::find($request->query('tipo'));
-        } else {
-            $tipoSeleccionada = null;
-        }
         $homeHeader = homeHeader::where('idPais', \Session::get('pais'))->first();
         return view('actividades.index')
             ->with(
                 [
                     'categoriaSeleccionada' => $categoriaSeleccionada,
                     'categorias' => $categorias,
-                    'tipoSeleccionada' => $tipoSeleccionada,
                     'homeHeader' => $homeHeader,
                 ]
             );

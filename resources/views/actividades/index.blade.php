@@ -32,7 +32,6 @@
             <div class="col-md-12">
                 <filtro
                     categoria_seleccionada="{{ ($categoriaSeleccionada) ? $categoriaSeleccionada->id : null }}"
-                    tipo_seleccionada="{{ ($tipoSeleccionada) ? $tipoSeleccionada->idTipo : null }}"
                     categorias="{{ $categorias }}"
                 >
                 </filtro>
