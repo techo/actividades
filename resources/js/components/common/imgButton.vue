@@ -2,7 +2,7 @@
   <a :href="url" class="text-decoration-none filtro-tipo">
     <div class="d-flex flex-column align-items-center p-1" style="width: 148px;">
       <img :src="img" :alt="text" class="img-fluid mb-2" />
-      <span class="text-center techo-blue text-truncate text-wrap" style="width: 100%; line-height: 1.2;">
+      <span class="text-center text-truncate text-wrap" style="width: 100%; line-height: 1.2;">
         {{ text }}
       </span>
     </div>
@@ -31,8 +31,8 @@ export default {
 
 <style scoped>
 img {
-  max-width: 80px;
-  max-height: 80px;
+  max-width: 95px;
+  max-height: 95px;
 }
 
 .filtro-tipo:hover {
@@ -46,5 +46,6 @@ span {
   overflow: hidden;
   text-overflow: ellipsis; /* Añade puntos suspensivos si es necesario */
   word-break: break-word; /* Corta las palabras si es necesario */
+  color: black;
 }
 </style>

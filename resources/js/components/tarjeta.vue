@@ -24,10 +24,10 @@
         
       <div class="card-body px-0 pt-1 pb-1">
         <div style="width: 100%;">
-            <img class="card-img-top px-4" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
-                v-bind:style="{ borderRadius: '15%', width: '15rem', height: '6rem' }">
+            <img class="card-img-top px-3" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
+                v-bind:style="{ borderRadius: '15%', width: '15rem', height: '8.4rem' }">
             <div class=" texto-encima centrado">
-                <span class=" techo-titulo-card" v-bind:style="{color:actividad.tipo.color}" >{{ actividad.tipo.nombre }}</span><br>
+                <span class="techo-titulo-card">{{ actividad.tipo.nombre }}</span><br>
             </div>
         </div>
         <p v-if="actividad.show_location" class="techo-titulo-card text-center pt-1" >{{ actividad.ubicacion }}</p>
@@ -97,7 +97,7 @@ div.tarjeta {
     border: 0px;
     border-radius: 15%;
     text-align: center;
-    height: 320px;
+    height: 390px;
     background-color: var(--card-color); /* Esto aplica el color base */
     transition: background-color 0.3s ease; /* Transición suave */
 }
