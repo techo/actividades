@@ -45,7 +45,7 @@
         "extract-text-webpack-plugin": "^3.0.2",
         "jquery-knob": "^1.2.11",
         "minimist": "^1.2.0",
-        "tinymce": "^5.1.4",
+        "tinymce": "^5.10.7",
         "vue-axios": "^2.1.1",
         "vue-chartjs": "^3.3.2",
         "vue-cropperjs": "^4.2.0",
