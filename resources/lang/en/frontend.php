@@ -21,6 +21,7 @@ return [
 	'find_how' => '👉 Find out how',
 	'to_be_part_of_team' => 'to be part of the team',
 
+	'postulate' => 'Apply here',
 
 	// cookies-bar.vue
 	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',

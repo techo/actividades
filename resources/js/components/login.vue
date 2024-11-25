@@ -151,7 +151,7 @@
                             <a class="nav-link text-uppercase" v-on:click="ayuda">{{ $t('frontend.help') }}</a>
                         </li>
                         <li class="nav-item active d-block d-md-none" v-if="authenticated">
-                            <a href="/postulaciones" class="btn bg-techo-pink-light text-white" style="border-radius: 40px; transition: background-color 0.3s;">
+                            <a :href="postulacionesLink" class="btn bg-techo-pink-light text-white" style="border-radius: 40px; transition: background-color 0.3s;">
                                 {{ $t('frontend.find_how') }} <span class="techo-violet">{{ $t('frontend.to_be_part_of_team') }}</span>
                             </a>
                         </li>
@@ -169,7 +169,7 @@
                     </ul>
                 </div>
 
-                <a v-if="authenticated" href="/postulaciones" class="btn bg-techo-pink text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
+                <a v-if="authenticated" :href="postulacionesLink" class="btn bg-techo-pink text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
                     {{ $t('frontend.find_how') }} <span class="techo-yellow"><b>{{ $t('frontend.to_be_part_of_team') }}</b></span>
                 </a>
                 <div class="locale-changer col-md-1 d-none d-md-block" >
@@ -316,6 +316,9 @@
                     return locales.map(function(v){ return v.trim().split('|') });
                 }
                 else return []
+            },
+            postulacionesLink() {
+                return `${window.location.href}/postulaciones`;
             },
         },
         mounted(){

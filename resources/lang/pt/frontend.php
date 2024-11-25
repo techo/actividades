@@ -21,6 +21,7 @@ return [
 	'find_how' => '👉 Descubra como',
 	'to_be_part_of_team' => 'fazer parte da equipe',
 
+	'postulate' => 'Candidate-se aqui',
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este site usa cookies para melhorar a experiência do usuário. Se você usar este site, estará aceitando nossa',
 	'cookie_policy' => 'politica de Cookies.',

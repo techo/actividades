@@ -287,6 +287,8 @@ return [
 	'message_1' => 'Estás por desinscribirte de la actividad',
 	'message_2' => ' se borrarán tus datos para participar. Puedes inscribirte cuando desees. ¿Deseas continuar?',
 	'unenroll_button' => 'SI, DESINSCRIBIRME',
+	'postulate' => 'Postulate aquí',
+
 
 	// componenets/datatable/filterBar.vue
 	'filter_by' => 'Filtrar por',

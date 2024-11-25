@@ -1,7 +1,17 @@
 <template>
-    <span>
-        <div class="row py-2">
-            <tarjeta
+    <span >
+        <div class="row py-2" v-if="horizontal">
+            <TarjetaHori 
+                v-for="(act, index) in actividades" 
+                :key="'tarjeta_' + act.idActividad" 
+                v-bind:actividad="act"
+                v-bind:key="Math.random() + '_' + act.idActividad"
+                :color="colores[index % colores.length]"
+            >
+            </TarjetaHori>
+        </div>
+        <div class="row py-2" v-else>
+            <tarjeta 
                 v-for="act in actividades"
                 v-bind:actividad="act"
                 v-bind:key="Math.random() + '_' + act.idActividad"
@@ -21,10 +31,12 @@
 <script>
     import axios from 'axios';
     import Tarjeta from './tarjeta';
+    import TarjetaHori from './tarjetaHorizontal';
     import Suscribe from './suscribe';
 
     export default {
         name: "contenedor-de-tarjetas",
+        props: ['horizontal'],
 
         data () {
             return {
@@ -36,10 +48,11 @@
                 ultimaTarjeta: 0,
                 totalTarjetas: 0,
                 vacio: false,
-                filtros: {}
+                filtros: {},
+                colores: ['#e94362', '#fdc533', '#f088b6', '#954B97', '#009fe3'],
             }
         },
-        components: {Suscribe, tarjeta: Tarjeta},
+        components: {Suscribe, tarjeta: Tarjeta, TarjetaHori },
         created () {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
