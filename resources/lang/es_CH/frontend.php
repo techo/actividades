@@ -10,6 +10,20 @@ return [
 	|
 	*/
 
+
+	//nueva visual Home
+    'home_last_spots' => '¡Úlitmos cupos! 🚨 no te quedes sin participar',
+    'home_community' => 'Con el pie en territorio 💙 todas las actividades en comunidad',
+    'home_formation' => 'Fortalece tus capacidades 🧠 Capacitaciones, Espacios formativos y Talleres.',
+    'home_new' => 'Nuevas Actividades. 🆕',
+    'home_for_new_volunteers' => 'Ideal para nuevo voluntario 🙋',
+    'home_specials' => 'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!',
+    'home_teams' => 'Para los equipos 🤝 encuentra tu actividad de reunion de equipo',
+    'find_how' => '👉 Descubre cómo',
+    'to_be_part_of_team' => 'ser parte del equipo',
+
+	'postulate' => 'Postulate aquí',
+	
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
 	'cookie_policy' => 'Políticas de Cookies',
@@ -66,6 +80,9 @@ return [
 	'view_activities'  =>  'Anotame',
 
 	'welcome' => 'Bienvenidx',
+	'welcome_M' => 'Bienvenido',
+	'welcome_F' => 'Bienvenida',
+	'welcome_X' => 'Bienvenidx',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',
@@ -185,11 +202,39 @@ return [
 
 	// perfil / educacion
 	'estudios' => 'Educación',
+	'review_estudios' => 'Completa o revisa tus estudios',
+	'nivel_de_estudios' => 'Nivel de Estudios',
+	'secundario' => 'Secundario',
+	'universitario' => 'Universitario (Licenciatura, Ingenierica, Tecnico etc.)',
+	'posgrado' => 'Posgrado Universitario (Maestria, Doctorado etc.)',
 	'institucion_educativa' => 'Institución educativa',
-	'titulo_educacion' => 'Título',
-	'disciplina_academica' => 'Carrera universitaria',
+	'titulo_educacion' => 'Título *',
+	'disciplina_academica' => 'Disciplina académica *',
 	'descripcion_educacion' => 'Descripción',
-
+	'complete_education' => 'Para continuar tenes que agregar al menos un estudio',
+	'other' => 'Otro',
+	'ingrese_institucion_educativa' => 'Ingresar nombre de la institución manualmente',
+	
+		// perfil/ equipos
+	'equipos' => 'Equipos',
+	'rol' => 'rol',
+	'estado'    => 'estado',
+	'despliegue'    => 'despliegue',
+	'relacion'    => 'relación',
+	'fechaInicio' => 'fecha inicio',
+	'fechaFin' => 'fecha fin',
+	'descripcion_rol'    => 'descripción rol',
+	'hitos'    => 'hitos',
+	'meta'    => 'meta',
+	'dia_hora_reunion'    => 'día y hora de reunión',
+	'periodicidad_reunion' => 'periodicidad reunión',
+	'impacto' => 'Redacta tu impacto',
+	'capacidades' => 'Capacidades que deseo fortalecer',
+	'ver' => 'Ver',
+	'archivo_carta_compromiso' => 'Carta de Compromiso',
+	'semanal' => 'Semanal',
+	'quincenal' => 'Quincenal',
+	'mensual' => 'Mensual',
 	// perfil / otros datos
 	'otros_datos' => 'Otros Datos', 
 

@@ -52,6 +52,7 @@ Route::prefix('ajax')->group(function () {
 
         Route::prefix('estudios')->group(function () {
             Route::post('', 'ajax\EstudiosController@create');
+            Route::get('/usuario', 'ajax\EstudiosController@estudiosUsuario');
             Route::put('', 'ajax\EstudiosController@update');
             Route::delete('/{id}', 'ajax\EstudiosController@delete');
         });
@@ -247,8 +248,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         ->middleware('role:admin');
     Route::get('/usuarios/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesUsuario')
         ->middleware('role:admin');
-    Route::get('/ajax/usuarios/{id}/estudios', 'backoffice\ajax\UsuariosController@estudios')
-        ->middleware('requiere.auth');
+    Route::get('/ajax/usuarios/{id}/estudios', 'backoffice\ajax\UsuariosController@estudios');
 
     Route::get('/roles', 'backoffice\UsuariosRolesController@index')->middleware('permission:asignar_roles'); //TODO: Mejorar la nomenclatura de la ruta
     Route::get('/ajax/roles', 'backoffice\ajax\UsuariosRolesController@index')->middleware('permission:ver_usuarios'); //TODO: Mejorar la nomenclatura de la ruta
