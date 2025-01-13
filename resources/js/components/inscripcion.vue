@@ -426,12 +426,13 @@
                 return JSON.stringify(this.jornadas);
             },
             estudiosRevisados: function () {
-                axios.get('/admin/ajax/usuarios/'+this.actividad.idPersona+'/estudios').then(response => {
-                    if(response.data) {
-                        if(response.data.total>0)
+                axios.get('/ajax/estudios/usuario').then(response => {
+                    if (response.data) {
+                        if (response.data.total > 0) {
                             this.estudiosAplicado = true;
-                        else
+                        } else {
                             this.showCompleteEstudios = true;
+                        }
                     }
                 });
             },

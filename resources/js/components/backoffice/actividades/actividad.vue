@@ -995,7 +995,7 @@
 
                         })
                         .catch((error) => { 
-                            this.errors = error;
+                            this.errors = error.response.data.errors;
                             Event.$emit('error');
                         });
                 }

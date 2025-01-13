@@ -106,6 +106,12 @@ div.tarjeta:hover {
     filter: brightness(1.2); /* Aumenta el brillo al pasar el mouse */
 }
 
+    div.tarjeta {
+        cursor: pointer;
+        border: 0px;
+        border-radius: 15%;
+        text-align: center;
+    }
 
     div.card-top {
         height: 25px;
@@ -151,7 +157,6 @@ div.tarjeta:hover {
     }
     
     .centrado{
-        top: 25%;
         left: 50%;
         transform: translate(-50%, -50%);
     }

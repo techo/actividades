@@ -1,14 +1,14 @@
 <template>
-    <div class="col-lg-6">
+    <div class="col-lg-6 p-2">
       <div class="card tarjeta" v-on:click="ir_a_actividad" v-bind:style="{backgroundColor:color}">
         <div class="card-body row">
           <div class="col-sm-6">
               <img class="card-img-top" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
-                  v-bind:style="{ borderRadius: '15px' , width: '9rem', height: '7rem'}">
+                  v-bind:style="{ borderRadius: '15px' , width: '10rem', height: '16rem'}">
           </div>
           <div class="col-sm-6">
-            <h5 class="text-center text-white">{{ actividad.nombreActividad }}</h5>
-            <p class="pt-1 text-center text-white px-1">{{ actividad.descripcion }}</p>
+            <h4 class="text-center text-white">{{ actividad.nombreActividad }}</h4>
+            <p class="pt-1 text-center text-white px-1">{{ descripcionActividadRecortado }}</p>
             <button type="button" 
                 class="btn btn-primary bg-techo-blue" 
                 @click="ir_a_actividad" >
@@ -29,6 +29,11 @@
               return {
                   key: '',
               }
+          },
+          computed: {
+            descripcionActividadRecortado() {
+                return this.actividad.descripcion.length > 50 ? this.actividad.descripcion.substring(0, 46) + '..' : this.actividad.descripcion;
+            }
           },
           methods: {
               ir_a_actividad: function () {

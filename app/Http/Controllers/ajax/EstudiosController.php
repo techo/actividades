@@ -61,4 +61,13 @@ class EstudiosController extends Controller
             }
         }
     }
+
+    public function estudiosUsuario()
+    {
+        $total = Estudios::where('idPersona', '=', auth()->user()->idPersona)->count(); 
+
+        return response()->json([
+            'total' => $total
+        ]);
+    }
 }
