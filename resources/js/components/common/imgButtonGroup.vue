@@ -28,37 +28,37 @@ export default {
     return {
       buttons: [
         {
-          url: '?tipo[]=11&tipo[]=27&tipo[]=65&tipo[]=72&tipo[]=73&tipo[]=80&tipo[]=81&tipo[]=98&tipo[]=105&tipo[]=114&tipo[]=115',
+          url: 'filtro?tipo[]=11&tipo[]=27&tipo[]=65&tipo[]=72&tipo[]=73&tipo[]=80&tipo[]=81&tipo[]=98&tipo[]=105&tipo[]=114&tipo[]=115',
           img: '/img/tipoActividad/construcciones.png',
           text: 'Construcciones',
         },
         {
-          url: '?tipo[]=25&tipo[]=28&tipo[]=29&tipo[]=75&tipo[]=76&tipo[]=82&tipo[]=83&tipo[]=85&tipo[]=113&tipo[]=117',
+          url: 'filtro?tipo[]=25&tipo[]=28&tipo[]=29&tipo[]=75&tipo[]=76&tipo[]=82&tipo[]=83&tipo[]=85&tipo[]=113&tipo[]=117',
           img: '/img/tipoActividad/mesaTrabajo.png',
           text: 'Mesas de Trabajo',
         },
         {
-          url: '?tipo[]=22&tipo[]=32&tipo[]=77&tipo[]=79&tipo[]=97&tipo[]=103',
+          url: 'filtro?tipo[]=22&tipo[]=32&tipo[]=77&tipo[]=79&tipo[]=97&tipo[]=103',
           img: '/img/tipoActividad/infraestructura.png',
           text: 'Infraestructura',
         },
         {
-          url: '?tipo[]=23&tipo[]=30&tipo[]=31&tipo[]=33&tipo[]=34&tipo[]=35&tipo[]=36&tipo[]=45&tipo[]=46&tipo[]=47&tipo[]=49&tipo[]=52&tipo[]=53&tipo[]=56&tipo[]=58&tipo[]=59&tipo[]=62&tipo[]=89',
+          url: 'filtro?tipo[]=23&tipo[]=30&tipo[]=31&tipo[]=33&tipo[]=34&tipo[]=35&tipo[]=36&tipo[]=45&tipo[]=46&tipo[]=47&tipo[]=49&tipo[]=52&tipo[]=53&tipo[]=56&tipo[]=58&tipo[]=59&tipo[]=62&tipo[]=89',
           img: '/img/tipoActividad/formacion.png',
           text: 'Espacios Formativos',
         },
         {
-          url: '?tipo[]=54&tipo[]=55&tipo[]=63&tipo[]=64&tipo[]=68&tipo[]=69&tipo[]=71&tipo[]=86&tipo[]=88&tipo[]=90',
+          url: 'filtro?tipo[]=54&tipo[]=55&tipo[]=63&tipo[]=64&tipo[]=68&tipo[]=69&tipo[]=71&tipo[]=86&tipo[]=88&tipo[]=90',
           img: '/img/tipoActividad/encuentros.png',
           text: 'Encuentros',
         },
         {
-          url: '?tipo[]=43&tipo[]=96',
+          url: 'filtro?tipo[]=43&tipo[]=96',
           img: '/img/tipoActividad/colecta.png',
           text: 'Colecta',
         },
         {
-          url: '?tipo[]=44&tipo[]=48&tipo[]=60&tipo[]=101&tipo[]=104',
+          url: 'filtro?tipo[]=44&tipo[]=48&tipo[]=60&tipo[]=101&tipo[]=104',
           img: '/img/tipoActividad/eventos.png',
           text: 'Eventos y Otros',
         },
