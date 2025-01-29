@@ -20,6 +20,8 @@ return [
 	'home_teams' => 'For teams 🤝 find your team meeting activity',
 	'find_how' => '👉 Find out how',
 	'to_be_part_of_team' => 'to be part of the team',
+	'to_be_part_of_team' => 'fazer parte da equipe',
+    'actividades_destacadas' => 'Featured Activities ✨',
 
 	'postulate' => 'Apply here',
 

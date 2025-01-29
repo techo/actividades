@@ -22,6 +22,9 @@ import imgButtonGroup from './components/common/imgButtonGroup.vue';
 Vue.component('imgButtonGroup', imgButtonGroup);
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
 import CarouselDeTarjetas from './components/carouselDeTarjetas.vue';
+import CarouselDestacadas from './components/carouselDestacadas.vue';
+Vue.component('carousel-destacadas', CarouselDestacadas);
+
 import Inscripcion from './components/inscripcion';
 import ConfirmacionPago from './components/confirmacionPago';
 import Autenticar from './components/autenticar';

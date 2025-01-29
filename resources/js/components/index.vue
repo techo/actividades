@@ -6,6 +6,10 @@
             <i class="fas fa-sync fa-spin fa-3x"></i>
         </div>
         <div v-show="!loading">
+            <carousel-destacadas
+                v-show="actividadesDestacadas && actividadesDestacadas.length > 0"
+                :actividades="actividadesDestacadas || []"
+            />
             <carousel-de-tarjetas
                 v-show="actividadesUltimosCupos && actividadesUltimosCupos.length > 0"
                 :actividades="actividadesUltimosCupos || []"
@@ -68,6 +72,7 @@
                 actividadesUltimosCupos:[],
                 actividadesEquipos: [],
                 actividadesNuevas: [],
+                actividadesDestacadas: [],
                 loading: false,
                 next_page: '',
                 bottom: false,
@@ -83,7 +88,7 @@
                 type: Array
             }
         },
-        components: { Suscribe, tarjeta: Tarjeta, CarouselDeTarjetas },
+        components: { Suscribe, tarjeta: Tarjeta, CarouselDeTarjetas},
 
         created () {
             this.inicializarActividadesPorCategoria();
@@ -129,7 +134,6 @@
                     }
                     if (response.data) {
                         response.data.data.forEach(actividad => {
-                            console.log('tags:', actividad.fechaCreacion);
                             if(actividad.actividades_tags){
                                 actividad.actividades_tags.forEach(item => {
                                     if (item.text === "Equipos") {
@@ -147,7 +151,9 @@
                                     }
                                 });
                             }
-
+                            if(actividad.imagen_destacada){
+                                this.actividadesDestacadas.push(actividad);
+                            }
                             const hoy = new Date();
                             const hace14Dias = new Date();
                             hace14Dias.setDate(hoy.getDate() - 14);

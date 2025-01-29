@@ -20,6 +20,8 @@ return [
     'home_teams' => 'Para los equipos 🤝 encuentra tu actividad de reunion de equipo',
     'find_how' => '👉 Descubre cómo',
     'to_be_part_of_team' => 'ser parte del equipo',
+    'actividades_destacadas' => 'Actividades destacadas ✨',
+	'false' => 'falso',
 
 
 	// cookies-bar.vue
