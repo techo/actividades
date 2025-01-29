@@ -18,6 +18,8 @@ import Login from './components/login.vue';
 import Filtro from './components/filtro.vue';
 import imgButton from './components/common/imgButton.vue';
 Vue.component('imgButton', imgButton);
+import personaTooltip from './components/common/personaTooltip.vue';
+Vue.component('persona-tooltip', personaTooltip);
 import imgButtonGroup from './components/common/imgButtonGroup.vue';
 Vue.component('imgButtonGroup', imgButtonGroup);
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';

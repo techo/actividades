@@ -76,24 +76,17 @@
 		</div>
         <div class="row">
             <div class="col-md-12 p-1 ">
-                <ul style="list-style-type:none;">
                     @foreach($actividad->coordinadores as $coordinador)
-                        <li>
-                        @if ($coordinador->persona->photo)
-                            <img class="imagen-perfil-mini" src="{{ '/'.$coordinador->persona->photo }}" alt="Foto">
-                        @else
-                            <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
-                        @endif
-                        
-                            <span>
-                                {{$coordinador->persona->nombres}} {{$coordinador->persona->apellidoPaterno }}
-                                @if (strpos($coordinador->persona->telefonoMovil, '+') === 0 && strlen($coordinador->persona->telefonoMovil) >= 7 && $coordinador->activaWhatsapp)
-                                    <a href="https://wa.me/{{ $coordinador->persona->telefonoMovil }}" target="_blank"><i class="fa fa-whatsapp text-success" aria-hidden="true"></i></a>
-                                @endif
-                            </span>
-                        </li>
+                    <span style="display: none;">
+                        {{ $coordinador->persona->nombres }} {{ $coordinador->persona->apellidoPaterno }}
+                    </span>
+                   
+
+                   
                     @endforeach
-                </ul>
+                    <persona-tooltip
+                        :personas='@json($actividad->coordinadores)'
+                    />
                 
             </div>
         </div>
