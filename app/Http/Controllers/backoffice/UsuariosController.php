@@ -59,6 +59,7 @@ class UsuariosController extends Controller
             'canal_contacto' => $usuario->canal_contacto,
             'estadoPersona' => $usuario->estadoPersona,
             'photo' => $usuario->photo,
+            'instagram' => $usuario->instagram,
         ];
 
         $edicion = false;

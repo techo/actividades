@@ -251,7 +251,19 @@
                     <span v-bind:class="{'d-none':!validacion.localidad.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
-            
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>INSTAGRAM</label>
+                        <input type="text" class="form-control" name="instagram" id="instagram" v-model="user.instagram">
+                        <small v-if="validacion.instagram.texto" class="form-text text-danger">{{validacion.instagram.texto}}&nbsp;<br></small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <span v-bind:class="{'d-none':!validacion.instagram.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.instagram.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
             </div>
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
@@ -419,7 +431,7 @@
             text: ''
           }
         }
-        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni','pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad', 'canal_contacto'];
+        var campos = ['user','email','pass','nombre','apellido','nacimiento','genero','dni', 'instagram', 'pais','provincia','localidad','telefono','facebook_id','google_id', 'privacidad', 'canal_contacto'];
         for(var i in campos) {
           var campo = campos[i]
           data.user[campo] = '';
@@ -452,6 +464,7 @@
         'user.nacimiento': function() { this.validar_data('nacimiento') },
         'user.genero': function() { this.validar_data('genero') },
         'user.dni': function() { this.validar_data('dni') },
+        'user.instagram': function() { this.validar_data('instagram') },
         'phoneNumber': function () {
             this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');
             this.validar_data('telefono')

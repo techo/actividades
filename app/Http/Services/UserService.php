@@ -53,6 +53,7 @@ class UserService
         $persona->telefonoMovil = $request->telefono;
         $persona->canal_contacto = $request->canal_contacto;
         $persona->estadoPersona = $request->estadoPersona;
+        $persona->instagram = $request->instagram;
 
         if($request->rol['rol'] == "admin" || $request->rol['rol'] == "coordinador"){
             $persona->idPaisPermitido = auth()->user()->idPaisPermitido;

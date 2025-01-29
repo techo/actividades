@@ -250,6 +250,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>INSTAGRAM</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="instagram" id="instagram" v-model="user.instagram">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.instagram.invalido }"><i
+                                                class="fas fa-times text-danger"></i></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mx-2">
                             <div class="col-md-6">
@@ -423,7 +439,7 @@ export default {
         data.tabs = ['#datos', '#ficha', '#estudios'],
         data.usernombre = data.user.nombre;
 
-        var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'genero', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion'];
+        var campos = ['id', 'email', 'nombre', 'apellido', 'nacimiento', 'genero', 'dni', 'pais', 'provincia', 'localidad', 'telefono', 'facebook_id', 'google_id', 'pass_actual', 'pass', 'pass_confirmacion', 'instagram'];
         for (var i in campos) {
             var campo = campos[i]
             if (!data.user[campo]) data.user[campo] = ''
@@ -474,6 +490,9 @@ export default {
         },
         'user.dni': function () {
             this.validar_data('dni')
+        },
+        'user.instagram': function () {
+            this.validar_data('instagram')
         },
         'phoneNumber': function () {
             this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');

@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="telefono">{{ $t('backend.phone') }}</label>
                                     <input type="text"
@@ -114,6 +114,18 @@
                                            name="telefono"
                                            id="telefono"
                                            v-model="usuario.telefono"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="instagram">Instagram</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="instagram"
+                                           id="instagram"
+                                           v-model="usuario.instagram"
                                            :disabled="readonly"
                                     >
                                 </div>

@@ -108,6 +108,7 @@ class UsuarioController extends BaseController
       $persona->acepta_marketing = $request->acepta_marketing;
       $persona->canal_contacto = $request->canal_contacto;
       $persona->estadoPersona = $request->estadoPersona;
+      $persona->instagram = $request->instagram;
 
       return $persona;
   }

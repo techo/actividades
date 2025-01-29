@@ -37,6 +37,7 @@ class PerfilResource extends Resource
             'nacimiento'    => $this->fechaNacimiento,
             'genero'          => $this->genero,
             'dni'           => $this->dni,
+            'instagram'           => $this->instagram,
             'pais'          => $this->idPais,
             'provincia'     => $this->idProvincia,
             'localidad'     => $this->idLocalidad,
