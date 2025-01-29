@@ -12,16 +12,6 @@
                 :title="$t('frontend.home_last_spots')"
             />
             <carousel-de-tarjetas
-                v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
-                :actividades="actividadesPorCategoria[1] || []"
-                :title="$t('frontend.home_community')"
-            />
-            <carousel-de-tarjetas
-                v-show="actividadesPorCategoria[2] && actividadesPorCategoria[2].length > 0"
-                :actividades="actividadesPorCategoria[2] || []"
-                :title="$t('frontend.home_formation')"
-            />
-            <carousel-de-tarjetas
                 v-show="actividadesNuevas && actividadesNuevas.length > 0"
                 :actividades="actividadesNuevas || []"
                 :title="$t('frontend.home_new')"
@@ -31,6 +21,18 @@
                 :actividades="actividadesNuevosVoluntarios || []"
                 :title="$t('frontend.home_for_new_volunteers')"
             />
+            <carousel-de-tarjetas
+                v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
+                :actividades="actividadesPorCategoria[1] || []"
+                :title="$t('frontend.home_community')"
+            />
+            <carousel-de-tarjetas
+                v-show="actividadesPorCategoria[2] && actividadesPorCategoria[2].length > 0"
+                :actividades="actividadesPorCategoria[2] || []"
+                :title="$t('frontend.home_formation')"
+            />
+            
+            
             <carousel-de-tarjetas
                 v-show="actividadesHitoAnual && actividadesHitoAnual.length > 0"
                 :actividades="actividadesHitoAnual || []"

@@ -157,7 +157,7 @@ export default {
 
 /*-------------- Contenedor principal -----------------*/
 .tarjetas-agrupadas {
-    margin-bottom: 70px;
+    margin-bottom: 30px;
 }
 
 .tarjetas-agrupadas .contenedor-principal {
