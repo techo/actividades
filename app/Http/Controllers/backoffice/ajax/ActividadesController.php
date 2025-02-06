@@ -55,7 +55,7 @@ class ActividadesController extends BaseController
     public function storeImagenTarjeta(Request $request, $id){
         
         $validate = $request->validate([
-            'imagen_tarjeta' => 'nullable|file|image',
+            'imagen_tarjeta' => 'nullable|file',
         ]);
 
         $imagen = $validate['imagen_tarjeta'];

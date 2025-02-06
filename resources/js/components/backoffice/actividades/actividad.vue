@@ -541,16 +541,20 @@
                             <p class="help-block">
                                 {{ $t('backend.imagen_tarjeta_description') }}
                             </p>
-                            <div>
-                                <img v-if="actividad.imagen_tarjeta != null" :src="actividad.imagen_tarjeta" 
-                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
-                                 alt="imagen actividad">          
+                            <div v-show="!openPhotoEdit">
+                                <img v-if="actividad.imagen_tarjeta != null && actividad.imagenNew == null"
+                                 v-bind:style="{ borderRadius: '15%', width: '15rem', height: '8.4rem' }"  :src="actividad.imagen_tarjeta" alt="Foto">
+                                <img v-else-if="actividad.imagenNew != null" :src="croppedImagenTarjetaUrl" v-bind:style="{ borderRadius: '15%', width: '15rem', height: '8.4rem' }" alt="User Image">
+                            
+                                <button  v-if="edicion"  class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
+                                    <i class="fa fa-edit"></i>
+                                </button>
                             </div>
-
-                            <button v-if="edicion" class="btn btn-light" @click="updateArchivo = true" ><i class="fa fa-edit"></i></button>
-                            <input v-if="(actividad.imagen_tarjeta == null || updateArchivo)" type="file" class="form-control"  @change="guardar_archivo" 
-                            :disabled="!edicion" ref="imagen_tarjeta">
+                        <photoEdit :openPhotoEdit="openPhotoEdit" :photoPerfil="actividad.imagen_tarjeta" :ratio="4/3" @updatePhoto="updatePhoto">
+                            </photoEdit >
+                            
                         </div>
+                        
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
@@ -653,10 +657,13 @@
     import 'tinymce/plugins/link'
     import VueTagsInput from '@johmun/vue-tags-input';
 
+
+    import photoEdit from '../../common/photoCropper';    
+
     export default {
         name: "actividad",
         props: {'id': {}, 'disabled': {default: false, type: Boolean} },
-        components: { 'tinymce-editor': editor, vSwitch, VueTagsInput },
+        components: { 'tinymce-editor': editor, vSwitch, VueTagsInput , photoEdit},
         data() {
             return {
                 tag: '',
@@ -665,6 +672,8 @@
                 rolesTags: [],
                 actividadesTags: [],
                 tipoInscriptosTags:  [],
+                openPhotoEdit: false,
+                croppedImagenTarjetaUrl: '',
                 autocompleteTipoInscriptos: [{
                         text: 'Secundaria',
                     }, {
@@ -1015,18 +1024,32 @@
                     delete this.errors[field];
                 }
             },
+            updatePhoto: function ({ blob, imageUrl }) {
+
+                if (this.actividad.imagenNew) {
+                    URL.revokeObjectURL(this.actividad.imagenNew);
+                }
+                this.croppedImagenTarjetaUrl = imageUrl;
+                this.actividad.imagenNew = blob;
+                this.openPhotoEdit = false;
+            },
+            selectPhoto: function () {
+                this.openPhotoEdit = !this.openPhotoEdit;
+            },
             guardarImagenTarjeta(){
                 let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-tarjeta`;
                 
                 const data = new FormData();
 
                 if (this.actividad.imagenNew != null){
-                    data.append('imagen_tarjeta', this.actividad.imagenNew);
+                    const file = new File([this.actividad.imagenNew], 'cropped-image.jpg', { type: 'image/png' });
+
+                    data.append('imagen_tarjeta', file);
 
                     const headers = { 'Content-Type': 'multipart/form-data' };
                     axios.post(url, data, { headers })
                         .then((respuesta) => {
-                        // this.tipoActividad = respuesta.data;
+                            this.actividad.imagen_tarjeta = respuesta.data;
                         })
                         .catch((error) => { 
                             
