@@ -2,7 +2,7 @@
     <div v-if="openPhotoEdit">
       <input
         ref="input"
-        hidden
+        v-show="false"
         type="file"
         name="image"
         accept="image/*"
@@ -62,18 +62,14 @@
     methods: {
       cropImage() {
         this.$refs.cropper
-        .getCroppedCanvas({
-          width: 240,
-          height: 180
-        })
+        .getCroppedCanvas()
         .toBlob(blob => {
             
           const imageUrl = URL.createObjectURL(blob);
           this.$emit('updatePhoto', { blob, imageUrl });
 
                
-            }, 'image/jpeg').catch((error) => {
-            });
+            }, 'image/jpeg');
       },
       setImage(e) {
         const file = e.target.files[0];

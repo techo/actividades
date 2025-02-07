@@ -73,7 +73,7 @@ class ActividadesController extends BaseController
     public function storeImagenDestacada(Request $request, $id){
         
         $validate = $request->validate([
-            'imagen_destacada' => 'nullable|file|image',
+            'imagen_destacada' => 'nullable|file',
         ]);
 
         $imagen = $validate['imagen_destacada'];

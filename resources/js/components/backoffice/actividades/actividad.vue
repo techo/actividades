@@ -562,15 +562,20 @@
                             <p class="help-block">
                                 {{ $t('backend.destacada_description') }}
                             </p>
-                            <div>
-                                <img v-if="actividad.imagen_destacada != null" :src="actividad.imagen_destacada" 
-                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
-                                 alt="imagen actividad">          
-                            </div>
 
-                            <button v-if="edicion && actividad.imagen_destacada != null" class="btn btn-light" @click="updateDestacada = true" ><i class="fa fa-edit"></i></button>
-                            <input v-if="(actividad.imagen_destacada == null || updateDestacada)" type="file" class="form-control"  @change="guardar_destacada" 
-                            :disabled="!edicion" ref="imagen_destacada">
+                            <div v-show="!openPhotoEditDestacada">
+                                <img v-if="actividad.imagen_destacada != null && actividad.imagenDestacadaNew == null"
+                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} "
+                                :src="actividad.imagen_destacada" alt="Foto">
+                                <img v-else-if="actividad.imagenDestacadaNew != null" :src="croppedImagenDestacadaUrl" 
+                                v-bind:style="{borderRadius:'15%' , maxWidth:'24rem', maxHeight:'8rem', minWidth:'24rem', minHeight:'10rem'} " alt="User Image">
+                            
+                                <button  v-if="edicion"  class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhotoDestacada">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </div>
+                        <photoEdit :openPhotoEdit="openPhotoEditDestacada" :photoPerfil="actividad.imagen_destacada" :ratio="5/1" @updatePhoto="updatePhotoDestacada">
+                            </photoEdit >
 
                             <span class="help-block">{{ errors.imagen_destacada }}</span>
                         </div>
@@ -673,7 +678,9 @@
                 actividadesTags: [],
                 tipoInscriptosTags:  [],
                 openPhotoEdit: false,
+                openPhotoEditDestacada: false,
                 croppedImagenTarjetaUrl: '',
+                croppedImagenDestacadaUrl: '',
                 autocompleteTipoInscriptos: [{
                         text: 'Secundaria',
                     }, {
@@ -771,6 +778,7 @@
 
                     chat_grupal_whatsapp: null,
                     imagenNew: null,
+                    imagenDestacadaNew: null,
                     imagenDestacada: null,
 
                 },
@@ -1036,13 +1044,26 @@
             selectPhoto: function () {
                 this.openPhotoEdit = !this.openPhotoEdit;
             },
+            updatePhotoDestacada: function ({ blob, imageUrl }) {
+                
+                if (this.actividad.imagenDestacadaNew) {
+                    URL.revokeObjectURL(this.actividad.imagenDestacadaNew);
+                }
+                this.croppedImagenDestacadaUrl = imageUrl;
+                this.actividad.imagenDestacadaNew = blob;
+                this.openPhotoEditDestacada = false;
+                },
+            selectPhotoDestacada: function () {
+                this.openPhotoEditDestacada = !this.openPhotoEditDestacada;
+            },
+
             guardarImagenTarjeta(){
                 let url = `/admin/ajax/actividades/${encodeURI(this.actividad.idActividad)}/imagen-tarjeta`;
                 
                 const data = new FormData();
 
                 if (this.actividad.imagenNew != null){
-                    const file = new File([this.actividad.imagenNew], 'cropped-image.jpg', { type: 'image/png' });
+                    const file = new File([this.actividad.imagenNew], 'cropped-image-'+this.actividad.idActividad+'.jpg', { type: 'image/png' });
 
                     data.append('imagen_tarjeta', file);
 
@@ -1065,13 +1086,16 @@
                 
                 const data = new FormData();
 
-                if (this.actividad.imagenDestacada != null){
-                    data.append('imagen_destacada', this.actividad.imagenDestacada);
+                if (this.actividad.imagenDestacadaNew != null){
+                    const file = new File([this.actividad.imagenDestacadaNew], 'cropped-image-'+this.actividad.idActividad+'.jpg', { type: 'image/png' });
+
+                    data.append('imagen_destacada', file);
+
 
                     const headers = { 'Content-Type': 'multipart/form-data' };
                     axios.post(url, data, { headers })
                         .then((respuesta) => {
-                        // this.tipoActividad = respuesta.data;
+                            this.actividad.imagen_destacada = respuesta.data;
                         })
                         .catch((error) => { 
                            
