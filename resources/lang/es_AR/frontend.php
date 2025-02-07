@@ -18,6 +18,7 @@ return [
     'home_for_new_volunteers' => 'Ideal para nuevo voluntario 🙋',
     'home_specials' => 'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!',
     'home_teams' => 'Para los equipos 🤝 encuentra tu actividad de reunion de equipo',
+    'home_campaign' => '¡Estamos en Campaña! 🎉',
     'find_how' => '👉 Descubre cómo',
     'to_be_part_of_team' => 'ser parte del equipo',
     'actividades_destacadas' => 'Actividades destacadas ✨',

@@ -18,11 +18,11 @@
 
 @push('additional_scripts')
     <script>
-        // Define la URL de la imagen de fondo
-        var imagenFondo = '/img/background-index.png';
-        // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
-        document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
-        document.getElementById('main-background').style.backgroundSize = 'cover';
+        // // Define la URL de la imagen de fondo
+        // var imagenFondo = '/img/background-index.png';
+        // // Selecciona el elemento con el ID "main-background" y establece la imagen de fondo
+        // document.getElementById('main-background').style.backgroundImage = 'url(' + imagenFondo + ')';
+        // document.getElementById('main-background').style.backgroundSize = 'cover';
     </script>
 @endpush
 
@@ -31,7 +31,7 @@
      
         <div class="row">
             <div class="col-md-12">
-                <index ref="contenedor" :categorias="[1,2,3]"/>
+                <index ref="contenedor" :categorias="[1,2,3,5]"/>
             </div>
         </div>
         <div class="row" style="display: none;">

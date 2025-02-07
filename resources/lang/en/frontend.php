@@ -18,6 +18,7 @@ return [
 	'home_for_new_volunteers' => 'Ideal for new volunteers 🙋',
 	'home_specials' => 'Annual Highlights 👑 only once a year! Don’t miss them!',
 	'home_teams' => 'For teams 🤝 find your team meeting activity',
+	'home_campaign' => 'We are in Campaign! 🎉',
 	'find_how' => '👉 Find out how',
 	'to_be_part_of_team' => 'to be part of the team',
 	'to_be_part_of_team' => 'fazer parte da equipe',

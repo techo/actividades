@@ -1,7 +1,7 @@
 <template>
     <div class="tarjetas-agrupadas">
     <div class="contenedor-titulo-controles">
-        <h4>{{ title }}</h4>
+        <h4  class="mt-2 mb-1">{{ title }}</h4>
         <div class="indicadores"></div>
     </div>
 
@@ -194,7 +194,6 @@ export default {
 /*-------------- Carousel -----------------*/
 .tarjetas-agrupadas .contenedor-carousel {
     width: 100%;
-    padding: 20px 0px;
     overflow: hidden;
     scroll-behavior: smooth;
 }

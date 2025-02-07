@@ -36,7 +36,11 @@
                 :title="$t('frontend.home_formation')"
             />
             
-            
+            <carousel-de-tarjetas
+                v-show="actividadesPorCategoria[5] && actividadesPorCategoria[5].length > 0"
+                :actividades="actividadesPorCategoria[5] || []"
+                :title="$t('frontend.home_campaign')"
+            />
             <carousel-de-tarjetas
                 v-show="actividadesHitoAnual && actividadesHitoAnual.length > 0"
                 :actividades="actividadesHitoAnual || []"
