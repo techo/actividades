@@ -82,7 +82,10 @@ return [
 	'online_events_description' => 'Online Events',
 	'campaign' => 'Campaing',
 	'campaign_description' => 'Campaing',
-
+	'application' => 'Applications',
+	'application_description' => 'At TECHO, the will never stops. There are teams for all interests and skills. A team where you can communicate ideas, work in the community, lead projects, organize events, and much more. If you want to make a difference (and meet amazing people along the way), this is your place.',
+	'application_descripcion_call' => 'Ready to join? Apply to an area and be part of TECHO’s Permanent Team. It has started and won’t stop!',
+	
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
 	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
 	'view_activities'  =>  'Apply!',

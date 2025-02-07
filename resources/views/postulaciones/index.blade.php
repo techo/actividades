@@ -37,6 +37,15 @@
                 </filtro>
             </div>
         </div>
+        <div class="text-center">
+            <p>
+            {{ __('frontend.application_description') }}
+            </p>
+
+            <p>
+            {{ __('frontend.application_descripcion_call') }}
+            </p>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <contenedor-de-tarjetas ref="contenedor" horizontal="true"></contenedor-de-tarjetas>

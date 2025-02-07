@@ -84,7 +84,10 @@ return [
 	'view_activities'  =>  'Me inscrever',
 	'campaign' => 'Campainha',
 	'campaign_description' => 'Campainha',
-
+	'application' => 'Candidaturas',
+	'application_description' => 'Na TECHO, a vontade nunca para. Existem equipes para todos os interesses e habilidades. Uma equipe onde você pode comunicar ideias, trabalhar na comunidade, liderar projetos, organizar eventos e muito mais. Se você quer fazer a diferença (e conhecer pessoas incríveis no caminho), este é o seu lugar.',
+	'application_descripcion_call' => 'Prontx para se juntar? Candidate-se a uma área e faça parte da Equipe Permanente da TECHO. Começou e não para!',
+	
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
 	'ciclo_voluntariado_description' => 'Ciclo de voluntariado',

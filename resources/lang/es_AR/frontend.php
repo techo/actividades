@@ -80,6 +80,10 @@ return [
 	'view_activities'  =>  'Anotame',
 	'campaign' => 'Campaña',
 	'campaign_description' => 'Campaña',
+	'application' => 'Postulaciones',
+	'application_description' => 'En TECHO, la voluntad nunca para. Hay equipos para todos los intereses y habilidades. Un equipo donde puedas comunicar ideas, trabajar en comunidad, liderar proyectos, organizar eventos y mucho más. Si quieres hacer la diferencia (y conocer gente increíble en el camino), este es tu lugar.',
+	'application_descripcion_call' => '¿Listx para sumarte? Postúlate a un área y sé parte del Equipo Permanente de TECHO. ¡Comenzó y no para!',
+
 
 
 	'ciclo_voluntariado' => 'Ciclo de voluntariado',
