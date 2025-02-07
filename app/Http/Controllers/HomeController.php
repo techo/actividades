@@ -78,6 +78,7 @@ class HomeController extends Controller
         $pais = \App\Pais::find($id);
         if($pais) {
             $request->session()->put('pais', $pais->id);
+            $request->session()->put('pais_abreviacion', $pais->abreviacion);
             $request->session()->put('locale',$pais->locale);
         }
 
@@ -87,6 +88,7 @@ class HomeController extends Controller
     public function deseleccionarPais(Request $request)
     {
         $request->session()->forget('pais');
+        $request->session()->forget('pais_abreviacion');
         return redirect('/actividades');
     }
 }

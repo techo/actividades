@@ -278,7 +278,7 @@
 <script>
     export default {
         name: "login",
-        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais', 'showpaises' ],
+        props:['usuario', 'veradmin', 'showlogin', 'docs', 'available_locales', 'pais', 'pais_abreviacion', 'showpaises' ],
         data () {
             let data = {
                 credentials: {
@@ -318,7 +318,7 @@
                 else return []
             },
             postulacionesLink() {
-                return `${window.location.href}/postulaciones`;
+                return `/${this.pais_abreviacion}/postulaciones/`;
             },
         },
         mounted(){

@@ -26,12 +26,16 @@ class UrlPais
             if(config('app.pais_default')){
                 $pais = Pais::where('id', config('app.pais_default'))->first();
                 config([ 'app.pais' =>  $pais->id]);
+                config([ 'app.pais_abreviacion' =>  $pais->abreviacion]);
                 $request->session()->put('pais', $pais->id);
+                $request->session()->put('pais_abreviacion', $pais->abreviacion);
                 $request->session()->put('locale',$pais->locale);
             }
        } else {
             config([ 'app.pais' => $pais->id ]);
+            config([ 'app.pais_abreviacion' => $pais->abreviacion ]);
             $request->session()->put('pais', $pais->id);
+            $request->session()->put('pais_abreviacion', $pais->abreviacion);
             $request->session()->put('locale',$pais->locale);
            // dd($pais->id);
 

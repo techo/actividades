@@ -10,6 +10,7 @@
            @endif
            showpaises="{{isset($showPaises) ? 1 : 0 }}"
            pais="{{ config('app.pais') }}"
+           pais_abreviacion="{{ config('app.pais_abreviacion') }}"
     ></login>
 @endauth
 @guest

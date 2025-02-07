@@ -17,11 +17,13 @@ class SeleccionarPais
     {
         if(\Session::has('pais')){
             config([ 'app.pais' => \Session::get('pais') ]);
+            config([ 'app.pais_abreviacion' => \Session::get('pais_abreviacion') ]);
         }
         else {
             if(config('app.pais_default')){
                 $pais = \App\Pais::find(config('app.pais_default'));
                 config([ 'app.pais' => $pais->id ]);
+                config([ 'app.pais_abreviacion' => $pais->abreviacion ]);
             }
         }
         return $next($request);
