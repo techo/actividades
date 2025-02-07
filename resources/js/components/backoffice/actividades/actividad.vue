@@ -550,7 +550,8 @@
                                     <i class="fa fa-edit"></i>
                                 </button>
                             </div>
-                        <photoEdit :openPhotoEdit="openPhotoEdit" :photoPerfil="actividad.imagen_tarjeta" :ratio="4/3" @updatePhoto="updatePhoto">
+                            <photoEdit :openPhotoEdit="openPhotoEdit" :photoPerfil="actividad.imagen_tarjeta"
+                            :ratio="idCategoria == '6' ? 9/16 : 4/3" @updatePhoto="updatePhoto">
                             </photoEdit >
                             
                         </div>
@@ -818,6 +819,7 @@
                 virtual: false,
                 updateArchivo: false,
                 updateDestacada: false,
+                idCategoria: 0,
             }
         },
         created() {
@@ -1136,6 +1138,7 @@
                     .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
             },
             getTipos(id){
+                this.idCategoria = id;
                 axios.get('/ajax/categorias/' + id + '/tipos')
                     .then((datos) => { 
                         this.tipos = datos.data; 
