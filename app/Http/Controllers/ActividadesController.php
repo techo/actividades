@@ -94,7 +94,9 @@ class actividadesController extends Controller
         $accion = '/inscripciones/actividad/' .  $actividad->idActividad;
         $habilitado = false;
         $payment = '';
-        $chatGrupalWhatsapp = false;
+        $inscripcionConfirmada = false;
+        $inscriptos = '';
+
         $qrCode = false;
 
         if (auth()->check() && auth()->user()->estadoInscripcion($id)) {
@@ -137,9 +139,10 @@ class actividadesController extends Controller
                     $mensaje = __('frontend.confirmed');
                     $clase = 'btn-success disabled';
                     $habilitado = false;
-                    $chatGrupalWhatsapp = true;
+                    $inscripcionConfirmada = true;
                     $persona = Persona::find(auth()->user()->idPersona);
                     $inscripcion = $persona->inscripcionActividad($id);
+                    $inscriptos = $actividad->comunidad();
 
                     $qrCode = $this->generateQRCode(auth()->user(), $actividad, $inscripcion);
                     break;
@@ -183,7 +186,7 @@ class actividadesController extends Controller
             }
         }
 
-        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'chatGrupalWhatsapp', 'qrCode'));
+        return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'inscripcionConfirmada', 'qrCode', 'inscriptos'));
     }
 
     /**

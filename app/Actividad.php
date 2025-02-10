@@ -132,6 +132,11 @@ class Actividad extends Model
         return $this->inscripciones()->get();
     }
 
+    public function comunidad()
+{
+    return $this->inscripciones()->with('persona:idPersona,nombres,photo,instagram')->get();
+}
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idActividad')->with('responsable');

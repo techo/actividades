@@ -79,10 +79,7 @@
                     @foreach($actividad->coordinadores as $coordinador)
                     <span style="display: none;">
                         {{ $coordinador->persona->nombres }} {{ $coordinador->persona->apellidoPaterno }}
-                    </span>
-                   
-
-                   
+                    </span>                   
                     @endforeach
                     <persona-tooltip
                         :personas='@json($actividad->coordinadores)'
@@ -141,6 +138,18 @@
                 @endif
             @endforeach
         @endif
+
+        @if ($inscripcionConfirmada && $inscriptos != '')
+            <hr>
+            <div class="row justify-content-center text-left">
+                <div class="col-md-12">
+                    <h5>{{ __('frontend.meet_your_new_community') }}</h5>
+                    <inscripto-tooltip
+                        :inscriptos='@json($inscriptos)'    
+                    />
+                </div>
+            </div>
+        @endif
         </div>
     </div>
 
@@ -155,7 +164,7 @@
             </div>
             <div class="col-md-6">
                 <div style="text-align: right">
-                    @if ($chatGrupalWhatsapp && $actividad->chat_grupal_whatsapp != null)
+                    @if ($inscripcionConfirmada && $actividad->chat_grupal_whatsapp != null)
                         <a class="btn rounded-pill text-white bg-success" href="{{ $actividad->chat_grupal_whatsapp }}" target="_blank">
                             <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
                             <span>{{ __('frontend.group_chat') }}</span>

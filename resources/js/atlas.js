@@ -20,6 +20,8 @@ import imgButton from './components/common/imgButton.vue';
 Vue.component('imgButton', imgButton);
 import personaTooltip from './components/common/personaTooltip.vue';
 Vue.component('persona-tooltip', personaTooltip);
+import inscriptoTooltip from './components/common/inscriptoTooltip.vue';
+Vue.component('inscripto-tooltip', inscriptoTooltip);
 import imgButtonGroup from './components/common/imgButtonGroup.vue';
 Vue.component('imgButtonGroup', imgButtonGroup);
 import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
