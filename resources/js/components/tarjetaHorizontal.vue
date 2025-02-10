@@ -8,7 +8,7 @@
           </div>
           <div class="col-sm-6">
             <h4 class="text-center text-white">{{ actividad.nombreActividad }}</h4>
-            <p class="pt-1 text-center text-white px-1">{{ descripcionActividadRecortado }}</p>
+            <p class="pt-1 text-center text-white">{{ descripcionActividadRecortado }}</p>
             <button type="button" 
                 class="btn btn-primary bg-techo-blue" 
                 @click="ir_a_actividad" >
