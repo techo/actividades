@@ -82,8 +82,8 @@ return [
 	'campaign' => 'Campaña',
 	'campaign_description' => 'Campaña',
 	'application' => 'Postulaciones',
-	'application_description' => 'En TECHO, la voluntad nunca para. Hay equipos para todos los intereses y habilidades. Un equipo donde puedas comunicar ideas, trabajar en comunidad, liderar proyectos, organizar eventos y mucho más. Si quieres hacer la diferencia (y conocer gente increíble en el camino), este es tu lugar.',
-	'application_descripcion_call' => '¿Listx para sumarte? Postúlate a un área y sé parte del Equipo Permanente de TECHO. ¡Comenzó y no para!',
+	'application_description' => 'En TECHO, la voluntad nunca para. Hay equipos para todos los intereses y habilidades. Un espacio donde podés compartir ideas, trabajar en comunidad, liderar proyectos, organizar eventos y mucho más. Si querés hacer la diferencia (y cruzarte con gente increíble en el camino), este es tu lugar.',
+	'application_descripcion_call' => '¿Te copás? Sumate a un área y sé parte del Equipo Permanente de TECHO. ¡Comenzó no para! 🚀',
 
 
 
@@ -326,6 +326,7 @@ return [
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
     'group_chat' => 'Chat Grupal',
+	'meet_your_new_community' => '¡Conocé tu nueva comunidad!',
 
     // actividadesController
     'error' => 'ERROR',

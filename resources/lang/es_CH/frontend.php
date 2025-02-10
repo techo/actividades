@@ -19,9 +19,11 @@ return [
     'home_for_new_volunteers' => 'Ideal para nuevo voluntario 🙋',
     'home_specials' => 'Hitos Anuales 👑 solo 1 vez al año ¡No te los puedes perder!',
     'home_teams' => 'Para los equipos 🤝 encuentra tu actividad de reunion de equipo',
+    'home_campaign' => '¡Estamos en Campaña! 🎉',
     'find_how' => '👉 Descubre cómo',
     'to_be_part_of_team' => 'ser parte del equipo',
     'actividades_destacadas' => 'Actividades destacadas ✨',
+	'false' => 'falso',
 
 	'postulate' => 'Postulate aquí',
 	
@@ -79,6 +81,11 @@ return [
 	'online_events' => 'Virtual',
 	'online_events_description' => 'Eventos Virtuales',
 	'view_activities'  =>  'Anotame',
+	'campaign' => 'Campaña',
+	'campaign_description' => 'Campaña',
+	'application' => 'Postulaciones',
+	'application_description' => 'En TECHO, la voluntad nunca se detiene. Hay equipos para todos los intereses y habilidades. Un espacio donde puedes compartir ideas, trabajar en comunidad, liderar proyectos, organizar eventos y mucho más. Si quieres hacer la diferencia (y conocer a gente increíble en el camino), este es tu lugar.',
+	'application_descripcion_call' => '¿Te animas? Postula a un área y sé parte del Equipo Permanente de TECHO. ¡Comenzó no para! 🚀',
 
 	'welcome' => 'Bienvenidx',
 	'welcome_M' => 'Bienvenido',
@@ -308,9 +315,13 @@ return [
     'description' => '',
     'not_defined' => 'No definido',
     'coordinator' => 'Coordina',
+	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 
+	'show_on_arrival' => 'Muéstralo al llegar a la actividad.',
     'meeting_points' => 'Puntos de encuentro / URL de Conexión',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
+    'group_chat' => 'Chat Grupal',
+	'meet_your_new_community' => '¡Conocé tu nueva comunidad!',
 
     // actividadesController
     'error' => 'ERROR',

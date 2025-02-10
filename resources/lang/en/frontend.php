@@ -342,7 +342,8 @@ return [
 	'show_on_arrival' => 'To show upon arrival at the activity',
 	'jornada' => 'Session',
 	'jornadas' => 'Sessions',
-	'review_jornadas' => 'Sign up for the session(s) you wish to participate in',
+	'review_jornadas' => 'Sign up for the session(s) you wish to participate in', 
+	'meet_your_new_community' => 'Meet your new community!',
 
 
 	'type_of_inscription' => 'Type of Inscription',
