@@ -51,6 +51,19 @@
                 <contenedor-de-tarjetas ref="contenedor" horizontal="true"></contenedor-de-tarjetas>
             </div>
         </div>
+        
+
+        <div class="row bg-light p-4 rounded">
+            <div class="col-md-10 mx-auto">
+                <p class="mb-2 font-weight-bold text-left">{{ __('frontend.autotest_pregunta') }}</p>
+                <a class="btn bg-techo-yellow font-weight-bold text-white rounded-pill px-4 py-2 w-100 d-block" href="/autotest">
+                    {{ __('frontend.autotestTituloBoton') }} <br>
+                    <span class="techo-violet font-weight-bold">QUIZ</span>
+                </a>
+            </div>
+        </div>
+
+
     </div>
     <!-- <aviso-modal></aviso-modal> -->
 

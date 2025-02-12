@@ -30,6 +30,7 @@
               <p class="tooltip-nombre">{{ inscripto.persona.nombres }}</p>
               <!-- <p class="tooltip-rol">{{ persona.mail }}</p> -->
               <p v-if="inscripto.rol" class="tooltip-rol">{{ inscripto.rol }}</p>
+              <p class="tooltip-rol">{{ persona.persona.estado_voluntario }}</p>
   
               <a 
                 v-if="inscripto.persona.instagram"

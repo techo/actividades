@@ -97,7 +97,10 @@ return [
 	'suscribe' => 'Suscribirme',
 	'suscribe_thanks' => 'Gracias! te avisaremos cuando se abran actividades en tu zona',
 	'email_validation_error' => 'Por favor, ingresa un email válido',
-	'autotestTituloBoton' => 'Autotest: ¿Cuál es la actividad perfecta para ti?',
+	'autotestTituloBoton' => '¡Descubre que área combina mejor contigo!',
+	'autotest_pregunta' => '¿No sabes qué área escoger?',
+
+	
 	
 
 	// components/estadisticas-publicas.vue

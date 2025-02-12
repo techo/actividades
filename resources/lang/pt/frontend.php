@@ -101,8 +101,9 @@ return [
 	'suscribe_so_we_get_in_touch' => 'Inscreva-se para saber primeiro sobre as próximas atividades',
 	'suscribe' => 'inscrever',
 	'suscribe_thanks' => 'Obrigado! Iremos notificá-lo quando as atividades forem abertas em sua região',
-	'email_validation_error' => 'por favor digite um e-mail válido',
-	'autotestTituloBoton' => 'Auto teste: Qual é a atividade perfeita para você?',
+	'email_validation_error' => 'por favor digite um e-mail válido', 
+	'autotestTituloBoton' => 'Descubra qual área combina melhor com você!',
+    'autotest_pregunta' => 'Você não sabe qual área escolher?',
 
 	// components/estadisticas-publicas.vue
 	'mobilized_volunteer_instances' => 'Participação voluntária',
