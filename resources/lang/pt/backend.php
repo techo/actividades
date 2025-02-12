@@ -75,6 +75,7 @@ return [
     'imagen_tarjeta_description' => 'Se não inserir, será exibida a imagem padrão por categoria',
     'destacada' => 'Destacar Atividade',
     'destacada_description' => 'Esta atividade será exibida com um banner e é obrigatória a carga do mesmo',
+    'aviso_recortar' => "No se esqueça de clicar em 'Recortar' para salvar as alterações",
 
     'new_inscription' => 'Novo!',
     'slots' => 'Vagas',

@@ -34,7 +34,7 @@
             <i class="fa fa-upload"></i>{{ $t('frontend.upload_new' ) }}
             </a>
           </div>
-  
+          <p class="text-danger">{{ $t('backend.aviso_recortar' ) }}</p>
         </section>
       </div>
     </div>

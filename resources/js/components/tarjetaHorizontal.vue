@@ -6,7 +6,7 @@
               <img class="card-img-top" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
                   v-bind:style="{ borderRadius: '15px' , width: '10rem', height: '16rem'}">
           </div>
-          <div class="col-sm-6">
+          <div class="col-sm-6 px-3">
             <h4 class="text-center text-white">{{ actividad.nombreActividad }}</h4>
             <p class="pt-1 text-center text-white">{{ descripcionActividadRecortado }}</p>
             <button type="button" 

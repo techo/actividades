@@ -75,6 +75,7 @@ return [
     'imagen_tarjeta_description' => 'De no poner se mostrara la default por categoria',
     'destacada' => 'Destacar Actividad',
     'destacada_description' => 'Esta actividad se mostrara con Banner y es obligatoria la carga del mismo',
+    'aviso_recortar' => "No olvides hacer click en 'Recortar' para guardar los cambios",
     
     'new_inscription' => 'Nuevo!',
     'slots' => 'Cupos',
