@@ -308,7 +308,7 @@ return [
  	'place' => 'Place',
 
 	// actividades/show.blade.php
-    'description' => '',
+    'description' => 'Description',
     'not_defined' => 'Not Defined',
     'coordinator' => 'Coordinator',
     'meeting_points' => '¿Where we meet up?',

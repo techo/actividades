@@ -312,7 +312,7 @@ return [
  	'place' => 'Lugar',
     
 	// actividades/show.blade.php
-    'description' => '',
+    'description' => 'Descripción',
     'not_defined' => 'No definido',
     'coordinator' => 'Coordina',
 	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 

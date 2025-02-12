@@ -57,16 +57,30 @@
             @endif
 		</div>
 		<hr>
-		<div class="row">
-			<div class="col-md-12">
-				<h5> {{ __('frontend.description') }}</h5>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12">
-				{!! $actividad->descripcion !!}
-			</div>
-		</div>
+        @if ($inscripcionConfirmada)
+            <div class="row align-items-center">
+                <div class="col">
+                    <button class="btn btn-white mb-2 d-flex align-items-center justify-content-between w-100 p-0" type="button" data-toggle="collapse" data-target="#collapseActividad" aria-expanded="false" aria-controls="collapseActividad">
+                        <span class="h5 m-0">{{ __('frontend.description') }}</span> 
+                        <i class="fas fa-chevron-down" id="iconoDescripcion"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse" id="collapseActividad">
+                <div class="row">
+                    <div class="col-md-12 px-4">
+                        {!! $actividad->descripcion !!}
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="row">
+                <div class="col-md-12">
+                    {!! $actividad->descripcion !!}
+                </div>
+            </div>
+        @endif
 
 		<hr>
 		<div class="row">
@@ -216,4 +230,16 @@
             $("#copiar_url").tooltip('show');
         }
 	</script>
+
+<script>
+    $(document).ready(function () {
+        $('#collapseActividad').on('show.bs.collapse', function () {
+            $('#iconoDescripcion').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        });
+
+        $('#collapseActividad').on('hide.bs.collapse', function () {
+            $('#iconoDescripcion').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        });
+    });
+</script>
 @endpush

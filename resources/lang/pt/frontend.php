@@ -313,7 +313,7 @@ return [
 	'place' => 'Lugar',
 
 	// actividades/show.blade.php
-	'description' => '',
+	'description' => 'Descrição',
 	'not_defined' => 'Não definido',
 	'coordinator' => 'Coordenador',
 	'meeting_points' => 'Onde nos encontramos?',
