@@ -33,7 +33,7 @@
         <p v-if="actividad.show_location" class="techo-titulo-card text-center pt-1" >{{ actividad.ubicacion }}</p>
         <h6 class="pt-1 text-center text-white px-1 mb-0">{{ nombreActividadRecortado }}</h6>
       </div>
-      <div class="card-footer px-0 pt-0 border-0 mt-0" v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
+      <div class="card-footer px-0 pb-2 border-0 mt-0" v-if="actividad.show_dates" style="width: 100%; font-size: 14px; margin: 0.5em 0; padding: 0.5em 0">
             <span class="col-sm-4"><i class="fas fa-calendar-alt"></i> <span style="padding-bottom: 5px">{{ actividad.fecha }}</span></span>
             <span class="col-sm-4"><i class="fas fa-clock"></i> {{ actividad.hora }}</span>
         </div>
@@ -97,7 +97,7 @@ div.tarjeta {
     border: 0px;
     border-radius: 15%;
     text-align: center;
-    height: 390px;
+    height: 360px;
     background-color: var(--card-color); /* Esto aplica el color base */
     transition: background-color 0.3s ease; /* Transición suave */
 }
