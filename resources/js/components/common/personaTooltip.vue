@@ -23,7 +23,7 @@
               <i class="fab fa-instagram"></i> Instagram
             </a>
 
-            <a v-if="isValidWhatsAppNumber(persona.persona.telefonoMovil) && persona.persona.activaWhatsapp"
+            <a v-if="isValidWhatsAppNumber(persona.persona.telefonoMovil) && persona.activaWhatsapp"
               :href="'https://wa.me/' + persona.persona.telefonoMovil" target="_blank" class="tooltip-whatsapp">
               <i class="fa fa-whatsapp"></i> Whatsapp
             </a>
@@ -65,9 +65,9 @@ export default {
     },
     cerrarSiClickFuera(event) {
       // Cierra el tooltip si el clic no está dentro de ningún tooltip
-      if (this.tooltipAbierto && !this.$refs.tooltip.contains(event.target)) {
-        this.cerrarTooltip();
-      }
+      // if (this.tooltipAbierto && !this.$refs.tooltip.contains(event.target)) {
+      //   this.cerrarTooltip();
+      // }
     }
   },
   mounted() {

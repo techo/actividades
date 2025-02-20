@@ -18,11 +18,11 @@
                 <strong>{{ $t('frontend.suscribe') }} </strong>
             </a>
         </div> -->
-        <a 
+        <!-- <a 
             class="btn btn-secondary text-wrap d-md-block m-2"  
             href="autotest">
             {{ $t('frontend.autotestTituloBoton') }} 
-        </a>
+        </a> -->
 
     </span>
 </template>

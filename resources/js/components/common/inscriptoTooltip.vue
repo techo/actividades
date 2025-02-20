@@ -87,8 +87,8 @@
       },
       cerrarSiClickFuera(event) {
         // Cierra el tooltip si el clic no está dentro de ningún tooltip
-        if (this.tooltipAbierto && !this.$refs.tooltip.contains(event.target)) {
-          this.cerrarTooltip();
+        if (this.tooltipAbierto) {
+         // this.cerrarTooltip();
         }
       }
     },
