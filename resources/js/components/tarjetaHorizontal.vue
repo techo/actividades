@@ -6,8 +6,8 @@
               <img class="card-img-top" :src="actividad.imagen_tarjeta ? actividad.imagen_tarjeta : actividad.tipo.imagen" alt="imagen actividad"
                   v-bind:style="{ borderRadius: '15px' , width: '10rem', height: '16rem'}">
           </div>
-          <div class="col-sm-6 px-3">
-            <h4 class="text-center text-white">{{ actividad.nombreActividad }}</h4>
+          <div class="col-sm-6 px-1">
+            <h5 class="text-center text-white">{{ actividad.nombreActividad }}</h5>
             <p class="pt-1 text-center text-white">{{ descripcionActividadRecortado }}</p>
             <button type="button" 
                 class="btn btn-primary bg-techo-blue" 
@@ -32,7 +32,7 @@
           },
           computed: {
             descripcionActividadRecortado() {
-                return this.actividad.descripcion.length > 50 ? this.actividad.descripcion.substring(0, 46) + '..' : this.actividad.descripcion;
+                return this.actividad.descripcion.length > 120 ? this.actividad.descripcion.substring(0, 118) + '..' : this.actividad.descripcion;
             }
           },
           methods: {

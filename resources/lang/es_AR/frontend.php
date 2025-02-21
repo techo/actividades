@@ -183,6 +183,7 @@ return [
  	'email_succesfully_updated' => 'La casilla de email fue modificada con éxito ¡Verificá tu casilla de email para activarla!',
 
 	'crop' => 'Recortar',
+	'edit' => 'Editar',
 	'upload_new' => 'Subir nueva',
 
 

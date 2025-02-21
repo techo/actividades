@@ -133,9 +133,14 @@ class Actividad extends Model
     }
 
     public function comunidad()
-{
-    return $this->inscripciones()->with('persona:idPersona,nombres,photo,instagram')->get();
-}
+    {
+        return $this->inscripciones()
+            ->whereHas('persona', function ($query) {
+                $query->whereNull('deleted_at'); // Filtra solo personas activas
+            })
+            ->with('persona:idPersona,nombres,photo,instagram,deleted_at')
+            ->get();
+    }
 
     public function puntosEncuentro()
     {

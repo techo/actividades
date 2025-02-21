@@ -53,7 +53,7 @@
         </div>
         
 
-        <div class="row bg-techo-cool-gray p-3 mx-0" style="border-radius: 20px 20px 20px 20px;">
+        <div class="row bg-techo-cool-gray p-3 mx-0 mt-3" style="border-radius: 20px 20px 20px 20px;">
             <div class="col-md-10 mx-auto">
                 <p class="mb-2 font-weight-bold text-left lead techo-blue">{{ __('frontend.autotest_pregunta') }}</p>
                 <a class="btn bg-techo-yellow font-weight-bold text-white rounded-pill px-4 py-2 w-100 d-block" href="/autotest">

@@ -186,6 +186,7 @@ return [
 	'email_succesfully_updated' => 'Endereço de e-mail atualizado com sucesso. Verifique sua caixa de correio para verificar!',
 	'crop' => 'Recortar', 
 	'upload_new' => 'Carregar novo',
+	'edit' => 'Editar',
 
 	// perfil / ficha medica
 	'ficha_medica' => 'Registro médico',

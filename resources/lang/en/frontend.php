@@ -183,6 +183,7 @@ return [
  	'email_succesfully_updated' => 'Email address succesfully updated. Check your mailbox to verify!',
 	'crop' => 'Crop', 
 	'upload_new' => 'Upload new',
+	'edit' => 'Edit',
  	// perfil / ficha medica
  	'ficha_medica' => 'Medical Data',
  	'ficha_medica_requerida' => 'This activity requires your medical record, upload or verify it here!',
