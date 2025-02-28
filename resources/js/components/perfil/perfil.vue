@@ -15,7 +15,7 @@
                         <img v-else src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-redonda" alt="User Image">
                     
                         <button class="btn btn-light btn-circle edit-button mt-3 position-absolute top-50 start-50 translate-middle" @click="selectPhoto">
-                            <i class="fa fa-edit"></i> {{ $t('frontend.edit' ) }}
+                            <i class="fa fa-edit"></i>
                         </button>
                     </div>
                     <photoEdit :openPhotoEdit="openPhotoEdit" :photoPerfil="user.photo" @updatePhoto="updatePhoto">

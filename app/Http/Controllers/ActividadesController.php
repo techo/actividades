@@ -155,13 +155,13 @@ class actividadesController extends Controller
                 $mensaje = __('frontend.closed_inscriptions');
                 $clase = "disabled";
                 $habilitado = true;
-                return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
             }
             if(!$hay_cupos) {
                 $mensaje = __('frontend.activity_full');
                 $clase = "disabled";
                 $habilitado = false;
-                return view('actividades.show', compact('actividad', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
             }
 
             if($actividad->confirmacion == 1 || $actividad->pago == 1) {
