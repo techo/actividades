@@ -13,6 +13,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $inscripcion;
+    public $persona;
     public $QRCode;
 
     /**
@@ -23,6 +24,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     public function __construct($inscripcion)
     {
         $this->inscripcion = $inscripcion;
+        $this->persona = $inscripcion->persona;
         $this->QRCode = $this->generateQRCode();
     }
 
