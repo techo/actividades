@@ -79,7 +79,7 @@ class actividadesController extends Controller
     public function show($id)
     {
 
-        $actividad = Actividad::with('localidad')->where('estadoConstruccion', 'Abierta')->findOrFail($id);
+        $actividad = Actividad::with('localidad')->findOrFail($id);
 
         $cantInscriptos = $actividad->inscripciones()->count();
 
@@ -155,13 +155,13 @@ class actividadesController extends Controller
                 $mensaje = __('frontend.closed_inscriptions');
                 $clase = "disabled";
                 $habilitado = true;
-                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'inscripcionConfirmada', 'qrCode', 'inscriptos'));
             }
             if(!$hay_cupos) {
                 $mensaje = __('frontend.activity_full');
                 $clase = "disabled";
                 $habilitado = false;
-                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment'));
+                return view('actividades.show', compact('actividad', 'inscripcionConfirmada', 'mensaje', 'accion' , 'clase', 'habilitado', 'payment', 'inscripcionConfirmada', 'qrCode', 'inscriptos'));
             }
 
             if($actividad->confirmacion == 1 || $actividad->pago == 1) {

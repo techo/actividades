@@ -23,7 +23,7 @@ class LocalidadesDataSearch
 
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);
-                Log::info($value);
+                // Log::info($value);
             }
         }
         return $query;

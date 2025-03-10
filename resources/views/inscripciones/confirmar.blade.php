@@ -141,6 +141,8 @@
                             {{ __('frontend.accept') }} 
                             @if($actividad->idPais == 33)
                             <a href="/carta-voluntariado-brasil" target="_blank">
+                            @elseif($actividad->abreviacion == 'paraguay')
+                                <a href="/carta-voluntariado-paraguay" target="_blank">
                             @else
                             <a href="/carta-voluntariado" target="_blank">
                             @endif

@@ -66,8 +66,8 @@ $sql = $consulta->toSql();
 // Y aquí obtenemos los bindings (parámetros) que serán usados en la consulta
 $bindings = $consulta->getBindings();
 
-Log::info($sql);
-Log::info($bindings);
+// Log::info($sql);
+// Log::info($bindings);
 
         return $consulta->get();
     }

@@ -15,6 +15,7 @@ Route::get('/cookie/close', function(){
 });
 Route::get('/carta-voluntariado', function (){ return view('terminos.actividades.show');  });
 Route::get('/carta-voluntariado-brasil', function (){ return view('terminos.actividades.show_brasil');  });
+Route::get('/carta-voluntariado-paraguay', function (){ return view('terminos.actividades.show_paraguay');  });
 Route::get('/desuscribirse/{uuid}', 'UnsubscribeController@view');
 Route::post('/desuscribirse/{uuid}', 'UnsubscribeController@confirm')->name('unsubscribe.confirmar');
 

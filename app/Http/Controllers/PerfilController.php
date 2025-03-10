@@ -107,7 +107,7 @@ class PerfilController extends Controller
 
 		// Log::info($persona);
 		// Log::info($inscripciones);
-		Log::info($integrantes);
+		// Log::info($integrantes);
 
 		$pdf = app('dompdf.wrapper');
         $pdf->loadView('pdf.constanciaVoluntariado', compact('persona', 'inscripciones', 'integrantes'));

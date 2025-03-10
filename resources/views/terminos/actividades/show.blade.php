@@ -6,7 +6,7 @@
 
 @section('main_content')
     <div class="row d-flex justify-content-center">
-        <img src="/img/techo_logo_big.png" height="100" alt="logo techo">
+        <img src="/img/logo_n.png" height="70" alt="logo techo">
     </div>
     <div class="row">
         <div class="col-md-8 offset-md-2 mt-5 text-justify">
