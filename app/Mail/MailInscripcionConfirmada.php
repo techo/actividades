@@ -38,9 +38,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     public function generateQRCode()
     {
         $url = env("APP_URL").'/admin/actividades/'.$this->inscripcion->idActividad.'/inscripcion/'.$this->inscripcion->idInscripcion.'/persona/'.$this->inscripcion->idPersona; 
-        Log::info($url);        
         $qr = QrCode::size(200)->generate($url);
-        Log::info("QR Code: " . $qr); // Verifica si esto imprime algo
         return $qr;
     }
  

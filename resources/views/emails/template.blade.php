@@ -35,7 +35,7 @@
                 <tr bgcolor="#0092dd">
                     <td align="left">
                         <a href="{{ url('/') }}">
-                            <img src="{{ url('img/techo-logo_269x83.png') }}" alt="Techo" width="170">
+                            <img src="{{ url('img/techo_b.png') }}" alt="Techo" width="170">
                         </a>
                         {{--@yield('header')--}}
                     </td>
