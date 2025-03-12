@@ -197,6 +197,21 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/usuarios/{persona}/fusionar', 'backoffice\ajax\UsuariosController@fusionar')->middleware('role:admin');
 
 
+    // panel comunidaddes
+
+    Route::prefix('/comunidades')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ComunidadesController@index');
+        Route::get('/crear', 'backoffice\ComunidadesController@create');
+        Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
+    });
+    Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
+        Route::get('', 'backoffice\ajax\ComunidadesController@index');
+        Route::put('/{idComunidad}', 'backoffice\ajax\ComunidadesController@update');
+        Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy');
+        Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store');
+
+    });
+
     // panel Equipos
 
     Route::prefix('/equipos')->middleware(['role:admin|coordinador'])->group(function() {

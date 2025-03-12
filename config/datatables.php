@@ -458,6 +458,38 @@ return [
         ]
     ],
 
+    'comunidades' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idComunidad',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'oficina',
+                'sortField' => 'oficina',
+                'title' => 'Oficina'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+
     'provincias' => [
         'fields' => [
             [
