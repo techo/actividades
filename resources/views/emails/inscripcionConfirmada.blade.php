@@ -82,20 +82,17 @@
         @endif
         <hr>
     @endif
-    
-    @isset($QRCode)
-    
-            <div class="row justify-content-center text-center">
-                <div class="col-md-12">
-                    <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
-                    <span>{{ __('frontend.show_on_arrival') }}</span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center m-2">
-                <img src="{{ $qrCid }}" alt="Código QR">
-            </div>
-            <hr class="mx-auto" style="width: 80%;">
-    @endif
+
+    <div class="row justify-content-center text-center">
+        <div class="col-md-12">
+            <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
+            <span>{{ __('frontend.show_on_arrival') }}</span>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center m-2">
+        <img src="{{ $qrCid }}" alt="Código QR">
+    </div>
+    <hr class="mx-auto" style="width: 80%;">
     <p>
           @lang('email.greetings')
     </p>
