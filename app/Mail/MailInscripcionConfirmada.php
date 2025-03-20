@@ -46,6 +46,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
             ->with([
                 'inscripcion' => $this->inscripcion,
                 'persona' => $this->persona,
+                'qrCid' => $qrCid,
             ]);
     }
 }
