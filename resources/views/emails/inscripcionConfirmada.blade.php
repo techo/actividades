@@ -92,6 +92,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center m-2">
+                <img src="cid:{{$qrFileName}}" alt="QR Code">
                 {!! $QRCode !!}
             </div>
             <hr class="mx-auto" style="width: 80%;">
