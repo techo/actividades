@@ -26,20 +26,6 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
-        $this->QRCode = $this->generateQRCode();
-    }
-
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-
-    public function generateQRCode()
-    {
-        $url = env("APP_URL").'/admin/actividades/'.$this->inscripcion->idActividad.'/inscripcion/'.$this->inscripcion->idInscripcion.'/persona/'.$this->inscripcion->idPersona; 
-        $qr = QrCode::size(200)->generate($url);
-        return $qr;
     }
 
     public function getQrUrl()
@@ -49,18 +35,13 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
  
     public function build()
     {
-        $qrPng = QrCode::format('png')->size(200)->generate($this->getQrUrl());
-        $fileName = 'qrcode.png';
-        $this->attachData($qrPng, $fileName, [
-            'mime' => 'image/png',
-        ]);
+        $qrImage = QrCode::format('png')->size(200)->generate($this->getQrUrl());
 
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
             ->view('emails.inscripcionConfirmada')
             ->with([
-                'QRCode' => $this->QRCode,
                 'qrCid' => $this->embedData($qrImage, 'qrcode.png', 'image/png'),
                 'inscripcion' => $this->inscripcion,
                 'persona' => $this->persona,
