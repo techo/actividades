@@ -61,7 +61,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
             ->view('emails.inscripcionConfirmada')
             ->with([
                 'QRCode' => $this->QRCode,
-                'qrFileName' => $fileName,
+                'qrCid' => $this->embedData($qrImage, 'qrcode.png', 'image/png'),
                 'inscripcion' => $this->inscripcion,
                 'persona' => $this->persona,
             ]);
