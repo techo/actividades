@@ -91,11 +91,8 @@
                 <a href="{{ $url }}" class="btn bg-techo-blue">
                     {{ __('frontend.access_qr') }}
                 </a>
+            </div>
         </div>
-        </div>
-    </div>
-    <div class="d-flex justify-content-center m-2">
-        <img src="cid:{{ $qrCid }}" alt="Código QR">
     </div>
     <hr class="mx-auto" style="width: 80%;">
     <p>

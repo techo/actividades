@@ -31,7 +31,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     public function build()
     {
 
-        $url = env("APP_URL").'/admin/actividades/'.$this->inscripcion->idActividad.'/inscripcion/'.$this->inscripcion->idInscripcion.'/persona/'.$this->inscripcion->idPersona;
+        $url = env("APP_URL").'/actividades/'.$this->inscripcion->idActividad;
 
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
