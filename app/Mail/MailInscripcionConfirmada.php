@@ -15,6 +15,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
 
     public $inscripcion;
     public $persona;
+    public $url;
 
     /**
      * Create a new message instance.
@@ -25,13 +26,12 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
-    
+        $this->url = env("APP_URL").'/actividades/'.$this->inscripcion->idActividad;
     }
  
     public function build()
     {
 
-        $url = env("APP_URL").'/actividades/'.$this->inscripcion->idActividad;
 
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
@@ -40,7 +40,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
             ->with([
                 'inscripcion' => $this->inscripcion,
                 'persona' => $this->persona,
-                'url' => $url,
+                'url' => $this->url,
             ]);
     }
 }
