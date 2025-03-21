@@ -230,6 +230,7 @@ return [
         'Share' => Chencha\Share\ShareFacade::class,
         'Socialite' => Laravel\Socialite\SocialiteServiceProvider::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
     ],
 
 ];
