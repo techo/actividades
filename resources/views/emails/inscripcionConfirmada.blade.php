@@ -90,7 +90,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-center m-2">
-        <img src="{{ $message->embedData($qrImage, 'qrcode.png') }}" />
+        <img src="{!!$message->embedData(QrCode::format('png')->generate('Embed me into an e-mail!'), 'QrCode.png', 'image/png')!!}">
     </div>
     <hr class="mx-auto" style="width: 80%;">
     <p>
