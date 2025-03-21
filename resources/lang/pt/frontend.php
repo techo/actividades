@@ -349,6 +349,7 @@ return [
 
 	'confirm_inscription_with_qr' => 'QR para confirmar sua presença',
 	'show_on_arrival' => 'Para mostrar ao chegar na atividade',
+	'access_qr' => 'Acesse este link para obtê-lo.',
 	'jornada' => 'Sessão',
 	'jornadas' => 'Sessões',
 	'review_jornadas' => 'Inscreva-se na(s) sessão(ões) em que deseja participar',

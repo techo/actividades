@@ -342,6 +342,7 @@ return [
 	'no_apply_rol' => "No, I don't want to apply for a rol",
 	'confirm_inscription_with_qr' => 'QR to confirm your attendance',
 	'show_on_arrival' => 'To show upon arrival at the activity',
+	'access_qr' => 'Access this link to get it.',
 	'jornada' => 'Session',
 	'jornadas' => 'Sessions',
 	'review_jornadas' => 'Sign up for the session(s) you wish to participate in', 

@@ -87,6 +87,11 @@
         <div class="col-md-12">
             <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
             <span>{{ __('frontend.show_on_arrival') }}</span>
+            <div class="mt-4">
+                <a href="{{ $url }}" class="btn bg-techo-blue">
+                    {{ __('frontend.access_qr') }}
+                </a>
+        </div>
         </div>
     </div>
     <div class="d-flex justify-content-center m-2">
