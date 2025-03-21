@@ -32,17 +32,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
     {
 
         $url = env("APP_URL").'/admin/actividades/'.$this->inscripcion->idActividad.'/inscripcion/'.$this->inscripcion->idInscripcion.'/persona/'.$this->inscripcion->idPersona; 
-        Log::info('URL generada: '.$url);
-    
-        try {
-            $qrImage = QrCode::format('png')->size(200)->generate($url);  
-            Log::info('QR generado correctamente');
-        } catch(\Throwable $e) {
-            Log::error('Error generando QR: ' . $e->getMessage());
-        }
-    
-        $qrCid = $this->embedData($qrImage ?? '', 'qrcode.png', 'image/png');
-        Log::info('QR CID: '.$qrCid);
+        
         return $this
             ->subject( __('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
@@ -50,7 +40,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
             ->with([
                 'inscripcion' => $this->inscripcion,
                 'persona' => $this->persona,
-                'qrCid' => $qrCid,
+                'url' => $url,
             ]);
     }
 }
