@@ -1,232 +1,234 @@
 <template>
     <div class="row">
-        <div class="col-md-8" v-if="!mostrarFichaMedica">
-          <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
+        <div v-if="cargaFinalizada">
+            <div class="col-md-8" v-if="!mostrarFichaMedica">
+            <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
+                        </div>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p>{{ $t('frontend.whats_a_meeting_point') }}</p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>{{ $t('frontend.whats_a_meeting_point') }}</p>
+                        </div>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5 class="card-title">{{ $t('frontend.meeting_points') }}</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="card-title">{{ $t('frontend.meeting_points') }}</h5>
+                        </div>
                     </div>
-                </div>
-                <form
-                    v-bind:action="'/inscripciones/actividad/' + actividad.idActividad + '/confirmar'"
-                    method="POST"
-                    v-on:submit="validateForm"
-                >
-                    <input type="hidden" name="roles_aplicados" v-bind:value="convertToJSON()">
+                    <form
+                        v-bind:action="'/inscripciones/actividad/' + actividad.idActividad + '/confirmar'"
+                        method="POST"
+                        v-on:submit="validateForm"
+                    >
+                        <input type="hidden" name="roles_aplicados" v-bind:value="convertToJSON()">
 
-                    <input type="hidden" name="aplica_rol" v-bind:value="aplicaRol">
-                   
-                    <input type="hidden" name="inscripciones_aplicadas" v-bind:value="convertToJSONInscripciones()">
-
-                    <input type="hidden" name="jornadas" v-bind:value="convertToJSONJornadas()">
-
-                <div class="row" v-for="(item, index) in puntosActivos">
-                    <div class="col-md-12">
-                        <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
-                      {{item.punto}}, 
-                      <template v-if="item.localidad">{{ item.localidad.localidad }}, </template> 
-                      {{ item.provincia.provincia }} - {{item.horario | format_time}}hs
-
-                      
-                        
-                    </div>
-                </div>
-                <hr>
-                <div class="row text-center justify-content-center">
-                    <input type="hidden" name="_token" v-bind:value="csrf_token">
-                    <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
-                    <!-- <div class="col-md-2 text-primary">
-                        <p>
-                            <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
-                        </p>
-                    </div> -->
-                    <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary" v-if="validateForm()"></div>
-                </div>
-                </form>
-            </div>
-            <div v-else-if="!rolAplicado">
-
-                <h2 class="card-title text-center">{{ $t('frontend.apply_for_rol') }}</h2>
-            
-                <div class="card-body"> 
-                    <p>{{ $t('frontend.whats_a_rol') }}</p>   
+                        <input type="hidden" name="aplica_rol" v-bind:value="aplicaRol">
                     
-                    <vue-tags-input
-                        v-model="tag"
-                        :tags="rolesAplicado"
-                        placeholder=""
-                        class="h-100"
-                        autocomplete="new-password"
-                        add-only-from-autocomplete
-                        :autocomplete-items="actividad.roles_tags"
-                        @tags-changed="newTags => rolesAplicado = newTags"
-                    /> 
-                    <b>{{ $t('frontend.leave_blank') }}</b>    
-                </div>
+                        <input type="hidden" name="inscripciones_aplicadas" v-bind:value="convertToJSONInscripciones()">
 
-                <div class="card-footer">
-                    <div class="row justify-content-center  text-center">
-                        <!-- <div class="col-md-3 text-primary">
+                        <input type="hidden" name="jornadas" v-bind:value="convertToJSONJornadas()">
+
+                    <div class="row" v-for="(item, index) in puntosActivos">
+                        <div class="col-md-12">
+                            <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
+                        {{item.punto}}, 
+                        <template v-if="item.localidad">{{ item.localidad.localidad }}, </template> 
+                        {{ item.provincia.provincia }} - {{item.horario | format_time}}hs
+
+                        
+                            
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center justify-content-center">
+                        <input type="hidden" name="_token" v-bind:value="csrf_token">
+                        <input type="hidden" name="idActividad" id="idActividad" v-bind:value="actividad.idActividad">
+                        <!-- <div class="col-md-2 text-primary">
                             <p>
                                 <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
                             </p>
                         </div> -->
-                        <div class="col-md-3">
-                            <button type="button" 
-                                class="btn btn-primary" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="if(validateForm())rolAplicado=true;" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.continue') }}
-                                </span>
-                            </button>
-                        </div>
+                        <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary" v-if="validateForm()"></div>
                     </div>
+                    </form>
                 </div>
-            </div>
-            <div v-else-if="!tipoInscriptoAplicado">
-                <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
+                <div v-else-if="!rolAplicado">
 
-                <div class="card-body">
-                    <p>{{ $t('frontend.whats_a_type_inscription') }}</p>   
-                    <vue-tags-input
-                        v-model="tag2"
-                        :tags="tipoInscriptoTags"
-                        placeholder=""
-                        autocomplete="new-password"
-                        add-only-from-autocomplete
-                        :open-on-focus="true"
-                        :autocomplete-items="actividad.tipo_inscriptos_tag"
-                        @tags-changed="newTags => tipoInscriptoTags = newTags"
-                    />
-                </div>
-                <div class="card-footer">
-                    <div class="row justify-content-center  text-center">
-                        <div class="col-md-3">
-                            <!-- <button type="button" 
-                                class="btn btn-link" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="rolAplicado=false" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.go_back') }}
-                                </span>
-                            </button> -->
-                        </div>
-                        <div class="col-md-3">
-                            <button type="button" 
-                                class="btn btn-primary" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="if(validateForm()) tipoInscriptoAplicado=true" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.continue') }}
-                                </span>
-                            </button>
-                        </div>
+                    <h2 class="card-title text-center">{{ $t('frontend.apply_for_rol') }}</h2>
+                
+                    <div class="card-body"> 
+                        <p>{{ $t('frontend.whats_a_rol') }}</p>   
+                        
+                        <vue-tags-input
+                            v-model="tag"
+                            :tags="rolesAplicado"
+                            placeholder=""
+                            class="h-100"
+                            autocomplete="new-password"
+                            add-only-from-autocomplete
+                            :autocomplete-items="actividad.roles_tags"
+                            @tags-changed="newTags => rolesAplicado = newTags"
+                        /> 
+                        <b>{{ $t('frontend.leave_blank') }}</b>    
                     </div>
-                </div>
-            </div>
-            <div v-else-if="!estudiosAplicado">
-                <h2 class="card-title text-center">{{ $t('frontend.estudios') }}</h2>
 
-                <div class="card-body">
-                    <p>{{ $t('frontend.review_estudios') }}</p>   
-                    <estudios ref="estudios" :estudios="actividad.estudios" :idPersona="actividad.idPersona"/>
-
-                </div>
-                <div class="card-footer">
-                    <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
-                            <strong>{{ $t('frontend.complete_education') }}</strong>
-                        </div>
-                    <div class="row justify-content-center  text-center">
-                        <!-- <div class="col-md-3">
-                            <button type="button" 
-                                class="btn btn-link" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="tipoInscriptoAplicado=false" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.go_back') }}
-                                </span>
-                            </button>
-                        </div> -->
-                        <div class="col-md-3">
-                            <button type="button" 
-                                class="btn btn-primary" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="if(validateForm())  estudiosRevisados();" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.continue') }}
-                                </span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else-if="!jornadasAplicado">
-                <h2 class="card-title text-center">{{ $t('frontend.jornadas') }}</h2>
-
-                <div class="card-body">
-                    <p>{{ $t('frontend.review_jornadas') }}</p>   
-                    <ul class="list-unstyled">
-                        <li class="listItems" v-for="jornada in jornadas">
-                            <div v-if="jornada.activo">
-                                <input v-model="jornada.selected" :id="jornada.idJornada" :value="jornada.nombre" type="checkbox"> 
-                                {{ jornada.nombre }} - 
-                                {{ formatFecha(jornada.fechaInicio) }}
-                                </input>
+                    <div class="card-footer">
+                        <div class="row justify-content-center  text-center">
+                            <!-- <div class="col-md-3 text-primary">
+                                <p>
+                                    <a v-bind:href="'/actividades/'+actividad.idActividad" class="btn btn-link"> {{ $t('frontend.go_back') }}</a>
+                                </p>
+                            </div> -->
+                            <div class="col-md-3">
+                                <button type="button" 
+                                    class="btn btn-primary" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="if(validateForm())rolAplicado=true;" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.continue') }}
+                                    </span>
+                                </button>
                             </div>
-                        </li> 
-                    </ul>
-                </div>
-                <div class="card-footer">
-                    <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
-                            <strong>{{ $t('frontend.sign_up_jornada') }}</strong>
                         </div>
-                    <div class="row justify-content-center  text-center">
-                        <div class="col-md-3">
-                            <button type="button" 
-                                class="btn btn-primary" 
-                                data-dismiss="modal" 
-                                aria-label="Close" 
-                                @click="if(validateForm())  jornadasAplicado=true;" >
-                                <span aria-hidden="true">
-                                    {{ $t('frontend.continue') }}
-                                </span>
-                            </button>
+                    </div>
+                </div>
+                <div v-else-if="!tipoInscriptoAplicado">
+                    <h2 class="card-title text-center">{{ $t('frontend.type_of_inscription') }}</h2>
+
+                    <div class="card-body">
+                        <p>{{ $t('frontend.whats_a_type_inscription') }}</p>   
+                        <vue-tags-input
+                            v-model="tag2"
+                            :tags="tipoInscriptoTags"
+                            placeholder=""
+                            autocomplete="new-password"
+                            add-only-from-autocomplete
+                            :open-on-focus="true"
+                            :autocomplete-items="actividad.tipo_inscriptos_tag"
+                            @tags-changed="newTags => tipoInscriptoTags = newTags"
+                        />
+                    </div>
+                    <div class="card-footer">
+                        <div class="row justify-content-center  text-center">
+                            <div class="col-md-3">
+                                <!-- <button type="button" 
+                                    class="btn btn-link" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="rolAplicado=false" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.go_back') }}
+                                    </span>
+                                </button> -->
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" 
+                                    class="btn btn-primary" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="if(validateForm()) tipoInscriptoAplicado=true" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.continue') }}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="!estudiosAplicado">
+                    <h2 class="card-title text-center">{{ $t('frontend.estudios') }}</h2>
+
+                    <div class="card-body">
+                        <p>{{ $t('frontend.review_estudios') }}</p>   
+                        <estudios ref="estudios" :estudios="actividad.estudios" :idPersona="actividad.idPersona"/>
+
+                    </div>
+                    <div class="card-footer">
+                        <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
+                                <strong>{{ $t('frontend.complete_education') }}</strong>
+                            </div>
+                        <div class="row justify-content-center  text-center">
+                            <!-- <div class="col-md-3">
+                                <button type="button" 
+                                    class="btn btn-link" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="tipoInscriptoAplicado=false" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.go_back') }}
+                                    </span>
+                                </button>
+                            </div> -->
+                            <div class="col-md-3">
+                                <button type="button" 
+                                    class="btn btn-primary" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="if(validateForm())  estudiosRevisados();" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.continue') }}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="!jornadasAplicado">
+                    <h2 class="card-title text-center">{{ $t('frontend.jornadas') }}</h2>
+
+                    <div class="card-body">
+                        <p>{{ $t('frontend.review_jornadas') }}</p>   
+                        <ul class="list-unstyled">
+                            <li class="listItems" v-for="jornada in jornadas">
+                                <div v-if="jornada.activo">
+                                    <input v-model="jornada.selected" :id="jornada.idJornada" :value="jornada.nombre" type="checkbox"> 
+                                    {{ jornada.nombre }} - 
+                                    {{ formatFecha(jornada.fechaInicio) }}
+                                    </input>
+                                </div>
+                            </li> 
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row alert alert-info m-2" v-show='showCompleteEstudios'>
+                                <strong>{{ $t('frontend.sign_up_jornada') }}</strong>
+                            </div>
+                        <div class="row justify-content-center  text-center">
+                            <div class="col-md-3">
+                                <button type="button" 
+                                    class="btn btn-primary" 
+                                    data-dismiss="modal" 
+                                    aria-label="Close" 
+                                    @click="if(validateForm())  jornadasAplicado=true;" >
+                                    <span aria-hidden="true">
+                                        {{ $t('frontend.continue') }}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div v-else class="col-md-8" >
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
-                    <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+            <div v-else class="col-md-8" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
+                        <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+                    </div>
                 </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 px-4">
+                        <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="validateForm();mostrarFichaMedica = false;"/>
+                    </div>
+                </div> 
             </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-12 px-4">
-                    <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="validateForm();mostrarFichaMedica = false;"/>
-                </div>
-            </div> 
         </div>
         <hr>
         <div class="col-md-4 prev" >
@@ -298,6 +300,7 @@
             localidad: {},
             imagen: '',
             dummyInput: '',
+            cargaFinalizada: false,
           }
         },
         
@@ -354,6 +357,8 @@
                     selected: false
                 };
             });
+
+            self.cargaFinalizada = true;
           });
           this.validateForm();
         },

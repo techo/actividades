@@ -88,7 +88,7 @@
             <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
             <!-- <span>{{ __('frontend.show_on_arrival') }}</span> -->
             <div class="mt-4">
-                <a href="{{ url('/actividades/'. $inscripcion->idActividad) }}" class="btn bg-techo-blue">
+                <a href="{{ url('/actividades/'. $inscripcion->idActividad) }}" class="btn bg-techo-blue text-white">
                     {{ __('frontend.access_qr') }}
                 </a>
             </div>
