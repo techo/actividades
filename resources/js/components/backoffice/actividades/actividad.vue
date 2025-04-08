@@ -52,7 +52,7 @@
                     <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">{{ $t('backend.office') }}</label>
-                            <select name="idOficina" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
+                            <select name="idOficina"  @change="getComunidades($event.target.value)" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
                                 <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
                             <span class="help-block">{{ errors.idOficina }}</span>
@@ -236,8 +236,24 @@
                 <span class="help-block" v-show="virtual==true">{{ $t('backend.meeting_location') }}</span>
                 <span class="help-block" v-show="virtual==false">{{ $t('backend.activity_location_description') }}</span>
                 <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="applicable_roles">{{ $t('backend.comunidades') }}</label>
+                            <vue-tags-input
+                                v-model="tagComunidades"
+                                :tags="comunidadesTags"
+                                :disabled="!edicion"
+                                :autocompleteItems="filteredComunidadTags"
+                                placeholder=""
+                                @tags-changed="newTags => comunidadesTags = newTags"
+                            />
 
-                    <div class="col-md-4">
+                            <p class="help-block">
+                            
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div :class="{ 'form-group': true, 'has-error': errors.lugar }" >
                             <label for="lugar">{{ $t('backend.location_medium') }} </label>
                             <input id="lugar" name="lugar" type="text" class="form-control" v-model="actividad.lugar" required
@@ -246,7 +262,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4" v-show="virtual==false">
+                    <div class="col-md-3" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idProvincia }" >
                             <label for="provincia">{{ $t('backend.province') }}</label>
                             <select name="idProvincia" class="form-control" v-model="actividad.idProvincia" required @change="getLocalidades($event)" :disabled="!edicion">
@@ -256,7 +272,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4" v-show="virtual==false">
+                    <div class="col-md-3" v-show="virtual==false">
                         <div :class="{ 'form-group': true, 'has-error': errors.idLocalidad }" >
                             <label for="localidad">{{ $t('backend.location') }}</label>
                             <select name="idLocalidad" class="form-control" v-model="actividad.idLocalidad" required :disabled="!edicion">
@@ -675,9 +691,11 @@
                 tag: '',
                 actividadTagSelected: '',
                 tag2: '',
+                tagComunidades: '',
                 rolesTags: [],
                 actividadesTags: [],
                 tipoInscriptosTags:  [],
+                comunidadesTags:  [],
                 openPhotoEdit: false,
                 openPhotoEditDestacada: false,
                 croppedImagenTarjetaUrl: '',
@@ -723,7 +741,7 @@
                         text: 'Últimos Cupos',
                     }],
 
-                
+                autocompleteComunidadesTags: [],
 
                 fichaMedicaCampos:{
                     'contacto_emergencia' : false,
@@ -814,6 +832,7 @@
                 oficinas: [],
                 tipos: [],
                 categorias: [],
+                comunidades: [],
                 calculaFechas: false,
                 edicion: false,
                 virtual: false,
@@ -855,6 +874,16 @@
 
                         if (this.actividad.tipo_inscriptos_tag)
                             this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
+                            if (this.actividad.comunidades) {
+                                this.comunidadesTags = this.actividad.comunidades.map(comunidad => {
+                                    return {
+                                        idComunidad: comunidad.idComunidad,
+                                        text: comunidad.nombre,
+                                        tiClasses: ['ti-valid']
+                                    };
+                                });
+                            }
+
                         this.getTodasRelaciones();
                         this.cargarFechas();
                     }).catch((error) => { debugger; });
@@ -878,6 +907,12 @@
             },
             filteredActividadTags() {
                 return this.autocompleteActividadTags.filter(i => {
+                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+                });
+            },
+
+            filteredComunidadTags() {
+                return this.autocompleteComunidadesTags.filter(i => {
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
                 });
             },
@@ -999,6 +1034,7 @@
                 this.actividad.roles_tags = this.rolesTags;
                 this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
                 this.actividad.actividades_tags  = this.actividadesTags;
+                this.actividad.comunidades_tags  = this.comunidadesTags ;
                 
                 
 
@@ -1120,6 +1156,7 @@
                 this.getOficinas();
                 this.getTipos(this.actividad.tipo.idCategoria);
                 this.getCategorias();
+                this.getComunidades(this.actividad.idOficina);
             },
             getPaises(){
                 axios.get('/ajax/paises/propios')
@@ -1148,6 +1185,18 @@
             getCategorias(){
                 axios.get('/ajax/categorias/')
                     .then((datos) => { this.categorias = datos.data; }).catch((error) => { debugger; });
+            },
+            getComunidades(idOficina){
+                axios.get('/ajax/comunidades/' + idOficina )
+                    .then((datos) => { 
+                        this.autocompleteComunidadesTags = this.formatComunidades(datos.data);
+                    }).catch((error) => { debugger; });
+            },
+            formatComunidades(response) {
+                return response.map(comunidad => ({
+                    text: comunidad.nombre,
+                    idComunidad: comunidad.idComunidad
+                }));
             },
             tiny_mce_filemanager_callback(callback, value, meta) {
                 //gracias a esto ❤ https://github.com/UniSharp/laravel-filemanager/issues/759 

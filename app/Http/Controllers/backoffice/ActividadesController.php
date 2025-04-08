@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -117,10 +118,15 @@ class ActividadesController extends Controller
         $coordinador->idPersona = auth()->user()->idPersona;
         $actividad->coordinadores()->save($coordinador);
         $actividad->idPersonaCreacion = auth()->user()->idPersona;
-   
-
+        if ($request->has('comunidades_tags')) {
+            $this->linkComunidades($actividad, $request->input('comunidades_tags'));
+        }
         return response()->json($actividad->fresh());
+    }
 
+    public function linkComunidades($actividad, $comunidades){
+        $idComunidades = collect($comunidades)->pluck('idComunidad')->toArray();
+        $actividad->comunidades()->sync($idComunidades);
     }
 
     /**
@@ -142,6 +148,10 @@ class ActividadesController extends Controller
         $actividad->fill($validado);
         $actividad->save();
 
+        if ($request->has('comunidades_tags')) {
+            $this->linkComunidades($actividad, $request->input('comunidades_tags'));
+        }
+
         $actividad->tipo;
 
         return response()->json($actividad);
@@ -155,7 +165,7 @@ class ActividadesController extends Controller
      */
     public function actividad(Actividad $id)
     {
-        $id->tipo;
+        $id->load('tipo', 'comunidades:actividad_comunidad.idComunidad,nombre');
         return response()->json($id);
     }
 

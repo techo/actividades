@@ -26,6 +26,8 @@ class CrearComunidad extends FormRequest
         return [
             'nombre' => 'required',
             'idOficina' => 'nullable',
+            'idLocalidad' => 'nullable',
+            'idProvincia' => 'nullable',
             'activo' => 'required|boolean',
         ];
     }

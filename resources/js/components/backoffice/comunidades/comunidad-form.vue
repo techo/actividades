@@ -36,6 +36,27 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <div class="form-group" >
+                                    <label for="provincia">{{ $t('backend.province') }}</label>
+                                    <select name="idProvincia" class="form-control" v-model="data.idProvincia" required @change="getLocalidades($event)" :disabled="this.readonly">
+                                        <option v-text="provincia.provincia" v-bind:value="provincia.id" v-for="provincia in provincias" ></option>
+                                    </select>
+                                    <span class="help-block">{{ errors.idProvincia }}</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group" >
+                                    <label for="localidad">{{ $t('backend.location') }}</label>
+                                    <select name="idLocalidad" class="form-control" v-model="data.idLocalidad" required :disabled="this.readonly">
+                                        <option v-text="localidad.localidad" v-bind:value="localidad.id" v-for="localidad in localidades" ></option>
+                                    </select>
+                                    <span class="help-block">{{ errors.idLocalidad }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 
                                 <div class="form-group">
                                     <label for="estado">{{ $t('backend.state') }}</label>
@@ -68,12 +89,17 @@ export default {
                 nombre: "",
                 idOficina: null,
                 activo: 1,
+                idPais: null, 
+                idProvincia: null, 
+                idLocalidad: null, 
             },
             guardado: false,
             mensajeGuardado: '',
             validationErrors: {},
             dataOficinas: [],
             oficinaSeleccionado: {},
+            provincias: [],
+            localidades: [],
             readonly: !this.edicion,
             errors: {},
         }
@@ -95,6 +121,8 @@ export default {
     watch: {
         oficinaSeleccionado: function () {
                 this.data.idOficina = this.oficinaSeleccionado.id;
+                this.data.idPais = this.oficinaSeleccionado.id_pais;
+                this.getProvincias();
         },
     },
     methods: {
@@ -114,6 +142,14 @@ export default {
                     }
                 })
                 .catch(() => { debugger });
+        },
+        getProvincias(){
+                axios.get('/ajax/paises/' + this.data.idPais + '/provincias')
+                    .then((datos) => { this.provincias = datos.data; }).catch((error) => { debugger; });
+        },
+        getLocalidades(){
+            axios.get('/ajax/paises/' + this.data.idPais + '/provincias/' + this.data.idProvincia + '/localidades')
+                .then((datos) => { this.localidades = datos.data; }).catch((error) => { debugger; });
         },
         mostrarLoadingAlert() {
             this.$refs.loading.openSimplert({

@@ -16,6 +16,7 @@ class CreaComunidadesTabla extends Migration
         Schema::create('Comunidad', function (Blueprint $table) {
             $table->increments('idComunidad');
             $table->unsignedInteger('idOficina')->nullable();
+            $table->unsignedInteger('idProvincia')->nullable();
             $table->unsignedInteger('idLocalidad')->nullable();
             $table->unsignedInteger('idPais');
             
@@ -32,6 +33,11 @@ class CreaComunidadesTabla extends Migration
             // Clave foránea de idLocalidad con SET NULL en cascada
             $table->foreign('idLocalidad')
                 ->references('id')->on('atl_localidades')
+                ->onDelete('SET NULL');
+
+            // Clave foránea de idLocalidad con SET NULL en cascada
+            $table->foreign('idProvincia')
+                ->references('id')->on('atl_provincias')
                 ->onDelete('SET NULL');
 
 

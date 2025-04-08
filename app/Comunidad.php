@@ -10,7 +10,7 @@ class Comunidad extends Model
     use SoftDeletes;
     protected $table = "Comunidad";
     protected $primaryKey = "idComunidad";
-    protected $fillable = ['idOficina', 'nombre', 'idLocalidad', 'activo'];
+    protected $fillable = ['idOficina', 'nombre', 'idLocalidad','idProvincia', 'activo', 'idPais'];
 
     public function oficina()
     {
@@ -25,6 +25,11 @@ class Comunidad extends Model
     public function pais()
     {
         return $this->hasOne(Pais::class, 'idPais', 'id');
+    }
+
+    public function actividades()
+    {
+        return $this->belongsToMany(Actividad::class, 'actividad_comunidad', 'idComunidad', 'idActividad');
     }
     
 }
