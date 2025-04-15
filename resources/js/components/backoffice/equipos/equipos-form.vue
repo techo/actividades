@@ -23,7 +23,7 @@
                                         :disabled="this.readonly">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="pais">{{ $t('backend.office') }}</label>
                                     <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
@@ -31,6 +31,24 @@
                                         >
                                         <span slot="no-options"></span>
                                     </v-select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="comunidades">{{ $t('backend.comunidades') }}</label>
+                                    <vue-tags-input
+                                        v-model="tag"
+                                        :tags="comunidadesTags"
+                                        :disabled="this.readonly"
+                                        add-only-from-autocomplete
+                                        :autocompleteItems="filteredComunidadTags"
+                                        placeholder=""
+                                        @tags-changed="newTags => comunidadesTags = newTags"
+                                    />
+
+                                    <p class="help-block">
+                                    
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -103,10 +121,12 @@
 import DatePicker from 'vue2-datepicker';
 import moment from 'moment';
 import vSwitch from 'vue-switches';
+import VueTagsInput from '@johmun/vue-tags-input';
+
 export default {
     name: "equipos-form",
     props: ['equipo', 'edicion'],
-    components: {},
+    components: {VueTagsInput},
     data() {
         return {
             data: {
@@ -116,7 +136,15 @@ export default {
                 fechaFin: null,
                 activo: 1,
                 area: null,
+                tagComunidades: [],
             },
+            autocompleteComunidadesTags: [],
+            tag: [],
+
+            comunidadesTags:  [],
+            comunidades: [],
+
+            tag: '',
             guardado: false,
             mensajeGuardado: '',
             validationErrors: {},
@@ -134,7 +162,19 @@ export default {
             this.data.fechaInicio = moment(this.equipo.fechaInicio).format('YYYY-MM-DD');
             if (this.data.fechaFin )
                 this.data.fechaFin = moment(this.equipo.fechaFin).format('YYYY-MM-DD');
+
+            if (this.data.comunidades) {
+                this.comunidadesTags = this.data.comunidades.map(comunidad => {
+                    return {
+                        idComunidad: comunidad.idComunidad,
+                        text: comunidad.nombre,
+                        tiClasses: ['ti-valid']
+                    };
+                });
+            }
         }
+
+        this.getComunidades(this.data.idOficina);
         Event.$on('guardar', this.guardar);
         Event.$on('eliminar', this.eliminar);
         Event.$on('editar', this.editar);
@@ -142,6 +182,12 @@ export default {
     computed: {
         tieneErrores: function () {
             return (this.validationErrors.length > 0);
+        },
+
+        filteredComunidadTags() {
+            return this.autocompleteComunidadesTags.filter(i => {
+                return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+            });
         },
     },
     watch: {
@@ -167,6 +213,18 @@ export default {
                 })
                 .catch(() => { debugger });
         },
+        getComunidades(idOficina){
+                axios.get('/ajax/comunidades/' + idOficina )
+                    .then((datos) => { 
+                        this.autocompleteComunidadesTags = this.formatComunidades(datos.data);
+                    }).catch((error) => { debugger; });
+            },
+        formatComunidades(response) {
+            return response.map(comunidad => ({
+                text: comunidad.nombre,
+                idComunidad: comunidad.idComunidad
+            }));
+        },
         mostrarLoadingAlert() {
             this.$refs.loading.openSimplert({
                 title: 'Espera...',
@@ -191,6 +249,7 @@ export default {
             let url;
             this.mostrarLoadingAlert();
             this.validationErrors = [];
+            this.data.tagComunidades = this.comunidadesTags;
             url = `/admin/equipos/`+this.data.idEquipo;
             axios.put(url, this.data)
                 .then((respuesta) => {
@@ -216,6 +275,7 @@ export default {
             this.mostrarLoadingAlert();
             this.validationErrors = [];
             url = `/admin/equipos/registrar`;
+            this.data.tagComunidades = this.comunidadesTags;
             axios.post(url, this.data)
                 .then((respuesta) => {
                     this.data = respuesta.data;

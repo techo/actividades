@@ -31,5 +31,10 @@ class Comunidad extends Model
     {
         return $this->belongsToMany(Actividad::class, 'actividad_comunidad', 'idComunidad', 'idActividad');
     }
+
+    public function equipos()
+    {
+        return $this->belongsToMany(Equipo::class, 'actividad_equipo', 'idComunidad', 'idEquipo');
+    }
     
 }

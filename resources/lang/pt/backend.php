@@ -369,6 +369,7 @@ return [
     'people' => 'Pessoas',
     'subscribed' => 'Inscritas',
     'teams' => 'Equipas',
+    'comunidades' => 'Comunidades',
     'activities' => 'Atividades',
     'my_activities' => 'Minhas Atividades',
     'create_team' => 'Criar Equipe',

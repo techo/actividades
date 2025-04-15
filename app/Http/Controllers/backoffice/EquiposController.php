@@ -76,6 +76,10 @@ class EquiposController extends Controller
 
         $equipo->save();
 
+        if ($request->has('tagComunidades')) {
+            $this->linkComunidades($equipo, $request->input('tagComunidades'));
+        }
+
         return response()->json($equipo->fresh());
 
     }
@@ -96,7 +100,17 @@ class EquiposController extends Controller
         $equipo->idPais = $oficina->id_pais;
         $equipo->save();
 
+        if ($request->has('tagComunidades')) {
+            $this->linkComunidades($equipo, $request->input('tagComunidades'));
+        }
+
         return response()->json($equipo);
+    }
+
+
+    public function linkComunidades($equipo, $comunidades){
+        $idComunidades = collect($comunidades)->pluck('idComunidad')->toArray();
+        $equipo->comunidades()->sync($idComunidades);
     }
     
     /**
@@ -107,7 +121,8 @@ class EquiposController extends Controller
      */
     public function show($id)
     {
-        $equipo = Equipo::findOrFail($id);
+        $equipo = Equipo::findOrFail($id)->load('comunidades:equipo_comunidad.idComunidad,nombre');
+     
         $edicion = false;
 
         return view(

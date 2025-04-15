@@ -238,11 +238,12 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="applicable_roles">{{ $t('backend.comunidades') }}</label>
+                            <label for="comunidades">{{ $t('backend.comunidades') }}</label>
                             <vue-tags-input
                                 v-model="tagComunidades"
                                 :tags="comunidadesTags"
                                 :disabled="!edicion"
+                                add-only-from-autocomplete
                                 :autocompleteItems="filteredComunidadTags"
                                 placeholder=""
                                 @tags-changed="newTags => comunidadesTags = newTags"

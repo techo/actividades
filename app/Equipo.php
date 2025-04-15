@@ -21,6 +21,11 @@ class Equipo extends Model
         return $this->belongsTo(Oficina::class, 'idOficina', 'id');
     }
 
+    public function comunidades()
+    {
+        return $this->belongsToMany(Comunidad::class, 'equipo_comunidad', 'idEquipo', 'idComunidad' );
+    }
+
     public function pais()
     {
         return $this->hasOne(Pais::class, 'idPais', 'id');
