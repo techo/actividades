@@ -16,8 +16,8 @@ class ComunidadesController extends Controller
     public function index(Request $request)
     {
         $filtros = [];
-        if($request->has('nombre')){
-            $filtros['nombre'] = $request->nombre;
+        if($request->has('comunidad')){
+            $filtros['comunidad'] = $request->comunidad;
         }
         
         if($request->filled('sort')) {

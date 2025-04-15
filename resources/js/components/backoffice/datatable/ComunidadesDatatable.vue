@@ -171,7 +171,7 @@ export default {
   events: {
     'filter-set' (filterText) {
       this.moreParams = {
-        equipo: filterText,
+        comunidad: filterText,
       };
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     },

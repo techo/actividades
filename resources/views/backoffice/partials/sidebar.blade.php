@@ -58,13 +58,16 @@
             
 
             @if (Auth::user()->hasRole('coordinador') || Auth::user()->hasRole('admin'))
-                <li class="treeview {{ (request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
+                <li class="treeview {{ (request()->is('admin/equipos*')) ? 'active menu-open' : ''}}">
                     <a href="#"><i class="fa fa-users"></i> <span>{{ __('backend.teams') }}</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                   </span>
                     </a>
-                    <ul class="treeview-menu">                        
+                    <ul class="treeview-menu">
+                        <li class="{{request()->is('admin/equipos/crear') ? 'active' : ''}}">
+                            <a href="/admin/equipos/crear"><i class="fa fa-plus"></i>{{ __('backend.create_team') }}</a>
+                        </li>                        
                         <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">{{ __('backend.view_teams') }}</a></li>
                     </ul>
                 </li>
@@ -81,6 +84,9 @@
               </span>
                 </a>
                 <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/comunidades/crear') ? 'active' : ''}}">
+                        <a href="/admin/comunidades/crear"><i class="fa fa-plus"></i>{{ __('backend.create_comunidad') }}</a>
+                    </li>
                     <li class="{{request()->is('admin/comunidades') ? 'active' : ''}}">
                         <a href="/admin/comunidades">{{ __('backend.view_list') }}</a>
                     </li>

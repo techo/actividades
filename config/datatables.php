@@ -390,12 +390,10 @@ return [
             ],
             [
                 'name' => 'oficina',
-                'sortField' => 'oficina',
                 'title' => 'Oficina'
             ],
             [
                 'name' => '__component:comunidades',
-                'sortField' => 'comunidades',
                 'title' => 'Comunidades'
             ],
             [
@@ -407,7 +405,7 @@ return [
         'sortOrder' => [
             [
                 'field' => 'nombre',
-                'sortField' => 'nombre',
+                'sortField' => 'Equipo.nombre',
                 'direction' => 'asc'
             ],
         ]
@@ -474,7 +472,6 @@ return [
             ],
             [
                 'name' => 'oficina',
-                'sortField' => 'oficina',
                 'title' => 'Oficina'
             ],
             [

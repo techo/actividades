@@ -27,7 +27,7 @@
                                 <div class="form-group">
                                     <label for="pais">{{ $t('backend.office') }}</label>
                                     <v-select :disabled="this.readonly" :options="dataOficinas" label="descripcion" placeholder="Seleccione"
-                                        name="oficina" id="oficina" v-model="oficinaSeleccionado"
+                                        name="oficina" id="oficina" v-model="oficinaSeleccionado" 
                                         >
                                         <span slot="no-options"></span>
                                     </v-select>
@@ -193,6 +193,7 @@ export default {
     watch: {
         oficinaSeleccionado: function () {
             this.data.idOficina = this.oficinaSeleccionado.id;
+            this.getComunidades(this.data.idOficina);
         },
     },
     methods: {
