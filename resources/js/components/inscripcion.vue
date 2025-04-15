@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <div v-if="cargaFinalizada">
-            <div class="col-md-8" v-if="!mostrarFichaMedica">
+        <div class="col-md-8" v-if="cargaFinalizada">
+            <div v-if="!mostrarFichaMedica">
             <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado">
                     <div class="row">
                         <div class="col-md-12">

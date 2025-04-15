@@ -68,6 +68,14 @@
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);
   Vue.component('estado-inscripcion', EstadoInscripcion);
 
+  import comunidades from './comunidades';
+  Vue.component('comunidades', comunidades);
+
+
+  import estadoActividad from './estadoActividad';
+  Vue.component('estadoActividad', estadoActividad);
+
+
 export default {
   components: {
     Simplert,

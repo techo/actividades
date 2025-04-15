@@ -493,7 +493,7 @@ class ActividadesController extends Controller
                 dispatch($job);
             };
         } catch (ModelNotFoundException $e){
-            \Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');
+            Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');
         }
 
     }

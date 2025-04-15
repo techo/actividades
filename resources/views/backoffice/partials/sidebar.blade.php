@@ -55,31 +55,11 @@
                     </li>
                 </ul>
             </li>
-            @if (Auth::user()->hasRole('admin'))
-                <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos') || request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
-                    <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                    </a>
-                    <ul class="treeview-menu">                        
-                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}">
-                            <a href="/admin/usuarios/registrar"><i class="fa fa-plus"></i>{{ __('backend.create_person') }}</a>
-                        </li>
-                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">{{ __('backend.view_all') }}</a></li>
-                        <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">{{ __('backend.view_subscribed') }}</a></li>
-                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">{{ __('backend.view_teams') }}</a></li>
+            
 
-                    </ul>
-                </li>
-                    <ul class="treeview-menu">
-                        <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">{{ __('backend.view_list') }}</a></li>
-                        <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">{{ __('backend.register_user') }}</a></li>
-                    </ul>
-                </li>
-            @elseif (Auth::user()->hasRole('coordinador'))
+            @if (Auth::user()->hasRole('coordinador') || Auth::user()->hasRole('admin'))
                 <li class="treeview {{ (request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
-                    <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>
+                    <a href="#"><i class="fa fa-users"></i> <span>{{ __('backend.teams') }}</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                   </span>
@@ -93,6 +73,40 @@
 
 
             @if (Auth::user()->hasRole('admin'))
+
+            <li class="treeview {{ request()->is('admin/comunidades*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-home"></i> <span>{{ __('backend.comunidades') }}</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/comunidades') ? 'active' : ''}}">
+                        <a href="/admin/comunidades">{{ __('backend.view_list') }}</a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos') || request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">                        
+                    <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}">
+                        <a href="/admin/usuarios/registrar"><i class="fa fa-plus"></i>{{ __('backend.create_person') }}</a>
+                    </li>
+                    <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">{{ __('backend.view_all') }}</a></li>
+                    <li class="{{request()->is('admin/suscriptos') ? 'active' : ''}}"><a href="/admin/suscriptos">{{ __('backend.view_subscribed') }}</a></li>
+
+                </ul>
+            </li>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/usuarios') ? 'active' : ''}}"><a href="/admin/usuarios">{{ __('backend.view_list') }}</a></li>
+                    <li class="{{request()->is('admin/usuarios/registrar') ? 'active' : ''}}"><a href="/admin/usuarios/registrar">{{ __('backend.register_user') }}</a></li>
+                </ul>
+            </li>
 
             <li class="treeview {{ request()->is('admin/estadisticas*') ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-bar-chart"></i> <span>{{ __('backend.statistics') }}</span>

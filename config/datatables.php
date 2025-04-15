@@ -26,6 +26,15 @@ return [
                 'title' => 'Oficina'
             ],
             [
+                'name' => '__component:comunidades',
+                'sortField' => 'comunidades',
+                'title' => 'Comunidades'
+            ],
+            [
+                'name' => '__component:estadoActividad',
+                'title' => 'Estado Actividad'
+            ],
+            [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
                 'titleClass' => 'text-center',
@@ -54,13 +63,6 @@ return [
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
                 'title' => 'Estado',
-            ],
-            [
-                'name' => 'pais',
-                'sortField' => 'pais',
-                'titleClass' => 'text-center',
-                'dataClass' => 'text-center',
-                'title' => 'Pais',
             ],
             //            [
             //                'name' => '__component:mis-actividades',
@@ -477,7 +479,7 @@ return [
             ],
             [
                 'name' => 'estado',
-                'sortField' => 'estado',
+                'sortField' => 'activo',
                 'title' => 'Estado'
             ],
         ],

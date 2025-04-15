@@ -29,7 +29,7 @@
                 <actividad :disabled="true" id="{{ $actividad->idActividad }}"></actividad>
 
                 <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
-                    cancelar-url="/admin/actividades/{{ $actividad->idActividad }}"
+                    cancelar-url="/admin/actividades/"
                     watch-url="/actividades/{{ $actividad->idActividad }}"
                     edicion="{{ $edicion }}"
                     compartir="{{ $compartir }}"

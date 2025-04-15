@@ -39,6 +39,16 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                     'atl_pais.nombre AS pais',
+                    DB::raw('(SELECT GROUP_CONCAT(c.nombre SEPARATOR ";")
+                              FROM actividad_comunidad ac
+                              JOIN Comunidad c ON c.idComunidad = ac.idComunidad
+                              WHERE ac.idActividad = Actividad.idActividad) AS comunidades'),
+
+                    'fechaInicioInscripciones',
+                    'fechaFinInscripciones',
+                    'fechaInicioEvaluaciones',
+                    'fechaFinEvaluaciones',
+                    'pago'
                 ]
             )
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
