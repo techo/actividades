@@ -23,6 +23,9 @@ class EquiposResource extends Resource
             'area'      => $this->area,
             'fechaInicio' => ($this->fechaInicio)?$this->fechaInicio->format('d/m/Y'):'',
             'fechaFin' => ($this->fechaFin)?$this->fechaFin->format('d/m/Y'):'',
+            'comunidades' => $this->comunidades
+                ? $this->comunidades->pluck('nombre')->implode(';')
+                : '',
         ];
     }
 }

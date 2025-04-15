@@ -394,9 +394,9 @@ return [
                 'title' => 'Oficina'
             ],
             [
-                'name' => 'fechaInicio',
-                'sortField' => 'fechaInicio',
-                'title' => 'Fecha de Inicio'
+                'name' => '__component:comunidades',
+                'sortField' => 'comunidades',
+                'title' => 'Comunidades'
             ],
             [
                 'name' => 'estado',
