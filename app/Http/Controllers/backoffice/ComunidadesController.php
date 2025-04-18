@@ -21,6 +21,15 @@ class ComunidadesController extends Controller
         return view('backoffice.comunidades.index', compact('fields', 'sortOrder'));
     }
 
+    public function getActividades(Request $request, $idComunidad)
+    {
+        $comunidad = Comunidad::findOrFail($idComunidad);
+        $datatableConfig = config('datatables.actividades');
+        $fields = json_encode($datatableConfig['fields']);
+        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        return view('backoffice.comunidades.actividades.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

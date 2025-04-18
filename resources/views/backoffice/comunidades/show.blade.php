@@ -19,7 +19,8 @@
     </form>
 
     <div class="nav-tabs-custom">
-        
+        @include('backoffice.comunidades.tabs' , [ 'tab' => __('backend.general') , 'idComunidad' => $comunidad->idComunidad])
+
         <div class="tab-content">
 
             <div class="tab-pane active" id="general">

@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Comunidad;
-use App\Http\Controllers\Controller;
+use App\Exports\ActividadesExport;
+use App\Exports\ComunidadActividadesExport;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Comunidad\CrearComunidad;
 use App\Http\Resources\ComunidadesResource;
 use App\Oficina;
 use App\Search\ComunidadesSearch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
-class ComunidadesController extends Controller
+class ComunidadesController extends BaseController
 {
     public function index(Request $request)
     {
@@ -35,6 +36,19 @@ class ComunidadesController extends Controller
         $result = ComunidadesSearch::apply($filtros, $sort, $per_page);
         $comunidades = ComunidadesResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
+    }
+
+    public function getActividades(Request $request, $idComunidad)
+    {
+        $per_page = 25;
+        if($request->filled('per_page')) {
+            $per_page = $request->per_page;
+        }
+
+        $export = new ActividadesExport($request->filter, $request->sort, $idComunidad);
+        $collection = $export->collection();
+        $result = $this->paginate($collection, $per_page);
+        return $result;
     }
 
     public function store(CrearComunidad $request)
