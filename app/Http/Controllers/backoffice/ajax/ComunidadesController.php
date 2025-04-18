@@ -4,12 +4,13 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Comunidad;
 use App\Exports\ActividadesExport;
-use App\Exports\ComunidadActividadesExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Comunidad\CrearComunidad;
 use App\Http\Resources\ComunidadesResource;
+use App\Http\Resources\EquiposResource;
 use App\Oficina;
 use App\Search\ComunidadesSearch;
+use App\Search\EquiposSearch;
 use Illuminate\Http\Request;
 
 class ComunidadesController extends BaseController
@@ -49,6 +50,30 @@ class ComunidadesController extends BaseController
         $collection = $export->collection();
         $result = $this->paginate($collection, $per_page);
         return $result;
+    }
+
+    public function getEquipos(Request $request, $idComunidad)
+    {
+        $filtros = [];
+        if($request->has('equipo')){
+            $filtros['equipo'] = $request->equipo;
+        }
+        
+        if($request->filled('sort')) {
+            if(strpos($request->sort, "|"))
+                $sort = join(" ",explode("|", $request->sort));
+            else
+                $sort = $request->sort;
+        }
+
+        $per_page = 25;
+        if($request->filled('per_page')) {
+            $per_page = $request->per_page;
+        }
+
+        $result = EquiposSearch::apply($filtros, $sort, $per_page, $idComunidad);
+        $equipos = EquiposResource::collection($result); // Yo se que es horrible pero no funciona sin esto
+        return response()->json($result);
     }
 
     public function store(CrearComunidad $request)

@@ -93,7 +93,7 @@
                 </ul>
             </li>
             
-            <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos') || request()->is('admin/equipos')) ? 'active menu-open' : ''}}">
+            <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos')) ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
