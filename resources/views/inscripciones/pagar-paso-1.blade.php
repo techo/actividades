@@ -57,9 +57,9 @@
                                     
                                     <div class=" p-1">
                                     @if ($actividad->montoMax === '0.00')
-                                    {{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}$)
+                                    {{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}{{ __('frontend.coin_name') }})
                                     @else
-                                    {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}$)
+                                    {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}{{ __('frontend.coin_name') }})
                                     @endif
                                     
                                     </p>
@@ -89,9 +89,9 @@
                                 <div class="col-md-12">
                                     <input type="number" class="form-control" placeholder="{{ $actividad->moneda }}" name="monto" min="1" required step="0.1">
                                     @if ($actividad->montoMax === '0.00')
-                                    <p>{{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}$)</p>
+                                    <p>{{ __('frontend.suggested_donation') . $actividad->montoMin}} ({{$actividad->moneda}}{{ __('frontend.coin_name') }})</p>
                                     @else
-                                    <p> {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}$)</p>
+                                    <p> {{__('frontend.suggested_donation_between') . $actividad->montoMin . __('frontend.and') . $actividad->montoMax }} ({{$actividad->moneda}}{{ __('frontend.coin_name') }})</p>
                                     @endif
                                 </div>
                             </div>

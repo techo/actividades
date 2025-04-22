@@ -390,6 +390,7 @@ return [
 	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
 	'confirm_later' => 'Guardar inscripción, finalizar después',
 
+	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',
 	'ready_for_paying' => '¡Listo para pagar por la plataforma!',

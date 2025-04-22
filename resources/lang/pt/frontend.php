@@ -385,6 +385,7 @@ return [
 	'payment_in_process' => 'Recebemos seu voucher. Estamos verificando seu pagamento',
 	'confirm_later' => 'Confirmar Mais Tarde',
 
+	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',
 	'ready_for_paying' => 'Pronto para pagar pela site!',

@@ -164,8 +164,8 @@ return [
     'gender_o'  =>  'Prefiero no decirlo',
     'passport'  =>  'RUT',
     'country'  =>  'PAIS ACTUAL ',
-	'state'  =>  'ESTADO ACTUAL',
-	'municipality'  =>  'CIUDAD ACTUAL',
+	'state'  =>  'REGIÓN ACTUAL',
+	'municipality'  =>  'COMUNA ACTUAL',
 	'telephone'  =>  'TELEFONO',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL',
 	'new_password'  =>  'NUEVA CONTRASEÑA',
@@ -375,6 +375,12 @@ return [
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
 	'make_donation' => 'Haz tu pago por el siguiente ',
+
+	'upload_voucher' => 'Adjunta Voucher',
+	'data_uploaded' => 'Voucher Subido',
+	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
+	'confirm_later' => 'Guardar inscripción, finalizar después',
+	'coin_name' => 'CLP',
 
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu cuota',

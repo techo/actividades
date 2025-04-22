@@ -379,6 +379,7 @@ return [
 	'data_uploaded' => 'Voucher Uploaded',
 	'payment_in_process' => "We've received your voucher. We are verifying your payment",
 	'confirm_later' => 'Confirm Later',
+	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
 	'ready_for_paying' => "You're ready for paying using the platform!",
