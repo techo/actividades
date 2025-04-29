@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class EquiposSearch
 {
-    public static function apply($filters, $sort = 'created_at desc', $per_page = 25, $idComunidad = null)
+    public static function apply($filters, $sort = 'created_at desc', $per_page = 25, $idComunidad = null, $idOficina = null)
     {
-        $query = static::applyDecoratorsFromRequest($filters, EquiposSearch::newQuery($idComunidad));
+        $query = static::applyDecoratorsFromRequest($filters, EquiposSearch::newQuery($idComunidad, $idOficina));
         return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
@@ -38,12 +38,16 @@ class EquiposSearch
         return $query->paginate($per_page);
     }
 
-    private static function newQuery($idComunidad=null){
+    private static function newQuery($idComunidad=null, $idOficina=null){
         $query = (new Equipo())->newQuery();        
 
         if ($idComunidad) {
             $query->join('equipo_comunidad', 'equipo_comunidad.idEquipo', '=', 'Equipo.idEquipo')
                     ->where('equipo_comunidad.idComunidad', $idComunidad);
+        }
+
+        if ($idOficina) {
+            $query->where('Equipo.idOficina', $idOficina);
         }
 
         if(auth()->user()->hasRole("admin")){

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class EquiposController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $idOficina = null)
     {
         $filtros = [];
         if($request->has('equipo')){
@@ -31,7 +31,7 @@ class EquiposController extends Controller
             $per_page = $request->per_page;
         }
 
-        $result = EquiposSearch::apply($filtros, $sort, $per_page);
+        $result = EquiposSearch::apply($filtros, $sort, $per_page, null, $idOficina);
         $equipos = EquiposResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }

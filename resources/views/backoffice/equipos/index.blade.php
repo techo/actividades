@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', __('backend.teams'))
+@section('page_title', __('backend.teams') )
 
 @section('add-new')
 
@@ -19,7 +19,7 @@
     <div class="box">
         <div class="box-body  with-border">
             <equipos-datatable
-                    api-url="/admin/ajax/equipos/"
+                    api-url="{{ $apiUrl }}"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
                     placeholder-text="{{ __('backend.search_by_name_or_area') }}"

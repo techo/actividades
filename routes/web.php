@@ -225,6 +225,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::prefix('/equipos')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\EquiposController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\EquiposController@index');
         Route::get('/crear', 'backoffice\EquiposController@create');
         Route::post('/registrar', 'backoffice\EquiposController@store');
         Route::get('/{idEquipo}', 'backoffice\EquiposController@show');
@@ -241,6 +242,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     });
     Route::prefix('ajax/equipos')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\EquiposController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\ajax\EquiposController@index');
         
         Route::prefix('/{idEquipo}/integrante')->group(function() {
             Route::get('', 'backoffice\ajax\IntegrantesController@index'); 

@@ -20,4 +20,9 @@ class Oficina extends Model
     {
         return $this->belongsTo(Pais::class, 'id_pais');
     }
+
+    public function equipos()
+    {
+        return $this->hasMany(Equipo::class, 'idOficina');
+    }
 }

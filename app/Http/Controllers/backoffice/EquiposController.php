@@ -19,12 +19,18 @@ class EquiposController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $oficina = null)
     {
         $datatableConfig = config('datatables.equipos');
         $fields = json_encode($datatableConfig['fields']);
+        if ($oficina)
+            $apiUrl = "/admin/ajax/equipos/oficina/".$oficina;
+        else
+            $apiUrl = "/admin/ajax/equipos/";
+    
+    
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.equipos.index', compact('fields', 'sortOrder'));
+        return view('backoffice.equipos.index', compact('fields', 'sortOrder', 'apiUrl'));
     }
 
     /**

@@ -67,8 +67,17 @@
                     <ul class="treeview-menu">
                         <li class="{{request()->is('admin/equipos/crear') ? 'active' : ''}}">
                             <a href="/admin/equipos/crear"><i class="fa fa-plus"></i>{{ __('backend.create_team') }}</a>
-                        </li>                        
-                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">{{ __('backend.view_teams') }}</a></li>
+                        </li>  
+                        @if($oficinasPais)                      
+                        @foreach ($oficinasPais as $oficina)
+                            <li class="{{ request()->is('admin/equipos/oficina/' . $oficina->id) ? 'active' : '' }}">
+                                <a href="{{ url('admin/equipos/oficina/' . $oficina->id) }}">
+                                {{ $oficina->nombre }}
+                                </a>
+                            </li>
+                        @endforeach
+                        @endif
+                        <li class="{{request()->is('admin/equipos') ? 'active' : ''}}"><a href="/admin/equipos">{{ __('backend.view_list') }}</a></li>
                     </ul>
                 </li>
             @endif
