@@ -76,7 +76,7 @@
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div v-if="!form.estado" class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
                                 <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
@@ -123,15 +123,16 @@
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
                                 <label for="meta">{{ $t('backend.goal') }}</label>
-                                <input v-model="form.meta" name="meta" type="text" class="form-control" required>
+
+                                <textarea v-model="form.meta" name="meta" class="form-control" rows="3" required></textarea>
                                 <span v-if="errors.meta" v-text="errors.meta[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.hitos }">
                                 <label for="hitos">{{ $t('backend.milestones') }}</label>
-                                <input v-model="form.hitos" name="hitos" type="text" class="form-control"
-                                    required>
+                                <textarea v-model="form.hitos" name="hitos" class="form-control" rows="3" required></textarea>
+
                                 <span v-if="errors.hitos" v-text="errors.hitos[0]" class="help-block"></span>
                             </div>
                         </div>
@@ -177,7 +178,7 @@
                 
 
                 <div class="modal-footer text-center">
-                    <div v-if="guardado" class="row  m-2">
+                    <div v-if="guardado" class="row">
                         <p class="text-center bg-success">
                             {{ $t('backend.changes_saved') }}
                         </p>
@@ -272,8 +273,12 @@ export default {
             axios.put('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
-                    this.submitFiles();
+                    if (this.archivo_carta_compromiso)
+                        this.submitFiles();
                     this.guardado = true;
+                    setTimeout(() => {
+                        this.guardado = false;
+                    }, 2000);
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
