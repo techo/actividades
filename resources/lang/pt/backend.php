@@ -373,6 +373,7 @@ return [
     'activities' => 'Atividades',
     'my_activities' => 'Minhas Atividades',
     'create_team' => 'Criar Equipe',
+    'create_comunidad' => 'Criar Comunidad',
     'add_member' => 'Adicionar Membro',
     'new_member' => 'Novo Membro',
     'view_all' => 'Ver todas',

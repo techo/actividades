@@ -68,7 +68,7 @@
                         <li class="{{request()->is('admin/equipos/crear') ? 'active' : ''}}">
                             <a href="/admin/equipos/crear"><i class="fa fa-plus"></i>{{ __('backend.create_team') }}</a>
                         </li>  
-                        @if($oficinasPais)                      
+                        @if(isset($oficinasPais))                   
                         @foreach ($oficinasPais as $oficina)
                             <li class="{{ request()->is('admin/equipos/oficina/' . $oficina->id) ? 'active' : '' }}">
                                 <a href="{{ url('admin/equipos/oficina/' . $oficina->id) }}">
