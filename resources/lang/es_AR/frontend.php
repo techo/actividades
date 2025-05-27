@@ -254,6 +254,11 @@ return [
 	'semanal' => 'Semanal',
 	'quincenal' => 'Quincenal',
 	'mensual' => 'Mensual',
+	'zonal' => 'Zonal',
+    'coordinacion' => 'Coordinación',
+    'coordinacion_general' => 'Coordinación General',
+    'voluntariado_mesa' => 'Voluntariado Mesa',
+    'voluntariado_equipo' => 'Voluntariado Equipo',
 
 	// perfil / otros datos
 	'otros_datos' => 'Otros Datos', 

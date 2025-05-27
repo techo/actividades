@@ -255,7 +255,11 @@ return [
 
  	// perfil/index.blade.php
  	'profile' => 'Perfil',
-
+	'zonal' => 'Zonal',
+	'coordinacion' => 'Coordinación',
+	'coordinacion_general' => 'Coordinación General',
+	'voluntariado_mesa' => 'Voluntariado Mesa',
+	'voluntariado_equipo' => 'Voluntariado Equipo',
  	// perfil/cambiar-email.blade.php
  	'change_email' => 'Cambiar Email',
  	'change_email_title' => 'Aquí podrás realizar cambios en tu casilla de email.',

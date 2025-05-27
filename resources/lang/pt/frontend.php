@@ -254,7 +254,11 @@ return [
 	'semanal' => 'Semanal', 
 	'quincenal' => 'Quinzenal', 
 	'mensual' => 'Mensal',
-	
+	'zonal'=> 'Zonal',
+    'coordinacion'=> 'Coordenação',
+    'coordinacion_general'=> 'Coordenação Geral',
+    'voluntariado_mesa'=> 'Voluntariado de Mesa',
+    'voluntariado_equipo'=> 'Voluntariado de Equipe',
 	// perfil/index.blade.php
 	'profile' => 'Perfil',
 

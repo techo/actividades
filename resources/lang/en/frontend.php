@@ -250,6 +250,11 @@ return [
 	'quincenal' => 'Fortnightly', 
 	'mensual' => 'Monthly',
 
+	'zonal'=> 'Zonal',
+    'coordinacion'=> 'Coordination',
+    'coordinacion_general'=> 'General Coordination',
+    'voluntariado_mesa'=> 'Community Volunteer',
+    'voluntariado_equipo'=> 'Team Volunteer',
  	// perfil/index.blade.php
  	'profile' => 'Profile',
 
