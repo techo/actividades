@@ -44,10 +44,16 @@ class actividadesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $actividad = Actividad::find($id);
+
+        $localeActual = $request->session()->get('locale');
+        if ($localeActual == config('app.locale')) {
+            $request->session()->put('locale', $actividad->pais()->locale);
+        $request->session()->put('locale', $actividad->pais()->locale);
         $actividad->descripcion = clean_string($actividad->descripcion);
+        
         return new ActividadResource($actividad);
     }
 
