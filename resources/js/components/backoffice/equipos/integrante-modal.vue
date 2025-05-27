@@ -60,8 +60,23 @@
                         </div>
                     </div>
 
-                    <div v-show="form.despliegue == 'Comunidad'" class="row">
+                    <div class="row">
                         <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.rol }">
+                                <label for="rol">{{ $t('backend.role') }}</label>
+                                <input v-model="form.rol" name="rol" type="text" class="form-control" required>
+                                
+                                <!-- <select v-model="form.rol" name="rol" class="form-control" required>
+                                    <option value="zonal" :selected="form.rol == 'zonal'">{{ $t('frontend.zonal') }}</option>
+                                    <option value="coordinacion" :selected="form.rol == 'coordinacion'">{{ $t('frontend.coordinacion') }}</option>
+                                    <option value="coordinacion_general" :selected="form.rol == 'coordinacion_general'">{{ $t('frontend.coordinacion_general') }}</option>
+                                    <option value="voluntariado_mesa" :selected="form.rol == 'voluntariado_mesa'">{{ $t('frontend.voluntariado_mesa') }}</option>
+                                    <option value="voluntariado_equipo" :selected="form.rol == 'voluntariado_equipo'">{{ $t('frontend.voluntariado_equipo') }}</option>
+                                </select> -->
+                                <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div v-show="form.despliegue == 'Comunidad'"  class="col-md-6">
                                 <div class="form-group">
                                     <label for="comunidades">{{ $t('backend.community') }}</label>
                                     <vue-tags-input
@@ -77,19 +92,7 @@
                                     </p>
                                 </div>
                             </div>
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.rol }">
-                                <label for="rol">{{ $t('backend.role') }}</label>
-                                <select v-model="form.rol" name="rol" class="form-control" required>
-                                    <option value="zonal" :selected="form.rol == 'zonal'">{{ $t('frontend.zonal') }}</option>
-                                    <option value="coordinacion" :selected="form.rol == 'coordinacion'">{{ $t('frontend.coordinacion') }}</option>
-                                    <option value="coordinacion_general" :selected="form.rol == 'coordinacion_general'">{{ $t('frontend.coordinacion_general') }}</option>
-                                    <option value="voluntariado_mesa" :selected="form.rol == 'voluntariado_mesa'">{{ $t('frontend.voluntariado_mesa') }}</option>
-                                    <option value="voluntariado_equipo" :selected="form.rol == 'voluntariado_equipo'">{{ $t('frontend.voluntariado_equipo') }}</option>
-                                </select>
-                                <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
-                            </div>
-                        </div>
+                        
                     </div>
 
                     <div class="row">
