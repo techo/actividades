@@ -26,13 +26,54 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="comunidades">{{ $t('backend.comunidad') }}</label>
+                                    <vue-tags-input
+                                        v-model="tag"
+                                        :tags="comunidades"
+                                        add-only-from-autocomplete
+                                        :autocompleteItems="filteredComunidadTags"
+                                        placeholder=""
+                                        @tags-changed="handleTagChange"
+                                    />
+                                    <p class="help-block">
+                                    
+                                    </p>
+                                </div>
+                            </div>
+                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
                                 <label for="rol">{{ $t('backend.role') }}</label>
                                 <input v-model="form.rol" name="rol" type="text" class="form-control" required>
                                 <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
+                                <label for="despliegue">{{ $t('backend.deployment') }}</label>
+                                <select v-model="form.despliegue" name="despliegue" class="form-control" required>
+                                    <option value="Oficina" :selected="form.despliegue == 'Oficina'">{{ $t('backend.office') }}</option>
+                                    <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">{{ $t('backend.community') }}</option>
+                                    <option value="Otras" :selected="form.despliegue == 'Otras'">{{ $t('backend.other') }}</option>
+                                </select>
+                                <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div :class="{ 'form-group': true, 'has-error': errors.relacion }">
+                                <label for="relacion">{{ $t('backend.relationship') }}</label>
+                                <select v-model="form.relacion" name="relacion" class="form-control" required>
+                                    <option value="Rentado" :selected="form.relacion == 'Rentado'">{{ $t('backend.rented') }}</option>
+                                    <option value="Voluntario" :selected="form.relacion == 'Voluntario'">{{ $t('backend.volunteer') }}</option>
+                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">{{ $t('backend.intern') }}</option>
+                                </select>
+                                <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                         <div class="col-md-4">
                             <div :class="{ 'form-group': true, 'has-error': errors.estado }">
                                 <label for="estado">{{ $t('backend.state') }}</label>
                                 <select v-model="form.estado" name="estado" class="form-control" required>
@@ -45,30 +86,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
-                                <label for="despliegue">{{ $t('backend.deployment') }}</label>
-                                <select v-model="form.despliegue" name="despliegue" class="form-control" required>
-                                    <option value="Oficina" :selected="form.despliegue == 'Oficina'">{{ $t('backend.office') }}</option>
-                                    <option value="Comunidad" :selected="form.despliegue == 'Comunidad'">{{ $t('backend.community') }}</option>
-                                    <option value="Otras" :selected="form.despliegue == 'Otras'">{{ $t('backend.other') }}</option>
-                                </select>
-                                <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.relacion }">
-                                <label for="relacion">{{ $t('backend.relationship') }}</label>
-                                <select v-model="form.relacion" name="relacion" class="form-control" required>
-                                    <option value="Rentado" :selected="form.relacion == 'Rentado'">{{ $t('backend.rented') }}</option>
-                                    <option value="Voluntario" :selected="form.relacion == 'Voluntario'">{{ $t('backend.volunteer') }}</option>
-                                    <option value="Pasante" :selected="form.relacion == 'Pasante'">{{ $t('backend.intern') }}</option>
-                                </select>
-                                <span v-if="errors.relacion" v-text="errors.relacion[0]" class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaInicio }">
                                 <label for="fechaInicio">{{ $t('backend.start_date') }}</label>
                                 <input v-model="form.fechaInicio" name="fechaInicio" type="date" class="form-control"
@@ -76,7 +93,7 @@
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div v-if="!form.estado" class="col-md-6">
+                        <div v-show="form.estado == '0'" class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
                                 <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
@@ -198,10 +215,10 @@
 
 import vSelect from 'vue-select';
 import Simplert from 'vue2-simplert';
-import { debounce } from 'lodash';
+import VueTagsInput from '@johmun/vue-tags-input';
 
 export default {
-    components: { 'v-select': vSelect },
+    components: { 'v-select': vSelect , VueTagsInput},
     props: ['idEquipo'],
     data: function () {
         return {
@@ -229,7 +246,13 @@ export default {
                 periodicidad_reunion : null,
                 impacto : null,
                 capacidades : null,
+                idComunidad: null,
             },
+            comunidad: '',
+            comunidades: [],
+            autocompleteComunidadesTags: [],
+            tags: [],
+            tag: '',
             errors: {},
             guardado: false
         }
@@ -238,6 +261,7 @@ export default {
         Event.$on('integrante:crear', this.show);
         Event.$on('integrante:editar', this.editar);
         this.guardado = false;
+        this.getComunidades();
     },
     watch: {
         persona(v, vv) {
@@ -249,7 +273,12 @@ export default {
             if (this.form['idIntegrante'])
                 return true
             return false
-        }
+        },
+        filteredComunidadTags() {
+            return this.autocompleteComunidadesTags.filter(i => {
+                return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+            });
+        },
     },
     methods: {
         guardar() {
@@ -259,6 +288,11 @@ export default {
                 this.store();
         },
         store() {
+            if (this.comunidades.length > 0)
+                this.form.idComunidad = this.comunidades[0].idComunidad;
+            else
+                this.form.idComunidad = null;
+
             axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
@@ -270,6 +304,10 @@ export default {
         },
 
         update() {
+            if (this.comunidades.length > 0)
+                this.form.idComunidad = this.comunidades[0].idComunidad;
+            else
+                this.form.idComunidad = null;
             axios.put('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
@@ -281,6 +319,26 @@ export default {
                     }, 2000);
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+        },
+
+        getComunidades(){
+            axios.get('/ajax/comunidades/equipo/'+ this.idEquipo )
+                .then((datos) => { 
+                    this.autocompleteComunidadesTags = this.formatComunidades(datos.data);
+                }).catch((error) => { debugger; });
+        },
+        formatComunidades(response) {
+            return response.map(comunidad => ({
+                text: comunidad.nombre,
+                idComunidad: comunidad.idComunidad
+            }));
+        },
+        handleTagChange(newTags) {
+            if (newTags.length > 0) {
+                    this.comunidades = [newTags[0]];
+                } else {
+                 //   this.comunidades = [];
+                }
         },
 
         selectCarta: function () {
@@ -324,6 +382,21 @@ export default {
                         this.form.fechaFin = moment(this.form.fechaFin).format('YYYY-MM-DD');
                     this.persona = datos.data.persona;
                     this.persona.nombre = datos.data.personaData.nombre;
+
+                    if (this.form.idComunidad) {
+                        const comunidadSeleccionada = this.autocompleteComunidadesTags.find(
+                            c => c.idComunidad === this.form.idComunidad
+                        );
+
+                        if (comunidadSeleccionada) {
+                            this.comunidades = [{
+                                ...comunidadSeleccionada,
+                                tiClasses: ['ti-valid']
+                            }];
+                        }
+                    } else {
+                        this.comunidades = [];
+                    }
                 }).catch((error) => { debugger; });
         },
         show: function () {

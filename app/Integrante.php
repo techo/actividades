@@ -27,7 +27,8 @@ class Integrante extends Model
         'dia_hora_reunion',
         'periodicidad_reunion',
         'impacto',
-        'capacidades'
+        'capacidades',
+        'idComunidad'
     ];
 
     protected $dates =
@@ -44,6 +45,11 @@ class Integrante extends Model
     public function persona()
     {
         return $this->hasOne(Persona::class, 'idPersona', 'idPersona');
+    }
+
+    public function comunidad()
+    {
+        return $this->hasOne(Comunidad::class, 'idComunidad', 'idComunidad' );
     }
 
 }

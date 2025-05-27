@@ -32,6 +32,7 @@ class IntegranteResource extends Resource
             'impacto'    => $this->impacto,
             'capacidades'    => $this->capacidades,
             'archivo_carta_compromiso'          => $this->archivo_carta_compromiso,
+            'comunidad'          => ($this->comunidad)?$this->comunidad->nombre:'',
         ];
     }
 }

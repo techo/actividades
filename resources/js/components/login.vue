@@ -20,8 +20,8 @@
                                     <div class="col-md-12">
 
                                         <h3 class="text-center mt-2 ml-1" style="font-size: 0.7em;" >{{ $t('frontend.not_a_volunteer') }}</h3>
-                                        <a class="btn btn-primary tag-social facebook py-3" @click="registro_facebook()" style="width: inherit"><i
-                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;facebook</a>
+                                        <!-- <a class="btn btn-primary tag-social facebook py-3" @click="registro_facebook()" style="width: inherit"><i
+                                                class="fab fa-facebook-f"></i>&nbsp;&nbsp;facebook</a> -->
                                         <a class="btn btn-primary tag-social google py-3" @click="registro_google()" style="width: inherit"><i
                                                 class="fab fa-google"></i>&nbsp;&nbsp;google</a>
                                     </div>

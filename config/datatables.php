@@ -425,16 +425,19 @@ return [
                 'title' => 'Nombre'
             ],
             [
-                'name' => 'rol',
-                'sortField' => 'rol',
-                'title' => 'Rol'
-            ],
-            [
                 'name' => 'despliegue',
                 'sortField' => 'despliegue',
                 'title' => 'Despliegue'
             ],
-
+            [
+                'name' => 'comunidad',
+                'title' => 'Comunidad',
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol'
+            ],
             [
                 'name' => 'relacion',
                 'sortField' => 'relacion',

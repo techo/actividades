@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             if (Auth::check() && Auth::user()->hasRole('admin')) { // o el campo que uses
                 $oficinas = Oficina::with('pais')
-                    ->where('id_pais', Auth::user()->idPais)
+                    ->where('id_pais', Auth::user()->idPaisPermitido)
                     ->whereHas('equipos') 
                     ->get();
     

@@ -21,11 +21,11 @@
 
             <hr>
             <div class="row">
-                <div class="col-md-12">
+                <!-- <div class="col-md-12">
                     <a class="btn facebook" @click="registro_facebook()">
                         <i class="fab fa-facebook-f"></i>&nbsp;&nbsp;{{ $t('frontend.register_facebook') }}
                     </a>
-                </div>
+                </div> -->
                 <div class="col-md-12 align-center">
                     <a class="btn google" @click="registro_google()">
                         <i class="fab fa-google"></i> {{ $t('frontend.register_google') }}

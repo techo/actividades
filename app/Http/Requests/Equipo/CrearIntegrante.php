@@ -26,6 +26,7 @@ class CrearIntegrante extends FormRequest
         return [
             'idPersona' => 'required',
             'idEquipo' => 'required',
+            'idComunidad' => 'nullable',
             'rol' => 'required',
             'estado' => 'required|boolean',
             'despliegue' => 'required',

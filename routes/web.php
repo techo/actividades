@@ -34,6 +34,7 @@ Route::prefix('ajax')->group(function () {
 
     Route::get('comunidades', 'ajax\ComunidadesController@index');
     Route::get('comunidades/{idOficina}', 'ajax\ComunidadesController@indexOficina');
+    Route::get('comunidades/equipo/{idEquipo}/', 'ajax\ComunidadesController@indexEquipo');
     Route::get('comunidades/{id}', 'ajax\ComunidadesController@show');
 
     Route::prefix('paises')->group(function () {
