@@ -8,4 +8,7 @@
     <li class="{{ ($tab == 'equipos')?'active':'' }}">
         <a href="/admin/comunidades/{{ $idComunidad }}/equipos/" aria-expanded="true">{{ __('backend.teams') }}</a>
     </li>
+    <li class="{{ ($tab == 'ficha')?'active':'' }}">
+        <a href="/admin/comunidades/{{ $idComunidad }}/ficha/" aria-expanded="true">{{ __('comunidad_ficha_inicial.ficha') }}</a>
+    </li>
 </ul>

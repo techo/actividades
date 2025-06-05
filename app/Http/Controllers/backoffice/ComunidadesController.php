@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backoffice;
 
 use App\Comunidad;
+use App\ComunidadFichaInicial;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,14 @@ class ComunidadesController extends Controller
         $sortOrder = json_encode($datatableConfig['sortOrder']);
         return view('backoffice.comunidades.equipos.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
     }
+
+    public function showFicha(Request $request, $idComunidad)
+    {
+        $comunidad = Comunidad::findOrFail($idComunidad);
+        $ficha = ComunidadFichaInicial::where('idComunidad', $idComunidad)->get();
+        return view('backoffice.comunidades.ficha.show', compact('comunidad', 'ficha'));
+    }
+
 
     /**
      * Show the form for creating a new resource.

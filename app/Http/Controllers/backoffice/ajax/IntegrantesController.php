@@ -23,7 +23,7 @@ class IntegrantesController extends Controller
             $filtros['integrante'] = $request->integrante;
         }
 
-
+        $filtros['estado'] = true;
         $filtros['idEquipo'] = $idEquipo;
         
         if($request->filled('sort')) {

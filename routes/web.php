@@ -210,6 +210,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
         Route::get('/{idComunidad}/equipos', 'backoffice\ComunidadesController@getEquipos');
         Route::get('/{idComunidad}/actividades', 'backoffice\ComunidadesController@getActividades');
+        Route::get('/{idComunidad}/ficha', 'backoffice\ComunidadesController@showFicha');
     });
     Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\ComunidadesController@index');
