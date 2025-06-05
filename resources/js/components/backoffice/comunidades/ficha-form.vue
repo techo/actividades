@@ -640,12 +640,6 @@ export default {
                     .includes(this.tagRiesgoNatural.toLowerCase())
             );
         },
-        riesgosNaturalesTraducidos() {
-            return this.data.riesgos_naturales.map(tag => ({
-                ...tag,
-                text: this.$t(`riesgos_naturales.${tag.text}`)
-            }));
-        }
         filteredFactoresAntropicos() {
             return this.autocompleteFactoresAntropicos.filter(item =>
                 item.text.toLowerCase().includes(this.tagFactorAntropico.toLowerCase())
