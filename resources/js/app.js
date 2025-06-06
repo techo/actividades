@@ -57,6 +57,8 @@ import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 import EquiposForm from './components/backoffice/equipos/equipos-form';
 import ComunidadForm from './components/backoffice/comunidades/comunidad-form';
 import CoordinadoresEquipo from './components/backoffice/equipos/coordinadores-equipo';
+import CoordinadoresComunidad from './components/backoffice/comunidades/coordinadores-comunidad';
+Vue.component('coordinadores-comunidad', CoordinadoresComunidad);
 import HomeHeaderForm from './components/backoffice/homeHeader/home-header-form';
 import UsuariosFichaTab from './components/backoffice/usuarios/usuario-ficha-tab';
 import UsuariosEstudiosTab from './components/backoffice/usuarios/usuarios-estudios-tab';

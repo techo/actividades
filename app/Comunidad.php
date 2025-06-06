@@ -36,5 +36,10 @@ class Comunidad extends Model
     {
         return $this->belongsToMany(Equipo::class, 'actividad_equipo', 'idComunidad', 'idEquipo');
     }
+
+    public function coordinadores()
+    {
+        return $this->hasMany(CoordinadorComunidad::class, 'idComunidad', 'idComunidad');
+    }
     
 }

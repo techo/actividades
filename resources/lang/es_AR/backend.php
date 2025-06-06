@@ -117,7 +117,8 @@ return [
     'members' => 'Integrantes',
     'coordination' => 'Coordinación',
     'team_coordination' => 'Coordinación del equipo',
-    'all_these_people_can_edit_the_team' => 'Todas estas Personas tienen acceso a editar el equipo.',
+    'all_these_people_can_edit_the_team' => 'Todas estas Personas tienen acceso a editar el equipo. Deben primero tener permiso de coordinador en su perfil..',
+    'all_these_people_can_edit_the_community' => 'Todas estas Personas tienen acceso a editar la comunidad. Deben primero tener permiso de coordinador en su perfil.',
     'enter_name_surname_or_dni' => 'Escribe el nombre, apellido o DNI',
     'deployment' => 'Despliegue',
     'community' => 'Comunidad',
@@ -362,7 +363,7 @@ return [
     'select_only_one_file' => 'Seleccionar solo un archivo',
     'download_last_error_log' => 'Descargar el último registro de errores',
     'selected_registrations_will_be_deleted_from_this_activity_are_you_sure' => 'Se van a eliminar las inscripciones seleccionadas de esta actividad ¿está SEGURO?',
-    'all_these_people_have_access_to_edit_the_activity' => 'Todas estas Personas tienen acceso a editar la actividad.',
+    'all_these_people_have_access_to_edit_the_activity' => 'Todas estas Personas tienen acceso a editar la actividad. Deben primero tener permiso de coordinador en su perfil.',
 
 
     // Titulos / Opciones

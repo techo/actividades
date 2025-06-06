@@ -134,7 +134,9 @@ return [
     'skills' => 'Capacidades',
     'changes_saved' => 'Alterações salvas',
     'activity_coordination' => 'Coordenação da atividade',
-    'all_these_people_can_edit_the_team' => 'Todas essas pessoas têm acesso para editar a equipe.',
+    'all_these_people_can_edit_the_team' => 'Todas essas pessoas têm acesso para editar a Equipe. Para isso, devem primeiro ter permissão de coordenador.',
+    'all_these_people_can_edit_the_community' => 'Todas essas pessoas têm acesso para editar a Comunidade. Para isso, devem primeiro ter permissão de coordenador.',
+
     'point' => 'Ponto',
     'schedule' => 'Horário',
     'add_meeting_point' => 'Adicionar Ponto de Encontro',
@@ -360,7 +362,7 @@ return [
     'select_only_one_file' => 'Selecione apenas um arquivo',
     'download_last_error_log' => 'Baixar o último registro de erros',
     'selected_registrations_will_be_deleted_from_this_activity_are_you_sure' => 'As inscrições selecionadas serão removidas desta atividade. Tem CERTEZA?',
-    'all_these_people_have_access_to_edit_the_activity' => 'Todas essas pessoas têm acesso para editar a atividade.',
+    'all_these_people_have_access_to_edit_the_activity' => 'Todas essas pessoas têm acesso para editar a atividade. Para isso, devem primeiro ter permissão de coordenador.',
 
 
     // Títulos / Opciones

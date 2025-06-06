@@ -211,15 +211,25 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{idComunidad}/equipos', 'backoffice\ComunidadesController@getEquipos');
         Route::get('/{idComunidad}/actividades', 'backoffice\ComunidadesController@getActividades');
         Route::get('/{idComunidad}/ficha', 'backoffice\ComunidadesController@showFicha');
+        
+        Route::get('/{idComunidad}/coordinacion', 'backoffice\CoordinadorComunidadController@index');
+
     });
     Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\ComunidadesController@index');
-        Route::put('/{idComunidad}', 'backoffice\ajax\ComunidadesController@update');
-        Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy');
-        Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store');
+        Route::put('/{idComunidad}', 'backoffice\ajax\ComunidadesController@update')->middleware('role:admin');
+        Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy')->middleware('role:admin');
+        Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store')->middleware('role:admin');
 
         Route::get('/{idComunidad}/equipos', 'backoffice\ajax\ComunidadesController@getEquipos');
         Route::get('/{idComunidad}/actividades', 'backoffice\ajax\ComunidadesController@getActividades');
+
+        //coordinacion
+        Route::prefix('/{idComunidad}/coordinacion')->group(function() {
+            Route::get('', 'backoffice\ajax\CoordinadorComunidadController@index');
+            Route::post('/{idPersona}', 'backoffice\ajax\CoordinadorComunidadController@store');
+            Route::delete('/{idCoordinadorComunidad}', 'backoffice\ajax\CoordinadorComunidadController@delete');
+        });
 
     });
 

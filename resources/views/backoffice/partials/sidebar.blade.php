@@ -81,11 +81,7 @@
                     </ul>
                 </li>
             @endif
-
-
-
-            @if (Auth::user()->hasRole('admin'))
-
+            
             <li class="treeview {{ request()->is('admin/comunidades*') ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-home"></i> <span>{{ __('backend.comunidades') }}</span>
                     <span class="pull-right-container">
@@ -93,14 +89,19 @@
               </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{request()->is('admin/comunidades/crear') ? 'active' : ''}}">
-                        <a href="/admin/comunidades/crear"><i class="fa fa-plus"></i>{{ __('backend.create_comunidad') }}</a>
-                    </li>
+                    @if (Auth::user()->hasRole('admin'))
+                        <li class="{{request()->is('admin/comunidades/crear') ? 'active' : ''}}">
+                            <a href="/admin/comunidades/crear"><i class="fa fa-plus"></i>{{ __('backend.create_comunidad') }}</a>
+                        </li>
+                    @endif
                     <li class="{{request()->is('admin/comunidades') ? 'active' : ''}}">
                         <a href="/admin/comunidades">{{ __('backend.view_list') }}</a>
                     </li>
                 </ul>
             </li>
+
+
+            @if (Auth::user()->hasRole('admin'))
             
             <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos')) ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>

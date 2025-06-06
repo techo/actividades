@@ -39,8 +39,15 @@ class ComunidadesSearch
 
     private static function newQuery(){
         $query = (new Comunidad())->newQuery();        
+        if(auth()->user()->hasRole("admin")){
+            $query->where('idPais', '=', auth()->user()->idPaisPermitido);
+        } else if(auth()->user()->hasRole("coordinador")){
+            $query
+            ->join('coordinadores_comunidad','coordinadores_comunidad.idComunidad','=','Comunidad.idComunidad')
+            ->where('idPersona', auth()->user()->idPersona)
+            ->get();
+        }
 
-        $query->where('idPais', '=', auth()->user()->idPaisPermitido);
     
 
         return $query;

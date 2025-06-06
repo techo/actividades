@@ -5,11 +5,6 @@ namespace App\Http\Controllers\backoffice\ajax;
 use App\CoordinadorEquipo;
 use App\Equipo;
 use App\Http\Controllers\Controller;
-use App\Integrante;
-use Illuminate\Http\Request;
-
-use App\Http\Requests\Equipo\CrearIntegrante;
-use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\Persona;
 
 class CoordinadorEquipoController extends Controller
