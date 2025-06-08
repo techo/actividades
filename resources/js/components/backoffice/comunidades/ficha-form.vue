@@ -67,90 +67,90 @@
                 <h3 class="box-title bg-primary">{{ $t('comunidad_ficha_inicial.legalidad_y_riesgos') }}</h3>
             </div>
             <div class="box-body">
-                    <!-- Propietario actual del terreno -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.propietario_actual') }}</span>
-                            <select class="form-control" v-model="data.propietario_actual" :disabled="readonly">
-                                <option disabled value="">Seleccione</option>
-                                <option v-for="opcion in opcionesPropietario" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
-                                </option>
-                            </select>
-                        </div>
+                <!-- Propietario actual del terreno -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.propietario_actual') }}</span>
+                        <select class="form-control" v-model="data.propietario_actual" :disabled="readonly">
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="opcion in opcionesPropietario" :key="opcion.text" :value="opcion.text">
+                                {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                            </option>
+                        </select>
                     </div>
+                </div>
 
-                    <!-- Estado de legalización -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.estado_legalizacion') }}</span>
-                            <select class="form-control" v-model="data.estado_legalizacion" :disabled="readonly">
-                                <option disabled value="">Seleccione</option>
-                                <option v-for="opcion in opcionesLegalizacion" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
-                                </option>
-                            </select>
-                        </div>
+                <!-- Estado de legalización -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.estado_legalizacion') }}</span>
+                        <select class="form-control" v-model="data.estado_legalizacion" :disabled="readonly">
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="opcion in opcionesLegalizacion" :key="opcion.text" :value="opcion.text">
+                                {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                            </option>
+                        </select>
                     </div>
+                </div>
 
-                    <!-- Riesgo a eventos naturales -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.riesgo_eventos') }}</span>
-                            <select class="form-control" v-model="data.riesgo_eventos" :disabled="readonly">
-                                <option disabled value="">Seleccione</option>
-                                <option v-for="opcion in opcionesRiesgo" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                <!-- Riesgo a eventos naturales -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.riesgo_eventos') }}</span>
+                        <select class="form-control" v-model="data.riesgo_eventos" :disabled="readonly">
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="opcion in opcionesRiesgo" :key="opcion.text" :value="opcion.text">
+                                {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
 
-                                
-                                </option>
-                            </select>
-                        </div>
+                            
+                            </option>
+                        </select>
                     </div>
+                </div>
 
-                    <!-- Riesgo a desalojos -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.riesgo_desalojo') }}</span>
-                            <select class="form-control" v-model="data.riesgo_desalojo" :disabled="readonly">
-                                <option disabled value="">Seleccione</option>
-                                <option v-for="opcion in opcionesRiesgo" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                <!-- Riesgo a desalojos -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.riesgo_desalojo') }}</span>
+                        <select class="form-control" v-model="data.riesgo_desalojo" :disabled="readonly">
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="opcion in opcionesRiesgo" :key="opcion.text" :value="opcion.text">
+                                {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
 
-                                
-                                </option>
-                            </select>
-                        </div>
+                            
+                            </option>
+                        </select>
                     </div>
-    
-                    <!-- Riesgos naturales (tags) -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.riesgos_naturales') }}</span>
-                            <vue-tags-input
-                                v-model="tagRiesgoNatural"
-                                :tags="data.riesgos_naturales"
-                                :autocomplete-items="filteredRiesgosNaturales"
-                                add-only-from-autocomplete
-                                :disabled="readonly"
-                                @tags-changed="newTags => data.riesgos_naturales = newTags"
-                            />
-                        </div>
+                </div>
+
+                <!-- Riesgos naturales (tags) -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.riesgos_naturales') }}</span>
+                        <vue-tags-input
+                            v-model="tagRiesgoNatural"
+                            :tags="data.riesgos_naturales"
+                            :autocomplete-items="filteredRiesgosNaturales" 
+                            add-only-from-autocomplete
+                            :disabled="readonly"
+                            @tags-changed="newTags => data.riesgos_naturales = newTags"
+                        />
                     </div>
-                    <!-- Factores antrópicos cercanos -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>Factores antrópicos cercanos (menos de 500 m)</span>
-                            <vue-tags-input
-                                v-model="tagFactorAntropico"
-                                :tags="data.factores_antropicos"
-                                :autocomplete-items="filteredFactoresAntropicos"
-                                add-only-from-autocomplete
-                                :disabled="readonly"
-                                @tags-changed="newTags => data.factores_antropicos = newTags"
-                            />
-                        </div>
+                </div>
+                <!-- Factores antrópicos cercanos -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>Factores antrópicos cercanos (menos de 500 m)</span>
+                        <vue-tags-input
+                            v-model="tagFactorAntropico"
+                            :tags="data.factores_antropicos"
+                            :autocomplete-items="filteredFactoresAntropicos"
+                            add-only-from-autocomplete
+                            :disabled="readonly"
+                            @tags-changed="newTags => data.factores_antropicos = newTags"
+                        />
                     </div>
+                </div>
             </div>
         </div>
         <div class="box">
@@ -463,15 +463,15 @@ export default {
 
             tagRiesgoNatural: '',
             autocompleteRiesgosNaturales: [
-                { text: 'derrumbes' },
-                { text: 'deslizamientos_deslaves' },
-                { text: 'ciclon_huracan' },
-                { text: 'incendios' },
-                { text: 'inundaciones' },
-                { text: 'desbordes_rio' },
-                { text: 'movimientos_teluricos' },
-                { text: 'ninguno' }
-                ],
+                { code: 'derrumbes', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.derrumbes') },
+                { code: 'deslizamientos_deslaves', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.deslizamientos_deslaves') },
+                { code: 'ciclon_huracan', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.ciclon_huracan') },
+                { code: 'incendios', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.incendios') },
+                { code: 'inundaciones', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.inundaciones') },
+                { code: 'desbordes_rio', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.desbordes_rio') },
+                { code: 'movimientos_teluricos', text: this.$t('comunidad_ficha_inicial.riesgos_naturales_opciones.movimientos_teluricos') },
+                { code: 'ninguno', text: this.$t('comunidad_ficha_inicial.ninguno') },
+            ],
 
                 opcionesPropietario: [
                 { text: 'estatal_municipal' },
@@ -499,17 +499,18 @@ export default {
                 { text: 'planificada_estado' }
                 ],
 
+
                 autocompleteFactoresAntropicos: [
-                { text: 'relleno_sanitario' },
-                { text: 'torres_alta_tension' },
-                { text: 'vias_tren' },
-                { text: 'vias_vehiculares' },
-                { text: 'desechos_industriales' },
-                { text: 'industria_alto_impacto' },
-                { text: 'actividades_extractivas' },
-                { text: 'incendios_intencionados' },
-                { text: 'especies_exoticas' },
-                { text: 'ninguno' }
+                    { code: 'relleno_sanitario', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.relleno_sanitario') },
+                    { code: 'torres_alta_tension', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.torres_alta_tension') },
+                    { code: 'vias_tren', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.vias_tren') },
+                    { code: 'vias_vehiculares', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.vias_vehiculares') },
+                    { code: 'desechos_industriales', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.desechos_industriales') },
+                    { code: 'industria_alto_impacto', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.industria_alto_impacto') },
+                    { code: 'actividades_extractivas', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.actividades_extractivas') },
+                    { code: 'incendios_intencionados', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.incendios_intencionados') },
+                    { code: 'especies_exoticas', text: this.$t('comunidad_ficha_inicial.factores_antropicos_opciones.especies_exoticas') },
+                    { code: 'ninguno', text: this.$t('comunidad_ficha_inicial.ninguno') },
                 ],
 
                 opcionesMaterialCalles: [
@@ -612,17 +613,17 @@ export default {
                 ],
 
                 autocompleteEquipamientos: [
-                { text: 'instituciones_educativas' },
-                { text: 'cuidado_infancia' },
-                { text: 'cuidado_mayores' },
-                { text: 'centros_salud' },
-                { text: 'espacios_reunion' },
-                { text: 'espacios_culturales' },
-                { text: 'espacios_deportivos' },
-                { text: 'plazas_parques' },
-                { text: 'senderos_escaleras' },
-                { text: 'estaciones_transporte' },
-                { text: 'ninguno' }
+                    { code: 'instituciones_educativas', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.instituciones_educativas') },
+                    { code: 'cuidado_infancia', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.cuidado_infancia') },
+                    { code: 'cuidado_mayores', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.cuidado_mayores') },
+                    { code: 'centros_salud', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.centros_salud') },
+                    { code: 'espacios_reunion', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.espacios_reunion') },
+                    { code: 'espacios_culturales', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.espacios_culturales') },
+                    { code: 'espacios_deportivos', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.espacios_deportivos') },
+                    { code: 'plazas_parques', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.plazas_parques') },
+                    { code: 'senderos_escaleras', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.senderos_escaleras') },
+                    { code: 'estaciones_transporte', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.estaciones_transporte') },
+                    { code: 'ninguno', text: this.$t('comunidad_ficha_inicial.equipamientos_opciones.ninguno') },
                 ],
 
                 autocompleteCanales: [
@@ -637,17 +638,9 @@ export default {
                 { text: 'radio_comunitaria' },
                 { text: 'carteles' },
                 { text: 'voz_a_voz' }
-                ],
-
-          
-           
-            
+                ],            
             tagFactorAntropico: '',
-            
-            
-
-           
-           
+          
             tagEquipamiento: '',
 
             tagCanal: '',
@@ -658,8 +651,7 @@ export default {
     computed: {
         filteredRiesgosNaturales() {
             return this.autocompleteRiesgosNaturales.filter(item =>
-                this.$t(`coumunidad_ficha_inicial.${item.text}`).toLowerCase()
-                    .includes(this.tagRiesgoNatural.toLowerCase())
+                item.text.toLowerCase().includes(this.tagRiesgoNatural.toLowerCase())
             );
         },
         filteredFactoresAntropicos() {
