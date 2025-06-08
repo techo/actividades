@@ -1,7 +1,11 @@
 <template>
     <div class="ficha-comunidad-form">
         <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('backend.general_information') }}</h3>
+            </div>
             <div class="box-body">
+                
                 <div class="row">   
                     <!-- Cantidad de familias -->
                     <div class="col-md-12">
@@ -55,7 +59,14 @@
                             <input type="number" class="form-control" v-model="data.anio_inicio_techo" :disabled="readonly">
                         </div>
                     </div>
-
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('comunidad_ficha_inicial.legalidad_y_riesgos') }}</h3>
+            </div>
+            <div class="box-body">
                     <!-- Propietario actual del terreno -->
                     <div class="col-md-12">
                         <div class="form-group">
@@ -140,7 +151,13 @@
                             />
                         </div>
                     </div>
-
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('comunidad_ficha_inicial.infraestructura_y_servicios') }}</h3>
+            </div>
+            <div class="box-body">
                     <!-- Material de calles principales -->
                     <div class="col-md-12">
                         <div class="form-group">
@@ -262,64 +279,71 @@
                     </div>
                     <!-- Alumbrado público -->
                     <div class="col-md-12">
-                    <div class="form-group">
-                        <span>{{ $t('comunidad_ficha_inicial.alumbrado_publico') }}</span>
-                        <select class="form-control" v-model="data.alumbrado_publico" :disabled="readonly">
-                        <option disabled value="">Seleccione</option>
-                        <option v-for="opcion in opcionesAlumbrado" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
-                                </option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <span>{{ $t('comunidad_ficha_inicial.alumbrado_publico') }}</span>
+                            <select class="form-control" v-model="data.alumbrado_publico" :disabled="readonly">
+                            <option disabled value="">Seleccione</option>
+                            <option v-for="opcion in opcionesAlumbrado" :key="opcion.text" :value="opcion.text">
+                                        {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                                    </option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Equipamientos presentes -->
                     <div class="col-md-12">
-                    <div class="form-group">
-                        <span>{{ $t('comunidad_ficha_inicial.equipamientos') }}</span>
-                        <vue-tags-input
-                        v-model="tagEquipamiento"
-                        :tags="data.equipamientos_presentes"
-                        :autocomplete-items="filteredEquipamientos"
-                        add-only-from-autocomplete
-                        :disabled="readonly"
-                        @tags-changed="newTags => data.equipamientos_presentes = newTags"
-                        />
+                        <div class="form-group">
+                            <span>{{ $t('comunidad_ficha_inicial.equipamientos') }}</span>
+                            <vue-tags-input
+                            v-model="tagEquipamiento"
+                            :tags="data.equipamientos_presentes"
+                            :autocomplete-items="filteredEquipamientos"
+                            add-only-from-autocomplete
+                            :disabled="readonly"
+                            @tags-changed="newTags => data.equipamientos_presentes = newTags"
+                            />
+                        </div>
                     </div>
-                    </div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="box-header with-border bg-primary">
+                <h3 class="box-title bg-primary">{{ $t('comunidad_ficha_inicial.organizacion_comunitaria') }}</h3>
+            </div>
+            <div class="box-body">
+                    
+                <!-- Organización comunitaria -->
+                <!-- <div class="col-md-12">
+                <div class="form-group">
+                    <span>{{ $t('comunidad_ficha_inicial.tiene_organizacion') }}</span>
+                    <select class="form-control" v-model="data.tiene_organizacion" :disabled="readonly">
+                    <option :value="true">{{ $t('backend.yes') }}</option>
+                    <option :value="false">{{ $t('backend.no') }}</option>
+                    </select>
+                </div>
+                </div>-->
 
-                    <!-- Organización comunitaria -->
-                    <!-- <div class="col-md-12">
-                    <div class="form-group">
-                        <span>{{ $t('comunidad_ficha_inicial.tiene_organizacion') }}</span>
-                        <select class="form-control" v-model="data.tiene_organizacion" :disabled="readonly">
-                        <option :value="true">Sí</option>
-                        <option :value="false">No</option>
-                        </select>
-                    </div>
-                    </div>-->
+                <!-- Liderazgos electos -->
+                <!-- <div class="col-md-12">
+                <div class="form-group">
+                    <span>{{ $t('comunidad_ficha_inicial.liderazgos_electos') }}</span>
+                    <select class="form-control" v-model="data.liderazgos_democraticos" :disabled="readonly">
+                    <option :value="true">{{ $t('backend.yes') }}</option>
+                    <option :value="false">{{ $t('backend.no') }}</option>
+                    </select>
+                </div>
+                </div> -->
 
-                    <!-- Liderazgos electos -->
-                    <!-- <div class="col-md-12">
-                    <div class="form-group">
-                        <span>{{ $t('comunidad_ficha_inicial.liderazgos_electos') }}</span>
-                        <select class="form-control" v-model="data.liderazgos_democraticos" :disabled="readonly">
-                        <option :value="true">Sí</option>
-                        <option :value="false">No</option>
-                        </select>
-                    </div>
-                    </div> -->
-
-                    <!-- Año de elección -->
-                    <div class="col-md-12">
+                <!-- Año de elección -->
+                <div class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.anio_eleccion') }}</span>
                         <input type="date" class="form-control" v-model="data.anio_eleccion_organizacion" :disabled="readonly">
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Frecuencia de reunión -->
-                    <div class="col-md-12">
+                <!-- Frecuencia de reunión -->
+                <div class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.periodicidad_reunion') }}</span>
                         <select class="form-control" v-model="data.frecuencia_reunion_organizacion" :disabled="readonly">
@@ -329,29 +353,29 @@
                                 </option>
                         </select>
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Actividades de la organización -->
-                    <div class="col-md-12">
+                <!-- Actividades de la organización -->
+                <div class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.actividades_organizacion') }}</span>
                         <input type="text" class="form-control" v-model="data.actividades_organizacion" :disabled="readonly">
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Otros grupos comunitarios -->
-                    <div class="col-md-12">
+                <!-- Otros grupos comunitarios -->
+                <div class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.otros_grupos') }}</span>
                         <select class="form-control" v-model="data.otro_grupo_comunitario" :disabled="readonly">
-                        <option :value="true">Sí</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ $t('backend.yes') }}</option>
+                        <option :value="false">{{ $t('backend.no') }}</option>
                         </select>
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Tipo de grupo comunitario -->
-                    <div class="col-md-12">
+                <!-- Tipo de grupo comunitario -->
+                <div v-show="data.otro_grupo_comunitario" class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.tipo_grupo') }}</span>
                         <select class="form-control" v-model="data.tipo_otro_grupo" :disabled="readonly">
@@ -361,32 +385,30 @@
                                 </option>
                         </select>
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Canales de comunicación -->
-                    <div class="col-md-12">
+                <!-- Canales de comunicación -->
+                <div class="col-md-12">
                     <div class="form-group">
                         <span>{{ $t('comunidad_ficha_inicial.canales_comunicacion') }}</span>
                         <select class="form-control" v-model="data.existen_canales_comunicacion" :disabled="readonly">
-                        <option :value="true">Sí</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ $t('backend.yes') }}</option>
+                        <option :value="false">{{ $t('backend.no') }}</option>
                         </select>
                     </div>
-                    </div>
+                </div>
 
-                    <!-- Tipo de comunicación -->
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <span>{{ $t('comunidad_ficha_inicial.tipo_comunicacion') }}</span>
-                            <select class="form-control" v-model="data.tipo_comunicacion" :disabled="readonly">
-                            <option disabled value="">Seleccione</option>
-                            <option v-for="opcion in opcionesTipoComunicacion" :key="opcion.text" :value="opcion.text">
-                                    {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
-                                </option>
-                            </select>
-                        </div>
+                <!-- Tipo de comunicación -->
+                <div v-show="data.existen_canales_comunicacion" class="col-md-12">
+                    <div class="form-group">
+                        <span>{{ $t('comunidad_ficha_inicial.tipo_comunicacion') }}</span>
+                        <select class="form-control" v-model="data.tipo_comunicacion" :disabled="readonly">
+                        <option disabled value="">Seleccione</option>
+                        <option v-for="opcion in opcionesTipoComunicacion" :key="opcion.text" :value="opcion.text">
+                                {{ $t('comunidad_ficha_inicial.'+opcion.text) }}
+                            </option>
+                        </select>
                     </div>
-
                 </div>
             </div>
         </div>

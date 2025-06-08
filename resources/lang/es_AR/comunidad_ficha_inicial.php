@@ -8,12 +8,16 @@ return [
     'forma_constitucion' => '¿De qué forma se constituyó la comunidad?',
     'georeferencia' => 'Georeferencia (Link de googlemaps)',
     'anio_inicio_techo' => 'Año de inicio intervención TECHO',
+
+    'legalidad_y_riesgos' => 'Legalidad y Riesgos',
     'propietario_actual' => 'Propietario actual del terreno',
     'estado_legalizacion' => 'Estado de legalización',
     'riesgo_eventos' => 'Riesgo a afectación por eventos naturales',
     'riesgo_desalojo' => 'Riesgo a desalojos',
     'riesgos_naturales' => '¿El asentamiento se encuentra expuesto a alguno de estos riesgos naturales?',
     'riesgos_antropicos' => '¿El asentamiento se encuentra cerca (menos de 500 m) a alguno de estos factores antrópicos?',
+
+    'infraestructura_y_servicios' => 'Infraestructura y Servicios',
     'material_calle' => '¿Qué material es predominante en las calles principales?',
     'acceso_electricidad' => '¿Cuál es la forma predominante de acceso a electricidad en el asentamiento?',
     'acceso_agua' => '¿Cuál es la forma predominante de acceso a agua potable en el asentamiento?',
@@ -24,6 +28,8 @@ return [
     'material_techo' => '¿Cuál es el material predominante en el techo de las viviendas?',
     'alumbrado_publico' => '¿La mayor parte del asentamiento cuenta con alumbrado público?',
     'equipamientos' => '¿El asentamiento cuenta con alguno de los siguientes equipamientos?',
+
+    'organizacion_comunitaria' => 'Organización Comuninitaria',
     'tiene_organizacion' => '¿Existe algún órgano de organización comunitaria?',
     'liderazgos_electos' => '¿Los liderazgos son electos democráticamente?',
     'anio_eleccion' => 'Año de elección de la junta u órgano de organización comunitaria',
