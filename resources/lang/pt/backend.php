@@ -118,6 +118,8 @@ return [
     'enter_name_surname_or_dni' => 'Digite o nome, sobrenome ou DNI',
     'deployment' => 'Implantação',
     'community' => 'Comunidade',
+    'diagnostico' => 'Diagnóstico',
+    'plan_de_accion' => 'Plano de ação',
     'other' => 'Outras',
     'relationship' => 'Relacionamento',
     'rented' => 'Alugado',

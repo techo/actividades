@@ -28,6 +28,8 @@ class CrearComunidad extends FormRequest
             'idOficina' => 'nullable',
             'idLocalidad' => 'nullable',
             'idProvincia' => 'nullable',
+            'diagnostico' => 'nullable',
+            'plan_de_accion' => 'nullable',
             'activo' => 'required|boolean',
         ];
     }

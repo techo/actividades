@@ -122,6 +122,8 @@ return [
     'enter_name_surname_or_dni' => 'Escribe el nombre, apellido o DNI',
     'deployment' => 'Despliegue',
     'community' => 'Comunidad',
+    'diagnostico' => 'Diagnostico',
+    'plan_de_accion' => 'Plan de accion',
     'other' => 'Otras',
     'relationship' => 'Relación',
     'rented' => 'Rentado',

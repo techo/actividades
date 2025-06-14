@@ -68,6 +68,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="diagnostico">{{ $t('backend.diagnostico') }}</label>
+                                    <textarea name="diagnostico" v-model="data.diagnostico" class="form-control" :disabled="this.readonly" >
+                                        </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="plan_de_accion">{{ $t('backend.plan_de_accion') }}</label>
+                                    <textarea name="plan_de_accion" v-model="data.plan_de_accion" class="form-control" :disabled="this.readonly" >
+                                        </textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,6 +108,8 @@ export default {
                 idPais: null, 
                 idProvincia: null, 
                 idLocalidad: null, 
+                diagnostico: null, 
+                plan_de_accion: null, 
             },
             guardado: false,
             mensajeGuardado: '',
