@@ -26,10 +26,10 @@
 
             <div class="tab-pane active" id="general">
 
-                <ficha-form :disabled="true" :ficha="{{ $ficha }}" edicion="true"></ficha-form>
+                <ficha-comunidad-form :disabled="true" :comunidad="{{ $comunidad }}" :ficha='@json($ficha)' edicion="{{ $edicion }}"></ficha-comunidad-form>
 
                 <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
-                    edicion="true"
+                    edicion="{{ $edicion }}"
                     can-editar="{{ 
                         Auth::user()->hasRole('admin')
                     }}"

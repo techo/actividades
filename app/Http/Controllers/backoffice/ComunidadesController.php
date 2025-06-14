@@ -42,9 +42,10 @@ class ComunidadesController extends Controller
 
     public function showFicha(Request $request, $idComunidad)
     {
+        $edicion = true;
         $comunidad = Comunidad::findOrFail($idComunidad);
-        $ficha = ComunidadFichaInicial::where('idComunidad', $idComunidad)->get();
-        return view('backoffice.comunidades.ficha.show', compact('comunidad', 'ficha'));
+        $ficha = ComunidadFichaInicial::where('idComunidad', $idComunidad)->first();
+        return view('backoffice.comunidades.ficha.show', compact('comunidad', 'ficha', 'edicion'));
     }
 
 

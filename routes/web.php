@@ -211,6 +211,9 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{idComunidad}/equipos', 'backoffice\ComunidadesController@getEquipos');
         Route::get('/{idComunidad}/actividades', 'backoffice\ComunidadesController@getActividades');
         Route::get('/{idComunidad}/ficha', 'backoffice\ComunidadesController@showFicha');
+        Route::post('/{idComunidad}/ficha', 'backoffice\ajax\ComunidadFichaController@store');
+        Route::post('/{idComunidad}/ficha/{idFicha}', 'backoffice\ajax\ComunidadFichaController@update');
+
         
         Route::get('/{idComunidad}/coordinacion', 'backoffice\CoordinadorComunidadController@index');
 

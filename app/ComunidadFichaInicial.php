@@ -56,7 +56,6 @@ class ComunidadFichaInicial extends Model
         'otros_grupos' => 'boolean',
         'canales_comunicacion' => 'boolean',
         'fecha_formacion' => 'date',
-        'anio_eleccion' => 'date',
     ];
 
     public function comunidad()

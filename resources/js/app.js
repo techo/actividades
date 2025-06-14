@@ -119,8 +119,8 @@ Vue.component('estadisticas-personas', EstadisticasPersonas);
 import EstadisticasCoordinadores from './components/backoffice/estadisticas/estadisticas-coordinadores';
 Vue.component('estadisticas-coordinadores', EstadisticasCoordinadores);
 
-import fichaForm from './components/backoffice/comunidades/ficha-form';
-Vue.component('ficha-form', fichaForm);
+import fichaComunidadForm from './components/backoffice/comunidades/ficha-comunidad-form';
+Vue.component('ficha-comunidad-form', fichaComunidadForm);
 
 import Novedades from './components/backoffice/novedades';
 Vue.component('novedades', Novedades);

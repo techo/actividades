@@ -15,7 +15,7 @@ class AgregaTablaComunidadFichaInicial extends Migration
     {
         Schema::create('comunidad_ficha_inicial', function (Blueprint $table) {
             $table->increments('idFicha');
-            $table->unsignedInteger('idComunidad')->nullable();
+            $table->unsignedInteger('idComunidad');
 
             $table->foreign('idComunidad')
                 ->references('idComunidad')->on('Comunidad')
@@ -46,9 +46,9 @@ class AgregaTablaComunidadFichaInicial extends Migration
             $table->string('alumbrado_publico')->nullable();
             $table->json('equipamientos')->nullable();
         
-            $table->boolean('tiene_organizacion')->default(false);
+            $table->boolean('tiene_organizacion')->nullable();
             $table->boolean('liderazgos_electos')->nullable();
-            $table->date('anio_eleccion')->nullable();
+            $table->year('anio_eleccion')->nullable();
             $table->string('periodicidad_reunion')->nullable();
             $table->text('actividades_organizacion')->nullable();
             $table->boolean('otros_grupos')->nullable();
