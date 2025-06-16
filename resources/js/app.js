@@ -52,6 +52,8 @@ import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable
 import ComunidadesDatatable from './components/backoffice/datatable/ComunidadesDatatable';
 import IntegrantesDatatable from './components/backoffice/datatable/IntegrantesDatatable';
 import IntegranteModal from './components/backoffice/equipos/integrante-modal';
+import ReunionesDatatable from './components/backoffice/datatable/ReunionesDatatable';
+import ReunionModal from './components/backoffice/equipos/reunion-modal';
 import UsuariosFilterBar from './components/backoffice/datatable/UsuariosFilterBar';
 import UsuariosForm from './components/backoffice/usuarios/usuario-form';
 import EquiposForm from './components/backoffice/equipos/equipos-form';
@@ -172,6 +174,8 @@ Vue.component('comunidades-datatable', ComunidadesDatatable);
 Vue.component('equipos-datatable', EquiposDatatable);
 Vue.component('integrantes-datatable', IntegrantesDatatable);
 Vue.component('integrante-modal', IntegranteModal);
+Vue.component('reuniones-datatable', ReunionesDatatable);
+Vue.component('reunion-modal', ReunionModal);
 Vue.component('usuarios-filter-bar', UsuariosFilterBar);
 Vue.component('usuario-form', UsuariosForm);
 Vue.component('equipo-form', EquiposForm);

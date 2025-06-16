@@ -250,6 +250,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::get('', 'backoffice\IntegrantesController@index');
         });
 
+        Route::prefix('/{idEquipo}/seguimiento')->group(function() {
+            Route::get('', 'backoffice\EquipoReunionesController@index');
+        });
+
         Route::prefix('/{idEquipo}/coordinacion')->group(function() {
             Route::get('', 'backoffice\CoordinadorEquipoController@index');
         });
@@ -266,6 +270,13 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
             Route::get('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@get');  
             Route::post('/{idIntegrante}/archivos', 'backoffice\ajax\IntegrantesController@uploadArchivos');  
+        });
+
+        Route::prefix('/{idEquipo}/reuniones')->group(function() {
+            Route::get('', 'backoffice\ajax\EquipoReunionesController@index'); 
+            Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
+            Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
+            Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
         });
 
         Route::prefix('/{idEquipo}/coordinacion')->group(function() {
