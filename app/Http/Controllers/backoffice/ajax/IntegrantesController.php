@@ -83,7 +83,8 @@ class IntegrantesController extends Controller
     {
         $integrante = Integrante::findOrFail($idIntegrante);
         $r = $integrante->persona;
-		$integrante->personaData = [
+		$integrante->nombreEquipo = $integrante->equipo->nombre;
+        $integrante->personaData = [
 			"idPersona" => $r->idPersona,
 			"nombre" => $r->nombres . ' ' . $r->apellidoPaterno . ' (' . $r->mail . ')',
 		];

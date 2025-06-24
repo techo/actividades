@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $comunidad->nombre . ' - ' . __('backend.teams'))
+@section('page_title', $comunidad->nombre . ' - ' . __('backend.members'))
 
 @section('content')
     @if (Session::has('mensaje'))
@@ -15,13 +15,14 @@
             <div class="tab-pane active" id="actividades-comunidad">
                 <div class="box">
                     <div class="box-body  with-border">
-                    <equipos-datatable
-                        api-url="/admin/ajax/comunidades/{{ $idComunidad }}/equipos"
+                    <integrantes-datatable
+                        api-url="/admin/ajax/comunidades/{{ $idComunidad }}/integrantes"
                         fields="{{ $fields }}"
                         sort-order="{{ $sortOrder }}"
                         placeholder-text="{{ __('backend.search_by_name_or_area') }}"
-                        detail-url="/admin/equipos/"
-                    ></equipos-datatable>
+                        detail-url="/admin/comunidades/"
+                        id-comunidad="{{ $idComunidad }}"
+                    ></integrantes-datatable>
                         <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
                             cancelar-url="/admin/comunidades"
                         ></crud-footer>

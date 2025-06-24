@@ -208,7 +208,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('', 'backoffice\ComunidadesController@index');
         Route::get('/crear', 'backoffice\ComunidadesController@create');
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
-        Route::get('/{idComunidad}/equipos', 'backoffice\ComunidadesController@getEquipos');
+        Route::get('/{idComunidad}/integrantes', 'backoffice\ComunidadesController@showIntegrantes');
         Route::get('/{idComunidad}/actividades', 'backoffice\ComunidadesController@getActividades');
     });
     Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
@@ -217,7 +217,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy');
         Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store');
 
-        Route::get('/{idComunidad}/equipos', 'backoffice\ajax\ComunidadesController@getEquipos');
+        Route::get('/{idComunidad}/integrantes', 'backoffice\ajax\ComunidadesController@getIntegrantes');
         Route::get('/{idComunidad}/actividades', 'backoffice\ajax\ComunidadesController@getActividades');
 
     });
