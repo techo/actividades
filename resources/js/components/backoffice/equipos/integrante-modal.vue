@@ -14,6 +14,15 @@
                         <p v-text="errors.idIntegrante[0]"></p>
                     </div>
 
+                    <div v-if="!idEquipo" class="row">
+                        <div class="col-md-12">
+                            <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
+                                <label for="idPersona">{{ $t('backend.team') }}</label>
+                                <input v-model="form.nombreEquipo" name="team" type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
@@ -26,7 +35,7 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-4">
+                        <div v-if="idEquipo" class="col-md-4">
                             <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
                                 <label for="despliegue">{{ $t('backend.deployment') }}</label>
                                 <select v-model="form.despliegue" name="despliegue" class="form-control" required>
@@ -76,7 +85,7 @@
                                 <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div v-show="form.despliegue == 'Comunidad'"  class="col-md-6">
+                        <div v-show="form.despliegue == 'Comunidad' && idEquipo"  class="col-md-6">
                                 <div class="form-group">
                                     <label for="comunidades">{{ $t('backend.community') }}</label>
                                     <vue-tags-input
@@ -299,12 +308,12 @@ export default {
                 this.store();
         },
         store() {
-            if (this.comunidades.length > 0)
+            if (this.comunidades.length > 0){
                 this.form.idComunidad = this.comunidades[0].idComunidad;
-            else
+            } else if (this.idEquipo){
                 this.form.idComunidad = null;
-
-            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
+            }
+            axios.post('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
                     // location.reload();
@@ -315,11 +324,12 @@ export default {
         },
 
         update() {
-            if (this.comunidades.length > 0)
+            if (this.comunidades.length > 0){
                 this.form.idComunidad = this.comunidades[0].idComunidad;
-            else
+            } else if (this.idEquipo){
                 this.form.idComunidad = null;
-            axios.put('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
+            }
+            axios.put('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
                     if (this.archivo_carta_compromiso)
@@ -348,7 +358,7 @@ export default {
             if (newTags.length > 0) {
                     this.comunidades = [newTags[0]];
                 } else {
-                 //   this.comunidades = [];
+                    this.comunidades = [];
                 }
         },
 
@@ -365,7 +375,7 @@ export default {
             formData.append('archivo_carta_compromiso', this.archivo_carta_compromiso);
             formData.append('archivo_plan_de_trabajo', this.archivo_plan_de_trabajo);
             const headers = { 'Content-Type': 'multipart/form-data' };
-            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form['idIntegrante'] + '/archivos', formData, { headers }).then(response => {
+            axios.post('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form['idIntegrante'] + '/archivos', formData, { headers }).then(response => {
                 this.form.archivo_carta_compromiso = response.data.archivo_carta_compromiso;
              //   console.log(response);
                 this.archivo_carta_compromiso = null;
@@ -375,7 +385,7 @@ export default {
             });
         },
         eliminar() {
-            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
+            axios.delete('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     Event.$emit('integrantes:refrescar');
                     location.reload();
@@ -384,8 +394,7 @@ export default {
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         editar(p) {
-            this.show();
-            axios.get('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + p.idIntegrante)
+            axios.get('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + p.idIntegrante)
                 .then((datos) => {
                     this.form = datos.data;
                     this.form.fechaInicio = moment(this.form.fechaInicio).format('YYYY-MM-DD');
@@ -409,6 +418,7 @@ export default {
                         this.comunidades = [];
                     }
                 }).catch((error) => { debugger; });
+            this.show();
         },
         show: function () {
             $('#inscribir-modal').modal('show'); //sino pasan cosas raras con el scroll

@@ -226,7 +226,7 @@
         <!-- Ubicacion -->
         <div class="box">
             <div class="box-header with-border bg-primary">
-                <h3 class="box-title bg-primary">{{ $t('backend.location') }}</h3>
+                <h3 class="box-title bg-primary">{{ $t('backend.ubication') }}</h3>
                 <input class="bg-primary" type="checkbox" v-model="actividad.show_location" :disabled="!edicion"> 
                     {{ $t('backend.show_location') }}
                 </input>

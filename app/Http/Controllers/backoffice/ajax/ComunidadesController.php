@@ -8,9 +8,11 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Comunidad\CrearComunidad;
 use App\Http\Resources\ComunidadesResource;
 use App\Http\Resources\EquiposResource;
+use App\Http\Resources\IntegranteResource;
 use App\Oficina;
 use App\Search\ComunidadesSearch;
 use App\Search\EquiposSearch;
+use App\Search\IntegrantesSearch;
 use Illuminate\Http\Request;
 
 class ComunidadesController extends BaseController
@@ -52,12 +54,14 @@ class ComunidadesController extends BaseController
         return $result;
     }
 
-    public function getEquipos(Request $request, $idComunidad)
+    public function getIntegrantes(Request $request, $idComunidad)
     {
         $filtros = [];
-        if($request->has('equipo')){
-            $filtros['equipo'] = $request->equipo;
-        }
+        if($request->has('integrante')){
+            $filtros['integrante'] = $request->integrante;
+}
+
+        $filtros['comunidadIntegrantes'] = $idComunidad;
         
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
@@ -71,8 +75,8 @@ class ComunidadesController extends BaseController
             $per_page = $request->per_page;
         }
 
-        $result = EquiposSearch::apply($filtros, $sort, $per_page, $idComunidad);
-        $equipos = EquiposResource::collection($result); // Yo se que es horrible pero no funciona sin esto
+        $result = IntegrantesSearch::apply($filtros, $sort, $per_page);
+        $equipos = IntegranteResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }
 

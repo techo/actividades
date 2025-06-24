@@ -31,13 +31,13 @@ class ComunidadesController extends Controller
         return view('backoffice.comunidades.actividades.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
     }
 
-    public function getEquipos(Request $request, $idComunidad)
+    public function showIntegrantes(Request $request, $idComunidad)
     {
         $comunidad = Comunidad::findOrFail($idComunidad);
-        $datatableConfig = config('datatables.equipos');
+        $datatableConfig = config('datatables.comunidad_integrantes');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.comunidades.equipos.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
+        return view('backoffice.comunidades.integrantes.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
     }
 
     public function showFicha(Request $request, $idComunidad)
