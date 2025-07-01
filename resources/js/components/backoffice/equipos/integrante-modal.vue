@@ -313,11 +313,12 @@ export default {
             } else if (this.idEquipo){
                 this.form.idComunidad = null;
             }
-            axios.post('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/crear', this.form)
+            axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
                     Event.$emit('integrante:refrescar');
                     // location.reload();
                     this.submitFiles(datos.data.idIntegrante);
+                    this.guardado = true;
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
 
@@ -371,18 +372,20 @@ export default {
             this.nombre_carta_compromiso = this.$refs.archivo_carta_compromiso.files[0].name;
         },
         submitFiles() {
-            const formData = new FormData();
-            formData.append('archivo_carta_compromiso', this.archivo_carta_compromiso);
-            formData.append('archivo_plan_de_trabajo', this.archivo_plan_de_trabajo);
-            const headers = { 'Content-Type': 'multipart/form-data' };
-            axios.post('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form['idIntegrante'] + '/archivos', formData, { headers }).then(response => {
-                this.form.archivo_carta_compromiso = response.data.archivo_carta_compromiso;
-             //   console.log(response);
-                this.archivo_carta_compromiso = null;
-                this.nombre_carta_compromiso = '';
+            if(this.archivo_carta_compromiso || this.archivo_plan_de_trabajo){
+                const formData = new FormData();
+                formData.append('archivo_carta_compromiso', this.archivo_carta_compromiso);
+                formData.append('archivo_plan_de_trabajo', this.archivo_plan_de_trabajo);
+                const headers = { 'Content-Type': 'multipart/form-data' };
+                axios.post('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form['idIntegrante'] + '/archivos', formData, { headers }).then(response => {
+                    this.form.archivo_carta_compromiso = response.data.archivo_carta_compromiso;
+                //   console.log(response);
+                    this.archivo_carta_compromiso = null;
+                    this.nombre_carta_compromiso = '';
 
-            }).catch((error) => {
-            });
+                }).catch((error) => {
+                });
+            }
         },
         eliminar() {
             axios.delete('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
