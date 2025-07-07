@@ -1,7 +1,7 @@
 <template>
   <div>
-    <integrante-modal :id-equipo="idEquipo" ></integrante-modal>
-    <div class="row">
+    <integrante-modal :id-equipo="idEquipo"  @actualizar="refrescarTabla"></integrante-modal>
+    <div v-if="idEquipo" class="row">
       <div class="col-md-12">
           <span class="pull-right">
               <button class="btn btn-primary" @click.prevent="desplegarModal()">{{ $t('backend.create') }} <i class="fa fa-plus"></i></button>
@@ -112,7 +112,11 @@ export default {
     },
       bold: function(value) {
           return '<b>' + value + '</b>';
-      }
+      },
+    refrescarTabla() {
+        this.moreParams = {}; 
+        this.$refs.vuetable.refresh();
+      },
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);

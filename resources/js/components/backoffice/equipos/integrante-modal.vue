@@ -28,7 +28,7 @@
                             <div :class="{ 'form-group': true, 'has-error': errors.idPersona }">
                                 <label for="idPersona">{{ $t('backend.person') }}</label>
                                 <v-select :options="personas" @search="onSearch" label="nombre" v-model="persona"
-                                    :filterable="false" :selectOnTab="true"></v-select>
+                                    :filterable="false" :selectOnTab="true" v-bind:disabled="!idEquipo"></v-select>
                                 <span v-if="errors.idPersona" v-text="errors.idPersona[0]" class="help-block"></span>
                             </div>
                         </div>
@@ -315,10 +315,13 @@ export default {
             }
             axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
-                    Event.$emit('integrante:refrescar');
-                    // location.reload();
                     this.submitFiles(datos.data.idIntegrante);
                     this.guardado = true;
+                    setTimeout(() => {
+                        this.guardado = false;
+                        this.$emit('actualizar');
+                        this.cancelar();
+                    }, 2000);
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
 
@@ -332,12 +335,13 @@ export default {
             }
             axios.put('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
-                    Event.$emit('integrante:refrescar');
                     if (this.archivo_carta_compromiso)
                         this.submitFiles();
                     this.guardado = true;
                     setTimeout(() => {
                         this.guardado = false;
+                        this.$emit('actualizar');
+                        this.cancelar();
                     }, 2000);
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
