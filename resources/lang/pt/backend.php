@@ -46,7 +46,7 @@ return [
     'payment_date_expired' => 'Data de Pagamento Expirada!!',
     'registrations_start' => 'Inscrições começam',
     'description' => 'Descrição',
-    'location' => 'Localização',
+    'ubication' => 'Localização',
     'location_medium' => 'Local',
     'confirmation' => 'Confirmação',
     'automatic' => 'Automática',

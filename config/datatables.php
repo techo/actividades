@@ -412,6 +412,58 @@ return [
             ],
         ]
     ],
+    'comunidad_integrantes' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idIntegrante',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'nombreEquipo',
+                'sortField' => 'nombreEquipo',
+                'title' => 'Equipo',
+            ],
+            [
+                'name' => 'despliegue',
+                'sortField' => 'despliegue',
+                'title' => 'Despliegue'
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol'
+            ],
+            [
+                'name' => 'relacion',
+                'sortField' => 'relacion',
+                'title' => 'Relación'
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+            [
+                'name' => 'fechaInicio',
+                'sortField' => 'fechaInicio',
+                'title' => 'Fecha de Inicio'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'estado',
+                'sortField' => 'estado',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+
     'integrantes' => [
         'fields' => [
             [

@@ -16,6 +16,7 @@ class IntegranteResource extends Resource
     {
         return [
             'equipo'          => $this->equipo,
+            'nombreEquipo'          => $this->equipo->nombre,
             'idIntegrante' => $this->idIntegrante,
             'nombre' => $this->persona->getNombreCompletoAttribute(),
             'rol' => $this->rol,

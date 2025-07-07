@@ -46,7 +46,7 @@ return [
     'payment_date_expired' => 'Fecha de Pago Vencida!!',
     'registrations_start' => 'Inscripciones empiezan',
     'description' => 'Descripción',
-    'location' => 'Ubicación',
+    'ubication' => 'Ubicación',
     'location_medium' => 'Lugar',
     'confirmation' => 'Confirmación y Pago',
     'automatic' => 'Automática',
