@@ -437,6 +437,7 @@ export default {
             for (let field in this.form) {
                 this.form[field] = null;
             }
+            this.form.idEquipo = this.idEquipo;
             this.persona = null;
             this.reset_errors();
         },
