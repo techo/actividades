@@ -274,9 +274,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
         Route::prefix('/{idEquipo}/reuniones')->group(function() {
             Route::get('', 'backoffice\ajax\EquipoReunionesController@index'); 
-            Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
-            Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
-            Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');
+            Route::post('/crear', 'backoffice\ajax\EquipoReunionesController@store');  
+            Route::get('/{idReunion}', 'backoffice\ajax\EquipoReunionesController@get');  
+            Route::put('/{idReunion}', 'backoffice\ajax\EquipoReunionesController@update');
+            Route::delete('/{idReunion}', 'backoffice\ajax\EquipoReunionesController@delete');
         });
 
         Route::prefix('/{idEquipo}/coordinacion')->group(function() {
