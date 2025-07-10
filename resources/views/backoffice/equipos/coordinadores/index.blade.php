@@ -9,7 +9,7 @@
         </div>
     @endif
     <div class="nav-tabs-custom">
-        @include('backoffice.equipos.tabs' , [ 'tab' => 'coordinadores' , 'idEquipo' => $id])
+        @include('backoffice.equipos.tabs' , [ 'tab' => 'coordinacion' , 'idEquipo' => $id])
     
         <div class="tab-content">
             <div class="tab-pane active" id="coordinadores">

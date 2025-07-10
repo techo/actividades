@@ -464,6 +464,43 @@ return [
         ]
     ],
 
+    'reuniones_equipo' => [
+        'fields' => [
+            [
+                'name' => 'idReunion',
+                'sortField' => 'idReunion',
+                'visible' => false
+            ],
+            [
+                'name' => 'idReunion',
+                'sortField' => 'idReunion',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'despliegue',
+                'sortField' => 'despliegue',
+                'title' => 'Despliegue'
+            ],
+            [
+                'name' => 'fecha',
+                'sortField' => 'fecha',
+                'title' => 'Fecha'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'fecha',
+                'sortField' => 'fecha',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+
     'integrantes' => [
         'fields' => [
             [

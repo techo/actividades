@@ -5,6 +5,9 @@
     <li class="{{ ($tab == 'integrantes')?'active':'' }}">
         <a href="/admin/equipos/{{ $idEquipo }}/integrantes/" aria-expanded="true">{{ __('backend.members') }}</a>
     </li>
+    <li class="{{ ($tab == 'seguimiento')?'active':'' }}">
+        <a href="/admin/equipos/{{ $idEquipo }}/seguimiento/" aria-expanded="true">{{ __('backend.seguimiento') }}</a>
+    </li>
     <li class="{{ ($tab == 'coordinacion')?'active':'' }}">
         <a href="/admin/equipos/{{ $idEquipo }}/coordinacion/" aria-expanded="true">{{ __('backend.coordination') }}</a>
     </li>

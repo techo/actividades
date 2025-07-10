@@ -61,6 +61,11 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Integrante::class, 'idPersona', 'idPersona');
     }
 
+    public function reuniones()
+    {
+        return $this->belongsToMany(EquipoReunion::class, 'equipo_reunion_persona', 'idPersona', 'idReunion');
+    }
+
     public function actividadesCreadas()
     {
         return $this->hasMany(Actividad::class, 'idPersonaCreacion');
