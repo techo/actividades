@@ -382,6 +382,7 @@ return [
     'crear_reunion' => 'Crear Reunión',
     'seguimiento' => 'Seguimiento',
     'compromisos' => 'Compromisos',
+    'contenido_reunion' => 'Contenido de la reunión',
     'view_all' => 'Ver todas',
     'view_subscribed' => 'Ver Suscriptas',
     'view_teams' => 'Ver Equipos',

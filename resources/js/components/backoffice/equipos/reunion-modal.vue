@@ -46,6 +46,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div style="position: relative;">
+                                <label for="descripcion">{{ $t('backend.people') }}</label>
                                 <vue-tags-input
                                     v-model="tagPersona"
                                     :tags="personasMiembros"
@@ -54,6 +55,8 @@
                                     @tags-changed="updatePersonasMiembros"
                                     @input="onSearch"
                                     placeholder="Buscar persona..."
+                                    class="w-100"
+                                    style="width: 100%;"
                                 />
                                 <i class="fa fa-spinner fa-spin" v-if="loadingPersonas"></i>
                                 <span v-if="loadingPersonas"
@@ -67,18 +70,27 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
-                                <label for="descripcion">{{ $t('backend.compromisos') }}</label>
-
-                                <textarea v-model="form.compromisos" name="compromisos" class="form-control" rows="3" required></textarea>
-                                <span v-if="errors.compromisos" v-text="errors.compromisos[0]" class="help-block"></span>
+                                <label for="descripcion">{{ $t('backend.contenido_reunion') }}</label>
+                                <tinymce-editor 
+                                    v-model="form.descripcion" 
+                                    :init="{
+                                        menubar: 'false',
+                                        file_picker_callback: tiny_mce_filemanager_callback,
+                                        relative_urls: false,
+                                        resize: true,
+                                    }"
+                                    toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
+                                    plugins="paste autoresize image preview paste link"
+                                ></tinymce-editor>
+                                <span v-if="errors.descripcion" v-text="errors.descripcion[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
-                                <label for="descripcion">{{ $t('backend.description') }}</label>
+                                <label for="descripcion">{{ $t('backend.compromisos') }}</label>
 
-                                <textarea v-model="form.descripcion" name="descripcion" class="form-control" rows="3" required></textarea>
-                                <span v-if="errors.descripcion" v-text="errors.descripcion[0]" class="help-block"></span>
+                                <textarea v-model="form.compromisos" name="compromisos" class="form-control" rows="3" required></textarea>
+                                <span v-if="errors.compromisos" v-text="errors.compromisos[0]" class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -108,13 +120,13 @@
 </template>
 
 <script>
-
+import tinymceEditor from '@tinymce/tinymce-vue';
 import vSelect from 'vue-select';
 import Simplert from 'vue2-simplert';
 import VueTagsInput from '@johmun/vue-tags-input';
 
 export default {
-    components: { 'v-select': vSelect , VueTagsInput},
+    components: { tinymceEditor, 'v-select': vSelect , VueTagsInput},
     props: ['idEquipo'],
     data: function () {
         return {
@@ -259,6 +271,26 @@ export default {
                 }
             })
         },
+        tiny_mce_filemanager_callback(callback, value, meta) {
+                //gracias a esto ❤ https://github.com/UniSharp/laravel-filemanager/issues/759 
+                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+                let cmsURL = '/laravel-filemanager?editor=tinymce5&field_name=' + value;
+                if (meta.filetype == 'image') { cmsURL = cmsURL + "&type=Images"; } 
+                else { cmsURL = cmsURL + "&type=Files"; }
+
+                tinyMCE.activeEditor.windowManager.openUrl({
+                    url : cmsURL,
+                    title : 'Administrador de archivos',
+                    width : x * 0.8,
+                    height : y * 0.8,
+                    resizable : "yes",
+                    close_previous : "no",
+                    onMessage: (api, message) => {
+                        callback(message.content);
+                    }
+                });
+            },
         onSearch: _.debounce(function (text) {
                 if (text.length > 3) {
                     this.loadingPersonas = true;
