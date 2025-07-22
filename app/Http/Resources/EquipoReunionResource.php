@@ -22,6 +22,7 @@ class EquipoReunionResource extends Resource
             'despliegue'    => $this->despliegue,
             'descripcion'    => $this->descripcion,
             'compromisos'    => $this->compromisos,
+            'tipo_reunion'    => $this->tipo_reunion,
             'personas'     => $this->personas->map(function ($p) {
                                 return [
                                     'id' => $p->idPersona,

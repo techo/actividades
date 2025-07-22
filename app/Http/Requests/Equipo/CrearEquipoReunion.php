@@ -30,6 +30,7 @@ class CrearEquipoReunion extends FormRequest
             'fecha' => 'required',
             'descripcion' => 'nullable',
             'compromisos' => 'nullable',
+            'tipo_reunion' => 'nullable',
             'personas' => 'nullable',
         ];
     }

@@ -14,14 +14,29 @@
                         <p v-text="errors.idReunion[0]"></p>
                     </div>
 
-                    
-                    
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
                                 <label for="nombre">{{ $t('backend.name') }}</label>
                                 <input v-model="form.nombre" name="nombre" type="text" class="form-control" required>
                                 <span v-if="errors.nombre" v-text="errors.nombre[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div :class="{ 'form-group': true, 'has-error': errors.tipo_reunion }">
+                                <label for="tipo_reunion">{{ $t('backend.tipo_reunion') }}</label>
+                                <select v-model="form.tipo_reunion" name="tipo_reunion" class="form-control" required>
+                                    <option value="mesas_trabajo" :selected="form.tipo_reunion == 'mesas_trabajo'">{{ $t('backend.mesas_trabajo') }}</option>
+                                    <option value="seguimiento" :selected="form.tipo_reunion == 'seguimiento'">{{ $t('backend.seguimiento') }}</option>
+                                    <option value="reunion_equipo" :selected="form.tipo_reunion == 'reunion_equipo'">{{ $t('backend.reunion_equipo') }}</option>
+                                    <option value="visita_comunidad" :selected="form.tipo_reunion == 'visita_comunidad'">{{ $t('backend.visita_comunidad') }}</option>
+                                    <option value="revision_proyecto" :selected="form.tipo_reunion == 'revision_proyecto'">{{ $t('backend.revision_proyecto') }}</option>
+                                    <option value="espacio_renovacion_o_cierre" :selected="form.tipo_reunion == 'espacio_renovacion_o_cierre'">{{ $t('backend.espacio_renovacion_o_cierre') }}</option>
+                                </select>
+                                <span v-if="errors.tipo_reunion" v-text="errors.tipo_reunion[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -140,6 +155,7 @@ export default {
                 idEquipo: this.idEquipo,
                 nombre: null,
                 despliegue: null,
+                tipo_reunion: null,
                 fecha: null,
                 descripcion: null,
                 compromiso: null,
@@ -152,7 +168,6 @@ export default {
             errors: {},
             guardado: false,
             tagPersona: '',
-            personasMiembros: [], // [{ text: 'Juan Pérez', id: 5 }, ...]
             filteredPersonasTags: [],
             loadingPersonas: false,
         }
@@ -297,7 +312,7 @@ export default {
                 axios.get('/admin/ajax/equipos/'+ this.form.idEquipo +'/integrante?sort=estado&integrante=' + text)
                     .then((response) => {
                         this.filteredPersonasTags = response.data.data.map(persona => ({
-                            text: persona.nombre,
+                            text: `${persona.nombre || ''} (${persona.rol || ''})`,
                             id: persona.idPersona,
                         }));
                     })

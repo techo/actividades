@@ -17,6 +17,7 @@ class EquipoReunion extends Model
         'despliegue', 
         'descripcion', 
         'compromisos', 
+        'tipo_reunion'
     ];
 
     protected $dates =
