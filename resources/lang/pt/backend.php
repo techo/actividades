@@ -423,5 +423,6 @@ return [
     'present' => 'Presentes',
     'add_new' => 'Adicionar Novo',
     'add' => 'Adicionar',
-
+    'show_all' => 'Mostrar Todos',
+    'show_active' => 'Mostrar Ativos',
 ];

@@ -4,6 +4,9 @@
     <div v-if="idEquipo" class="row">
       <div class="col-md-12">
           <span class="pull-right">
+              <a class="btn btn-secondary" :href="toggleRoute">
+                {{ toggleLabel }}
+              </a>
               <button class="btn btn-primary" @click.prevent="desplegarModal()">{{ $t('backend.create') }} <i class="fa fa-plus"></i></button>
           </span>
       </div>
@@ -133,8 +136,24 @@ export default {
       this.moreParams = {};
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
-  }
+  },
+  computed: {
+    isTodosView() {
+      return window.location.pathname.includes('/integrantes/todos');
+    },
+    toggleLabel() {
+      return this.isTodosView ? this.$t('backend.show_active') : this.$t('backend.show_all');
+    },
+    toggleRoute() {
+      if (this.isTodosView) {
+        return `/admin/equipos/${this.idEquipo}/integrantes/activos`;
+      } else {
+        return `/admin/equipos/${this.idEquipo}/integrantes/todos`;
+      }
+    }
+  },
 }
+
 </script>
 <style>
 .pagination {

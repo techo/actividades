@@ -247,7 +247,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::put('/{idEquipo}', 'backoffice\EquiposController@update');
         Route::delete('/{idEquipo}', 'backoffice\EquiposController@destroy');
         Route::prefix('/{idEquipo}/integrantes')->group(function() {
-            Route::get('', 'backoffice\IntegrantesController@index');
+            Route::get('/todos', 'backoffice\IntegrantesController@indexAll');
+            Route::get('/activos', 'backoffice\IntegrantesController@indexActive');
         });
 
         Route::prefix('/{idEquipo}/seguimiento')->group(function() {
@@ -264,7 +265,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/oficina/{idOficina}', 'backoffice\ajax\EquiposController@index');
         
         Route::prefix('/{idEquipo}/integrante')->group(function() {
-            Route::get('', 'backoffice\ajax\IntegrantesController@index'); 
+            Route::get('/{estado}', 'backoffice\ajax\IntegrantesController@index'); 
             Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
             Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');

@@ -14,13 +14,22 @@ class IntegrantesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $idEquipo)
+    public function indexAll(Request $request, $idEquipo)
     {
         $equipo = Equipo::findOrFail($idEquipo);
         $datatableConfig = config('datatables.integrantes');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.equipos.personas.index', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
+        return view('backoffice.equipos.personas.indexAll', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
+    }
+
+    public function indexActive(Request $request, $idEquipo)
+    {
+        $equipo = Equipo::findOrFail($idEquipo);
+        $datatableConfig = config('datatables.integrantes');
+        $fields = json_encode($datatableConfig['fields']);
+        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        return view('backoffice.equipos.personas.indexActive', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
     }
 
 }

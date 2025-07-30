@@ -16,14 +16,16 @@ use Illuminate\Support\Facades\Storage;
 
 class IntegrantesController extends Controller
 {
-    public function index(Request $request, $idEquipo)
+    public function index(Request $request, $idEquipo, $estado)
     {
         $filtros = [];
         if($request->has('integrante')){
             $filtros['integrante'] = $request->integrante;
         }
+        
+        if($estado)
+            $filtros['estado'] = true;
 
-        $filtros['estado'] = true;
         $filtros['idEquipo'] = $idEquipo;
         
         if($request->filled('sort')) {

@@ -422,6 +422,8 @@ return [
     'present' => 'Presentes',
     'add_new' => 'Agregar Nuevo',
     'add' => 'Agregar',
+    'show_all' => 'Mostrar Todos',
+    'show_active' => 'Mostrar Activos',
 
 
 ];
