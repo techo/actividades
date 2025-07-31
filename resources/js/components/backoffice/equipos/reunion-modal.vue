@@ -309,7 +309,7 @@ export default {
         onSearch: _.debounce(function (text) {
             if (text.length > 3) {
                 this.loadingPersonas = true;
-                axios.get('/admin/ajax/equipos/'+ this.form.idEquipo +'/integrante?sort=estado&integrante=' + text)
+                axios.get('/admin/ajax/equipos/'+ this.form.idEquipo +'/integrante/1?sort=estado&integrante=' + text)
                     .then((response) => {
                         this.filteredPersonasTags = response.data.data.map(persona => ({
                             text: `${persona.nombre || ''} (${persona.rol || ''})`,
