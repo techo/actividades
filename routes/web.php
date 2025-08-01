@@ -265,7 +265,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/oficina/{idOficina}', 'backoffice\ajax\EquiposController@index');
         
         Route::prefix('/{idEquipo}/integrante')->group(function() {
-            Route::get('/{estado}', 'backoffice\ajax\IntegrantesController@index'); 
+            Route::get('/estado/{estado}', 'backoffice\ajax\IntegrantesController@index'); 
             Route::post('/crear', 'backoffice\ajax\IntegrantesController@store');  
             Route::put('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@update');
             Route::delete('/{idIntegrante}', 'backoffice\ajax\IntegrantesController@delete');

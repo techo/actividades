@@ -16,7 +16,7 @@
                 <div class="box">
                     <div class="box-body  with-border">
                         <integrantes-datatable
-                            api-url="/admin/ajax/equipos/{{ $idEquipo }}/integrante/0"
+                            api-url="/admin/ajax/equipos/{{ $idEquipo }}/integrante/estado/0"
                             fields="{{ $fields }}"
                             id-equipo="{{ $idEquipo }}"
                             sort-order="{{ $sortOrder }}"
