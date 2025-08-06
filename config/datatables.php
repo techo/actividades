@@ -464,6 +464,37 @@ return [
         ]
     ],
 
+    'comunidad_redes' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idRedComunidad',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'tipo',
+                'sortField' => 'tipo',
+                'title' => 'Tipo',
+            ],
+            [
+                'name' => 'presencia',
+                'sortField' => 'presencia',
+                'title' => 'Presencia'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'nombre',
+                'sortField' => 'nombre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'reuniones_equipo' => [
         'fields' => [
             [

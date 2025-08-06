@@ -5,7 +5,7 @@
     <li class="{{ ($tab == 'ficha')?'active':'' }}">
         <a href="/admin/comunidades/{{ $idComunidad }}/ficha/" aria-expanded="true">{{ __('comunidad_ficha_inicial.ficha') }}</a>
     </li>
-    <li class="{{ ($tab == 'ficha')?'active':'' }}">
+    <li class="{{ ($tab == 'coordinadores')?'active':'' }}">
         <a href="/admin/comunidades/{{ $idComunidad }}/coordinacion/" aria-expanded="true">{{ __('backend.coordination') }}</a>
     </li>
     <li class="{{ ($tab == 'actividades')?'active':'' }}">
@@ -13,5 +13,8 @@
     </li>
     <li class="{{ ($tab == 'integrantes')?'active':'' }}">
         <a href="/admin/comunidades/{{ $idComunidad }}/integrantes/" aria-expanded="true">{{ __('backend.members') }}</a>
+    </li>
+    <li class="{{ ($tab == 'redes')?'active':'' }}">
+        <a href="/admin/comunidades/{{ $idComunidad }}/redes/" aria-expanded="true">{{ __('backend.redes') }}</a>
     </li>
 </ul>

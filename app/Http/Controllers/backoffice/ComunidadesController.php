@@ -31,6 +31,14 @@ class ComunidadesController extends Controller
         return view('backoffice.comunidades.actividades.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
     }
 
+    public function showRedes(Request $request, $idComunidad)
+    {
+        $comunidad = Comunidad::findOrFail($idComunidad);
+        $datatableConfig = config('datatables.comunidad_redes');
+        $fields = json_encode($datatableConfig['fields']);
+        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        return view('backoffice.comunidades.redes.index', compact('fields', 'sortOrder', 'idComunidad', 'comunidad'));
+    }
     public function showIntegrantes(Request $request, $idComunidad)
     {
         $comunidad = Comunidad::findOrFail($idComunidad);

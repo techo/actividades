@@ -50,6 +50,12 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDatatable';
 import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable';
 import ComunidadesDatatable from './components/backoffice/datatable/ComunidadesDatatable';
+import RedesDatatable from './components/backoffice/datatable/RedesDatatable';
+import RedModal from './components/backoffice/comunidad/red-modal';
+
+Vue.component('redes-datatable', RedesDatatable);
+Vue.component('red-modal', RedModal);
+
 import IntegrantesDatatable from './components/backoffice/datatable/IntegrantesDatatable';
 import IntegranteModal from './components/backoffice/equipos/integrante-modal';
 import ReunionesDatatable from './components/backoffice/datatable/ReunionesDatatable';

@@ -425,4 +425,32 @@ return [
     'add' => 'Adicionar',
     'show_all' => 'Mostrar Todos',
     'show_active' => 'Mostrar Ativos',
+
+    'tipo' => 'Tipo de organização',
+    'entidad_estatal_municipal' => 'Entidade estatal ou municipal',
+    'organismo_internacional' => 'Organismo internacional',
+    'organizacion_local' => 'Organização local',
+    'organizacion_base_comunitaria' => 'Organização de base comunitária',
+    'empresa_servicios_publicos' => 'Empresa prestadora de serviços públicos',
+    'empresa_privada' => 'Empresa privada',
+
+    'nombre' => 'Nome da organização',
+    'relacion' => 'Relacionamento com a comunidade',
+    'excelente' => 'Excelente',
+    'buena' => 'Bom',
+    'regular' => 'Médio',
+    'mala' => 'Ruim',
+
+    'presencia' => 'Presença na comunidade',
+    'constante' => 'Constante',
+    'intermitente' => 'Intermitente',
+    'poca' => 'Pequena',
+
+    'nombre_contacto' => 'Nome de contato',
+    'telefono_contacto' => 'Telefone de contato',
+    'mail_contacto' => 'Email de contato',
+
+    'comentarios' => 'Comentários',
+    'redes' => 'Redes',
+    'new_red' => 'Nueva Red',
 ];

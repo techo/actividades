@@ -426,4 +426,32 @@ return [
     'show_active' => 'Mostrar Activos',
 
 
+    'tipo' => 'Tipo de organización',
+    'entidad_estatal_municipal' => 'Entidad estatal o municipal',
+    'organismo_internacional' => 'Organismo internacional',
+    'organizacion_local' => 'Organización local',
+    'organizacion_base_comunitaria' => 'Organización de base comunitaria',
+    'empresa_servicios_publicos' => 'Empresa prestadora de servicios públicos',
+    'empresa_privada' => 'Empresa privada',
+
+    'nombre' => 'Nombre de la organización',
+    'relacion' => 'Relación con la comunidad',
+    'excelente' => 'Excelente',
+    'buena' => 'Buena',
+    'regular' => 'Regular',
+    'mala' => 'Mala',
+
+    'presencia' => 'Presencia en la comunidad',
+    'constante' => 'Constante',
+    'intermitente' => 'Intermitente',
+    'poca' => 'Poca',
+
+    'nombre_contacto' => 'Nombre de contacto',
+    'telefono_contacto' => 'Teléfono de contacto',
+    'mail_contacto' => 'Mail de contacto',
+
+    'comentarios' => 'Comentarios',
+    'redes' => 'Redes',
+    'new_red' => 'Nueva Red',
+
 ];
