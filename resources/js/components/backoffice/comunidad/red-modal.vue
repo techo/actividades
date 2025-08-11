@@ -18,7 +18,7 @@
                     <div class="row">
                     <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.nombre }">
-                            <label for="nombre">{{ $t('backend.nombre') }}</label>
+                            <label for="nombre">{{ $t('backend.nombre_organizacion') }}</label>
                             <input v-model="form.nombre" type="text" name="nombre" class="form-control" required>
                             <span v-if="errors.nombre" v-text="errors.nombre[0]" class="help-block"></span>
                         </div>
@@ -163,14 +163,14 @@ export default {
     },
     computed: {
         editando() {
-            if (this.form['idRedComunitaria'])
+            if (this.form['idRedComunidad'])
                 return true
             return false
         },
     },
     methods: {
         guardar() {
-            if (this.form['idRedComunitaria'])
+            if (this.form['idRedComunidad'])
                 this.update();
             else
                 this.store();
@@ -226,8 +226,6 @@ export default {
             for (let field in this.form) {
                 this.form[field] = null;
             }
-            this.form.idEquipo = this.idEquipo;
-            this.persona = null;
             this.reset_errors();
         },
         reset_errors: function () {

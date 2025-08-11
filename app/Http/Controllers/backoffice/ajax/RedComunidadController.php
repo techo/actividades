@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Comunidad\DeleteComunidad;
 use App\Http\Requests\Comunidad\RedComunidad as RequestRedComunidad;
 use App\Http\Resources\RedComunidadResource;
 use App\Search\RedComunidadSearch;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\RedComunidad;
 
 class RedComunidadController extends Controller
@@ -39,12 +39,6 @@ class RedComunidadController extends Controller
         return response()->json($result);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(RequestRedComunidad $request, $idComunidad)
     {
         $redComunidad = new RedComunidad();
@@ -57,31 +51,25 @@ class RedComunidadController extends Controller
 
     }
 
-    public function update(RequestRedComunidad $request, $idEquipo, $idIntegrante)
+    public function update(RequestRedComunidad $request, $idComunidad, $idRedComunidad)
     {
-        $integrante = Integrante::findOrFail($idIntegrante);
-        $validado = $validado = $request->validated();
-        $integrante->fill($validado);
-        $integrante->save();
+        $redComunidad = RedComunidad::findOrFail($idRedComunidad);
+        $validado = $request->validated();
+        $redComunidad->fill($validado);
+        $redComunidad->save();
 
-        return response()->json($integrante);
+        return response()->json($redComunidad);
     }
 
-    /**
-     * Get a resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function get($idComunidad, $idRedComunidad)
     {
         $redComunidad = RedComunidad::findOrFail($idRedComunidad);
         return response()->json($redComunidad);
     }
 
-    public function delete(DeleteIntegrante $id, $idEquipo, $idIntegrante)
+    public function delete(DeleteComunidad $id, $idComunidad, $idRedComunidad)
 	{
-        $redComunidad = RedComunidad::findOrFail($idIntegrante);
+        $redComunidad = RedComunidad::findOrFail($idRedComunidad);
 		$redComunidad->delete();
 
 		return response()->json('OK', 200);
