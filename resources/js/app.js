@@ -56,6 +56,12 @@ import RedModal from './components/backoffice/comunidad/red-modal';
 Vue.component('redes-datatable', RedesDatatable);
 Vue.component('red-modal', RedModal);
 
+import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
+import ReferenteModal from './components/backoffice/comunidad/referente-modal';
+
+Vue.component('referentes-datatable', ReferentesDatatable);
+Vue.component('referente-modal', ReferenteModal);
+
 import IntegrantesDatatable from './components/backoffice/datatable/IntegrantesDatatable';
 import IntegranteModal from './components/backoffice/equipos/integrante-modal';
 import ReunionesDatatable from './components/backoffice/datatable/ReunionesDatatable';

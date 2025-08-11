@@ -495,6 +495,45 @@ return [
             ],
         ]
     ],
+
+
+    'comunidad_referentes' => [
+        'fields' => [
+            [
+                'name' => 'id',
+                'sortField' => 'idReferenteComunidad',
+                'visible' => false
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'Nombre'
+            ],
+            [
+                'name' => 'rol',
+                'sortField' => 'rol',
+                'title' => 'Rol',
+            ],
+            [
+                'name' => 'telefono',
+                'sortField' => 'telefono',
+                'title' => 'Teléfono',
+            ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'estado',
+                'sortField' => 'estado',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
+
     'reuniones_equipo' => [
         'fields' => [
             [

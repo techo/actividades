@@ -41,5 +41,15 @@ class Comunidad extends Model
     {
         return $this->hasMany(CoordinadorComunidad::class, 'idComunidad', 'idComunidad');
     }
+
+    public function redes()
+    {
+        return $this->hasMany(RedComunidad::class, 'idComunidad', 'idComunidad');
+    }
+
+    public function referentes()
+    {
+        return $this->hasMany(Ref::class, 'idComunidad', 'idComunidad');
+    }
     
 }

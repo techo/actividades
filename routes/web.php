@@ -210,6 +210,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
         Route::get('/{idComunidad}/integrantes', 'backoffice\ComunidadesController@showIntegrantes');
         Route::get('/{idComunidad}/actividades', 'backoffice\ComunidadesController@getActividades');
+        Route::get('/{idComunidad}/referentes', 'backoffice\ComunidadesController@showReferentes');
         Route::get('/{idComunidad}/redes', 'backoffice\ComunidadesController@showRedes');
         Route::get('/{idComunidad}/ficha', 'backoffice\ComunidadesController@showFicha');
         Route::post('/{idComunidad}/ficha', 'backoffice\ajax\ComunidadFichaController@store');
@@ -235,6 +236,15 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
             Route::delete('/{idRedComunidad}', 'backoffice\ajax\RedComunidadController@delete');
             Route::get('/{idRedComunidad}', 'backoffice\ajax\RedComunidadController@get');  
         });
+
+        Route::prefix('/{idComunidad}/referentes')->group(function() {
+            Route::get('', 'backoffice\ajax\ReferenteComunidadController@index');  
+            Route::post('/crear', 'backoffice\ajax\ReferenteComunidadController@store');  
+            Route::put('/{idReferenteComunidad}', 'backoffice\ajax\ReferenteComunidadController@update');
+            Route::delete('/{idReferenteComunidad}', 'backoffice\ajax\ReferenteComunidadController@delete');
+            Route::get('/{idReferenteComunidad}', 'backoffice\ajax\ReferenteComunidadController@get');  
+        });
+        
         //coordinacion
         Route::prefix('/{idComunidad}/coordinacion')->group(function() {
             Route::get('', 'backoffice\ajax\CoordinadorComunidadController@index');

@@ -17,4 +17,7 @@
     <li class="{{ ($tab == 'redes')?'active':'' }}">
         <a href="/admin/comunidades/{{ $idComunidad }}/redes/" aria-expanded="true">{{ __('backend.redes') }}</a>
     </li>
+    <li class="{{ ($tab == 'referentes')?'active':'' }}">
+        <a href="/admin/comunidades/{{ $idComunidad }}/referentes/" aria-expanded="true">{{ __('backend.referentes') }}</a>
+    </li>
 </ul>

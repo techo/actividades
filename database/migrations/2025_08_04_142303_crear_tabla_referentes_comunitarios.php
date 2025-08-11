@@ -19,6 +19,8 @@ class CrearTablaReferentesComunitarios extends Migration
             $table->string('nombre');
             $table->string('rol');
             $table->string('telefono')->nullable();
+            $table->string('mail')->nullable();
+            $table->string('comentarios')->nullable();
 			$table->boolean('estado');
             $table->timestamps();
             $table->softDeletes();

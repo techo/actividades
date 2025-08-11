@@ -434,7 +434,7 @@ return [
     'empresa_servicios_publicos' => 'Empresa prestadora de serviços públicos',
     'empresa_privada' => 'Empresa privada',
 
-    'nombre' => 'Nome da organização',
+    'nombre_organizacion' => 'Nome da organização',
     'relacion' => 'Relacionamento com a comunidade',
     'excelente' => 'Excelente',
     'buena' => 'Bom',
@@ -452,5 +452,10 @@ return [
 
     'comentarios' => 'Comentários',
     'redes' => 'Redes',
-    'new_red' => 'Nueva Red',
+    'new_red' => 'Nova Red',
+
+    'referentes' => 'Referente',
+    'new_referente' => 'Novo Referente',
+    'telefono' => 'Teléfono',
+    'nombre' => 'Nome',
 ];
