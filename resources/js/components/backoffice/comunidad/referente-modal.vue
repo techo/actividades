@@ -57,7 +57,7 @@
                     <!-- documento-->
                     <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.documento }">
-                            <label for="documento">{{ $t('frontend.documento') }}</label>
+                            <label for="documento">{{ $t('backend.documento') }}</label>
                             <input v-model="form.documento" type="text" name="documento" class="form-control" required>
                             <span v-if="errors.documento" v-text="errors.documento[0]" class="help-block"></span>
                         </div>
