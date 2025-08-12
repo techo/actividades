@@ -454,8 +454,9 @@ return [
     'redes' => 'Redes',
     'new_red' => 'Nova Red',
 
-    'referentes' => 'Referente',
-    'new_referente' => 'Novo Referente',
+    'referentes' => 'Referentes(as)',
+    'new_referente' => 'Novo',
     'telefono' => 'Teléfono',
+    'documento' => 'CPF',
     'nombre' => 'Nome',
 ];

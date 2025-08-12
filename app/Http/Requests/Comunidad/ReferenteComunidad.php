@@ -26,9 +26,10 @@ class ReferenteComunidad extends FormRequest
         return [
             'idComunidad' => 'required',
             'nombre' => 'required',
-            'rol' => 'nullable',
-            'telefono' => 'required',
+            'rol' => 'required',
+            'telefono' => 'nullable',
             'mail' => 'nullable',
+            'documento' => 'nullable',
             'comentarios' => 'nullable',
             'estado' => 'required'
         ];

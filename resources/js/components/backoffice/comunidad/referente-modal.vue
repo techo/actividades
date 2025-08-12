@@ -28,7 +28,7 @@
 
                     <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.rol }">
-                            <label for="rol">{{ $t('frontend.rol') }}</label>
+                            <label for="rol">{{ $t('backend.role') }}</label>
                             <input v-model="form.rol" type="text" name="rol" class="form-control" required>
                             <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
                         </div>
@@ -37,7 +37,7 @@
                      <!-- telefono-->
 
                     <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.rol }">
+                        <div :class="{ 'form-group': true, 'has-error': errors.telefono }">
                             <label for="telefono">{{ $t('backend.telefono') }}</label>
                             <input v-model="form.telefono" type="text" name="telefono" class="form-control" required>
                             <span v-if="errors.telefono" v-text="errors.telefono[0]" class="help-block"></span>
@@ -47,10 +47,31 @@
                      <!-- mail-->
 
                     <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.rol }">
+                        <div :class="{ 'form-group': true, 'has-error': errors.mail }">
                             <label for="mail">{{ $t('frontend.mail') }}</label>
                             <input v-model="form.mail" type="text" name="mail" class="form-control" required>
                             <span v-if="errors.mail" v-text="errors.mail[0]" class="help-block"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- documento-->
+                    <div class="col-md-6">
+                        <div :class="{ 'form-group': true, 'has-error': errors.documento }">
+                            <label for="documento">{{ $t('frontend.documento') }}</label>
+                            <input v-model="form.documento" type="text" name="documento" class="form-control" required>
+                            <span v-if="errors.documento" v-text="errors.documento[0]" class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <!-- estado-->
+                    <div class="col-md-6">
+                        <div :class="{ 'form-group': true, 'has-error': errors.estado }">
+                            <label for="estado">{{ $t('backend.state') }}</label>
+                            <select v-model="form.estado" name="estado" class="form-control" required>
+                                <option value="1" :selected="form.estado == 1">{{ $t('backend.active') }}</option>
+                                <option value="0" :selected="form.estado == 0">{{ $t('backend.inactive') }}</option>
+                            </select>
+                            <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block"></span>
                         </div>
                     </div>
 
@@ -62,16 +83,7 @@
                             <span v-if="errors.comentarios" v-text="errors.comentarios[0]" class="help-block"></span>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.estado }">
-                                <label for="estado">{{ $t('backend.state') }}</label>
-                                <select v-model="form.estado" name="estado" class="form-control" required>
-                                    <option value="1" :selected="form.estado == 1">{{ $t('backend.active') }}</option>
-                                    <option value="0" :selected="form.estado == 0">{{ $t('backend.inactive') }}</option>
-                                </select>
-                                <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block"></span>
-                            </div>
-                        </div>
+                    
                 </div>
                 </div>
 
@@ -112,6 +124,7 @@ export default {
                 rol: '',
                 telefono: '',
                 mail: '',
+                documento: '',
                 estado: 1,
                 comentarios: '',
             },
@@ -185,6 +198,7 @@ export default {
             this.show();
         },
         show: function () {
+            this.form.idComunidad = this.idComunidad;
             $('#referente-modal').modal('show'); //sino pasan cosas raras con el scroll
         },
         hide: function () {
@@ -194,6 +208,7 @@ export default {
             for (let field in this.form) {
                 this.form[field] = null;
             }
+            this.form['estado'] = 1;
             this.reset_errors();
         },
         reset_errors: function () {

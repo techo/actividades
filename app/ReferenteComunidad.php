@@ -16,6 +16,7 @@ class ReferenteComunidad extends Model
         'rol', 
         'telefono', 
         'mail', 
+        'documento', 
         'comentarios', 
         'estado',
     ];

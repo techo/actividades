@@ -19,6 +19,7 @@ class ReferenteComunidadResource extends Resource
             'nombre' => $this->nombre,
             'rol' => $this->rol,
             'telefono' => $this->telefono,
+            'documento' => $this->documento,
             'estado'    => $this->estado?"Activo":"Inactivo",
         ];
     }
