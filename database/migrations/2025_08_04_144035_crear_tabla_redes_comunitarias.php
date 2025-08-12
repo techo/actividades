@@ -23,7 +23,7 @@ class CrearTablaRedesComunitarias extends Migration
             $table->string('nombre_contacto')->nullable();
             $table->string('telefono_contacto')->nullable();
             $table->string('mail_contacto')->nullable();
-            $table->string('comentarios')->nullable();
+            $table->text('comentarios')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
