@@ -42,7 +42,7 @@ class EquipoReunionesController extends Controller
      */
     public function get($idEquipo, $idReunion)
     {
-        $equipoReunion = EquipoReunion::with('personas')->findOrFail($idReunion);
+        $equipoReunion = EquipoReunion::with('personas', 'referentes')->findOrFail($idReunion);
         return new EquipoReunionResource($equipoReunion);
     }
 
@@ -59,6 +59,7 @@ class EquipoReunionesController extends Controller
         $equipoReunion->fill($validado);
         $equipoReunion->save();
         $equipoReunion->personas()->sync($request->input('personas', []));
+        $equipoReunion->referentes()->sync($request->input('referentes', []));
         return response()->json($equipoReunion->fresh());
 
     }
@@ -70,6 +71,7 @@ class EquipoReunionesController extends Controller
         $equipoReunion->fill($validado);
         $equipoReunion->save();
         $equipoReunion->personas()->sync($request->input('personas', []));
+        $equipoReunion->referentes()->sync($request->input('referentes', []));
         return response()->json($equipoReunion);
     }
 }

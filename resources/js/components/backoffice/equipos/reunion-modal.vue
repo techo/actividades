@@ -25,7 +25,7 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div :class="{ 'form-group': true, 'has-error': errors.tipo_reunion }">
                                 <label for="tipo_reunion">{{ $t('backend.tipo_reunion') }}</label>
                                 <select v-model="form.tipo_reunion" name="tipo_reunion" class="form-control" required>
@@ -39,7 +39,7 @@
                                 <span v-if="errors.tipo_reunion" v-text="errors.tipo_reunion[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div :class="{ 'form-group': true, 'has-error': errors.despliegue }">
                                 <label for="despliegue">{{ $t('backend.deployment') }}</label>
                                 <select v-model="form.despliegue" name="despliegue" class="form-control" required>
@@ -49,7 +49,17 @@
                                 <span v-if="errors.despliegue" v-text="errors.despliegue[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-3" v-if="form.despliegue == 'Comunidad'">
+                            <div :class="{ 'form-group': true, 'has-error': errors.idComunidad }" >
+                                <label for="comunidad">{{ $t('backend.community') }}</label>
+                                <select name="idComunidad" class="form-control" v-model="form.idComunidad">
+                                    <option v-text="comunidad.nombre" v-bind:value="comunidad.idComunidad" v-for="comunidad in comunidades" ></option>
+                                </select>
+                                <span class="help-block">{{ errors.idComunidad }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div :class="{ 'form-group': true, 'has-error': errors.fecha }">
                                 <label for="fecha">{{ $t('backend.date') }}</label>
                                 <input v-model="form.fecha" name="fecha" type="date" class="form-control"
@@ -81,7 +91,29 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="row"  v-if="form.idComunidad && form.despliegue == 'Comunidad'">
+                        <div class="col-md-12">
+                            <div style="position: relative;">
+                                <label for="descripcion">{{ $t('backend.referentes') }}</label>
+                                <vue-tags-input
+                                    v-model="tagReferentes"
+                                    :tags="referentesMiembros"
+                                    :autocomplete-items="filteredReferentesTags"
+                                    :add-only-from-autocomplete="true"
+                                    @tags-changed="updateReferentesMiembros"
+                                    @input="onSearchReferentes"
+                                    placeholder="Buscar persona..."
+                                    class="w-100"
+                                    style="width: 100%;"
+                                />
+                                <i class="fa fa-spinner fa-spin" v-if="loadingReferentes"></i>
+                                <span v-if="loadingReferentes"
+                                    class="spinner-border spinner-border-sm text-secondary"
+                                    style="position: absolute; top: 10px; right: 10px;">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
@@ -159,22 +191,30 @@ export default {
                 fecha: null,
                 descripcion: null,
                 compromiso: null,
+                idComunidad: null,
                 personas: [],
+                referentes: [],
             },
             personasMiembros: [],
+            referentesMiembros: [],
             tags: [],
             tag: '',
             tagPersonas: '',
+            tagReferentes: '',
             errors: {},
             guardado: false,
             tagPersona: '',
             filteredPersonasTags: [],
+            filteredReferentesTags: [],
+            loadingReferentes: false,
             loadingPersonas: false,
+            comunidades : [],
         }
     },
     mounted() {
         Event.$on('reunion:crear', this.show);
         Event.$on('reunion:editar', this.editar);
+        this.getComunidades();
         this.guardado = false;
     },
     watch: {
@@ -193,6 +233,7 @@ export default {
     methods: {
         guardar() {
             this.form.personas = this.personasMiembros.map(p => p.id);
+            this.form.referentes = this.referentesMiembros.map(p => p.id);
             if (this.form['idReunion'])
                 this.update();
             else
@@ -225,9 +266,9 @@ export default {
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         eliminar() {
-            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
+            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/reuniones/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
-                    Event.$emit('integrantes:refrescar');
+                    Event.$emit('reuniones:refrescar');
                     location.reload();
                     this.cancelar();
                 })
@@ -238,6 +279,7 @@ export default {
                 .then((datos) => {
                     this.form = datos.data.data;
                     this.personasMiembros = this.form.personas;
+                    this.referentesMiembros = this.form.referentes;
                     this.form.fecha = moment(this.form.fecha, 'DD/MM/YYYY').format('YYYY-MM-DD');
                 }).catch((error) => { debugger; });
             
@@ -255,7 +297,8 @@ export default {
                 this.form[field] = null;
             }
             this.form.idEquipo = this.idEquipo;
-            this.persona = null;
+            this.personasMiembros = [];
+            this.referentesMiembros = [];
             this.reset_errors();
         },
         reset_errors: function () {
@@ -306,6 +349,14 @@ export default {
                     }
                 });
             },
+
+        getComunidades(){
+            axios.get('/ajax/comunidades/equipo/'+ this.idEquipo )
+                .then((datos) => { 
+                    this.comunidades = datos.data;
+                }).catch((error) => { debugger; });
+        },
+
         onSearch: _.debounce(function (text) {
             if (text.length > 3) {
                 this.loadingPersonas = true;
@@ -321,10 +372,31 @@ export default {
                     });
                 }
             }, 400),
+        
+        onSearchReferentes: _.debounce(function (text) {
+            if (text.length > 3) {
+                this.loadingReferentes = true;
+                axios.get('/admin/ajax/comunidades/'+ this.form.idComunidad +'/referentes?sort=estado&red=' + text)
+                    .then((response) => {
+                        this.filteredReferentesTags = response.data.data.map(persona => ({
+                            text: `${persona.nombre || ''} (${persona.rol || ''})`,
+                            id: persona.idReferenteComunidad,
+                        }));
+                    })
+                    .finally(() => {
+                        this.loadingReferentes = false;
+                    });
+                }
+            }, 400
+        ),
 
-            updatePersonasMiembros(newTags) {
-                this.personasMiembros = newTags;
-            }
+        updatePersonasMiembros(newTags) {
+            this.personasMiembros = newTags;
+        },
+
+        updateReferentesMiembros(newTags) {
+            this.referentesMiembros = newTags;
+        }
 
     }
 }

@@ -32,6 +32,8 @@ class CrearEquipoReunion extends FormRequest
             'compromisos' => 'nullable',
             'tipo_reunion' => 'nullable',
             'personas' => 'nullable',
+            'idComunidad' => 'nullable',
+            'referentes' => 'nullable',
         ];
     }
 }

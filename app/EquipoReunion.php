@@ -12,6 +12,7 @@ class EquipoReunion extends Model
     protected $primaryKey = "idReunion";
     protected $fillable = [
         'idEquipo', 
+        'idComunidad', 
         'nombre', 
         'fecha', 
         'despliegue', 
@@ -34,5 +35,15 @@ class EquipoReunion extends Model
     public function personas()
     {
         return $this->belongsToMany(Persona::class, 'equipo_reunion_persona', 'idReunion', 'idPersona');
+    }
+
+    public function referentes()
+    {
+        return $this->belongsToMany(ReferenteComunidad::class, 'equipo_reunion_referente', 'idReunion', 'idReferenteComunidad');
+    }
+
+    public function comunidad()
+    {
+        return $this->hasOne(Comunidad::class, 'idComunidad', 'idComunidad' );
     }
 }

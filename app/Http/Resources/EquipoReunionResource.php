@@ -16,6 +16,7 @@ class EquipoReunionResource extends Resource
     {
         return [
             'idEquipo'          => $this->idEquipo,
+            'idComunidad'          => $this->idComunidad,
             'idReunion'          => $this->idReunion,
             'nombre' => $this->nombre,
             'fecha' => ($this->fecha)?$this->fecha->format('d/m/Y'):'',
@@ -27,6 +28,12 @@ class EquipoReunionResource extends Resource
                                 return [
                                     'id' => $p->idPersona,
                                     'text' => $p->nombre_completo
+                                ];
+                            }),
+            'referentes'     => $this->referentes->map(function ($p) {
+                                return [
+                                    'id' => $p->idReferenteComunidad,
+                                    'text' => $p->nombre
                                 ];
                             }),
         ];

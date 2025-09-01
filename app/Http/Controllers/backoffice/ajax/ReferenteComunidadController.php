@@ -17,7 +17,7 @@ class ReferenteComunidadController extends Controller
     {
         $filtros = [];
         if($request->has('red')){
-            $filtros['nombre'] = $request->red;
+            $filtros['referente'] = $request->red;
         }
         
         $filtros['idComunidad'] = $idComunidad;
