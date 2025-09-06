@@ -33,7 +33,6 @@ class IntegrantesSearch
     }
     private static function getResults(Builder $query, $sort, $per_page)
     {
-        // return $query->get();
         $query->orderByRaw($sort);
         return $query->paginate($per_page);
     }

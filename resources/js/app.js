@@ -59,6 +59,11 @@ Vue.component('red-modal', RedModal);
 import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
 import ReferenteModal from './components/backoffice/comunidad/referente-modal';
 
+
+import participacion from './components/backoffice/datatable/participacion';
+Vue.component('participacion', participacion);
+
+
 Vue.component('referentes-datatable', ReferentesDatatable);
 Vue.component('referente-modal', ReferenteModal);
 

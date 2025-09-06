@@ -380,6 +380,12 @@ return [
     'create_team' => 'Crear Equipo',
     'add_member' => 'Agregar Integrante',
     'new_member' => 'Nuevo Integrante',
+
+    'onfire' => 'On Fire',
+    'comprometido' => 'Comprometido',
+    'reactivar' => 'Reactivar',
+    'sin_senial' => 'Sin señal',
+
     'crear_reunion' => 'Crear Reunión',
     'seguimiento' => 'Seguimiento',
     'compromisos' => 'Compromisos',

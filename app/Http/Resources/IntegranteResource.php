@@ -35,6 +35,7 @@ class IntegranteResource extends Resource
             'capacidades'    => $this->capacidades,
             'archivo_carta_compromiso'          => $this->archivo_carta_compromiso,
             'comunidad'          => ($this->comunidad)?$this->comunidad->nombre:'',
+            'participacion_status'          => $this->participacion_status,
         ];
     }
 }

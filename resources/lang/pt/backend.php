@@ -380,6 +380,12 @@ return [
     'create_comunidad' => 'Criar Comunidad',
     'add_member' => 'Adicionar Membro',
     'new_member' => 'Novo Membro',
+
+    'onfire' => 'Em Chamas',
+    'comprometido' => 'Comprometido',
+    'reactivar' => 'Reativar',
+    'sin_senial' => 'Sem sinal',
+
     'crear_reunion' => 'Criar Reunião',
     'mesas_trabajo' => 'Mesas de trabalho',
     'seguimiento' => 'Espaço de acompanhamento',

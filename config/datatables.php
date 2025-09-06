@@ -603,9 +603,8 @@ return [
                 'title' => 'Relación'
             ],
             [
-                'name' => 'estado',
-                'sortField' => 'estado',
-                'title' => 'Estado'
+                'name' => '__component:participacion',
+                'title' => 'Semáforo'
             ],
             [
                 'name' => 'fechaInicio',
