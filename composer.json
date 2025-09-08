@@ -20,7 +20,8 @@
         "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^2.11",
         "unisharp/laravel-filemanager": "~1.8",
-        "webpatser/laravel-uuid": "^3.0"
+        "webpatser/laravel-uuid": "^3.0",
+        "lcobucci/jwt": "3.3.3"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
