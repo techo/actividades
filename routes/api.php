@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // Rutas Publicas
 Route::post('login', 'api\PersonasController@login');
 Route::post('register', 'api\PersonasController@register');
-Route::post('create', 'api\UsuarioController@apiCreate');
+Route::post('create', 'ajax\UsuarioController@apiCreate');
 
 // forgot password
 Route::post('resetPassword', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
