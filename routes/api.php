@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,30 +19,45 @@ use Illuminate\Support\Facades\Auth;
 // Rutas Publicas
 Route::post('login', 'api\PersonasController@login');
 Route::post('register', 'api\PersonasController@register');
+Route::post('create', 'api\PersonasController@create');
 
-
-Route::get('/sedes', 'backoffice\ajax\OficinasController@getOficinas');
 // forgot password
-
 Route::post('resetPassword', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('categorias', 'ajax\CategoriasController@index');
+Route::get('/sedes', 'backoffice\ajax\OficinasController@getOficinas');
 
-// Rutas Privadas, por Token
+Route::prefix('paises')->group(function () {
+    Route::get('/', 'ajax\PaisesController@index');
+    Route::get('{id_pais}/provincias', 'ajax\PaisesController@provincias');
+    Route::get('{id_pais}/provincias/{id_provincia}/localidades', 'ajax\PaisesController@localidades');
+    Route::get('/habilitados', 'ajax\PaisesController@paisesHabilitados');
+});
 
-// edit Usuario 
-Route::post('editPersona/{persona}', 'api\PersonasController@update')->middleware('auth:api');
-Route::post('logout', 'api\PersonasController@logout')->middleware('auth:api');
 
-// delete usuario
-// change password
 
-Route::get('personas', 'api\PersonasController@index')->middleware('auth:api');
-Route::get('personas/{persona}', 'api\PersonasController@show')->middleware('auth:api');
-// Route::post('personas', 'api\PersonasController@store');
-// Route::put('personas/{persona}', 'api\PersonasController@update');
-// Route::delete('personas/{persona}', 'api\PersonasController@delete');
+/////////////////////////////////
+// Rutas Privadas, por Token   //
+/////////////////////////////////
 
-Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail')->middleware('auth:api');
-Route::get('inscripciones/', 'api\PersonasController@getInscripciones')->middleware('auth:api');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::middleware('auth:api')->group(function () {
+
+    Route::post('logout', 'api\PersonasController@logout');
+    Route::get('actividades', 'ajax\ActividadesController@index');
+
+    // personas
+    //Route::get('personas', 'api\PersonasController@index');
+    Route::get('personas/{persona}', 'api\PersonasController@show');
+    Route::post('editPersona/{persona}', 'api\PersonasController@update');
+   // Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail');
+
+    Route::get('inscripciones/', 'api\PersonasController@getInscripciones');
+});
+
+
+
+

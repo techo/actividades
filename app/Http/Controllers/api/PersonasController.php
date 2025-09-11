@@ -7,9 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CrearPersona;
 use App\Persona;
 use App\Inscripcion;
+use App\Pais;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Hash;
+use Webpatser\Uuid\Uuid;
 
 class PersonasController extends Controller
 { 
@@ -90,6 +91,40 @@ class PersonasController extends Controller
         );
     }
 
+    public function create(Request $request) {
+        $this->validar($request, 'create');
+
+        $persona = new Persona();
+        $this->cargar_cambios($request, $persona);
+        $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) 
+            ? Hash::make(str_random(30)) 
+            : Hash::make($request->pass);
+
+        $persona->idUnidadOrganizacional = 0;
+        $persona->recibirMails = 1;
+        $persona->unsubscribe_token = Uuid::generate()->string;
+
+        if (!empty($request->google_id) || !empty($request->facebook_id)){
+            $persona->email_verified_at = now(); 
+        } else {
+            $persona->notify(new \App\Notifications\RegistroUsuario);
+        }
+
+        $persona->save();
+
+        // 🔑 En API devolvés un token en lugar de usar Auth::login()
+        $token = $persona->createToken('Token Name')->accessToken;
+
+        $pais = Pais::find($persona->idPais);
+
+        return response()->json([
+            'mensaje' => __('messages.account_created'),
+            'token' => $token,
+            'persona' => $persona,
+            'abreviacionPais' => $pais->abreviacion,
+            'loginSocial' => (!empty($request->google_id) || !empty($request->facebook_id)),
+        ]);
+    }
     public function register(CrearPersona $request)
     {   
         $fields = $request->validated();
