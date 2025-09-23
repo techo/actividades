@@ -26,6 +26,7 @@ use Webpatser\Uuid\Uuid;
 class UsuarioController extends BaseController
 {
   public function validar(Request $request, $verbo) {
+    dd($request->all());
     if(!($verbo == 'update' || $verbo == 'create')) abort(404);
       $rules = [];
       switch ($verbo) {

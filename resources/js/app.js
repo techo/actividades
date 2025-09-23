@@ -63,6 +63,8 @@ import ReferenteModal from './components/backoffice/comunidad/referente-modal';
 import participacion from './components/backoffice/datatable/participacion';
 Vue.component('participacion', participacion);
 
+import actividadInformeCierreForm from './components/backoffice/actividades/actividad-informe-cierre-form';
+Vue.component('actividad-informe-cierre-form', actividadInformeCierreForm);
 
 Vue.component('referentes-datatable', ReferentesDatatable);
 Vue.component('referente-modal', ReferenteModal);

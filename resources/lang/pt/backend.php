@@ -381,10 +381,10 @@ return [
     'add_member' => 'Adicionar Membro',
     'new_member' => 'Novo Membro',
 
-    'onfire' => 'Em Chamas',
-    'comprometido' => 'Comprometido',
-    'reactivar' => 'Reativar',
-    'sin_senial' => 'Sem sinal',
+    'onfire'       => '🔥 Em chamas',
+    'comprometido' => '🤝 Comprometido',
+    'reactivar'    => '⚡ Reativar',
+    'sin_senial'   => '📴 Sem sinal',
 
     'crear_reunion' => 'Criar Reunião',
     'mesas_trabajo' => 'Mesas de trabalho',
@@ -465,4 +465,43 @@ return [
     'telefono' => 'Teléfono',
     'documento' => 'CPF',
     'nombre' => 'Nome',
+
+    'informe_cierre' => 'Relatório de impacto',
+
+    'numero_participantes' => 'Número de vizinhos e vizinhas que participaram',
+    'numero_beneficiados' => 'Número de pessoas beneficiadas',
+    'programa' => 'Programa',
+    'soluciones_entregadas' => 'Soluções entregues',
+    'quienes_financiaron' => 'Quem financiou este projeto',
+    'link_adicional' => 'Link adicional',
+    'comentarios_adicionales' => 'Comentários adicionais',
+
+    'programa_options' => [
+        'emergencia_habitacional' => 'Emergência habitacional zero',
+        'acesso_servicios' => 'Acesso a serviços públicos',
+        'infraestrutura_comunitaria' => 'Infraestrutura comunitária',
+        'gestion_comunitaria' => 'Gestão comunitária',
+        'formalizacion_tenencia' => 'Formalização da posse'
+    ],
+
+    'soluciones_options' => [
+        'vivienda_emergencia' => 'Habitação de emergência',
+        'vivienda_transitoria' => 'Habitação transitória/progressiva',
+        'vivienda_social' => 'Habitação social/definitiva',
+        'solucion_agua_familiar' => 'Solução de água familiar',
+        'solucion_saneamiento_familiar' => 'Solução de saneamento familiar',
+        'solucion_energia_familiar' => 'Solução de energia elétrica familiar',
+        'solucion_infraestructura_comunitaria' => 'Solução de infraestrutura comunitária',
+        'solucion_agua_comunitaria' => 'Solução de água comunitária',
+        'solucion_saneamiento_comunitario' => 'Solução de saneamento comunitário',
+        'solucion_energia_comunitaria' => 'Solução de energia elétrica comunitária'
+    ],
+
+    'tipo_voluntariado_options' => [
+        'voluntariado' => 'Voluntariado',
+        'corporativos' => 'Corporativo',
+        'secundarios' => 'Secundário',
+        'universitarios' => 'Universitário',
+        'familias_amigos' => 'Famílias e Amigos'
+    ],
 ];

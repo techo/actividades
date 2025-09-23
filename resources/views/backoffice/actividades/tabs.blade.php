@@ -17,6 +17,13 @@
     <li class="{{ ($tab == 'evaluaciones')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/evaluaciones" aria-expanded="true">{{__('backend.evaluations')}}</a>
     </li>
+   @if($actividad->tipo->idCategoria == 1)
+        <li class="{{ ($tab == 'informe_cierre') ? 'active' : '' }}">
+            <a href="/admin/actividades/{{ $actividad->idActividad }}/informe_cierre" aria-expanded="true">
+                {{ __('backend.informe_cierre') }}
+            </a>
+        </li>
+    @endif
     <li class="{{ ($tab == 'accesos')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/accesos" aria-expanded="true">{{__('backend.coordinators')}}</a>
     </li>
