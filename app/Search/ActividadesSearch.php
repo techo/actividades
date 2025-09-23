@@ -58,11 +58,13 @@ class ActividadesSearch
             ->where('fechaInicio', '>=', date('Y-m-d H:i'))
             ->where('PuntoEncuentro.estado', 1);
 
-        if (\Session::get('pais')){
-            $query->where('Actividad.idPais', \Session::get('pais'));
-        }else if(config('app.pais')) {
-            $query->where('Actividad.idPais', config('app.pais'));
-        }  
+        if (auth('web')->check()) {
+            if (\Session::get('pais')){
+                $query->where('Actividad.idPais', \Session::get('pais'));
+            }else if(config('app.pais')) {
+                $query->where('Actividad.idPais', config('app.pais'));
+            }  
+        }
 
         return $query;
     }
