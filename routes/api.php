@@ -82,6 +82,6 @@ Route::middleware('auth:api')->group(function () {
 
         $request->merge(['tipos' => json_encode($tipos)]);
 
-        return app(\App\Http\Controllers\ActividadesController::class)->index($request);
+        return app(\App\Http\Controllers\ajax\ActividadesController::class)->index($request);
     });
 });
