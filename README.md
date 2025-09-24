@@ -1,10 +1,11 @@
 # Plataforma de voluntariado eventual 
-[![Build Status](https://travis-ci.org/techo/voluntariado-eventual.svg?branch=master)](https://travis-ci.org/techo/voluntariado-eventual)
 
 Online en: [actividades.techo.org](https://actividades.techo.org)
+Prueba en: [sandbox.actividades.techo.org](https://sandbox.actividades.techo.org)
+
+📖 Documentación de la API: [docs/api.md](docs/api.md)
 
 ## Instalación para desarrollo
-
 
 ###Usa
 - [Laravel 5.5](https://laravel.com/docs/5.5)
@@ -69,7 +70,6 @@ DB_PASSWORD=TU_CONTRASEÑA
 ```bash
 composer install
 php artisan key:generate
-php artisan migrate --seed
 npm install
 npm run dev
 ```
@@ -88,9 +88,6 @@ Ingresar a en el navegador a [localhost:8000](http://localhost:8000)
 vendor/bin/phpunit
 ```
 
-###Usuarios de prueba que vienen para desarrollo
-- administrador@administrador.com (administrador)
-- coordinador@coordinador.com (coordinador)
 
 ## Instalación para producción en Ubuntu 18.04
 
@@ -162,15 +159,3 @@ mkdir photos/shares/thumbs
 chmod -R 777 photos/  
 php artisan storage:link
 ```
-
-
-###EXTRA 1: Develop en Sandbox
-git pull
-php artisan down
-php artisan migrate
-php artisan vue-i18n:generate
-npm run dev
-php artisan cache:clear
-php artisan route:clear
-php artisan config:clear
-php artisan up
