@@ -48,11 +48,16 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('logout', 'api\PersonasController@logout');
     Route::get('actividades', 'ajax\ActividadesController@index');
+    
+    Route::get('actividades/{id}', 'ajax\ActividadesController@show');
+    Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
+    Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
 
     // personas
     //Route::get('personas', 'api\PersonasController@index');
     Route::get('personas/{persona}', 'api\PersonasController@show');
     Route::post('editPersona/{persona}', 'api\PersonasController@update');
+    Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
    // Route::get('personas/mail/{mail}', 'api\PersonasController@getPersonaxMail');
 
     Route::get('inscripciones/', 'api\PersonasController@getInscripciones');
