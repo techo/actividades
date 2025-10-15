@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Storage;
 class FichaMedicaController extends Controller
 {
   public function upsert(Request $request) {
-      $url = $request->session()->get('login_callback','');
 
       $request->validate([
               'contacto_nombre' => 'nullable',
