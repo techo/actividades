@@ -76,6 +76,49 @@ class PersonasController extends Controller
             );
         }
     }
+    public function socialLogin(Request $request)
+    {
+        $media = $request->input('media');
+        $socialId = $request->input('id');
+        $email = $request->input('email');
+
+        if (!$media || !$socialId || !$email) {
+            return response([
+                'success' => false,
+                'mensaje' => 'Datos insuficientes para login social',
+            ], 400);
+        }
+
+        $persona = Persona::where('mail', $email)->first();
+
+        if (!$persona) {
+            return response([
+                'success' => false,
+                'mensaje' => 'Usuario no encontrado',
+            ], 404);
+        }
+
+        if ($media === 'google') {
+            $persona->google_id = $socialId;
+        } elseif ($media === 'facebook') {
+            $persona->facebook_id = $socialId;
+        }
+
+        $persona->email_verified_at = now();
+        $persona->save();
+
+        $token = $persona->createToken('Token Name')->accessToken;
+        $pais = Pais::find($persona->idPais);
+
+        return response([
+            'success' => true,
+            'persona' => $persona,
+            'mensaje' => 'Login social exitoso',
+            'token' => $token,
+            'abreviacionPais' => $pais ? $pais->abreviacion : null,
+            'loginSocial' => true,
+        ], 200);
+    }
 
     public function logout(request $request)
     {   
@@ -159,6 +202,9 @@ class PersonasController extends Controller
                 201
             );
     }
+
+  
+
 
     public function update(Request $request, Persona $persona)
     {   

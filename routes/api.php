@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Http\Controllers\Api\TranslationController;
+
+Route::get('/translate', [TranslationController::class, 'getTranslation']);
 
 
 // Rutas Publicas
 Route::post('login', 'api\PersonasController@login');
+Route::post('socialLogin', 'api\PersonasController@socialLogin');
 Route::post('register', 'api\PersonasController@register');
 Route::post('create', 'ajax\UsuarioController@apiCreate');
 
@@ -47,6 +51,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->group(function () {
 
     Route::post('logout', 'api\PersonasController@logout');
+
+    Route::prefix('perfil')->group(function () {
+            Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+            Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
+
+             Route::prefix('estudios')->group(function () {
+                Route::post('', 'ajax\EstudiosController@create');
+                Route::get('/usuario', 'ajax\EstudiosController@estudiosUsuario');
+                Route::put('', 'ajax\EstudiosController@update');
+                Route::delete('/{id}', 'ajax\EstudiosController@delete');
+            });
+    });
+
+   
     Route::get('actividades', 'ajax\ActividadesController@index');
 
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');

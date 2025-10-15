@@ -8,7 +8,7 @@ Este documento describe los endpoints principales de la API.
 
 ### Login
 - **URL:** `/api/login`  
-- **Método:** `GET` _(lo ideal sería `POST`)_  
+- **Método:** `POST`
 - **Parámetros:**  
   - `user` → email de usuario  
   - `password` → contraseña  
@@ -18,7 +18,18 @@ Este documento describe los endpoints principales de la API.
 - **Devuelve:** Token de autenticación  
 
 ---
+### Login Social
+- **URL:** `/api/socialLogin`  
+- **Método:** `POST`  
+- **Parámetros:**  
+  - `media` → red social utilizada (por ejemplo: google, facebook)  
+  - `id` → identificador único del usuario en esa red social  
+  - `email` → correo electrónico asociado a la cuenta  
 
+- **Devuelve:** Token de autenticación 
+ 
+
+---
 ### Logout
 - **URL:** `/api/logout`  
 - **Método:** `GET`  
