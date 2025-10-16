@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use App\Http\Controllers\Api\TranslationController;
 
-Route::get('/translate', [TranslationController::class, 'getTranslation']);
+Route::get('/translate', 'api\TranslationController@getTranslation');
 
 
 // Rutas Publicas
