@@ -106,6 +106,14 @@ class InscripcionesController extends BaseController
             if ($actividad->confirmacion == 1) {
                 $inscripcion->save();
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Inscripción guardada, esperando confirmación.',
+                        'actividad_id' => $actividad->idActividad,
+                        'inscripcion_id' => $inscripcion->idInscripcion ?? null,
+                    ]);
+                }
                 return view('inscripciones.confirmar-paso-1')
                     ->with('actividad', $actividad);
             }
@@ -121,7 +129,15 @@ class InscripcionesController extends BaseController
                 $payment->setMonto($request->monto);
                 $inscripcion->save();
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
-
+                
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Inscripción guardada, falta pago.',
+                        'actividad_id' => $actividad->idActividad,
+                        'inscripcion_id' => $inscripcion->idInscripcion ?? null,
+                    ]);
+                }
                 return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
                     ->with('inscripcion', $inscripcion)
@@ -130,14 +146,36 @@ class InscripcionesController extends BaseController
 
             $inscripcion->save();
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
+            if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Inscripción guardada.',
+                        'actividad_id' => $actividad->idActividad,
+                        'inscripcion_id' => $inscripcion->idInscripcion ?? null,
+                    ]);
+                }
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acepte Terminos.',
+                'actividad_id' => $actividad->idActividad,
+            ]);
+        }
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $punto_encuentro)
             ->with('tipo', $actividad->tipo);
+        }
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Punto de Encuentro cerrado.',
+                'actividad_id' => $actividad->idActividad,
+            ]);
         }
         return response('El punto de encuentro se encuentra cerrado', 500);
     }

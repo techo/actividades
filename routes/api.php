@@ -65,7 +65,7 @@ Route::middleware('auth:api')->group(function () {
 
    
     Route::get('actividades', 'ajax\ActividadesController@index');
-
+    Route::post('inscripciones/{idActividad}/create', 'InscripcionesController@confirmar'); 
     Route::get('actividades/{id}', 'ajax\ActividadesController@show');
     Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
     Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
@@ -76,6 +76,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
 
     Route::get('inscripciones/', 'api\PersonasController@getInscripciones');
+
+    Route::post('/inscripciones/actividad/{id}', 'InscripcionesController@create');
+    Route::post('/inscripcion/voucherPago','InscripcionesController@voucherPago');
 
     Route::get('actividades/categoria/{nombre}', function ($nombre, Request $request) {
         $categorias = [
