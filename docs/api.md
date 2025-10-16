@@ -67,6 +67,36 @@ Este documento describe los endpoints principales de la API.
 
 ---
 
+### Modificar o Crear Ficha Medica
+- **URL:** `/api/perfil/fichaMedica/?contacto_nombre=jorge&contacto_telefono=1233321&contacto_relacion=familiar&grupo_sanguinieo=a+&cobertura_tipo=social&cobertura_nombre=nombre cobert&cobertura_numero=1233312312&alergias=si tengo&vacunacion_covid=si&alimentacion=asdas&confirma_datos=1`  
+- **Método:** `POST`  
+- **Parámetros:**  
+- `contacto_nombre` (texto)  
+- `contacto_telefono` (texto)  
+- `contacto_relacion` (texto)  
+- `grupo_sanguinieo` (Valores: A+, A-, AB+, AB-, B+, B-, O+, 0-)  
+- `cobertura_tipo` (Valores: cobertura_paga, salud_publica)
+- `cobertura_nombre` (texto)  
+- `cobertura_numero` (texto)  
+- `alergias` (texto)  
+- `vacunacion_covid` (Valores : Si , No)  
+- `alimentacion` (texto)  
+- `confirma_datos` (Boolean: 1)  
+- **Headers:** `Authorization: Bearer {token}`  
+
+---
+
+### Cambiar archivos Ficha Medica
+- **URL:** `/api/perfil/fichaMedica/archivo_medico`  
+- **Método:** `POST`  
+- **Parámetros:**  
+- `archivo_medico` (archivo de imagen, opcional)  
+- `documento_frente` (archivo de imagen, opcional)  
+- `documento_dorso` (archivo de imagen, opcional)  
+- **Headers:** `Authorization: Bearer {token}`  
+
+---
+
 ## 📅 Actividades
 
 ### Listado general
@@ -165,3 +195,12 @@ Este documento describe los endpoints principales de la API.
 - **URL:** `/api/categorias`  
 - **Método:** `GET`  
 - **Devuelve:** Lista de categorías de actividades
+
+## 🏷️ Traduccion
+- **URL:** `/api/translate`  
+- **Método:** `GET`  
+- **Parámetros:**  
+- `code=frontend.name` → codido de diccionario, anteponer frontend.
+- `lang=es_AR` → lenguaje buscado (es_AR, es_CH, pt o en)   
+- **Devuelve:** Texto Traduccion
+- **Ejemplo:** /api/translate?code=frontend.name&lang=es_AR
