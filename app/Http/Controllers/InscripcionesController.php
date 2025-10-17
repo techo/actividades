@@ -109,7 +109,7 @@ class InscripcionesController extends BaseController
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'Inscripción guardada, esperando confirmación.',
+                        'message' => 'PRE-INSCRIPTO',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
                     ]);
@@ -133,7 +133,7 @@ class InscripcionesController extends BaseController
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'Inscripción guardada, falta pago.',
+                        'message' => 'FALTA-PAGO',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
                     ]);
@@ -149,7 +149,7 @@ class InscripcionesController extends BaseController
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'Inscripción guardada.',
+                        'message' => 'CONFIRMADO',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
                     ]);
@@ -157,14 +157,14 @@ class InscripcionesController extends BaseController
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad);
         }
-        $request->session()->flash('status', 'Debe aceptar los términos para continuar');
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Acepte Terminos.',
+                'message' => 'Debe aceptar los términos para continuar.',
                 'actividad_id' => $actividad->idActividad,
             ]);
         }
+        $request->session()->flash('status', 'Debe aceptar los términos para continuar');
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('punto_encuentro', $punto_encuentro)

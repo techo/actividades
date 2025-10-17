@@ -60,6 +60,12 @@ Route::middleware('auth:api')->group(function () {
                 Route::get('/usuario', 'ajax\EstudiosController@estudiosUsuario');
                 Route::put('', 'ajax\EstudiosController@update');
                 Route::delete('/{id}', 'ajax\EstudiosController@delete');
+
+                Route::prefix('institucionEducativa')->group(function() {
+                    Route::get('', 'ajax\InstitucionEducativaController@index');
+                    Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
+                    Route::get('pais/{idPais}', 'ajax\InstitucionEducativaController@porPais');
+                });
             });
     });
 
