@@ -220,8 +220,10 @@ Este documento describe los endpoints principales de la API.
 - `roles_aplicados` →  Lista de roles a los que el usuario aplica (array vacío [] si no aplica)   
 - `inscripciones_aplicadas` →  secundario, corporativo, universitario o voluntario (solo estos valores)   
 - **Devuelve:**
-
-- **Headers:** `Authorization: Bearer {token}`  
+- `message` 
+- `actividad_id` 
+- `inscripcion_id`
+- `estados_inscripcion` →  PRE_INSCRIPTO, FALTA_PAGO, CONFIRMADO, PUNTO_ENCUENTRO_CERRADO o FALTA_ACEPTAR_TERMINOS
 
 ## 🌍 Ubicaciones
 

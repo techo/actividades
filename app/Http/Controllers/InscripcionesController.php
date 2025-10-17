@@ -109,9 +109,10 @@ class InscripcionesController extends BaseController
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'PRE-INSCRIPTO',
+                        'message' => 'Inscripción registrada, a la espera de confirmación',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
+                        'estado_inscripcion' => 'PRE_INSCRIPTO',
                     ]);
                 }
                 return view('inscripciones.confirmar-paso-1')
@@ -133,7 +134,8 @@ class InscripcionesController extends BaseController
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'FALTA-PAGO',
+                        'message' => 'Inscripción registrada, falta pago',
+                        'estado_inscripcion' => 'FALTA_PAGO',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
                     ]);
@@ -149,9 +151,10 @@ class InscripcionesController extends BaseController
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'CONFIRMADO',
+                        'message' => 'Inscripción confirmada',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
+                    'estado_inscripcion' => 'CONFIRMADO',
                     ]);
                 }
             return view('inscripciones.gracias')
@@ -162,6 +165,7 @@ class InscripcionesController extends BaseController
                 'success' => false,
                 'message' => 'Debe aceptar los términos para continuar.',
                 'actividad_id' => $actividad->idActividad,
+                'estado_inscripcion' => 'FALTA_ACEPTAR_TERMINOS',
             ]);
         }
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
@@ -174,6 +178,7 @@ class InscripcionesController extends BaseController
             return response()->json([
                 'success' => false,
                 'message' => 'Punto de Encuentro cerrado.',
+                'estado_inscripcion' => 'PUNTO_ENCUENTRO_CERRADO',
                 'actividad_id' => $actividad->idActividad,
             ]);
         }
