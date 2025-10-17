@@ -55,11 +55,11 @@ Route::middleware('auth:api')->group(function () {
             Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
             Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
-             Route::prefix('estudios')->group(function () {
-                Route::post('', 'ajax\EstudiosController@create');
-                Route::get('/usuario', 'ajax\EstudiosController@estudiosUsuario');
-                Route::put('', 'ajax\EstudiosController@update');
-                Route::delete('/{id}', 'ajax\EstudiosController@delete');
+        Route::prefix('estudios')->group(function () {
+            Route::post('', 'ajax\EstudiosController@create');
+            Route::get('', 'ajax\EstudiosController@index');
+            Route::put('', 'ajax\EstudiosController@update');
+            Route::delete('/{id}', 'ajax\EstudiosController@delete');
 
                 Route::prefix('institucionEducativa')->group(function() {
                     Route::get('', 'ajax\InstitucionEducativaController@index');

@@ -61,6 +61,14 @@ class EstudiosController extends Controller
             }
         }
     }
+    public function index()
+    {
+        $estudios = Estudios::where('idPersona', '=', auth()->user()->idPersona)->get(); 
+
+        return response()->json([
+            'estudios' => $estudios
+        ]);
+    }
 
     public function estudiosUsuario()
     {

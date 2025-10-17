@@ -76,8 +76,8 @@ Este documento describe los endpoints principales de la API.
 - `contacto_relacion` (texto)  
 - `grupo_sanguinieo` (Valores: A+, A-, AB+, AB-, B+, B-, O+, 0-)  
 - `cobertura_tipo` (Valores: cobertura_paga, salud_publica)
-- `cobertura_nombre` (texto)  
-- `cobertura_numero` (texto)  
+- `cobertura_nombre` (texto, solo si cobertura_tipo = 'cobertura_paga')  
+- `cobertura_numero` (texto, solo si cobertura_tipo = 'cobertura_paga')   
 - `alergias` (texto)  
 - `vacunacion_covid` (Valores : Si , No)  
 - `alimentacion` (texto)  
@@ -90,13 +90,53 @@ Este documento describe los endpoints principales de la API.
 - **URL:** `/api/perfil/fichaMedica/archivo_medico`  
 - **Método:** `POST`  
 - **Parámetros:**  
-- `archivo_medico` (archivo de imagen, opcional)  
 - `documento_frente` (archivo de imagen, opcional)  
 - `documento_dorso` (archivo de imagen, opcional)  
 - **Headers:** `Authorization: Bearer {token}`  
 
 ---
 
+### Estudios
+- **URL:** `/api/perfil/estudios/`  
+- **Método:** `GET`  
+- **Headers:** `Authorization: Bearer {token}`  
+
+------
+
+### Crear Estudio
+- **URL:** `/api/perfil/estudios/`  
+- **Método:** `POST`  
+- **Parámetros:**  
+- `nivelDeEstudios` (Valores aceptados: secundario, universitario o posgrado)  
+- `disciplina_academica` (Disciplina académica, texto)  
+- `idPersona` (Igual al idPersona logueado)  
+- `idPaisInstitucion` (Pais donde se realizo estudio)  
+- `idInstitucionEducativa` (ID institucion, 0 en caso de ser Otra)  
+- `institucion_educativa` (Texto, en caso de no existir en bbdd la institucion)  
+- `descripcion_educacion` (descripcion, texto)  
+- **Headers:** `Authorization: Bearer {token}`  
+
+
+------
+
+### Editar Estudio
+- **URL:** `/api/perfil/estudios/archivo_medico`  
+- **Método:** `PUT`  
+- **Parámetros:**  
+- (repite parametros Crear Estudio)  
+- `id` (idEstudio a editar)  
+- **Headers:** `Authorization: Bearer {token}`  
+
+---
+
+### Insitutuciones Educativas por Pais
+- **URL:** `/api/perfil/estudios/institucionEducativa/pais/{idPais}`  
+- **Método:** `GET`  
+- **Parámetros:**  
+- `idPais` (en URL)  
+- **Headers:** `Authorization: Bearer {token}`  
+
+---
 ## 📅 Actividades
 
 ### Listado general
@@ -168,6 +208,20 @@ Este documento describe los endpoints principales de la API.
 - **Devuelve:** Actividades en las que el usuario está inscripto  
 
 ---
+
+### 📝 Inscribir a Actividad
+
+- **URL:** `/api/inscripciones/actividad/{idActividad}/`
+- **Método:** `POST`
+- **Parámetros:**
+- `punto_encuentro` → ID del punto de encuentro seleccionado
+- `aceptar_terminos` →  1 si el usuario acepta los términos y condiciones   
+- `jornadas` →  Lista de jornadas seleccionadas (array vacío [] si no aplica)   
+- `roles_aplicados` →  Lista de roles a los que el usuario aplica (array vacío [] si no aplica)   
+- `inscripciones_aplicadas` →  secundario, corporativo, universitario o voluntario (solo estos valores)   
+- **Devuelve:**
+
+- **Headers:** `Authorization: Bearer {token}`  
 
 ## 🌍 Ubicaciones
 
