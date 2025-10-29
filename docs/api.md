@@ -149,12 +149,24 @@ Este documento describe los endpoints principales de la API.
 - `tipos[]={json}` → lista de tipos de actividad  
 
 ---
+### Listado por categorias
+- **URL:** `/api/actividades/`  
+- **Método:** `GET`  
+- **Headers:** (Opcional) `Authorization: Bearer {token}`  
+- **Parámetros opcionales:**  
+- `destacada=1` → actividades destacadas  
+- `pais={id}` → filtra por país  
+- `tipos[]={json}` → lista de tipos de actividad  
 
-### Actividad puntual
+---
+
+### Actividad show
 - **URL:** `/api/actividades/{id}`  
 - **Ejemplo:**  
 /api/actividades/18402
-- **Devuelve:** Datos completos de la actividad  
+- **Devuelve:**
+ Datos completos de la actividad 
+- `estadoInscripcion` →  confirmed, confirm_by_paying, confirmation_date_is_closed, waiting_for_confirmation
 
 ---
 
@@ -209,7 +221,7 @@ Este documento describe los endpoints principales de la API.
 
 ---
 
-### 📝 Inscribir a Actividad
+### Inscribir a Actividad
 
 - **URL:** `/api/inscripciones/actividad/{idActividad}/`
 - **Método:** `POST`
@@ -224,6 +236,18 @@ Este documento describe los endpoints principales de la API.
 - `actividad_id` 
 - `inscripcion_id`
 - `estados_inscripcion` →  PRE_INSCRIPTO, FALTA_PAGO, CONFIRMADO, PUNTO_ENCUENTRO_CERRADO o FALTA_ACEPTAR_TERMINOS
+
+
+### 📤 Subir Voucher Pago
+
+- **URL:** `/api/inscripciones/voucher/`
+- **Método:** `POST`
+- **Parámetros:**
+- `idInscripcion` 
+- `voucher` →  imagen  
+- **Devuelve:**
+- `inscripcion.voucherURL` 
+
 
 ## 🌍 Ubicaciones
 
