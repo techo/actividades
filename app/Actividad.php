@@ -144,7 +144,14 @@ class Actividad extends Model
                 $query->whereNull('deleted_at'); // Filtra solo personas activas
             })
             ->with('persona:idPersona,nombres,photo,instagram,deleted_at')
-            ->get();
+            ->get()
+            ->filter(function ($inscripcion) {
+                return $this->estadoInscripcion($inscripcion->idPersona) === 'confirmed';
+            })
+            ->map(function ($inscripcion) {
+                return $inscripcion->persona;
+            })
+            ->values();;
     }
 
     public function puntosEncuentro()

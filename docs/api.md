@@ -165,8 +165,12 @@ Este documento describe los endpoints principales de la API.
 - **Ejemplo:**  
 /api/actividades/18402
 - **Devuelve:**
- Datos completos de la actividad 
+ Datos completos de la actividad, se detallan algunos importantes
 - `estadoInscripcion` →  confirmed, confirm_by_paying, confirmation_date_is_closed, waiting_for_confirmation
+- `ficha_medica` → devuelve ficha medica cargada para la persona logueada
+- `estudios` → estudios de la persona logueada  
+- `inscriptos` → inscriptos confirmados a la actividad  (solo si persona confirmed)
+- `coordinadores` → coordinadores de la actividad
 
 ---
 

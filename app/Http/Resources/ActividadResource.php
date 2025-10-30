@@ -62,7 +62,14 @@ class ActividadResource extends Resource
             'jornadas'           => $this->jornadas,
             'imagen_tarjeta'           => $this->imagen_tarjeta,
             'imagen_destacada'           => $this->imagen_destacada,
-        ];
+            'inscriptos'           => ($this->estadoInscripcion($idPersona) == 'confirmed') ? $this->comunidad() : [],
+            'coordinadores' => $this->coordinadores()
+                ->with(['persona:idPersona,nombres,photo,instagram,mail,telefonoMovil'])
+                ->get()
+                ->pluck('persona')
+                ->filter()
+                ->values(),
+            ];
     }
 
     private static function convertirFecha($fecha)

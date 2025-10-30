@@ -8,11 +8,11 @@
         <!-- Imagen principal -->
         <div class="row" @click="toggleTooltip(inscripto.idPersona)" >
           <img 
-            :src="photoUrl(inscripto.persona)" 
+            :src="photoUrl(inscripto)" 
             
             class="imagen-hover"
           /> 
-        <span class="m-1">{{ inscripto.persona.nombres }}</span> 
+        <span class="m-1">{{ inscripto.nombres }}</span> 
         </div>
   
         <!-- Tooltip que aparece solo si la persona coincide con tooltipAbierto -->
@@ -25,16 +25,16 @@
           >
             <button class="close-btn" @click="cerrarTooltip">✖</button>
   
-            <img :src="photoUrl(inscripto.persona)" class="tooltip-img" alt="Foto perfil" />
+            <img :src="photoUrl(inscripto)" class="tooltip-img" alt="Foto perfil" />
             <div class="tooltip-info">
-              <p class="tooltip-nombre">{{ inscripto.persona.nombres }}</p>
+              <p class="tooltip-nombre">{{ inscripto.nombres }}</p>
               <!-- <p class="tooltip-rol">{{ persona.mail }}</p> -->
               <p v-if="inscripto.rol" class="tooltip-rol">{{ inscripto.rol }}</p>
-              <p class="tooltip-rol">{{ inscripto.persona.estado_voluntario }}</p>
+              <p class="tooltip-rol">{{ inscripto.estado_voluntario }}</p>
   
               <a 
-                v-if="inscripto.persona.instagram"
-                :href="'https://instagram.com/' + inscripto.persona.instagram" 
+                v-if="inscripto.instagram"
+                :href="'https://instagram.com/' + inscripto.instagram" 
                 target="_blank" 
                 class="tooltip-instagram"
               >
