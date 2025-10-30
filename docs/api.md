@@ -171,7 +171,13 @@ Este documento describe los endpoints principales de la API.
 - `estudios` → estudios de la persona logueada  
 - `inscriptos` → inscriptos confirmados a la actividad  (solo si persona confirmed)
 - `coordinadores` → coordinadores de la actividad
-
+- `pago` → si la actividad tiene pago
+- `descripcionPago` 
+- `pedidoBeca` → Link para solicitar beca (ej:form de google)
+- `montoMin`
+- `montoMax`
+- `linkQR`
+ 
 ---
 
 ### Actividades destacadas

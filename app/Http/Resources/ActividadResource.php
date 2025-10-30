@@ -19,6 +19,10 @@ class ActividadResource extends Resource
 
         $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
 
+        if($this->estadoInscripcion($idPersona) == 'confirmed') 
+            $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
+
+
         return [
             'idActividad'   => $this->idActividad,
             'tipo'          => new TipoResource($this->tipo),
@@ -33,8 +37,11 @@ class ActividadResource extends Resource
             'nombreActividad'           => $this->nombreActividad,
             'descripcion'   => $this->descripcion,
             'compromiso'    => $this->compromiso,
+            'descripcionPago'         => $this->descripcionPago,
+            'pedidoBeca'         => $this->beca,
             'montoMin'         => $this->montoMin,
             'montoMax'         => $this->montoMax,
+            'linkQR'         => ($this->estadoInscripcion($idPersona) == 'confirmed') ? '/admin/actividades/'.$this->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$idPersona : '',
             'lugar'         => $this->lugar,
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
