@@ -27,6 +27,10 @@ class ActividadInformeCierre extends Model
         'comentarios_adicionales'
     ];
 
+    protected $casts = [
+        'soluciones_entregadas' => 'array',
+    ];
+
     // Relación con Actividad
     public function actividad()
     {
