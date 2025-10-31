@@ -19,7 +19,7 @@ class ActividadResource extends Resource
 
         $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
 
-        if($this->estadoInscripcion($idPersona) == 'confirmed') 
+        if($this->estadoInscripcion($idPersona)) 
             $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
 
 
@@ -46,6 +46,7 @@ class ActividadResource extends Resource
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'ubicacion'     => $this->provincia->provincia,
+            'idInscripcion'   => ($this->estadoInscripcion($idPersona)) ? $inscripcion->idInscripcion : null,
             'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
             'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
             'estudios'    => ($this->requiere_estudios == 1) ? Estudios::where('idPersona', $idPersona)->get() : 0,
