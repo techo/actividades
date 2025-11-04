@@ -144,7 +144,9 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" @click.prevent="guardar" :disabled="readonly">{{ $t('backend.save') }}</button>
+                <button class="btn btn-primary" @click.prevent="guardar" :disabled="readonly">{{ $t('backend.save') }}</button>                   
+                <button ref="eliminar" v-show="!readonly" class="btn btn-danger" @click.prevent="confirmar()" >{{ $t('backend.eliminate') }}</button>
+
             </div>
         </div>
     </div>
@@ -236,7 +238,7 @@ export default {
         guardar() {
             let url;
             this.validationErrors = [];
-            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe-cierre`;
+            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe_cierre`;
 
             this.data.soluciones_entregadas = this.solucionesTags.map(tag => tag.value);
   
