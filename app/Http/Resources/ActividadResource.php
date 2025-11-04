@@ -72,6 +72,7 @@ class ActividadResource extends Resource
             'imagen_tarjeta'           => $this->imagen_tarjeta,
             'imagen_destacada'           => $this->imagen_destacada,
             'inscriptos'           => ($this->estadoInscripcion($idPersona) == 'confirmed') ? $this->comunidad() : [],
+            'chat_grupal_whatsapp'           => ($this->estadoInscripcion($idPersona) == 'confirmed') ? $this->chat_grupal_whatsapp : [],
             'coordinadores' => $this->coordinadores()
                 ->with(['persona:idPersona,nombres,photo,instagram,mail,telefonoMovil'])
                 ->get()
