@@ -47,6 +47,7 @@ class ActividadResource extends Resource
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'ubicacion'     => $this->provincia->provincia,
             'idInscripcion'   => ($this->estadoInscripcion($idPersona)) ? $inscripcion->idInscripcion : null,
+            'voucherURL'   => ($this->estadoInscripcion($idPersona)) ? $inscripcion->voucherURL  : null,
             'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
             'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
             'estudios'    => ($this->requiere_estudios == 1) ? Estudios::where('idPersona', $idPersona)->get() : 0,
