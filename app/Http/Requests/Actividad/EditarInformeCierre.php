@@ -13,16 +13,19 @@ class EditarInformeCierre extends FormRequest
         $idPaisActividad = Actividad::findOrFail($idActividad)->idPais;
         $user = auth()->user();
 
+        $actividad = Actividad::with('coordinadores')->find($idActividad);
+        
         if ($user->hasRole('admin')) {
-            return $idPaisActividad == auth()->user()->idPaisPermitido;
+            return $idPaisActividad == auth()->user()->idPaisPermitido &&
+                $actividad->tipo->idCategoria == 1;
         }
 
         // Si es coordinador y pertenece a esta comunidad
         if ($user->hasRole('coordinador')) {
-            $actividad = Actividad::with('coordinadores')->find($idActividad);
 
             return $actividad &&
-                $actividad->coordinadores->contains('idPersona', $user->idPersona);
+                $actividad->coordinadores->contains('idPersona', $user->idPersona) &&
+                $actividad->tipo->idCategoria == 1;
         }
         
     }

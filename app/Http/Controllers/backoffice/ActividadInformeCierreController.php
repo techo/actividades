@@ -51,8 +51,8 @@ class ActividadInformeCierreController extends Controller
                 $informe->total_soluciones = 
                     ($informe->cant_soluciones_voluntariado ?? 0)
                 + ($informe->cant_soluciones_corporativos ?? 0)
-                + ($informe->cant_soluciones_secundarios ?? 0);
-                + ($informe->cant_soluciones_universitarios ?? 0);
+                + ($informe->cant_soluciones_secundarios ?? 0)
+                + ($informe->cant_soluciones_universitarios ?? 0)
                 + ($informe->cant_soluciones_familias ?? 0);
             return $informe;
         });; 
