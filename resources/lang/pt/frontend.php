@@ -24,6 +24,21 @@ return [
     'actividades_destacadas' => 'Atividades em destaque ✨',
 
 	'postulate' => 'Candidate-se aqui',
+
+	'sumate' => [
+		'titulo' => 'Junte-se e',
+		'transforma' => 'transforme',
+	],
+
+	'tipo_actividad' => [
+		'construcciones' => 'Construções',
+		'mesas_trabajo' => 'Mesas de Trabalho',
+		'infraestructura' => 'Infraestrutura',
+		'espacios_formativos' => 'Espaços Formativos',
+		'encuentros' => 'Encontros',
+		'colecta' => 'Coleta',
+		'eventos_otros' => 'Eventos e Outros',
+	],
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este site usa cookies para melhorar a experiência do usuário. Se você usar este site, estará aceitando nossa',
 	'cookie_policy' => 'politica de Cookies.',

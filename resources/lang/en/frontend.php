@@ -21,10 +21,23 @@ return [
 	'home_campaign' => 'We are in Campaign! 🎉',
 	'find_how' => '👉 Find out how',
 	'to_be_part_of_team' => 'to be part of the team',
-	'to_be_part_of_team' => 'fazer parte da equipe',
     'actividades_destacadas' => 'Featured Activities ✨',
 
 	'postulate' => 'Apply here',
+	'sumate' => [
+		'titulo' => 'Join us and',
+		'transforma' => 'make a change',
+	],
+
+	'tipo_actividad' => [
+		'construcciones' => 'Constructions',
+		'mesas_trabajo' => 'Community Roundtables',
+		'infraestructura' => 'Infrastructure',
+		'espacios_formativos' => 'Learning Spaces',
+		'encuentros' => 'Gatherings',
+		'colecta' => 'Fundraising Event',
+		'eventos_otros' => 'Events and Others',
+	],
 
 	// cookies-bar.vue
 	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',

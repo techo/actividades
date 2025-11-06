@@ -24,6 +24,20 @@ return [
     'actividades_destacadas' => 'Actividades destacadas ✨',
 	'false' => 'falso',
 
+	'sumate' => [
+		'titulo' => '¡Sumate y',
+		'transforma' => 'transformá',
+	],
+
+	'tipo_actividad' => [
+		'construcciones' => 'Construcciones',
+		'mesas_trabajo' => 'Mesas de Trabajo',
+		'infraestructura' => 'Infraestructura',
+		'espacios_formativos' => 'Espacios Formativos',
+		'encuentros' => 'Encuentros',
+		'colecta' => 'Colecta',
+		'eventos_otros' => 'Eventos y Otros',
+	],
 
 	// cookies-bar.vue
 	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
