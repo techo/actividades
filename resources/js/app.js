@@ -56,6 +56,10 @@ import RedModal from './components/backoffice/comunidad/red-modal';
 Vue.component('redes-datatable', RedesDatatable);
 Vue.component('red-modal', RedModal);
 
+
+import informesCierre from './components/backoffice/actividades/informes-cierre';
+Vue.component('informes-cierre', informesCierre);
+
 import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
 import ReferenteModal from './components/backoffice/comunidad/referente-modal';
 

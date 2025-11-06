@@ -467,12 +467,17 @@ return [
     'documento' => 'Documento',
     'nombre' => 'Nombre',
 
-    'informe_cierre' => 'Informe de impacto',
+    'impacto' => 'Impacto',
+    'informe_cierre' => 'Informe de Impacto',
 
     'numero_participantes' => 'Número vecinos y vecinas que participaron',
     'numero_beneficiados' => 'Número de personas beneficiadas',
     'programa' => 'Programa ',
     'soluciones_entregadas' => 'Soluciones entregadas',
+    'solucion_entregada' => 'Solución entregada',
+
+    'soluciones_entregadas_por' => 'Cantidad de soluciones entregadas por',
+
     'quienes_financiaron' => 'Quiénes financiaron este proyecto',
     'link_adicional' => 'Link adicional',
     'comentarios_adicionales' => 'Comentarios adicionales',
@@ -485,7 +490,7 @@ return [
         'formalizacion_tenencia' => 'Formalización en la tenencia'
     ],
 
-    'soluciones_options' => [
+    'soluciones_entregadas_options' => [
         'vivienda_emergencia' => 'Vivienda de emergencia',
         'vivienda_transitoria' => 'Vivienda transitoria/progresiva',
         'vivienda_social' => 'Vivienda social/definitiva',

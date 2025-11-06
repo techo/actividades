@@ -805,6 +805,38 @@ return [
             ],
         ]
     ],
+    'informeCierre' => [
+        'fields' => [
+            [
+                'name' => 'idActividadInformeCierre',
+                'sortField' => 'idActividadInformeCierre',
+                'visible' => false
+            ],
+            [
+                'name' => '__component:translateBackend_programa',
+                'title' => 'Programa',
+            ],
+            [
+                'name' => '__component:translateBackend_solucionesEntregadas',
+                'title' => 'Solución Entregada',
+            ],
+            [
+                'name' => 'total_soluciones',
+                'title' => 'Total Soluciones'
+            ],
+            [
+                'name' => 'numero_beneficiados',
+                'title' => 'Beneficiados'
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field' => 'idActividadInformeCierre',
+                'sortField' => 'idActividadInformeCierre',
+                'direction' => 'asc'
+            ],
+        ]
+    ],
     'oficinas' => [
         'fields' => [
             [

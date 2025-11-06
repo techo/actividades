@@ -23,12 +23,10 @@
         @include('backoffice.actividades.tabs' , [ 'tab' => 'informe_cierre'])
 
         <div class="tab-content">
-
-            <div class="tab-pane active" id="general">
-
-                <actividad-informe-cierre-form :disabled="true" :actividad="{{ $actividad }}" :informe="{{ $informe }}" edicion="{{ $edicion }}"></actividad-informe-cierre-form>
-
+            <div class="tab-pane active" id="informe_cierre">
+                <informes-cierre :actividad="{{ $actividad }}" fields="{{ $fieldsInforme }}" sort-order="{{ $sortOrderInforme }}" ></informes-cierre>
             </div>
+        </div>
     </div>
 
 @endsection

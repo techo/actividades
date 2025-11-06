@@ -20,7 +20,7 @@
    @if($actividad->tipo->idCategoria == 1)
         <li class="{{ ($tab == 'informe_cierre') ? 'active' : '' }}">
             <a href="/admin/actividades/{{ $actividad->idActividad }}/informe_cierre" aria-expanded="true">
-                {{ __('backend.informe_cierre') }}
+                {{ __('backend.impacto') }}
             </a>
         </li>
     @endif

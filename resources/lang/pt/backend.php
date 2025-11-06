@@ -466,7 +466,12 @@ return [
     'documento' => 'CPF',
     'nombre' => 'Nome',
 
-    'informe_cierre' => 'Relatório de impacto',
+    'impacto' => 'Impacto',
+    'informe_cierre' => 'Relatório de Impacto',
+
+    'solucion_entregada' => 'Solução entregue',
+    'soluciones_entregadas_por' => 'Quantidade de soluções entregues por',
+
 
     'numero_participantes' => 'Número de vizinhos e vizinhas que participaram',
     'numero_beneficiados' => 'Número de pessoas beneficiadas',
@@ -484,7 +489,7 @@ return [
         'formalizacion_tenencia' => 'Formalização da posse'
     ],
 
-    'soluciones_options' => [
+    'soluciones_entregadas_options' => [
         'vivienda_emergencia' => 'Habitação de emergência',
         'vivienda_transitoria' => 'Habitação transitória/progressiva',
         'vivienda_social' => 'Habitação social/definitiva',

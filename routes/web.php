@@ -342,8 +342,20 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones')->middleware('can:ver,App\Actividad,id');
-    Route::get('/actividades/{id}/informe_cierre', 'backoffice\ActividadInformeCierreController@show')->middleware('can:ver,App\Actividad,id');
-    Route::post('/ajax/actividades/{id}/informe-cierre', 'backoffice\ActividadInformeCierreController@upsert')->middleware('can:ver,App\Actividad,id');
+
+    Route::prefix('/actividades/{id}/informe_cierre')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ActividadInformeCierreController@index');
+        Route::get('/{idInformeCierre}', 'backoffice\ActividadInformeCierreController@get');
+        Route::post('', 'backoffice\ActividadInformeCierreController@upsert');
+    });
+
+    Route::prefix('ajax/actividades/{id}/informe_cierre')->middleware(['role:admin'])->group(function() {
+        Route::get('', 'backoffice\ActividadInformeCierreController@getInformes');
+        Route::get('/{idInformeCierre}', 'backoffice\ActividadInformeCierreController@get');
+        Route::post('', 'backoffice\ActividadInformeCierreController@upsert');
+        Route::delete('/{idInformeCierre}', 'backoffice\ActividadInformeCierreController@delete');
+    });
+
     Route::get('/actividades/{actividad}/inscripcion/{inscripcion}/persona/{persona}', 'backoffice\ActividadesController@confirmarInscripcion')->middleware('can:ver,App\Actividad,actividad');
     Route::get('/actividades/{id}/grupos', 'backoffice\ActividadesController@grupos')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/evaluaciones', 'backoffice\ActividadesController@evaluaciones')->middleware('can:ver,App\Actividad,id');

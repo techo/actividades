@@ -33,7 +33,7 @@
                     </div>
 
                     <!-- Programa -->
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="programa">{{ $t('backend.programa') }}</label>
                             <select id="programa" class="form-control" v-model="data.programa" :disabled="readonly">
@@ -42,27 +42,25 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="quienes_financiaron">{{ $t('backend.quienes_financiaron') }}</label>
-                            <input type="text" id="quienes_financiaron" class="form-control"
-                                   v-model="data.quienes_financiaron" :disabled="readonly">
-                        </div>
-                    </div>
                    
                 </div>
                 <div class="row">
                      <!-- Soluciones entregadas -->
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="soluciones_entregadas">{{ $t('backend.soluciones_entregadas') }}</label>
+                            <label for="soluciones_entregadas">{{ $t('backend.solucion_entregada') }}</label>
                             <select id="soluciones_entregadas" class="form-control" v-model="data.soluciones_entregadas" :disabled="readonly">
                                 <option v-for="(label, key) in opcionesSoluciones" :value="key">{{ label }}</option>
                             </select>
                         </div>
                     </div> 
-                    
-                   
+                </div> 
+                <label class="font-weight-bold mt-3">
+                                
+                                {{ $t('backend.soluciones_entregadas_por') }}
+                            </label>
+                <div class="row">
+                        <!-- Cantidad de soluciones entregadas por grupo -->
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="cant_soluciones_voluntariado">{{ $t('backend.tipo_voluntariado_options.voluntariado') }}</label>
@@ -114,7 +112,16 @@
                     </div>
                 </div>
 
-               
+               <div class="row"> 
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="quienes_financiaron">{{ $t('backend.quienes_financiaron') }}</label>
+                            <input type="text" id="quienes_financiaron" class="form-control"
+                                   v-model="data.quienes_financiaron" :disabled="readonly">
+                        </div>
+                    </div>
+                </div>
+                   
 
                 <!-- Comentarios adicionales -->
                 <div class="row">
@@ -138,9 +145,10 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" @click.prevent="guardar" :disabled="readonly">{{ $t('backend.save') }}</button>                   
-                <button ref="eliminar" v-show="!readonly" class="btn btn-danger" @click.prevent="confirmar()" >{{ $t('backend.eliminate') }}</button>
-
+                <div class="alligned-buttons pull-right">
+                    <button class="btn btn-primary" @click.prevent="guardar" :disabled="readonly">{{ $t('backend.save') }}</button>                   
+                    <button ref="eliminar" v-show="!readonly" class="btn btn-danger" @click.prevent="eliminar" >{{ $t('backend.eliminate') }}</button>
+                </div>
             </div>
         </div>
     </div>
@@ -173,7 +181,7 @@ export default {
             validationErrors: {},
 
             opcionesPrograma: this.$t('backend.programa_options'),
-            opcionesSoluciones: this.$t('backend.soluciones_options'),
+            opcionesSoluciones: this.$t('backend.soluciones_entregadas_options'),
         }
     },
     mounted() {
@@ -197,14 +205,12 @@ export default {
         guardar() {
             let url;
             this.validationErrors = [];
-            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe-cierre`;
+            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe_cierre`;
             axios.post(url, this.data)
                 .then((respuesta) => {
-                    this.mensajeGuardado = 'Registro guardado correctamente';
-                    this.guardado = true;
                     this.validationErrors = [];
                     this.$refs.loading.justCloseSimplert();
-                    this.readonly = true;
+                    this.$emit('saved', respuesta.data);
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -216,6 +222,26 @@ export default {
                     }
                 });
         },
+        eliminar() {
+            let url;
+            this.validationErrors = [];
+            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe_cierre/`+this.data.idActividadInformeCierre;
+            axios.delete(url)
+                .then((respuesta) => {
+                    this.validationErrors = [];
+                    this.$refs.loading.justCloseSimplert();
+                    this.$emit('saved', respuesta.data);
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        if (error.response.status === 422) {
+                            this.validationErrors = Object.values(error.response.data.errors);
+                            Event.$emit('error');
+
+                        }
+                    }
+                });
+        }
     }
 }
 </script>

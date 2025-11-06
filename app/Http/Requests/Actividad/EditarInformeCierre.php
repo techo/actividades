@@ -30,7 +30,7 @@ class EditarInformeCierre extends FormRequest
     public function rules()
     {
         return [
-            'idActividad' => 'required|integer',
+            'idInformeCierre' => 'sometimes|integer',
             'numero_participantes' => 'nullable|integer',
             'programa' => 'nullable|string',
             'soluciones_entregadas' => 'nullable|string',

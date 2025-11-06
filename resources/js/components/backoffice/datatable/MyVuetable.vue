@@ -71,6 +71,16 @@
   import comunidades from './comunidades';
   Vue.component('comunidades', comunidades);
 
+  import translateBackend from './TranslateBackend';
+  Vue.component('translateBackend', translateBackend);
+
+  const translateAliases = ['programa', 'solucionesEntregadas', 'categoria', 'rol', 'estado'];
+  translateAliases.forEach(alias => {
+    Vue.component(`translateBackend_${alias}`, translateBackend);
+  });
+
+// Alias para que el DataTable no se queje
+Vue.component('translateBackend_programa', require('./TranslateBackend.vue').default);
 
   import estadoActividad from './estadoActividad';
   Vue.component('estadoActividad', estadoActividad);
