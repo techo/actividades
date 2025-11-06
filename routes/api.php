@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('perfil')->group(function () {
         Route::post('fichaMedica', 'ajax\FichaMedicaController@upsert');
+        Route::get('fichaMedica', 'ajax\FichaMedicaController@getFichaMedica');
         Route::post('fichaMedica/archivo_medico', 'ajax\FichaMedicaController@uploadArchivoMedico');
 
         Route::prefix('estudios')->group(function () {

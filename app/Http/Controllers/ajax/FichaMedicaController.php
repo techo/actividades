@@ -48,6 +48,12 @@ class FichaMedicaController extends Controller
       $fichaMedica->save();
   }
 
+  public function getFichaMedica(Request $request) {
+      $persona = Auth::user();
+      $fichaMedica = FichaMedica::where('idPersona', $persona->idPersona)->first();
+      return response()->json($fichaMedica);
+  }
+
   public function uploadArchivoMedico(Request $request)
   {
     $this->validate($request, array(
