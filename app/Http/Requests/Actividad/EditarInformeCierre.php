@@ -33,7 +33,7 @@ class EditarInformeCierre extends FormRequest
             'idActividad' => 'required|integer',
             'numero_participantes' => 'nullable|integer',
             'programa' => 'nullable|string',
-            'soluciones_entregadas' => 'nullable|array',
+            'soluciones_entregadas' => 'nullable|string',
             'cant_soluciones_voluntariado' => 'nullable|integer',
             'cant_soluciones_corporativos' => 'nullable|integer',
             'cant_soluciones_secundarios' => 'nullable|integer',

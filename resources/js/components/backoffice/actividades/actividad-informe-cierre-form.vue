@@ -44,21 +44,6 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="soluciones_entregadas">{{ $t('backend.soluciones_entregadas') }}</label>
-                             <vue-tags-input
-                                v-model="tag2"
-                                :tags="solucionesTags"
-                                :disabled="!edicion"
-                                :autocompleteItems="filteredSolucionesEntregadas"
-                                :add-only-from-autocomplete="true"
-                                placeholder=""
-                                @tags-changed="newTags => solucionesTags = newTags"
-                            />
-                        </div>
-                    </div> 
-
-                    <div class="col-md-12">
-                        <div class="form-group">
                             <label for="quienes_financiaron">{{ $t('backend.quienes_financiaron') }}</label>
                             <input type="text" id="quienes_financiaron" class="form-control"
                                    v-model="data.quienes_financiaron" :disabled="readonly">
@@ -67,6 +52,15 @@
                    
                 </div>
                 <div class="row">
+                     <!-- Soluciones entregadas -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="soluciones_entregadas">{{ $t('backend.soluciones_entregadas') }}</label>
+                            <select id="soluciones_entregadas" class="form-control" v-model="data.soluciones_entregadas" :disabled="readonly">
+                                <option v-for="(label, key) in opcionesSoluciones" :value="key">{{ label }}</option>
+                            </select>
+                        </div>
+                    </div> 
                     
                    
                     <div class="col-md-2">
@@ -153,20 +147,16 @@
 </template>
 
 <script>
-
-import VueTagsInput from '@johmun/vue-tags-input';
 export default {
     name: "ActividadInformeCierreForm",
     props: ['informe', 'actividad', 'edicion'],
-    components: {VueTagsInput},
-
     data() {
         return {
             data: {
                 idActividad: this.actividad.idActividad,
                 numero_participantes: null,
                 programa: null,
-                soluciones_entregadas: [],
+                soluciones_entregadas: null,
                 numero_beneficiados: null,
                 quienes_financiaron: '',
                 link_adicional: '',
@@ -184,28 +174,10 @@ export default {
 
             opcionesPrograma: this.$t('backend.programa_options'),
             opcionesSoluciones: this.$t('backend.soluciones_options'),
-
-            tag2: '',
-            solucionesTags:  [],
-            
-            autocompleteSolucionesEntregadas:  Object.entries(this.$t('backend.soluciones_options')).map(([key, value]) => ({
-                value: key,
-                text: value
-            })),
         }
     },
     mounted() {
         this.data = this.informe;
-        if(this.data.soluciones_entregadas && Array.isArray(this.data.soluciones_entregadas)) {
-            this.solucionesTags = this.data.soluciones_entregadas.map(codigo => {
-                const text = this.$t(`backend.soluciones_options.${codigo}`) || codigo;
-                return {
-                    value: codigo,
-                    text: text,
-                    tiClasses: ['ti-valid']
-                };
-            });
-        }
     },
     computed: {
         tieneErrores() {
@@ -219,29 +191,13 @@ export default {
                 (parseInt(this.data.cant_soluciones_universitarios) || 0) +
                 (parseInt(this.data.cant_soluciones_familias) || 0)
             );
-        },
-         filteredSolucionesEntregadas() {
-            const tag = (this.tag || '').toLowerCase();
-
-            return (this.autocompleteSolucionesEntregadas || [])
-            .filter(i => i && i.text && i.text.toLowerCase().includes(tag));
-        },
-         tagsTraducidos() {
-    const traducciones = this.$t('backend.soluciones_options');
-    return this.tags.map(tag => ({
-      value: tag,
-      text: traducciones[tag] || tag
-    }));
-  }
+        }
     },
     methods: {
         guardar() {
             let url;
             this.validationErrors = [];
-            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe_cierre`;
-
-            this.data.soluciones_entregadas = this.solucionesTags.map(tag => tag.value);
-  
+            url = `/admin/ajax/actividades/`+this.actividad.idActividad+`/informe-cierre`;
             axios.post(url, this.data)
                 .then((respuesta) => {
                     this.mensajeGuardado = 'Registro guardado correctamente';
