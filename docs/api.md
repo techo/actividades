@@ -96,6 +96,14 @@ Este documento describe los endpoints principales de la API.
 
 ---
 
+### Ficha Medica
+- **URL:** `/api/perfil/fichaMedica/`  
+- **Método:** `GET`  
+- **Headers:** `Authorization: Bearer {token}`  
+
+------
+---
+
 ### Estudios
 - **URL:** `/api/perfil/estudios/`  
 - **Método:** `GET`  
