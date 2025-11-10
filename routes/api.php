@@ -76,7 +76,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('inscripciones')->group(function () {
 
-        Route::get('', 'api\PersonasController@getInscripciones');
+        Route::get('', 'ajax\UsuarioController@inscripciones');
         Route::delete('{id}', 'ajax\UsuarioController@desinscribir');
         Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
         Route::post('/actividad/{id}', 'InscripcionesController@create');
