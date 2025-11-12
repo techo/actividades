@@ -9,6 +9,7 @@ class EvaluacionActividad extends Model
     protected $table = 'EvaluacionActividad';
     protected $primaryKey = 'idEvaluacion';
     protected $guarded = ['idEvaluacion'];
+    protected $casts = ['tags_positivos'=>'array','tags_negativos'=>'array'];
 
     public function actividad()
     {

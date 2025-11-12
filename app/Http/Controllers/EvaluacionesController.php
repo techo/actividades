@@ -55,7 +55,24 @@ class EvaluacionesController extends Controller
 
     public function evaluarActividad(Request $request)
     {
+        $request->validate([
+            'idActividad'     => 'required|integer|exists:Actividad,idActividad',
+            'puntaje'         => 'required|numeric|min:0|max:10',
+            'tagsPositivos'         => 'nullable|array',
+            'tagsNegativos'         => 'nullable|array',
+            'comentario'      => 'nullable|string|max:2000',
+        ]);
+        
         $persona = auth()->user();
+
+        $inscripcion = Inscripcion::where('idActividad', '=', $request->idActividad)
+            ->where('idPersona', '=', $persona->idPersona)
+            ->first();
+
+        if (!$inscripcion) {
+            return response('Usuario no inscripto a esta actividad', 400);
+        }
+
         $evaluacion = EvaluacionActividad::where('idActividad', '=', $request->idActividad)
             ->where('idPersona', '=', $persona->idPersona)
             ->first();

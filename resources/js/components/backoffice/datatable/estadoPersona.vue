@@ -4,6 +4,10 @@
         {{ estado }}
         </span>
 
+        <span v-if="rowData.voucherUrl && !rowData.pago" class="badge badge-pill bg-techo-blue m-2 text-center">
+            {{ $t('backend.change_payment') }}
+        </span>
+
         <span v-if="esDeLasUltimas24Horas" class="badge badge-pill bg-techo-violet m-2 text-center">
         {{ $t('backend.new_inscription') }}
         </span>
