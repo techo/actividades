@@ -69,7 +69,6 @@ return [
 	'admin' => 'Admin',
 	'help' => 'Ayuda',
 	'logout' => 'Salir',
-	'welcome_techo' => '¡Hola!',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
 	'use_mail_login' => 'Login con mail',
 	'use_regular_browser' => 'Para seguir, abre este enlace en tu navegador favorito (Chrome, Safari, etc.). Así garantizamos que todo funcione súper bien.',
@@ -107,6 +106,7 @@ return [
 	'welcome_M' => 'Bienvenido',
 	'welcome_F' => 'Bienvenida',
 	'welcome_X' => 'Bienvenidx',
+	'welcome_techo' => 'TE DAMOS LA BIENVENIDA A TECHO',
 
 	'empty_search' => 'Ups! No hay actividades abiertas con esos filtros',
 	'suscribe_so_we_get_in_touch' => 'Suscríbete para enterarte primerx de las próximas actividades',

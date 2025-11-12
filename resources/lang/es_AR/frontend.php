@@ -66,7 +66,7 @@ return [
 	'admin' => 'Admin',
 	'help' => 'Ayuda',
 	'logout' => 'Salir',
-	'welcome_techo' => 'BIENVENIDX A TECHO',
+	'welcome_techo' => 'TE DAMOS LA BIENVENIDA A TECHO',
 	'login_null' => 'El Correo electrónico y la contraseña son requeridos',
 	'use_mail_login' => 'Login con mail',
 	'use_regular_browser' => 'Para seguir, abre este enlace en tu navegador favorito (Chrome, Safari, etc.). Así garantizamos que todo funcione súper bien.',

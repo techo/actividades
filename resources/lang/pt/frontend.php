@@ -71,7 +71,7 @@ return [
 	'use_mail_login' => 'Usar E-mail',
 	'use_regular_browser' => 'Para continuar, abra este link em seu navegador favorito (Chrome, Safari, etc.). Assim, garantimos que tudo funciona super bem.',
 
-	'welcome_techo' => 'Bem-vindo a TETO',
+	'welcome_techo' => 'Bora construir juntos na TETO!',
 
 	//loginController
 	'login_error' => 'E-mail e/ou senha es incorretos',
