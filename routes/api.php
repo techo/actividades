@@ -71,8 +71,16 @@ Route::middleware('auth:api')->group(function () {
     });
 
 
-    Route::get('actividades', 'ajax\ActividadesController@index');
-    Route::get('actividades/{id}', 'ajax\ActividadesController@show');
+    Route::prefix('actividades')->group(function () {
+        Route::get('', 'ajax\ActividadesController@index');
+        Route::get('/{id}', 'ajax\ActividadesController@show');
+
+        Route::prefix('/{id}/evaluaciones')->group(function () {
+            Route::get('', 'EvaluacionesController@index');
+            Route::get('/tags', 'EvaluacionesController@getTagsActividad');
+            Route::post('', 'EvaluacionesController@evaluarActividad');
+        });
+    });
 
     Route::prefix('inscripciones')->group(function () {
 

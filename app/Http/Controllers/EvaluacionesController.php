@@ -52,6 +52,14 @@ class EvaluacionesController extends Controller
             )
         );
     }
+    
+    public function getTagsActividad(Request $request, $id)
+    {
+        return response()->json([
+            'atributos' => __('evaluacion.atributos_actividad'),
+            'mejoras' => __('evaluacion.mejoras_actividad'),
+        ]);
+    }
 
     public function evaluarActividad(Request $request)
     {
