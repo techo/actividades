@@ -12,7 +12,12 @@ class ActividadesSeeder extends Seeder
     public function run()
     {
         factory('App\Actividad',3)
-                    ->create()
+                    ->create([
+                        'ficha_medica_campos' => [],
+                        'roles_tags' => [],
+                        'actividades_tags' => [],
+                        'tipo_inscriptos_tag' => [],
+                    ])
                     ->each(function ($a) {
                         $a->puntosEncuentro()->save(factory(\App\PuntoEncuentro::class)->make());
                 });

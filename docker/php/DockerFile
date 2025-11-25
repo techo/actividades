@@ -1,0 +1,47 @@
+FROM php:7.2-fpm
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Fix repos because Debian Buster is archived
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i '/buster-updates/d' /etc/apt/sources.list \
+ && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid
+
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libmagickwand-dev \
+    zip \
+    unzip \
+    git \
+    libonig-dev \
+    libxml2-dev
+
+# GD for PHP 7.2 → uses old flags
+RUN docker-php-ext-configure gd \
+    --with-freetype-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/
+
+RUN docker-php-ext-install \
+    gd \
+    mbstring \
+    pdo \
+    pdo_mysql \
+    tokenizer \
+    xml \
+    zip \
+    bcmath 
+
+RUN docker-php-ext-configure exif && \
+    docker-php-ext-install exif
+
+
+# Imagick
+RUN pecl install imagick \
+    && docker-php-ext-enable imagick
+
+WORKDIR /var/www/html
+
+CMD ["php-fpm"]
