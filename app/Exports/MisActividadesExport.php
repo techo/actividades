@@ -45,6 +45,10 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
                     'Tipo.nombre AS tipoActividad',
                     'atl_CategoriaActividad.nombre as nombreCategoria',
                     'atl_pais.nombre AS pais', 
+                    'fechaInicioInscripciones',
+                    'fechaFinInscripciones',
+                    'fechaInicioEvaluaciones',
+                    'fechaFinEvaluaciones',
                 ]
             )
             ->groupBy(
@@ -79,8 +83,12 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         return [
             $actividad->id,
             $actividad->nombreActividad,
-            Date::dateTimeToExcel($actividad->fechaInicio),
-            Date::dateTimeToExcel($actividad->fechaFin),
+            ($actividad->fechaInicio)?Date::dateTimeToExcel($actividad->fechaInicio):null,
+            ($actividad->fechaFin)?Date::dateTimeToExcel($actividad->fechaFin):null,
+            ($actividad->fechaInicioInscripciones)?Date::dateTimeToExcel($actividad->fechaInicioInscripciones):null,
+            ($actividad->fechaFinInscripciones)?Date::dateTimeToExcel($actividad->fechaFinInscripciones):null,
+            ($actividad->fechaInicioEvaluaciones)?Date::dateTimeToExcel($actividad->fechaInicioEvaluaciones):null,
+            ($actividad->fechaFinEvaluaciones)?Date::dateTimeToExcel($actividad->fechaFinEvaluaciones):null,
             $actividad->estadoConstruccion,
             $actividad->oficina,
             $actividad->tipoActividad,
