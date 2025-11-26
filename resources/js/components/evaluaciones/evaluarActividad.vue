@@ -51,7 +51,7 @@
                         </div>
 
                         <!-- ICONOS - ATRIBUTOS POSITIVOS -->
-                        <div class="form-group">
+                        <div class="form-group" v-show="puntaje>6">
                             <label>{{ $t('evaluacion.titulo_positivos') }}</label>
                             <div class="icons-line" :class="{ disabled: evaluacionPasada || enviado }" role="list">
                                 <div
@@ -71,7 +71,7 @@
                         </div>
 
                         <!-- ICONOS - PUNTOS A MEJORAR (NEGATIVOS) -->
-                        <div class="form-group">
+                        <div class="form-group" v-show="puntaje<8">
                             <label>{{ $t('evaluacion.titulo_negativos') }}</label>
                             <div class="icons-line" :class="{ disabled: evaluacionPasada || enviado }" role="list">
                                 <div
@@ -156,7 +156,7 @@
         },
         data: function () {
             return {
-                puntaje: 5,
+                puntaje: null,
                 actividad: {},
                 comentario: '',
                 abierto: true,

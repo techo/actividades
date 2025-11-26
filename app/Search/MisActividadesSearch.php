@@ -51,6 +51,9 @@ class MisActividadesSearch
             ->where('Inscripcion.idPersona', auth()->user()->idPersona)
             ->whereNull('Inscripcion.deleted_at')
             ->select(['Actividad.*', 'Inscripcion.presente', 'Tipo.*']);
+
+        $query->with('evaluaciones');
+        
         return $query;
     }
 }

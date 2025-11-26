@@ -74,9 +74,12 @@ Compilar assets:
     docker compose exec app chmod -R 777 photos
     docker compose exec app chmod -R 775 storage
 ```
-## 🔗 9. Crear symlink de storage
+## 🔗 9. Crear symlink de storage y keys de passportdocker compose exec app php artisan passport:install
+
 ```bash
     docker compose exec app php artisan storage:link
+    docker compose exec app php artisan passport:install
+
 ```
 ## 🧼 10. Limpiar cachés (recomendado)
 ```bash

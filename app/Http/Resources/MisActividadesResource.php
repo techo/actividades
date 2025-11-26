@@ -33,7 +33,8 @@ class MisActividadesResource extends Resource
             'puntoEncuentro' => empty($this->puntosEncuentro) ? null : $this->puntosEncuentro,
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'img' => $this->imagen,
-            'descripcion' => clean_string($this->descripcion)
+            'descripcion' => clean_string($this->descripcion),
+            'evaluacion_actividad' => $this->evaluaciones,
         ];
     }
 }
