@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Actividad;
 use App\EvaluacionActividad;
 use App\EvaluacionPersona;
+use App\EvaluacionPersonaRespuesta;
 use App\Grupo;
 use App\Http\Resources\PersonaEvaluadaResource;
 use App\Inscripcion;
 use App\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class EvaluacionesController extends Controller
 {
@@ -40,6 +42,11 @@ class EvaluacionesController extends Controller
             ->first();
 
         $evaluados = $this->getEvaluados($actividad, $user);
+        $respuestasEvaluacion = EvaluacionPersona::with('respuestas')
+            ->where('idActividad', $actividad->idActividad)
+            ->where('idEvaluador', $user->idPersona)
+            ->get();
+
         return view(
             'evaluaciones.index',
             compact(
@@ -48,7 +55,8 @@ class EvaluacionesController extends Controller
                 'listadoInscriptos',
                 'miGrupo',
                 'gruposSubordinados',
-                'evaluados'
+                'evaluados',
+                'respuestasEvaluacion'
             )
         );
     }
@@ -96,37 +104,74 @@ class EvaluacionesController extends Controller
         return response('Error al guardar la evaluación', 500);
     }
 
-    public function evaluarPersona(Request $request, $id, $idPersona)
+
+    public function evaluarPersona(Request $request, $id)
     {
         $actividad = Actividad::findOrFail($id);
         $evaluador = auth()->user();
-        $yaEvaluado = EvaluacionPersona::where('idActividad', '=', $id)
-            ->where('idEvaluador', '=', $evaluador->idPersona)
-            ->where('idEvaluado', '=', $request->evaluado['idPersona'])
-            ->first();
+
+        // ───────────────────────────────────────────────
+        // 1) Verificar si ya evaluó a esa persona
+        // ───────────────────────────────────────────────
+        $yaEvaluado = EvaluacionPersona::where([
+            'idActividad' => $id,
+            'idEvaluador' => $evaluador->idPersona,
+            'idEvaluado'  => $request->evaluado['idPersona'],
+        ])->exists();
 
         if ($yaEvaluado) {
-            return response('la evaluación ya existe', 400);
+            return response()->json(['error' => 'La evaluación ya existe'], 400);
         }
 
-        $puntajeSocial = ($request->noAplicaSocial) ?  null : $request->puntajeSocial;
-        $puntajeTecnico = ($request->noAplicaTecnico) ? null : $request->puntajeTecnico;
-        $puntajeGenero = ($request->noAplicaGenero) ? null : $request->puntajeGenero;
-        $evaluacion = [
+        // ───────────────────────────────────────────────
+        // 2) Normalizar puntajes (null si no aplica)
+        // ───────────────────────────────────────────────
+        $evaluacionData = [
             'idActividad'   => $actividad->idActividad,
-            'idEvaluador' => $evaluador->idPersona,
-            'idEvaluado' => $request->evaluado['idPersona'],
-            'puntajeSocial' => $puntajeSocial,
-            'puntajeTecnico' => $puntajeTecnico,
-            'puntajeGenero' => $puntajeGenero,
-            'comentario'    => $request->comentario
+            'idEvaluador'   => $evaluador->idPersona,
+            'idEvaluado'    => $request->evaluado['idPersona'],
+            'puntajeSocial' => $request->noAplicaSocial ? null : $request->puntajeSocial,
+            'puntajeTecnico'=> $request->noAplicaTecnico ? null : $request->puntajeTecnico,
+            'puntajeGenero' => $request->noAplicaGenero ? null : $request->puntajeGenero,
+            'comentario'    => $request->comentario,
         ];
 
-        if (EvaluacionPersona::create($evaluacion)) {
-            return response('ok', 200);
-        }
+        // ───────────────────────────────────────────────
+        // 3) Guardar evaluación + respuestas en una transacción
+        // ───────────────────────────────────────────────
+        try {
+            DB::beginTransaction();
 
-        return response('Ocurrió un error al guardar evaluación de persona', 500);
+            $evaluacion = EvaluacionPersona::create($evaluacionData);
+
+            foreach ($request->puntajes as $questionKey => $score) {
+
+                $tags = $request->tagsSeleccionados[$questionKey] ?? [
+                    'positivos' => [],
+                    'negativos' => []
+                ];
+
+                EvaluacionPersonaRespuesta::create([
+                    'idEvaluacionPersona' => $evaluacion->idEvaluacionPersona,
+                    'question_key'          => $questionKey,
+                    'score'                 => (int) $score,
+                    'tags_positivos'        => $tags['positivos'],
+                    'tags_negativos'        => $tags['negativos'],
+                    'comentario'            => null
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'ok'], 200);
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Ocurrió un error al guardar la evaluación',
+                'detail' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     private function getInscriptos(Actividad $actividad)

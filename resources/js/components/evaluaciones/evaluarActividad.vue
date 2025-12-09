@@ -53,12 +53,14 @@
                         <!-- ICONOS - ATRIBUTOS POSITIVOS -->
                         <div class="form-group" v-show="puntaje>6">
                             <label>{{ $t('evaluacion.titulo_positivos') }}</label>
-                            <div class="icons-line" :class="{ disabled: evaluacionPasada || enviado }" role="list">
+                            <div class="icons-line" role="list">
                                 <div
                                   v-for="([key, text], idx) in atributosArray"
                                   :key="key"
                                   class="icon-item"
-                                  :class="{ seleccionado: tagsPositivos.includes(key) }"
+                                  :class="{ seleccionado: tagsPositivos.includes(key) ,
+                                        disabledTag: evaluacionPasada || enviado
+                                    }"
                                   @click="!isDisabled && toggleTag(key, 'positivo')"
                                   :aria-pressed="tagsPositivos.includes(key)"
                                   :title="text"
@@ -73,12 +75,14 @@
                         <!-- ICONOS - PUNTOS A MEJORAR (NEGATIVOS) -->
                         <div class="form-group" v-show="puntaje<8">
                             <label>{{ $t('evaluacion.titulo_negativos') }}</label>
-                            <div class="icons-line" :class="{ disabled: evaluacionPasada || enviado }" role="list">
+                            <div class="icons-line" role="list">
                                 <div
                                   v-for="([key, text], idx) in mejorasArray"
                                   :key="key"
                                   class="icon-item negativo"
-                                  :class="{ seleccionado: tagsNegativos.includes(key) }"
+                                  :class="{ seleccionado: tagsNegativos.includes(key) ,
+                                        disabledTag: evaluacionPasada || enviado
+                                    }"
                                   @click="!isDisabled && toggleTag(key, 'negativo')"
                                   :aria-pressed="tagsNegativos.includes(key)"
                                   :title="text"
@@ -271,26 +275,42 @@
 
     .icons-line {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex-wrap: nowrap;          /* 🔹 una sola línea */
+    overflow-x: auto;           /* 🔹 scroll horizontal */
     gap: 1rem;
     margin-bottom: 1.5rem;
-    }
 
-    .icon-item {
+    /* Opcional: oculta scroll feo */
+    scrollbar-width: thin;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+}
+
+.icons-line::-webkit-scrollbar {
+    height: 6px;                /* finito */
+}
+
+.icons-line::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.icon-item {
+    flex: 0 0 auto;             /* 🔹 no se achica */
+    width: 110px;               /* tu tamaño original */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     text-align: center;
-    width: 110px; /* ajustá según el espacio disponible */
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     padding: 0.5rem;
     border-radius: 12px;
     background: #f8f8f8;
-    min-height: 130px; /* para dar espacio al texto */
-    }
+    min-height: 130px;
+    scroll-snap-align: start;
+}
 
     .icon-item:hover {
     transform: scale(1.05);
@@ -328,5 +348,13 @@
     .icon-item.negativo.seleccionado {
       background: #fff0f0;
       box-shadow: 0 4px 10px rgba(185, 64, 64, 0.06);
+    }
+
+    .icon-item.disabledTag {
+        pointer-events: none;        /* 🔸 no se puede hacer click */
+        opacity: 0.5;                /* 🔸 se ve deshabilitado */
+        transform: none !important;  /* 🔸 sin animaciones */
+        box-shadow: none !important;
+        cursor: default;
     }
 </style>

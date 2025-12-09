@@ -24,7 +24,7 @@
                         :data-parent="'#evaluacionPersona_' + persona.idPersona"
                 >
                     <div class="card-body">
-                        <div class="row">
+               <!--         <div class="row">
                             <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="sliderTecnico">{{ $t('frontend.technical_score') }}<div v-show="!noAplicaTecnico" class="infoPuntaje text-center" :style="{ 'background-color': colorPuntajeTecnico}">{{ puntajeTecnico }}</div></label>
@@ -121,6 +121,66 @@
                                 </div>
                             </div>
 
+                        </div>-->
+
+                       <div v-for="(pregunta, keyPregunta) in preguntas" :key="keyPregunta" class="mb-4">
+                            <!-- TÍTULO Y DESCRIPCIÓN -->
+                            <label :for="'slider-' + keyPregunta">
+                                {{ pregunta.title }}
+                                
+                            </label>
+                            <p class="desc">{{ pregunta.desc }}</p>
+
+                            <div class="infoPuntaje" :style="{ backgroundColor: colorPuntaje(puntajes[keyPregunta]) }">
+                            {{ puntajes[keyPregunta] }}
+                            </div>
+
+                            <!-- SLIDER -->
+                            <input type="range"
+                                class="form-control-range"
+                                :id="'slider-' + keyPregunta"
+                                min="1"
+                                max="10"
+                                step="1"
+                                v-model="puntajes[keyPregunta]"
+                                :disabled="evaluacionPasada || enviado"
+                            >
+
+                            <!-- TAGS POSITIVOS -->
+                            <div class="form-group" v-if="puntajes[keyPregunta] >= 7">
+                                <label>{{ $t('evaluacion.titulo_positivos') }}</label>
+
+                                <div class="icons-line" role="list">
+                                <span
+                                    v-for="(text, keyTag) in tags[keyPregunta].positivos"
+                                    :key="keyTag"
+                                    class="icon-item positivo"
+                                    :class="{ seleccionado: tagsSeleccionados[keyPregunta].positivos.includes(keyTag) ,
+                                                deshabilitado: evaluacionPasada || enviado}"
+                                    @click="!evaluacionPasada && !enviado && toggleTag(keyPregunta, keyTag, 'positivos')"
+                                >
+                                    {{ text }}
+                                </span>
+                                </div>
+                            </div>
+                                                    
+                            <!-- TAGS NEGATIVOS -->
+                            <div class="form-group" v-if="puntajes[keyPregunta] <= 6">
+                                <label>{{ $t('evaluacion.titulo_negativos') }}</label>
+
+                                <div class="icons-line" role="list">
+                                <span
+                                    v-for="(text, keyTag) in tags[keyPregunta].negativos"
+                                    :key="keyTag"
+                                                            class="icon-item negativo"
+                                    :class="{ seleccionado: tagsSeleccionados[keyPregunta].negativos.includes(keyTag) ,
+                                                deshabilitado: evaluacionPasada || enviado}"
+                                    @click="!evaluacionPasada && !enviado && toggleTag(keyPregunta, keyTag, 'negativos')"
+                                >
+                                    {{ text }}
+                                </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="comentarios">{{ $t('frontend.comments') }}</label>
@@ -163,8 +223,12 @@
         components: {
             'vue-slider': VueSlider
         },
-        props: ['persona', 'actividad'],
+        props: ['persona', 'actividad', 'respuestas'],
         created: function () {
+
+
+            this.preguntas = this.$t('evaluacion.personas.preguntas') || {};
+            this.tags = this.$t('evaluacion.personas.tags') || {};
             // Si puntaje Social existe, puntaje tecnico también
             if (this.persona.puntajeSocial !== undefined) {
                 this.puntajeTecnico = this.persona.puntajeTecnico;
@@ -179,9 +243,9 @@
         },
         data: function () {
             return {
-                puntajeSocial: 5,
-                puntajeTecnico: 5,
-                puntajeGenero: 5,
+                puntajeSocial: null,
+                puntajeTecnico: null,
+                puntajeGenero: null,
                 comentario: '',
                 abierto: true,
                 noAplicaTecnico: false,
@@ -189,6 +253,32 @@
                 noAplicaGenero: false,
                 error: false,
                 enviado: false,
+                preguntas: [],
+                tags: [],
+                puntajes: {},
+                tagsSeleccionados: {}
+            }
+        },
+
+        mounted() {
+            // inicializar estructuras dinámicas
+            Object.keys(this.preguntas).forEach((key) => {
+            this.$set(this.puntajes, key, 9); // puntaje por defecto
+            this.$set(this.tagsSeleccionados, key, {
+                positivos: [],
+                negativos: []
+            });
+            });
+            this.cargarRespuestasIniciales();
+        },
+
+
+        watch: {
+            respuestas: {
+                deep: true,
+                handler() {
+                    this.cargarRespuestasIniciales();
+                }
             }
         },
         methods: {
@@ -204,7 +294,9 @@
                     evaluado: this.persona,
                     noAplicaSocial: this.noAplicaSocial,
                     noAplicaTecnico: this.noAplicaTecnico,
-                    noAplicaTecnico: this.noAplicaGenero
+                    noAplicaGenero: this.noAplicaGenero,
+                    puntajes: this.puntajes,
+                    tagsSeleccionados: this.tagsSeleccionados
                 };
                 this.axiosPost(url,
                     function(response, self) {
@@ -217,8 +309,44 @@
                     }
                 );
             },
+            cargarRespuestasIniciales() {
+                if (!this.respuestas || this.respuestas.length === 0) return;
+
+                this.respuestas.forEach(resp => {
+                    const key = resp.question_key;
+
+                    // Puntaje
+                    this.$set(this.puntajes, key, resp.score);
+
+                    // Tags Seleccionados
+                    this.$set(this.tagsSeleccionados, key, {
+                        positivos: resp.tags_positivos || [],
+                        negativos: resp.tags_negativos || []
+                    });
+                });
+            },
             cambiarIcono: function () {
                 this.abierto = !this.abierto;
+            },
+            toggleTag(pregunta, tagKey, tipo) {
+                const arr = this.tagsSeleccionados[pregunta][tipo];
+
+                if (arr.includes(tagKey)) {
+                    this.tagsSeleccionados[pregunta][tipo] =
+                    arr.filter((x) => x !== tagKey);
+                } else {
+                    arr.push(tagKey);
+                }
+            },
+
+            iconPath(tagKey) {
+                return `/images/tags/${tagKey}.png`;
+            },
+
+            colorPuntaje(v) {
+                if (v <= 3) return "#F7977A";
+                if (v <= 6) return "#FFF79A";
+                return "#82CA9D";
             }
         },
         computed: {
@@ -290,5 +418,107 @@
         padding-top: 3px;
         margin-left: 3px;
     }
+.pregunta-card { margin-bottom: 2rem; }
+ .icons-line {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
 
+    -webkit-overflow-scrolling: touch;
+    /* Opcional: oculta scroll feo */
+    scrollbar-width: thin;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+}
+
+/* Opcional: scroll estilizado */
+.icons-line::-webkit-scrollbar {
+    height: 6px;
+}
+.icons-line::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.icon-item {
+    flex: 0 0 auto;  /* ❗ Fundamental para scroll horizontal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    width: 95px; /* más compacto */
+    padding: 0.4rem 0.5rem;
+
+    background: #f8f8f8;
+    border-radius: 10px;
+    cursor: pointer;
+    scroll-snap-align: start;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Imagen o ícono dentro */
+.icon-item img,
+.icon-item .icon {
+    width: 40px;     /* achicado */
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 0.3rem;
+}
+
+/* Texto: que fluya en varias líneas sin cortar */
+.icon-text {
+    font-size: 0.42rem;
+    line-height: 1.1rem;
+    white-space: normal;        /* ❗ Hace que no se corte */
+    word-break: break-word;     /* ❗ Evita overflow */
+    max-width: 100%;
+}
+
+    .icon-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+    }
+
+    .icon-label {
+    font-size: 0.7rem;
+    color: #444;
+    line-height: 1;
+    word-wrap: break-word;
+    white-space: normal; /* 🔹 Permite varias líneas */
+    overflow-wrap: break-word;
+    }
+
+    /* Estado seleccionado */
+    .icon-item.seleccionado {
+    border: 2px solid #007bff;
+    background-color: #e8f0ff;
+    }
+
+    /* Estado deshabilitado */
+    .icons-line.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    }
+
+    .icon-item.negativo.seleccionado {
+      background: #fff0f0;
+      box-shadow: 0 4px 10px rgba(185, 64, 64, 0.06);
+    }
+
+    .icon-item.deshabilitado {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none; /* si querés bloquear click 100% desde CSS */
+}
 </style>

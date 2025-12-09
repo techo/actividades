@@ -36,7 +36,7 @@
         </div>
         <h5 v-if="evaluados.length > 0">{{ $t('frontend.peers_already_received_feedback') }}</h5>
         <div v-for="persona in evaluados" class="mt-2">
-            <evaluar-persona :persona="persona" :actividad="actividad"></evaluar-persona>
+            <evaluar-persona :persona="persona" :actividad="actividad" :respuestas="respuestasPorPersona[persona.idPersona] || []"></evaluar-persona>
         </div>
         
 
@@ -54,6 +54,7 @@
         props: [
             'prop-actividad',
             'prop-evaluados',
+            'prop-evaluados-respuesta',
             'prop-inscriptos',
             'prop-user',
             'prop-mi-grupo',
@@ -71,12 +72,14 @@
                 gruposSubordinados: [],
                 personasNoEvaluadas: [],
                 evaluados: [],
+                evaluadosRespuesta: [],
                 showSearcher: false,
             }
         },
         created: function () {
             let result = {};
             this.evaluados = JSON.parse(this.propEvaluados);
+            this.evaluadosRespuesta = JSON.parse(this.propEvaluadosRespuesta);
             this.actividad = JSON.parse(this.propActividad);
             this.user = JSON.parse(this.propUser);
             this.listadoInscriptos = JSON.parse(this.propInscriptos);
@@ -146,6 +149,12 @@
                 let ahora = new Date();
                 let fechaFinEvaluaciones = new Date(this.actividad.fechaFinEvaluaciones);
                 return ahora.getTime() > fechaFinEvaluaciones.getTime();
+            },
+            respuestasPorPersona() {
+                return this.evaluadosRespuesta.reduce((acc, evaluacion) => {
+                    acc[evaluacion.idEvaluado] = evaluacion.respuestas;
+                    return acc;
+                }, {});
             }
         }
     }

@@ -14,4 +14,9 @@ class EvaluacionPersona extends Model
     {
         return $this->belongsTo(Persona::class, 'idPersona', 'idEvaluado');
     }
+
+    public function respuestas()
+    {
+        return $this->hasMany(EvaluacionPersonaRespuesta::class, 'idEvaluacionPersona', 'idEvaluacionPersona');
+    }
 }

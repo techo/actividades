@@ -506,7 +506,7 @@ return [
         'voluntariado' => 'Voluntariado',
         'corporativos' => 'Corporativo',
         'secundarios' => 'Secundarios',
-        'universitarios' => 'Universitarios',
+        'universitarios' => 'Otros',
         'familias_amigos' => 'Familias y Amigos'
     ],
 ];
