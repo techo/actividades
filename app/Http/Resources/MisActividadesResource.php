@@ -35,6 +35,8 @@ class MisActividadesResource extends Resource
             'img' => $this->imagen,
             'descripcion' => clean_string($this->descripcion),
             'evaluacion_actividad' => $this->evaluaciones,
+            'imagen_tarjeta'           => $this->imagen_tarjeta,
+            'imagen_destacada'           => $this->imagen_destacada,
         ];
     }
 }
