@@ -26,6 +26,7 @@ class ActividadResource extends Resource
         return [
             'idActividad'   => $this->idActividad,
             'tipo'          => new TipoResource($this->tipo),
+            'idCategoria'   => $this->idCategoria,
             'pago'          => $this->pago,
             'fecha'         => $this->fechaInicio->format('d/m'),
             'hora'          => $this->fechaInicio->format('H:i'),

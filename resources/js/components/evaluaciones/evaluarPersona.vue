@@ -217,7 +217,7 @@
     </div>
 </template>
 <script>
-    import VueSlider from 'vue-slider-component'; //https://github.com/NightCatSama/vue-slider-component
+    import VueSlider from 'vue-slider-component';
     export default {
         name: "evaluarPersona",
         components: {
@@ -225,8 +225,6 @@
         },
         props: ['persona', 'actividad', 'respuestas'],
         created: function () {
-
-
             this.preguntas = this.$t('evaluacion.personas.preguntas') || {};
             this.tags = this.$t('evaluacion.personas.tags') || {};
             // Si puntaje Social existe, puntaje tecnico también
