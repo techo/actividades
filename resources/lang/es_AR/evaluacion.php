@@ -25,7 +25,12 @@ return [
         'logistica_insuficiente' => 'Logística o alimentación insuficiente',
     ],
 
+
     'personas' => [
+
+        'titulo_positivos' => '¿Cuales son sus mejores atributos?',
+        'titulo_negativos' => '¿Cuales son los puntos de mejora?',
+
         'preguntas' => [
             'conexion_equipo' => [
                 'title' => 'Conexión con el equipo y la comunidad',

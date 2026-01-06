@@ -26,6 +26,10 @@ return [
     ],
 
     'personas' => [
+
+        'titulo_positivos' => 'Quais são seus melhores atributos?',
+        'titulo_negativos' => 'Quais são os pontos de melhoria?',
+
         'preguntas' => [
             'conexion_equipo' => [
                 'title' => 'Conexão com a equipe e a comunidade',

@@ -123,12 +123,11 @@
 
                         </div>-->
 
-                       <div v-for="(pregunta, keyPregunta) in preguntas" :key="keyPregunta" class="mb-4">
+                       <div v-for="(pregunta, keyPregunta, index) in preguntas" :key="keyPregunta" class="mb-4">
                             <!-- TÍTULO Y DESCRIPCIÓN -->
-                            <label :for="'slider-' + keyPregunta">
-                                {{ pregunta.title }}
-                                
-                            </label>
+                            <h5 :for="'slider-' + keyPregunta">
+                                {{ index + 1 }} - {{ pregunta.title }}
+                            </h5>
                             <p class="desc">{{ pregunta.desc }}</p>
 
                             <div class="infoPuntaje" :style="{ backgroundColor: colorPuntaje(puntajes[keyPregunta]) }">
@@ -148,13 +147,13 @@
 
                             <!-- TAGS POSITIVOS -->
                             <div class="form-group" v-if="puntajes[keyPregunta] >= 7">
-                                <label>{{ $t('evaluacion.titulo_positivos') }}</label>
+                                <label>{{ $t('evaluacion.personas.titulo_positivos') }}</label>
 
                                 <div class="icons-line" role="list">
                                 <span
                                     v-for="(text, keyTag) in tags[keyPregunta].positivos"
                                     :key="keyTag"
-                                    class="icon-item positivo"
+                                    class="icon-item positivo small lh-sm"
                                     :class="{ seleccionado: tagsSeleccionados[keyPregunta].positivos.includes(keyTag) ,
                                                 deshabilitado: evaluacionPasada || enviado}"
                                     @click="!evaluacionPasada && !enviado && toggleTag(keyPregunta, keyTag, 'positivos')"
@@ -166,13 +165,13 @@
                                                     
                             <!-- TAGS NEGATIVOS -->
                             <div class="form-group" v-if="puntajes[keyPregunta] <= 6">
-                                <label>{{ $t('evaluacion.titulo_negativos') }}</label>
+                                <label>{{ $t('evaluacion.personas.titulo_negativos') }}</label>
 
                                 <div class="icons-line" role="list">
                                 <span
                                     v-for="(text, keyTag) in tags[keyPregunta].negativos"
                                     :key="keyTag"
-                                                            class="icon-item negativo"
+                                    class="icon-item negativo small lh-sm"
                                     :class="{ seleccionado: tagsSeleccionados[keyPregunta].negativos.includes(keyTag) ,
                                                 deshabilitado: evaluacionPasada || enviado}"
                                     @click="!evaluacionPasada && !enviado && toggleTag(keyPregunta, keyTag, 'negativos')"
@@ -400,8 +399,8 @@
         color: red;
     }
 
-    .gris {
-        color: #8F8F8F;
+   .gris {
+        color: #6F6F6F;
     }
 
     .infoPuntaje {
