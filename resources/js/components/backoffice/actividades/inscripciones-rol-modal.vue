@@ -10,25 +10,24 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="rol">{{ $t('backend.role') }}</label>
-                        
-                        <vue-tags-input
-                            v-model="tag"
-                            :tags="rolesAplicado"
-                            placeholder=""
-                            :autocomplete-items="rolesDisponibles"
-                            @tags-changed="newTags => rolesAplicado = newTags"
-                            :max-tags="1"
-                        />
+                    
+                        <select
+                            class="form-control"
+                            v-model="rolSeleccionado"
+                        >
+                            <option
+                                v-for="(label, key) in rolesFallback"
+                                :key="key"
+                                :value="key"
+                            >
+                                {{ label }}
+                            </option>
+                        </select>
+
+
                         <p class="help-block">
                             {{ $t('backend.only_one_tag_selectable_per_registration_selection') }}
                         </p>
-                        <input type="hidden"
-                               id="rol"
-                               name="rol"
-                               class="input form-control"
-                               placeholder="Escriba el rol"
-                               v-model="rolSeleccionado"
-                        >
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -57,6 +56,18 @@
                 actividad: [],
             }
         },
+        computed: {
+            rolesFallback() {
+                return this.$i18n.messages[this.$i18n.locale].backend.roles_actividad;
+            }
+        },
+        watch: {
+            rolesAplicado(newVal) {
+                if (newVal.length > 0) {
+                    this.rolSeleccionado = newVal[0].text;
+                }
+            }
+        },
         created(){
             Event.$on('show-rol-modal', this.mostrarModal);
         },
@@ -71,7 +82,6 @@
             },
             confirmar: function () {
                 $('#rol-modal').modal('hide');
-                this.rolSeleccionado = this.rolesAplicado[0].text;
                 Event.$emit('rol-asignado', this.rolSeleccionado);
             }
         }

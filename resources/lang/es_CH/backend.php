@@ -527,4 +527,14 @@ return [
         'territorio' => 'Territorio',
     ],
 
+    'roles_actividad' => [
+        'liderazgo_cuadrilla' => 'Liderazgo / Jefatura de Cuadrilla',
+        'liderazgo_escuela' => 'Liderazgo / Jefatura de Escuela',
+        'intendencia' => 'Intendencia',
+        'monitor' => 'Monitor/a',
+        'logistica' => 'Logística',
+        'liderazgo_trabajo' => 'Liderazgo / Jefatura de Trabajo',
+        'salud_bienestar' => 'Salud y Bienestar',
+        'camioneta' => 'Camioneta',
+    ],
 ];

@@ -526,4 +526,15 @@ return [
         'renovacion' => 'Renovação',
         'territorio' => 'Território',
     ],
+
+     'roles_actividad' => [
+        'liderazgo_cuadrilla' => 'Liderança / Chefia de Equipe',
+        'liderazgo_escuela' => 'Liderança / Chefia de Escola',
+        'intendencia' => 'Manutenção',
+        'monitor' => 'Monitor/a',
+        'logistica' => 'Logística',
+        'liderazgo_trabajo' => 'Liderança / Chefia de Trabalho',
+        'salud_bienestar' => 'Saúde e Bem-estar',
+        'camioneta' => 'Caminhonete',
+    ],
 ];
