@@ -84,13 +84,6 @@
                                    v-model="data.cant_soluciones_secundarios" :disabled="readonly">
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="cant_soluciones_universitarios">{{ $t('backend.tipo_voluntariado_options.universitarios') }}</label>
-                             <input type="number" id="cant_soluciones_universitarios" class="form-control"
-                                   v-model="data.cant_soluciones_universitarios" :disabled="readonly">
-                        </div>
-                    </div>
 
                     <div class="col-md-2">
                         <div class="form-group">
@@ -100,6 +93,14 @@
                         </div>
                     </div>
 
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="cant_soluciones_universitarios">{{ $t('backend.tipo_voluntariado_options.universitarios') }}</label>
+                             <input type="number" id="cant_soluciones_universitarios" class="form-control"
+                                   v-model="data.cant_soluciones_universitarios" :disabled="readonly">
+                        </div>
+                    </div>
+                    
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="cant_soluciones_familias">TOTAL</label>

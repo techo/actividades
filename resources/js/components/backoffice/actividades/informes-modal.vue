@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'modal':true, 'fade': true }" :style="{}" id="inscribir-modal">
         <simplert ref="confirmar"></simplert>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cancelar()" >
