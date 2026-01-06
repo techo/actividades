@@ -38,6 +38,9 @@ class TiposActividadController extends Controller
         $tipoActividad = $request->validate([
             'nombre' => 'required',
             'idCategoria' => 'required',
+            'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
+            'activo' => 'required|boolean',
+            'tipo_indicador' => 'required'
         ]);
 
         Tipo::create($tipoActividad);
@@ -51,6 +54,8 @@ class TiposActividadController extends Controller
             'nombre' => 'required',
             'idCategoria' => 'required',
             'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
+            'activo' => 'required|boolean',
+            'tipo_indicador' => 'required'
         ]);
 
         $tipoActividad = Tipo::find($validados['idTipo']);
@@ -63,6 +68,8 @@ class TiposActividadController extends Controller
         }
         $tipoActividad->nombre = $validados['nombre'];
         $tipoActividad->idCategoria = $validados['idCategoria'];
+        $tipoActividad->tipo_indicador = $validados['tipo_indicador'];
+        $tipoActividad->activo = $validados['activo'];
         
         $tipoActividad->save();
 

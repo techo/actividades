@@ -516,4 +516,14 @@ return [
     'reactivate_member_confirm' => 'Sim, reativar',
     'reactivate_member_inline_warning' => 'Ao reativar esta pessoa, será criado um novo registro para preservar o histórico de períodos ativos.',
 
+    'tipo_indicador' => 'Indicador aplicável',
+    'tipo_indicadores_options' => [
+        'colecta' => 'Coleta',
+        'construcciones_inmersivas' => 'Construções imersivas',
+        'encuentros' => 'Encontros',
+        'insercion' => 'Inserção',
+        'otras_actividades' => 'Outras atividades',
+        'renovacion' => 'Renovação',
+        'territorio' => 'Território',
+    ],
 ];

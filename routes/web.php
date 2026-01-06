@@ -28,6 +28,7 @@ Route::prefix('ajax')->group(function () {
     Route::get('categorias', 'ajax\CategoriasController@index');
     Route::get('categorias/{id}', 'ajax\CategoriasController@show');
     Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
+    Route::get('categorias/{id}/tipos/activas', 'ajax\CategoriasController@tiposActivas');
     Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
     Route::get('personas', 'ajax\UsuarioController@getPersonas');
 

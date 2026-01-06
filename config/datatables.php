@@ -886,6 +886,16 @@ return [
                 'title' => 'Categoría',
                 'callback' => 'traducir'
             ],
+            [
+                'name' => 'activo',
+                'sortField' => 'activo',
+                'title' => 'Activo',
+            ],
+            [
+                'name' => 'tipo_indicador',
+                'sortField' => 'tipo_indicador',
+                'title' => 'Tipo Indicador',
+        ],
         ],
         'sortOrder' => [
             [

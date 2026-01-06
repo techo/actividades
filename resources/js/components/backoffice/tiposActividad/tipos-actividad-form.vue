@@ -59,6 +59,35 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="activo">{{ $t('backend.tipo_indicador') }}</label>
+                                    <select
+                                            class="form-control"
+                                            v-model="tipoActividad.tipo_indicador"
+                                            :disabled="readonly"
+                                    >
+                                       <option
+                                            v-for="(label, key) in tipo_indicadores_options"
+                                            :key="key"
+                                            :value="key"
+                                        >{{ label }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="activo">{{ $t('backend.active') }}</label>
+                                    <select v-model="tipoActividad.activo" name="activo" class="form-control" required>
+                                        <option value="1" :selected="tipoActividad.activo == 1">{{ $t('backend.active') }}</option>
+                                        <option value="0" :selected="tipoActividad.activo == 0">{{ $t('backend.inactive') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,6 +111,8 @@
                     idCategoria: null,
                     imagen: null,
                     imagenNew: null,
+                    tipo_indicador: null,
+                    activo: true,
                 },
                 readonly: !this.edicion,
                 guardado: false,
@@ -90,6 +121,7 @@
                 validationErrors: {},
                 dataCategorias: [],
                 categoriaSeleccionado: {},
+            
             }
         },
         created(){
@@ -107,6 +139,9 @@
             tieneErrores: function () {
                 return (this.validationErrors.length > 0);
             },
+            tipo_indicadores_options() {
+                return this.$i18n.messages[this.$i18n.locale].backend.tipo_indicadores_options;
+            }
         },
         watch: {
             tipoActividad: function() {
@@ -161,6 +196,8 @@
                 data.append('idTipo', this.tipoActividad.idTipo);
                 data.append('nombre', this.tipoActividad.nombre);
                 data.append('idCategoria', (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null);
+                data.append('tipo_indicador', this.tipoActividad.tipo_indicador);
+                data.append('activo', this.tipoActividad.activo);
 
                 if (this.tipoActividad.imagenNew != null)
                     data.append('imagen', this.tipoActividad.imagenNew);

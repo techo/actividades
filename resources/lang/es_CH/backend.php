@@ -515,4 +515,16 @@ return [
     'reactivate_member_message_2' => 'Al activarla nuevamente se creará un nuevo registro para conservar el historial de sus períodos activos e inactivos.',
     'reactivate_member_confirm' => 'Sí, reactivar',
     'reactivate_member_inline_warning' => 'Al activar nuevamente a esta persona se creará un nuevo registro para conservar el historial de períodos activos.',
+    
+    'tipo_indicador' => 'Indicador que aplica',
+    'tipo_indicadores_options' => [
+        'colecta' => 'Colecta',
+        'construcciones_inmersivas' => 'Construcciones inmersivas',
+        'encuentros' => 'Encuentros',
+        'insercion' => 'Inserción',
+        'otras_actividades' => 'Otras actividades',
+        'renovacion' => 'Renovación',
+        'territorio' => 'Territorio',
+    ],
+
 ];

@@ -1177,7 +1177,7 @@
             },
             getTipos(id){
                 this.idCategoria = id;
-                axios.get('/ajax/categorias/' + id + '/tipos')
+                axios.get('/ajax/categorias/' + id + '/tipos/activas')
                     .then((datos) => { 
                         this.tipos = datos.data; 
                     }).catch((error) => { debugger; });

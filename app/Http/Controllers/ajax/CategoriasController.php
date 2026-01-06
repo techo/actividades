@@ -26,4 +26,10 @@ class CategoriasController extends Controller
         $categoria = CategoriaActividad::find($request->id);
         return $categoria->tipos;
     }
+    
+    public function tiposActivas(Request $request)
+    {
+        $categoria = CategoriaActividad::find($request->id);
+        return $categoria->tipos()->where('activo', true)->get();
+    }
 }
