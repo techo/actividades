@@ -611,6 +611,11 @@ return [
                 'sortField' => 'fechaInicio',
                 'title' => 'Fecha de Inicio'
             ],
+            [
+                'name' => 'estado',
+                'sortField' => 'estado',
+                'title' => 'Estado'
+            ],
         ],
         'sortOrder' => [
             [

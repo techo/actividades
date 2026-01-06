@@ -69,6 +69,20 @@ class IntegrantesController extends Controller
     {
         $integrante = Integrante::findOrFail($idIntegrante);
         $validado = $validado = $request->validated();
+
+        // Caso especial: se activa (estado pasa a 1)
+        if (
+            $integrante->estado == 0 &&
+            $validado['estado'] == 1
+        ) {
+            // Crear nuevo integrante
+            unset($validado['idIntegrante']); 
+            $nuevoIntegrante = Integrante::create($validado);
+
+            return response()->json($nuevoIntegrante, 201);
+        }
+        
+        // Caso normal: solo actualizar
         $integrante->fill($validado);
         $integrante->save();
 

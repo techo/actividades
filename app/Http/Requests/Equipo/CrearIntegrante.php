@@ -39,7 +39,7 @@ class CrearIntegrante extends FormRequest
             'impacto' => 'nullable',
             'capacidades' => 'nullable',
             'fechaInicio' => 'required|date',
-            'fechaFin' => 'nullable|date',
+            'fechaFin' => 'nullable|date|required_if:estado,0',
         ];
     }
 }

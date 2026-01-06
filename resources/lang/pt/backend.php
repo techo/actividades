@@ -509,4 +509,11 @@ return [
         'universitarios' => 'Outros',
         'familias_amigos' => 'Famílias e Amigos'
     ],
+
+    'reactivate_member_title' => 'Reativar integrante',
+    'reactivate_member_message_1' => 'Esta pessoa já foi integrante anteriormente.',
+    'reactivate_member_message_2' => 'Ao reativá-la, será criado um novo registro para preservar o histórico de períodos ativos e inativos.',
+    'reactivate_member_confirm' => 'Sim, reativar',
+    'reactivate_member_inline_warning' => 'Ao reativar esta pessoa, será criado um novo registro para preservar o histórico de períodos ativos.',
+
 ];

@@ -64,6 +64,14 @@
                                     <option value="1" :selected="form.estado == 1">{{ $t('backend.active') }}</option>
                                     <option value="0" :selected="form.estado == 0">{{ $t('backend.inactive') }}</option>
                                 </select>
+                                <p
+                                    v-if="form.estado == 1 && editando && estadoEraInactivo"
+                                    class="help-block text-warning"
+                                >
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    
+                                    {{ $t('backend.reactivate_member_inline_warning') }}
+                                </p>
                                 <span v-if="errors.estado" v-text="errors.estado[0]" class="help-block"></span>
                             </div>
                         </div>
@@ -229,7 +237,7 @@
             </div>
         </div>
     </div>
-</div></template>
+</template>
 
 <script>
 
@@ -274,7 +282,8 @@ export default {
             tags: [],
             tag: '',
             errors: {},
-            guardado: false
+            guardado: false,
+            estadoOriginal: null,
         }
     },
     mounted() {
@@ -286,7 +295,23 @@ export default {
     watch: {
         persona(v, vv) {
             if (v) this.form.idPersona = v.idPersona
+        },
+        'form.estado'(nuevo, viejo) {
+            // De INACTIVO → ACTIVO
+            if (viejo == 0 && nuevo == 1) {
+                this.form.fechaInicio = null;
+                this.form.fechaFin = null;
+            }
+
+            // De ACTIVO → INACTIVO
+            if (nuevo == 0) {
+                // no borramos fechaInicio
+                if (!this.form.fechaFin) {
+                    this.errors.fechaFin = ['La fecha de fin es obligatoria'];
+                }
+            }
         }
+
     },
     computed: {
         editando() {
@@ -299,9 +324,21 @@ export default {
                 return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
             });
         },
+        estadoEraInactivo() {
+            return this.estadoOriginal == 0;
+        }
     },
     methods: {
         guardar() {
+            if (
+                this.editando &&
+                this.estadoOriginal == 0 &&
+                this.form.estado == 1
+            ) {
+                this.confirmarReactivacion();
+                return;
+            }
+
             if (this.form['idIntegrante'])
                 this.update();
             else
@@ -345,6 +382,24 @@ export default {
                     }, 2000);
                 })
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+        },
+        confirmarReactivacion() {
+            this.$refs.confirmar.openSimplert({
+                title: this.$t('backend.reactivate_member_title'),
+                message: `
+                    ${this.$t('backend.reactivate_member_message_1')}
+                    <br><br>
+                    ${this.$t('backend.reactivate_member_message_2')}
+                `,
+                useConfirmBtn: true,
+                isShown: true,
+                customConfirmBtnText: this.$t('backend.reactivate_member_confirm'),
+                customConfirmBtnClass: 'btn btn-warning',
+                customCloseBtnText: this.$t('backend.cancel'),
+                onConfirm: () => {
+                    this.update();
+                }
+            });
         },
 
         getComunidades(){
@@ -404,6 +459,7 @@ export default {
             axios.get('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + p.idIntegrante)
                 .then((datos) => {
                     this.form = datos.data;
+                    this.estadoOriginal = datos.data.estado;
                     this.form.fechaInicio = moment(this.form.fechaInicio).format('YYYY-MM-DD');
                     if (this.form.fechaFin)
                         this.form.fechaFin = moment(this.form.fechaFin).format('YYYY-MM-DD');
