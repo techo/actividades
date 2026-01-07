@@ -29,12 +29,30 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         list($sortField, $sortOrder) = $sort;
 
         $result = \App\Suscribe::select(
-                ['mail', 'idPersona', 'perfil_seleccionado', 'tematica', 'tiempo_disponible', 'created_at']
-            )
-            ->orderBy($sortField, $sortOrder);
+                [
+                    'mail',
+                    'idPersona',
+                    'nombre',
+                    'apellido',
+                    'dni',
+                    'genero',
+                    'fecha_nacimiento',
+                    'telefono',
+                    'idPais',
+                    'idProvincia',
+                    'idLocalidad',
+                    'ocupacion_actual',
+                    'canal_contacto',
+                    'experiencia_previa',
+                    'perfil_seleccionado',
+                    'tematica',
+                    'tiempo_disponible',
+                    'created_at'
+                ]
+            )->orderBy($sortField, $sortOrder);
 
 
-              $result->where('idPais', '=', auth()->user()->idPaisPermitido);
+        $result->where('idPais', '=', auth()->user()->idPaisPermitido);
 
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);
@@ -59,10 +77,32 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         return [
             $suscritos->mail,
             $suscritos->idPersona,
+
+            $suscritos->nombre,
+            $suscritos->apellido,
+            $suscritos->dni,
+            $suscritos->genero,
+
+            $suscritos->fecha_nacimiento
+                ? Date::dateTimeToExcel($suscritos->fecha_nacimiento)
+                : null,
+
+            $suscritos->telefono,
+            $suscritos->idPais,
+            $suscritos->idProvincia,
+            $suscritos->idLocalidad,
+
+            $suscritos->ocupacion_actual,
+            $suscritos->canal_contacto,
+            $suscritos->experiencia_previa ? 'Sí' : 'No',
+
             $suscritos->perfil_seleccionado,
             $suscritos->tematica,
             $suscritos->tiempo_disponible,
-            ($suscritos->created_at)?Date::dateTimeToExcel($suscritos->created_at):null
+
+            $suscritos->created_at
+                ? Date::dateTimeToExcel($suscritos->created_at)
+                : null,
 
         ];
     }
@@ -71,11 +111,28 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
     {
         return [
             'Mail',
-            'IdPersona (si el mail esta asociado a un usuario)',
+            'IdPersona (si el mail está asociado a un usuario)',
+
+            'Nombre',
+            'Apellido',
+            'Documento',
+            'Género',
+            'Fecha de Nacimiento',
+
+            'Teléfono',
+            'Id País',
+            'Id Provincia',
+            'Id Localidad',
+
+            'Ocupación Actual',
+            'Canal de Contacto',
+            'Experiencia Previa',
+
             'Perfil Seleccionado',
-            'tematica',
-            'tiempo_disponible',
-            'Fecha De Creación'
+            'Temática',
+            'Tiempo Disponible',
+
+            'Fecha de Creación',
         ];
     }
 }
