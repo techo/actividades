@@ -16,7 +16,18 @@ class Suscribe extends Model
         'filtro_ubicaciones',
         'perfil_seleccionado',
         'tematica',
-        'tiempo_disponible'
+        'tiempo_disponible',
+        'nombre',
+        'apellido',
+        'dni',
+        'genero',
+        'fecha_nacimiento',
+        'telefono',
+        'idProvincia',
+        'idLocalidad',
+        'ocupacion_actual',
+        'canal_contacto',
+        'experiencia_previa'
     ];
 
 
@@ -28,5 +39,15 @@ class Suscribe extends Model
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
+
+    public function localidad()
+    {
+        return $this->hasOne(Localidad::class, 'idLocalidad', 'id');
+    }
+
+    public function provincia()
+    {
+        return $this->hasOne(Provincia::class, 'idProvincia', 'id');
     }
 }

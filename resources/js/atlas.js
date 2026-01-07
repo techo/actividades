@@ -61,6 +61,8 @@ import avisoModal from './components/aviso-modal'
 Vue.component('aviso-modal', avisoModal);
 
 
+import Suscribe from './components/perfil/suscribe'
+Vue.component('suscribe', Suscribe);
 
 
 import axios from 'axios';

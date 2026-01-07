@@ -548,7 +548,10 @@ Route::get('/login', 'HomeController@index')->name('home');
 
 Route::get('/autotest', 'PerfilController@quiz_techero');
 
+
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
+    Route::get('/suscribe', 'SuscribeController@get');
+    Route::post('/suscribe', 'SuscribeController@create');
     Route::get('/filtro', 'ActividadesController@index');
     Route::get('/', 'HomeController@index');
     Route::get('/postulaciones', 'PostulacionesController@index');
