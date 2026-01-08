@@ -91,6 +91,11 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(EvaluacionActividad::class, 'idPersona', 'idPersona');
     }
 
+    public function evaluacionesImpactoActividadRealizadas()
+    {
+        return $this->hasMany(EvaluacionImpactoActividad::class, 'idPersona', 'idPersona');
+    }
+    
     public function getPromedioSocialAttribute()
     {
         return $this->evaluacionesRecibidas->avg('puntajeSocial');

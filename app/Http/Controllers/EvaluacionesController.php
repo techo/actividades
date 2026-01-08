@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actividad;
 use App\EvaluacionActividad;
+use App\EvaluacionImpactoActividad;
 use App\EvaluacionPersona;
 use App\EvaluacionPersonaRespuesta;
 use App\Grupo;
@@ -46,6 +47,10 @@ class EvaluacionesController extends Controller
             ->where('idActividad', $actividad->idActividad)
             ->where('idEvaluador', $user->idPersona)
             ->get();
+        
+        $respuestasImpactoActividad = EvaluacionImpactoActividad::where('idPersona', '=', $user->idPersona)
+            ->where('idActividad', '=', $actividad->idActividad)
+            ->first();
 
         return view(
             'evaluaciones.index',
@@ -56,7 +61,8 @@ class EvaluacionesController extends Controller
                 'miGrupo',
                 'gruposSubordinados',
                 'evaluados',
-                'respuestasEvaluacion'
+                'respuestasEvaluacion',
+                'respuestasImpactoActividad'
             )
         );
     }
@@ -104,6 +110,41 @@ class EvaluacionesController extends Controller
         return response('Error al guardar la evaluación', 500);
     }
 
+    public  function evaluarImpacto(Request $request, $id)
+    {
+        $request->validate([
+            'idActividad' => 'required|integer|exists:Actividad,idActividad',
+
+            'impacto_habilidades_capacidades' => 'required|integer|min:1|max:10',
+            'impacto_percepcion_realidad'     => 'required|integer|min:1|max:10',
+            'impacto_recomendaria_experiencia'=> 'required|integer|min:1|max:10',
+        ]);
+
+        $persona = auth()->user();
+
+        $inscripcion = Inscripcion::where('idActividad', $request->idActividad)
+            ->where('idPersona', $persona->idPersona)
+            ->first();
+
+        if (!$inscripcion) {
+            return response('Usuario no inscripto a esta actividad', 400);
+        }
+
+        EvaluacionImpactoActividad::updateOrCreate(
+            [
+                'idActividad' => $request->idActividad,
+                'idPersona'   => $persona->idPersona,
+            ],
+            [
+                'impacto_habilidades_capacidades' => $request->impacto_habilidades_capacidades,
+                'impacto_percepcion_realidad'     => $request->impacto_percepcion_realidad,
+                'impacto_recomendaria_experiencia'=> $request->impacto_recomendaria_experiencia,
+            ]
+        );
+
+        return response('ok');
+        
+    }
 
     public function evaluarPersona(Request $request, $id)
     {

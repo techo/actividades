@@ -136,6 +136,7 @@ Route::get('autenticado', function () {
 Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
 Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
 Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
+Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
 
 // Flujo de inscripciones
 

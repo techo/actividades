@@ -21,6 +21,8 @@
             prop-grupos-subordinados="{{ json_encode($gruposSubordinados) }}"
             prop-evaluados="{{ json_encode($evaluados) }}"
             prop-evaluados-respuesta="{{ json_encode($respuestasEvaluacion ) }}"
+            prop-evaluacion-impacto-respuesta="{{ json_encode($respuestasImpactoActividad ) }}"
+
     >
     </contenedor-evaluaciones>
 

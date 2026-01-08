@@ -118,4 +118,21 @@ return [
             ],
         ],
     ],
+    
+    'impacto' => [
+        'titulo' => 'Impact Evaluation',
+
+        'preguntas' => [
+            'impacto_habilidades_capacidades' => [
+                'title' => 'I strengthened my skills and abilities',
+            ],
+            'impacto_percepcion_realidad' => [
+                'title' => 'I changed my perception of the country’s reality',
+            ],
+            'impacto_recomendaria_experiencia' => [
+                'title' => 'I would recommend this experience',
+            ],
+        ],
+    ],
+
 ];

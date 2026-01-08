@@ -119,4 +119,21 @@ return [
             ],
         ],
     ],
+
+
+    'impacto' => [
+        'titulo' => 'Evaluaciòn de impacto',
+
+        'preguntas' => [
+            'impacto_habilidades_capacidades' => [
+                'title' => 'Fortalecì mis habilidades y capacidades',
+            ],
+            'impacto_percepcion_realidad' => [
+                'title' => 'Cambie mi percepciòn acerca de la realidad del pais',
+            ],
+            'impacto_recomendaria_experiencia' => [
+                'title' => 'Recomendarìa esta experiencia',
+            ],
+        ],
+    ],
 ];

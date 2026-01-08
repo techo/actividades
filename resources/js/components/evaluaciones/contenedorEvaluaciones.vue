@@ -39,6 +39,11 @@
             <evaluar-persona :persona="persona" :actividad="actividad" :respuestas="respuestasPorPersona[persona.idPersona] || []"></evaluar-persona>
         </div>
         
+        <evaluar-impacto
+            class="mt-5"
+            :actividad="actividad"
+            :evaluacionRespuesta="evaluacionImpactoRespuesta"
+        />
 
 
     </span>
@@ -58,7 +63,8 @@
             'prop-inscriptos',
             'prop-user',
             'prop-mi-grupo',
-            'prop-grupos-subordinados'
+            'prop-grupos-subordinados',
+            'prop-evaluacion-impacto-respuesta'
         ],
         data: function () {
             return {
@@ -73,6 +79,7 @@
                 personasNoEvaluadas: [],
                 evaluados: [],
                 evaluadosRespuesta: [],
+                evaluacionImpactoRespuesta: [],
                 showSearcher: false,
             }
         },
@@ -80,6 +87,7 @@
             let result = {};
             this.evaluados = JSON.parse(this.propEvaluados);
             this.evaluadosRespuesta = JSON.parse(this.propEvaluadosRespuesta);
+            this.evaluacionImpactoRespuesta = JSON.parse(this.propEvaluacionImpactoRespuesta);
             this.actividad = JSON.parse(this.propActividad);
             this.user = JSON.parse(this.propUser);
             this.listadoInscriptos = JSON.parse(this.propInscriptos);
