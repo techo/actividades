@@ -30,6 +30,10 @@ class Suscribe extends Model
         'experiencia_previa'
     ];
 
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+        'created_at' => 'datetime',
+    ];  
 
     public function pais()
     {
