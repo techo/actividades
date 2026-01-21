@@ -470,7 +470,7 @@ return [
 	'my_score_not_active' => 'Not enought evaluations from your activities to make a average',
 
 	// contenedorEvaluaciones.vue
-	'feedback_to_your_peers' => 'Give feedback to your peers',
+	'feedback_to_your_peers' => '3. Give feedback to your peers',
 	'peers_already_received_feedback' => 'Already received feedback',
 	'cannot_find_peer' => 'If you cannot see the peer your looking click here to look it up',
 	'search_volunteer' => 'Name or surname',

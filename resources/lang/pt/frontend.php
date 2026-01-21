@@ -478,7 +478,7 @@ return [
 	'my_score_feedback' => 'Avalie agora!',
 
 	// contenedorEvaluaciones.vue
-	'feedback_to_your_peers' => 'Avalie seus colegas',
+	'feedback_to_your_peers' => '3. Avalie seus colegas',
 	'peers_already_received_feedback' => 'Colegas já avaliados',
 	'cannot_find_peer' => 'Não encontras a pessoa que você quer avaliar? clique para incluir-lá',
 	'search_volunteer' => 'Nome, Sobrenome o CPF do voluntário',

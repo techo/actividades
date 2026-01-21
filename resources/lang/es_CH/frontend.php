@@ -473,7 +473,7 @@ return [
 
 
 	// contenedorEvaluaciones.vue
-	'feedback_to_your_peers' => 'Evalúa a tus compañeros',
+	'feedback_to_your_peers' => '3. Evalúa a tus compañeros',
 	'peers_already_received_feedback' => 'Compañeros ya evaluados',
 	'cannot_find_peer' => '¿No ves a la persona que quieres evaluar? Usa este buscador para incluirla',
 	'search_volunteer' => 'Nombre, apellido o DNI del voluntario',

@@ -1,5 +1,11 @@
 <template>
     <span>
+         <evaluar-impacto
+            class="mt-5"
+            :actividad="actividad"
+            :evaluacionRespuesta="evaluacionImpactoRespuesta"
+        />
+
         <h4>{{ $t('frontend.feedback_to_your_peers') }}</h4>
         <p class="alert alert-info mt-3" v-if="!evaluacionPasada" @click="showSearcher = !showSearcher">
             <i class="fa fa-star" style="margin-right: 0.5em"></i>
@@ -39,11 +45,7 @@
             <evaluar-persona :persona="persona" :actividad="actividad" :respuestas="respuestasPorPersona[persona.idPersona] || []"></evaluar-persona>
         </div>
         
-        <evaluar-impacto
-            class="mt-5"
-            :actividad="actividad"
-            :evaluacionRespuesta="evaluacionImpactoRespuesta"
-        />
+       
 
 
     </span>

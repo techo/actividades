@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>3 . {{ $t('evaluacion.impacto.titulo') }}</h4>
+        <h4>2 . {{ $t('evaluacion.impacto.titulo') }}</h4>
 
         <div v-for="(pregunta, keyPregunta) in preguntasImpacto"
              :key="keyPregunta"
@@ -25,7 +25,7 @@
                 max="10"
                 step="1"
                 v-model="puntajesImpacto[keyPregunta]"
-                :disabled="evaluacionPasada || evaluacionRealizada"
+                :disabled="evaluacionPasada || evaluacionRealizada || enviado"
             >
         </div>
 
