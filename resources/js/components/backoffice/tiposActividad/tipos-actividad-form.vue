@@ -212,7 +212,7 @@
                         this.validationErrors = [];
                         this.$refs.loading.justCloseSimplert();
                         this.readonly = true;
-                        window.location.replace('/admin/configuracion/tipos-actividad/'+this.tipoActividad.idTipo);
+                        window.location.replace('/admin/configuracion/tipos-actividad/');
                     })
                     .catch((error) => { 
                         this.ocultarLoadingAlert();
