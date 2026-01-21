@@ -31,9 +31,11 @@ return [
     'success' => 'Gracias por sumarte a TECHO',
     'privacy_notice' => 'Todos los datos ingresados están regidos por nuestra',
     'privacy_policy' => 'política de privacidad',
-    
+    'fecha_de_nacimiento' => 'Fecha de nacimiento',
+    'gender' => 'Género',
 
     'dni_by_country' => [
+        'argentina' => 'Número de DNI',
         'bolivia' => 'Cédula de Identidad',
         'colombia' => 'Cédula de Ciudadanía',
         'costarica' => 'Cédula de Identidad',
@@ -49,6 +51,26 @@ return [
         'uruguay' => 'Cédula de Identidad',
         'venezuela' => 'Cédula de Identidad',
         'latam' => 'Pasaporte',
+    ],
+
+    'secundario_by_country' => [
+        'argentina' => 'Secundario',
+        'bolivia' => 'Bachillerato',
+        'chile' => 'Enseñanza Media',
+        'colombia' => 'Educación Media',
+        'costarica' => 'Educación Secundaria',
+        'republicadominicana' => 'Educación Media',
+        'ecuador' => 'Bachillerato',
+        'elsalvador' => 'Educación Media',
+        'guatemala' => 'Bachillerato',
+        'honduras' => 'Educación Media',
+        'mexico' => 'Preparatoria / Bachillerato',
+        'panama' => 'Educación Secundaria',
+        'paraguay' => 'Bachillerato',
+        'peru' => 'Educación Secundaria',
+        'uruguay' => 'Secundario',
+        'venezuela' => 'Educación Media',
+        'latam' => 'Secundario / Bachillerato',
     ],
 
 

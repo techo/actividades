@@ -27,7 +27,8 @@ class Suscribe extends Model
         'idLocalidad',
         'ocupacion_actual',
         'canal_contacto',
-        'experiencia_previa'
+        'experiencia_previa',
+        'instagram',
     ];
 
     protected $casts = [

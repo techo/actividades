@@ -38,7 +38,7 @@
 
                 <div class="col-md-4">
                     <select class="form-control" v-model="suscriptor.genero">
-                        <option value="">{{ $t('frontend.gender') }}</option>
+                        <option value="">{{ $t('suscribe.gender') }}</option>
                         <option value="F">{{ $t('frontend.gender_f') }}</option>
                         <option value="M">{{ $t('frontend.gender_m') }}</option>
                         <option value="X">{{ $t('frontend.gender_x') }}</option>
@@ -48,7 +48,7 @@
                 <div class="col-md-4">
                     <datepicker
                         v-model="suscriptor.fecha_nacimiento"
-                        :placeholder="$t('frontend.date_placeholder')"
+                        :placeholder="$t('suscribe.fecha_de_nacimiento')"
                         id="nacimiento"
                         lang="es"
                         format="DD-MM-YYYY"
@@ -95,17 +95,26 @@
                 </div>
             </div>
 
+            <div class="row mt-2">
+                <div class="col-md-4">
+                    <input
+                        class="form-control"
+                        placeholder="Instagram"
+                        v-model="suscriptor.instagram">
+                </div>
+            </div>
+
             <!-- Información Académica -->
             <h4 class="mt-3">{{ $t('suscribe.academic_info') }}</h4>
             <select class="form-control" v-model="suscriptor.ocupacion_actual">
                 <option value="">{{ $t('frontend.nivel_de_estudios') }}</option>
-                <option value="secundario"> {{ $t('frontend.secundario') }} </option>
+                <option value="secundario"> {{ secundarioLabel }} </option>
                 <option value="universitario">{{ $t('frontend.universitario') }}</option>
                 <option value="posgrado"> {{ $t('frontend.posgrado') }} </option>
             </select>
 
             <!-- Información TECHO -->
-            <h4 class="mt-3">{{ $t('suscribe.techo_info') }}</h4>
+            <h4 class="mt-3">{{ $t('suscribe.how_meet_techo') }}</h4>
             <select id="canal_contacto" v-model="suscriptor.canal_contacto" class="form-control">
                 <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
                 <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
@@ -190,7 +199,9 @@ export default {
                 idLocalidad: '',
                 ocupacion_actual: '',
                 canal_contacto: '',
-                experiencia_previa: false
+                experiencia_previa: false,
+                instagram: '',
+                dni: '',
             },
             provincias: [],
             localidades: [],
@@ -224,6 +235,21 @@ export default {
 
             // Fallback
             return this.$t('frontend.passport')
+        },
+        secundarioLabel() {
+            if (!this.pais || !this.pais.abreviacion) {
+                return this.$t('frontend.secundario')
+            }
+
+            const key = `suscribe.secundario_by_country.${this.pais.abreviacion}`
+
+            // Si existe la traducción, úsala
+            if (this.$te(key)) {
+                return this.$t(key)
+            }
+
+            // Fallback
+            return this.$t('frontend.secundario')
         }
     },
 

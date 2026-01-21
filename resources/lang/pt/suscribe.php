@@ -31,6 +31,8 @@ return [
     'success' => 'Obrigado por se juntar à TECHO',
     'privacy_notice' => 'Todos os dados informados estão protegidos pela nossa',
     'privacy_policy' => 'política de privacidade',
+    'fecha_de_nacimiento' => 'Data de nascimento',
+    'gender' => 'Gênero',
 
     'dni_by_country' => [
         'bolivia' => 'Carteira de Identidade',

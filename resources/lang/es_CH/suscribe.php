@@ -31,6 +31,8 @@ return [
     'success' => 'Gracias por sumarte a TECHO',
     'privacy_notice' => 'Todos los datos ingresados están regidos por nuestra',
     'privacy_policy' => 'política de privacidad',
+    'fecha_de_nacimiento' => 'Fecha de nacimiento',
+    'gender' => 'Género',
     
 
     'dni_by_country' => [

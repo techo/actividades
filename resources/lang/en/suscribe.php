@@ -31,7 +31,9 @@ return [
     'success' => 'Thank you for joining TECHO',
     'privacy_notice' => 'All the information provided is governed by our',
     'privacy_policy' => 'privacy policy',
-
+    'fecha_de_nacimiento' => 'Date of birth',
+    'gender' => 'Gender',
+    
     'dni_by_country' => [
         'bolivia' => 'Identity Card',
         'colombia' => 'Citizenship ID',
