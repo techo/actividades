@@ -41,7 +41,8 @@ class TiposActividadSearch
 
         $query = (new Tipo())->newQuery();
         $query->join('atl_CategoriaActividad', 'Tipo.idCategoria', '=', 'atl_CategoriaActividad.id')
-        ->selectRaw('Tipo.idTipo as id, Tipo.nombre as nombre, atl_CategoriaActividad.nombre as categoria');
+        ->selectRaw('Tipo.idTipo as id, Tipo.nombre as nombre, atl_CategoriaActividad.nombre as categoria,
+        Tipo.activo, Tipo.tipo_indicador');
         return $query;
     }
 }

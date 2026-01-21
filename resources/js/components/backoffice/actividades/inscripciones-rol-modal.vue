@@ -26,7 +26,7 @@
 
 
                         <p class="help-block">
-                            {{ $t('backend.only_one_tag_selectable_per_registration_selection') }}
+                            <!-- {{ $t('backend.only_one_tag_selectable_per_registration_selection') }} -->
                         </p>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
         },
         computed: {
             rolesFallback() {
-                return this.$i18n.messages[this.$i18n.locale].backend.roles_actividad;
+                return this.$i18n.messages[this.$i18n.locale].backend.roles_actividad_options;
             }
         },
         watch: {

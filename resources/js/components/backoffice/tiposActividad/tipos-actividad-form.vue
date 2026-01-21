@@ -68,6 +68,7 @@
                                             v-model="tipoActividad.tipo_indicador"
                                             :disabled="readonly"
                                     >
+                                        <option value="" :selected="tipoActividad.tipo_indicador == null"></option>
                                        <option
                                             v-for="(label, key) in tipo_indicadores_options"
                                             :key="key"

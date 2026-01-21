@@ -226,8 +226,7 @@ return [
             ],
 
             [
-                'name' => 'nombreRol',
-                'sortField' => 'nombreRol',
+                'name' => '__component:translateBackend_rolesActividad',
                 'title' => 'Rol'
             ],
             [

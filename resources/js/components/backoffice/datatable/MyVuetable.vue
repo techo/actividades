@@ -74,7 +74,7 @@
   import translateBackend from './TranslateBackend';
   Vue.component('translateBackend', translateBackend);
 
-  const translateAliases = ['programa', 'solucionesEntregadas', 'categoria', 'rol', 'estado'];
+  const translateAliases = ['programa', 'solucionesEntregadas', 'categoria', 'rolesActividad', 'rolesEquipos', 'estado'];
   translateAliases.forEach(alias => {
     Vue.component(`translateBackend_${alias}`, translateBackend);
   });
