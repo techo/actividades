@@ -52,6 +52,31 @@ class EvaluacionesController extends Controller
             ->where('idActividad', '=', $actividad->idActividad)
             ->first();
 
+        if (request()->expectsJson()) {
+
+            $idsGruposPermitidos = collect([
+                $miGrupo->idGrupo,
+                $miGrupo->idPadre,
+            ])->filter(); // por si idPadre es null o 0
+
+            $inscriptosMiGrupo = $listadoInscriptos->filter(function ($persona) use ($idsGruposPermitidos) {
+                return $idsGruposPermitidos->contains($persona->idGrupo);
+            })->values();
+
+            return response()->json([
+                'actividad' => $actividad,
+                'miGrupo' => $miGrupo,
+                'gruposSubordinados' => $gruposSubordinados,
+                'listado_presentes' => $listadoInscriptos,
+                'listado_a_evaluar' => $inscriptosMiGrupo,
+                'respuesta_actividad' => $respuestaActividad,
+                'respuestas_persona' => $respuestasEvaluacion,
+                'respuestas_impacto' => $respuestasImpactoActividad,
+                'preguntasEvaluacionPersona' => __('evaluacion.personas'),
+                'preguntasEvaluacionImpacto' => __('evaluacion.impacto'),
+            ]);
+        }   
+
         return view(
             'evaluaciones.index',
             compact(

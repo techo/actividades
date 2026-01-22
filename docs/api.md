@@ -255,6 +255,21 @@ Este documento describe los endpoints principales de la API.
 - `inscripcion_id`
 - `estados_inscripcion` →  PRE_INSCRIPTO, FALTA_PAGO, CONFIRMADO, PUNTO_ENCUENTRO_CERRADO o FALTA_ACEPTAR_TERMINOS
 
+### Ver Evaluacion por Actividad
+
+- **URL:** `/api/actividades/{idActividad}/evaluaciones`
+- **Método:** `GET`
+- **Devuelve:**
+- `actividad` 
+- `listado_presentes` - personas que deberian ser seleccionables
+- `listado_a_evaluar` - personas que deberia mostrarse en el listado
+- `respuesta_actividad` - evaluacion de actividad, si la hubiera 
+- `respuestas_persona` - evaluacion de impacto, si la hubiera 
+- `respuestas_impacto` - evaluacion de las personas, si la hubiera 
+- `preguntasEvaluacionPersona` - preguntas, descripcion y tags postitvos/negativos para personas
+- `preguntasEvaluacionImpacto` - preguntas de impacto
+
+
 
 ### 📤 Subir Voucher Pago
 
