@@ -28,6 +28,7 @@ class CrearIntegrante extends FormRequest
             'idEquipo' => 'required',
             'idComunidad' => 'nullable',
             'rol' => 'required',
+            'cargo' => 'nullable',
             'estado' => 'required|boolean',
             'despliegue' => 'required',
             'relacion' => 'required',
@@ -40,6 +41,7 @@ class CrearIntegrante extends FormRequest
             'capacidades' => 'nullable',
             'fechaInicio' => 'required|date',
             'fechaFin' => 'nullable|date|required_if:estado,0',
+            'proyeccion' => 'nullable|integer',
         ];
     }
 }

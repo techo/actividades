@@ -20,6 +20,7 @@ return [
     'gender' => 'Gender',
     'phone' => 'Phone',
     'role' => 'Role',
+    'cargo' => 'Position',
     'state' => 'State',
     'country' => 'Country',
     'province' => 'Province',
@@ -132,6 +133,7 @@ return [
     'commitment_letter' => 'Commitment Letter',
     'view_uploaded_letter' => 'View Uploaded Letter',
     'role_description' => 'Role Description',
+    'proyeccion' => 'Projection (months)',
     'goal' => 'Goal',
     'milestones' => 'Milestones',
     'meeting_day_and_time' => 'Meeting Day and Time',
@@ -519,9 +521,11 @@ return [
 
     'tipo_indicador' => 'Applicable indicator',
     'tipo_indicadores_options' => [
+        'captacion' => 'Captación',
         'colecta' => 'Collection',
-        'construcciones_inmersivas' => 'Immersive constructions',
+        'construccion_de_viviendas' => 'Construction of housing',
         'encuentros' => 'Meetings',
+        'gestion_y_acompañamiento' => 'Management and Support',
         'insercion' => 'Insertion',
         'otras_actividades' => 'Other activities',
         'renovacion' => 'Renovation',

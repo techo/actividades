@@ -20,6 +20,7 @@ return [
     'gender' => 'Gênero',
     'phone' => 'Telefone',
     'role' => 'Função',
+    'cargo' => 'Cargo',
     'state' => 'Estado',
     'country' => 'País',
     'province' => 'Província',
@@ -128,6 +129,7 @@ return [
     'commitment_letter' => 'Carta de Compromisso',
     'view_uploaded_letter' => 'Ver Carta Carregada',
     'role_description' => 'Descrição do Papel',
+    'proyeccion' => 'Projection (meses)',
     'goal' => 'Meta',
     'milestones' => 'Marcos',
     'meeting_day_and_time' => 'Dia e Hora da Reunião',
@@ -518,9 +520,11 @@ return [
 
     'tipo_indicador' => 'Indicador aplicável',
     'tipo_indicadores_options' => [
+        'captacion' => 'Captación',
         'colecta' => 'Coleta',
-        'construcciones_inmersivas' => 'Construções imersivas',
+        'construccion_de_viviendas' => 'Construcción de viviendas',
         'encuentros' => 'Encontros',
+        'gestion_y_acompañamiento' => 'Gestión y Acompañamiento',
         'insercion' => 'Inserção',
         'otras_actividades' => 'Outras atividades',
         'renovacion' => 'Renovação',
@@ -537,4 +541,15 @@ return [
         'salud_bienestar' => 'Saúde e Bem-estar',
         'camioneta' => 'Caminhonete',
     ],
+
+    'roles_integrantes' => [
+        'coordinacion' => 'Coordenação',
+        'zonal' => 'Zonal',
+        'voluntariado_equipo' => 'Voluntariado de Equipe',
+        'subcoordinacion' => 'Subcoordenação',
+        'implementador' => 'Implementador/a',
+        'gestor' => 'Gestor/a',
+        'jefatura_liderazgo' => 'Chefatura / Liderança',
+    ],
+
 ];

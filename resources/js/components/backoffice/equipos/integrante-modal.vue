@@ -78,22 +78,33 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div :class="{ 'form-group': true, 'has-error': errors.rol }">
                                 <label for="rol">{{ $t('backend.role') }}</label>
-                                <input v-model="form.rol" name="rol" type="text" class="form-control" required>
-                                
-                                <!-- <select v-model="form.rol" name="rol" class="form-control" required>
-                                    <option value="zonal" :selected="form.rol == 'zonal'">{{ $t('frontend.zonal') }}</option>
-                                    <option value="coordinacion" :selected="form.rol == 'coordinacion'">{{ $t('frontend.coordinacion') }}</option>
-                                    <option value="coordinacion_general" :selected="form.rol == 'coordinacion_general'">{{ $t('frontend.coordinacion_general') }}</option>
-                                    <option value="voluntariado_mesa" :selected="form.rol == 'voluntariado_mesa'">{{ $t('frontend.voluntariado_mesa') }}</option>
-                                    <option value="voluntariado_equipo" :selected="form.rol == 'voluntariado_equipo'">{{ $t('frontend.voluntariado_equipo') }}</option>
-                                </select> -->
+                                <select
+                                    class="form-control"
+                                    v-model="form.rol"
+                                >
+                                    <option
+                                        v-for="(label, key) in rolesFallback"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ label }}
+                                    </option>
+                                </select>
                                 <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div v-show="form.despliegue == 'Comunidad' && idEquipo"  class="col-md-6">
+                        <div class="col-md-4">
+                            <div :class="{ 'form-group': true, 'has-error': errors.cargo }">
+                                <label for="cargo">{{ $t('backend.cargo') }}</label>
+                                <input v-model="form.cargo" name="cargo" type="text" class="form-control"
+                                    required>
+                                <span v-if="errors.cargo" v-text="errors.cargo[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div v-show="form.despliegue == 'Comunidad' && idEquipo"  class="col-md-4">
                                 <div class="form-group">
                                     <label for="comunidades">{{ $t('backend.community') }}</label>
                                     <vue-tags-input
@@ -113,7 +124,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaInicio }">
                                 <label for="fechaInicio">{{ $t('backend.start_date') }}</label>
                                 <input v-model="form.fechaInicio" name="fechaInicio" type="date" class="form-control"
@@ -121,7 +132,14 @@
                                 <span v-if="errors.fechaInicio" v-text="errors.fechaInicio[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <div v-show="form.estado == '0'" class="col-md-6">
+                        <div class="col-md-4">
+                            <div :class="{ 'form-group': true, 'has-error': errors.proyeccion }">
+                                <label for="proyeccion">{{ $t('backend.proyeccion') }}</label>
+                                <input v-model="form.proyeccion" name="proyeccion" type="number" class="form-control">
+                                <span v-if="errors.proyeccion" v-text="errors.proyeccion[0]" class="help-block"></span>
+                            </div>
+                        </div>
+                        <div v-show="form.estado == '0'" class="col-md-4">
                             <div :class="{ 'form-group': true, 'has-error': errors.fechaFin }">
                                 <label for="fechaFin">{{ $t('backend.end_date') }}</label>
                                 <input v-model="form.fechaFin" name="fechaFin" type="date" class="form-control" required>
@@ -142,15 +160,6 @@
                                 <span v-if="errors.archivo_carta_compromiso" v-text="errors.archivo_carta_compromiso[0]" class="help-block"></span>
                             </div>
                         </div>
-                        <!-- <div class="col-md-6">
-                            <div :class="{ 'form-group': true, 'has-error': errors.archivo_plan_de_trabajo }">
-                                <label for="archivo_plan_de_trabajo">Plan de Trabajo</label>
-                                <a v-if="form.archivo_plan_de_trabajo != null" :href="'/'+form.archivo_plan_de_trabajo" target="_blank"> Ver Plan Cargado</a>
-                                <input ref="archivo_plan_de_trabajo" type="file" class="form-control">
-                                <span v-if="errors.archivo_plan_de_trabajo" v-text="errors.archivo_plan_de_trabajo[0]"
-                                    class="help-block"></span>
-                            </div>
-                        </div> -->
                     </div>
 
                     <div class="row">
@@ -261,11 +270,13 @@ export default {
                 idIntegrante: null,
                 idPersona: null,
                 rol: null,
+                cargo: null,
                 despliegue: null,
                 relacion: null,
                 estado: 1,
                 fechaInicio: null,
                 fechaFin: null,
+                proyeccion: null,
                 archivo_carta_compromiso: '',
                 descripcion_rol : null,
                 meta : null,
@@ -310,9 +321,15 @@ export default {
                     this.errors.fechaFin = ['La fecha de fin es obligatoria'];
                 }
             }
+        },
+        rolesAplicado(newVal) {
+            if (newVal.length > 0) {
+                this.rolSeleccionado = newVal[0].text;
+            }
         }
 
     },
+
     computed: {
         editando() {
             if (this.form['idIntegrante'])
@@ -323,6 +340,9 @@ export default {
             return this.autocompleteComunidadesTags.filter(i => {
                 return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
             });
+        },
+        rolesFallback() {
+            return this.$i18n.messages[this.$i18n.locale].backend.roles_integrantes;
         },
         estadoEraInactivo() {
             return this.estadoOriginal == 0;

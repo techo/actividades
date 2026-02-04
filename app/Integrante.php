@@ -13,6 +13,7 @@ class Integrante extends Model
     protected $fillable = [
         'idEquipo', 
         'rol', 
+        'cargo',
         'estado', 
         'despliegue', 
         'relacion', 
@@ -28,7 +29,8 @@ class Integrante extends Model
         'periodicidad_reunion',
         'impacto',
         'capacidades',
-        'idComunidad'
+        'idComunidad',
+        'proyeccion'
     ];
 
     protected $dates =

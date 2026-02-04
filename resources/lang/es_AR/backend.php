@@ -20,6 +20,7 @@ return [
     'gender' => 'Género',
     'phone' => 'Teléfono',
     'role' => 'Rol',
+    'cargo' => 'Cargo',
     'state' => 'Estado',
     'country' => 'País',
     'province' => 'Provincia',
@@ -132,6 +133,7 @@ return [
     'commitment_letter' => 'Carta de Compromiso',
     'view_uploaded_letter' => 'Ver Carta Cargada',
     'role_description' => 'Descripcion Rol',
+    'proyeccion' => 'Proyección (meses)',
     'goal' => 'Meta',
     'milestones' => 'Hitos',
     'meeting_day_and_time' => 'Día y hora Reunión',
@@ -519,16 +521,18 @@ return [
 
     'tipo_indicador' => 'Indicador que aplica',
     'tipo_indicadores_options' => [
+        'captacion' => 'Captación',
         'colecta' => 'Colecta',
-        'construcciones_inmersivas' => 'Construcciones inmersivas',
+        'construccion_de_viviendas' => 'Construcción de viviendas',
         'encuentros' => 'Encuentros',
+        'gestion_y_acompañamiento' => 'Gestión y Acompañamiento',
         'insercion' => 'Inserción',
         'otras_actividades' => 'Otras actividades',
         'renovacion' => 'Renovación',
         'territorio' => 'Territorio',
     ],
 
-    'roles_actividad' => [
+    'roles_actividad_options' => [
         'liderazgo_cuadrilla' => 'Liderazgo / Jefatura de Cuadrilla',
         'liderazgo_escuela' => 'Liderazgo / Jefatura de Escuela',
         'intendencia' => 'Intendencia',
@@ -538,4 +542,15 @@ return [
         'salud_bienestar' => 'Salud y Bienestar',
         'camioneta' => 'Camioneta',
     ],
+
+    'roles_integrantes' => [
+        'coordinacion' => 'Coordinación',
+        'zonal' => 'Zonal',
+        'voluntariado_equipo' => 'Voluntariado de Equipo',
+        'subcoordinacion' => 'Subcoordinación',
+        'implementador' => 'Implementador/a',
+        'gestor' => 'Gestor/a',
+        'jefatura_liderazgo' => 'Jefatura / Liderazgo',
+    ],
+
 ];
