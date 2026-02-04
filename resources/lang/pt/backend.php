@@ -537,6 +537,7 @@ return [
         'intendencia' => 'Manutenção',
         'monitor' => 'Monitor/a',
         'logistica' => 'Logística',
+        'comunicacion' => 'Comunicação / Audiovisuais',
         'liderazgo_trabajo' => 'Liderança / Chefia de Trabalho',
         'salud_bienestar' => 'Saúde e Bem-estar',
         'camioneta' => 'Caminhonete',

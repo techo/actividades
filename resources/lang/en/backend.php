@@ -538,6 +538,7 @@ return [
         'intendencia' => 'Facilities',
         'monitor' => 'Monitor',
         'logistica' => 'Logistics',
+        'comunicacion' => 'Communication / Audiovisuals',
         'liderazgo_trabajo' => 'Leadership / Work Chief',
         'salud_bienestar' => 'Health and Wellbeing',
         'camioneta' => 'Van / Truck',
