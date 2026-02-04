@@ -59,11 +59,11 @@ class UsuarioController extends BaseController
       $this->validar($request,'create');
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
-      $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
+      $persona->password = (!empty($request->google_id) || !empty($request->facebook_id) || !empty($request->apple_id) || !empty($request->instagram_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
-      if (!empty($request->google_id) || !empty($request->facebook_id)){
+      if (!empty($request->google_id) || !empty($request->facebook_id) || !empty($request->apple_id) || !empty($request->instagram_id)){
         $persona->email_verified_at = now(); 
       } else {
         $persona->notify(new \App\Notifications\RegistroUsuario);
@@ -140,6 +140,8 @@ class UsuarioController extends BaseController
       $persona->telefonoMovil = $request->telefono;
       $persona->google_id = $request->google_id;
       $persona->facebook_id = $request->facebook_id;
+      $persona->apple_id = $request->apple_id;
+      $persona->instagram_id = $request->instagram_id;
       $persona->acepta_marketing = $request->acepta_marketing;
       $persona->canal_contacto = $request->canal_contacto;
       $persona->estadoPersona = $request->estadoPersona;

@@ -11,6 +11,8 @@ use App\Pais;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Webpatser\Uuid\Uuid;
+use App\Services\SocialAuth\SocialProviderFactory;
+use Illuminate\Support\Facades\Log;
 
 class PersonasController extends Controller
 { 
@@ -118,6 +120,62 @@ class PersonasController extends Controller
             'abreviacionPais' => $pais ? $pais->abreviacion : null,
             'loginSocial' => true,
         ], 200);
+    } 
+
+    public function providerLogin(Request $request)
+    {
+        $request->validate([
+            'provider' => 'required|string',
+            'token'    => 'required|string',
+        ]);
+
+        try {
+            $provider = SocialProviderFactory::make($request->provider);
+        } catch (\Exception $e) {
+            return response(['success' => false, 'mensaje' => 'Proveedor inválido'], 400);
+        }
+
+        $data = $provider->validate($request->token);
+
+        if (!$data || empty($data['email'])) {
+            return response(['success' => false, 'mensaje' => 'Token inválido'], 401);
+        }
+
+        if (!$data['email_verified']) {
+            return response(['success' => false, 'mensaje' => 'Email no verificado'], 403);
+        }
+
+        $persona = Persona::where('mail', $data['email'])->first();
+
+        if (!$persona) {
+            return response(['success' => false, 'mensaje' => 'Usuario no encontrado'], 404);
+        }
+
+        $column = $data['provider'] . '_id';
+
+        if ($persona->$column && $persona->$column !== $data['social_id']) {
+            Log::warning('Intento takeover cuenta social', [
+                'persona_id' => $persona->id,
+                'provider'   => $data['provider'],
+            ]);
+
+            return response(['success' => false, 'mensaje' => 'Cuenta ya asociada'], 409);
+        }
+
+        $persona->$column = $data['social_id'];
+        $persona->email_verified_at = now();
+        $persona->save();
+
+        $token = $persona->createToken('social-login')->accessToken;
+        $pais = Pais::find($persona->idPais);
+
+        return response([
+            'success'           => true,
+            'persona'           => $persona,
+            'token'             => $token,
+            'abreviacionPais'   => optional($pais)->abreviacion,
+            'loginSocial'       => true,
+        ]);
     }
 
     public function logout(request $request)
