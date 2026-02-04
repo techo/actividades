@@ -79,7 +79,10 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('/{id}/evaluaciones')->group(function () {
             Route::get('', 'EvaluacionesController@index');
             Route::get('/tags', 'EvaluacionesController@getTagsActividad');
+            
             Route::post('', 'EvaluacionesController@evaluarActividad');
+            Route::post('/persona/{idPersona}', 'EvaluacionesController@evaluarActividad');
+            Route::post('/impacto', 'EvaluacionesController@evaluarImpacto');
         });
     });
 

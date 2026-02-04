@@ -27,6 +27,16 @@ Este documento describe los endpoints principales de la API.
   - `email` → correo electrónico asociado a la cuenta  
 
 - **Devuelve:** Token de autenticación 
+
+---
+### Login Social por Provider (NEW)
+- **URL:** `/api/providerLogin`  
+- **Método:** `POST`  
+- **Parámetros:**  
+  - `provider` → red social utilizada (por ejemplo: google, facebook)  
+  - `token` → identificador único enviado al hacer login  
+
+- **Devuelve:** Token de autenticación 
  
 
 ---
@@ -269,6 +279,71 @@ Este documento describe los endpoints principales de la API.
 - `preguntasEvaluacionPersona` - preguntas, descripcion y tags postitvos/negativos para personas
 - `preguntasEvaluacionImpacto` - preguntas de impacto
 
+### Enviar Evaluacion por Actividad
+
+- **URL:** `/api/actividades/{idActividad}/evaluaciones`
+- **Método:** `POST`
+- **Devuelve:**
+- `idActividad` 
+- `puntaje` - 1 a 10
+- `tagsPositivos` - array con codigo de los tags
+- `tagsNegativos` - array 
+- `comentario`
+
+### Enviar Evaluacion por Impacto
+
+- **URL:** `/api/actividades/{idActividad}/evaluaciones/impacto`
+- **Método:** `POST`
+- **Devuelve:**
+- `idActividad` 
+- `impacto_habilidades_capacidades` - 1 a 10
+- `impacto_percepcion_realidad` - 1 a 10
+- `impacto_recomendaria_experiencia` - 1 a 10
+
+### Enviar Evaluacion por Persona
+
+- **URL:** `/api/actividades/{idActividad}/evaluaciones/persona/{idPersona}`
+- **Método:** `POST`
+- **Devuelve:**
+- `idActividad` 
+- `evaluado` - array con atributos idPersona
+- `puntajes` - 
+array con puntajes, ej:
+    {
+      "conexion_equipo": "4",
+      "compromiso_colaboracion": "7",
+      "actitud_propositiva": "3",
+      "potencia_otras": "5"
+    }
+- `tagsSeleccionados` - array de tags
+  {
+    "conexion_equipo": {
+      "positivos": [],
+      "negativos": [
+        "evitar_suposiciones"
+      ]
+    },
+    "compromiso_colaboracion": {
+      "positivos": [
+        "resolucion_autonoma",
+        "perseverancia"
+      ],
+      "negativos": []
+    },
+    "actitud_propositiva": {
+      "positivos": [
+        "actitud_positiva"
+      ],
+      "negativos": []
+    },
+    "potencia_otras": {
+      "positivos": [],
+      "negativos": [
+        "ser_paciente"
+      ]
+    }
+  }
+- `comentario` - string
 
 
 ### 📤 Subir Voucher Pago
