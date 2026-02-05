@@ -64,7 +64,7 @@ class Inscripcion extends Model
 
     public function scopeAusente($query)
     {
-        return $query->where('presente', '=', '0' );
+        return $query->where('presente', '!=', '1' );
     }
 
     public function jornadas()

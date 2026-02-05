@@ -15,6 +15,7 @@
                             class="form-control"
                             v-model="rolSeleccionado"
                         >
+                            <option value=""></option>
                             <option
                                 v-for="(label, key) in rolesFallback"
                                 :key="key"
