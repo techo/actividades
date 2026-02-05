@@ -4,6 +4,7 @@ namespace App\Services\SocialAuth;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\JWK;
+use Illuminate\Support\Facades\Log;
 
 class AppleProvider implements SocialProviderInterface
 {
@@ -29,10 +30,16 @@ class AppleProvider implements SocialProviderInterface
                 'provider'        => 'apple',
                 'social_id'       => $decoded->sub,
                 'email'           => $decoded->email ?? null,
-                'email_verified'  => ($decoded->email_verified ?? 'false') === 'true',
+                'email_verified'  => filter_var(
+                    $decoded->email_verified ?? false,
+                    FILTER_VALIDATE_BOOLEAN
+                ),
             ];
         } catch (\Exception $e) {
-            return null;
+            Log::error('Apple token invalid', [
+                'error' => $e->getMessage(),
+            ]);
+            return  null;
         }
     }
 }
