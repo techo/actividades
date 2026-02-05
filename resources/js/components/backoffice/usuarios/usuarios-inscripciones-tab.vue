@@ -107,7 +107,7 @@
 						title: 'Presente',
 						name: 'presente',
 						callback: function (value) {
-							return value === 0 ? 'Ausente' : 'Presente';
+							return value === 1 ? 'Presente' : 'Ausente';
 						},
 						sortField: 'presente',
 					}
