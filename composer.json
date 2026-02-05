@@ -15,7 +15,7 @@
         "laravel/passport": "7.5.1",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
-        "lcobucci/jwt": "3.4.6",
+        "lcobucci/jwt": "3.3.3",
         "maatwebsite/excel": "^3.0",
         "rap2hpoutre/fast-excel": "^1.2.2",
         "sentry/sentry-laravel": "^0.11.0",
