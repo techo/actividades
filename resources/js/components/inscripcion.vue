@@ -393,9 +393,13 @@
             checkSubmit: function() {
                 if(this.actividad.puntosEncuentro.length == 1){
                     const formData = new FormData();
-                    formData.append('roles_aplicados', this.convertToJSON());
+                    if(this.rolesAplicado.length > 0)
+                        formData.append('roles_aplicados', JSON.stringify(this.rolesAplicado.map(tag => tag.id)));
+                
+                    if(this.tipoInscriptoTags.length > 0)
+                        formData.append('inscripciones_aplicadas', JSON.stringify(this.tipoInscriptoTags.map(tag => tag.id)));
+                    
                     formData.append('aplica_rol', this.aplicaRol);
-                    formData.append('inscripciones_aplicadas', this.convertToJSONInscripciones());
                     formData.append('jornadas', this.convertToJSONJornadas());
                 
                     formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);

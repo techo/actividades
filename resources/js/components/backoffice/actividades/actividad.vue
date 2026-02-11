@@ -466,6 +466,7 @@
                                 :tags="rolesTags"
                                 :disabled="!edicion"
                                 :autocompleteItems="filteredRolesTags"
+                                :add-only-from-autocomplete="true"
                                 placeholder=""
                                 @tags-changed="newTags => rolesTags = newTags"
                             />
@@ -701,36 +702,6 @@
                 openPhotoEditDestacada: false,
                 croppedImagenTarjetaUrl: '',
                 croppedImagenDestacadaUrl: '',
-                autocompleteTipoInscriptos: [{
-                        text: 'Secundaria',
-                    }, {
-                        text: 'Voluntariado Corporativo',
-                    }, {
-                        text: 'Pasante',
-                    }, {
-                        text: 'Universidad',
-                    }, {
-                        text: 'Voluntariado',
-                }],
-                autocompleteRoles: [{
-                        text: 'Liderazgo de Cuadrilla',
-                    }, {
-                        text: 'Co-Liderazgo de Cuadrilla',
-                    }, {
-                        text: 'Liderazgo de Construcción',
-                    }, {
-                        text: 'Liderazgo de Escuela',
-                    }, {
-                        text: 'Monitor/a',
-                    }, {
-                        text: 'Intendencia',
-                    }, {
-                            text: 'Camioneta',
-                    }, {
-                            text: 'Logistica',
-                    }, {
-                            text: 'Delegación de Comunicaciones',
-                }],
 
                 autocompleteActividadTags: [{
                         text: 'Nuevos Voluntarios',
@@ -868,22 +839,28 @@
                                 'vacunacion_covid' : false
                             };
                         if (this.actividad.roles_tags)
-                            this.rolesTags = this.actividad.roles_tags;
+                            this.rolesTags = this.rolesFallback.filter(role =>
+                                    this.actividad.roles_tags.includes(role.id)
+                            );
 
                         if (this.actividad.actividades_tags)
                             this.actividadesTags = this.actividad.actividades_tags;
 
+                        
                         if (this.actividad.tipo_inscriptos_tag)
-                            this.tipoInscriptosTags = this.actividad.tipo_inscriptos_tag;
-                            if (this.actividad.comunidades) {
-                                this.comunidadesTags = this.actividad.comunidades.map(comunidad => {
-                                    return {
-                                        idComunidad: comunidad.idComunidad,
-                                        text: comunidad.nombre,
-                                        tiClasses: ['ti-valid']
-                                    };
-                                });
-                            }
+                            this.tipoInscriptosTags = this.tipoVoluntarioFallback .filter(tipo =>
+                                    this.actividad.tipo_inscriptos_tag.includes(tipo.id)
+                            );
+                        
+                        if (this.actividad.comunidades) {
+                            this.comunidadesTags = this.actividad.comunidades.map(comunidad => {
+                                return {
+                                    idComunidad: comunidad.idComunidad,
+                                    text: comunidad.nombre,
+                                    tiClasses: ['ti-valid']
+                                };
+                            });
+                        }
 
                         this.getTodasRelaciones();
                         this.cargarFechas();
@@ -896,15 +873,47 @@
 
         },
         computed: {
-            filteredTipoInscriptosTags() {
-                return this.autocompleteTipoInscriptos.filter(i => {
-                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
-                });
+            tipoVoluntarioFallback() {
+                const roles =
+                    this.$i18n.messages[this.$i18n.locale]
+                        .backend
+                        .tipo_voluntariado_options;
+
+                return Object.entries(roles).map(([id, text]) => ({
+                    id,
+                    text
+                }));
             },
+
+            filteredTipoInscriptosTags() {
+                if (!this.tag) return this.tipoVoluntarioFallback;
+
+                const search = this.tag.toLowerCase();
+
+                return this.tipoVoluntarioFallback.filter(tipo =>
+                    tipo.text.toLowerCase().includes(search)
+                    );
+            },
+            rolesFallback() {
+                const roles =
+                    this.$i18n.messages[this.$i18n.locale]
+                        .backend
+                        .roles_actividad_options;
+
+                return Object.entries(roles).map(([id, text]) => ({
+                    id,
+                    text
+                }));
+            },
+
             filteredRolesTags() {
-                return this.autocompleteRoles.filter(i => {
-                    return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
-                });
+                if (!this.tag) return this.rolesFallback;
+
+                const search = this.tag.toLowerCase();
+
+                return this.rolesFallback.filter(role =>
+                    role.text.toLowerCase().includes(search)
+                    );
             },
             filteredActividadTags() {
                 return this.autocompleteActividadTags.filter(i => {
@@ -1032,8 +1041,12 @@
                 }
                 
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
-                this.actividad.roles_tags = this.rolesTags;
-                this.actividad.tipo_inscriptos_tag  = this.tipoInscriptosTags;
+                if(this.rolesTags.length > 0)
+                    this.actividad.roles_tags = this.rolesTags.map(tag => tag.id);
+                
+                if(this.tipoInscriptosTags.length > 0)
+                    this.actividad.tipo_inscriptos_tag = this.tipoInscriptosTags.map(tag => tag.id);
+
                 this.actividad.actividades_tags  = this.actividadesTags;
                 this.actividad.comunidades_tags  = this.comunidadesTags ;
                 

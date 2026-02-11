@@ -31,7 +31,9 @@ export default {
             } else {
                 value = this.rowData[field];
             }
-            
+            if (value === null || value === undefined || value === '') {
+                return '';
+            }
             return this.$t(`backend.${field}_options.${value}`) || value;
         }
     }

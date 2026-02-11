@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Estudios;
 use App\FichaMedica;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Lang;
 
 class ActividadResource extends Resource
 {
@@ -61,9 +62,19 @@ class ActividadResource extends Resource
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
-            'roles_tags' =>  $this->roles_tags,
+            'roles_tags' => collect($this->roles_tags)->map(function ($role) {
+                return [
+                    'id'   => $role,
+                    'text' => Lang::get("backend.roles_actividad_options.$role"),
+                ];
+            }),
             'actividades_tags' =>  $this->actividades_tags,
-            'tipo_inscriptos_tag' =>  $this->tipo_inscriptos_tag,
+            'tipo_inscriptos_tag' => collect($this->tipo_inscriptos_tag)->map(function ($tipo) {
+                return [
+                    'id'   => $tipo,
+                    'text' => Lang::get("backend.tipo_voluntariado_options.$tipo"),
+                ];
+            }),
             'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
             'show_dates' =>  $this->show_dates,

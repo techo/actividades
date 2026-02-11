@@ -23,12 +23,12 @@
                 <br>
                 <label>{{ $t('backend.registration_type') }}: </label>
                 <span v-for="tipoInscripcion in tiposInscripcionSinComillas" class="label label-primary">
-                    {{ tipoInscripcion.text }}
+                    {{ $t('backend.tipo_voluntariado_options.' + tipoInscripcion) }}
                 </span>
                 <br>
                 <label>{{ $t('backend.applicable_roles') }}: </label>
                 <span v-for="item in items" class="label label-primary">
-                    {{ item.text }}
+                    {{ $t('backend.roles_actividad_options.' + item) }}
                 </span>
                 
                
@@ -80,11 +80,11 @@ export default {
     rowIndex: {
       type: Number
     },
-    items: [],
     tiposInscripcion: [],
   },
   data() {
-    return {
+    return {  
+      items: [],
       tiposInscripcionSinComillas: [],
     }
   },
