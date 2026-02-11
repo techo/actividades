@@ -1043,9 +1043,13 @@
                 this.actividad.ficha_medica_campos = this.fichaMedicaCampos;
                 if(this.rolesTags.length > 0)
                     this.actividad.roles_tags = this.rolesTags.map(tag => tag.id);
+                else   
+                    this.actividad.roles_tags = [];
                 
                 if(this.tipoInscriptosTags.length > 0)
                     this.actividad.tipo_inscriptos_tag = this.tipoInscriptosTags.map(tag => tag.id);
+                else
+                    this.actividad.tipo_inscriptos_tag = [];
 
                 this.actividad.actividades_tags  = this.actividadesTags;
                 this.actividad.comunidades_tags  = this.comunidadesTags ;
