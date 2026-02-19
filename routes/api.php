@@ -48,7 +48,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+Route::get('actividades', 'ajax\ActividadesController@index');
+
 Route::middleware('auth:api')->group(function () {
+
+    Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
 
     Route::post('logout', 'api\PersonasController@logout');
 
@@ -73,7 +77,6 @@ Route::middleware('auth:api')->group(function () {
 
 
     Route::prefix('actividades')->group(function () {
-        Route::get('', 'ajax\ActividadesController@index');
         Route::get('/{id}', 'ajax\ActividadesController@show');
 
         Route::prefix('/{id}/evaluaciones')->group(function () {

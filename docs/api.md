@@ -48,6 +48,14 @@ Este documento describe los endpoints principales de la API.
 
 ---
 
+### Delete Usuario
+- **URL:** `/api/logout`  
+- **Método:** `DELETE`  
+- **Headers:** `Authorization: Bearer {token}`  
+- **Devuelve:** Elimina el usuario logueado 
+
+---
+
 ### Registro
 - **URL:** `/api/create`  
 - **Método:** `GET` _(lo ideal sería `POST`)_  
@@ -160,7 +168,6 @@ Este documento describe los endpoints principales de la API.
 ### Listado general
 - **URL:** `/api/actividades/`  
 - **Método:** `GET`  
-- **Headers:** (Opcional) `Authorization: Bearer {token}`  
 - **Parámetros opcionales:**  
 - `destacada=1` → actividades destacadas  
 - `pais={id}` → filtra por país  
