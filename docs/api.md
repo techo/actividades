@@ -49,7 +49,7 @@ Este documento describe los endpoints principales de la API.
 ---
 
 ### Delete Usuario
-- **URL:** `/api/logout`  
+- **URL:** `/api/usuario`  
 - **Método:** `DELETE`  
 - **Headers:** `Authorization: Bearer {token}`  
 - **Devuelve:** Elimina el usuario logueado 
@@ -58,17 +58,17 @@ Este documento describe los endpoints principales de la API.
 
 ### Registro
 - **URL:** `/api/create`  
-- **Método:** `GET` _(lo ideal sería `POST`)_  
+- **Método:** `POST`  
 - **Parámetros principales:**  
-- `dni`, `nombres`, `apellidoPaterno`  
-- `mail`  
+- `dni`, `nombre`, `apellido`  
+- `email`  
 - `password`  
 - `fechaNacimiento`  
 - `telefono` (⚠️ con `+`, ej: `%2B5491123456789`)  
 - `recibirMails`, `acepta_marketing`  
-- `idPais`, `idProvincia`, `idLocalidad`, `idUnidadOrganizacional`  
+- `pais`, `provincia`, `localidad`, `idUnidadOrganizacional`  
 - **Ejemplo:**  
-/api/create?dni=123456&nombres=juio&apellidoPaterno=zao&mail=juios@mail.com&password=juju1234&telefono=%2B5491123456789&idPais=13&idProvincia=1&idLocalidad=22
+/api/create?dni=123456&nombre=juio&apellido=zao&email=juios@mail.com&password=juju1234&telefono=%2B5491123456789&pais=13&provincia=1&localidad=22
 
 - **Devuelve:** Registro de usuario o error de validación  
 

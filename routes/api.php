@@ -52,7 +52,7 @@ Route::get('actividades', 'ajax\ActividadesController@index');
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
+    Route::delete('usuario', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
 
     Route::post('logout', 'api\PersonasController@logout');
 

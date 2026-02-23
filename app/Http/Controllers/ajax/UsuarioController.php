@@ -289,7 +289,13 @@ class UsuarioController extends BaseController
 
         // grabar
         $persona->save();
-        return app('App\Http\Controllers\Auth\LoginController')->logout($request); //Todo: Mejorar pasandolo a un servicio
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+          $request->user()->token()->revoke();
+          return response()->json(['success' => true, 'message' => 'Usuario eliminado correctamente']);
+        } else {
+          return app('App\Http\Controllers\Auth\LoginController')->logout($request); //Todo: Mejorar pasandolo a un servicio
+        }
     }
 }
 
