@@ -43,13 +43,13 @@ class UsuarioController extends BaseController
       }
         if($request->has('nombre')) $rules['nombre'] = 'required';
         if($request->has('apellido')) $rules['apellido'] = 'required';
-        if($request->has('genero')) $rules['genero'] = 'required';
+        if($request->has('genero')) $rules['genero'] = 'nullable';
         if($request->has('pais')) $rules['pais'] = 'required|exists:atl_pais,id';
-        if($request->has('provincia')) $rules['provincia'] = 'required|exists:atl_provincias,id';
-        if($request->has('localidad')) $rules['localidad'] = 'required|exists:atl_localidades,id';
-        if($request->has('nacimiento')) $rules['nacimiento'] = 'required|date|before:' . date('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
+        if($request->has('provincia')) $rules['provincia'] = 'nullable|exists:atl_provincias,id';
+        if($request->has('localidad')) $rules['localidad'] = 'nullable|exists:atl_localidades,id';
+        if($request->has('nacimiento')) $rules['nacimiento'] = 'nullable|date|before:' . date('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|regex:/^\+\d{1,3}\d{7,15}$/';
-        if($request->has('dni')) $rules['dni'] = 'required';
+        if($request->has('dni')) $rules['dni'] = 'nullable';
         $validatedData = $request->validate($rules);
         return ['success' => true, 'params' => array_keys($rules)];
     }
