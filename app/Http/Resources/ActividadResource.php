@@ -62,7 +62,15 @@ class ActividadResource extends Resource
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'requiere_ficha_medica' =>  $this->requiere_ficha_medica,
             'ficha_medica_campos' =>  $this->ficha_medica_campos,
-            'roles_tags' => collect($this->roles_tags ?? [])
+            'roles_tags' => collect(
+                    is_array($this->roles_tags)
+                        ? $this->roles_tags
+                        : (is_string($this->roles_tags)
+                            ? json_decode($this->roles_tags, true)
+                            : []
+                        )
+                )
+                ->filter()
                 ->map(function ($role) {
                     return [
                         'id'   => $role,
