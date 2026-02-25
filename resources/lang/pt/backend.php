@@ -531,7 +531,7 @@ return [
         'territorio' => 'Território',
     ],
 
-     'roles_actividad' => [
+     'roles_actividad_options' => [
         'liderazgo_cuadrilla' => 'Liderança / Chefia de Equipe',
         'liderazgo_escuela' => 'Liderança / Chefia de Escola',
         'intendencia' => 'Manutenção',

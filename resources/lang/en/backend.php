@@ -532,7 +532,7 @@ return [
         'territorio' => 'Territory',
     ],
 
-    'roles_actividad' => [
+    'roles_actividad_options' => [
         'liderazgo_cuadrilla' => 'Leadership / Crew Chief',
         'liderazgo_escuela' => 'Leadership / School Chief',
         'intendencia' => 'Facilities',
