@@ -52,7 +52,7 @@ class EvaluacionesController extends Controller
             ->where('idActividad', '=', $actividad->idActividad)
             ->first();
 
-        if (request()->expectsJson()) {
+        if (request()->expectsJson() || request()->is('api/*')) {
 
             $idsGruposPermitidos = collect([
                 $miGrupo->idGrupo,
