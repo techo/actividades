@@ -77,14 +77,20 @@ class ActividadResource extends Resource
                     ->values()
                 : $this->roles_tags,
 
-            'tipo_inscriptos_tag' => collect($this->tipo_inscriptos_tag ?? [])
-                ->map(function ($tipo) {
-                    return [
-                        'id'   => $tipo,
-                        'text' => Lang::get("backend.tipo_voluntariado_options.$tipo"),
-                    ];
-                })
-                ->values(),
+            'tipo_inscriptos_tag' => is_array($this->tipo_inscriptos_tag)
+                ? collect($this->tipo_inscriptos_tag)
+                    ->map(function ($tipo) {
+                        if (is_array($tipo)) {
+                            return $tipo; // ya viene formateado
+                        }
+
+                        return [
+                            'id'   => $tipo,
+                            'text' => Lang::get("backend.tipo_voluntariado_options.$tipo"),
+                        ];
+                    })
+                    ->values()
+                : $this->tipo_inscriptos_tag,
             'actividades_tags' =>  $this->actividades_tags,
             'acuerdo_especifico_url' =>  $this->acuerdo_especifico_url,
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
