@@ -206,7 +206,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     // panel comunidaddes
 
-    Route::prefix('/comunidades')->middleware(['role:admin'])->group(function() {
+    Route::prefix('/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ComunidadesController@index');
         Route::get('/crear', 'backoffice\ComunidadesController@create');
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
