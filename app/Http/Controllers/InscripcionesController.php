@@ -62,10 +62,12 @@ class InscripcionesController extends BaseController
     public function create(Request $request, $id)
     {
         $request->validate([
-            'roles_aplicados' => 'json',
-            'inscripciones_aplicadas' => 'json',
-            'jornadas' => 'json',
+            'roles_aplicados' => 'nullable|json',
+            'inscripciones_aplicadas' => 'nullable|json',
+            'jornadas' => 'nullable|json',
         ]);
+
+
         $actividad = Actividad::find($id);
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
@@ -89,10 +91,6 @@ class InscripcionesController extends BaseController
                 
             }
 
-            
-
-
-
             $jornadas = json_decode($request->input('jornadas'), true);
             if(count($jornadas)>0){
                 $inscripcion->save();
@@ -102,7 +100,6 @@ class InscripcionesController extends BaseController
                 }
             }
             
-
             if ($actividad->confirmacion == 1) {
                 $inscripcion->save();
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
@@ -154,7 +151,7 @@ class InscripcionesController extends BaseController
                         'message' => 'Inscripción confirmada',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
-                    'estado_inscripcion' => 'CONFIRMADO',
+                        'estado_inscripcion' => 'CONFIRMADO',
                     ]);
                 }
             return view('inscripciones.gracias')
