@@ -74,7 +74,7 @@
                     
                     @foreach($inscripcionesAplicadas as $rol)
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.tipo_voluntariado_options.'.$rol) }}
+                            {{ __('backend.tipo_voluntariado_options.'.$rol['id']) }}
                         </span>
                     @endforeach
                     </div>
@@ -120,7 +120,7 @@
                     
                     @foreach($rolesAplicados as $rol)
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.roles_actividad_options.'.$rol) }}
+                            {{ __('backend.roles_actividad_options.'.$rol['id']) }}
                         </span>
                     @endforeach
                     </div>

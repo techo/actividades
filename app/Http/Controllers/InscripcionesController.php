@@ -61,12 +61,33 @@ class InscripcionesController extends BaseController
      */
     public function create(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'roles_aplicados' => 'nullable|json',
             'inscripciones_aplicadas' => 'nullable|json',
             'jornadas' => 'nullable|json',
         ]);
 
+        $inscripciones = json_decode($validated['inscripciones_aplicadas'] ?? '[]', true);
+
+        $validated['inscripciones_aplicadas'] = collect($inscripciones)
+            ->map(function ($item) {
+                return is_array($item) && isset($item['id'])
+                    ? $item['id']
+                    : $item;
+            })
+            ->values()
+            ->toArray();
+        
+        $roles = json_decode($validated['roles_aplicados'] ?? '[]', true);
+
+        $validated['roles_aplicados'] = collect($roles)
+            ->map(function ($item) {
+                return is_array($item) && isset($item['id'])
+                    ? $item['id']
+                    : $item;
+            })
+            ->values()
+            ->toArray();
 
         $actividad = Actividad::find($id);
         $actividad->load('pais','provincia','localidad');
@@ -83,8 +104,8 @@ class InscripcionesController extends BaseController
                 $inscripcion->idPuntoEncuentro = $request->input('punto_encuentro');
                 $inscripcion->idPersona = Auth::user()->idPersona;
                 $inscripcion->fechaInscripcion = new Carbon();
-                $inscripcion->roles_aplicados = $request->input('roles_aplicados');
-                $inscripcion->inscripciones_aplicadas = $request->input('inscripciones_aplicadas');
+                $inscripcion->roles_aplicados = $validated['roles_aplicados'];
+                $inscripcion->inscripciones_aplicadas = $validated['inscripciones_aplicadas'];
 
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
 
