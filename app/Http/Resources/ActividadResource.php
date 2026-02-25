@@ -65,6 +65,10 @@ class ActividadResource extends Resource
             'roles_tags' => is_array($this->roles_tags)
                 ? collect($this->roles_tags)
                     ->map(function ($role) {
+                        if (is_array($role)) {
+                            return $role; // ya viene formateado
+                        }
+
                         return [
                             'id'   => $role,
                             'text' => Lang::get("backend.roles_actividad_options.$role"),
