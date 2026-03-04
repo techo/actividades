@@ -52,6 +52,8 @@ Route::get('actividades', 'ajax\ActividadesController@index');
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('password/reset', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+
     Route::delete('usuario', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
 
     Route::post('logout', 'api\PersonasController@logout');
@@ -84,7 +86,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('/tags', 'EvaluacionesController@getTagsActividad');
             
             Route::post('', 'EvaluacionesController@evaluarActividad');
-            Route::post('/persona/{idPersona}', 'EvaluacionesController@evaluarActividad');
+            Route::post('/persona/{idPersona}', 'EvaluacionesController@evaluarPersona');
             Route::post('/impacto', 'EvaluacionesController@evaluarImpacto');
         });
     });

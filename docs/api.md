@@ -38,13 +38,21 @@ Este documento describe los endpoints principales de la API.
 
 - **Devuelve:** Token de autenticación 
  
-
 ---
+
 ### Logout
 - **URL:** `/api/logout`  
 - **Método:** `GET`  
 - **Headers:** `Authorization: Bearer {token}`  
 - **Devuelve:** Cierra la sesión del usuario autenticado  
+
+---
+
+### Reset Password
+- **URL:** `/api/password/reset`  
+- **Método:** `POST`  
+- **Headers:** `Authorization: Bearer {token}`  
+- **Devuelve:** Envia mail de reset password
 
 ---
 
