@@ -37,6 +37,8 @@ class TiposActividadController extends Controller
     public function store(Request $request) {
         $tipoActividad = $request->validate([
             'nombre' => 'required',
+            'nombre_pt' => 'nullable',
+            'nombre_en' => 'nullable',
             'idCategoria' => 'required',
             'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
             'activo' => 'required|boolean',
@@ -52,6 +54,8 @@ class TiposActividadController extends Controller
         $validados = $request->validate([
             'idTipo' => 'required',
             'nombre' => 'required',
+            'nombre_pt' => 'nullable',
+            'nombre_en' => 'nullable',
             'idCategoria' => 'required',
             'imagen' => 'nullable|file|image|dimensions:max_width=380,max_height=248,min_width=380,min_height=248',
             'activo' => 'required|boolean',
@@ -67,6 +71,8 @@ class TiposActividadController extends Controller
             $tipoActividad->imagen = str_replace('public', 'storage', '/'.$path);
         }
         $tipoActividad->nombre = $validados['nombre'];
+        $tipoActividad->nombre_pt = $validados['nombre_pt'];
+        $tipoActividad->nombre_en = $validados['nombre_en'];
         $tipoActividad->idCategoria = $validados['idCategoria'];
         $tipoActividad->tipo_indicador = $validados['tipo_indicador'];
         $tipoActividad->activo = $validados['activo'];

@@ -14,7 +14,9 @@ return [
 
     // Users
     'identifications' => 'ID / Passport',
-    'name' => 'First Name',
+    'name' => 'Name',
+    'name_pt' => 'Name (Portuguese)',
+    'name_en' => 'Name (English)',
     'last_name' => 'Last Name',
     'birthdate' => 'Date of Birth',
     'gender' => 'Gender',

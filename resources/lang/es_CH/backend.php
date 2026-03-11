@@ -15,6 +15,8 @@ return [
     // Usuarios
     'identifications' => 'DNI / Pasaporte',
     'name' => 'Nombre',
+    'name_pt' => 'Nombre (Portugués)',
+    'name_en' => 'Nombre (Inglés)',
     'last_name' => 'Apellido',
     'birthdate' => 'Fecha de nacimiento',
     'gender' => 'Género',

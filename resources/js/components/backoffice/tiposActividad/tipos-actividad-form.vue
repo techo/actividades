@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="nombre">{{ $t('backend.name') }}</label>
                                     <input id="nombre"
@@ -27,7 +27,32 @@
                                     >
                                 </div>
                             </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="nombre">{{ $t('backend.name_pt') }}</label>
+                                    <input id="nombre_pt"
+                                           type="text"
+                                           class="form-control"
+                                           v-model="tipoActividad.nombre_pt"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="nombre">{{ $t('backend.name_en') }}</label>
+                                    <input id="nombre_en"
+                                           type="text"
+                                           class="form-control"
+                                           v-model="tipoActividad.nombre_en"
+                                           :disabled="readonly"
+                                    >
+                                </div>
+                            </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -109,6 +134,8 @@
                 tipoActividad: {
                     idTipo: null,
                     nombre: "",
+                    nombre_pt: "",
+                    nombre_en: "",
                     idCategoria: null,
                     imagen: null,
                     imagenNew: null,
@@ -196,6 +223,8 @@
 
                 data.append('idTipo', this.tipoActividad.idTipo);
                 data.append('nombre', this.tipoActividad.nombre);
+                data.append('nombre_pt', this.tipoActividad.nombre_pt);
+                data.append('nombre_en', this.tipoActividad.nombre_en);
                 data.append('idCategoria', (this.categoriaSeleccionado)?this.categoriaSeleccionado.id:null);
                 data.append('tipo_indicador', this.tipoActividad.tipo_indicador);
                 data.append('activo', this.tipoActividad.activo);

@@ -15,6 +15,8 @@ return [
     // Usuarios
     'identifications' => 'RG / Passaporte',
     'name' => 'Nome',
+    'name_pt' => 'Nome (Português)',
+    'name_en' => 'Nome (Inglês)',
     'last_name' => 'Sobrenome',
     'birthdate' => 'Data de nascimento',
     'gender' => 'Gênero',
