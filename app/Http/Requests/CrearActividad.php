@@ -33,6 +33,8 @@ class CrearActividad extends FormRequest
 
             'idTipo' => 'required',
             'idOficina' => 'required',
+            'idEquipo' => 'nullable',
+            'vida_escuela' => 'nullable',
 
             'fechaInicio' => 'required|date',
             'fechaFin' => 'required|date',

@@ -18,7 +18,8 @@ class EquiposController extends Controller
         if($request->has('equipo')){
             $filtros['equipo'] = $request->equipo;
         }
-        
+        $sort = 'created_at desc';
+
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
                 $sort = join(" ",explode("|", $request->sort));

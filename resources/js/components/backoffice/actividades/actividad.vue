@@ -37,7 +37,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div :class="{ 'form-group': true, 'has-error': errors.idPais }" >
                             <label for="pais">{{ $t('backend.country') }}</label>
                             <select name="idPais" class="form-control" v-model="actividad.idPais" required 
@@ -49,13 +49,24 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div :class="{ 'form-group': true, 'has-error': errors.idOficina }" >
                             <label for="oficina">{{ $t('backend.office') }}</label>
-                            <select name="idOficina"  @change="getComunidades($event.target.value)" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
+                            <select name="idOficina"  @change="getComunidades($event.target.value);getEquipos();" class="form-control" v-model="actividad.idOficina" required :disabled="!edicion">
                                 <option v-text="oficina.nombre" v-bind:value="oficina.id" v-for="oficina in oficinas" ></option>
                             </select>
                             <span class="help-block">{{ errors.idOficina }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div :class="{ 'form-group': true, 'has-error': errors.idEquipo }" >
+                            <label for="equipo">{{ $t('backend.team') }}</label>
+                            <select name="idEquipo" class="form-control" v-model="actividad.idEquipo" required :disabled="!edicion">
+                                <option value="" ></option>
+                                <option v-text="equipo.nombre" v-bind:value="equipo.idEquipo" v-for="equipo in equipos" ></option>
+                            </select>
+                            <span class="help-block">{{ errors.idEquipo }}</span>
                         </div>
                     </div>
 
@@ -82,7 +93,17 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="vida_escuela">{{ $t('backend.vida_escuela') }}</label>
+                            <select name="vida_escuela" class="form-control" v-model="actividad.vida_escuela" :disabled="!edicion" >
+                                <option value="1" :selected="actividad.vida_escuela == 1" >{{ $t('backend.yes') }}</option>
+                                <option value="0" :selected="actividad.vida_escuela == 0" selected>{{ $t('backend.no') }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="estado">{{ $t('backend.activity_status') }}</label>
                             <select name="estadoConstruccion" class="form-control" v-model="actividad.estadoConstruccion" required :disabled="!edicion" >
@@ -92,7 +113,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="inscripcionInterna">{{ $t('backend.activity_visibility') }}</label>
                             <select name="inscripcionInterna" class="form-control" v-model="actividad.inscripcionInterna" required :disabled="!edicion" >
@@ -736,7 +757,9 @@
 
                     idTipo: null,
                     idOficina: null,
+                    idEquipo: null,
 
+                    vida_escuela: 0,
                     calculaFecha: false,
                     fechaInicio: null,
                     fechaFin: null,
@@ -802,6 +825,7 @@
                 provincias: [],
                 localidades: [],
                 oficinas: [],
+                equipos: [],
                 tipos: [],
                 categorias: [],
                 comunidades: [],
@@ -1172,6 +1196,7 @@
                 this.getProvincias();
                 this.getLocalidades();
                 this.getOficinas();
+                this.getEquipos();
                 this.getTipos(this.actividad.tipo.idCategoria);
                 this.getCategorias();
                 this.getComunidades(this.actividad.idOficina);
@@ -1191,6 +1216,10 @@
             getOficinas(){
                 axios.get('/admin/ajax/oficinas/pais/' + this.actividad.idPais)
                     .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
+            },
+            getEquipos(){
+                axios.get('/admin/ajax/equipos/oficina/' + this.actividad.idOficina)
+                    .then((datos) => { this.equipos = datos.data.data; }).catch((error) => { debugger; });
             },
             getTipos(id){
                 this.idCategoria = id;

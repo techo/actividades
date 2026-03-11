@@ -376,6 +376,7 @@ return [
     'people' => 'People',
     'subscribed' => 'Subscribed',
     'teams' => 'Teams',
+    'team' => 'Team',
     'comunidades' => 'Communities',
     'activities' => 'Activities',
     'my_activities' => 'My Activities',
@@ -519,6 +520,8 @@ return [
     'reactivate_member_confirm' => 'Yes, reactivate',
     'reactivate_member_inline_warning' => 'Re-activating this person will create a new record to preserve the history of active periods.',
 
+    'vida_escuela' => 'School life',
+    
     'tipo_indicador' => 'Applicable indicator',
     'tipo_indicadores_options' => [
         'captacion' => 'Captación',

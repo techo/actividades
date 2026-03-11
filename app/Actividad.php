@@ -36,6 +36,11 @@ class Actividad extends Model
         return $this->belongsTo(Tipo::class, 'idTipo', 'idTipo');
     }
 
+    public function equipo()
+    {
+        return $this->belongsTo(Equipo::class, 'idEquipo', 'idEquipo');
+    }
+
     public function comunidades()
     {
         return $this->belongsToMany(Comunidad::class, 'actividad_comunidad', 'idActividad', 'idComunidad' );

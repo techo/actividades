@@ -51,4 +51,9 @@ class Equipo extends Model
         return $this->belongsTo(Equipo::class, 'idEquipo', 'idEquipoPadre');
     }
 
+    public function actividades()
+    {
+        return $this->hasMany(Actividad::class, 'idEquipo', 'idEquipo');
+    }
+
 }

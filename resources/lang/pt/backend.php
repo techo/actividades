@@ -375,6 +375,7 @@ return [
     'people' => 'Pessoas',
     'subscribed' => 'Inscritas',
     'teams' => 'Equipas',
+    'team' => 'Equipa',
     'comunidades' => 'Comunidades',
     'activities' => 'Atividades',
     'my_activities' => 'Minhas Atividades',
@@ -517,6 +518,8 @@ return [
     'reactivate_member_message_2' => 'Ao reativá-la, será criado um novo registro para preservar o histórico de períodos ativos e inativos.',
     'reactivate_member_confirm' => 'Sim, reativar',
     'reactivate_member_inline_warning' => 'Ao reativar esta pessoa, será criado um novo registro para preservar o histórico de períodos ativos.',
+
+    'vida_escuela' => 'Vida de escola',
 
     'tipo_indicador' => 'Indicador aplicável',
     'tipo_indicadores_options' => [
