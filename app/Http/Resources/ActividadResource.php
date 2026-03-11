@@ -19,10 +19,10 @@ class ActividadResource extends Resource
     {
 
         $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
-
-        if($this->estadoInscripcion($idPersona)) 
+        $estadoInscripcion =  $idPersona ? $this->estadoInscripcion($idPersona) : null;
+        
+        if($estadoInscripcion) 
             $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
-
 
         return [
             'idActividad'   => $this->idActividad,
@@ -42,14 +42,14 @@ class ActividadResource extends Resource
             'pedidoBeca'         => $this->beca,
             'montoMin'         => $this->montoMin,
             'montoMax'         => $this->montoMax,
-            'linkQR'         => ($this->estadoInscripcion($idPersona) == 'confirmed') ? '/admin/actividades/'.$this->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$idPersona : '',
+            'linkQR'         => ($estadoInscripcion == 'confirmed') ? '/admin/actividades/'.$this->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$idPersona : '',
             'lugar'         => $this->lugar,
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
             'ubicacion'     => $this->provincia->provincia,
-            'idInscripcion'   => ($this->estadoInscripcion($idPersona)) ? $inscripcion->idInscripcion : null,
-            'voucherURL'   => ($this->estadoInscripcion($idPersona)) ? $inscripcion->voucherUrl  : null,
-            'estadoInscripcion'    => $this->estadoInscripcion($idPersona),
+            'idInscripcion'   => ($estadoInscripcion) ? $inscripcion->idInscripcion : null,
+            'voucherURL'   => ($estadoInscripcion) ? $inscripcion->voucherUrl  : null,
+            'estadoInscripcion'    => $estadoInscripcion,
             'fichaMedica'    => ($this->requiere_ficha_medica == 1) ? FichaMedica::where('idPersona', $idPersona)->first(): 0,
             'estudios'    => ($this->requiere_estudios == 1) ? Estudios::where('idPersona', $idPersona)->get() : 0,
             'requiere_estudios' =>  $this->requiere_estudios,
@@ -99,8 +99,8 @@ class ActividadResource extends Resource
             'jornadas'           => $this->jornadas,
             'imagen_tarjeta'           => $this->imagen_tarjeta,
             'imagen_destacada'           => $this->imagen_destacada,
-            'inscriptos'           => ($this->estadoInscripcion($idPersona) == 'confirmed') ? $this->comunidad() : [],
-            'chat_grupal_whatsapp'           => ($this->estadoInscripcion($idPersona) == 'confirmed') ? $this->chat_grupal_whatsapp : [],
+            'inscriptos'           => ($estadoInscripcion == 'confirmed') ? $this->comunidad() : [],
+            'chat_grupal_whatsapp'           => ($estadoInscripcion == 'confirmed') ? $this->chat_grupal_whatsapp : [],
             'coordinadores' => $this->coordinadores()
                 ->with(['persona:idPersona,nombres,photo,instagram,mail,telefonoMovil'])
                 ->get()

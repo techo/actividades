@@ -47,8 +47,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::get('actividades', 'ajax\ActividadesController@index');
+Route::get('actividades', 'ajax\ActividadesController@index')
+    ->middleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {
 
@@ -92,13 +92,11 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::prefix('inscripciones')->group(function () {
-
         Route::get('', 'ajax\UsuarioController@inscripciones');
         Route::delete('{id}', 'ajax\UsuarioController@desinscribir');
         Route::post('/actividad/{id}', 'InscripcionesController@create');
         Route::post('/voucher', 'InscripcionesController@voucherPago');
     });
-
 
     // personas
     Route::get('personas/{persona}', 'api\PersonasController@show');
