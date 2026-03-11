@@ -222,6 +222,10 @@ class UsuarioController extends BaseController
         foreach ($inscripciones as $inscripcion) {
             $resourceCollection[] = new MisActividadesResource($inscripcion);
         }
+        if ($request->is('api/*')) {
+            return $resourceCollection;
+        }
+
         return $this->paginate($resourceCollection, $items, $request->query());
     }
     return $resourceCollection;
