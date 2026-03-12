@@ -129,5 +129,5 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
-Route::get('actividades', 'ajax\ActividadesController@index');
+Route::get('actividades/general', 'ajax\ActividadesController@index');
 
