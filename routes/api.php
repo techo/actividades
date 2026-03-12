@@ -47,10 +47,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('actividades', 'ajax\ActividadesController@index')
-    ->middleware('auth:api');
-
 Route::middleware('auth:api')->group(function () {
+
+    Route::get('actividades', 'ajax\ActividadesController@index');
 
     Route::post('password/reset', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 
@@ -129,3 +128,6 @@ Route::middleware('auth:api')->group(function () {
         return app(\App\Http\Controllers\ajax\ActividadesController::class)->index($request);
     });
 });
+
+Route::get('actividades', 'ajax\ActividadesController@index');
+
