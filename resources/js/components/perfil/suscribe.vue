@@ -6,143 +6,147 @@
 
             <!-- Información Personal -->
             <h4 class="mt-2">{{ $t('suscribe.personal_info') }}</h4>
-
-            <div class="row">
-                <div class="col-md-4">
-                <input
-                    class="form-control"
-                    :placeholder="$t('suscribe.name')"
-                    v-model="suscriptor.nombre">
-                </div>
-                <div class="col-md-4">
-                <input
-                    class="form-control"
-                    :placeholder="$t('suscribe.lastname')"
-                    v-model="suscriptor.apellido">
-                </div>
-                <div class="col-md-4">
-                <input
-                    class="form-control"
-                    :placeholder="documentoLabel"
-                    v-model="suscriptor.dni">
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-md-4">
+            <form @submit="guardar">
+                <div class="row">
+                    <div class="col-md-4">
                     <input
                         class="form-control"
-                        :placeholder="$t('suscribe.email')"
-                        v-model="suscriptor.mail">
-                </div>
-
-                <div class="col-md-4">
-                    <select class="form-control" v-model="suscriptor.genero">
-                        <option value="">{{ $t('suscribe.gender') }}</option>
-                        <option value="F">{{ $t('frontend.gender_f') }}</option>
-                        <option value="M">{{ $t('frontend.gender_m') }}</option>
-                        <option value="X">{{ $t('frontend.gender_x') }}</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <datepicker
-                        v-model="suscriptor.fecha_nacimiento"
-                        :placeholder="$t('suscribe.fecha_de_nacimiento')"
-                        id="nacimiento"
-                        lang="es"
-                        format="DD-MM-YYYY"
-                    />
-                </div>
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-md-4">
-                    <VueTelInput
-                        v-model="phoneNumber"
-                        :preferredCountries="['mx','ar', 'co', 'pe', 'py', 'ur', 'br', 'cl']"
-                        mode="international"
-                        :defaultCountry="telefonoPaisIso"
-                        :key="telefonoPaisIso"
-                        :inputOptions="{
-                            showDialCode: true,
-                            placeholder: $t('suscribe.phone')
-                        }"
-                        :dropdownOptions="{
-                            showFlags: true,
-                        }"
-                        ref="telInput"
-                    />
-                </div>
-
-                <div class="col-md-4">
-                    <select id="localidad" v-model="suscriptor.idProvincia" class="form-control">
-                        <option value="">{{ $t('suscribe.state') }}</option>
-                        <option v-for="provincia in provincias" v-bind:value="provincia.id">
-                            {{provincia.provincia}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <select id="localidad" v-model="suscriptor.idLocalidad" class="form-control">
-                        <option value="">{{ $t('suscribe.city') }}</option>
-                        <option v-for="localidad in localidades" v-bind:value="localidad.id">
-                            {{localidad.localidad}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-md-4">
+                        :placeholder="$t('suscribe.name')"
+                        v-model="suscriptor.nombre"
+                        required>
+                    </div>
+                    <div class="col-md-4">
                     <input
                         class="form-control"
-                        placeholder="Instagram"
-                        v-model="suscriptor.instagram">
+                        :placeholder="$t('suscribe.lastname')"
+                        v-model="suscriptor.apellido">
+                    </div>
+                    <div class="col-md-4">
+                    <input
+                        class="form-control"
+                        :placeholder="documentoLabel"
+                        v-model="suscriptor.dni">
+                    </div>
                 </div>
-            </div>
 
-            <!-- Información Académica -->
-            <h4 class="mt-3">{{ $t('suscribe.academic_info') }}</h4>
-            <select class="form-control" v-model="suscriptor.ocupacion_actual">
-                <option value="">{{ $t('frontend.nivel_de_estudios') }}</option>
-                <option value="secundario"> {{ secundarioLabel }} </option>
-                <option value="universitario">{{ $t('frontend.universitario') }}</option>
-                <option value="posgrado"> {{ $t('frontend.posgrado') }} </option>
-            </select>
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <input
+                            class="form-control"
+                            :placeholder="$t('suscribe.email')"
+                            v-model="suscriptor.mail"
+                            required>
+                    </div>
 
-            <!-- Información TECHO -->
-            <h4 class="mt-3">{{ $t('suscribe.how_meet_techo') }}</h4>
-            <select id="canal_contacto" v-model="suscriptor.canal_contacto" class="form-control">
-                <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
-                <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
-                <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
-                <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
-                <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
-                <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
-                <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
-                <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
-            </select>
+                    <div class="col-md-4">
+                        <select class="form-control" v-model="suscriptor.genero">
+                            <option value="">{{ $t('suscribe.gender') }}</option>
+                            <option value="F">{{ $t('frontend.gender_f') }}</option>
+                            <option value="M">{{ $t('frontend.gender_m') }}</option>
+                            <option value="X">{{ $t('frontend.gender_x') }}</option>
+                        </select>
+                    </div>
 
-            <div class="form-check mt-3">
-                <input
-                type="checkbox"
-                class="form-check-input"
-                v-model="suscriptor.experiencia_previa">
-                <label class="form-check-label">
-                {{ $t('suscribe.previous_experience') }}
-                </label>
-            </div>
+                    <div class="col-md-4">
+                        <datepicker
+                            v-model="suscriptor.fecha_nacimiento"
+                            :placeholder="$t('suscribe.fecha_de_nacimiento')"
+                            id="nacimiento"
+                            lang="es"
+                            format="DD-MM-YYYY"
+                        />
+                    </div>
+                </div>
 
-            <button
-                v-if="!guardado"
-                class="btn btn-primary btn-lg mt-4 w-100"
-                @click="guardar"
-                >
-                    {{ $t('suscribe.submit') }}
-            </button>
+                <div class="row mt-2">
+
+                    <div class="col-md-4">
+                        <VueTelInput
+                            v-model="phoneNumber"
+                            :preferredCountries="['mx','ar', 'co', 'pe', 'py', 'ur', 'br', 'cl']"
+                            mode="international"
+                            :defaultCountry="telefonoPaisIso"
+                            :key="telefonoPaisIso"
+                            :inputOptions="{
+                                showDialCode: true,
+                                placeholder: $t('suscribe.phone')
+                            }"
+                            :dropdownOptions="{
+                                showFlags: true,
+                            }"
+                            ref="telInput"
+                            required
+                        />
+                    </div>
+
+                    <div class="col-md-4">
+                        <select id="localidad" v-model="suscriptor.idProvincia" class="form-control" required>
+                            <option value="">{{ $t('suscribe.state') }}</option>
+                            <option v-for="provincia in provincias" v-bind:value="provincia.id">
+                                {{provincia.provincia}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <select id="localidad" v-model="suscriptor.idLocalidad" class="form-control" required>
+                            <option value="">{{ $t('suscribe.city') }}</option>
+                            <option v-for="localidad in localidades" v-bind:value="localidad.id">
+                                {{localidad.localidad}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <input
+                            class="form-control"
+                            placeholder="Instagram"
+                            v-model="suscriptor.instagram">
+                    </div>
+                </div>
+
+                <!-- Información Académica -->
+                <h4 class="mt-3">{{ $t('suscribe.academic_info') }}</h4>
+                <select class="form-control" v-model="suscriptor.ocupacion_actual">
+                    <option value="">{{ $t('frontend.nivel_de_estudios') }}</option>
+                    <option value="secundario"> {{ secundarioLabel }} </option>
+                    <option value="universitario">{{ $t('frontend.universitario') }}</option>
+                    <option value="posgrado"> {{ $t('frontend.posgrado') }} </option>
+                </select>
+
+                <!-- Información TECHO -->
+                <h4 class="mt-3">{{ $t('suscribe.how_meet_techo') }}</h4>
+                <select id="canal_contacto" v-model="suscriptor.canal_contacto" class="form-control" required>
+                    <option v-bind:value="$t('frontend.social_networks')"> {{ $t('frontend.social_networks') }} </option>
+                    <option v-bind:value="$t('frontend.advertisement_traditional_media')"> {{ $t('frontend.advertisement_traditional_media') }} </option>
+                    <option v-bind:value="$t('frontend.outdoor_advertising')"> {{ $t('frontend.outdoor_advertising') }} </option>
+                    <option v-bind:value="$t('frontend.website')"> {{ $t('frontend.website') }} </option>
+                    <option v-bind:value="$t('frontend.known_person')"> {{ $t('frontend.known_person') }} </option>
+                    <option v-bind:value="$t('frontend.email_campaign')"> {{ $t('frontend.email_campaign') }} </option>
+                    <option v-bind:value="$t('frontend.street_intervention')"> {{ $t('frontend.street_intervention') }} </option>
+                    <option v-bind:value="$t('frontend.event_collection_volunteer_campaign')"> {{ $t('frontend.event_collection_volunteer_campaign') }} </option>    
+                </select>
+
+                <div class="form-check mt-3">
+                    <input
+                    type="checkbox"
+                    class="form-check-input"
+                    v-model="suscriptor.experiencia_previa">
+                    <label class="form-check-label">
+                    {{ $t('suscribe.previous_experience') }}
+                    </label>
+                </div>
+
+                <button
+                    v-if="!guardado"
+                    class="btn btn-primary btn-lg mt-4 w-100"
+                    type="submit"
+                    >
+                        {{ $t('suscribe.submit') }}
+                </button>
+            </form>
 
             <div
                 v-if="guardado"
@@ -271,7 +275,13 @@ export default {
     },
 
     methods: {
-        guardar() {
+        guardar(e) {
+            const form = e.target
+
+            if (!form.checkValidity()) {
+                form.reportValidity()
+                return
+            }
             const payload = {
                 ...this.suscriptor,
                 fecha_nacimiento: this.formatFecha(this.suscriptor.fecha_nacimiento)

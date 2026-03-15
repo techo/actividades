@@ -38,6 +38,7 @@ Route::prefix('paises')->group(function () {
 });
 
 
+Route::get('actividadesGeneral', 'ajax\ActividadesController@index');
 
 /////////////////////////////////
 // Rutas Privadas, por Token   //
@@ -129,5 +130,4 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
-Route::get('actividades/general', 'ajax\ActividadesController@index');
 
