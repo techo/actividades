@@ -6,7 +6,7 @@
 
             <!-- Información Personal -->
             <h4 class="mt-2">{{ $t('suscribe.personal_info') }}</h4>
-            <form @submit="guardar">
+            <form @submit.prevent="guardar">
                 <div class="row">
                     <div class="col-md-4">
                     <input
@@ -19,13 +19,15 @@
                     <input
                         class="form-control"
                         :placeholder="$t('suscribe.lastname')"
-                        v-model="suscriptor.apellido">
+                        v-model="suscriptor.apellido"
+                        required>
                     </div>
                     <div class="col-md-4">
                     <input
                         class="form-control"
                         :placeholder="documentoLabel"
-                        v-model="suscriptor.dni">
+                        v-model="suscriptor.dni"
+                        required>
                     </div>
                 </div>
 
@@ -75,8 +77,10 @@
                                 showFlags: true,
                             }"
                             ref="telInput"
-                            required
+                            :class="{ 'is-invalid': errores.telefono }"
                         />
+
+                        <small v-if="errores.telefono" class="form-text text-danger">{{ $t('frontend.error') }}&nbsp;<br></small>
                     </div>
 
                     <div class="col-md-4">
@@ -213,6 +217,7 @@ export default {
             previousCountry: '',
             telefonoPaisIso: null,
             guardado: false,
+            errores: {},
         }
     },
     mounted: function(){
@@ -276,12 +281,22 @@ export default {
 
     methods: {
         guardar(e) {
-            const form = e.target
+            const form = e.target;
 
             if (!form.checkValidity()) {
-                form.reportValidity()
-                return
+                form.reportValidity();
+                return;
             }
+
+            this.errores.telefono = false;
+
+            if (!this.suscriptor.telefono || this.suscriptor.telefono.length <= 6) {
+                this.errores.telefono = true;
+                return;
+            }
+
+
+
             const payload = {
                 ...this.suscriptor,
                 fecha_nacimiento: this.formatFecha(this.suscriptor.fecha_nacimiento)
@@ -358,5 +373,7 @@ export default {
 </script>
 
 <style scoped>  
-
+.is-invalid {
+    border: 2px solid #dc3545 !important;
+}
 </style>
