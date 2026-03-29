@@ -64,22 +64,6 @@
 			return {
 				url: "",
 				urlDescarga: "",
-				fields: [
-					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
-					{ title: 'Tipo',  name: 'nombre', sortField: 'nombre', },
-					{
-						title: 'Fecha',
-						name: 'fechaInicio',
-						callback: function (value) {
-						    return window.moment(value).format('DD/MM/YYYY hh:mm');
-						},
-						sortField: 'fechaInicio',
-					},
-					{ title: 'Promedio técnico', name: 'puntajeTecnico', sortField: 'puntajeTecnico', },
-					{ title: 'Promedio social', name: 'puntajeSocial', sortField: 'puntajeSocial',  },
-					{ title: 'Promedio género', name: 'puntajeGenero', sortField: 'puntajeGenero',  },
-					{ title: 'Comentario', name: 'comentario', sortField: 'comentario', },
-				],
 				css: {
 					table: {
 				        tableClass: 'table table-hover table-condensed',
@@ -125,7 +109,27 @@
 			this.urlDescarga = "/admin/usuarios/" + this.persona + "/exportar-evaluaciones";
 		},
 		mounted () {
-		}
+		},
+		computed: {
+			fields() {
+				return [
+				{ title: this.$t('backend.activity'), name: 'nombreActividad', sortField: 'nombreActividad' },
+				{ title: this.$t('backend.type'), name: 'nombre', sortField: 'nombre' },
+				{
+					title: this.$t('backend.date'),
+					name: 'fechaInicio',
+					callback: (value) => {
+					return window.moment(value).format('DD/MM/YYYY hh:mm');
+					},
+					sortField: 'fechaInicio',
+				},
+				{ title: this.$t('frontend.technical_score'), name: 'puntajeTecnico', sortField: 'puntajeTecnico' },
+				{ title: this.$t('frontend.social_score'), name: 'puntajeSocial', sortField: 'puntajeSocial' },
+				{ title: this.$t('frontend.gender_score'), name: 'puntajeGenero', sortField: 'puntajeGenero' },
+				{ title: this.$t('frontend.comments'), name: 'comentario', sortField: 'comentario' },
+				]
+			}
+			}
 	}
 </script>
 <style>

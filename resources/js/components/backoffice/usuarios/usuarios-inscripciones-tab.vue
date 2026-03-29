@@ -91,27 +91,6 @@
 				inscripciones: 0,
 				presentes: 0,
 				ausentes: 0,
-				fields: [
-					{ title: 'Actividad', name: 'nombreActividad', sortField: 'nombreActividad', },
-					{ title: 'Tipo', name: 'nombre', sortField: 'nombre', },
-					{
-						title: 'Fecha',
-						name: 'fechaInscripcion',
-						callback: function (value) {
-						    return window.moment(value).format('DD/MM/YYYY hh:mm');
-						},
-						sortField: 'fechaInscripcion',
-					},
-					{ title: 'Rol', name: 'rol', sortField: 'rol', },
-					{
-						title: 'Presente',
-						name: 'presente',
-						callback: function (value) {
-							return value === 1 ? 'Presente' : 'Ausente';
-						},
-						sortField: 'presente',
-					}
-				],
 				css: {
 					table: {
 				        tableClass: 'table table-hover table-condensed',
@@ -145,6 +124,42 @@
 			this.urlDescarga = "/admin/usuarios/" + this.persona + "/exportar-inscripciones";
 		},
 		computed: {
+			fields() {
+				const t = this.$t.bind(this);
+				return [
+				{ 
+					title: t('backend.activity'), 
+					name: 'nombreActividad', 
+					sortField: 'nombreActividad' 
+				},
+				{ 
+					title: t('backend.type'), 
+					name: 'nombre', 
+					sortField: 'nombre' 
+				},
+				{
+					title: t('backend.date'),
+					name: 'fechaInscripcion',
+					callback: (value) => {
+					return window.moment(value).format('DD/MM/YYYY hh:mm');
+					},
+					sortField: 'fechaInscripcion',
+				},
+				{ 
+					title: t('backend.role'), 
+					name: 'rol', 
+					sortField: 'rol' 
+				},
+				{
+					title: t('backend.present'),
+					name: 'presente',
+					callback: (value) => {
+					return value === 1 ? t('backend.present') : t('backend.absent');
+					},
+					sortField: 'presente',
+				}
+				]
+			}
 		},
 		watch: {
 		},

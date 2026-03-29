@@ -142,7 +142,7 @@ export default {
         }
     },
     created() {
-        this.usuario = JSON.parse(this.propUsuario);
+        this.usuario = this.propUsuario && this.propUsuario !== "null" ? JSON.parse(this.propUsuario) : this.usuario;
     },
 }
 </script>

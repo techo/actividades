@@ -44,11 +44,6 @@
 		data: function () {
 			return {
 				url: "",
-				fields: [
-					{ title: 'Institución',  name: 'institucion_educativa', sortField: 'institucion_educativa', },
-					{ title: 'Disciplina', name: 'disciplina_academica', sortField: 'disciplina_academica', },
-					{ title: 'Descripción', name: 'descripcion_educacion', sortField: 'descripcion_educacion',  },
-				],
 				css: {
 					table: {
 				        tableClass: 'table table-hover table-condensed',
@@ -91,6 +86,15 @@
 		},
 		created () {
 			this.url = "/admin/ajax/usuarios/" + this.persona + "/estudios";
+		},
+		computed: {
+			fields() {
+				return [
+				{ title: this.$t('backend.educational_institution'), name: 'institucion_educativa', sortField: 'institucion_educativa' },
+				{ title: this.$t('frontend.disciplina_academica'), name: 'disciplina_academica', sortField: 'disciplina_academica' },
+				{ title: this.$t('backend.description'), name: 'descripcion_educacion', sortField: 'descripcion_educacion' },
+				]
+			}
 		},
 		mounted () {
 		}

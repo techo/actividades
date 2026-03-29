@@ -343,26 +343,26 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombres',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'apellido',
                 'sortField' => 'apellidoPaterno',
-                'title' => 'Apellido'
+                'title' => 'backend.last_name'
             ],
             [
                 'name' => 'dni',
                 'sortField' => 'dni',
-                'title' => 'Documento'
+                'title' => 'backend.document'
             ],
             [
                 'name' => 'email',
                 'sortField' => 'mail',
-                'title' => 'Email'
+                'title' => 'backend.email'
             ],
             [
                 'name' => 'telefono',
-                'title' => 'Teléfono'
+                'title' => 'backend.phone'
             ],
         ],
         'sortOrder' => [
