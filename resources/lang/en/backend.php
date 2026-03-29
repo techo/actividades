@@ -547,6 +547,9 @@ return [
         'liderazgo_trabajo' => 'Leadership / Work Chief',
         'salud_bienestar' => 'Health and Wellbeing',
         'camioneta' => 'Van / Truck',
+        'voluntariado_cuadrilla' => 'Crew Volunteering',
+        'digitador' => 'Data Entry',
+        'traductor' => 'Translator',    
     ],
 
     'roles_integrantes' => [

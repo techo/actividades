@@ -546,6 +546,9 @@ return [
         'liderazgo_trabajo' => 'Liderazgo / Jefatura de Trabajo',
         'salud_bienestar' => 'Salud y Bienestar',
         'camioneta' => 'Camioneta',
+        'voluntariado_cuadrilla' => 'Voluntariado de Cuadrilla',
+        'digitador' => 'Digitador/a',
+        'traductor' => 'Traductor/a'    
     ],
 
     'roles_integrantes' => [
