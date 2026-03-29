@@ -17,29 +17,29 @@ return [
             // },
             [
                 'name' => 'nombreActividad',
-                'title' => 'Nombre',
+                'title' => 'backend.name',
                 'sortField' => 'nombreActividad',
             ],
             [
                 'name' => 'oficina',
                 'sortField' => 'oficina',
-                'title' => 'Oficina'
+                'title' => 'backend.office'
             ],
             [
                 'name' => '__component:comunidades',
                 'sortField' => 'comunidades',
-                'title' => 'Comunidades'
+                'title' => 'backend.community'
             ],
             [
                 'name' => '__component:estadoActividad',
-                'title' => 'Estado Actividad'
+                'title' => 'backend.activity_status'
             ],
             [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Fecha Inicio',
+                'title' => 'backend.start_dates',
                 'callback' => 'formatDate|DD-MM-YYYY'
             ],
             [
@@ -47,7 +47,7 @@ return [
                 'sortField' => 'fechaFin',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Fecha Fin',
+                'title' => 'backend.end_date',
                 'callback' => 'formatDate|DD-MM-YYYY'
             ],
             [
@@ -55,14 +55,14 @@ return [
                 'sortField' => 'tipoActividad',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Tipo',
+                'title' => 'backend.type',
             ],
             [
                 'name' => 'estadoConstruccion',
                 'sortField' => 'estadoConstruccion',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Estado',
+                'title' => 'backend.state',
             ],
             //            [
             //                'name' => '__component:mis-actividades',
@@ -120,29 +120,29 @@ return [
             // },
             [
                 'name' => 'nombreActividad',
-                'title' => 'Nombre',
+                'title' => 'backend.name',
                 'sortField' => 'nombreActividad',
             ],
             [
                 'name' => 'oficina',
                 'sortField' => 'oficina',
-                'title' => 'Oficina'
+                'title' => 'backend.office'
             ],
             [
                 'name' => '__component:comunidades',
                 'sortField' => 'comunidades',
-                'title' => 'Comunidades'
+                'title' => 'backend.community'
             ],
             [
                 'name' => '__component:estadoActividad',
-                'title' => 'Estado Actividad'
+                'title' => 'backend.activity_status'
             ],
             [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Fecha Inicio',
+                'title' => 'backend.start_date',
                 'callback' => 'formatDate|DD-MM-YYYY'
             ],
             [
@@ -150,7 +150,7 @@ return [
                 'sortField' => 'fechaFin',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Fecha Fin',
+                'title' => 'backend.end_date',
                 'callback' => 'formatDate|DD-MM-YYYY'
             ],
             [
@@ -158,14 +158,14 @@ return [
                 'sortField' => 'tipoActividad',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Tipo',
+                'title' => 'backend.type',
             ],
             [
                 'name' => 'estadoConstruccion',
                 'sortField' => 'estadoConstruccion',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'Estado',
+                'title' => 'backend.state',
             ],
             // [
             //   name' => 'nickname',
@@ -206,33 +206,33 @@ return [
             [
                 'name' => 'dni',
                 'sortField' => 'dni',
-                'title' => 'DNI/Pasaporte',
+                'title' => 'backend.dni',
                 'visible' => false
             ],
             [
                 'name' => 'nombres',
                 'sortField' => 'nombres',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'apellidoPaterno',
                 'sortField' => 'apellidoPaterno',
-                'title' => 'Apellido'
+                'title' => 'backend.last_name'
             ],
             [
                 'name' => 'nombreGrupo',
                 'sortField' => 'nombreGrupo',
-                'title' => 'Grupo'
+                'title' => 'backend.group'
             ],
 
             [
                 'name' => '__component:translateBackend_rolesActividad',
-                'title' => 'Rol'
+                'title' => 'backend.role'
             ],
             [
                 'name' => 'oficina',
                 'sortField' => 'oficina',
-                'title' => 'Oficina'
+                'title' => 'backend.office'
             ],
             // [
             //     'name' => '__component:inscripciones_aplicadas',
@@ -242,11 +242,11 @@ return [
             [
                 'name' => '__component:estado_persona',
                 'sortField' => 'estadoPersona',
-                'title' => 'Estado Voluntariado'
+                'title' => 'backend.state'
             ],
             [
                 'name' => '__component:asistencia',
-                'title' => 'Asistencia',
+                'title' => 'backend.present',
                 'titleClass' => 'text-center',
                 'sortField' => 'presente',
                 'dataClass' => 'text-center'
@@ -271,26 +271,27 @@ return [
             ],
             [
                 'name' => 'tipo',
+                'title' => 'backend.type',
                 'callback' => 'getIcon'
             ],
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre',
+                'title' => 'backend.name',
             ],
             [
                 'name' => 'linkEvaluacion',
                 'sortField' => 'linkEvaluacion',
-                'title' => 'Link de Evaluación',
+                'title' => 'backend.evaluation_link',
             ],
             [
                 'name' => 'rol',
                 'sortField' => 'rol',
-                'title' => 'Rol',
+                'title' => 'backend.role',
             ],
             [
                 'name' => 'cantidad',
-                'title' => 'Miembros',
+                'title' => 'backend.members',
             ],
         ],
         'sortOrder' => [
@@ -307,20 +308,20 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre',
+                'title' => 'backend.name',
             ],
             [
                 'name' => 'activo',
                 'sortField' => 'activo',
-                'title' => 'Estado',
+                'title' => 'backend.state',
             ],
             [
                 'name' => 'fechaInicio',
-                'title' => 'Fecha Inicio',
+                'title' => 'backend.start_date',
             ],
             [
                 'name' => 'fechaFin',
-                'title' => 'Fecha Fin',
+                'title' => 'backend.end_date',
             ],
         ],
         'sortOrder' => [
@@ -382,25 +383,25 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'area',
                 'sortField' => 'area',
-                'title' => 'Area'
+                'title' => 'backend.area'
             ],
             [
                 'name' => 'oficina',
-                'title' => 'Oficina'
+                'title' => 'backend.office'
             ],
             [
                 'name' => '__component:comunidades',
-                'title' => 'Comunidades'
+                'title' => 'backend.community'
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'estado',
-                'title' => 'Estado'
+                'title' => 'backend.state'
             ],
         ],
         'sortOrder' => [
@@ -773,31 +774,31 @@ return [
             ],
             [
                 'name' => 'punto',
-                'title' => 'Punto'
+                'title' => 'backend.point'
             ],
             [
                 'name' => 'horario',
-                'title' => 'Hora'
+                'title' => 'backend.schedule'
             ],
             [
                 'name' => 'provincia',
-                'title' => 'Provincia'
+                'title' => 'backend.province'
             ],
             [
                 'name' => 'localidad',
-                'title' => 'Localidad'
+                'title' => 'backend.location'
             ],
             [
                 'name' => 'nombres',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'apellidoPaterno',
-                'title' => 'Apellido'
+                'title' => 'backend.last_name'
             ],
             [
                 'name' => 'estado',
-                'title' => 'Estado',
+                'title' => 'backend.state',
                 'callback' => 'estado',
             ],
         ],
@@ -818,11 +819,11 @@ return [
             ],
             [
                 'name' => '__component:translateBackend_programa',
-                'title' => 'Programa',
+                'title' => 'backend.programa',
             ],
             [
                 'name' => '__component:translateBackend_solucionesEntregadas',
-                'title' => 'Solución Entregada',
+                'title' => 'backend.soluciones_entregadas',
             ],
             [
                 'name' => 'total_soluciones',

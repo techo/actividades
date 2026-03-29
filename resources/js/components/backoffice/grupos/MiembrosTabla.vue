@@ -131,13 +131,32 @@ export default {
               this.$refs.vuetableMiembros.refresh();
               this.$refs.vuetableMiembros.selectedTo = [];
             });
-        }
+        },
+        translateField(title) {
+            if (!title) return title;
+
+            // si es una key de traducción
+            if (title.includes('.')) {
+                return this.$t(title);
+            }
+
+            return title;
+        },
     },
     created()  {
         this.dataSortOrder = JSON.parse(this.sortOrder);
-        this.dataFields = JSON.parse(this.fields);
         this.idGrupoActual = this.idGrupoRaiz;
         this.moreParams.idActividad = JSON.parse(this.idActividad);
+        let fields = JSON.parse(this.fields);
+
+        fields = fields.map(field => {
+            if (field.title) {
+                field.title = this.translateField(field.title);
+            }
+            return field;
+        });
+
+        this.dataFields = fields;
         Event.$on('vuetable-actualizarTabla', this.actualizarTabla);
     },
     events: {

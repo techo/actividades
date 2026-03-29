@@ -74,8 +74,17 @@
             }
         },
         created() {
-            this.fields_ = JSON.parse(this.fields);
             this.sortOrder_ = JSON.parse(this.sortOrder);
+            let fields = JSON.parse(this.fields);
+
+            fields = fields.map(field => {
+                if (field.title) {
+                    field.title = this.translateField(field.title);
+                }
+                return field;
+            });
+
+            this.fields_ = fields;
         },
         mounted() {
             Event.$on('informes:refrescar', this.refrescar);
@@ -96,7 +105,17 @@
             },
             estado(v) {
                 return (v=='1')?'Activo':'Inactivo';
-            }
+            },
+            translateField(title) {
+                if (!title) return title;
+
+                // si es una key de traducción
+                if (title.includes('.')) {
+                    return this.$t(title);
+                }
+
+                return title;
+            },
         }
     }
 </script>

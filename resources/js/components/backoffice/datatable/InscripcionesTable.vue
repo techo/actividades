@@ -333,10 +333,30 @@ export default {
       cargarAuditoria: function(id) {
         Event.$emit('cargarAuditoria', {tabla: 'inscripcion', id: id});
       },
+      translateField(title) {
+          if (!title) return title;
+
+          // si es una key de traducción
+          if (title.includes('.')) {
+              return this.$t(title);
+          }
+
+          return title;
+      },
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
       this.dataFields = JSON.parse(this.fields);
+      let fields = JSON.parse(this.fields);
+
+      fields = fields.map(field => {
+        if (field.title) {
+            field.title = this.translateField(field.title);
+        }
+        return field;
+      });
+
+      this.dataFields = fields;
       // Custom
       Event.$on('agregar-condicion', this.agregarCondicion);
       Event.$on('remover-condicion', this.removerCondicion);
