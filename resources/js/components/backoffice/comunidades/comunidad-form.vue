@@ -69,18 +69,32 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="diagnostico">{{ $t('backend.diagnostico') }}</label>
                                     <textarea name="diagnostico" v-model="data.diagnostico" class="form-control" :disabled="this.readonly" >
                                         </textarea>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                
+                                    <label for="fecha_diagnostico">{{ $t('backend.created_at') }}</label>
+
+                                    <input type="date" class="form-control" v-model="data.fecha_diagnostico" :disabled="this.readonly">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="plan_de_accion">{{ $t('backend.plan_de_accion') }}</label>
                                     <textarea name="plan_de_accion" v-model="data.plan_de_accion" class="form-control" :disabled="this.readonly" >
                                         </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="fecha_plan_de_accion">{{ $t('backend.created_at') }}</label>
+                                    <input type="date" class="form-control" v-model="data.fecha_plan_de_accion" :disabled="this.readonly">
                                 </div>
                             </div>
                         </div>
@@ -110,6 +124,8 @@ export default {
                 idLocalidad: null, 
                 diagnostico: null, 
                 plan_de_accion: null, 
+                fecha_diagnostico: '',
+                fecha_plan_de_accion: ''
             },
             guardado: false,
             mensajeGuardado: '',

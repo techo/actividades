@@ -103,14 +103,14 @@ class ComunidadesController extends BaseController
      */
     public function update(CrearComunidad $request, $id)
     {
-        $equipo = Comunidad::findOrFail($id);
+        $comunidad = Comunidad::findOrFail($id);
         $validado = $validado = $request->validated();
         $oficina = Oficina::findOrFail($validado['idOficina']);
-        $equipo->fill($validado);
-        $equipo->idPais = $oficina->id_pais;
-        $equipo->save();
+        $comunidad->fill($validado);
+        $comunidad->idPais = $oficina->id_pais;
+        $comunidad->save();
 
-        return response()->json($equipo);
+        return response()->json($comunidad);
     }
 
     /**

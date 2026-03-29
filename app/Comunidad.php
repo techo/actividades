@@ -10,8 +10,9 @@ class Comunidad extends Model
     use SoftDeletes;
     protected $table = "Comunidad";
     protected $primaryKey = "idComunidad";
-    protected $fillable = ['idOficina', 'nombre', 'idLocalidad','idProvincia', 'activo', 'idPais', 'diagnostico','plan_de_accion'];
-
+    protected $fillable = ['idOficina', 'nombre', 'idLocalidad','idProvincia', 'activo', 'idPais', 'diagnostico','plan_de_accion', 'fecha_diagnostico', 'fecha_plan_de_accion'];
+    protected $dates = [];
+    
     public function oficina()
     {
         return $this->belongsTo(Oficina::class, 'idOficina', 'id');

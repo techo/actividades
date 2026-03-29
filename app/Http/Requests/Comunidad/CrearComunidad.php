@@ -29,7 +29,9 @@ class CrearComunidad extends FormRequest
             'idLocalidad' => 'nullable',
             'idProvincia' => 'nullable',
             'diagnostico' => 'nullable',
+            'fecha_diagnostico' => 'nullable|date',
             'plan_de_accion' => 'nullable',
+            'fecha_plan_de_accion' => 'nullable|date',
             'activo' => 'required|boolean',
         ];
     }
