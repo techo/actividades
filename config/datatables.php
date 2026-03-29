@@ -422,37 +422,37 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'nombreEquipo',
                 'sortField' => 'nombreEquipo',
-                'title' => 'Equipo',
+                'title' => 'backend.team',
             ],
             [
                 'name' => 'despliegue',
                 'sortField' => 'despliegue',
-                'title' => 'Despliegue'
+                'title' => 'backend.deployment'
             ],
             [
                 'name' => 'rol',
                 'sortField' => 'rol',
-                'title' => 'Rol'
+                'title' => 'backend.role'
             ],
             [
                 'name' => 'relacion',
                 'sortField' => 'relacion',
-                'title' => 'Relación'
+                'title' => 'backend.relation'
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'estado',
-                'title' => 'Estado'
+                'title' => 'backend.state'
             ],
             [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
-                'title' => 'Fecha de Inicio'
+                'title' => 'backend.start_date'
             ],
         ],
         'sortOrder' => [
@@ -474,17 +474,17 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'tipo',
                 'sortField' => 'tipo',
-                'title' => 'Tipo',
+                'title' => 'backend.type',
             ],
             [
                 'name' => 'presencia',
                 'sortField' => 'presencia',
-                'title' => 'Presencia'
+                'title' => 'backend.presencia'
             ],
         ],
         'sortOrder' => [
@@ -507,22 +507,22 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'rol',
                 'sortField' => 'rol',
-                'title' => 'Rol',
+                'title' => 'backend.role',
             ],
             [
                 'name' => 'telefono',
                 'sortField' => 'telefono',
-                'title' => 'Teléfono',
+                'title' => 'backend.phone',
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'estado',
-                'title' => 'Estado'
+                'title' => 'backend.state'
             ],
         ],
         'sortOrder' => [
@@ -636,16 +636,16 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'oficina',
-                'title' => 'Oficina'
+                'title' => 'backend.office'
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'activo',
-                'title' => 'Estado'
+                'title' => 'backend.state'
             ],
         ],
         'sortOrder' => [

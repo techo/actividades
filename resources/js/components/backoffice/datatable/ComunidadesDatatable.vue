@@ -140,6 +140,17 @@ export default {
     ocultarLoadingAlert () {
         this.$refs.loading.justCloseSimplert();
     },
+
+    translateField(title) {
+        if (!title) return title;
+
+        // si es una key de traducción
+        if (title.includes('.')) {
+            return this.$t(title);
+        }
+
+        return title;
+    },
   //   exportarEquipos: function() {
 	// 		this.loading = true;
 	// 		axios({
@@ -165,7 +176,15 @@ export default {
   },
   created()  {
       this.dataSortOrder = JSON.parse(this.sortOrder);
-      this.dataFields = JSON.parse(this.fields);
+      let fields = JSON.parse(this.fields);
+      fields = fields.map(field => {
+          if (field.title) {
+              field.title = this.translateField(field.title);
+          }
+          return field;
+      });
+
+      this.dataFields = fields;
       
   },
   events: {
