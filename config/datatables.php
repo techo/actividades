@@ -549,17 +549,17 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'despliegue',
                 'sortField' => 'despliegue',
-                'title' => 'Despliegue'
+                'title' => 'backend.deployment'
             ],
             [
                 'name' => 'fecha',
                 'sortField' => 'fecha',
-                'title' => 'Fecha'
+                'title' => 'backend.date'
             ],
         ],
         'sortOrder' => [
@@ -581,40 +581,40 @@ return [
             [
                 'name' => 'nombre',
                 'sortField' => 'nombre',
-                'title' => 'Nombre'
+                'title' => 'backend.name'
             ],
             [
                 'name' => 'despliegue',
                 'sortField' => 'despliegue',
-                'title' => 'Despliegue'
+                'title' => 'backend.deployment'
             ],
             [
                 'name' => 'comunidad',
-                'title' => 'Comunidad',
+                'title' => 'backend.community',
             ],
             [
                 'name' => 'rol',
                 'sortField' => 'rol',
-                'title' => 'Rol'
+                'title' => 'backend.role',
             ],
             [
                 'name' => 'relacion',
                 'sortField' => 'relacion',
-                'title' => 'Relación'
+                'title' => 'backend.relationship'
             ],
             [
                 'name' => '__component:participacion',
-                'title' => 'Semáforo'
+                'title' => 'Semaforo'
             ],
             [
                 'name' => 'fechaInicio',
                 'sortField' => 'fechaInicio',
-                'title' => 'Fecha de Inicio'
+                'title' => 'backend.start_date'
             ],
             [
                 'name' => 'estado',
                 'sortField' => 'estado',
-                'title' => 'Estado'
+                'title' => 'backend.state'
             ],
         ],
         'sortOrder' => [
