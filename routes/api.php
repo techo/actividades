@@ -104,6 +104,10 @@ Route::middleware('auth:api')->group(function () {
     Route::post('editPersona/{persona}', 'api\PersonasController@update');
     Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
 
+    // dispositivos para notificaciones push (OneSignal)
+    Route::post('dispositivos', 'api\DispositivoController@registrar');
+    Route::delete('dispositivos/{player_id}', 'api\DispositivoController@desactivar');
+
 
     Route::get('actividades/categoria/{nombre}', function ($nombre, Request $request) {
         $categorias = [

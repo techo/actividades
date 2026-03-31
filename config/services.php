@@ -48,4 +48,9 @@ return [
     'apple' => [
         'client_id' => env('APPLE_CLIENT_ID'),
     ],
+
+    'onesignal' => [
+        'app_id'  => env('ONESIGNAL_APP_ID'),
+        'api_key' => env('ONESIGNAL_REST_API_KEY'),
+    ],
 ];
