@@ -225,7 +225,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-12 px-4">
-                        <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" @guardado="validateForm();mostrarFichaMedica = false;"/>
+                        <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" :obligatorio="true" @guardado="validateForm();mostrarFichaMedica = false;"/>
                     </div>
                 </div> 
             </div>

@@ -173,7 +173,7 @@ export default {
         }
         return data;
     },
-    props: ['fichaMedica', 'campos'],
+    props: ['fichaMedica', 'campos', 'obligatorio'],
     created: function () {
         if (this.ficha == null){
             this.ficha = {
@@ -199,8 +199,44 @@ export default {
         this.formDirty = false
     },
     methods: {
+        validarCamposObligatorios: function () {
+            if (!this.obligatorio) return true;
+            const c = this.campos;
+            if (!c || c.grupo_sanguinieo) {
+                if (!this.ficha.grupo_sanguinieo) return false;
+            }
+            if (!c || c.cobertura_medica) {
+                if (!this.ficha.cobertura_tipo) return false;
+                if (this.ficha.cobertura_tipo === 'cobertura_paga') {
+                    if (!this.ficha.cobertura_nombre || !this.ficha.cobertura_numero) return false;
+                }
+            }
+            if (!c || c.contacto_emergencia) {
+                if (!this.ficha.contacto_nombre || !this.ficha.contacto_telefono || !this.ficha.contacto_relacion) return false;
+            }
+            if (!c || c.documento_identidad) {
+                const tieneFrente = this.ficha.documento_frente != null || this.documento_frente != null;
+                const tieneDorso = this.ficha.documento_dorso != null || this.documento_dorso != null;
+                if (!tieneFrente || !tieneDorso) return false;
+            }
+            if (!c || c.ficha_alergias) {
+                if (!this.ficha.alergias) return false;
+            }
+            if (!c || c.ficha_alimentacion) {
+                if (!this.ficha.alimentacion) return false;
+            }
+            if (!c || c.vacunacion_covid) {
+                if (!this.ficha.vacunacion_covid) return false;
+            }
+            return true;
+        },
         guardarFicha: function () {
             this.guardo = false;
+            this.error = false;
+            if (!this.validarCamposObligatorios()) {
+                this.error = true;
+                return;
+            }
             this.validateForm();
             axios.post('/ajax/fichaMedica', this.ficha).then(response => {
                 this.submitFiles();
