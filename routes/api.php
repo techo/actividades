@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/translate', 'api\TranslationController@getTranslation');
+Route::post('/translate/batch', 'api\TranslationController@getBatchTranslations');
 
 
 // Rutas Publicas

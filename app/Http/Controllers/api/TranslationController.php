@@ -9,6 +9,34 @@ use Illuminate\Support\Facades\Lang;
 
 class TranslationController extends Controller
 {
+    public function getBatchTranslations(Request $request)
+    {
+        $codes = $request->input('codes', []);
+        $lang  = $request->input('lang', config('app.locale'));
+
+        if (empty($codes) || !is_array($codes)) {
+            return response()->json(['error' => 'El parámetro codes debe ser un array no vacío'], 400);
+        }
+
+        if (count($codes) > 100) {
+            return response()->json(['error' => 'Se permite un máximo de 100 códigos por request'], 400);
+        }
+
+        App::setLocale($lang);
+
+        $translations = [];
+        foreach ($codes as $code) {
+            $translation = Lang::get($code);
+            // Si no existe, devolver null (el cliente decide el fallback)
+            $translations[$code] = ($translation === $code) ? null : $translation;
+        }
+
+        return response()->json([
+            'lang'         => $lang,
+            'translations' => $translations,
+        ]);
+    }
+
     public function getTranslation(Request $request)
     {
         $code = $request->get('code');
