@@ -212,6 +212,7 @@ return [
  	'ficha_otros' => 'Otros Datos',
  	'ficha_alergias' => 'Alergias',
  	'ficha_alimentacion' => 'Restricciones o dieta',
+ 	'enfermedades_preexistentes' => 'Enfermedades Preexistentes',
  	'ficha_confirma_datos' => 'Confirmacion de datos',
  	'contacto_emergencia' => 'Contacto de Emergencia',
  	'documents' => 'Documentos',

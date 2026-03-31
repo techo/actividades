@@ -246,6 +246,7 @@ return [
     'number' => 'Number',
     'emergency_contact' => 'Emergency Contact',
     'allergies' => 'Allergies',
+    'pre_existing_conditions' => 'Pre-existing Conditions',
     'diet' => 'Diet',
     'covid_vaccination' => 'Covid Vaccination',
     'document_front' => 'Document Front',

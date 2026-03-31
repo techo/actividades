@@ -744,6 +744,7 @@
                     'ficha_alimentacion' : false,
                     'documento_identidad' : false,
                     'vacunacion_covid' : false,
+                    'enfermedades_preexistentes' : false,
                 },
                 estadoInscripcion: false,
                 estadoEvaluaciones: false,
@@ -860,7 +861,8 @@
                                 'ficha_alergias' : false,
                                 'ficha_alimentacion' : false,
                                 'documento_identidad' : false,
-                                'vacunacion_covid' : false
+                                'vacunacion_covid' : false,
+                                'enfermedades_preexistentes' : false
                             };
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.rolesFallback.filter(role =>

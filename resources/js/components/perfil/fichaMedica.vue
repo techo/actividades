@@ -110,6 +110,13 @@
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12" v-show="(!campos || campos.enfermedades_preexistentes)">
+                        <label>{{ $t('frontend.enfermedades_preexistentes') }}</label>
+                        <input type="text" class="form-control" name="enfermedades_preexistentes" id="enfermedades_preexistentes"
+                            v-model="ficha.enfermedades_preexistentes">
+                    </div>
+                </div>
             </div>
             <h6 class="mt-4">{{ $t('frontend.ficha_confirma_datos') }}</h6>
             <div class="row mt-2">
@@ -188,6 +195,7 @@ export default {
               'alergias' : "",
               'vacunacion_covid': "",
               'alimentacion' : "",
+              'enfermedades_preexistentes' : "",
               'confirma_datos' : "",
               'archivo_medico' : null,
               'documento_frente' : null,
@@ -227,6 +235,9 @@ export default {
             }
             if (!c || c.vacunacion_covid) {
                 if (!this.ficha.vacunacion_covid) return false;
+            }
+            if (!c || c.enfermedades_preexistentes) {
+                if (!this.ficha.enfermedades_preexistentes) return false;
             }
             return true;
         },

@@ -246,6 +246,7 @@ return [
     'number' => 'Número',
     'emergency_contact' => 'Contacto Emergencia',
     'allergies' => 'Alergias',
+    'pre_existing_conditions' => 'Enfermedades Preexistentes',
     'diet' => 'Alimentación',
     'covid_vaccination' => 'Vacunación Covid',
     'document_front' => 'Documento Frente',

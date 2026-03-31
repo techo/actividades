@@ -26,6 +26,7 @@ class PerfilResource extends Resource
                 'cobertura_numero' => '',
                 'archivo_medico' => '',
                 'confirma_datos' => '',
+                'enfermedades_preexistentes' => '',
                 'idPersona' => ''
             ];
         }
