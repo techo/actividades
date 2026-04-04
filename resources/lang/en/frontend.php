@@ -481,4 +481,10 @@ return [
 	//aviso_modal
 	'aviso_modal' => 'Continue to Online Activities',
 
+    'cargando' => 'Loading...',
+
+    // Registration questions
+    'preguntas_inscripcion'       => 'Registration questions',
+    'complete_required_questions' => 'Please answer all required questions.',
+
 ];

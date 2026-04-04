@@ -566,4 +566,22 @@ return [
         'jefatura_liderazgo' => 'Management / Leadership',
     ],
 
+    // Registration questions
+    'preguntas_inscripcion' => 'Registration questions',
+    'pregunta'              => 'Question',
+    'descripcion_ayuda'     => 'Description / help text (optional)',
+    'tipo'                  => 'Type',
+    'tipo_abierta'          => 'Open text',
+    'tipo_desplegable'      => 'Dropdown',
+    'opciones'              => 'Options',
+    'opciones_placeholder'  => 'Type an option and press Enter',
+    'opciones_ayuda'        => 'Press Enter or comma to add each option.',
+    'requerida'             => 'Required',
+    'orden'                 => 'Order',
+    'loading'               => 'Loading...',
+    'saving'                => 'Saving...',
+    'no_preguntas'          => 'No questions configured for this activity.',
+    'error_guardando'       => 'An error occurred while saving. Please try again.',
+    'confirm_delete'        => 'Are you sure you want to delete this record? This action cannot be undone.',
+
 ];

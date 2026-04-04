@@ -484,5 +484,11 @@ return [
 	//aviso_modal
 	'aviso_modal' => 'Ver Actividades Virtuales',
 
+    'cargando' => 'Cargando...',
+
+    // Preguntas de inscripción
+    'preguntas_inscripcion'       => 'Preguntas de inscripción',
+    'complete_required_questions' => 'Por favor responde todas las preguntas obligatorias.',
+
 ];
 

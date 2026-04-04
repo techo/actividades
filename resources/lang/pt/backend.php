@@ -565,4 +565,22 @@ return [
         'jefatura_liderazgo' => 'Chefatura / Liderança',
     ],
 
+    // Perguntas de inscrição
+    'preguntas_inscripcion' => 'Perguntas de inscrição',
+    'pregunta'              => 'Pergunta',
+    'descripcion_ayuda'     => 'Descrição / texto de ajuda (opcional)',
+    'tipo'                  => 'Tipo',
+    'tipo_abierta'          => 'Campo aberto',
+    'tipo_desplegable'      => 'Lista suspensa',
+    'opciones'              => 'Opções',
+    'opciones_placeholder'  => 'Digite uma opção e pressione Enter',
+    'opciones_ayuda'        => 'Pressione Enter ou vírgula para adicionar cada opção.',
+    'requerida'             => 'Obrigatória',
+    'orden'                 => 'Ordem',
+    'loading'               => 'Carregando...',
+    'saving'                => 'Salvando...',
+    'no_preguntas'          => 'Nenhuma pergunta configurada para esta atividade.',
+    'error_guardando'       => 'Ocorreu um erro ao salvar. Tente novamente.',
+    'confirm_delete'        => 'Tem certeza de que deseja excluir este registro? Esta ação não pode ser desfeita.',
+
 ];
