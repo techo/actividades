@@ -71,4 +71,9 @@ class Inscripcion extends Model
     {
         return $this->belongsToMany(Jornada::class, 'InscripcionJornada', 'idInscripcion', 'idJornada');
     }
+
+    public function respuestas()
+    {
+        return $this->hasMany(InscripcionRespuesta::class, 'inscripcion_id', 'idInscripcion');
+    }
 }
