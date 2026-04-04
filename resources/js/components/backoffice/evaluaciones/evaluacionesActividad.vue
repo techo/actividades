@@ -1,68 +1,44 @@
 <template>
     <div class="box">
         <div class="box-header with-border">
-            <h2 class="box-title"><strong>{{ $t('backend.activity_evaluations') }}</strong></h2>
+            <h3 class="box-title"><strong>{{ $t('backend.activity_evaluations') }}</strong></h3>
             <span class="pull-right">
-                <a  class="btn btn-primary" :href="urlExportar">
+                <a class="btn btn-primary btn-sm" :href="urlExportar">
                     <i class="fa fa-download"></i>
                     {{ $t('backend.download_excel') }}
                 </a>
             </span>
         </div>
         <div class="box-body">
+            <!-- Fila superior: stats + histograma -->
             <div class="row">
-                <div class="col-md-6 divisor">
-                    <evaluaciones-actividad-stats :id="id" ></evaluaciones-actividad-stats>
-                </div>
-                <div class="col-md-6">
-                    <evaluaciones-actividad-chart :id="id" ></evaluaciones-actividad-chart>
+                <div class="col-md-8">
+                    <evaluaciones-actividad-stats :id="id"></evaluaciones-actividad-stats>
+                    <evaluaciones-actividad-chart :id="id" style="margin-top: 16px;"></evaluaciones-actividad-chart>
+                    <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
                 </div>
             </div>
-        </div>
-        <!-- /.box-body -->
-        <div v-show="loading" class="overlay">
-            <i class="fa fa-refresh fa-spin"></i>
         </div>
     </div>
 </template>
 
 <script>
+    import EvaluacionesActividadStats from './EvaluacionesActividadStats';
+    import EvaluacionesActividadChart from './EvaluacionesActividadChart';
+    import EvaluacionesComentarios    from './EvaluacionesComentarios';
+
     export default {
         name: "evaluaciones-actividad",
-        props: [ 'id' ],
-        data(){
-            return {
-                chartLoading: true,
-                statsLoading: true,
-                urlExportar: '',
-                idActividad: null,
-            }
+        props: ['id'],
+        components: {
+            EvaluacionesActividadStats,
+            EvaluacionesActividadChart,
+            EvaluacionesComentarios,
         },
         computed: {
-            loading: function () {
-                return this.chartLoading || this.statsLoading;
-            }
-        },
-        created(){
-            this.urlExportar = "/admin/actividades/" + this.id + "/exportar-evaluaciones";
-            this.idActividad = this.id;
-
-            Event.$on('chart-actividad-loaded', this.chartLoaded);
-            Event.$on('stats-actividad-loaded', this.statsLoaded);
-        },
-        methods: {
-            chartLoaded: function () {
-                this.chartLoading = false;
-            },
-            statsLoaded: function () {
-                this.statsLoading = false;
+            urlExportar() {
+                return "/admin/actividades/" + this.id + "/exportar-evaluaciones";
             }
         }
     }
 </script>
-
-<style scoped>
-    .divisor {
-        border-right: 1px rgb(244,244,244) solid;
-    }
-</style>

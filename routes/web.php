@@ -408,6 +408,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/evaluaciones/general/stats', 'backoffice\ajax\EvaluacionesController@getGeneralStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/voluntarios/stats', 'backoffice\ajax\EvaluacionesController@getVoluntariosStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/voluntarios/chartdata', 'backoffice\ajax\EvaluacionesController@getVoluntariosChartData')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
+    Route::get('/ajax/actividades/{id}/evaluaciones/comentarios', 'backoffice\ajax\EvaluacionesController@getComentarios')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/tags', 'backoffice\ajax\EvaluacionesController@getTagsResumen')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/competencias', 'backoffice\ajax\EvaluacionesController@getCompetenciasStats')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/impacto', 'backoffice\ajax\EvaluacionesController@getImpactoStats')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink');
