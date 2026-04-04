@@ -17,6 +17,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <evaluaciones-actividad-chart :id="id" style="margin-top: 16px;"></evaluaciones-actividad-chart>
+                </div>
             </div>
             <div class="col-md-4">
                 <div class="estado-circular-wrapper">
