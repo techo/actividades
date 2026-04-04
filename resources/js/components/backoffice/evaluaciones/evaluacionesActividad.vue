@@ -10,14 +10,14 @@
             </span>
         </div>
         <div class="box-body">
-            <!-- Fila superior: stats + histograma -->
-            <div class="row">
-                <div class="col-md-8">
-                    <evaluaciones-actividad-stats :id="id"></evaluaciones-actividad-stats>
-                    <evaluaciones-actividad-chart :id="id" style="margin-top: 16px;"></evaluaciones-actividad-chart>
-                    <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
-                </div>
+            <!-- Fila 1: promedio + NPS (izquierda) | estado circular (derecha) -->
+            <evaluaciones-actividad-stats :id="id"></evaluaciones-actividad-stats>
+            <!-- Fila 2: histograma full-width -->
+            <div style="margin-top: 20px;">
+                <evaluaciones-actividad-chart :id="id"></evaluaciones-actividad-chart>
             </div>
+            <!-- Fila 3: comentarios -->
+            <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
         </div>
     </div>
 </template>

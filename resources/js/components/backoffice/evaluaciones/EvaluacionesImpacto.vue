@@ -1,14 +1,14 @@
 <template>
     <div class="box">
         <div class="box-header with-border">
-            <h4 class="box-title"><strong>Impacto Percibido</strong></h4>
+            <h4 class="box-title"><strong>{{ $t('backend.perceived_impact') }}</strong></h4>
         </div>
         <div class="box-body">
-            <div v-if="total === 0" class="text-muted" style="font-size:13px;">Sin evaluaciones de impacto aún.</div>
+            <div v-if="total === 0" class="text-muted" style="font-size:13px;">{{ $t('backend.no_impact_yet') }}</div>
             <div v-else>
                 <div class="impacto-row">
                     <div class="impacto-label-row">
-                        <span class="impacto-label">Fortalecí mis habilidades</span>
+                        <span class="impacto-label">{{ $t('backend.strengthened_skills') }}</span>
                         <span class="impacto-pct">{{ habilidades }}%</span>
                     </div>
                     <div class="impacto-bar-outer">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="impacto-row">
                     <div class="impacto-label-row">
-                        <span class="impacto-label">Cambié mi percepción</span>
+                        <span class="impacto-label">{{ $t('backend.changed_perception') }}</span>
                         <span class="impacto-pct">{{ percepcion }}%</span>
                     </div>
                     <div class="impacto-bar-outer">
@@ -26,14 +26,14 @@
                 </div>
                 <div class="impacto-row">
                     <div class="impacto-label-row">
-                        <span class="impacto-label">Recomendaría experiencia</span>
+                        <span class="impacto-label">{{ $t('backend.would_recommend') }}</span>
                         <span class="impacto-pct">{{ recomendaria }}%</span>
                     </div>
                     <div class="impacto-bar-outer">
                         <div class="impacto-bar-inner" :style="{ width: recomendaria + '%' }"></div>
                     </div>
                 </div>
-                <p class="impacto-footnote">Porcentaje de participantes que respondieron 'Sí' o ≥ 8</p>
+                <p class="impacto-footnote">{{ $t('backend.impact_footnote') }}</p>
             </div>
         </div>
     </div>

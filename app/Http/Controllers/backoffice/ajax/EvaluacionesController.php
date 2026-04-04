@@ -226,6 +226,7 @@ class EvaluacionesController extends BaseController
         foreach ($topPositivos as $key => $count) {
             $itemsPositivos[] = [
                 'key'        => $key,
+                'label'      => __('evaluacion.atributos_actividad.' . $key),
                 'cantidad'   => $count,
                 'porcentaje' => round($count * 100 / $maxPositivo),
             ];
@@ -235,6 +236,7 @@ class EvaluacionesController extends BaseController
         foreach ($topNegativos as $key => $count) {
             $itemsNegativos[] = [
                 'key'        => $key,
+                'label'      => __('evaluacion.mejoras_actividad.' . $key),
                 'cantidad'   => $count,
                 'porcentaje' => round($count * 100 / $maxNegativo),
             ];

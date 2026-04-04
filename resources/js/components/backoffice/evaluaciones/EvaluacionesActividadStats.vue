@@ -5,12 +5,12 @@
                 <div class="row">
                     <div class="col-xs-4">
                         <div class="promedio-general">{{ promedio }}</div>
-                        <div class="promedio-label">Promedio General</div>
+                        <div class="promedio-label">{{ $t('backend.average_general') }}</div>
                     </div>
                     <div class="col-xs-8">
                         <div class="nps-label-row">
-                            <span class="nps-title">NPS (Net Promoter Score)</span>
-                            <span class="nps-badge">Excelente ({{ porcentajeExcelente }}%)</span>
+                            <span class="nps-title">{{ $t('backend.nps_score') }}</span>
+                            <span class="nps-badge">{{ $t('backend.excellent') }} ({{ porcentajeExcelente }}%)</span>
                         </div>
                         <div class="nps-bar-outer">
                             <div class="nps-bar-inner" :style="{ width: porcentajeExcelente + '%' }"></div>
@@ -20,22 +20,22 @@
             </div>
             <div class="col-md-4">
                 <div class="estado-circular-wrapper">
-                    <h5 class="text-center" style="margin-bottom: 6px;">Estado de Evaluaciones</h5>
+                    <h5 class="text-center" style="margin-bottom: 6px;">{{ $t('backend.evaluation_status') }}</h5>
                     <knob :valor="porcentajeCompletado"
                           :simbolo="'%'"
                           :listener="'knob-eval-actividad-upd'"
                     ></knob>
                     <div class="text-center" style="margin-top: 6px;">
-                        <small>Completado</small>
+                        <small>{{ $t('backend.completed') }}</small>
                     </div>
                     <div class="estado-row">
                         <i class="fa fa-user-circle" style="color: #5bc0de;"></i>
-                        <span>Evaluaron</span>
+                        <span>{{ $t('backend.evaluated') }}</span>
                         <strong class="pull-right">{{ evaluaron }}</strong>
                     </div>
                     <div class="estado-row">
                         <i class="fa fa-user-circle-o" style="color: #aaa;"></i>
-                        <span>Pendientes</span>
+                        <span>{{ $t('backend.pending_evaluation') }}</span>
                         <strong class="pull-right">{{ pendientes }}</strong>
                     </div>
                 </div>
@@ -132,7 +132,9 @@
     transition: width 0.6s ease;
 }
 .estado-circular-wrapper {
-    padding: 0 10px;
+    max-width: 200px;
+    margin: 0 auto;
+    text-align: center;
 }
 .estado-row {
     display: flex;
@@ -142,5 +144,6 @@
     font-size: 13px;
     border-top: 1px solid #f0f0f0;
     padding-top: 6px;
+    text-align: left;
 }
 </style>

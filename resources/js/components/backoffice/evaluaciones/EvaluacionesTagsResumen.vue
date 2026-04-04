@@ -4,14 +4,14 @@
             <div class="row">
                 <!-- Atributos Destacados -->
                 <div class="col-md-6 col-tags-positivos">
-                    <h4 class="tags-section-title"><strong>Atributos Destacados</strong></h4>
-                    <p class="tags-section-sub">Lo más valorado por los voluntarios.</p>
-                    <div v-if="positivos.length === 0" class="text-muted" style="font-size:13px;">Sin datos aún</div>
+                    <h4 class="tags-section-title"><strong>{{ $t('backend.highlighted_attributes') }}</strong></h4>
+                    <p class="tags-section-sub">{{ $t('backend.most_valued_by_volunteers') }}</p>
+                    <div v-if="positivos.length === 0" class="text-muted" style="font-size:13px;">{{ $t('backend.no_data_yet') }}</div>
                     <div v-for="item in positivos" :key="item.key" class="tag-bar-row">
                         <div class="tag-bar-info">
                             <span class="tag-heart">&#9829;</span>
-                            <span class="tag-label">{{ labelFor(item.key) }}</span>
-                            <span class="tag-count">{{ item.cantidad }} votos</span>
+                            <span class="tag-label">{{ item.label }}</span>
+                            <span class="tag-count">{{ item.cantidad }} {{ $t('backend.votes') }}</span>
                         </div>
                         <div class="tag-bar-outer">
                             <div class="tag-bar-inner tag-bar-positiva" :style="{ width: item.porcentaje + '%' }"></div>
@@ -21,14 +21,14 @@
 
                 <!-- Puntos de Mejora -->
                 <div class="col-md-6 col-tags-negativos">
-                    <h4 class="tags-section-title"><strong>Puntos de Mejora</strong></h4>
-                    <p class="tags-section-sub">Aspectos con evaluación menor a 7.</p>
-                    <div v-if="negativos.length === 0" class="text-muted" style="font-size:13px;">Sin datos aún</div>
+                    <h4 class="tags-section-title"><strong>{{ $t('backend.improvement_points') }}</strong></h4>
+                    <p class="tags-section-sub">{{ $t('backend.low_evaluation_aspects') }}</p>
+                    <div v-if="negativos.length === 0" class="text-muted" style="font-size:13px;">{{ $t('backend.no_data_yet') }}</div>
                     <div v-for="item in negativos" :key="item.key" class="tag-bar-row">
                         <div class="tag-bar-info">
                             <span class="tag-warn">&#9675;</span>
-                            <span class="tag-label">{{ labelForNegativo(item.key) }}</span>
-                            <span class="tag-count">{{ item.cantidad }} reportes</span>
+                            <span class="tag-label">{{ item.label }}</span>
+                            <span class="tag-count">{{ item.cantidad }} {{ $t('backend.reports') }}</span>
                         </div>
                         <div class="tag-bar-outer">
                             <div class="tag-bar-inner tag-bar-negativa" :style="{ width: item.porcentaje + '%' }"></div>
@@ -41,27 +41,6 @@
 </template>
 
 <script>
-    const LABELS_POSITIVOS = {
-        informacion_previa:     'Información previa clara y útil',
-        ambiente_seguro:        'Ambiente seguro y agradable',
-        reflexion_inspiradora:  'Reflexión inspiradora y fortalecedora',
-        buena_logistica:        'Buena logística y alimentación',
-        conexion_comunidad:     'Conexión con familia o comunidad',
-        liderazgos_proactivos:  'Liderazgos proactivos y atentos',
-        herramientas_completas: 'Herramientas e insumos completos',
-        motivacion_energia:     'Sentir motivación y energía',
-    };
-
-    const LABELS_NEGATIVOS = {
-        poca_informacion:        'Poca información previa',
-        falta_conexion:          'Falta de conexión con comunidad',
-        herramientas_incompletas:'Herramientas o insumos incompletos',
-        no_conecte_causa:        'No conseguí conectarme con la causa',
-        incomodidad:             'Sentí incomodidad o inseguridad',
-        poca_presencia_staff:    'Poca presencia o acompañamiento del staff',
-        logistica_insuficiente:  'Logística o alimentación insuficiente',
-    };
-
     export default {
         name: "evaluaciones-tags-resumen",
         props: ['id'],
@@ -81,12 +60,6 @@
                         this.positivos = res.data.positivos || [];
                         this.negativos = res.data.negativos || [];
                     });
-            },
-            labelFor(key) {
-                return LABELS_POSITIVOS[key] || key;
-            },
-            labelForNegativo(key) {
-                return LABELS_NEGATIVOS[key] || key;
             }
         }
     }

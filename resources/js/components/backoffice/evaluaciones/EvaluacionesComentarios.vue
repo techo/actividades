@@ -1,11 +1,11 @@
 <template>
     <div v-if="comentarios.length > 0" style="margin-top: 20px;">
-        <h5><i class="fa fa-comments-o"></i> Comentarios Recientes</h5>
+        <h5><i class="fa fa-comments-o"></i> {{ $t('backend.recent_comments') }}</h5>
         <div v-for="(item, index) in comentarios" :key="index" class="comentario-item">
             <div class="comentario-header">
-                <span class="comentario-autor">Voluntario</span>
-                <span v-if="tienePositivos(item)" class="tag-chip tag-positivo">Positivo</span>
-                <span v-else-if="tieneNegativos(item)" class="tag-chip tag-mejorable">Mejorable</span>
+                <span class="comentario-autor">{{ $t('backend.evaluators') }}</span>
+                <span v-if="tienePositivos(item)" class="tag-chip tag-positivo">{{ $t('backend.positive') }}</span>
+                <span v-else-if="tieneNegativos(item)" class="tag-chip tag-mejorable">{{ $t('backend.improvable') }}</span>
             </div>
             <p class="comentario-texto">"{{ item.comentario }}"</p>
         </div>
