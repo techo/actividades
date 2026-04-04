@@ -222,17 +222,27 @@ class EvaluacionesController extends BaseController
         $maxPositivo = !empty($topPositivos) ? max($topPositivos) : 1;
         $maxNegativo = !empty($topNegativos) ? max($topNegativos) : 1;
 
-        $resultado = [
-            'positivos' => array_map(fn($key, $count) => [
+        $itemsPositivos = [];
+        foreach ($topPositivos as $key => $count) {
+            $itemsPositivos[] = [
                 'key'        => $key,
                 'cantidad'   => $count,
                 'porcentaje' => round($count * 100 / $maxPositivo),
-            ], array_keys($topPositivos), $topPositivos),
-            'negativos' => array_map(fn($key, $count) => [
+            ];
+        }
+
+        $itemsNegativos = [];
+        foreach ($topNegativos as $key => $count) {
+            $itemsNegativos[] = [
                 'key'        => $key,
                 'cantidad'   => $count,
                 'porcentaje' => round($count * 100 / $maxNegativo),
-            ], array_keys($topNegativos), $topNegativos),
+            ];
+        }
+
+        $resultado = [
+            'positivos' => $itemsPositivos,
+            'negativos' => $itemsNegativos,
         ];
 
         return response()->json($resultado);
@@ -262,7 +272,7 @@ class EvaluacionesController extends BaseController
         }
 
         // Texto de análisis: dimensión más alta y más baja
-        $validos = array_filter($promedios, fn($v) => $v !== null);
+        $validos = array_filter($promedios, function($v) { return $v !== null; });
         $analisis = null;
         if (!empty($validos)) {
             $maxKey = array_search(max($validos), $validos);
