@@ -60,6 +60,9 @@ Vue.component('red-modal', RedModal);
 import informesCierre from './components/backoffice/actividades/informes-cierre';
 Vue.component('informes-cierre', informesCierre);
 
+import preguntasActividad from './components/backoffice/actividades/preguntas-actividad';
+Vue.component('preguntas-actividad', preguntasActividad);
+
 import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
 import ReferenteModal from './components/backoffice/comunidad/referente-modal';
 

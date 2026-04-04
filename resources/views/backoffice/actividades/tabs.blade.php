@@ -24,6 +24,9 @@
             </a>
         </li>
     @endif
+    <li class="{{ ($tab == 'preguntas')?'active':'' }}">
+        <a href="/admin/actividades/{{ $actividad->idActividad }}/preguntas" aria-expanded="true">{{__('backend.preguntas_inscripcion')}}</a>
+    </li>
     <li class="{{ ($tab == 'accesos')?'active':'' }}">
         <a href="/admin/actividades/{{ $actividad->idActividad }}/accesos" aria-expanded="true">{{__('backend.coordinators')}}</a>
     </li>

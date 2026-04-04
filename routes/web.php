@@ -366,6 +366,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/{id}/jornadas', 'backoffice\ActividadesController@jornadas')->middleware('can:ver,App\Actividad,id');
     Route::get('/ajax/actividades/{id}/jornadas', 'backoffice\ajax\ActividadesController@jornadas');
 
+    Route::get('/actividades/{actividad}/preguntas', 'backoffice\ActividadesController@preguntas')->middleware('can:ver,actividad');
+    Route::get('/ajax/actividades/{actividad}/preguntas', 'backoffice\ajax\ActividadPreguntasController@index')->middleware('can:ver,actividad');
+    Route::post('/ajax/actividades/{actividad}/preguntas', 'backoffice\ajax\ActividadPreguntasController@store')->middleware('can:ver,actividad');
+    Route::put('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@update')->middleware('can:ver,actividad');
+    Route::delete('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@destroy')->middleware('can:ver,actividad');
+
     Route::post('ajax/actividades/{id}/jornadas', 'backoffice\ajax\JornadasController@store')->middleware('can:ver,App\Actividad,id');;
 
 
