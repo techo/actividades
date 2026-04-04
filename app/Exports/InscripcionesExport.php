@@ -2,6 +2,8 @@
 
 namespace App\Exports;
 
+use App\ActividadPregunta;
+use App\InscripcionRespuesta;
 use App\Search\InscripcionesSearch;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -17,21 +19,37 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFormatting, WithMapping, WithStrictNullComparison, ShouldAutoSize
 {
     protected $filter;
+    protected $preguntas;
+    protected $respuestasMap = [];
 
     public function __construct($filter)
     {
         $this->filter = $filter;
+
+        $this->preguntas = !empty($filter['idActividad'])
+            ? ActividadPregunta::where('actividad_id', $filter['idActividad'])
+                ->orderBy('orden')
+                ->get()
+            : collect();
     }
 
     public function collection()
     {
         $inscriptos = InscripcionesSearch::apply($this->filter);
+
+        if ($this->preguntas->count() > 0 && $inscriptos->count() > 0) {
+            $ids = $inscriptos->pluck('id');
+            $respuestas = InscripcionRespuesta::whereIn('inscripcion_id', $ids)->get();
+            // Agrupar por inscripcion_id para lookup O(1) en map()
+            $this->respuestasMap = $respuestas->groupBy('inscripcion_id');
+        }
+
         return $inscriptos;
     }
 
     public function headings(): array
     {
-        return [
+        $headings = [
             //'ID del Voluntario',
             'dni',
             'nombre',
@@ -66,8 +84,14 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'rol',
             'roles Aplicados',
             'Tipo de Inscripcion',
-            'Jornadas'
+            'Jornadas',
         ];
+
+        foreach ($this->preguntas as $pregunta) {
+            $headings[] = $pregunta->pregunta;
+        }
+
+        return $headings;
     }
 
     public function map($query): array
@@ -98,7 +122,7 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             // Combinar las jornadas en un solo string, separadas por comas
             $jornadasString = implode(' | ', $jornadas);
 
-        return [
+        $row = [
             //$query->idPersona,
             $query->dni,
             $query->nombres,
@@ -135,6 +159,15 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->inscripciones_aplicadas,
             $jornadasString,
         ];
+
+        foreach ($this->preguntas as $pregunta) {
+            $respuesta = isset($this->respuestasMap[$query->id])
+                ? $this->respuestasMap[$query->id]->firstWhere('pregunta_id', $pregunta->id)
+                : null;
+            $row[] = $respuesta ? $respuesta->respuesta : '';
+        }
+
+        return $row;
     }
 
     public function columnFormats(): array
