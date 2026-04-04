@@ -14,7 +14,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <evaluaciones-actividad-stats :id="id"></evaluaciones-actividad-stats>
-                    <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
                 </div>
             </div>
             <!-- Fila 3: comentarios -->
