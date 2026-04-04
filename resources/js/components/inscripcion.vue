@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-8" v-if="cargaFinalizada">
             <div v-if="!mostrarFichaMedica">
-            <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado">
+                <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado && preguntasAplicado">
                     <div class="row">
                         <div class="col-md-12">
                             <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -32,6 +32,8 @@
                         <input type="hidden" name="inscripciones_aplicadas" v-bind:value="convertToJSONInscripciones()">
 
                         <input type="hidden" name="jornadas" v-bind:value="convertToJSONJornadas()">
+
+                        <input type="hidden" name="respuestas" v-bind:value="convertToJSONRespuestas()">
 
                     <div class="row" v-for="(item, index) in puntosActivos">
                         <div class="col-md-12">
@@ -214,20 +216,69 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-else class="col-md-8" >
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
-                        <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+                <div v-else-if="!preguntasAplicado">
+                    <h2 class="card-title text-center">{{ $t('frontend.preguntas_inscripcion') }}</h2>
+
+                    <div class="card-body">
+                        <div v-for="(pregunta, index) in actividad.preguntas" :key="pregunta.id" class="form-group">
+                            <label>
+                                {{ pregunta.pregunta }}
+                                <span v-if="pregunta.requerida" class="text-danger">*</span>
+                            </label>
+                            <small v-if="pregunta.descripcion" class="form-text text-muted">{{ pregunta.descripcion }}</small>
+
+                            <input
+                                v-if="pregunta.tipo === 'abierta'"
+                                v-model="respuestas[index].respuesta"
+                                type="text"
+                                class="form-control"
+                            >
+                            <select
+                                v-else-if="pregunta.tipo === 'desplegable'"
+                                v-model="respuestas[index].respuesta"
+                                class="form-control"
+                            >
+                                <option value="">—</option>
+                                <option v-for="opcion in pregunta.opciones" :key="opcion" :value="opcion">{{ opcion }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div v-if="errorPreguntas" class="row alert alert-warning m-2">
+                            <strong>{{ $t('frontend.complete_required_questions') }}</strong>
+                        </div>
+                        <div class="row justify-content-center text-center">
+                            <div class="col-md-3">
+                                <button type="button"
+                                    class="btn btn-primary"
+                                    @click="avanzarPreguntas()">
+                                    <span aria-hidden="true">{{ $t('frontend.continue') }}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12 px-4">
-                        <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" :obligatorio="true" @guardado="validateForm();mostrarFichaMedica = false;"/>
+            </div>
+            <div v-else class="col-md-8" >
+                <div v-if="transicionando" class="text-center py-5">
+                    <i class="fa fa-spinner fa-spin fa-3x text-primary"></i>
+                    <p class="mt-3 text-muted">{{ $t('frontend.cargando') }}</p>
+                </div>
+                <template v-else>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 class="card-title">{{ $t('frontend.ficha_medica') }}</h2>
+                            <p>{{ $t('frontend.ficha_medica_requerida') }}</p>
+                        </div>
                     </div>
-                </div> 
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12 px-4">
+                            <ficha-medica ref="fichaMedica" :fichaMedica="actividad.fichaMedica" :campos="actividad.ficha_medica_campos" :obligatorio="true" @guardado="fichaGuardada"/>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
         <hr>
@@ -286,10 +337,14 @@
                 }
             },
             aplicaRol: false,
+            checkk: false,
             rolAplicado: false,
             tipoInscriptoAplicado: false,
             jornadasAplicado: false,
             estudiosAplicado: true,
+            preguntasAplicado: true,
+            respuestas: [],
+            errorPreguntas: false,
             showCompleteEstudios: false,
             tag: "",
             tag2: "",
@@ -297,6 +352,7 @@
             tipoInscriptoTags: [],
             jornadas: [],
             mostrarFichaMedica: false,
+            transicionando: false,
             localidad: {},
             imagen: '',
             dummyInput: '',
@@ -306,27 +362,32 @@
         
         watch: {
             rolAplicado: function(newVal, oldVal) {
-                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado && this.preguntasAplicado){
                     this.checkSubmit();
                 }
             },
             tipoInscriptoAplicado: function(newVal, oldVal) {
-                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
+                if (newVal  && this.rolAplicado && this.estudiosAplicado && !this.mostrarFichaMedica && this.jornadasAplicado && this.preguntasAplicado){
                     this.checkSubmit();
                 }
             },
             estudiosAplicado: function(newVal, oldVal) {
-                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
+                if (newVal  && this.rolAplicado && this.tipoInscriptoAplicado && !this.mostrarFichaMedica && this.jornadasAplicado && this.preguntasAplicado){
                     this.checkSubmit();
                 }
             },
             mostrarFichaMedica: function(newVal, oldVal) {
-                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && this.jornadasAplicado){
+                if (!newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && this.jornadasAplicado && this.preguntasAplicado){
                     this.checkSubmit();
                 }
             },
             jornadasAplicado: function(newVal, oldVal) {
-                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && !this.mostrarFichaMedica){
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && !this.mostrarFichaMedica && this.preguntasAplicado){
+                    this.checkSubmit();
+                }
+            },
+            preguntasAplicado: function(newVal, oldVal) {
+                if (newVal  && this.tipoInscriptoAplicado && this.estudiosAplicado && this.rolAplicado && !this.mostrarFichaMedica && this.jornadasAplicado){
                     this.checkSubmit();
                 }
             }
@@ -348,6 +409,12 @@
                 self.estudiosAplicado = false;
             if(self.actividad.jornadas.length == 0)
                 self.jornadasAplicado = true;
+            if (self.actividad.preguntas && self.actividad.preguntas.length > 0) {
+                self.preguntasAplicado = false;
+                self.respuestas = self.actividad.preguntas.map(function(p) {
+                    return { pregunta_id: p.id, respuesta: '' };
+                });
+            }
             self.ubicacion = self.actividad.ubicacion;
             self.es_inscripto(self.actividad.idActividad);
             self.imagen = self.actividad.tipo.imagen;
@@ -401,7 +468,8 @@
                     
                     formData.append('aplica_rol', this.aplicaRol);
                     formData.append('jornadas', this.convertToJSONJornadas());
-                
+                    formData.append('respuestas', this.convertToJSONRespuestas());
+
                     formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);
                     const headers = { 'Content-Type': 'multipart/form-data' };
 
@@ -433,6 +501,31 @@
             },
             convertToJSONJornadas: function() {
                 return JSON.stringify(this.jornadas);
+            },
+            fichaGuardada: function() {
+                this.transicionando = true;
+                this.validateForm();
+                setTimeout(() => {
+                    this.mostrarFichaMedica = false;
+                    this.$nextTick(() => {
+                        this.transicionando = false;
+                    });
+                }, 350);
+            },
+            convertToJSONRespuestas: function() {
+                return JSON.stringify(this.respuestas);
+            },
+            avanzarPreguntas: function() {
+                // Validar requeridas
+                var preguntas = this.actividad.preguntas || [];
+                for (var i = 0; i < preguntas.length; i++) {
+                    if (preguntas[i].requerida && !this.respuestas[i].respuesta) {
+                        this.errorPreguntas = true;
+                        return;
+                    }
+                }
+                this.errorPreguntas = false;
+                this.preguntasAplicado = true;
             },
             estudiosRevisados: function () {
                 axios.get('/ajax/estudios/usuario').then(response => {

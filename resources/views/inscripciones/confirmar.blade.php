@@ -39,6 +39,7 @@
                 <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
                 <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas }}">
                 <input type="hidden" name="jornadas" value="{{ $jornadas }}">
+                <input type="hidden" name="respuestas" value="{{ $respuestas ?? '[]' }}">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -126,7 +127,36 @@
                     </div>
                 @endif
 
-                
+                @php
+                    $respuestasData = json_decode($respuestas ?? '[]', true);
+                    $respuestasPorPregunta = collect($respuestasData)->keyBy('pregunta_id');
+                @endphp
+
+                @if ($actividad->preguntas->count() > 0)
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>{{ __('frontend.preguntas_inscripcion') }}</h4>
+                        </div>
+                    </div>
+                    @foreach ($actividad->preguntas as $pregunta)
+                        @php
+                            $respuestaItem = $respuestasPorPregunta->get($pregunta->id);
+                            $respuestaTexto = $respuestaItem['respuesta'] ?? null;
+                        @endphp
+                        <div class="row mt-2 mb-1">
+                            <div class="col-md-12">
+                                <small class="text-muted">{{ $pregunta->pregunta }}</small><br>
+                                @if ($respuestaTexto)
+                                    <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">{{ $respuestaTexto }}</span>
+                                @else
+                                    <span class="ml-2 text-muted">—</span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
                 <hr>
                 <div class="row">
                     <div class="col-md-12">

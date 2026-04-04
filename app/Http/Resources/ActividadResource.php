@@ -46,6 +46,7 @@ class ActividadResource extends Resource
             'lugar'         => $this->lugar,
             'moneda'        => $this->moneda,
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
+            'preguntas'     => $this->preguntas,
             'ubicacion'     => $this->provincia->provincia,
             'idInscripcion'   => ($estadoInscripcion) ? $inscripcion->idInscripcion : null,
             'voucherURL'   => ($estadoInscripcion) ? $inscripcion->voucherUrl  : null,
@@ -107,6 +108,7 @@ class ActividadResource extends Resource
                 ->pluck('persona')
                 ->filter()
                 ->values(),
+            'preguntas' => $this->preguntas,
             ];
     }
 
