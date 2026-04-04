@@ -30,7 +30,7 @@
         </div>
         <div class="col-sm-3 col-lg-2">
             <p class="pt-2 mb-1">
-                &copy; 2024 TECHO
+                &copy; {{ date('Y') }} @if(\App::getLocale() == 'pt') TETO @else TECHO @endif
             </p>
         </div>
         <div class="col-sm-3 pt-1">
