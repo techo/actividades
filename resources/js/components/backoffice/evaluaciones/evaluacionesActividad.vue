@@ -17,6 +17,8 @@
                     <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
                 </div>
             </div>
+            <!-- Fila 3: comentarios -->
+            <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
         </div>
     </div>
 </template>

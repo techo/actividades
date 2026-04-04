@@ -16,7 +16,7 @@
                     <div class="info-box-content text-center">
                         <span class="info-box-number"><h3>{{ presentes }}</h3></span>
                         <span class="info-box-text">{{ $t('backend.present') }}</span>
-                        <span class="info-box-text" v-if="inscriptos > 0">{{ porcentajeAsistencia }}% Asistencia</span>
+                        <span class="info-box-text" v-if="inscriptos > 0">{{ porcentajeAsistencia }}% {{ $t('backend.attendance_percentage') }}</span>
                     </div>
                 </div>
             </div>
@@ -34,8 +34,8 @@
                     <span class="info-box-icon" style="background-color: #7e57c2;"><i class="fa fa-clock-o"></i></span>
                     <div class="info-box-content text-center">
                         <span class="info-box-number"><h3>{{ horasVoluntariado }}</h3></span>
-                        <span class="info-box-text">Horas Voluntariado</span>
-                        <span class="info-box-text" v-if="horasPorVoluntario > 0">~{{ horasPorVoluntario }}h por voluntario</span>
+                        <span class="info-box-text">{{ $t('backend.volunteer_hours') }}</span>
+                        <span class="info-box-text" v-if="horasPorVoluntario > 0">~{{ horasPorVoluntario }}{{ $t('backend.hours_per_volunteer') }}</span>
                     </div>
                 </div>
             </div>

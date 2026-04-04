@@ -1,31 +1,31 @@
 <template>
     <div class="box">
         <div class="box-header with-border">
-            <h4 class="box-title"><strong>Evaluación de Competencias (Participantes)</strong></h4>
+            <h4 class="box-title"><strong>{{ $t('backend.competencies_evaluation') }}</strong></h4>
             <span class="pull-right">
                 <a class="btn btn-default btn-xs" :href="urlExportar">
-                    <i class="fa fa-download"></i> Informe Individual
+                    <i class="fa fa-download"></i> {{ $t('backend.individual_report') }}
                 </a>
             </span>
         </div>
         <div class="box-body">
             <div v-if="sinDatos" class="text-muted text-center" style="padding: 20px 0;">
-                Sin evaluaciones de competencias aún.
+                {{ $t('backend.no_competencies_yet') }}
             </div>
             <div v-else class="row">
                 <div class="col-md-6 text-center">
                     <radar-chart v-if="chartData" :chart-data="chartData" :options="chartOptions" style="height:260px;"></radar-chart>
                 </div>
                 <div class="col-md-6">
-                    <h5><strong>Análisis de Dimensiones</strong></h5>
+                    <h5><strong>{{ $t('backend.dimensions_analysis') }}</strong></h5>
                     <p v-if="analisis" class="analisis-texto">
-                        El grupo destaca en <strong>{{ labelFor(analisis.mas_alto) }}</strong>,
-                        mostrando una fuerte empatía con la comunidad.<br><br>
-                        Área de oportunidad: <strong>{{ labelFor(analisis.mas_bajo) }}</strong>,
-                        es el punto más bajo con {{ analisis.valor_bajo }}/10.
+                        {{ $t('backend.group_highlights_in') }} <strong>{{ labelFor(analisis.mas_alto) }}</strong>,
+                        {{ $t('backend.showing_strong_empathy') }}<br><br>
+                        {{ $t('backend.opportunity_area') }}: <strong>{{ labelFor(analisis.mas_bajo) }}</strong>,
+                        {{ $t('backend.lowest_point_with') }} {{ analisis.valor_bajo }}/10.
                     </p>
                     <div class="promedio-global-box">
-                        <span class="promedio-global-label">Promedio Global:</span>
+                        <span class="promedio-global-label">{{ $t('backend.global_average') }}:</span>
                         <strong class="promedio-global-valor">{{ promedioGlobal }}</strong>
                     </div>
                 </div>
@@ -36,13 +36,6 @@
 
 <script>
     import RadarChart from '../../plugins/RadarChart';
-
-    const LABELS = {
-        conexion_equipo:         'Conexión y Comunidad',
-        compromiso_colaboracion: 'Compromiso y Colaboración',
-        actitud_propositiva:     'Actitud Propositiva',
-        potencia_otras:          'Potencia a Otros',
-    };
 
     const QUESTION_KEYS = [
         'conexion_equipo',
@@ -67,13 +60,21 @@
             urlExportar() {
                 return "/admin/actividades/" + this.id + "/exportar-evaluaciones-voluntarios";
             },
+            radarLabels() {
+                return [
+                    this.$t('backend.competency_connection'),
+                    this.$t('backend.competency_commitment'),
+                    this.$t('backend.competency_attitude'),
+                    this.$t('backend.competency_empowers'),
+                ];
+            },
             chartData() {
                 const valores = QUESTION_KEYS.map(k => this.promedios[k] || 0);
                 if (valores.every(v => v === 0)) return null;
                 return {
-                    labels: QUESTION_KEYS.map(k => LABELS[k]),
+                    labels: this.radarLabels,
                     datasets: [{
-                        label: 'Competencias',
+                        label: this.$t('backend.competencies_evaluation'),
                         data: valores,
                         backgroundColor: 'rgba(83, 166, 201, 0.2)',
                         borderColor: '#53a6c9',
@@ -104,12 +105,18 @@
                         this.promedios      = res.data.promedios || {};
                         this.promedioGlobal = res.data.promedio_global;
                         this.analisis       = res.data.analisis;
-                        const vals = Object.values(this.promedios).filter(v => v !== null);
+                        const vals = Object.values(this.promedios).filter(function(v){ return v !== null; });
                         this.sinDatos = vals.length === 0;
                     });
             },
             labelFor(key) {
-                return LABELS[key] || key;
+                const map = {
+                    'conexion_equipo':         this.$t('backend.competency_connection'),
+                    'compromiso_colaboracion':  this.$t('backend.competency_commitment'),
+                    'actitud_propositiva':      this.$t('backend.competency_attitude'),
+                    'potencia_otras':           this.$t('backend.competency_empowers'),
+                };
+                return map[key] || key;
             }
         }
     }
