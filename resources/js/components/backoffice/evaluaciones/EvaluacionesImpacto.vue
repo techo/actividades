@@ -2,6 +2,11 @@
     <div class="box">
         <div class="box-header with-border">
             <h4 class="box-title"><strong>{{ $t('backend.perceived_impact') }}</strong></h4>
+            <span class="pull-right">
+                <a class="btn btn-default btn-xs" :href="urlExportar">
+                    <i class="fa fa-download"></i> {{ $t('backend.export') }}
+                </a>
+            </span>
         </div>
         <div class="box-body">
             <div v-if="total === 0" class="text-muted" style="font-size:13px;">{{ $t('backend.no_impact_yet') }}</div>
@@ -49,6 +54,11 @@
                 habilidades: 0,
                 percepcion: 0,
                 recomendaria: 0,
+            }
+        },
+        computed: {
+            urlExportar() {
+                return "/admin/actividades/" + this.id + "/exportar-evaluaciones-impacto";
             }
         },
         created(){
