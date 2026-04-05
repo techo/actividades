@@ -43,19 +43,30 @@
 <script>
     export default {
         name: "evaluaciones-tags-resumen",
-        props: ['id'],
+        props: ['id', 'filtros'],
         data(){
             return {
                 positivos: [],
                 negativos: [],
             }
         },
+        computed: {
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/tags'
+                    : '/admin/ajax/estadisticas/evaluaciones/tags';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
+        },
         created(){
             this.getData();
         },
         methods: {
             getData() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/tags")
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((res) => {
                         this.positivos = res.data.positivos || [];
                         this.negativos = res.data.negativos || [];

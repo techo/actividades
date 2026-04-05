@@ -22,7 +22,7 @@
 
     export default {
         name: "evaluaciones-actividad-chart",
-        props: [ 'id' ],
+        props: ['id', 'filtros'],
         components: { BarChart },
         data(){
             return {
@@ -60,31 +60,34 @@
                 }
             }
         },
+        computed: {
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/chartdata'
+                    : '/admin/ajax/estadisticas/evaluaciones/histograma';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
+        },
         created(){
             this.getData();
         },
         methods: {
             getData: function () {
-                let url = window.location.origin + "/admin/ajax/actividades/" + this.id + "/evaluaciones/chartdata";
-                this.axiosGet(
-                    url,
-                    //success callback
-                    function (data, self) {
-                        self.info = {
+                axios.get(this.apiUrl, { params: this.apiParams })
+                    .then((response) => {
+                        this.info = {
                             labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                                datasets: [
-                                    {
-                                        label: 'Cantidad',
-                                        backgroundColor: '#82CFE8',
-                                        data: data.cantidades
-                                    }
-                                ]
-                            };
-                        Event.$emit('chart-actividad-loaded');
-                    }
-                    //payload
-                    //error callback
-                );
+                            datasets: [{
+                                label: 'Cantidad',
+                                backgroundColor: '#82CFE8',
+                                data: response.data.cantidades
+                            }]
+                        };
+                        if (this.id) Event.$emit('chart-actividad-loaded');
+                    });
             }
         }
     }

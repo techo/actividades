@@ -46,7 +46,7 @@
 
     export default {
         name: "evaluaciones-competencias",
-        props: ['id'],
+        props: ['id', 'filtros'],
         components: { RadarChart },
         data(){
             return {
@@ -57,8 +57,23 @@
             }
         },
         computed: {
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/competencias'
+                    : '/admin/ajax/estadisticas/evaluaciones/competencias';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); },
             urlExportar() {
-                return "/admin/actividades/" + this.id + "/exportar-evaluaciones-voluntarios";
+                if (this.id) return '/admin/actividades/' + this.id + '/exportar-evaluaciones-voluntarios';
+                var qs = '';
+                if (this.filtros) {
+                    var parts = [];
+                    if (this.filtros.año)     parts.push('año='     + this.filtros.año);
+                    if (this.filtros.pais)    parts.push('pais='    + this.filtros.pais);
+                    if (this.filtros.oficina) parts.push('oficina=' + this.filtros.oficina);
+                    if (parts.length) qs = '?' + parts.join('&');
+                }
+                return '/admin/ajax/estadisticas/evaluaciones/exportar-personas' + qs;
             },
             radarLabels() {
                 return [
@@ -95,12 +110,15 @@
                 };
             }
         },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
+        },
         created(){
             this.getData();
         },
         methods: {
             getData() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/competencias")
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((res) => {
                         this.promedios      = res.data.promedios || {};
                         this.promedioGlobal = res.data.promedio_global;

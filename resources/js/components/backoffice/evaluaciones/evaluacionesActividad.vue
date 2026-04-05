@@ -11,13 +11,13 @@
         </div>
         <div class="box-body">
             <!-- Fila 1: promedio + NPS (izquierda) | estado circular (derecha) -->
-            <evaluaciones-actividad-stats :id="id"></evaluaciones-actividad-stats>
+            <evaluaciones-actividad-stats :id="id" :filtros="filtros"></evaluaciones-actividad-stats>
             <!-- Fila 2: histograma full-width -->
             <div style="margin-top: 20px;">
-                <evaluaciones-actividad-chart :id="id"></evaluaciones-actividad-chart>
+                <evaluaciones-actividad-chart :id="id" :filtros="filtros"></evaluaciones-actividad-chart>
             </div>
             <!-- Fila 3: comentarios -->
-            <evaluaciones-comentarios :id="id"></evaluaciones-comentarios>
+            <evaluaciones-comentarios :id="id" :filtros="filtros"></evaluaciones-comentarios>
         </div>
     </div>
 </template>
@@ -29,7 +29,7 @@
 
     export default {
         name: "evaluaciones-actividad",
-        props: ['id'],
+        props: ['id', 'filtros'],
         components: {
             EvaluacionesActividadStats,
             EvaluacionesActividadChart,
@@ -37,7 +37,16 @@
         },
         computed: {
             urlExportar() {
-                return "/admin/actividades/" + this.id + "/exportar-evaluaciones";
+                if (this.id) return '/admin/actividades/' + this.id + '/exportar-evaluaciones';
+                var qs = '';
+                if (this.filtros) {
+                    var parts = [];
+                    if (this.filtros.año)     parts.push('año='     + this.filtros.año);
+                    if (this.filtros.pais)    parts.push('pais='    + this.filtros.pais);
+                    if (this.filtros.oficina) parts.push('oficina=' + this.filtros.oficina);
+                    if (parts.length) qs = '?' + parts.join('&');
+                }
+                return '/admin/ajax/estadisticas/evaluaciones/exportar-actividad' + qs;
             }
         }
     }

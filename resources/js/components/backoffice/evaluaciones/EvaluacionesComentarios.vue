@@ -15,18 +15,29 @@
 <script>
     export default {
         name: "evaluaciones-comentarios",
-        props: ['id'],
+        props: ['id', 'filtros'],
         data(){
             return {
                 comentarios: [],
             }
+        },
+        computed: {
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/comentarios'
+                    : '/admin/ajax/estadisticas/evaluaciones/comentarios';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
         },
         created(){
             this.getData();
         },
         methods: {
             getData() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/comentarios")
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((res) => {
                         this.comentarios = res.data;
                     });

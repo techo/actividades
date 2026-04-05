@@ -47,7 +47,7 @@
 <script>
     export default {
         name: "evaluaciones-impacto",
-        props: ['id'],
+        props: ['id', 'filtros'],
         data(){
             return {
                 total: 0,
@@ -57,16 +57,34 @@
             }
         },
         computed: {
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/impacto'
+                    : '/admin/ajax/estadisticas/evaluaciones/impacto';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); },
             urlExportar() {
-                return "/admin/actividades/" + this.id + "/exportar-evaluaciones-impacto";
+                if (this.id) return '/admin/actividades/' + this.id + '/exportar-evaluaciones-impacto';
+                var qs = '';
+                if (this.filtros) {
+                    var parts = [];
+                    if (this.filtros.año)     parts.push('año='     + this.filtros.año);
+                    if (this.filtros.pais)    parts.push('pais='    + this.filtros.pais);
+                    if (this.filtros.oficina) parts.push('oficina=' + this.filtros.oficina);
+                    if (parts.length) qs = '?' + parts.join('&');
+                }
+                return '/admin/ajax/estadisticas/evaluaciones/exportar-impacto' + qs;
             }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
         },
         created(){
             this.getData();
         },
         methods: {
             getData() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/impacto")
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((res) => {
                         this.total        = res.data.total;
                         this.habilidades  = res.data.habilidades;
