@@ -23,7 +23,7 @@
                 <h5 class="text-center" style="margin-bottom: 6px;">{{ $t('backend.evaluation_status') }}</h5>
                 <knob :valor="porcentajeCompletado"
                       :simbolo="'%'"
-                      :listener="'knob-eval-actividad-upd'"
+                      :listener="knobListener"
                 ></knob>
                 <div class="text-center" style="margin-top: 6px;">
                     <small>{{ $t('backend.completed') }}</small>
@@ -48,7 +48,7 @@
 
     export default {
         name: "evaluaciones-actividad-stats",
-        props: ['id'],
+        props: ['id', 'filtros'],
         components: { knob },
         data(){
             return {
@@ -60,30 +60,43 @@
             }
         },
         computed: {
+            knobListener() {
+                return this.id ? 'knob-eval-actividad-upd' : 'knob-eval-general-upd';
+            },
             porcentajeCompletado() {
                 if (this.loading || this.presentes === 0) return 0;
                 const p = Math.round(this.evaluaron * 100 / this.presentes);
-                Event.$emit('knob-eval-actividad-upd', p);
+                Event.$emit(this.knobListener, p);
                 return p;
             },
             pendientes() {
                 if (this.loading) return 0;
                 return Math.max(0, this.presentes - this.evaluaron);
-            }
+            },
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/stats'
+                    : '/admin/ajax/estadisticas/evaluaciones/actividad-stats';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getStats(); } }
         },
         created(){
             this.getStats();
         },
         methods: {
             getStats() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/stats")
+                this.loading = true;
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((datos) => {
                         this.evaluaron           = datos.data.evaluaron;
                         this.promedio            = datos.data.promedio;
                         this.presentes           = datos.data.presentes;
                         this.porcentajeExcelente = datos.data.porcentaje_excelente;
                         this.loading = false;
-                        Event.$emit('stats-actividad-loaded');
+                        if (this.id) Event.$emit('stats-actividad-loaded');
                     });
             }
         }

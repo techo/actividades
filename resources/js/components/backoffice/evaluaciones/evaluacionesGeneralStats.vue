@@ -46,7 +46,7 @@
 <script>
     export default {
         name: "evaluaciones-general-stats",
-        props: ['id'],
+        props: ['id', 'filtros'],
         data(){
             return {
                 inscriptos: 0,
@@ -60,16 +60,27 @@
             porcentajeAsistencia() {
                 if (this.inscriptos === 0) return 0;
                 return Math.round(this.presentes * 100 / this.inscriptos);
-            }
+            },
+            apiUrl() {
+                return this.id
+                    ? '/admin/ajax/actividades/' + this.id + '/evaluaciones/general/stats'
+                    : '/admin/ajax/estadisticas/evaluaciones/general-stats';
+            },
+            apiParams() { return this.id ? {} : (this.filtros || {}); }
+        },
+        watch: {
+            filtros: { deep: true, handler() { this.getData(); } }
         },
         created(){
             this.getData();
-            Event.$on('btnGrupoPersona:guardar-no-inscripto', this.getData);
-            Event.$on('asistencia:cambio', this.getData);
+            if (this.id) {
+                Event.$on('btnGrupoPersona:guardar-no-inscripto', this.getData);
+                Event.$on('asistencia:cambio', this.getData);
+            }
         },
         methods:{
             getData() {
-                axios.get("/admin/ajax/actividades/" + this.id + "/evaluaciones/general/stats")
+                axios.get(this.apiUrl, { params: this.apiParams })
                     .then((datos) => {
                         this.presentes          = datos.data.presentes;
                         this.inscriptos         = datos.data.inscriptos;
