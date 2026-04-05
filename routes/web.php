@@ -340,6 +340,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
     Route::get('/actividades/{id}/exportar-evaluaciones-voluntarios', 'backoffice\ReportController@exportarEvaluacionesPersonas');
     Route::get('/actividades/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesActividad');
+    Route::get('/actividades/{id}/exportar-evaluaciones-impacto', 'backoffice\ReportController@exportarEvaluacionesImpacto');
     //vista de actividad
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');

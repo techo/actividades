@@ -1,51 +1,22 @@
 <?php
 namespace App\Exports;
 
-use App\EvaluacionPersona;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class EvaluacionesPersonasExport implements FromCollection, WithHeadings, ShouldAutoSize
+class EvaluacionesPersonasExport implements WithMultipleSheets
 {
     protected $actividad;
-
 
     public function __construct($actividad)
     {
         $this->actividad = $actividad;
     }
 
-    public function collection()
-    {
-        return EvaluacionPersona::join('Persona', 'Persona.idPersona', '=', 'EvaluacionPersona.idEvaluado')
-            ->select(
-                ['Persona.nombres', 'Persona.apellidoPaterno', 'Persona.dni', 'Persona.mail',
-                    'EvaluacionPersona.puntajeSocial', 'EvaluacionPersona.puntajeTecnico','EvaluacionPersona.puntajeGenero', 'EvaluacionPersona.comentario']
-            )
-            ->where('idActividad', $this->actividad->idActividad)
-            ->get();
-    }
-
-    public function headings(): array
+    public function sheets(): array
     {
         return [
-            'Nombre',
-            'Apellido',
-            'DNI',
-            'Email',
-            'Puntaje Social',
-            'Puntaje Técnico',
-            'Puntaje Genero',
-            'Comentario'
+            new EvaluacionesPersonasResumenSheet($this->actividad),
+            new EvaluacionesPersonasDetalleSheet($this->actividad),
         ];
     }
-
-/*    public function map($query): array
-    {
-        return [
-            $query->nombres,
-            $query->,
-        ];
-    }*/
 }

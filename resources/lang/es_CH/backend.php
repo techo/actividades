@@ -603,6 +603,7 @@ return [
     'changed_perception'         => 'Cambié mi percepción',
     'would_recommend'            => 'Recomendaría experiencia',
     'impact_footnote'            => "Porcentaje de participantes que respondieron 'Sí' o ≥ 8",
+    'export'                     => 'Exportar',
 
     // Preguntas de inscripción
     'preguntas_inscripcion' => 'Preguntas de inscripción',

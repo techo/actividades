@@ -8,6 +8,7 @@ use App\Exports\SuscriptosExport;
 use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
+use App\Exports\EvaluacionesImpactoExport;
 use App\Exports\EvaluacionesGeneralesExport;
 use App\Exports\EvaluadoresGeneralesExport;
 use App\Exports\InscripcionesUsuarioExport;
@@ -114,6 +115,18 @@ class ReportController extends Controller
         //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
         $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
         return Excel::download($evaluaciones,'Evaluaciones de '. $nombreActividad . '.xlsx');
+    }
+
+    public function exportarEvaluacionesImpacto($id)
+    {
+        $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos.');
+            return redirect()->back();
+        }
+        $evaluaciones = new EvaluacionesImpactoExport($actividad);
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones, 'Impacto de ' . $nombreActividad . '.xlsx');
     }
 
     public function exportarEvaluacionesUsuario($id)

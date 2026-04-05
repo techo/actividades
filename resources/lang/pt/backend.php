@@ -621,5 +621,6 @@ return [
     'changed_perception'         => 'Mudei minha percepção',
     'would_recommend'            => 'Recomendaria a experiência',
     'impact_footnote'            => "Porcentagem de participantes que responderam 'Sim' ou ≥ 8",
+    'export'                     => 'Exportar',
 
 ];
