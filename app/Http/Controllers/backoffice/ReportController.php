@@ -9,6 +9,9 @@ use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
 use App\Exports\EvaluacionesImpactoExport;
+use App\Exports\EvaluacionesActividadGeneralExport;
+use App\Exports\EvaluacionesPersonasGeneralExport;
+use App\Exports\EvaluacionesImpactoGeneralExport;
 use App\Exports\EvaluacionesGeneralesExport;
 use App\Exports\EvaluadoresGeneralesExport;
 use App\Exports\InscripcionesUsuarioExport;
@@ -75,6 +78,21 @@ class ReportController extends Controller
     {
         $inscripciones = new PersonasInscriptasExport($request);
         return Excel::download($inscripciones, 'personas inscriptas.xlsx');
+    }
+
+    public function exportarEvaluacionesActividadGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesActividadGeneralExport($request), 'evaluaciones-actividad.xlsx');
+    }
+
+    public function exportarEvaluacionesPersonasGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesPersonasGeneralExport($request), 'evaluaciones-personas.xlsx');
+    }
+
+    public function exportarEvaluacionesImpactoGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesImpactoGeneralExport($request), 'evaluaciones-impacto.xlsx');
     }
 
     public function exportarEvaluacionesGenerales(Request $request)
