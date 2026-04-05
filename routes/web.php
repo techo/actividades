@@ -473,10 +473,24 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones-sociales', 'backoffice\EstadisticasController@evaluaciones_sociales');
     Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
 
+    // Dashboard general de evaluaciones
+    Route::get('/ajax/estadisticas/evaluaciones/general-stats',   'backoffice\EstadisticasController@evaluaciones_general_stats');
+    Route::get('/ajax/estadisticas/evaluaciones/actividad-stats', 'backoffice\EstadisticasController@evaluaciones_actividad_stats');
+    Route::get('/ajax/estadisticas/evaluaciones/histograma',      'backoffice\EstadisticasController@evaluaciones_histograma');
+    Route::get('/ajax/estadisticas/evaluaciones/comentarios',     'backoffice\EstadisticasController@evaluaciones_comentarios_general');
+    Route::get('/ajax/estadisticas/evaluaciones/tags',            'backoffice\EstadisticasController@evaluaciones_tags_general');
+    Route::get('/ajax/estadisticas/evaluaciones/competencias',    'backoffice\EstadisticasController@evaluaciones_competencias_general');
+    Route::get('/ajax/estadisticas/evaluaciones/impacto',         'backoffice\EstadisticasController@evaluaciones_impacto_general');
+
     Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/inscripciones/personas/exportar', 'backoffice\ReportController@exportarPersonasInscriptas')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales')->middleware('role:admin');;
+
+    // Exportaciones del nuevo dashboard general
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-actividad',  'backoffice\ReportController@exportarEvaluacionesActividadGeneral')->middleware('role:admin');
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-personas',   'backoffice\ReportController@exportarEvaluacionesPersonasGeneral')->middleware('role:admin');
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-impacto',    'backoffice\ReportController@exportarEvaluacionesImpactoGeneral')->middleware('role:admin');
 
     Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
     Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');
