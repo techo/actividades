@@ -25,6 +25,7 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
         $this->actividad = $inscripcion->actividad;
+        $this->locale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
     }
 
     /**
