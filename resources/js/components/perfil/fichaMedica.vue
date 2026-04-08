@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion || campos.vacunacion_covid))">
+            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion || campos.vacunacion_covid ))">
             
                 <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
                 <div class="row">
@@ -110,12 +110,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12" v-show="(!campos || campos.enfermedades_preexistentes)">
-                        <label>{{ $t('frontend.enfermedades_preexistentes') }}</label>
-                        <input type="text" class="form-control" name="enfermedades_preexistentes" id="enfermedades_preexistentes"
-                            v-model="ficha.enfermedades_preexistentes">
-                    </div>
+            </div>
+            <div class="row" v-show="(!campos || campos.enfermedades_preexistentes)">
+                <div class="col-md-12">
+                    <label>{{ $t('frontend.enfermedades_preexistentes') }}</label>
+                    <input type="text" class="form-control" name="enfermedades_preexistentes" id="enfermedades_preexistentes"
+                        v-model="ficha.enfermedades_preexistentes">
                 </div>
             </div>
             <h6 class="mt-4">{{ $t('frontend.ficha_confirma_datos') }}</h6>
