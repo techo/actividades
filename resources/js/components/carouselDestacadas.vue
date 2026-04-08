@@ -12,7 +12,8 @@
         &lt;
       </button>
   
-      <div class="carousel-slide" v-on:click="ir_a_actividad">
+      <div  v-if="actividades.length > 0" 
+        class="carousel-slide" v-on:click="ir_a_actividad">
         <transition name="fade">
           <img
             :src="actividades[activeIndex].imagen_destacada"
