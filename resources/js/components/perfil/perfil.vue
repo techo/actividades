@@ -41,7 +41,7 @@
 
             <div>
                 <b-tabs content-class="mt-3" fill v-model="paso_actual">
-                    <b-tab class="m-3" :title="$t('frontend.personal_data')" href="#personales">
+                    <b-tab class="m-3" :title="$t('frontend.personal_data')">
                         <div class="row mx-2">
                             <div class="col-md-6">
                                 <div class="row">
@@ -393,14 +393,14 @@
                         <hr>
 
                     </b-tab>
-                    <b-tab href="#ficha" class="w-100 text-uppercase" :title="$t('frontend.ficha_medica')">
+                    <b-tab class="w-100 text-uppercase" :title="$t('frontend.ficha_medica')">
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
-                    <b-tab href="#estudios" :title="$t('frontend.estudios')">
+                    <b-tab :title="$t('frontend.estudios')">
                         <estudios ref="estudios" :estudios="user.estudios" :idPersona="user.id"/>
                     </b-tab>
 
-                    <b-tab href="#equipos" :title="$t('frontend.equipos')">
+                    <b-tab :title="$t('frontend.equipos')">
                         <equipos ref="equipos" :equipos="user.integrantes" :idPersona="user.id"/>
                     </b-tab>
 
@@ -428,7 +428,7 @@ export default {
             guardo: false,
             user: JSON.parse(this.usuario),
             validacion: {},
-            paso_actual: 'email',
+            paso_actual: 0,
             volver: true,
             paises: [],
             provincias: [],
@@ -460,11 +460,11 @@ export default {
             }
         }
         if (data.user.facebook_id || data.user.google_id) {
-            data.paso_actual = 'personales'
+            data.paso_actual = 0
             data.volver = false
         }
         if (this.linkear) {
-            data.paso_actual = 'linkear'
+            data.paso_actual = 0
         }
         data.pass = '';
         return data
@@ -476,7 +476,9 @@ export default {
         this.traer_localidades()
         this.formDirty = false
         this.phoneNumber = this.user.telefono;
-        this.paso_actual = (window.location.href.split('#')[1]);
+        var hashMap = { 'personales': 0, 'ficha': 1, 'estudios': 2, 'equipos': 3 };
+        var hash = window.location.href.split('#')[1];
+        this.paso_actual = hashMap[hash] !== undefined ? hashMap[hash] : 0;
         this.removeUndefinedText();
     },
     updated() {
