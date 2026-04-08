@@ -12,10 +12,6 @@
         <div class="box-body">
             <!-- Fila 1: promedio + NPS (izquierda) | estado circular (derecha) -->
             <evaluaciones-actividad-stats :id="id" :filtros="filtros"></evaluaciones-actividad-stats>
-            <!-- Fila 2: histograma full-width -->
-            <div style="margin-top: 20px;">
-                <evaluaciones-actividad-chart :id="id" :filtros="filtros"></evaluaciones-actividad-chart>
-            </div>
             <!-- Fila 3: comentarios -->
             <evaluaciones-comentarios :id="id" :filtros="filtros"></evaluaciones-comentarios>
         </div>

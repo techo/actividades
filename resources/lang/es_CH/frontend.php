@@ -183,6 +183,7 @@ return [
 	'state'  =>  'REGIÓN ACTUAL',
 	'municipality'  =>  'COMUNA ACTUAL',
 	'telephone'  =>  'TELEFONO',
+	'change_password'  =>  'Cambiar contraseña',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL',
 	'new_password'  =>  'NUEVA CONTRASEÑA',
     'confirm_new_password'  =>  'CONFIRMAR CONTRASEÑA',

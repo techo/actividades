@@ -186,6 +186,7 @@ return [
 	'state'  =>  'ESTADO',
 	'municipality'  =>  'MUNICIPIO',
 	'telephone'  =>  'TELEFONE',
+	'change_password'  =>  'Alterar senha',
 	'actual_password'  =>  'SENHA ATUAL',
 	'new_password'  =>  'NOVA SENHA',
 	'confirm_new_password'  =>  'CONFIRMAR SENHA',

@@ -181,6 +181,7 @@ return [
 	'state'  =>  'STATE',
 	'municipality'  =>  'MUNICIPALITY',
 	'telephone'  =>  'TELEPHONE',
+	'change_password'  =>  'Change password',
 	'actual_password'  =>  'ACTUAL PASSWORD',
 	'new_password'  =>  'NEW PASSWORD',
     'confirm_new_password'  =>  'NEW PASSWORD CONFIRMATION',
