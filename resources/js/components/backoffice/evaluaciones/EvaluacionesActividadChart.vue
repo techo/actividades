@@ -10,7 +10,7 @@
                 <bar-chart
                         :chart-data="info"
                         :options="options"
-                        :height="200"
+                        :height="140"
                 ></bar-chart>
             </div>
         </div>

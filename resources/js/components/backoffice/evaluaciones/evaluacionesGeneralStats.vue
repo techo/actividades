@@ -2,40 +2,53 @@
     <div class="box-body">
         <div class="row">
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
+                <div class="info-box" style="min-height:90px; max-height:90px; overflow:hidden;">
                     <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
-                    <div class="info-box-content text-center">
-                        <span class="info-box-number"><h3>{{ inscriptos }}</h3></span>
-                        <span class="info-box-text">{{ $t('backend.enrolled') }}</span>
+                    <div class="info-box-content text-center d-flex flex-column justify-content-center overflow-hidden">
+                        <div>
+                            <strong style="font-size:30px; font-weight:700; line-height:1;">{{ inscriptos }}</strong>
+
+                        </div>
+                        <span class="d-block text-uppercase text-muted text-truncate" style="font-size:10px; letter-spacing:.6px; margin-top:4px;">{{ $t('backend.enrolled') }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
+                <div class="info-box" style="min-height:90px; max-height:90px; overflow:hidden;">
                     <span class="info-box-icon bg-green"><i class="fa fa-check-circle"></i></span>
-                    <div class="info-box-content text-center">
-                        <span class="info-box-number"><h3>{{ presentes }}</h3></span>
-                        <span class="info-box-text">{{ $t('backend.present') }}</span>
-                        <span class="info-box-text" v-if="inscriptos > 0">{{ porcentajeAsistencia }}% {{ $t('backend.attendance_percentage') }}</span>
+                    <div class="info-box-content text-center d-flex flex-column justify-content-center overflow-hidden">
+                        <div>
+                        <strong style="font-size:30px; font-weight:700; line-height:1;">{{ presentes }}</strong>
+
+                        </div>
+
+                        <div>
+                            <span class="d-block text-uppercase text-muted text-truncate" style="font-size:10px; letter-spacing:.6px; margin-top:4px;">{{ $t('backend.present') }}</span>
+                        </div>
+                        <span class="d-block text-truncate" v-if="inscriptos > 0" style="font-size:10px; color:#27ae60; font-weight:600; margin-top:2px;">{{ porcentajeAsistencia }} {{ $t('backend.attendance_percentage') }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
+                <div class="info-box" style="min-height:90px; max-height:90px; overflow:hidden;">
                     <span class="info-box-icon bg-red"><i class="fa fa-times-circle"></i></span>
-                    <div class="info-box-content text-center">
-                        <span class="info-box-number"><h3>{{ ausentes }}</h3></span>
-                        <span class="info-box-text">{{ $t('backend.absent') }}</span>
+                    <div class="info-box-content text-center d-flex flex-column justify-content-center overflow-hidden">
+                    <div>
+                        <strong style="font-size:30px; font-weight:700; line-height:1;">{{ ausentes }}</strong>
+                    </div>
+                        <span class="d-block text-uppercase text-muted text-truncate" style="font-size:10px; letter-spacing:.6px; margin-top:4px;">{{ $t('backend.absent') }}</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
+                <div class="info-box" style="min-height:90px; max-height:90px; overflow:hidden;">
                     <span class="info-box-icon" style="background-color: #7e57c2;"><i class="fa fa-clock-o"></i></span>
-                    <div class="info-box-content text-center">
-                        <span class="info-box-number"><h3>{{ horasVoluntariado }}</h3></span>
-                        <span class="info-box-text">{{ $t('backend.volunteer_hours') }}</span>
-                        <span class="info-box-text" v-if="horasPorVoluntario > 0">~{{ horasPorVoluntario }}{{ $t('backend.hours_per_volunteer') }}</span>
+                    <div class="info-box-content text-center d-flex flex-column justify-content-center overflow-hidden">
+                    <div>
+                        <strong style="font-size:30px; font-weight:700; line-height:1;">{{ horasVoluntariado }}</strong>
+                    </div>                        
+                        <span class="d-block text-uppercase text-muted text-truncate" style="font-size:10px; letter-spacing:.6px; margin-top:4px;">{{ $t('backend.volunteer_hours') }}</span>
+                        <span class="d-block text-truncate" v-if="horasPorVoluntario > 0" style="font-size:10px; color:#7e57c2; font-weight:600; margin-top:2px;">~{{ horasPorVoluntario }}{{ $t('backend.hours_per_volunteer') }}</span>
                     </div>
                 </div>
             </div>
@@ -92,3 +105,4 @@
         }
     }
 </script>
+

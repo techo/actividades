@@ -14,7 +14,15 @@
             </div>
             <div v-else class="row">
                 <div class="col-md-6 text-center">
-                    <radar-chart v-if="chartData" :chart-data="chartData" :options="chartOptions" style="height:260px;"></radar-chart>
+                    <div class="radar-wrapper">
+                        <radar-chart v-if="chartData" :chart-data="chartData" :options="chartOptions" style="height: 100%;"></radar-chart>
+                        <template v-if="chartData">
+                            <span class="radar-label radar-label--top">{{ radarLabels[0] }}</span>
+                            <span class="radar-label radar-label--right">{{ radarLabels[1] }}</span>
+                            <span class="radar-label radar-label--bottom">{{ radarLabels[2] }}</span>
+                            <span class="radar-label radar-label--left">{{ radarLabels[3] }}</span>
+                        </template>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <h5><strong>{{ $t('backend.dimensions_analysis') }}</strong></h5>
@@ -104,7 +112,7 @@
                     maintainAspectRatio: false,
                     scale: {
                         ticks: { beginAtZero: true, max: 10, min: 0, stepSize: 2 },
-                        pointLabels: { fontSize: 11 }
+                        pointLabels: { display: false }
                     },
                     legend: { display: false },
                 };
@@ -141,6 +149,26 @@
 </script>
 
 <style scoped>
+.radar-wrapper {
+    position: relative;
+    height: 260px;
+}
+.radar-label {
+    position: absolute;
+    font-size: 10px;
+    color: #555;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 1px 4px;
+    border-radius: 2px;
+    line-height: 1.3;
+    max-width: 90px;
+    text-align: center;
+    pointer-events: none;
+}
+.radar-label--top    { top: 2px;  left: 50%; transform: translateX(-50%); }
+.radar-label--right  { top: 50%;  right: 2px; transform: translateY(-50%); }
+.radar-label--bottom { bottom: 2px; left: 50%; transform: translateX(-50%); }
+.radar-label--left   { top: 50%;  left: 2px;  transform: translateY(-50%); }
 .analisis-texto {
     font-size: 13px;
     color: #555;
