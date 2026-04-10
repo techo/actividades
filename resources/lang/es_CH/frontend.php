@@ -47,9 +47,11 @@ return [
 	'cookie_policy' => 'Políticas de Cookies',
 
 	// app-banner.vue
-	'app_banner_subtitle' => 'Abrir en MiTECHO app',
-	'app_banner_download' => 'DESCARGAR',
-	'app_banner_close'    => 'Cerrar',
+	'app_banner_subtitle'       => 'Descarga la app de MiTECHO',
+	'app_banner_open_subtitle'  => 'Abrir en MiTECHO app',
+	'app_banner_download'       => 'DESCARGAR',
+	'app_banner_open'           => 'ABRIR',
+	'app_banner_close'          => 'Cerrar',
 
 	// login.vue
     'login' => 'Ingresar',

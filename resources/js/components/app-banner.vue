@@ -4,9 +4,12 @@
         <img class="banner-icon" src="/img/icons/icon-128x128.png" alt="MiTECHO" />
         <div class="banner-info">
             <strong>MiTECHO</strong>
-            <span>{{ $t('frontend.app_banner_subtitle') }}</span>
+            <span>{{ userHasApp ? $t('frontend.app_banner_open_subtitle') : $t('frontend.app_banner_subtitle') }}</span>
         </div>
-        <a :href="storeUrl" class="banner-download" target="_blank" rel="noopener noreferrer">
+        <a v-if="userHasApp" href="#" class="banner-download" @click.prevent="openApp">
+            {{ $t('frontend.app_banner_open') }}
+        </a>
+        <a v-else :href="storeUrl" class="banner-download" target="_blank" rel="noopener noreferrer">
             {{ $t('frontend.app_banner_download') }}
         </a>
     </div>
@@ -16,32 +19,53 @@
     export default {
         name: 'app-banner',
         props: {
-            iosUrl: { type: String, default: '' },
-            androidUrl: { type: String, default: '' },
+            iosUrl:      { type: String, default: '' },
+            androidUrl:  { type: String, default: '' },
+            deepLinkUrl: { type: String, default: '' },
+            hasApp:      { type: String, default: '0' },  // '1' si primer_acceso_app tiene fecha
         },
         data() {
             return {
-                show: false,
-                storeUrl: '',
+                show:       false,
+                storeUrl:   '',
+                userHasApp: false,
             };
         },
         mounted() {
             if (localStorage.getItem('mitecho_app_banner_dismissed')) return;
-            const ua = navigator.userAgent;
-            const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+            const ua        = navigator.userAgent;
+            const isIOS     = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
             const isAndroid = /Android/.test(ua);
+
             if (isIOS && this.iosUrl) {
                 this.storeUrl = this.iosUrl;
-                this.show = true;
+                this.show     = true;
             } else if (isAndroid && this.androidUrl) {
                 this.storeUrl = this.androidUrl;
-                this.show = true;
+                this.show     = true;
             }
+
+            // Si el usuario ya usó la app y hay un deep link configurado, activamos modo "Abrir"
+            this.userHasApp = this.show && this.hasApp === '1' && !!this.deepLinkUrl;
         },
         methods: {
             dismiss() {
                 localStorage.setItem('mitecho_app_banner_dismissed', '1');
                 this.show = false;
+            },
+            openApp() {
+                // Intenta abrir la app con el deep link.
+                // Si el usuario NO tiene la app instalada, el scheme falla silenciosamente
+                // y el timeout redirige al store como fallback.
+                const fallbackTimer = setTimeout(() => {
+                    window.location.href = this.storeUrl;
+                }, 2000);
+
+                // Si la app abre, la ventana pierde foco (blur) → cancelamos el fallback
+                window.addEventListener('blur', () => clearTimeout(fallbackTimer), { once: true });
+
+                window.location.href = this.deepLinkUrl;
             },
         },
     };
