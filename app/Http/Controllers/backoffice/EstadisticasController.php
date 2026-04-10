@@ -434,7 +434,7 @@ class EstadisticasController extends Controller
         $total        = $registros->count();
 
         if ($total === 0) {
-            return response()->json(['total' => 0, 'habilidades' => 0, 'percepcion' => 0, 'recomendaria' => 0]);
+            return response()->json(['total' => 0, 'habilidades' => 0, 'percepcion' => 0, 'recomendaria' => 0, 'promotores' => 0, 'detractores' => 0]);
         }
 
         return response()->json([
@@ -442,6 +442,8 @@ class EstadisticasController extends Controller
             'habilidades'  => round($registros->where('impacto_habilidades_capacidades',  '>=', 8)->count() * 100 / $total),
             'percepcion'   => round($registros->where('impacto_percepcion_realidad',       '>=', 8)->count() * 100 / $total),
             'recomendaria' => round($registros->where('impacto_recomendaria_experiencia',  '>=', 8)->count() * 100 / $total),
+            'promotores' => round($registros->where('impacto_recomendaria_experiencia',  '>=', 9)->count() * 100 / $total),
+            'detractores' => round($registros->where('impacto_recomendaria_experiencia',  '<=', 6)->count() * 100 / $total),
         ]);
     }
 
