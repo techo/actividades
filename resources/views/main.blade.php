@@ -20,6 +20,12 @@
 
 <body>
     <div id="app">
+        @if(config('app.app_store_ios_url') || config('app.app_store_android_url'))
+        <app-banner
+            ios-url="{{ config('app.app_store_ios_url') }}"
+            android-url="{{ config('app.app_store_android_url') }}"
+        ></app-banner>
+        @endif
         @include('partials.header')
         <main role="main">
 
