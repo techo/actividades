@@ -18,8 +18,8 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];
-    protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'estadoPersona', 'photo', 'instagram'];
-    protected $dates = ['deleted_at'];
+    protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app'];
+    protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app'];
     protected $appends = array('estado_voluntario');
 
     protected static function boot()
