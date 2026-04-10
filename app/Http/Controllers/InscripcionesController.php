@@ -7,6 +7,7 @@ use App\FichaMedica;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
+use App\InscripcionRespuesta;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
@@ -31,6 +32,7 @@ class InscripcionesController extends BaseController
             'roles_aplicados' => 'json',
             'inscripciones_aplicadas' => 'json',
             'jornadas' => 'json',
+            'respuestas' => 'nullable|json',
         ]);
         $actividad = Actividad::find($id);
         $actividad->descripcion = clean_string($actividad->descripcion);
@@ -49,6 +51,7 @@ class InscripcionesController extends BaseController
             ->with('aplica_rol', $request->input('aplica_rol'))
             ->with('jornadas', $request->input('jornadas'))
             ->with('jornadasSelected', json_decode($request->input('jornadas'), true))
+            ->with('respuestas', $request->input('respuestas', '[]'))
             ->with('tipo', $tipo)
             ->with('edad', $edad);
 
@@ -65,6 +68,7 @@ class InscripcionesController extends BaseController
             'roles_aplicados' => 'nullable|json',
             'inscripciones_aplicadas' => 'nullable|json',
             'jornadas' => 'nullable|json',
+            'respuestas' => 'nullable|json',
         ]);
 
         $inscripciones = json_decode($validated['inscripciones_aplicadas'] ?? '[]', true);
@@ -123,6 +127,7 @@ class InscripcionesController extends BaseController
             
             if ($actividad->confirmacion == 1) {
                 $inscripcion->save();
+                $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
@@ -147,8 +152,9 @@ class InscripcionesController extends BaseController
                 }
                 $payment->setMonto($request->monto);
                 $inscripcion->save();
+                $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
-                
+
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
@@ -165,6 +171,7 @@ class InscripcionesController extends BaseController
             }
 
             $inscripcion->save();
+            $this->guardarRespuestasInscripcion($inscripcion, $request);
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
@@ -306,6 +313,28 @@ class InscripcionesController extends BaseController
      * @param int $idPersona
      * @return GrupoRolPersona
      */
+    private function guardarRespuestasInscripcion(Inscripcion $inscripcion, Request $request)
+    {
+        $respuestasJson = $request->input('respuestas', '[]');
+        $respuestas = json_decode($respuestasJson, true);
+
+        if (!is_array($respuestas) || empty($respuestas)) return;
+
+        foreach ($respuestas as $respuesta) {
+            if (!isset($respuesta['pregunta_id'])) continue;
+
+            InscripcionRespuesta::updateOrCreate(
+                [
+                    'inscripcion_id' => $inscripcion->idInscripcion,
+                    'pregunta_id'    => $respuesta['pregunta_id'],
+                ],
+                [
+                    'respuesta' => $respuesta['respuesta'] ?? null,
+                ]
+            );
+        }
+    }
+
     private function incluirEnGrupoRaiz(Actividad $actividad, int $idPersona)
     {
         $grupoRaiz = Grupo::firstOrCreate(

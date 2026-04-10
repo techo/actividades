@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion || campos.vacunacion_covid))">
+            <div v-show="(!campos || (campos.ficha_alergias || campos.ficha_alimentacion || campos.vacunacion_covid ))">
             
                 <h6 class="mt-4">{{ $t('frontend.ficha_otros') }}</h6>
                 <div class="row">
@@ -109,6 +109,13 @@
                             </option>
                         </select>
                     </div>
+                </div>
+            </div>
+            <div class="row" v-show="(!campos || campos.enfermedades_preexistentes)">
+                <div class="col-md-12">
+                    <label>{{ $t('frontend.enfermedades_preexistentes') }}</label>
+                    <input type="text" class="form-control" name="enfermedades_preexistentes" id="enfermedades_preexistentes"
+                        v-model="ficha.enfermedades_preexistentes">
                 </div>
             </div>
             <h6 class="mt-4">{{ $t('frontend.ficha_confirma_datos') }}</h6>
@@ -188,6 +195,7 @@ export default {
               'alergias' : "",
               'vacunacion_covid': "",
               'alimentacion' : "",
+              'enfermedades_preexistentes' : "",
               'confirma_datos' : "",
               'archivo_medico' : null,
               'documento_frente' : null,
@@ -227,6 +235,9 @@ export default {
             }
             if (!c || c.vacunacion_covid) {
                 if (!this.ficha.vacunacion_covid) return false;
+            }
+            if (!c || c.enfermedades_preexistentes) {
+                if (!this.ficha.enfermedades_preexistentes) return false;
             }
             return true;
         },

@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
 {
@@ -25,6 +26,8 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
         $this->actividad = $inscripcion->actividad;
+        $this->locale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
+        Log::info('[MailInscripcionFaltaPago] locale seteado: ' . $this->locale . ' | pais: ' . optional($inscripcion->persona->pais)->nombre);
     }
 
     /**

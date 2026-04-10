@@ -51,6 +51,12 @@ class Actividad extends Model
         return $this->hasMany(Inscripcion::class, 'idActividad');
     }
 
+    public function preguntas()
+    {
+        return $this->hasMany(ActividadPregunta::class, 'actividad_id', 'idActividad')
+                    ->orderBy('orden');
+    }
+
     public function getCantidadPresentesAttribute()
     {
         return $this->inscripciones()->where('presente','=',1)->count();

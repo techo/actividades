@@ -8,6 +8,10 @@ use App\Exports\SuscriptosExport;
 use App\Exports\EvaluacionesActividadExport;
 use App\Exports\EvaluacionesPersonasExport;
 use App\Exports\EvaluacionesUsuarioExport;
+use App\Exports\EvaluacionesImpactoExport;
+use App\Exports\EvaluacionesActividadGeneralExport;
+use App\Exports\EvaluacionesPersonasGeneralExport;
+use App\Exports\EvaluacionesImpactoGeneralExport;
 use App\Exports\EvaluacionesGeneralesExport;
 use App\Exports\EvaluadoresGeneralesExport;
 use App\Exports\InscripcionesUsuarioExport;
@@ -76,6 +80,21 @@ class ReportController extends Controller
         return Excel::download($inscripciones, 'personas inscriptas.xlsx');
     }
 
+    public function exportarEvaluacionesActividadGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesActividadGeneralExport($request), 'evaluaciones-actividad.xlsx');
+    }
+
+    public function exportarEvaluacionesPersonasGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesPersonasGeneralExport($request), 'evaluaciones-personas.xlsx');
+    }
+
+    public function exportarEvaluacionesImpactoGeneral(Request $request)
+    {
+        return Excel::download(new EvaluacionesImpactoGeneralExport($request), 'evaluaciones-impacto.xlsx');
+    }
+
     public function exportarEvaluacionesGenerales(Request $request)
     {
         $evaluaciones = new EvaluacionesGeneralesExport($request);
@@ -114,6 +133,18 @@ class ReportController extends Controller
         //Si el nombre de la actividad tiene alguno de estos caracteres, puede potencialmente romper la exportación
         $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
         return Excel::download($evaluaciones,'Evaluaciones de '. $nombreActividad . '.xlsx');
+    }
+
+    public function exportarEvaluacionesImpacto($id)
+    {
+        $actividad = Actividad::find($id);
+        if ($actividad->idPais !== auth()->user()->idPaisPermitido){
+            Session::flash('error', 'No tiene permisos.');
+            return redirect()->back();
+        }
+        $evaluaciones = new EvaluacionesImpactoExport($actividad);
+        $nombreActividad = str_replace(str_split('\\/:*?"<>|'), ' ', $actividad->nombreActividad);
+        return Excel::download($evaluaciones, 'Impacto de ' . $nombreActividad . '.xlsx');
     }
 
     public function exportarEvaluacionesUsuario($id)

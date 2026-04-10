@@ -12,6 +12,26 @@ class Tipo extends Model
     protected $primaryKey = "idTipo";
     public $timestamps = false;
     protected $fillable = ['nombre', 'idCategoria', 'imagen', 'tipo_indicador', 'activo', 'nombre_pt', 'nombre_en'];
+    protected $appends = ['nombre_localizado'];
+
+    /**
+     * Devuelve el nombre del tipo en el idioma activo de la sesión.
+     * Fallback a español (nombre) si el campo no está completo.
+     */
+    public function getNombreLocalizadoAttribute(): string
+    {
+        $locale = \App::getLocale();
+
+        if ($locale === 'pt' && !empty($this->nombre_pt)) {
+            return $this->nombre_pt;
+        }
+
+        if ($locale === 'en' && !empty($this->nombre_en)) {
+            return $this->nombre_en;
+        }
+
+        return $this->nombre;
+    }
 
     public function actividades()
     {

@@ -333,10 +333,19 @@ class ActividadesController extends Controller
     {
         $actividad = $id;
 
-        return view('backoffice.actividades.accesos', 
+        return view('backoffice.actividades.accesos',
             compact(
                 'actividad'
-            ) 
+            )
+        );
+    }
+
+    public function preguntas(Actividad $actividad)
+    {
+        return view('backoffice.actividades.preguntas',
+            compact(
+                'actividad'
+            )
         );
     }
 

@@ -43,6 +43,13 @@ return [
 	'cookie_bar_message' => 'This site uses cookies to enhance user experience. If you use this site you will be accepting the',
 	'cookie_policy' => 'Cookies policy',
 
+	// app-banner.vue
+	'app_banner_subtitle'       => 'Download the MiTECHO app',
+	'app_banner_open_subtitle'  => 'Open in MiTECHO app',
+	'app_banner_download'       => 'DOWNLOAD',
+	'app_banner_open'           => 'OPEN',
+	'app_banner_close'          => 'Close',
+
 	// login.vue
     'login' => 'Login',
     'login_or_register' => 'LOGIN / SIGN UP',
@@ -181,6 +188,7 @@ return [
 	'state'  =>  'STATE',
 	'municipality'  =>  'MUNICIPALITY',
 	'telephone'  =>  'TELEPHONE',
+	'change_password'  =>  'Change password',
 	'actual_password'  =>  'ACTUAL PASSWORD',
 	'new_password'  =>  'NEW PASSWORD',
     'confirm_new_password'  =>  'NEW PASSWORD CONFIRMATION',
@@ -206,9 +214,10 @@ return [
 	'documento_identidad_frente' => 'Front of ID Document', 
 	'documento_identidad_dorso' => 'Back of ID Document', 
 	'ficha_otros' => 'Other Information', 
-	'ficha_alergias' => 'Allergies', 
-	'vacunacion_covid' => 'Covid Vaccine', 
-	'ficha_alimentacion' => 'Dietary Restrictions', 
+	'ficha_alergias' => 'Allergies',
+	'vacunacion_covid' => 'Covid Vaccine',
+	'ficha_alimentacion' => 'Dietary Restrictions',
+	'enfermedades_preexistentes' => 'Pre-existing Conditions',
 	'ficha_confirma_datos' => 'Confirm Data',
 	'documents' => 'Documents',
 	'cobertura_paga' => 'Paid Coverage', 
@@ -479,5 +488,11 @@ return [
 
 	//aviso_modal
 	'aviso_modal' => 'Continue to Online Activities',
+
+    'cargando' => 'Loading...',
+
+    // Registration questions
+    'preguntas_inscripcion'       => 'Registration questions',
+    'complete_required_questions' => 'Please answer all required questions.',
 
 ];

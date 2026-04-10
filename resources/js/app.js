@@ -46,6 +46,10 @@ import EvaluacionesActividadStats from './components/backoffice/evaluaciones/Eva
 import EvaluacionesVoluntariosStats from './components/backoffice/evaluaciones/EvaluacionesVoluntariosStats';
 import EvaluacionesActividadChart from './components/backoffice/evaluaciones/EvaluacionesActividadChart';
 import EvaluacionesVoluntariosChart from './components/backoffice/evaluaciones/EvaluacionesVoluntariosChart';
+import EvaluacionesComentarios from './components/backoffice/evaluaciones/EvaluacionesComentarios';
+import EvaluacionesTagsResumen from './components/backoffice/evaluaciones/EvaluacionesTagsResumen';
+import EvaluacionesCompetencias from './components/backoffice/evaluaciones/EvaluacionesCompetencias';
+import EvaluacionesImpacto from './components/backoffice/evaluaciones/EvaluacionesImpacto';
 import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatable';
 import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDatatable';
 import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable';
@@ -59,6 +63,9 @@ Vue.component('red-modal', RedModal);
 
 import informesCierre from './components/backoffice/actividades/informes-cierre';
 Vue.component('informes-cierre', informesCierre);
+
+import preguntasActividad from './components/backoffice/actividades/preguntas-actividad';
+Vue.component('preguntas-actividad', preguntasActividad);
 
 import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
 import ReferenteModal from './components/backoffice/comunidad/referente-modal';
@@ -191,6 +198,10 @@ Vue.component('evaluaciones-actividad-stats', EvaluacionesActividadStats);
 Vue.component('evaluaciones-voluntarios-stats', EvaluacionesVoluntariosStats);
 Vue.component('evaluaciones-actividad-chart', EvaluacionesActividadChart);
 Vue.component('evaluaciones-voluntarios-chart', EvaluacionesVoluntariosChart);
+Vue.component('evaluaciones-comentarios', EvaluacionesComentarios);
+Vue.component('evaluaciones-tags-resumen', EvaluacionesTagsResumen);
+Vue.component('evaluaciones-competencias', EvaluacionesCompetencias);
+Vue.component('evaluaciones-impacto', EvaluacionesImpacto);
 Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('suscriptos-datatable', SuscriptosDatatable);
 Vue.component('comunidades-datatable', ComunidadesDatatable);

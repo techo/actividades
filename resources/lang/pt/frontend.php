@@ -43,6 +43,13 @@ return [
 	'cookie_bar_message' => 'Este site usa cookies para melhorar a experiência do usuário. Se você usar este site, estará aceitando nossa',
 	'cookie_policy' => 'politica de Cookies.',
 
+	// app-banner.vue
+	'app_banner_subtitle'       => 'Baixe o app MiTECHO',
+	'app_banner_open_subtitle'  => 'Abrir no app MiTECHO',
+	'app_banner_download'       => 'BAIXAR',
+	'app_banner_open'           => 'ABRIR',
+	'app_banner_close'          => 'Fechar',
+
 	// login.vue
 	'login' => 'Login',
     'login_or_register' => 'LOGIN / REGISTRO',
@@ -186,6 +193,7 @@ return [
 	'state'  =>  'ESTADO',
 	'municipality'  =>  'MUNICIPIO',
 	'telephone'  =>  'TELEFONE',
+	'change_password'  =>  'Alterar senha',
 	'actual_password'  =>  'SENHA ATUAL',
 	'new_password'  =>  'NOVA SENHA',
 	'confirm_new_password'  =>  'CONFIRMAR SENHA',
@@ -213,8 +221,9 @@ return [
 	'documento_identidad_dorso' => 'Documento Verso',
 	'ficha_otros' => 'Outras Informações',
 	'ficha_alergias' => 'Alergias',
-	'vacunacion_covid' => 'Certificado Nacional de Vacinação COVID', 
+	'vacunacion_covid' => 'Certificado Nacional de Vacinação COVID',
 	'ficha_alimentacion' => 'Restrições Alimentares',
+	'enfermedades_preexistentes' => 'Doenças Pré-existentes',
 	'ficha_confirma_datos' => 'Confirmar Dados',
 	'documents' => 'Documentos',
 	'cobertura_paga' => 'Cobertura Paga',
@@ -362,7 +371,7 @@ return [
 	'apply_for_rol' => 'Quer fazer parte da equipa organizadora desta atividade?',
 	'whats_a_rol' => 'Selecione as funções às quais você gostaria de se candidatar.',
 	'leave_blank' => 'Opcional',
-	'roles_aplicados' => 'Roles seleccionados',
+	'roles_aplicados' => 'Funções seleccionados',
 	'yes_apply_rol' => 'Sim, aplicar ao cargo', 
 	'no_apply_rol' => 'Não desejo aplicar ao cargo',
 
@@ -487,5 +496,11 @@ return [
 
 	//aviso_modal
 	'aviso_modal' => 'Ver Atividades Virtuais',
+
+    'cargando' => 'Carregando...',
+
+    // Perguntas de inscrição
+    'preguntas_inscripcion'       => 'Perguntas de inscrição',
+    'complete_required_questions' => 'Por favor responda todas as perguntas obrigatórias.',
 
 ];

@@ -16,6 +16,7 @@ class FichaMedica extends Model
         'alergias',
         'vacunacion_covid',
         'alimentacion',
+        'enfermedades_preexistentes',
         'confirma_datos', 
         'idPersona',
         'archivo_medico',

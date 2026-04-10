@@ -94,6 +94,13 @@
                                         v-model="usuario.vacunacion_covid" :disabled="readonly">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group" v-if="(usuario.enfermedades_preexistentes != null)">
+                            <label for="enfermedades_preexistentes">{{ $t('backend.pre_existing_conditions') }}</label>
+                            <input id="enfermedades_preexistentes" type="text" class="form-control"
+                                        v-model="usuario.enfermedades_preexistentes" :disabled="readonly">
+                        </div>
+                    </div>
                 </div>
                 <div class="row" >
                     <div class="col-md-6">
@@ -131,6 +138,7 @@ export default {
                 alergias: "",
                 vacunacion_covid: "",
                 alimentacion: "",
+                enfermedades_preexistentes: "",
                 documento_frente: "",
                 documento_dorso: "",
                 archivo_medico: "",

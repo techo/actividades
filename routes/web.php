@@ -340,6 +340,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
     Route::get('/actividades/{id}/exportar-evaluaciones-voluntarios', 'backoffice\ReportController@exportarEvaluacionesPersonas');
     Route::get('/actividades/{id}/exportar-evaluaciones', 'backoffice\ReportController@exportarEvaluacionesActividad');
+    Route::get('/actividades/{id}/exportar-evaluaciones-impacto', 'backoffice\ReportController@exportarEvaluacionesImpacto');
     //vista de actividad
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');
@@ -365,6 +366,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
     Route::get('/actividades/{id}/jornadas', 'backoffice\ActividadesController@jornadas')->middleware('can:ver,App\Actividad,id');
     Route::get('/ajax/actividades/{id}/jornadas', 'backoffice\ajax\ActividadesController@jornadas');
+
+    Route::get('/actividades/{actividad}/preguntas', 'backoffice\ActividadesController@preguntas')->middleware('can:ver,actividad');
+    Route::get('/ajax/actividades/{actividad}/preguntas', 'backoffice\ajax\ActividadPreguntasController@index')->middleware('can:ver,actividad');
+    Route::post('/ajax/actividades/{actividad}/preguntas', 'backoffice\ajax\ActividadPreguntasController@store')->middleware('can:ver,actividad');
+    Route::put('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@update')->middleware('can:ver,actividad');
+    Route::delete('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@destroy')->middleware('can:ver,actividad');
 
     Route::post('ajax/actividades/{id}/jornadas', 'backoffice\ajax\JornadasController@store')->middleware('can:ver,App\Actividad,id');;
 
@@ -402,6 +409,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/evaluaciones/general/stats', 'backoffice\ajax\EvaluacionesController@getGeneralStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/voluntarios/stats', 'backoffice\ajax\EvaluacionesController@getVoluntariosStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/voluntarios/chartdata', 'backoffice\ajax\EvaluacionesController@getVoluntariosChartData')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
+    Route::get('/ajax/actividades/{id}/evaluaciones/comentarios', 'backoffice\ajax\EvaluacionesController@getComentarios')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/tags', 'backoffice\ajax\EvaluacionesController@getTagsResumen')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/competencias', 'backoffice\ajax\EvaluacionesController@getCompetenciasStats')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::get('/ajax/actividades/{id}/evaluaciones/impacto', 'backoffice\ajax\EvaluacionesController@getImpactoStats')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol');
     Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink');
@@ -462,10 +473,24 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones-sociales', 'backoffice\EstadisticasController@evaluaciones_sociales');
     Route::get('/ajax/estadisticas/evaluaciones-tecnicas', 'backoffice\EstadisticasController@evaluaciones_tecnicas');
 
+    // Dashboard general de evaluaciones
+    Route::get('/ajax/estadisticas/evaluaciones/general-stats',   'backoffice\EstadisticasController@evaluaciones_general_stats');
+    Route::get('/ajax/estadisticas/evaluaciones/actividad-stats', 'backoffice\EstadisticasController@evaluaciones_actividad_stats');
+    Route::get('/ajax/estadisticas/evaluaciones/histograma',      'backoffice\EstadisticasController@evaluaciones_histograma');
+    Route::get('/ajax/estadisticas/evaluaciones/comentarios',     'backoffice\EstadisticasController@evaluaciones_comentarios_general');
+    Route::get('/ajax/estadisticas/evaluaciones/tags',            'backoffice\EstadisticasController@evaluaciones_tags_general');
+    Route::get('/ajax/estadisticas/evaluaciones/competencias',    'backoffice\EstadisticasController@evaluaciones_competencias_general');
+    Route::get('/ajax/estadisticas/evaluaciones/impacto',         'backoffice\EstadisticasController@evaluaciones_impacto_general');
+
     Route::get('/ajax/estadisticas/inscripciones/exportar', 'backoffice\ReportController@ExportarInscripciones')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/inscripciones/personas/exportar', 'backoffice\ReportController@exportarPersonasInscriptas')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluaciones/exportar', 'backoffice\ReportController@exportarEvaluacionesGenerales')->middleware('role:admin');;
     Route::get('/ajax/estadisticas/evaluadores/exportar', 'backoffice\ReportController@exportarEvaluadoresGenerales')->middleware('role:admin');;
+
+    // Exportaciones del nuevo dashboard general
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-actividad',  'backoffice\ReportController@exportarEvaluacionesActividadGeneral')->middleware('role:admin');
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-personas',   'backoffice\ReportController@exportarEvaluacionesPersonasGeneral')->middleware('role:admin');
+    Route::get('/ajax/estadisticas/evaluaciones/exportar-impacto',    'backoffice\ReportController@exportarEvaluacionesImpactoGeneral')->middleware('role:admin');
 
     Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
     Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');

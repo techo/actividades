@@ -33,14 +33,7 @@
 					</div>
 				</div>
 				<div id="evaluaciones" class="tab-pane" :class="{'active': display.evaluaciones}" >
-					<div style="text-align: right">
-						<button class="btn btn-default" @click="exportarEvaluaciones()" >{{ $t('backend.download') }} {{ $t('backend.evaluations') }} <i class="fa fa-download"></i></button>
-						<button class="btn btn-default" @click="exportarEvaluadores()" >{{ $t('backend.download') }} {{ $t('backend.evaluators') }} <i class="fa fa-download"></i></button>
-					</div>
-
-					<div style="height: 200px" >
-						<line-chart ref="graficoevaluaciones" v-if="loaded.evaluaciones" :chartData="dataEvaluaciones" :options="options"></line-chart>
-					</div>
+					<evaluaciones-dashboard-general v-if="display.evaluaciones" :filtros="filtros"></evaluaciones-dashboard-general>
 				</div>
 			</div>
 
@@ -52,12 +45,15 @@
 import LineChart from '../../plugins/LineChart';
 import Alert from '../../plugins/Alert';
 import EstadisticasFiltros from './estadisticas-filtros';
+import EvaluacionesDashboardGeneral from './EvaluacionesDashboardGeneral';
 
 export default {
-	components: { 
-		'estadisticas-filtros': EstadisticasFiltros, 
-		'line-chart': LineChart, 
-		'alert': Alert },
+	components: {
+		'estadisticas-filtros': EstadisticasFiltros,
+		'line-chart': LineChart,
+		'alert': Alert,
+		'evaluaciones-dashboard-general': EvaluacionesDashboardGeneral,
+	},
 	data() {
 		return {
 			filtros: {},

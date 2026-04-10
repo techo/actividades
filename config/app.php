@@ -40,6 +40,9 @@ return [
     'estadisticas' => env('APP_ESTADISTICAS', false),
     'available_locales' => env('APP_AVAILABLE_LOCALES', ''),
     'pais_default' => env('APP_PAIS_DEFAULT', false),
+    'app_store_ios_url'     => env('APP_STORE_IOS_URL', ''),
+    'app_store_android_url' => env('APP_STORE_ANDROID_URL', ''),
+    'app_deep_link_url'     => env('APP_DEEP_LINK_URL', ''),
 
 
     /*

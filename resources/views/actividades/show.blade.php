@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    {{ $actividad->tipo->nombre }}:  {{ $actividad->nombreActividad }}
+    {{ $actividad->tipo->nombre_localizado }}:  {{ $actividad->nombreActividad }}
 @endsection
 
 
@@ -28,7 +28,7 @@
 		<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
-				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre }}</h6>
+				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre_localizado }}</h6>
 			</div>
 		</div>
 		<div class="row">

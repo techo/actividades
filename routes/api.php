@@ -51,6 +51,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
 
+    Route::post('ping', 'api\PersonasController@ping');
+
     Route::get('actividades', 'ajax\ActividadesController@index');
 
     Route::post('password/reset', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');

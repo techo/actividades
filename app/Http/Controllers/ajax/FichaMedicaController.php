@@ -23,6 +23,7 @@ class FichaMedicaController extends Controller
               'alergias' => 'nullable',
               'vacunacion_covid' => 'nullable',
               'alimentacion' => 'nullable',
+              'enfermedades_preexistentes' => 'nullable',
               'confirma_datos' => 'required',
               ]);
       $persona = Auth::user();
@@ -43,6 +44,7 @@ class FichaMedicaController extends Controller
       $fichaMedica->alergias = $request->alergias;
       $fichaMedica->vacunacion_covid = $request->vacunacion_covid;
       $fichaMedica->alimentacion = $request->alimentacion;
+      $fichaMedica->enfermedades_preexistentes = $request->enfermedades_preexistentes;
       $fichaMedica->confirma_datos = $request->confirma_datos;
 
       $fichaMedica->save();

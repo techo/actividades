@@ -41,7 +41,7 @@
 
             <div>
                 <b-tabs content-class="mt-3" fill v-model="paso_actual">
-                    <b-tab class="m-3" :title="$t('frontend.personal_data')" href="#personales">
+                    <b-tab class="m-3" :title="$t('frontend.personal_data')">
                         <div class="row mx-2">
                             <div class="col-md-6">
                                 <div class="row">
@@ -279,65 +279,74 @@
                             <em>{{ $t('frontend.forget_password') }}</em>
                         </p>
                         <div class="col-md-5 mx-2" v-else>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>{{ $t('frontend.actual_password') }}</label>
-                                </div>
+                            <div v-if="!mostrarCambioPass">
+                                <a href="#" @click.prevent="mostrarCambioPass = true">{{ $t('frontend.change_password') }}</a>
                             </div>
+                            <div v-if="mostrarCambioPass">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>{{ $t('frontend.actual_password') }}</label>
+                                    </div>
+                                </div>
 
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <input type="password" class="form-control" name="pass_actual" id="pass_actual"
-                                        v-model="user.pass_actual">
-                                    <small class="form-text text-danger">{{ validacion.pass_actual.texto
-                                    }}&nbsp;<br></small>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="password" class="form-control" name="pass_actual" id="pass_actual"
+                                            v-model="user.pass_actual">
+                                        <small class="form-text text-danger">{{ validacion.pass_actual.texto
+                                        }}&nbsp;<br></small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.pass_actual.valido }"><i
+                                                class="fas fa-check text-success"></i></span>
+                                        <span v-bind:class="{ 'd-none': !validacion.pass_actual.invalido }"><i
+                                                class="fas fa-times text-danger"></i></span>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <span v-bind:class="{ 'd-none': !validacion.pass_actual.valido }"><i
-                                            class="fas fa-check text-success"></i></span>
-                                    <span v-bind:class="{ 'd-none': !validacion.pass_actual.invalido }"><i
-                                            class="fas fa-times text-danger"></i></span>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>{{ $t('frontend.new_password') }}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="password" class="form-control" name="pass" id="pass"
+                                            v-model="user.pass">
+                                        <small class="form-text text-danger">{{ validacion.pass.texto }}&nbsp;<br></small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.pass.valido }"><i
+                                                class="fas fa-check text-success"></i></span>
+                                        <span v-bind:class="{ 'd-none': !validacion.pass.invalido }"><i
+                                                class="fas fa-times text-danger"></i></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>{{ $t('frontend.confirm_new_password') }}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="password" class="form-control" name="pass_confirmacion"
+                                            id="pass_confirmacion" v-model="user.pass_confirmacion">
+                                        <small class="form-text text-danger">{{ validacion.pass_confirmacion.texto
+                                        }}&nbsp;<br>
+                                        </small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.pass_confirmacion.valido }"><i
+                                                class="fas fa-check text-success"></i></span>
+                                        <span v-bind:class="{ 'd-none': !validacion.pass_confirmacion.invalido }"><i
+                                                class="fas fa-times text-danger"></i></span>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-12">
+                                        <a href="#" @click.prevent="cancelarCambioPass()"><small>{{ $t('frontend.cancel') }}</small></a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>{{ $t('frontend.new_password') }}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <input type="password" class="form-control" name="pass" id="pass"
-                                        v-model="user.pass">
-                                    <small class="form-text text-danger">{{ validacion.pass.texto }}&nbsp;<br></small>
-                                </div>
-                                <div class="col-md-2">
-                                    <span v-bind:class="{ 'd-none': !validacion.pass.valido }"><i
-                                            class="fas fa-check text-success"></i></span>
-                                    <span v-bind:class="{ 'd-none': !validacion.pass.invalido }"><i
-                                            class="fas fa-times text-danger"></i></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>{{ $t('frontend.confirm_new_password') }}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <input type="password" class="form-control" name="pass_confirmacion"
-                                        id="pass_confirmacion" v-model="user.pass_confirmacion">
-                                    <small class="form-text text-danger">{{ validacion.pass_confirmacion.texto
-                                    }}&nbsp;<br>
-                                    </small>
-                                </div>
-                                <div class="col-md-2">
-                                    <span v-bind:class="{ 'd-none': !validacion.pass_confirmacion.valido }"><i
-                                            class="fas fa-check text-success"></i></span>
-                                    <span v-bind:class="{ 'd-none': !validacion.pass_confirmacion.invalido }"><i
-                                            class="fas fa-times text-danger"></i></span>
-                                </div>
-                            </div>
-
                         </div>
 
                         <div class="row mx-2">
@@ -384,14 +393,14 @@
                         <hr>
 
                     </b-tab>
-                    <b-tab href="#ficha" class="w-100 text-uppercase" :title="$t('frontend.ficha_medica')">
+                    <b-tab class="w-100 text-uppercase" :title="$t('frontend.ficha_medica')">
                         <ficha-medica ref="fichaMedica" :fichaMedica="user.fichaMedica" />
                     </b-tab>
-                    <b-tab href="#estudios" :title="$t('frontend.estudios')">
+                    <b-tab :title="$t('frontend.estudios')">
                         <estudios ref="estudios" :estudios="user.estudios" :idPersona="user.id"/>
                     </b-tab>
 
-                    <b-tab href="#equipos" :title="$t('frontend.equipos')">
+                    <b-tab :title="$t('frontend.equipos')">
                         <equipos ref="equipos" :equipos="user.integrantes" :idPersona="user.id"/>
                     </b-tab>
 
@@ -419,7 +428,7 @@ export default {
             guardo: false,
             user: JSON.parse(this.usuario),
             validacion: {},
-            paso_actual: 'email',
+            paso_actual: 0,
             volver: true,
             paises: [],
             provincias: [],
@@ -434,6 +443,7 @@ export default {
             openPhotoEdit: false,
             phoneNumber: '',
             previousCountry: '',
+            mostrarCambioPass: false,
         }
         data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
@@ -450,11 +460,11 @@ export default {
             }
         }
         if (data.user.facebook_id || data.user.google_id) {
-            data.paso_actual = 'personales'
+            data.paso_actual = 0
             data.volver = false
         }
         if (this.linkear) {
-            data.paso_actual = 'linkear'
+            data.paso_actual = 0
         }
         data.pass = '';
         return data
@@ -466,7 +476,9 @@ export default {
         this.traer_localidades()
         this.formDirty = false
         this.phoneNumber = this.user.telefono;
-        this.paso_actual = (window.location.href.split('#')[1]);
+        var hashMap = { 'personales': 0, 'ficha': 1, 'estudios': 2, 'equipos': 3 };
+        var hash = window.location.href.split('#')[1];
+        this.paso_actual = hashMap[hash] !== undefined ? hashMap[hash] : 0;
         this.removeUndefinedText();
     },
     updated() {
@@ -579,6 +591,7 @@ export default {
                 this.guardo = true;
                 this.formDirty = false;
                 this.$parent.$refs.login.user.nombres = this.user.nombre
+                this.cancelarCambioPass();
             }).catch((error) => {
                 this.validar_data()
             });
@@ -628,6 +641,15 @@ export default {
         },
         paso: function (paso) {
             return paso == this.paso_actual
+        },
+        cancelarCambioPass: function () {
+            this.mostrarCambioPass = false;
+            this.user.pass_actual = '';
+            this.user.pass = '';
+            this.user.pass_confirmacion = '';
+            this.validacion.pass_actual = { texto: '', valido: false, invalido: false };
+            this.validacion.pass = { texto: '', valido: false, invalido: false };
+            this.validacion.pass_confirmacion = { texto: '', valido: false, invalido: false };
         },
         limpia_validacion_pass: function (data) {
             if (!this.user.pass && !this.user.pass_actual && !this.user.pass_confirmacion) {

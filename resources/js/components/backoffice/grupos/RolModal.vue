@@ -11,13 +11,19 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="rol">{{ $t('backend.role') }}</label>
-                        <input type="text"
-                               id="rol"
-                               name="rol"
-                               class="input form-control"
-                               placeholder="Escriba el rol"
-                               v-model="rolSeleccionado"
+                        <select
+                            class="form-control"
+                            v-model="rolSeleccionado"
                         >
+                            <option value=""></option>
+                            <option
+                                v-for="(label, key) in rolesFallback"
+                                :key="key"
+                                :value="key"
+                            >
+                                {{ label }}
+                            </option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -42,6 +48,11 @@
                 rolSeleccionado: ""
             }
         },
+        computed: {
+            rolesFallback() {
+                return this.$i18n.messages[this.$i18n.locale].backend.roles_integrantes;
+            },
+        },  
         created(){
             Event.$on('GruposToolbar:show-rol-modal', this.mostrarModal);
         },

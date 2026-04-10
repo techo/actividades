@@ -87,7 +87,7 @@
                         <div :class="{ 'form-group': true, 'has-error': errors.idTipo }" >
                             <label for="tipo">{{ $t('backend.type') }}</label>
                             <select name="idTipo" class="form-control" v-model="actividad.idTipo" required :disabled="!edicion" >
-                                <option v-text="tipo.nombre" v-bind:value="tipo.idTipo" v-for="tipo in tipos" ></option>
+                                <option v-bind:value="tipo.idTipo" v-for="tipo in tipos" >{{ tipo.nombre_localizado || tipo.nombre }}</option>
                             </select>
                             <span class="help-block">{{ errors.idTipo }}</span>
                         </div>
@@ -744,6 +744,7 @@
                     'ficha_alimentacion' : false,
                     'documento_identidad' : false,
                     'vacunacion_covid' : false,
+                    'enfermedades_preexistentes' : false,
                 },
                 estadoInscripcion: false,
                 estadoEvaluaciones: false,
@@ -860,7 +861,8 @@
                                 'ficha_alergias' : false,
                                 'ficha_alimentacion' : false,
                                 'documento_identidad' : false,
-                                'vacunacion_covid' : false
+                                'vacunacion_covid' : false,
+                                'enfermedades_preexistentes' : false
                             };
                         if (this.actividad.roles_tags)
                             this.rolesTags = this.rolesFallback.filter(role =>

@@ -39,7 +39,7 @@ return [
                 'sortField' => 'fechaInicio',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
-                'title' => 'backend.start_dates',
+                'title' => 'backend.start_date',
                 'callback' => 'formatDate|DD-MM-YYYY'
             ],
             [

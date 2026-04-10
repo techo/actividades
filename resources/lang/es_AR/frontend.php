@@ -43,6 +43,13 @@ return [
 	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
 	'cookie_policy' => 'Politicas de Cookies',
 
+	// app-banner.vue
+	'app_banner_subtitle'       => 'Descargá la app de MiTECHO',
+	'app_banner_open_subtitle'  => 'Abrir en MiTECHO app',
+	'app_banner_download'       => 'DESCARGAR',
+	'app_banner_open'           => 'ABRIR',
+	'app_banner_close'          => 'Cerrar',
+
 	// login.vue
     'login' => 'Ingresar',
     'login_or_register' => 'LOGIN / REGISTRO',
@@ -182,6 +189,7 @@ return [
 	'state'  =>  'ESTADO ACTUAL',
 	'municipality'  =>  'CIUDAD ACTUAL',
 	'telephone'  =>  'TELEFONO',
+	'change_password'  =>  'Cambiar contraseña',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL',
 	'new_password'  =>  'NUEVA CONTRASEÑA',
     'confirm_new_password'  =>  'CONFIRMAR CONTRASEÑA',
@@ -210,8 +218,9 @@ return [
  	'documento_identidad_dorso' => 'Documento Dorso',
  	'ficha_otros' => 'Otros Datos',
  	'ficha_alergias' => 'Alergias',
-	'vacunacion_covid' => 'Vacuna Covid', 
+	'vacunacion_covid' => 'Vacuna Covid',
  	'ficha_alimentacion' => 'Restricciones o dieta',
+ 	'enfermedades_preexistentes' => 'Enfermedades Preexistentes',
  	'ficha_confirma_datos' => 'Confirmacion de datos',
  	'documents' => 'Documentos',
  	'cobertura_paga' => 'Cobertura Paga',
@@ -495,5 +504,11 @@ return [
 
 	//aviso_modal
 	'aviso_modal' => 'Ver Actividades Virtuales',
+
+    'cargando' => 'Cargando...',
+
+    // Preguntas de inscripción
+    'preguntas_inscripcion'       => 'Preguntas de inscripción',
+    'complete_required_questions' => 'Por favor respondé todas las preguntas obligatorias.',
 
 ];

@@ -1,6 +1,6 @@
 @extends('backoffice.main')
 
-@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.coordinators'))
+@section('page_title', $actividad->nombreActividad . ' - ' . __('backend.evaluations'))
 
 @section('content')
 <div class="nav-tabs-custom">
@@ -22,9 +22,26 @@
                     </span>
                 </div>
             </div>
-            <evaluaciones-general-stats :id="{{ $actividad->idActividad }}" ></evaluaciones-general-stats>
-            <evaluaciones-actividad :id="{{ $actividad->idActividad }}" ></evaluaciones-actividad>
-            <evaluaciones-voluntarios :id="{{ $actividad->idActividad }}" ></evaluaciones-voluntarios>
+
+            {{-- Fila 1: Resumen general (4 tarjetas) --}}
+            <evaluaciones-general-stats :id="{{ $actividad->idActividad }}"></evaluaciones-general-stats>
+
+            {{-- Fila 2: Evaluación General (histograma, NPS, comentarios) --}}
+            <evaluaciones-actividad :id="{{ $actividad->idActividad }}"></evaluaciones-actividad>
+
+            {{-- Fila 3: Tags - Atributos Destacados + Puntos de Mejora --}}
+            <evaluaciones-tags-resumen :id="{{ $actividad->idActividad }}"></evaluaciones-tags-resumen>
+
+            {{-- Fila 4: Competencias (radar) + Impacto Percibido --}}
+            <div class="row">
+                <div class="col-md-7">
+                    <evaluaciones-competencias :id="{{ $actividad->idActividad }}"></evaluaciones-competencias>
+                </div>
+                <div class="col-md-5">
+                    <evaluaciones-impacto :id="{{ $actividad->idActividad }}"></evaluaciones-impacto>
+                </div>
+            </div>
+
         </div>
 
     </div>

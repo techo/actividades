@@ -15,12 +15,12 @@ class TipoResource extends Resource
     public function toArray($request)
     {
       return  [
-            'idTipo' => $this->idTipo,
-            'nombre' => $this->nombre,
-            'imagen' => $this->imagen,
-            'flujo'  => $this->flujo,
-            'color' =>$this->categoria->color,
-            'idCategoria'   => $this->idCategoria,
+            'idTipo'      => $this->idTipo,
+            'nombre'      => $this->nombre_localizado,
+            'imagen'      => $this->imagen,
+            'flujo'       => $this->flujo,
+            'color'       => $this->categoria->color,
+            'idCategoria' => $this->idCategoria,
         ];
     }
 }

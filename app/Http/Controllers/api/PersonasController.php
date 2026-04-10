@@ -55,9 +55,16 @@ class PersonasController extends Controller
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
         $afterLoginUrl = '';
 
-        if ($authSuccess){ 
+        if ($authSuccess){
             $user = Persona::where('mail', $credentials['mail'])->first();
             $token = $user->createToken('Token Name')->accessToken;
+
+            if (is_null($user->primer_acceso_app)) {
+                $user->primer_acceso_app = now();
+            }
+            $user->ultimo_acceso_app = now();
+            $user->save();
+
             return response(
                 [
                     'success' => true,
@@ -121,6 +128,10 @@ class PersonasController extends Controller
 
         $persona->$column = $data['social_id'];
         $persona->email_verified_at = now();
+        if (is_null($persona->primer_acceso_app)) {
+            $persona->primer_acceso_app = now();
+        }
+        $persona->ultimo_acceso_app = now();
         $persona->save();
 
         $token = $persona->createToken('social-login')->accessToken;
@@ -133,6 +144,15 @@ class PersonasController extends Controller
             'abreviacionPais'   => optional($pais)->abreviacion,
             'loginSocial'       => true,
         ]);
+    }
+
+    public function ping(Request $request)
+    {
+        $persona = auth('api')->user();
+        $persona->ultimo_acceso_app = now();
+        $persona->save();
+
+        return response(['success' => true], 200);
     }
 
     public function logout(request $request)
