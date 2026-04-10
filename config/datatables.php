@@ -868,6 +868,92 @@ return [
             ],
         ]
     ],
+    'campanas' => [
+        'fields' => [
+            [
+                'name'      => 'id',
+                'sortField' => 'id',
+                'visible'   => false,
+            ],
+            [
+                'name'      => 'nombre',
+                'sortField' => 'nombre',
+                'title'     => 'backend.name',
+            ],
+            [
+                'name'      => 'tipo',
+                'sortField' => 'tipo',
+                'title'     => 'backend.type',
+            ],
+            [
+                'name'      => 'activa',
+                'sortField' => 'activa',
+                'title'     => 'backend.state',
+            ],
+            [
+                'name'      => 'created_at',
+                'sortField' => 'created_at',
+                'title'     => 'backend.created_at',
+                'callback'  => 'formatDate|DD-MM-YYYY',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field'     => 'created_at',
+                'sortField' => 'created_at',
+                'direction' => 'desc',
+            ],
+        ],
+    ],
+
+    'campana_suscriptos' => [
+        'fields' => [
+            [
+                'name'      => 'id',
+                'sortField' => 'id',
+                'visible'   => false,
+            ],
+            [
+                'name'      => 'nombre',
+                'sortField' => 'nombre',
+                'title'     => 'backend.name',
+            ],
+            [
+                'name'      => 'apellido',
+                'sortField' => 'apellido',
+                'title'     => 'backend.last_name',
+            ],
+            [
+                'name'      => 'mail',
+                'sortField' => 'mail',
+                'title'     => 'backend.email',
+            ],
+            [
+                'name'      => 'telefono',
+                'sortField' => 'telefono',
+                'title'     => 'backend.phone',
+            ],
+            [
+                'name'      => 'convertido',
+                'sortField' => 'convertido',
+                'title'     => 'backend.converted',
+            ],
+            [
+                'name'      => 'created_at',
+                'sortField' => 'created_at',
+                'title'     => 'backend.created_at',
+                'callback'  => 'formatDate|DD-MM-YYYY',
+            ],
+        ],
+        'sortOrder' => [
+            [
+                'field'     => 'created_at',
+                'sortField' => 'created_at',
+                'direction' => 'desc',
+            ],
+        ],
+    ],
+
     'tiposActividad' => [
         'fields' => [
             [

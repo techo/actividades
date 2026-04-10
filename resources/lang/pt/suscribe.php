@@ -55,4 +55,7 @@ return [
     'success_title' => 'Obrigado por se inscrever!',
     'success_message' => 'Entraremos em contato com você em breve.',
     'success_extra' => 'Seu interesse é muito importante para nós.',
+
+    'additional_questions' => 'Perguntas adicionais',
+    'select_option'        => 'Selecione uma opção',
 ];

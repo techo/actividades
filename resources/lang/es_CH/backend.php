@@ -623,4 +623,28 @@ return [
     'error_guardando'       => 'Ocurrió un error al guardar. Inténtalo nuevamente.',
     'confirm_delete'        => '¿Estás seguro de que quieres eliminar este registro? Esta acción no se puede deshacer.',
 
+    // Campañas
+    'campaigns'                  => 'Campañas',
+    'campaign'                   => 'Campaña',
+    'create_campaign'            => 'Crear Campaña',
+    'campaign_questions'         => 'Preguntas de la Campaña',
+    'view_public_link'           => 'Ver link público',
+    'converted'                  => 'Convertido',
+    'convert_to_user'            => 'Convertir en usuario',
+    'confirm_convert_to_user'    => '¿Quieres convertir este suscripto en usuario registrado?',
+    'active'                     => 'Activa',
+    'saved'                      => 'Guardado',
+    'save'                       => 'Guardar',
+    'add'                        => 'Agregar',
+    'cancel'                     => 'Cancelar',
+    'search'                     => 'Buscar',
+    'question'                   => 'Pregunta',
+    'required'                   => 'Requerida',
+    'dropdown'                   => 'Desplegable',
+    'order'                      => 'Orden',
+    'options'                    => 'Opciones',
+    'one_per_line'               => 'una por línea',
+    'edit_question'              => 'Editar pregunta',
+    'add_question'               => 'Agregar pregunta',
+
 ];

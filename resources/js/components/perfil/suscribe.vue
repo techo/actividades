@@ -143,6 +143,37 @@
                     </label>
                 </div>
 
+                <!-- Preguntas dinámicas de la campaña -->
+                <div v-if="preguntas && preguntas.length" class="mt-3">
+                    <h4>{{ $t('suscribe.additional_questions') }}</h4>
+                    <div v-for="pregunta in preguntas" :key="pregunta.id" class="form-group mt-2">
+                        <label>
+                            {{ pregunta.pregunta }}
+                            <span v-if="pregunta.requerida" class="text-danger">*</span>
+                        </label>
+                        <p v-if="pregunta.descripcion" class="text-muted small mb-1">{{ pregunta.descripcion }}</p>
+
+                        <select
+                            v-if="pregunta.tipo === 'desplegable'"
+                            class="form-control"
+                            v-model="respuestas[pregunta.id]"
+                            :required="pregunta.requerida"
+                        >
+                            <option value="">{{ $t('suscribe.select_option') }}</option>
+                            <option v-for="opcion in pregunta.opciones" :key="opcion" :value="opcion">
+                                {{ opcion }}
+                            </option>
+                        </select>
+
+                        <input
+                            v-else
+                            class="form-control"
+                            v-model="respuestas[pregunta.id]"
+                            :required="pregunta.requerida"
+                        >
+                    </div>
+                </div>
+
                 <button
                     v-if="!guardado"
                     class="btn btn-primary btn-lg mt-4 w-100"
@@ -191,7 +222,17 @@ export default {
             type: Object,
             required: false,
             default: null
-        }
+        },
+        campaign: {
+            type: Object,
+            required: false,
+            default: null
+        },
+        preguntas: {
+            type: Array,
+            required: false,
+            default: () => []
+        },
     },
     data() {
         return {
@@ -210,6 +251,7 @@ export default {
                 experiencia_previa: false,
                 instagram: '',
                 dni: '',
+                campaign_id: null,
             },
             provincias: [],
             localidades: [],
@@ -218,6 +260,7 @@ export default {
             telefonoPaisIso: null,
             guardado: false,
             errores: {},
+            respuestas: {},
         }
     },
     mounted: function(){
@@ -226,6 +269,9 @@ export default {
             this.suscriptor.idPais = this.pais.id;
             this.traer_provincias();
             this.telefonoPaisIso = this.pais.iso2 ? this.pais.iso2 : null;
+        }
+        if (this.campaign) {
+            this.suscriptor.campaign_id = this.campaign.id;
         }
     },
 
@@ -297,12 +343,20 @@ export default {
 
 
 
+            // Construir array de respuestas para preguntas dinámicas
+            const respuestasArray = Object.keys(this.respuestas).map(preguntaId => ({
+                pregunta_id: parseInt(preguntaId),
+                respuesta:   this.respuestas[preguntaId],
+            }))
+
             const payload = {
                 ...this.suscriptor,
-                fecha_nacimiento: this.formatFecha(this.suscriptor.fecha_nacimiento)
+                fecha_nacimiento: this.formatFecha(this.suscriptor.fecha_nacimiento),
+                respuestas: respuestasArray,
             }
 
-            axios.post('suscribe', payload)
+            const postUrl = this.pais ? ('/' + this.pais.abreviacion + '/suscribe') : 'suscribe'
+            axios.post(postUrl, payload)
                 .then(() => {
                     this.guardado = true;
             })

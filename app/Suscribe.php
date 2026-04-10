@@ -29,6 +29,8 @@ class Suscribe extends Model
         'canal_contacto',
         'experiencia_previa',
         'instagram',
+        'campaign_id',
+        'convertido',
     ];
 
     protected $casts = [
@@ -54,5 +56,15 @@ class Suscribe extends Model
     public function provincia()
     {
         return $this->hasOne(Provincia::class, 'idProvincia', 'id');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id');
+    }
+
+    public function respuestas()
+    {
+        return $this->hasMany(SuscribeRespuesta::class, 'suscripcion_id');
     }
 }

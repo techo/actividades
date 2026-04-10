@@ -103,6 +103,22 @@
 
             @if (Auth::user()->hasRole('admin'))
             
+            <li class="treeview {{ request()->is('admin/campanas*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-bullhorn"></i> <span>{{ __('backend.campaigns') }}</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/campanas/crear') ? 'active' : ''}}">
+                        <a href="/admin/campanas/crear"><i class="fa fa-plus"></i>{{ __('backend.create_campaign') }}</a>
+                    </li>
+                    <li class="{{request()->is('admin/campanas') ? 'active' : ''}}">
+                        <a href="/admin/campanas">{{ __('backend.view_list') }}</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="treeview {{ (request()->is('admin/usuarios*') || request()->is('admin/suscriptos')) ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-user"></i> <span>{{ __('backend.people') }}</span>
                     <span class="pull-right-container">

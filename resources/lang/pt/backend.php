@@ -623,4 +623,28 @@ return [
     'impact_footnote'            => "Porcentagem de participantes que responderam 'Sim' ou ≥ 8",
     'export'                     => 'Exportar',
 
+    // Campanhas
+    'campaigns'                  => 'Campanhas',
+    'campaign'                   => 'Campanha',
+    'create_campaign'            => 'Criar Campanha',
+    'campaign_questions'         => 'Perguntas da Campanha',
+    'view_public_link'           => 'Ver link público',
+    'converted'                  => 'Convertido',
+    'convert_to_user'            => 'Converter em usuário',
+    'confirm_convert_to_user'    => 'Deseja converter este inscrito em usuário registrado?',
+    'active'                     => 'Ativa',
+    'saved'                      => 'Salvo',
+    'save'                       => 'Salvar',
+    'add'                        => 'Adicionar',
+    'cancel'                     => 'Cancelar',
+    'search'                     => 'Buscar',
+    'question'                   => 'Pergunta',
+    'required'                   => 'Obrigatória',
+    'dropdown'                   => 'Seleção',
+    'order'                      => 'Ordem',
+    'options'                    => 'Opções',
+    'one_per_line'               => 'uma por linha',
+    'edit_question'              => 'Editar pergunta',
+    'add_question'               => 'Adicionar pergunta',
+
 ];

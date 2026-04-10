@@ -55,4 +55,7 @@ return [
     'success_title' => 'Thank you for signing up!',
     'success_message' => 'We will get in touch with you shortly.',
     'success_extra' => 'Your interest is very important to us.',
+
+    'additional_questions' => 'Additional questions',
+    'select_option'        => 'Select an option',
 ];

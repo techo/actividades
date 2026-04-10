@@ -624,4 +624,28 @@ return [
     'impact_footnote'            => "Percentage of participants who answered 'Yes' or ≥ 8",
     'export'                     => 'Export',
 
+    // Campaigns
+    'campaigns'                  => 'Campaigns',
+    'campaign'                   => 'Campaign',
+    'create_campaign'            => 'Create Campaign',
+    'campaign_questions'         => 'Campaign Questions',
+    'view_public_link'           => 'View public link',
+    'converted'                  => 'Converted',
+    'convert_to_user'            => 'Convert to user',
+    'confirm_convert_to_user'    => 'Do you want to convert this subscriber into a registered user?',
+    'active'                     => 'Active',
+    'saved'                      => 'Saved',
+    'save'                       => 'Save',
+    'add'                        => 'Add',
+    'cancel'                     => 'Cancel',
+    'search'                     => 'Search',
+    'question'                   => 'Question',
+    'required'                   => 'Required',
+    'dropdown'                   => 'Dropdown',
+    'order'                      => 'Order',
+    'options'                    => 'Options',
+    'one_per_line'               => 'one per line',
+    'edit_question'              => 'Edit question',
+    'add_question'               => 'Add question',
+
 ];

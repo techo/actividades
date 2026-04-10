@@ -196,6 +196,26 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
     Route::get('/suscriptos', 'backoffice\UsuariosController@suscriptos')->middleware('role:admin');
+
+    // Campañas
+    Route::prefix('/campanas')->middleware(['role:admin'])->group(function () {
+        Route::get('', 'backoffice\CampanasController@index');
+        Route::get('/crear', 'backoffice\CampanasController@create');
+        Route::get('/{id}', 'backoffice\CampanasController@show');
+    });
+    Route::prefix('ajax/campanas')->middleware(['role:admin'])->group(function () {
+        Route::get('', 'backoffice\ajax\CampanasController@index');
+        Route::post('', 'backoffice\ajax\CampanasController@store');
+        Route::put('/{id}', 'backoffice\ajax\CampanasController@update');
+        Route::delete('/{id}', 'backoffice\ajax\CampanasController@destroy');
+        Route::get('/{id}/suscriptos', 'backoffice\ajax\CampanasController@suscriptos');
+        Route::post('/{id}/convertir', 'backoffice\ajax\CampanasController@convertir');
+        // preguntas
+        Route::get('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@index');
+        Route::post('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@store');
+        Route::put('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@update');
+        Route::delete('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@destroy');
+    });
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
@@ -581,4 +601,5 @@ Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function 
     Route::get('/filtro', 'ActividadesController@index');
     Route::get('/', 'HomeController@index');
     Route::get('/postulaciones', 'PostulacionesController@index');
+    Route::get('/campania/{id}', 'CampaniaController@show');
 });
