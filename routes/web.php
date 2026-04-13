@@ -201,6 +201,9 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::prefix('/campanas')->middleware(['role:admin'])->group(function () {
         Route::get('', 'backoffice\CampanasController@index');
         Route::get('/crear', 'backoffice\CampanasController@create');
+        Route::get('/{id}/preguntas', 'backoffice\CampanasController@preguntas');
+        Route::get('/{id}/suscriptos', 'backoffice\CampanasController@suscriptos');
+        Route::get('/{id}/exportar', 'backoffice\CampanasController@exportar');
         Route::get('/{id}', 'backoffice\CampanasController@show');
     });
     Route::prefix('ajax/campanas')->middleware(['role:admin'])->group(function () {
@@ -210,6 +213,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::delete('/{id}', 'backoffice\ajax\CampanasController@destroy');
         Route::get('/{id}/suscriptos', 'backoffice\ajax\CampanasController@suscriptos');
         Route::post('/{id}/convertir', 'backoffice\ajax\CampanasController@convertir');
+        Route::post('/{id}/imagen', 'backoffice\ajax\CampanasController@storeImagen');
         // preguntas
         Route::get('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@index');
         Route::post('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@store');
@@ -612,4 +616,6 @@ Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function 
     Route::get('/', 'HomeController@index');
     Route::get('/postulaciones', 'PostulacionesController@index');
     Route::get('/campania/{id}', 'CampaniaController@show');
+    Route::get('/colecta/{id}', 'CampaniaController@show');
+    Route::get('/captacion/{id}', 'CampaniaController@show');
 });
