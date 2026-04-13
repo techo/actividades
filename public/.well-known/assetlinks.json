@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.techoapp.mitecho",
+      "sha256_cert_fingerprints": [
+        "FA:28:B6:26:8E:92:2B:93:C2:68:0A:C2:C5:0C:FB:2B:ED:2D:A0:6C:0B:23:44:20:8C:B6:7C:0F:E7:45:93:20"
+      ]
+    }
+  }
+]

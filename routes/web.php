@@ -10,6 +10,19 @@ use Illuminate\Support\Facades\Request;
 
 
 
+// Universal Links (iOS) y App Links (Android) — deep linking mobile
+Route::get('/.well-known/apple-app-site-association', function () {
+    return response()->file(public_path('.well-known/apple-app-site-association'), [
+        'Content-Type' => 'application/json',
+    ]);
+});
+
+Route::get('/.well-known/assetlinks.json', function () {
+    return response()->file(public_path('.well-known/assetlinks.json'), [
+        'Content-Type' => 'application/json',
+    ]);
+});
+
 Route::get('/cookie/close', function(){
     return response()->json([],200)->cookie('cookie-policy-accepted', 'ok', 60*24*365);
 });
