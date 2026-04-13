@@ -632,6 +632,8 @@ return [
     'converted'                  => 'Convertido',
     'convert_to_user'            => 'Convertir en usuario',
     'confirm_convert_to_user'    => '¿Quieres convertir este suscripto en usuario registrado?',
+    'answer'                     => 'Respuesta',
+    'no_answers'                 => 'Sin respuestas a preguntas de campaña',
     'active'                     => 'Activa',
     'saved'                      => 'Guardado',
     'save'                       => 'Guardar',
@@ -646,5 +648,14 @@ return [
     'one_per_line'               => 'una por línea',
     'edit_question'              => 'Editar pregunta',
     'add_question'               => 'Agregar pregunta',
+    'hero_image'                 => 'Imagen principal',
+    'no_image'                   => 'Sin imagen',
+    'upload_image'               => 'Subir imagen',
+    'uploading'                  => 'Subiendo...',
+    'select'                     => 'Seleccionar',
+    'campaign_tipo_options'      => [
+        'colecta'   => 'Colecta',
+        'captacion' => 'Captación',
+    ],
 
 ];

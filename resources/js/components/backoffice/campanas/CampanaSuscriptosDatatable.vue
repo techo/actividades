@@ -2,6 +2,14 @@
   <div>
     <simple-alert ref="loading"></simple-alert>
 
+    <div class="row" style="margin-bottom: 10px;">
+      <div class="col-md-12">
+        <a :href="exportUrl" class="btn btn-success pull-right">
+          <i class="fa fa-download"></i> {{ $t('backend.export') }}
+        </a>
+      </div>
+    </div>
+
     <vuetable
       class="vuetable"
       ref="vuetable"
@@ -11,13 +19,14 @@
       :css="css.table"
       :sort-order="dataSortOrder"
       :multi-sort="true"
-      :perPage="25"
+      :per-page="25"
       :append-params="moreParams"
+      detail-row-component="campana-suscriptos-detail-row"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:loading="mostrarLoadingAlert"
       @vuetable:loaded="ocultarLoadingAlert"
+      @vuetable:cell-clicked="onCellClicked"
     >
-      <!-- Columna convertido con botón de acción -->
       <template slot="convertido" slot-scope="props">
         <span v-if="props.rowData.convertido" class="text-success">
           <i class="fa fa-check"></i> {{ $t('backend.yes') }}
@@ -25,7 +34,7 @@
         <button
           v-else
           class="btn btn-xs btn-warning"
-          @click="convertir(props.rowData)"
+          @click.stop="convertir(props.rowData)"
           :disabled="convirtiendo === props.rowData.id"
         >
           <i class="fa fa-user-plus"></i> {{ $t('backend.convert_to_user') }}
@@ -56,18 +65,31 @@ import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePagination
 import Vue from 'vue'
 import VueEvents from 'vue-events'
 import Simplert from 'vue2-simplert'
+import CampanaSuscriptosDetailRow from './CampanaSuscriptosDetailRow'
 
 Vue.use(VueEvents)
+Vue.component('campana-suscriptos-detail-row', CampanaSuscriptosDetailRow)
 
 export default {
   components: { Simplert, Vuetable, VuetablePagination, VuetablePaginationInfo },
-  props: ['apiUrl', 'fields', 'sortOrder', 'campanaId'],
+  props: {
+    apiUrl:    { type: String, required: true },
+    exportUrl: { type: String, required: true },
+    campanaId: { type: String, required: true },
+  },
   data() {
     return {
-      dataSortOrder: [],
-      dataFields:    [],
-      moreParams:    {},
-      convirtiendo:  null,
+      convirtiendo: null,
+      moreParams:   {},
+      dataSortOrder: [{ field: 'created_at', sortField: 'created_at', direction: 'desc' }],
+      dataFields: [
+        { name: 'nombre',     sortField: 'nombre',     title: this.$t('backend.name') },
+        { name: 'apellido',   sortField: 'apellido',   title: this.$t('backend.last_name') },
+        { name: 'mail',       sortField: 'mail',       title: this.$t('backend.email') },
+        { name: 'telefono',   sortField: 'telefono',   title: this.$t('backend.phone') },
+        { name: '__slot:convertido',                   title: this.$t('backend.converted') },
+        { name: 'created_at', sortField: 'created_at', title: this.$t('backend.created_at'), callback: 'formatDate|DD-MM-YYYY' },
+      ],
       css: {
         table: {
           tableClass: 'table table-hover table-condensed',
@@ -80,20 +102,10 @@ export default {
           disabledClass: 'disabled',
           pageClass: 'page',
           linkClass: 'link',
+          icons: { first: '', prev: '', next: '', last: '' },
         },
       },
     }
-  },
-  created() {
-    this.dataSortOrder = JSON.parse(this.sortOrder)
-    // Reemplazar la columna convertido con slot
-    const parsed = JSON.parse(this.fields)
-    parsed.forEach(f => {
-      if (f.name === 'convertido') {
-        f.name = '__slot:convertido'
-      }
-    })
-    this.dataFields = parsed
   },
   methods: {
     onPaginationData(paginationData) {
@@ -102,6 +114,9 @@ export default {
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page)
+    },
+    onCellClicked(data) {
+      this.$refs.vuetable.toggleDetailRow(data.id)
     },
     mostrarLoadingAlert() {
       this.$refs.loading.openSimplert({
@@ -119,12 +134,14 @@ export default {
     convertir(rowData) {
       if (!confirm(this.$t('backend.confirm_convert_to_user'))) return
       this.convirtiendo = rowData.id
-      axios.post(`/admin/ajax/campanas/${rowData.id}/convertir`)
+      axios.post('/admin/ajax/campanas/' + rowData.id + '/convertir')
         .then(() => {
           this.$refs.vuetable.refresh()
         })
-        .catch(e => {
-          alert(e.response.data.message || this.$t('backend.error_guardando'))
+        .catch((e) => {
+          alert(e.response && e.response.data && e.response.data.message
+            ? e.response.data.message
+            : this.$t('backend.error_guardando'))
         })
         .finally(() => {
           this.convirtiendo = null
