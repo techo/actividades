@@ -69,6 +69,26 @@
                                     {{ __('frontend.payment_in_process') }}
                                     @endif
 
+                                    @php
+                                        $stripeConfig = json_decode($actividad->pais->config_pago);
+                                        $stripeHabilitado = !empty($stripeConfig->stripe_secret) && $inscripcion->pago != 1;
+                                    @endphp
+                                    @if ($stripeHabilitado)
+                                    <div class="mt-3 pt-3" style="border-top: 1px solid #dee2e6;">
+                                        <p class="font-weight-bold">{{ __('frontend.pay_with_stripe_title') }}</p>
+                                        @if(session('error'))
+                                            <div class="alert alert-danger">{{ session('error') }}</div>
+                                        @endif
+                                        <form action="{{ route('stripe.checkout', ['idInscripcion' => $inscripcion->idInscripcion]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-dark">
+                                                {{ __('frontend.pay_with_stripe') }}
+                                            </button>
+                                        </form>
+                                        <small class="text-muted">{{ __('frontend.stripe_redirect_note') }}</small>
+                                    </div>
+                                    @endif
+
                                     <br>
                                     </div>
                                 </div>

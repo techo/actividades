@@ -579,6 +579,16 @@ Route::prefix('/pagos/')->group(function() {
     Route::post('{idInscripcion}/confirmation', 'PagosController@confirmation');
 });
 
+// Stripe — rutas autenticadas
+Route::middleware('auth')->prefix('stripe')->group(function () {
+    Route::post('/{idInscripcion}/checkout', 'StripeController@createCheckout')->name('stripe.checkout');
+    Route::get('/success', 'StripeController@success')->name('stripe.success');
+    Route::get('/cancel/{idInscripcion}', 'StripeController@cancel')->name('stripe.cancel');
+});
+
+// Stripe webhook — sin auth ni CSRF (validado por firma Stripe)
+Route::post('/stripe/webhook/{paisId}', 'StripeController@webhook')->name('stripe.webhook');
+
 Route::get('locale/{locale}', function($locale){
     Session::put('locale',$locale);
     return redirect()->back();

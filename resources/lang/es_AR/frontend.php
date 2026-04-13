@@ -411,6 +411,16 @@ return [
 	'payment_in_process' => 'Recibimos tu voucher. Estamos verificando tu pago',
 	'confirm_later' => 'Guardar inscripción, finalizar después',
 
+	// stripe
+	'pay_with_stripe_title'        => 'O pagá directamente con tarjeta',
+	'pay_with_stripe'              => 'Pagar con tarjeta',
+	'stripe_redirect_note'         => 'Serás redirigido a Stripe para completar el pago de forma segura.',
+	'stripe_error'                 => 'No se pudo iniciar el pago. Intentá de nuevo o subí un comprobante.',
+	'stripe_payment_pending_title' => '¡Gracias por tu pago!',
+	'stripe_payment_pending'       => 'Estamos confirmando tu transacción con Stripe. Recibirás un email de confirmación en breve.',
+	'stripe_payment_cancelled_title' => 'Pago cancelado',
+	'stripe_payment_cancelled'     => 'No se realizó ningún cargo. Podés intentarlo de nuevo o subir un comprobante manualmente.',
+
 	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirmar con tu donación',

@@ -406,6 +406,16 @@ return [
 	'payment_in_process' => 'Recebemos seu voucher. Estamos verificando seu pagamento',
 	'confirm_later' => 'Confirmar Mais Tarde',
 
+	// stripe
+	'pay_with_stripe_title'        => 'Ou pague diretamente com cartão',
+	'pay_with_stripe'              => 'Pagar com cartão',
+	'stripe_redirect_note'         => 'Você será redirecionado ao Stripe para concluir o pagamento com segurança.',
+	'stripe_error'                 => 'Não foi possível iniciar o pagamento. Tente novamente ou envie um comprovante.',
+	'stripe_payment_pending_title' => 'Obrigado pelo seu pagamento!',
+	'stripe_payment_pending'       => 'Estamos confirmando sua transação com o Stripe. Você receberá um e-mail de confirmação em breve.',
+	'stripe_payment_cancelled_title' => 'Pagamento cancelado',
+	'stripe_payment_cancelled'     => 'Nenhum valor foi cobrado. Você pode tentar novamente ou enviar um comprovante manualmente.',
+
 	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirme seu pagamento',

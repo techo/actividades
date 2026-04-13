@@ -399,6 +399,17 @@ return [
 	'data_uploaded' => 'Voucher Uploaded',
 	'payment_in_process' => "We've received your voucher. We are verifying your payment",
 	'confirm_later' => 'Confirm Later',
+
+	// stripe
+	'pay_with_stripe_title'        => 'Or pay directly with card',
+	'pay_with_stripe'              => 'Pay with card',
+	'stripe_redirect_note'         => 'You will be redirected to Stripe to complete your payment securely.',
+	'stripe_error'                 => 'Could not start payment. Try again or upload a payment receipt.',
+	'stripe_payment_pending_title' => 'Thank you for your payment!',
+	'stripe_payment_pending'       => 'We are confirming your transaction with Stripe. You will receive a confirmation email shortly.',
+	'stripe_payment_cancelled_title' => 'Payment cancelled',
+	'stripe_payment_cancelled'     => 'No charge was made. You can try again or upload a payment receipt manually.',
+
 	'coin_name' => '$',
 	//pagar_paso_2
 	'confirm_by_paying' => 'Confirm by paying',
