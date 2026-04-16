@@ -48,6 +48,11 @@
                 rolSeleccionado: ""
             }
         },
+        computed: {
+            rolesFallback() {
+                return this.$i18n.messages[this.$i18n.locale].backend.roles_integrantes;
+            },
+        },  
         created(){
             Event.$on('GruposToolbar:show-rol-modal', this.mostrarModal);
         },

@@ -8,6 +8,7 @@ use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use App\InscripcionRespuesta;
+use App\Jobs\EnviarNotificacionPush;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
@@ -129,6 +130,12 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
+                $this->dispararPush(
+                    $persona,
+                    '¡Inscripción recibida!',
+                    'Tu inscripción a "' . $actividad->nombreActividad . '" está pendiente de confirmación.',
+                    ['tipo' => 'inscripcion', 'estado' => 'PRE_INSCRIPTO', 'idActividad' => $actividad->idActividad]
+                );
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
@@ -154,6 +161,12 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
+                $this->dispararPush(
+                    $persona,
+                    '¡Ya casi estás!',
+                    'Falta completar el pago para confirmar tu inscripción a "' . $actividad->nombreActividad . '".',
+                    ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $actividad->idActividad]
+                );
 
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
@@ -173,6 +186,12 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
             $this->guardarRespuestasInscripcion($inscripcion, $request);
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
+            $this->dispararPush(
+                $persona,
+                '¡Inscripción confirmada! 🎉',
+                'Ya estás anotado en "' . $actividad->nombreActividad . '". ¡Nos vemos!',
+                ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $actividad->idActividad]
+            );
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
@@ -332,6 +351,33 @@ class InscripcionesController extends BaseController
                     'respuesta' => $respuesta['respuesta'] ?? null,
                 ]
             );
+        }
+    }
+
+    /**
+     * Despacha una notificación push al usuario si tiene dispositivos activos
+     * y no desactivó las notificaciones push.
+     */
+    private function dispararPush($persona, string $titulo, string $mensaje, array $datos = []): void
+    {
+        try {
+            if (!$persona->recibir_push) return;
+
+            $playerIds = $persona->dispositivos()
+                ->where('activo', true)
+                ->pluck('player_id')
+                ->toArray();
+
+            if (empty($playerIds)) return;
+
+            EnviarNotificacionPush::dispatch($playerIds, $titulo, $mensaje, $datos);
+
+        } catch (\Exception $e) {
+            // El push nunca debe interrumpir el flujo de inscripción
+            Log::warning('dispararPush: error al encolar notificación', [
+                'idPersona' => $persona->idPersona ?? null,
+                'error'     => $e->getMessage(),
+            ]);
         }
     }
 

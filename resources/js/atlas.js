@@ -28,6 +28,8 @@ import ContenedorDeTarjetas from './components/contenedorDeTarjetas';
 import CarouselDeTarjetas from './components/carouselDeTarjetas.vue';
 import CarouselDestacadas from './components/carouselDestacadas.vue';
 Vue.component('carousel-destacadas', CarouselDestacadas);
+import AppBanner from './components/app-banner.vue';
+Vue.component('app-banner', AppBanner);
 
 import Inscripcion from './components/inscripcion';
 import ConfirmacionPago from './components/confirmacionPago';

@@ -38,6 +38,15 @@
                         <div class="impacto-bar-inner" :style="{ width: recomendaria + '%' }"></div>
                     </div>
                 </div>
+                <div class="impacto-row">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small text-muted">{{ $t('backend.nps_score') }}</span>
+                        <span class="nps-badge">{{ $t('backend.excellent') }} ({{ nps }}%)</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" :style="{ width:nps + '%' }"></div>
+                    </div>
+                </div>
                 <p class="impacto-footnote">{{ $t('backend.impact_footnote') }}</p>
             </div>
         </div>
@@ -54,6 +63,7 @@
                 habilidades: 0,
                 percepcion: 0,
                 recomendaria: 0,
+                nps: 0,
             }
         },
         computed: {
@@ -90,6 +100,7 @@
                         this.habilidades  = res.data.habilidades;
                         this.percepcion   = res.data.percepcion;
                         this.recomendaria = res.data.recomendaria;
+                        this.nps = res.data.promotores - res.data.detractores;
                     });
             }
         }
