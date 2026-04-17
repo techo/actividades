@@ -938,12 +938,6 @@ return [
                 'sortField' => 'convertido',
                 'title'     => 'backend.converted',
             ],
-            [
-                'name'      => 'created_at',
-                'sortField' => 'created_at',
-                'title'     => 'backend.created_at',
-                'callback'  => 'formatDate|DD-MM-YYYY',
-            ],
         ],
         'sortOrder' => [
             [
