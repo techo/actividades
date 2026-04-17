@@ -657,5 +657,8 @@ return [
         'colecta'   => 'Coleta',
         'captacion' => 'Captação',
     ],
+    'user_exists'                => 'Usuário existente',
+    'view_person'                => 'Ver pessoa',
+    'no_office'                  => 'Sem escritório',
 
 ];

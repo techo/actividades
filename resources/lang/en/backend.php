@@ -658,5 +658,8 @@ return [
         'colecta'   => 'Fundraising',
         'captacion' => 'Recruitment',
     ],
+    'user_exists'                => 'Existing user',
+    'view_person'                => 'View person',
+    'no_office'                  => 'No office',
 
 ];

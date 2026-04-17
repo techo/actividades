@@ -23,10 +23,12 @@
                         'descripcion'  => $campana->descripcion,
                         'tipo'         => $campana->tipo,
                         'imagen'       => $campana->imagen,
+                        'oficina_id'   => $campana->oficina_id,
                         'fecha_inicio' => $campana->fecha_inicio ? $campana->fecha_inicio->format('Y-m-d') : null,
                         'fecha_fin'    => $campana->fecha_fin    ? $campana->fecha_fin->format('Y-m-d')    : null,
                         'activa'       => $campana->activa,
                     ]) }}"
+                    :oficinas="{{ json_encode($oficinas) }}"
                     public-url="{{ $publicUrl }}"
                 ></campana-form>
             </div>

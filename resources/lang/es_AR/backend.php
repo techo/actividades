@@ -658,5 +658,8 @@ return [
         'colecta'   => 'Colecta',
         'captacion' => 'Captación',
     ],
+    'user_exists'                => 'Usuario existente',
+    'view_person'                => 'Ver persona',
+    'no_office'                  => 'Sin oficina',
 
 ];

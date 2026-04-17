@@ -33,6 +33,7 @@ class CampanasController extends Controller
             'nombre'       => 'required|string|max:255',
             'descripcion'  => 'nullable|string',
             'tipo'         => 'nullable|in:colecta,captacion',
+            'oficina_id'   => 'nullable|exists:atl_oficinas,id',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date',
             'activa'       => 'boolean',
@@ -103,6 +104,19 @@ class CampanasController extends Controller
 
         $result = SuscriptosSearch::apply($filtros, $sort, $per_page);
         $result->getCollection()->load('respuestas.pregunta');
+
+        // REQ 1 — Detectar si el email del Subscribe ya corresponde a un usuario (Persona)
+        $emails   = $result->getCollection()->pluck('mail')->filter()->values()->toArray();
+        $personas = \App\Persona::whereIn('mail', $emails)
+            ->select(['idPersona', 'mail', 'nombres', 'apellidoPaterno'])
+            ->get()
+            ->keyBy('mail');
+
+        $result->getCollection()->each(function ($suscripcion) use ($personas) {
+            $persona = $personas->get($suscripcion->mail);
+            $suscripcion->setAttribute('persona_id',     $persona ? $persona->idPersona : null);
+            $suscripcion->setAttribute('persona_nombre', $persona ? trim($persona->nombres . ' ' . $persona->apellidoPaterno) : null);
+        });
 
         return response()->json($result);
     }

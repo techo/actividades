@@ -25,4 +25,9 @@ class Oficina extends Model
     {
         return $this->hasMany(Equipo::class, 'idOficina');
     }
+
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class, 'oficina_id');
+    }
 }

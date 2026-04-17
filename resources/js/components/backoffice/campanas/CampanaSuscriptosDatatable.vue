@@ -28,9 +28,27 @@
       @vuetable:cell-clicked="onCellClicked"
     >
       <template slot="convertido" slot-scope="props">
-        <span v-if="props.rowData.convertido" class="text-success">
+        <!-- Email ya pertenece a un usuario existente -->
+        <span v-if="props.rowData.persona_id">
+          <span class="label label-info" style="font-size:0.85em;">
+            <i class="fa fa-user"></i> {{ $t('backend.user_exists') }}
+          </span>
+          &nbsp;
+          <a
+            :href="'/admin/usuarios/' + props.rowData.persona_id"
+            target="_blank"
+            class="btn btn-xs btn-default"
+            @click.stop
+          >
+            <i class="fa fa-external-link"></i> {{ $t('backend.view_person') }}
+            <span v-if="props.rowData.persona_nombre"> — {{ props.rowData.persona_nombre }}</span>
+          </a>
+        </span>
+        <!-- Convertido via botón -->
+        <span v-else-if="props.rowData.convertido" class="text-success">
           <i class="fa fa-check"></i> {{ $t('backend.yes') }}
         </span>
+        <!-- Sin usuario aún -->
         <button
           v-else
           class="btn btn-xs btn-warning"

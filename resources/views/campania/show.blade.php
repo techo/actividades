@@ -19,10 +19,22 @@
         </div>
     @endif
 
+    @php
+        $authUser = auth()->check() ? auth()->user() : null;
+        $userData = $authUser ? [
+            'idPersona' => $authUser->idPersona,
+            'nombre'    => $authUser->nombres,
+            'apellido'  => $authUser->apellidoPaterno,
+            'mail'      => $authUser->mail,
+            'telefono'  => $authUser->telefonoMovil,
+        ] : null;
+    @endphp
+
     <suscribe
         :pais="{{ json_encode($pais) }}"
         :campaign="{{ json_encode($campaign) }}"
         :preguntas="{{ json_encode($campaign->preguntas) }}"
+        :user="{{ json_encode($userData) }}"
     ></suscribe>
 
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice;
 use App\Campaign;
 use App\Exports\CampanaSuscriptosExport;
 use App\Http\Controllers\Controller;
+use App\Oficina;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CampanasController extends Controller
@@ -24,8 +25,12 @@ class CampanasController extends Controller
 
     public function show($id)
     {
-        $campana = Campaign::findOrFail($id);
-        return view('backoffice.campanas.show', compact('campana'));
+        $campana  = Campaign::findOrFail($id);
+        $oficinas = Oficina::where('id_pais', auth()->user()->idPaisPermitido)
+            ->orderBy('nombre')
+            ->get(['id', 'nombre']);
+
+        return view('backoffice.campanas.show', compact('campana', 'oficinas'));
     }
 
     public function preguntas($id)

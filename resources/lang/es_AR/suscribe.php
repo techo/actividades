@@ -78,6 +78,9 @@ return [
     'success_message' => 'Nos pondremos en contacto con vos a la brevedad.',
     'success_extra' => 'Tu interés es muy importante para nosotros.',
 
-    'additional_questions' => 'Preguntas adicionales',
-    'select_option'        => 'Seleccioná una opción',
+    'additional_questions'  => 'Preguntas adicionales',
+    'select_option'         => 'Seleccioná una opción',
+    'already_registered'    => 'Ya estás inscripto/a en esta campaña.',
+    'user_exists_warning'   => 'Este email ya pertenece a un usuario registrado. Podés iniciar sesión para inscribirte más fácil.',
+    'logged_in_as'          => 'Inscribiéndote como',
 ];

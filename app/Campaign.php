@@ -14,6 +14,7 @@ class Campaign extends Model
         'estado',
         'tipo',
         'imagen',
+        'oficina_id',
         'fecha_inicio',
         'fecha_fin',
         'activa',
@@ -24,6 +25,11 @@ class Campaign extends Model
         'fecha_inicio' => 'date',
         'fecha_fin'    => 'date',
     ];
+
+    public function oficina()
+    {
+        return $this->belongsTo(Oficina::class, 'oficina_id');
+    }
 
     public function suscriptos()
     {

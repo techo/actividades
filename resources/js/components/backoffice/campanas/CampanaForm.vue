@@ -36,6 +36,16 @@
       </div>
 
       <div class="form-group">
+        <label>{{ $t('backend.office') }}</label>
+        <select v-model="form.oficina_id" class="form-control">
+          <option :value="null">-- {{ $t('backend.no_office') }} --</option>
+          <option v-for="oficina in oficinas" :key="oficina.id" :value="oficina.id">
+            {{ oficina.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label>{{ $t('backend.description') }}</label>
         <textarea v-model="form.descripcion" class="form-control" rows="3"></textarea>
       </div>
@@ -115,6 +125,10 @@ export default {
       type: String,
       default: null,
     },
+    oficinas: {
+      type: Array,
+      default: function() { return []; },
+    },
   },
   data() {
     return {
@@ -122,6 +136,7 @@ export default {
         nombre:       '',
         descripcion:  '',
         tipo:         '',
+        oficina_id:   null,
         fecha_inicio: null,
         fecha_fin:    null,
         activa:       true,
@@ -138,6 +153,7 @@ export default {
         nombre:       this.initialData.nombre       || '',
         descripcion:  this.initialData.descripcion  || '',
         tipo:         this.initialData.tipo         || '',
+        oficina_id:   this.initialData.oficina_id   || null,
         fecha_inicio: this.initialData.fecha_inicio || null,
         fecha_fin:    this.initialData.fecha_fin    || null,
         activa:       this.initialData.activa !== undefined ? this.initialData.activa : true,

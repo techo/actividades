@@ -1,6 +1,8 @@
 <template>
     <tr>
         <td colspan="6" style="background:#f9f9f9; padding: 12px 20px;">
+
+            <!-- Respuestas a preguntas de campaña -->
             <div v-if="rowData.respuestas && rowData.respuestas.length">
                 <strong>{{ $t('backend.campaign_questions') }}</strong>
                 <table class="table table-condensed table-bordered" style="margin-top:8px; margin-bottom:0; background:#fff;">
@@ -21,6 +23,7 @@
             <div v-else class="text-muted">
                 {{ $t('backend.no_answers') }}
             </div>
+
         </td>
     </tr>
 </template>
@@ -37,5 +40,5 @@ export default {
             type: Number,
         },
     },
-}
+};
 </script>
