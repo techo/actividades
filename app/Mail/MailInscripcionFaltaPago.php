@@ -2,16 +2,17 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
 
 class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, HasMailLocale;
 
+    public $mailLocale;
     public $inscripcion;
     public $persona;
     public $actividad;
@@ -26,8 +27,7 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
         $this->actividad = $inscripcion->actividad;
-        $this->locale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
-        Log::info('[MailInscripcionFaltaPago] locale seteado: ' . $this->locale . ' | pais: ' . optional($inscripcion->persona->pais)->nombre);
+        $this->mailLocale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
     }
 
     /**
@@ -37,8 +37,6 @@ class MailInscripcionFaltaPago extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        Log::info('[MailInscripcionFaltaPago] build() ejecutado | $this->locale: ' . $this->locale . ' | App::getLocale(): ' . \App::getLocale() . ' | traduccion: ' . __('email.missing_payment_1'));
-
         return $this
             ->subject(__('email.missing_payment_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
