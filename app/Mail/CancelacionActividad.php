@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -9,10 +10,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CancelacionActividad extends Mailable implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, SerializesModels, HasMailLocale;
 
-    public $inscripcion;
+    public $mailLocale;
     public $persona;
+    public $actividad;
+    public $pais;
 
     /**
      * Create a new message instance.
@@ -24,6 +27,7 @@ class CancelacionActividad extends Mailable implements ShouldQueue
         $this->persona = $persona;
         $this->actividad = $actividad;
         $this->pais = $pais;
+        $this->mailLocale = optional($pais)->locale ?? config('app.locale');
     }
 
     /**
@@ -36,6 +40,10 @@ class CancelacionActividad extends Mailable implements ShouldQueue
         return $this
             ->subject(__('email.activity_cancel_title') . ' ' . $this->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
-            ->view('emails.cancelacionActividad',['persona' => $this->persona, 'actividad' => $this->actividad, 'pais' => $this->pais]);
+            ->view('emails.cancelacionActividad', [
+                'persona'  => $this->persona,
+                'actividad' => $this->actividad,
+                'pais'     => $this->pais,
+            ]);
     }
 }

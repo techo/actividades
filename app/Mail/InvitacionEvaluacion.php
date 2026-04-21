@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Actividad;
+use App\Mail\Concerns\HasMailLocale;
 use App\Persona;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -11,8 +12,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class InvitacionEvaluacion extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
-    public $persona; 
+    use Queueable, SerializesModels, HasMailLocale;
+
+    public $mailLocale;
+    public $persona;
     public $actividad;
 
     /**
@@ -24,6 +27,7 @@ class InvitacionEvaluacion extends Mailable implements ShouldQueue
     {
         $this->persona = $persona;
         $this->actividad = $actividad;
+        $this->mailLocale = optional($persona->pais)->locale ?? config('app.locale');
     }
 
     /**
@@ -34,7 +38,7 @@ class InvitacionEvaluacion extends Mailable implements ShouldQueue
     public function build()
     {
         return $this
-            ->subject( __('email.evaluation_title') . ' ' . $this->actividad->nombreActividad)
+            ->subject(__('email.evaluation_title') . ' ' . $this->actividad->nombreActividad)
             ->from('noreplyactividades@techo.org')
             ->view('emails.invitacionEvaluacion');
     }

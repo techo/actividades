@@ -2,15 +2,16 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MailRegistroUsuario extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, HasMailLocale;
 
+    public $mailLocale;
     public $persona;
 
     /**
@@ -21,6 +22,7 @@ class MailRegistroUsuario extends Mailable
     public function __construct($persona)
     {
         $this->persona = $persona;
+        $this->mailLocale = optional($persona->pais)->locale ?? config('app.locale');
     }
 
     /**

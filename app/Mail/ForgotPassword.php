@@ -2,15 +2,16 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ForgotPassword extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, HasMailLocale;
 
+    public $mailLocale;
     public $token;
     public $persona;
 
@@ -23,7 +24,7 @@ class ForgotPassword extends Mailable
     {
         $this->token = $token;
         $this->persona = $persona;
-
+        $this->mailLocale = optional($persona->pais)->locale ?? config('app.locale');
     }
 
     /**
