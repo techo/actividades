@@ -37,6 +37,7 @@ class CampanasController extends Controller
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date',
             'activa'       => 'boolean',
+            'whatsapp_link'=> 'nullable|url',
         ]);
 
         $campana = Campaign::create($request->except('slug', 'imagen'));
@@ -52,9 +53,11 @@ class CampanasController extends Controller
             'nombre'       => 'required|string|max:255',
             'descripcion'  => 'nullable|string',
             'tipo'         => 'nullable|in:colecta,captacion',
+            'oficina_id'   => 'nullable|exists:atl_oficinas,id',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin'    => 'nullable|date',
             'activa'       => 'boolean',
+            'whatsapp_link'=> 'nullable|url',
         ]);
 
         $campana->update($request->except('slug', 'imagen'));

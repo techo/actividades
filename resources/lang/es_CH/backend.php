@@ -660,5 +660,7 @@ return [
     'user_exists'                => 'Usuario existente',
     'view_person'                => 'Ver persona',
     'no_office'                  => 'Sin oficina',
+    'whatsapp_group_link'        => 'Link de grupo de WhatsApp',
+    'whatsapp_group_link_help'   => 'Pega el link de invitación al grupo. Se mostrará a los inscritos al confirmar su suscripción.',
 
 ];

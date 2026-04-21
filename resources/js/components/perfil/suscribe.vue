@@ -265,6 +265,15 @@
                 <p class="mb-0">
                     {{ $t('suscribe.success_extra') }}
                 </p>
+                <a
+                    v-if="campaign && campaign.whatsapp_link"
+                    :href="campaign.whatsapp_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-success mt-3"
+                >
+                    <i class="fa fa-whatsapp"></i> {{ $t('suscribe.join_whatsapp_group') }}
+                </a>
             </div>
 
             <small class="d-block text-center mt-2">

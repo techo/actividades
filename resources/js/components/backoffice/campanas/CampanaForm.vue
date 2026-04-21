@@ -50,6 +50,12 @@
         <textarea v-model="form.descripcion" class="form-control" rows="3"></textarea>
       </div>
 
+      <div class="form-group">
+        <label><i class="fa fa-whatsapp text-success"></i> {{ $t('backend.whatsapp_group_link') }}</label>
+        <input v-model="form.whatsapp_link" type="url" class="form-control" placeholder="https://chat.whatsapp.com/...">
+        <small class="text-muted">{{ $t('backend.whatsapp_group_link_help') }}</small>
+      </div>
+
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
@@ -133,13 +139,14 @@ export default {
   data() {
     return {
       form: {
-        nombre:       '',
-        descripcion:  '',
-        tipo:         '',
-        oficina_id:   null,
-        fecha_inicio: null,
-        fecha_fin:    null,
-        activa:       true,
+        nombre:        '',
+        descripcion:   '',
+        tipo:          '',
+        oficina_id:    null,
+        whatsapp_link: '',
+        fecha_inicio:  null,
+        fecha_fin:     null,
+        activa:        true,
       },
       imagenActual: null,
       guardando:    false,
@@ -150,13 +157,14 @@ export default {
   mounted() {
     if (this.initialData) {
       this.form = Object.assign({}, this.form, {
-        nombre:       this.initialData.nombre       || '',
-        descripcion:  this.initialData.descripcion  || '',
-        tipo:         this.initialData.tipo         || '',
-        oficina_id:   this.initialData.oficina_id   || null,
-        fecha_inicio: this.initialData.fecha_inicio || null,
-        fecha_fin:    this.initialData.fecha_fin    || null,
-        activa:       this.initialData.activa !== undefined ? this.initialData.activa : true,
+        nombre:        this.initialData.nombre        || '',
+        descripcion:   this.initialData.descripcion   || '',
+        tipo:          this.initialData.tipo          || '',
+        oficina_id:    this.initialData.oficina_id    || null,
+        whatsapp_link: this.initialData.whatsapp_link || '',
+        fecha_inicio:  this.initialData.fecha_inicio  || null,
+        fecha_fin:     this.initialData.fecha_fin     || null,
+        activa:        this.initialData.activa !== undefined ? this.initialData.activa : true,
       })
       this.imagenActual = this.initialData.imagen || null
     }

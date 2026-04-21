@@ -61,4 +61,5 @@ return [
     'already_registered'    => 'You are already registered for this campaign.',
     'user_exists_warning'   => 'This email already belongs to a registered user. You can log in to subscribe more easily.',
     'logged_in_as'          => 'Subscribing as',
+    'join_whatsapp_group'   => 'Join the WhatsApp group',
 ];

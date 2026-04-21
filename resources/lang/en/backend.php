@@ -661,5 +661,7 @@ return [
     'user_exists'                => 'Existing user',
     'view_person'                => 'View person',
     'no_office'                  => 'No office',
+    'whatsapp_group_link'        => 'WhatsApp group link',
+    'whatsapp_group_link_help'   => 'Paste the group invitation link. It will be shown to subscribers after confirming their registration.',
 
 ];

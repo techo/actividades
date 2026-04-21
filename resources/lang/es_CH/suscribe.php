@@ -63,4 +63,5 @@ return [
     'already_registered'    => 'Ya estás inscrito/a en esta campaña.',
     'user_exists_warning'   => 'Este email ya pertenece a un usuario registrado. Puedes iniciar sesión para inscribirte más fácil.',
     'logged_in_as'          => 'Inscribiéndote como',
+    'join_whatsapp_group'   => 'Unirte al grupo de WhatsApp',
 ];
