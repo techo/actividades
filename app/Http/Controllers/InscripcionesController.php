@@ -8,11 +8,11 @@ use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use App\InscripcionRespuesta;
-use App\Jobs\EnviarNotificacionPush;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +22,13 @@ use Illuminate\Support\Facades\Storage;
 
 class InscripcionesController extends BaseController
 {
+    protected $pushService;
+
+    public function __construct(PushNotificationService $pushService)
+    {
+        $this->pushService = $pushService;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -130,7 +137,7 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
-                $this->dispararPush(
+                $this->pushService->enviar(
                     $persona,
                     '¡Inscripción recibida!',
                     'Tu inscripción a "' . $actividad->nombreActividad . '" está pendiente de confirmación.',
@@ -161,7 +168,7 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
-                $this->dispararPush(
+                $this->pushService->enviar(
                     $persona,
                     '¡Ya casi estás!',
                     'Falta completar el pago para confirmar tu inscripción a "' . $actividad->nombreActividad . '".',
@@ -186,7 +193,7 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
             $this->guardarRespuestasInscripcion($inscripcion, $request);
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
-            $this->dispararPush(
+            $this->pushService->enviar(
                 $persona,
                 '¡Inscripción confirmada! 🎉',
                 'Ya estás anotado en "' . $actividad->nombreActividad . '". ¡Nos vemos!',
@@ -351,33 +358,6 @@ class InscripcionesController extends BaseController
                     'respuesta' => $respuesta['respuesta'] ?? null,
                 ]
             );
-        }
-    }
-
-    /**
-     * Despacha una notificación push al usuario si tiene dispositivos activos
-     * y no desactivó las notificaciones push.
-     */
-    private function dispararPush($persona, string $titulo, string $mensaje, array $datos = []): void
-    {
-        try {
-            if (!$persona->recibir_push) return;
-
-            $playerIds = $persona->dispositivos()
-                ->where('activo', true)
-                ->pluck('player_id')
-                ->toArray();
-
-            if (empty($playerIds)) return;
-
-            EnviarNotificacionPush::dispatch($playerIds, $titulo, $mensaje, $datos);
-
-        } catch (\Exception $e) {
-            // El push nunca debe interrumpir el flujo de inscripción
-            Log::warning('dispararPush: error al encolar notificación', [
-                'idPersona' => $persona->idPersona ?? null,
-                'error'     => $e->getMessage(),
-            ]);
         }
     }
 

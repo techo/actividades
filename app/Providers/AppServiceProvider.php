@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Oficina;
+use App\Services\OneSignal\OneSignalService;
+use App\Services\Push\PushNotificationService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Providers\TelescopeServiceProvider;
@@ -38,9 +40,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
         if ($this->app->isLocal()) {
-        $this->app->register(TelescopeServiceProvider::class);
-    }
+            $this->app->register(TelescopeServiceProvider::class);
+        }
+
+        // OneSignalService como singleton: una sola instancia de Guzzle por request.
+        $this->app->singleton(OneSignalService::class, function ($app) {
+            return new OneSignalService();
+        });
+
+        // PushNotificationService depende de OneSignalService — el Container lo resuelve.
+        $this->app->singleton(PushNotificationService::class, function ($app) {
+            return new PushNotificationService($app->make(OneSignalService::class));
+        });
     }
 }
