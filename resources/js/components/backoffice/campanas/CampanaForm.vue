@@ -56,6 +56,21 @@
         <small class="text-muted">{{ $t('backend.whatsapp_group_link_help') }}</small>
       </div>
 
+      <div class="form-group">
+        <label>{{ $t('backend.confirmation_message') }}</label>
+        <tinymce-editor
+          v-model="form.confirmation_message"
+          :init="{
+            menubar: false,
+            relative_urls: false,
+            resize: true,
+          }"
+          toolbar="undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link"
+          plugins="paste autoresize link"
+        ></tinymce-editor>
+        <small class="text-muted">{{ $t('backend.confirmation_message_help') }}</small>
+      </div>
+
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
@@ -115,9 +130,15 @@
 
 <script>
 import Simplert from 'vue2-simplert'
+import editor from '@tinymce/tinymce-vue'
+import 'tinymce/tinymce'
+import 'tinymce/themes/silver/theme'
+import 'tinymce/plugins/paste'
+import 'tinymce/plugins/autoresize'
+import 'tinymce/plugins/link'
 
 export default {
-  components: { Simplert },
+  components: { Simplert, 'tinymce-editor': editor },
   props: {
     campanaId: {
       type: Number,
@@ -139,14 +160,15 @@ export default {
   data() {
     return {
       form: {
-        nombre:        '',
-        descripcion:   '',
-        tipo:          '',
-        oficina_id:    null,
-        whatsapp_link: '',
-        fecha_inicio:  null,
-        fecha_fin:     null,
-        activa:        true,
+        nombre:               '',
+        descripcion:          '',
+        tipo:                 '',
+        oficina_id:           null,
+        whatsapp_link:        '',
+        confirmation_message: '',
+        fecha_inicio:         null,
+        fecha_fin:            null,
+        activa:               true,
       },
       imagenActual: null,
       guardando:    false,
@@ -157,14 +179,15 @@ export default {
   mounted() {
     if (this.initialData) {
       this.form = Object.assign({}, this.form, {
-        nombre:        this.initialData.nombre        || '',
-        descripcion:   this.initialData.descripcion   || '',
-        tipo:          this.initialData.tipo          || '',
-        oficina_id:    this.initialData.oficina_id    || null,
-        whatsapp_link: this.initialData.whatsapp_link || '',
-        fecha_inicio:  this.initialData.fecha_inicio  || null,
-        fecha_fin:     this.initialData.fecha_fin     || null,
-        activa:        this.initialData.activa !== undefined ? this.initialData.activa : true,
+        nombre:               this.initialData.nombre               || '',
+        descripcion:          this.initialData.descripcion          || '',
+        tipo:                 this.initialData.tipo                 || '',
+        oficina_id:           this.initialData.oficina_id           || null,
+        whatsapp_link:        this.initialData.whatsapp_link        || '',
+        confirmation_message: this.initialData.confirmation_message || '',
+        fecha_inicio:         this.initialData.fecha_inicio         || null,
+        fecha_fin:            this.initialData.fecha_fin            || null,
+        activa:               this.initialData.activa !== undefined ? this.initialData.activa : true,
       })
       this.imagenActual = this.initialData.imagen || null
     }

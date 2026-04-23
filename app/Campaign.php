@@ -16,6 +16,7 @@ class Campaign extends Model
         'imagen',
         'oficina_id',
         'whatsapp_link',
+        'confirmation_message',
         'fecha_inicio',
         'fecha_fin',
         'activa',

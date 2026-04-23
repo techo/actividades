@@ -30,14 +30,15 @@ class CampanasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'       => 'required|string|max:255',
-            'descripcion'  => 'nullable|string',
-            'tipo'         => 'nullable|in:colecta,captacion',
-            'oficina_id'   => 'nullable|exists:atl_oficinas,id',
-            'fecha_inicio' => 'nullable|date',
-            'fecha_fin'    => 'nullable|date',
-            'activa'       => 'boolean',
-            'whatsapp_link'=> 'nullable|url',
+            'nombre'               => 'required|string|max:255',
+            'descripcion'          => 'nullable|string',
+            'tipo'                 => 'nullable|in:colecta,captacion',
+            'oficina_id'           => 'nullable|exists:atl_oficinas,id',
+            'fecha_inicio'         => 'nullable|date',
+            'fecha_fin'            => 'nullable|date',
+            'activa'               => 'boolean',
+            'whatsapp_link'        => 'nullable|url',
+            'confirmation_message' => 'nullable|string',
         ]);
 
         $campana = Campaign::create($request->except('slug', 'imagen'));
@@ -50,14 +51,15 @@ class CampanasController extends Controller
         $campana = Campaign::findOrFail($id);
 
         $request->validate([
-            'nombre'       => 'required|string|max:255',
-            'descripcion'  => 'nullable|string',
-            'tipo'         => 'nullable|in:colecta,captacion',
-            'oficina_id'   => 'nullable|exists:atl_oficinas,id',
-            'fecha_inicio' => 'nullable|date',
-            'fecha_fin'    => 'nullable|date',
-            'activa'       => 'boolean',
-            'whatsapp_link'=> 'nullable|url',
+            'nombre'               => 'required|string|max:255',
+            'descripcion'          => 'nullable|string',
+            'tipo'                 => 'nullable|in:colecta,captacion',
+            'oficina_id'           => 'nullable|exists:atl_oficinas,id',
+            'fecha_inicio'         => 'nullable|date',
+            'fecha_fin'            => 'nullable|date',
+            'activa'               => 'boolean',
+            'whatsapp_link'        => 'nullable|url',
+            'confirmation_message' => 'nullable|string',
         ]);
 
         $campana->update($request->except('slug', 'imagen'));

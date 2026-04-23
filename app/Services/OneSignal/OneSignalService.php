@@ -38,7 +38,18 @@ class OneSignalService
     public function enviarAPlayerIds(array $playerIds, string $titulo, string $mensaje, array $datos = []): array
     {
         if (empty($playerIds)) {
-            return ['success' => false, 'error' => 'No hay player_ids destinatarios'];
+            return ['success' => false, 'id' => null, 'recipients' => 0, 'error' => 'No hay player_ids destinatarios'];
+        }
+
+        // Guard: si app_id no está configurado, fallar rápido con un error claro
+        // en lugar de mandar un payload malformado a OneSignal.
+        // Causa más común: ONESIGNAL_APP_ID (o ONESIGNAL_APP_ID_DEV) no definido en .env.
+        if (empty($this->appId)) {
+            Log::error('OneSignalService: app_id no configurado — notificación no enviada', [
+                'accion'  => 'Definir ONESIGNAL_APP_ID_DEV (local/staging) u ONESIGNAL_APP_ID (producción) en .env',
+                'titulo'  => $titulo,
+            ]);
+            return ['success' => false, 'id' => null, 'recipients' => 0, 'error' => 'ONESIGNAL_APP_ID no configurado en este entorno'];
         }
 
         // Si hay más de MAX_PLAYER_IDS_POR_REQUEST, dividir en batches

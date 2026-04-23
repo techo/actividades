@@ -256,15 +256,24 @@
                 v-if="guardado"
                 class="alert alert-success text-center mt-4 p-4"
             >
-                <h4 class="mb-2">
-                    {{ $t('suscribe.success_title') }}
-                </h4>
-                <p class="mb-1">
-                    {{ $t('suscribe.success_message') }}
-                </p>
-                <p class="mb-0">
-                    {{ $t('suscribe.success_extra') }}
-                </p>
+                <!-- Mensaje personalizado de la campaña (rich text) -->
+                <div
+                    v-if="campaign && campaign.confirmation_message"
+                    v-html="campaign.confirmation_message"
+                    class="campaign-confirmation-message mb-2"
+                ></div>
+                <!-- Fallback: mensaje genérico traducido -->
+                <template v-else>
+                    <h4 class="mb-2">
+                        {{ $t('suscribe.success_title') }}
+                    </h4>
+                    <p class="mb-1">
+                        {{ $t('suscribe.success_message') }}
+                    </p>
+                    <p class="mb-0">
+                        {{ $t('suscribe.success_extra') }}
+                    </p>
+                </template>
                 <a
                     v-if="campaign && campaign.whatsapp_link"
                     :href="campaign.whatsapp_link"

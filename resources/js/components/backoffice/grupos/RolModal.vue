@@ -50,7 +50,7 @@
         },
         computed: {
             rolesFallback() {
-                return this.$i18n.messages[this.$i18n.locale].backend.roles_integrantes;
+                return this.$i18n.messages[this.$i18n.locale].backend.roles_actividad_options;
             },
         },  
         created(){

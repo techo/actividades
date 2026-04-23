@@ -663,5 +663,7 @@ return [
     'no_office'                  => 'No office',
     'whatsapp_group_link'        => 'WhatsApp group link',
     'whatsapp_group_link_help'   => 'Paste the group invitation link. It will be shown to subscribers after confirming their registration.',
+    'confirmation_message'       => 'Confirmation message',
+    'confirmation_message_help'  => 'Displayed to the subscriber after completing the form. If left empty, the default message will be used.',
 
 ];

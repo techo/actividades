@@ -663,5 +663,7 @@ return [
     'no_office'                  => 'Sin oficina',
     'whatsapp_group_link'        => 'Link de grupo de WhatsApp',
     'whatsapp_group_link_help'   => 'Pegá el link de invitación al grupo. Se mostrará a los inscriptos al confirmar su suscripción.',
+    'confirmation_message'       => 'Mensaje de confirmación',
+    'confirmation_message_help'  => 'Se muestra al inscripto luego de completar el formulario. Si se deja vacío se usa el mensaje genérico.',
 
 ];

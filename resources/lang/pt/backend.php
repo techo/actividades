@@ -662,5 +662,7 @@ return [
     'no_office'                  => 'Sem escritório',
     'whatsapp_group_link'        => 'Link do grupo do WhatsApp',
     'whatsapp_group_link_help'   => 'Cole o link de convite para o grupo. Será exibido aos inscritos ao confirmar sua inscrição.',
+    'confirmation_message'       => 'Mensagem de confirmação',
+    'confirmation_message_help'  => 'Exibida ao inscrito após completar o formulário. Se deixado vazio, a mensagem padrão será utilizada.',
 
 ];
