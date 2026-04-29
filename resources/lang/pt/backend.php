@@ -550,7 +550,7 @@ return [
         'liderazgo_trabajo' => 'Liderança / Chefia de Trabalho',
         'salud_bienestar' => 'Saúde e Bem-estar',
         'camioneta' => 'Caminhonete',
-        'voluntariado_cuadrilla' => 'Voluntariado de cuadrilla',
+        'voluntariado_cuadrilla' => 'Voluntariado de Equipe',
         'digitador' => 'Digitador/a',
         'traductor' => 'Tradutor/a',    
     ],
