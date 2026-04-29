@@ -14,6 +14,18 @@
 
         <div class="box">
             <div class="box-body">
+                <!-- Comunidad -->
+                <div class="row" v-if="actividad.comunidades && actividad.comunidades.length">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="idComunidad">Comunidad</label>
+                            <select id="idComunidad" class="form-control" v-model="data.idComunidad" :disabled="readonly">
+                                <option :value="null">-- Sin comunidad --</option>
+                                <option v-for="c in actividad.comunidades" :key="c.idComunidad" :value="c.idComunidad">{{ c.nombre }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <!-- Número de participantes -->
                     <div class="col-md-6">
@@ -162,6 +174,7 @@ export default {
         return {
             data: {
                 idActividad: this.actividad.idActividad,
+                idComunidad: null,
                 numero_participantes: null,
                 programa: null,
                 soluciones_entregadas: null,

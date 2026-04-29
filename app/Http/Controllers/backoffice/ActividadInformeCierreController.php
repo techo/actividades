@@ -29,6 +29,7 @@ class ActividadInformeCierreController extends Controller
     public function index(Actividad $id)
     {
         $actividad = $id;
+        $actividad->load('comunidades');
 
         $datatableInformeConfig = config('datatables.informeCierre');
         $fieldsInforme = json_encode($datatableInformeConfig['fields']);

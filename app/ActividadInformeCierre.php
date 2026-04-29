@@ -13,6 +13,7 @@ class ActividadInformeCierre extends Model
 
     protected $fillable = [
         'idActividad',
+        'idComunidad',
         'numero_participantes',
         'programa',
         'soluciones_entregadas',
