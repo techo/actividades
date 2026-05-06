@@ -1,7 +1,7 @@
 <template>
     <div id="app-banner" v-if="show">
         <button class="banner-close" @click="dismiss" :aria-label="$t('frontend.app_banner_close')">&#x2715;</button>
-        <img class="banner-icon" src="/img/icons/icon-128x128.png" alt="MiTECHO" />
+        <img class="banner-icon" src="/img/mitecho-logo.png" alt="MiTECHO" />
         <div class="banner-info">
             <strong>MiTECHO</strong>
             <span>{{ userHasApp ? $t('frontend.app_banner_open_subtitle') : $t('frontend.app_banner_subtitle') }}</span>
@@ -75,7 +75,7 @@
     #app-banner {
         display: flex;
         align-items: center;
-        background-color: #f4a0a0;
+        background-color: #f088b6 ;
         padding: 8px 12px;
         gap: 10px;
         position: relative;
