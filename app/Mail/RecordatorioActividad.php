@@ -2,15 +2,16 @@
 
 namespace App\Mail;
 
+use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class RecordatorioActividad extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable, SerializesModels, HasMailLocale;
 
+    public $mailLocale;
     public $inscripcion;
     public $persona;
 
@@ -23,6 +24,7 @@ class RecordatorioActividad extends Mailable
     {
         $this->inscripcion = $inscripcion;
         $this->persona = $inscripcion->persona;
+        $this->mailLocale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
     }
 
     /**

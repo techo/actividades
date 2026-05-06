@@ -17,6 +17,7 @@ npm-debug.log
 yarn-error.log
 storage/debugbar/
 .env
+/.claude
 /public/mix-manifest.json
 /storage/debugbar
 app.dockerfile

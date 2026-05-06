@@ -34,6 +34,7 @@ class EditarInformeCierre extends FormRequest
     {
         return [
             'idInformeCierre' => 'sometimes|integer',
+            'idComunidad' => 'nullable|integer',
             'numero_participantes' => 'nullable|integer',
             'programa' => 'nullable|string',
             'soluciones_entregadas' => 'nullable|string',

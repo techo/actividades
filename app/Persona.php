@@ -18,7 +18,7 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];
-    protected $fillable = ['recibirMails', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app'];
+    protected $fillable = ['recibirMails', 'recibir_push', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app'];
     protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app'];
     protected $appends = array('estado_voluntario');
 
@@ -261,8 +261,14 @@ class Persona extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(FichaMedica::class, 'idPersona', 'idPersona');
     }
+
     public function estudios()
     {
         return $this->hasMany(Estudios::class, 'idPersona', 'idPersona');
+    }
+
+    public function dispositivos()
+    {
+        return $this->hasMany(Dispositivo::class, 'idPersona', 'idPersona');
     }
 }

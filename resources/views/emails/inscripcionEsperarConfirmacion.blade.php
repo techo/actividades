@@ -42,17 +42,6 @@
     @endif
 
     @if($inscripcion->punto_encuentro && $inscripcion->actividad->show_location)
-        <p>
-          <strong>
-              @lang('frontend.meeting_points'):
-          </strong>
-            {{$inscripcion->punto_encuentro->punto}} ({{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
-            @if($inscripcion->punto_encuentro->idLocalidad)
-                {{$inscripcion->punto_encuentro->localidad->localidad}},
-            @endif
-            {{$inscripcion->punto_encuentro->provincia->provincia}}, {{$inscripcion->punto_encuentro->pais->nombre}}
-        </p>
-
         @if($inscripcion->punto_encuentro->responsable)
             <p>
                 <strong>

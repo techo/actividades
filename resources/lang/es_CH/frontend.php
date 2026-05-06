@@ -46,6 +46,13 @@ return [
 	'cookie_bar_message' => 'Este sitio utiliza cookies para brindar una correcta experiencia al usuario. Si usas este sitio, estás aceptando las',
 	'cookie_policy' => 'Políticas de Cookies',
 
+	// app-banner.vue
+	'app_banner_subtitle'       => 'Descarga la app',
+	'app_banner_open_subtitle'  => 'Abrir en app',
+	'app_banner_download'       => 'DESCARGAR',
+	'app_banner_open'           => 'ABRIR',
+	'app_banner_close'          => 'Cerrar',
+
 	// login.vue
     'login' => 'Ingresar',
     'login_or_register' => 'Login / Registro',

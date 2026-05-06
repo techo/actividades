@@ -12,6 +12,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,13 @@ use Illuminate\Support\Facades\Storage;
 
 class InscripcionesController extends BaseController
 {
+    protected $pushService;
+
+    public function __construct(PushNotificationService $pushService)
+    {
+        $this->pushService = $pushService;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -129,6 +137,12 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
+                $this->pushService->enviar(
+                    $persona,
+                    '¡Inscripción recibida!',
+                    'Tu inscripción a "' . $actividad->nombreActividad . '" está pendiente de confirmación.',
+                    ['tipo' => 'inscripcion', 'estado' => 'PRE_INSCRIPTO', 'idActividad' => $actividad->idActividad]
+                );
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
@@ -154,6 +168,12 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
+                $this->pushService->enviar(
+                    $persona,
+                    '¡Ya casi estás!',
+                    'Falta completar el pago para confirmar tu inscripción a "' . $actividad->nombreActividad . '".',
+                    ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $actividad->idActividad]
+                );
 
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
@@ -173,6 +193,12 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
             $this->guardarRespuestasInscripcion($inscripcion, $request);
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
+            $this->pushService->enviar(
+                $persona,
+                '¡Inscripción confirmada! 🎉',
+                'Ya estás anotado en "' . $actividad->nombreActividad . '". ¡Nos vemos!',
+                ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $actividad->idActividad]
+            );
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,

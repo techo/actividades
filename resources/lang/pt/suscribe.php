@@ -56,6 +56,10 @@ return [
     'success_message' => 'Entraremos em contato com você em breve.',
     'success_extra' => 'Seu interesse é muito importante para nós.',
 
-    'additional_questions' => 'Perguntas adicionais',
-    'select_option'        => 'Selecione uma opção',
+    'additional_questions'  => 'Perguntas adicionais',
+    'select_option'         => 'Selecione uma opção',
+    'already_registered'    => 'Você já está inscrito/a nesta campanha.',
+    'user_exists_warning'   => 'Este e-mail já pertence a um usuário registrado. Você pode fazer login para se inscrever mais facilmente.',
+    'logged_in_as'          => 'Inscrevendo-se como',
+    'join_whatsapp_group'   => 'Entrar no grupo do WhatsApp',
 ];

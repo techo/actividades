@@ -48,4 +48,15 @@ return [
     'apple' => [
         'client_id' => env('APPLE_CLIENT_ID'),
     ],
+
+    'onesignal' => [
+        // En producción se usa ONESIGNAL_APP_ID.
+        // En cualquier otro ambiente (local, staging) se usa ONESIGNAL_APP_ID_DEV
+        // si está definido, o cae en ONESIGNAL_APP_ID como fallback.
+        // Esto evita que notificaciones de dev lleguen a dispositivos reales.
+        'app_id'  => env('APP_ENV') === 'production'
+            ? env('ONESIGNAL_APP_ID')
+            : env('ONESIGNAL_APP_ID_DEV', env('ONESIGNAL_APP_ID')),
+        'api_key' => env('ONESIGNAL_REST_API_KEY'),
+    ],
 ];

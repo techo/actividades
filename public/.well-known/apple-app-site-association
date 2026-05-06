@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "2WN59DZ37K.org.techoapp.mitecho",
+        "paths": [
+          "/actividades/*"
+        ]
+      }
+    ]
+  }
+}

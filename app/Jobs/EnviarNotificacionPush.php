@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Services\OneSignal\OneSignalService;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+
+class EnviarNotificacionPush implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Intentos antes de mover a failed_jobs.
+     * OneSignal puede tener indisponibilidades transitorias.
+     */
+    public $tries = 3;
+
+    /**
+     * Tiempo máximo de ejecución en segundos.
+     */
+    public $timeout = 60;
+
+    protected $playerIds;
+    protected $titulo;
+    protected $mensaje;
+    protected $datos;
+
+    /**
+     * Metadatos opcionales para trazabilidad en logs (idPersona, idInscripcion, etc.).
+     * No se envían a OneSignal — solo se usan para logging interno.
+     */
+    protected $context;
+
+    /**
+     * @param  array   $playerIds  Lista de OneSignal player_ids destinatarios
+     * @param  string  $titulo     Título de la notificación push
+     * @param  string  $mensaje    Cuerpo de la notificación push
+     * @param  array   $datos      Payload adicional para la app (tipo, id, etc.)
+     * @param  array   $context    Metadatos de trazabilidad para logs (idPersona, etc.)
+     *
+     * Ejemplo de uso:
+     *   EnviarNotificacionPush::dispatch(
+     *       ['player-id-1', 'player-id-2'],
+     *       'Tu inscripción fue confirmada',
+     *       'Ya podés ver los detalles de tu actividad.',
+     *       ['tipo' => 'inscripcion', 'idActividad' => 123],
+     *       ['idPersona' => 456]
+     *   );
+     */
+    public function __construct(
+        array $playerIds,
+        string $titulo,
+        string $mensaje,
+        array $datos = [],
+        array $context = []
+    ) {
+        $this->playerIds = $playerIds;
+        $this->titulo    = $titulo;
+        $this->mensaje   = $mensaje;
+        $this->datos     = $datos;
+        $this->context   = $context;
+    }
+
+    /**
+     * Tiempos de espera entre reintentos (backoff exponencial).
+     * Intento 1 → espera 10s antes del reintento 2
+     * Intento 2 → espera 60s antes del reintento 3
+     * Intento 3 → pasa a failed_jobs
+     *
+     * Cubre outages transitorios de OneSignal sin consumir los tres
+     * intentos en pocos segundos.
+     */
+    public function backoff(): array
+    {
+        return [10, 60];
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        if (empty($this->playerIds)) {
+            Log::info('EnviarNotificacionPush: sin destinatarios, se omite el envío', $this->context);
+            return;
+        }
+
+        $service   = app(OneSignalService::class);
+        $resultado = $service->enviarAPlayerIds(
+            $this->playerIds,
+            $this->titulo,
+            $this->mensaje,
+            $this->datos
+        );
+
+        if (!$resultado['success']) {
+            Log::error('EnviarNotificacionPush: fallo el envío', array_merge($this->context, [
+                'error'      => $resultado['error'] ?? 'desconocido',
+                'titulo'     => $this->titulo,
+                'player_ids' => $this->playerIds,
+                'intento'    => $this->attempts(),
+            ]));
+
+            // Lanzar excepción para que el sistema de reintentos actúe.
+            // Después de $this->tries intentos fallidos, el job pasa a failed_jobs.
+            throw new \Exception(
+                'Error al enviar notificación push: ' . ($resultado['error'] ?? 'desconocido')
+            );
+        }
+
+        Log::info('EnviarNotificacionPush: enviado correctamente', array_merge($this->context, [
+            'titulo'       => $this->titulo,
+            'recipients'   => $resultado['recipients'] ?? 0,
+            'onesignal_id' => $resultado['id'] ?? null,
+        ]));
+    }
+
+    /**
+     * Handle a job failure.
+     * Se ejecuta cuando se agotaron todos los reintentos.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed(\Exception $exception)
+    {
+        Log::critical(
+            'EnviarNotificacionPush: falló definitivamente tras ' . $this->tries . ' intentos',
+            array_merge($this->context, [
+                'titulo'     => $this->titulo,
+                'player_ids' => $this->playerIds,
+                'error'      => $exception->getMessage(),
+            ])
+        );
+    }
+}

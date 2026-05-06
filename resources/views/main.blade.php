@@ -20,6 +20,14 @@
 
 <body>
     <div id="app">
+        @if(config('app.app_store_ios_url') || config('app.app_store_android_url'))
+        <app-banner
+            ios-url="{{ config('app.app_store_ios_url') }}"
+            android-url="{{ config('app.app_store_android_url') }}"
+            deep-link-url="{{ config('app.app_deep_link_url') }}"
+            has-app="{{ Auth::check() && Auth::user()->primer_acceso_app ? '1' : '0' }}"
+        ></app-banner>
+        @endif
         @include('partials.header')
         <main role="main">
 
