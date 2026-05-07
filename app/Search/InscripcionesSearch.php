@@ -39,6 +39,11 @@ class InscripcionesSearch
     {
         return class_exists($decorator);
     }
+    public static function query($filters): Builder
+    {
+        return static::applyDecoratorsFromRequest($filters, static::newQuery());
+    }
+
     private static function getResults(Builder $query)
     {
         return $query->get();
