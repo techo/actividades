@@ -62,6 +62,8 @@ return [
     'max_amount_optional' => 'Max Amount (Optional)',
     'payment_deadline' => 'Payment deadline',
     'payment_steps' => 'Payment steps',
+    'payment_link_optional' => 'Payment Link (Optional)',
+    'payment_link_description' => 'If filled, it will appear as a payment option on the confirmation screen.',
     'scholarship_form_link_optional' => 'Scholarship form link (Optional)',
     'message' => 'Message',
     'others' => 'Others',

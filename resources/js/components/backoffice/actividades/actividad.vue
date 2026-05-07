@@ -3,7 +3,7 @@
         <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
-                    <div v-if="estadoInscripcion && (actividad.estadoConstruccion == $t('backend.open'))" class="alert alert-info" role="alert" >
+                    <div v-if="estadoInscripcion" class="alert alert-info" role="alert" >
                         {{ $t('backend.open_registrations') }}
                     </div>
                     <div v-else class="alert alert-danger" role="alert" >
@@ -408,13 +408,20 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-md-6">
+                    <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">Link para el Pago</label>
-                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <label for="">
+                                {{ $t('backend.payment_link_optional') }}
+                                <a v-if="actividad.linkPago" :href="actividad.linkPago" target="_blank" class="ml-2 small">
+                                    <i class="fas fa-external-link-alt"></i> {{ $t('backend.view') }}
+                                </a>
+                            </label>
+                            <input type="url" class="form-control" v-model="actividad.linkPago" :disabled="!edicion"
+                                placeholder="https://" >
+                            <p class="help-block">{{ $t('backend.payment_link_description') }}</p>
                             <span class="help-block">{{ errors.linkPago }}</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
 
                 <br>

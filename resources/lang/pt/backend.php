@@ -62,6 +62,8 @@ return [
     'max_amount_optional' => 'Montante Máx. (Opcional)',
     'payment_deadline' => 'Data limite de pagamento',
     'payment_steps' => 'Passos para realizar o pagamento',
+    'payment_link_optional' => 'Link de Pagamento (Opcional)',
+    'payment_link_description' => 'Se preenchido, aparecerá como opção de pagamento na tela de confirmação.',
     'scholarship_form_link_optional' => 'Isenção (Link do formulario de isenção)',
     'message' => 'Mensagem',
     'others' => 'Outros',

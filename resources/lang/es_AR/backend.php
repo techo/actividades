@@ -62,6 +62,8 @@ return [
     'max_amount_optional' => 'Monto Max. (Opcional)',
     'payment_deadline' => 'Fecha límite de pago',
     'payment_steps' => 'Pasos para realizar el pago',
+    'payment_link_optional' => 'Link de Pago (Opcional)',
+    'payment_link_description' => 'Si se completa, aparecerá como opción de pago en la pantalla de confirmación.',
     'scholarship_form_link_optional' => 'Link formulario de beca (Opcional)',
     'message' => 'Mensaje',
     'others' => 'Otros',
