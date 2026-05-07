@@ -12,6 +12,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\InscripcionFlow;
 use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class InscripcionesController extends BaseController
         $jornadas = json_decode($request->input('jornadas'), true);
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
@@ -153,7 +155,8 @@ class InscripcionesController extends BaseController
                     ]);
                 }
                 return view('inscripciones.confirmar-paso-1')
-                    ->with('actividad', $actividad);
+                    ->with('actividad', $actividad)
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
             }
 
             if ($actividad->pago == 1) {
@@ -186,6 +189,7 @@ class InscripcionesController extends BaseController
                 }
                 return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'pago', 'blade'))
                     ->with('inscripcion', $inscripcion)
                     ->with('payment', $payment);
             }
@@ -209,7 +213,8 @@ class InscripcionesController extends BaseController
                     ]);
                 }
             return view('inscripciones.gracias')
-                ->with('actividad', $actividad);
+                ->with('actividad', $actividad)
+                ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
         }
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -222,6 +227,7 @@ class InscripcionesController extends BaseController
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
             ->with('punto_encuentro', $punto_encuentro)
             ->with('tipo', $actividad->tipo);
         }
@@ -302,6 +308,7 @@ class InscripcionesController extends BaseController
 
         return view('inscripciones.pagar-paso-1')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'pago', 'blade'))
             ->with('inscripcion', $inscripcion)
             ->with('payment', $payment);
 

@@ -16,6 +16,7 @@
 
     @include('partials.meta')
     @include('partials.css')
+    @stack('additional_styles')
 </head>
 
 <body>

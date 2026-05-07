@@ -1,5 +1,21 @@
 <template>
-    <div class="row">
+    <div>
+        <!-- ── Inline breadcrumb for the Vue-managed sub-steps ────── -->
+        <nav v-if="cargaFinalizada && vueSteps.length > 1"
+             class="inscripcion-breadcrumb-wrap mb-3"
+             :aria-label="$t('frontend.step_progress')">
+            <ol class="inscripcion-steps list-unstyled d-flex align-items-center mb-0">
+                <template v-for="(step, index) in vueSteps">
+                    <li v-if="index > 0" class="inscripcion-step-sep" aria-hidden="true">›</li>
+                    <li :class="['inscripcion-step', 'inscripcion-step--' + step.state]"
+                        :aria-current="step.state === 'active' ? 'step' : false">
+                        {{ step.label }}
+                    </li>
+                </template>
+            </ol>
+        </nav>
+
+        <div class="row">
         <div class="col-md-8" v-if="cargaFinalizada">
             <div v-if="!mostrarFichaMedica">
                 <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado && preguntasAplicado">
@@ -313,7 +329,8 @@
 
             </div>
         </div>
-    </div>
+    </div><!-- /.row -->
+    </div><!-- /.wrapper -->
 </template>
 
 <script>
@@ -447,6 +464,61 @@
             esConstruccion() {
                 return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
             },
+
+            /**
+             * Key of the step currently visible inside the Vue flow.
+             * Mirrors the v-if/v-else-if precedence in the template.
+             */
+            currentVueStep() {
+                if (!this.cargaFinalizada) return null;
+                if (this.mostrarFichaMedica)      return 'ficha_medica';
+                if (!this.rolAplicado)            return 'rol';
+                if (!this.tipoInscriptoAplicado)  return 'tipo';
+                if (!this.estudiosAplicado)        return 'estudios';
+                if (!this.jornadasAplicado)        return 'jornadas';
+                if (!this.preguntasAplicado)       return 'preguntas';
+                return 'punto_encuentro';
+            },
+
+            /**
+             * Ordered list of Vue-phase steps relevant to this activity,
+             * each annotated with state: 'done' | 'active' | 'pending'.
+             */
+            vueSteps() {
+                if (!this.cargaFinalizada) return [];
+
+                var a = this.actividad;
+                // Order must match the actual display order in the template:
+                // ficha_medica is a gate shown FIRST, before all other steps.
+                var catalog = [
+                    { key: 'ficha_medica',    label: this.$t('frontend.step_ficha_medica'),
+                      active: !!a.requiere_ficha_medica },
+                    { key: 'rol',             label: this.$t('frontend.step_rol'),
+                      active: a.roles_tags && a.roles_tags.length > 0 },
+                    { key: 'tipo',            label: this.$t('frontend.step_tipo'),
+                      active: a.tipo_inscriptos_tag && a.tipo_inscriptos_tag.length > 0 },
+                    { key: 'estudios',        label: this.$t('frontend.step_estudios'),
+                      active: !!a.requiere_estudios },
+                    { key: 'jornadas',        label: this.$t('frontend.step_jornadas'),
+                      active: this.jornadas && this.jornadas.length > 0 },
+                    { key: 'preguntas',       label: this.$t('frontend.step_preguntas'),
+                      active: a.preguntas && a.preguntas.length > 0 },
+                    { key: 'punto_encuentro', label: this.$t('frontend.step_punto_encuentro'),
+                      active: true },
+                ];
+
+                var steps   = catalog.filter(function(s) { return s.active; });
+                var current = this.currentVueStep;
+                var found   = false;
+
+                return steps.map(function(s) {
+                    var state;
+                    if (s.key === current) { state = 'active'; found = true; }
+                    else if (!found)       { state = 'done';                  }
+                    else                   { state = 'pending';               }
+                    return { key: s.key, label: s.label, state: state };
+                });
+            },
         },
         methods: {
             validateForm: function(event) {
@@ -458,30 +530,38 @@
                 return true;
             },
             checkSubmit: function() {
-                if(this.actividad.puntosEncuentro.length == 1){
-                    const formData = new FormData();
-                    if(this.rolesAplicado.length > 0)
-                        formData.append('roles_aplicados', JSON.stringify(this.rolesAplicado.map(tag => tag.id)));
-                
-                    if(this.tipoInscriptoTags.length > 0)
-                        formData.append('inscripciones_aplicadas', JSON.stringify(this.tipoInscriptoTags.map(tag => tag.id)));
-                    
-                    formData.append('aplica_rol', this.aplicaRol);
-                    formData.append('jornadas', this.convertToJSONJornadas());
-                    formData.append('respuestas', this.convertToJSONRespuestas());
+                // When there is exactly one active meeting point, skip the selection
+                // screen and navigate directly to the confirmar step by submitting a
+                // hidden form (full-page POST). Using a real form submit rather than
+                // XHR + innerHTML avoids CSRF issues and silent failures.
+                if (this.puntosActivos.length === 1) {
+                    var self = this;
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action  = '/inscripciones/actividad/' + this.actividad.idActividad + '/confirmar';
+                    form.style.display = 'none';
 
-                    formData.append('punto_encuentro',  this.actividad.puntosEncuentro[0].idPuntoEncuentro);
-                    const headers = { 'Content-Type': 'multipart/form-data' };
+                    var fields = {
+                        '_token':                  this.csrf_token,
+                        'roles_aplicados':         this.convertToJSON(),
+                        'aplica_rol':              String(this.aplicaRol),
+                        'inscripciones_aplicadas': this.convertToJSONInscripciones(),
+                        'jornadas':                this.convertToJSONJornadas(),
+                        'respuestas':              this.convertToJSONRespuestas(),
+                        'punto_encuentro':         String(this.puntosActivos[0].idPuntoEncuentro),
+                    };
 
-                    axios.post('/inscripciones/actividad/' + this.actividad.idActividad + '/confirmar', formData).then(response => {
-                        this.validateForm();
-                        document.getElementById('app').innerHTML = response.data; // Suponiendo que 'app' es el ID de tu contenedor principal en el que se muestra la vista
-                
-                    }).catch((error) => {
+                    Object.keys(fields).forEach(function (key) {
+                        var input = document.createElement('input');
+                        input.type  = 'hidden';
+                        input.name  = key;
+                        input.value = fields[key];
+                        form.appendChild(input);
                     });
+
+                    document.body.appendChild(form);
+                    form.submit();
                 }
-                
-                        
             },
             mostrarLogin: function () {
                 $('#btnShowModal').trigger('click')
@@ -561,6 +641,21 @@
 </script>
 
 <style scoped>
+    /* ── Breadcrumb ── */
+    .inscripcion-breadcrumb-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .inscripcion-breadcrumb-wrap::-webkit-scrollbar { height: 0; width: 0; }
+    .inscripcion-steps       { flex-wrap: nowrap; gap: .3rem; padding: 0 8px 2px; min-width: max-content; }
+    .inscripcion-step        { font-size: .78rem; color: #bbb; list-style: none; white-space: nowrap; }
+    .inscripcion-step--done  { color: #aaa; }
+    .inscripcion-step--active{ color: #0092dd; font-weight: 700; border-bottom: 2px solid #0092dd; padding-bottom: 1px; }
+    .inscripcion-step-sep    { font-size: .78rem; color: #ddd; list-style: none; padding: 0 .1rem; flex-shrink: 0; }
+
+    /* ── Activity card ── */
     .card {
         border: none;
     }

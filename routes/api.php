@@ -19,6 +19,14 @@ Route::get('/translate', 'api\TranslationController@getTranslation');
 Route::post('/translate/batch', 'api\TranslationController@getBatchTranslations');
 
 
+// ── Donations — Stripe webhook (no auth, signature-validated by Stripe) ──────
+// Must be declared BEFORE the auth:api group so it is not auth-protected.
+// API routes are already CSRF-exempt (VerifyCsrfToken does not run for api group).
+Route::post(
+    'donations/stripe/webhook',
+    'api\DonationWebhookController@handle'
+)->name('api.donations.webhook');
+
 // Rutas Publicas
 Route::post('login', 'api\PersonasController@login');
 Route::post('socialLogin', 'api\PersonasController@socialLogin');
@@ -109,6 +117,17 @@ Route::middleware('auth:api')->group(function () {
     // dispositivos para notificaciones push (OneSignal)
     Route::post('dispositivos', 'api\DispositivoController@registrar');
     Route::delete('dispositivos/{player_id}', 'api\DispositivoController@desactivar');
+
+    // ── Donations ─────────────────────────────────────────────────────────
+    Route::prefix('donations')->group(function () {
+        // Create a Stripe PaymentIntent and persist a donation record
+        Route::post('stripe/payment-intent', 'api\DonationController@createPaymentIntent')
+             ->name('api.donations.create-intent');
+
+        // Poll donation status by Stripe PaymentIntent ID
+        Route::get('{intentId}/status', 'api\DonationController@getStatus')
+             ->name('api.donations.status');
+    });
 
 
     Route::get('actividades/categoria/{nombre}', function ($nombre, Request $request) {
