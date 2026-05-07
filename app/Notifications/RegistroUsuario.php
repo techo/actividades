@@ -4,15 +4,11 @@ namespace App\Notifications;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RegistroUsuario extends Notification implements ShouldQueue
+class RegistroUsuario extends Notification
 {
-    use Queueable;
     /**
      * The callback that should be used to build the mail message.
      *
@@ -57,7 +53,7 @@ class RegistroUsuario extends Notification implements ShouldQueue
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'verification.verify', Carbon::now()->addMinutes(60), ['id' => $notifiable->getKey()]
+            'verification.verify', Carbon::now()->addMinutes(1440), ['id' => $notifiable->getKey()]
         );
     }
 
