@@ -8,32 +8,32 @@
              @dragleave.prevent="dragging = false"
              @drop.prevent="onDrop">
 
-            <div v-if="!nombre_voucher && !voucher" class="text-center py-3">
-                <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2 d-block"></i>
-                <span class="d-block font-weight-bold text-muted" style="font-size:.9rem;">
+            <div v-if="!nombre_voucher && !voucher" class="d-flex flex-column align-items-center py-3">
+                <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                <span class="font-weight-bold text-muted" style="font-size:.9rem;">
                     {{ $t('frontend.voucher_click_to_browse') }}
                 </span>
-                <span class="d-block text-muted mt-1" style="font-size:.8rem;">
+                <span class="text-muted mt-1" style="font-size:.8rem;">
                     {{ $t('frontend.voucher_drag_drop') }}
                 </span>
-                <span class="d-block text-muted mt-1" style="font-size:.75rem;">
+                <span class="text-muted mt-1" style="font-size:.75rem;">
                     {{ $t('frontend.voucher_formats') }}
                 </span>
             </div>
 
-            <div v-if="voucher && !nombre_voucher" class="text-center py-3">
-                <i class="fas fa-file-alt fa-2x text-success mb-2 d-block"></i>
-                <span class="d-block text-muted small">{{ $t('frontend.data_uploaded') }}</span>
+            <div v-if="voucher && !nombre_voucher" class="d-flex flex-column align-items-center py-3">
+                <i class="fas fa-file-alt fa-2x text-success mb-2"></i>
+                <span class="text-muted small">{{ $t('frontend.data_uploaded') }}</span>
                 <a v-if="voucher" :href="'/' + voucher" target="_blank"
-                   class="d-block small mt-1"
+                   class="small mt-1"
                    @click.stop>
                     {{ $t('frontend.ver_adjunto') }}
                 </a>
             </div>
 
-            <div v-if="nombre_voucher" class="text-center py-3">
-                <i class="fas fa-file-alt fa-2x text-primary mb-2 d-block"></i>
-                <span class="d-block text-muted small">{{ nombre_voucher }}</span>
+            <div v-if="nombre_voucher" class="d-flex flex-column align-items-center py-3">
+                <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
+                <span class="text-muted small">{{ nombre_voucher }}</span>
             </div>
 
         </div>
