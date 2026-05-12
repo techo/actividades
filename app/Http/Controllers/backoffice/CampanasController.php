@@ -26,6 +26,7 @@ class CampanasController extends Controller
     public function show($id)
     {
         $campana  = Campaign::findOrFail($id);
+        $this->authorize('view', $campana);
         $oficinas = Oficina::where('id_pais', auth()->user()->idPaisPermitido)
             ->orderBy('nombre')
             ->get(['id', 'nombre']);
@@ -36,18 +37,21 @@ class CampanasController extends Controller
     public function preguntas($id)
     {
         $campana = Campaign::findOrFail($id);
+        $this->authorize('view', $campana);
         return view('backoffice.campanas.preguntas', compact('campana'));
     }
 
     public function suscriptos($id)
     {
         $campana = Campaign::findOrFail($id);
+        $this->authorize('view', $campana);
         return view('backoffice.campanas.suscriptos', compact('campana'));
     }
 
     public function exportar($id)
     {
         $campana = Campaign::with('preguntas')->findOrFail($id);
+        $this->authorize('view', $campana);
         $export = new CampanaSuscriptosExport($campana);
         $filename = 'suscriptos_' . str_slug($campana->nombre) . '.xlsx';
         return Excel::download($export, $filename);

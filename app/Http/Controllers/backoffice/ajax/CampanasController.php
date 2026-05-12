@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Campaign;
 use App\Http\Controllers\Controller;
+use App\Oficina;
 use App\Persona;
 use App\Suscribe;
 use App\Http\Resources\SuscriptosResource;
@@ -18,6 +19,7 @@ class CampanasController extends Controller
     public function index(Request $request)
     {
         $query = Campaign::query()
+            ->where('pais_id', auth()->user()->idPaisPermitido)
             ->orderBy('created_at', 'desc');
 
         if ($request->filled('nombre')) {
@@ -29,11 +31,23 @@ class CampanasController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Campaign::class);
+
         $request->validate([
             'nombre'               => 'required|string|max:255',
             'descripcion'          => 'nullable|string',
             'tipo'                 => 'nullable|in:colecta,captacion',
-            'oficina_id'           => 'nullable|exists:atl_oficinas,id',
+            'oficina_id'           => [
+                'nullable', 'exists:atl_oficinas,id',
+                function ($attribute, $value, $fail) {
+                    if ($value) {
+                        $oficina = Oficina::find($value);
+                        if (!$oficina || (int) $oficina->id_pais !== (int) auth()->user()->idPaisPermitido) {
+                            $fail('La oficina no pertenece a tu país.');
+                        }
+                    }
+                },
+            ],
             'fecha_inicio'         => 'nullable|date',
             'fecha_fin'            => 'nullable|date',
             'activa'               => 'boolean',
@@ -49,12 +63,23 @@ class CampanasController extends Controller
     public function update(Request $request, $id)
     {
         $campana = Campaign::findOrFail($id);
+        $this->authorize('update', $campana);
 
         $request->validate([
             'nombre'               => 'required|string|max:255',
             'descripcion'          => 'nullable|string',
             'tipo'                 => 'nullable|in:colecta,captacion',
-            'oficina_id'           => 'nullable|exists:atl_oficinas,id',
+            'oficina_id'           => [
+                'nullable', 'exists:atl_oficinas,id',
+                function ($attribute, $value, $fail) {
+                    if ($value) {
+                        $oficina = Oficina::find($value);
+                        if (!$oficina || (int) $oficina->id_pais !== (int) auth()->user()->idPaisPermitido) {
+                            $fail('La oficina no pertenece a tu país.');
+                        }
+                    }
+                },
+            ],
             'fecha_inicio'         => 'nullable|date',
             'fecha_fin'            => 'nullable|date',
             'activa'               => 'boolean',
@@ -70,6 +95,7 @@ class CampanasController extends Controller
     public function destroy($id)
     {
         $campana = Campaign::findOrFail($id);
+        $this->authorize('delete', $campana);
         $campana->delete();
 
         return response()->json(null, 204);
@@ -78,6 +104,7 @@ class CampanasController extends Controller
     public function storeImagen(Request $request, $id)
     {
         $campana = Campaign::findOrFail($id);
+        $this->authorize('update', $campana);
 
         $request->validate([
             'imagen' => 'required|file|image|max:4096',

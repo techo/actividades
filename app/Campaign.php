@@ -15,6 +15,7 @@ class Campaign extends Model
         'tipo',
         'imagen',
         'oficina_id',
+        'pais_id',
         'whatsapp_link',
         'confirmation_message',
         'fecha_inicio',
@@ -27,6 +28,24 @@ class Campaign extends Model
         'fecha_inicio' => 'date',
         'fecha_fin'    => 'date',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (Campaign $campaign) {
+            if ($campaign->oficina_id) {
+                $oficina = Oficina::find($campaign->oficina_id);
+                if ($oficina) {
+                    $campaign->pais_id = $oficina->id_pais;
+                    return;
+                }
+            }
+            if (auth()->check()) {
+                $campaign->pais_id = auth()->user()->idPaisPermitido;
+            }
+        });
+    }
 
     public function oficina()
     {
