@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Actividad;
+use App\Campaign;
 use App\Inscripcion;
 use App\Policies\ActividadesPolicy;
+use App\Policies\CampanaPolicy;
 use App\Policies\InscripcionesPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
         Actividad::class => ActividadesPolicy::class,
         Inscripcion::class => InscripcionesPolicy::class,
+        Campaign::class => CampanaPolicy::class,
     ];
 
     /**
