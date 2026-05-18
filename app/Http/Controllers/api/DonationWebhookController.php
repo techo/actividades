@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Donation;
+use App\DonationSubscription;
 use App\Http\Controllers\Controller;
 use App\Services\StripePaymentService;
 use Carbon\Carbon;
@@ -16,10 +17,16 @@ use Stripe\Exception\SignatureVerificationException;
  * Route: POST /api/donations/stripe/webhook
  * No auth middleware — Stripe signature validates the request.
  *
- * Events handled:
+ * PaymentIntent events (one-time donations):
  *   payment_intent.succeeded       → mark donation succeeded
  *   payment_intent.payment_failed  → mark donation failed
  *   payment_intent.canceled        → mark donation canceled
+ *
+ * Subscription events (recurring donations):
+ *   invoice.paid                    → mark subscription active, update period
+ *   invoice.payment_failed          → mark subscription past_due
+ *   customer.subscription.updated   → sync status and billing period
+ *   customer.subscription.deleted   → mark subscription canceled
  */
 class DonationWebhookController extends Controller
 {
@@ -45,47 +52,65 @@ class DonationWebhookController extends Controller
             ]);
             return response()->json(['message' => 'Invalid signature.'], 400);
         } catch (\RuntimeException $e) {
-            // webhook_secret not configured
             Log::error('DonationWebhook: configuration error', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Webhook not configured.'], 500);
         }
 
         // ── 2. Route to the right handler ─────────────────────────────────
         switch ($event->type) {
+
+            // ── One-time donation events ──────────────────────────────────
             case 'payment_intent.succeeded':
-                $this->handleSucceeded($event);
+                $this->handlePaymentIntentSucceeded($event);
                 break;
 
             case 'payment_intent.payment_failed':
-                $this->handleFailed($event);
+                $this->handlePaymentIntentFailed($event);
                 break;
 
             case 'payment_intent.canceled':
-                $this->handleCanceled($event);
+                $this->handlePaymentIntentCanceled($event);
+                break;
+
+            // ── Recurring subscription events ─────────────────────────────
+            case 'invoice.paid':
+                $this->handleInvoicePaid($event);
+                break;
+
+            case 'invoice.payment_failed':
+                $this->handleInvoicePaymentFailed($event);
+                break;
+
+            case 'customer.subscription.updated':
+                $this->handleSubscriptionUpdated($event);
+                break;
+
+            case 'customer.subscription.deleted':
+                $this->handleSubscriptionDeleted($event);
                 break;
 
             default:
-                // Unknown event type — acknowledge so Stripe stops retrying
                 Log::debug('DonationWebhook: unhandled event type', ['type' => $event->type]);
         }
 
-        // Always return 200 to prevent Stripe from retrying events we don't handle
+        // Always return 200 — prevents Stripe from retrying unhandled events
         return response()->json(['received' => true]);
     }
 
-    // ── Event handlers ────────────────────────────────────────────────────
+    // =========================================================================
+    // One-time PaymentIntent handlers
+    // =========================================================================
 
-    private function handleSucceeded(\Stripe\Event $event): void
+    private function handlePaymentIntentSucceeded(\Stripe\Event $event): void
     {
         /** @var \Stripe\PaymentIntent $intent */
-        $intent = $event->data->object;
-
+        $intent   = $event->data->object;
         $donation = $this->findDonation($intent->id);
+
         if (!$donation) {
             return;
         }
 
-        // ── Idempotency: skip if this exact event was already processed ───
         if ($donation->stripe_event_id === $event->id) {
             Log::debug('DonationWebhook: skipping duplicate event', [
                 'event_id'    => $event->id,
@@ -105,22 +130,17 @@ class DonationWebhookController extends Controller
         ]);
     }
 
-    private function handleFailed(\Stripe\Event $event): void
+    private function handlePaymentIntentFailed(\Stripe\Event $event): void
     {
         /** @var \Stripe\PaymentIntent $intent */
-        $intent = $event->data->object;
-
+        $intent   = $event->data->object;
         $donation = $this->findDonation($intent->id);
-        if (!$donation) {
+
+        if (!$donation || $donation->stripe_event_id === $event->id) {
             return;
         }
 
-        if ($donation->stripe_event_id === $event->id) {
-            return;
-        }
-
-        // Note: 'failed' is not a terminal state — the PI can be retried.
-        // We mark our record for observability but don't lock out the user.
+        // 'failed' is non-terminal — the PI can be retried by the user
         if (!$donation->isTerminal()) {
             $donation->update([
                 'status'          => Donation::STATUS_FAILED,
@@ -129,23 +149,19 @@ class DonationWebhookController extends Controller
         }
 
         Log::info('DonationWebhook: donation payment failed', [
-            'donation_id'    => $donation->id,
-            'intent_id'      => $intent->id,
+            'donation_id'     => $donation->id,
+            'intent_id'       => $intent->id,
             'failure_message' => $intent->last_payment_error->message ?? null,
         ]);
     }
 
-    private function handleCanceled(\Stripe\Event $event): void
+    private function handlePaymentIntentCanceled(\Stripe\Event $event): void
     {
         /** @var \Stripe\PaymentIntent $intent */
-        $intent = $event->data->object;
-
+        $intent   = $event->data->object;
         $donation = $this->findDonation($intent->id);
-        if (!$donation) {
-            return;
-        }
 
-        if ($donation->stripe_event_id === $event->id) {
+        if (!$donation || $donation->stripe_event_id === $event->id) {
             return;
         }
 
@@ -159,7 +175,135 @@ class DonationWebhookController extends Controller
         ]);
     }
 
-    // ── Private helpers ───────────────────────────────────────────────────
+    // =========================================================================
+    // Recurring subscription handlers
+    // =========================================================================
+
+    /**
+     * invoice.paid — a subscription invoice was paid successfully.
+     * Mark the subscription active and update the billing period.
+     */
+    private function handleInvoicePaid(\Stripe\Event $event): void
+    {
+        /** @var \Stripe\Invoice $invoice */
+        $invoice = $event->data->object;
+
+        $subscriptionId = $invoice->subscription ?? null;
+        if (!$subscriptionId) {
+            return;
+        }
+
+        $sub = $this->findSubscription($subscriptionId);
+        if (!$sub || $sub->stripe_event_id === $event->id) {
+            return;
+        }
+
+        $sub->transitionTo(DonationSubscription::STATUS_ACTIVE, [
+            'stripe_event_id'    => $event->id,
+            'current_period_end' => $invoice->lines->data[0]->period->end ?? null
+                ? Carbon::createFromTimestamp($invoice->lines->data[0]->period->end)
+                : $sub->current_period_end,
+        ]);
+
+        Log::info('DonationWebhook: subscription invoice paid', [
+            'subscription_id' => $subscriptionId,
+            'invoice_id'      => $invoice->id,
+        ]);
+    }
+
+    /**
+     * invoice.payment_failed — a subscription invoice could not be collected.
+     * Stripe will retry automatically; we mark the sub as past_due for the app.
+     */
+    private function handleInvoicePaymentFailed(\Stripe\Event $event): void
+    {
+        /** @var \Stripe\Invoice $invoice */
+        $invoice = $event->data->object;
+
+        $subscriptionId = $invoice->subscription ?? null;
+        if (!$subscriptionId) {
+            return;
+        }
+
+        $sub = $this->findSubscription($subscriptionId);
+        if (!$sub || $sub->stripe_event_id === $event->id) {
+            return;
+        }
+
+        if (!$sub->isTerminal()) {
+            $sub->update([
+                'status'          => DonationSubscription::STATUS_PAST_DUE,
+                'stripe_event_id' => $event->id,
+            ]);
+        }
+
+        Log::info('DonationWebhook: subscription invoice payment failed', [
+            'subscription_id' => $subscriptionId,
+            'invoice_id'      => $invoice->id,
+        ]);
+    }
+
+    /**
+     * customer.subscription.updated — sync any status or period changes.
+     * Stripe fires this on plan changes, trial ends, status transitions, etc.
+     */
+    private function handleSubscriptionUpdated(\Stripe\Event $event): void
+    {
+        /** @var \Stripe\Subscription $stripeSubscription */
+        $stripeSubscription = $event->data->object;
+
+        $sub = $this->findSubscription($stripeSubscription->id);
+        if (!$sub || $sub->stripe_event_id === $event->id) {
+            return;
+        }
+
+        // Sync status and billing period from Stripe's source of truth
+        $updates = [
+            'stripe_event_id' => $event->id,
+            'status'          => $stripeSubscription->status,
+        ];
+
+        if ($stripeSubscription->current_period_end) {
+            $updates['current_period_end'] = Carbon::createFromTimestamp(
+                $stripeSubscription->current_period_end
+            );
+        }
+
+        $sub->update($updates);
+
+        Log::info('DonationWebhook: subscription updated', [
+            'subscription_id' => $stripeSubscription->id,
+            'new_status'      => $stripeSubscription->status,
+        ]);
+    }
+
+    /**
+     * customer.subscription.deleted — the subscription has been canceled
+     * (either by the user, by Stripe due to failed payments, or via the dashboard).
+     */
+    private function handleSubscriptionDeleted(\Stripe\Event $event): void
+    {
+        /** @var \Stripe\Subscription $stripeSubscription */
+        $stripeSubscription = $event->data->object;
+
+        $sub = $this->findSubscription($stripeSubscription->id);
+        if (!$sub || $sub->stripe_event_id === $event->id) {
+            return;
+        }
+
+        $sub->transitionTo(DonationSubscription::STATUS_CANCELED, [
+            'stripe_event_id' => $event->id,
+            'canceled_at'     => $stripeSubscription->canceled_at
+                ? Carbon::createFromTimestamp($stripeSubscription->canceled_at)
+                : Carbon::now(),
+        ]);
+
+        Log::info('DonationWebhook: subscription canceled/deleted', [
+            'subscription_id' => $stripeSubscription->id,
+        ]);
+    }
+
+    // ── Private helpers ───────────────────────────────────────────────────────
 
     private function findDonation(string $paymentIntentId): ?Donation
     {
@@ -172,5 +316,18 @@ class DonationWebhookController extends Controller
         }
 
         return $donation;
+    }
+
+    private function findSubscription(string $subscriptionId): ?DonationSubscription
+    {
+        $sub = DonationSubscription::where('stripe_subscription_id', $subscriptionId)->first();
+
+        if (!$sub) {
+            Log::warning('DonationWebhook: unknown Subscription', [
+                'subscription_id' => $subscriptionId,
+            ]);
+        }
+
+        return $sub;
     }
 }

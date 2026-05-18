@@ -38,11 +38,13 @@
         </div>
         @if(config('app.env') == 'local' || config('app.env') == 'development' )
         <div class="row ml-2 mt-0">
-            
             @php
-                $head = explode('/',file_get_contents('../.git/HEAD'));
-                echo $head[count($head)-1];
-            @endphp              
+                $gitHead = base_path('../.git/HEAD');
+                if (file_exists($gitHead)) {
+                    $head = explode('/', file_get_contents($gitHead));
+                    echo trim($head[count($head) - 1]);
+                }
+            @endphp
         </div>
         @endif
     </div>

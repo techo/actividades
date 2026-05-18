@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\StripeCustomer;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
@@ -31,6 +32,15 @@ class StripePaymentService
     /** Valid values for the `source` field. */
     const ALLOWED_SOURCES = ['login_us', 'home_pill', 'profile'];
 
+    /** Valid payment modes. */
+    const ALLOWED_MODES = ['one_time', 'recurring'];
+
+    /** Valid payment method identifiers accepted by the API. */
+    const ALLOWED_PAYMENT_METHODS = ['card', 'apple_pay', 'google_pay', 'pix'];
+
+    /** Valid billing intervals for recurring donations. */
+    const ALLOWED_INTERVALS = ['month', 'year'];
+
     // ─────────────────────────────────────────────────────────────────────
 
     public function __construct()
@@ -59,15 +69,18 @@ class StripePaymentService
         Stripe::setApiKey($secret);
     }
 
+    // ── PaymentIntent ─────────────────────────────────────────────────────────
+
     /**
-     * Create a Stripe PaymentIntent.
+     * Create a Stripe PaymentIntent for a one-time donation.
      *
-     * @param  int    $amount         Minor units (e.g. 1500 = 15.00)
-     * @param  string $currency       ISO 4217 lowercase
-     * @param  int    $personId       Persona.idPersona
-     * @param  string $source         Where the user initiated the donation
-     * @param  string $idempotencyKey Unique key to prevent duplicate intents
-     * @param  array  $extra          Optional extra metadata stored on Stripe
+     * @param  int    $amount          Minor units (e.g. 1500 = 15.00)
+     * @param  string $currency        ISO 4217 lowercase
+     * @param  int    $personId        Persona.idPersona
+     * @param  string $source          Where the user initiated the donation
+     * @param  string $idempotencyKey  Unique key to prevent duplicate intents
+     * @param  string $paymentMethod   'card' | 'apple_pay' | 'google_pay' | 'pix'
+     * @param  array  $extra           Optional extra metadata stored on Stripe
      * @return PaymentIntent
      * @throws ApiErrorException
      */
@@ -77,6 +90,7 @@ class StripePaymentService
         int $personId,
         string $source,
         string $idempotencyKey,
+        string $paymentMethod = 'card',
         array $extra = []
     ): PaymentIntent {
         $this->boot();
@@ -84,10 +98,11 @@ class StripePaymentService
         $params = [
             'amount'               => $amount,
             'currency'             => $currency,
-            'payment_method_types' => ['card'],
+            'payment_method_types' => self::resolvePaymentMethodTypes($paymentMethod),
             'metadata'             => array_merge([
-                'person_id' => $personId,
-                'source'    => $source,
+                'person_id'      => $personId,
+                'source'         => $source,
+                'payment_method' => $paymentMethod,
             ], $extra),
         ];
 
@@ -96,6 +111,110 @@ class StripePaymentService
             ['idempotency_key' => $idempotencyKey]
         );
     }
+
+    // ── Customer ──────────────────────────────────────────────────────────────
+
+    /**
+     * Get the Stripe Customer ID for a persona, creating one if needed.
+     * Uses our local `stripe_customers` table to avoid duplicate customers.
+     *
+     * @throws ApiErrorException
+     */
+    public function getOrCreateCustomer(int $personId, string $email): string
+    {
+        $this->boot();
+
+        $existing = StripeCustomer::where('person_id', $personId)->first();
+
+        if ($existing) {
+            return $existing->stripe_customer_id;
+        }
+
+        $customer = \Stripe\Customer::create([
+            'email'    => $email,
+            'metadata' => ['person_id' => $personId],
+        ]);
+
+        StripeCustomer::create([
+            'person_id'          => $personId,
+            'stripe_customer_id' => $customer->id,
+        ]);
+
+        return $customer->id;
+    }
+
+    // ── Subscription ──────────────────────────────────────────────────────────
+
+    /**
+     * Create a Stripe Subscription for a recurring donation.
+     *
+     * Uses `payment_behavior: 'default_incomplete'` so the subscription starts
+     * in `incomplete` status and the app must confirm the first payment via the
+     * client_secret returned from `latest_invoice.payment_intent`.
+     * Subsequent charges are handled automatically by Stripe + webhooks.
+     *
+     * @param  string $customerId     Stripe Customer ID
+     * @param  int    $amount         Minor units
+     * @param  string $currency       ISO 4217 lowercase
+     * @param  string $interval       'month' | 'year'
+     * @param  int    $personId       Persona.idPersona (for metadata)
+     * @param  string $source         Where the donation originated
+     * @param  string $idempotencyKey Prevent duplicate subscriptions
+     * @param  array  $extra          Optional extra metadata
+     * @return \Stripe\Subscription   With latest_invoice.payment_intent expanded
+     * @throws ApiErrorException
+     */
+    public function createSubscription(
+        string $customerId,
+        int $amount,
+        string $currency,
+        string $interval,
+        int $personId,
+        string $source,
+        string $idempotencyKey,
+        array $extra = []
+    ): \Stripe\Subscription {
+        $this->boot();
+
+        return \Stripe\Subscription::create([
+            'customer' => $customerId,
+            'items'    => [[
+                'price_data' => [
+                    'currency'     => $currency,
+                    'unit_amount'  => $amount,
+                    'recurring'    => ['interval' => $interval],
+                    'product_data' => ['name' => 'TECHO Donación Recurrente'],
+                ],
+            ]],
+            'payment_behavior' => 'default_incomplete',
+            'payment_settings' => [
+                'save_default_payment_method' => 'on_subscription',
+            ],
+            'expand'   => ['latest_invoice.payment_intent'],
+            'metadata' => array_merge([
+                'person_id' => $personId,
+                'source'    => $source,
+            ], $extra),
+        ], ['idempotency_key' => $idempotencyKey]);
+    }
+
+    /**
+     * Retrieve a Stripe Subscription by ID (with latest_invoice expanded
+     * so we can re-fetch the client_secret on idempotent replays).
+     *
+     * @throws ApiErrorException
+     */
+    public function retrieveSubscription(string $subscriptionId): \Stripe\Subscription
+    {
+        $this->boot();
+
+        return \Stripe\Subscription::retrieve([
+            'id'     => $subscriptionId,
+            'expand' => ['latest_invoice.payment_intent'],
+        ]);
+    }
+
+    // ── Webhook ───────────────────────────────────────────────────────────────
 
     /**
      * Validate and parse a Stripe webhook payload.
@@ -120,7 +239,7 @@ class StripePaymentService
         return Webhook::constructEvent($rawPayload, $sigHeader, $webhookSecret);
     }
 
-    // ── Static helpers ────────────────────────────────────────────────────
+    // ── Static helpers ────────────────────────────────────────────────────────
 
     /**
      * Map a Stripe PaymentIntent status to our internal normalised status.
@@ -138,5 +257,23 @@ class StripePaymentService
                 // requires_action | processing | requires_capture
                 return 'pending';
         }
+    }
+
+    /**
+     * Map our `paymentMethod` value to Stripe's `payment_method_types` array.
+     *
+     * Apple Pay and Google Pay are wallet methods that route through the card
+     * network on Stripe — ['card'] is correct server-side for both.
+     * The client SDK (Stripe.js / mobile) handles the wallet UX automatically.
+     * PIX is a separate method that requires its own type.
+     */
+    public static function resolvePaymentMethodTypes(string $paymentMethod): array
+    {
+        if ($paymentMethod === 'pix') {
+            return ['pix'];
+        }
+
+        // 'card', 'apple_pay', 'google_pay' → all use the 'card' type server-side
+        return ['card'];
     }
 }

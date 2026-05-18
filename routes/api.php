@@ -120,11 +120,19 @@ Route::middleware('auth:api')->group(function () {
 
     // ── Donations ─────────────────────────────────────────────────────────
     Route::prefix('donations')->group(function () {
-        // Create a Stripe PaymentIntent and persist a donation record
+        // One-time: create PaymentIntent and persist a donation record
         Route::post('stripe/payment-intent', 'api\DonationController@createPaymentIntent')
              ->name('api.donations.create-intent');
 
-        // Poll donation status by Stripe PaymentIntent ID
+        // Recurring: create Stripe Subscription and persist the record
+        Route::post('stripe/subscription', 'api\DonationController@createSubscription')
+             ->name('api.donations.create-subscription');
+
+        // Poll subscription status by Stripe Subscription ID
+        Route::get('stripe/subscription/{subscriptionId}/status', 'api\DonationController@getSubscriptionStatus')
+             ->name('api.donations.subscription-status');
+
+        // Poll one-time donation status by Stripe PaymentIntent ID
         Route::get('{intentId}/status', 'api\DonationController@getStatus')
              ->name('api.donations.status');
     });

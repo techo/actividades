@@ -13,6 +13,8 @@ class Donation extends Model
         'stripe_payment_intent_id',
         'amount',
         'currency',
+        'mode',
+        'payment_method_type',
         'status',
         'source',
         'country_code',
