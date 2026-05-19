@@ -15,38 +15,32 @@
     $stripeHabilitado = !empty($stripeConfig->stripe_secret) && $inscripcion->pago != 1;
     $tieneLink        = !empty($actividad->linkPago);
 
-    // Tab seleccionado por defecto: card si hay Stripe, transfer en caso contrario
-    $tabDefault = $stripeHabilitado ? 'card' : 'transfer';
+    // Tab seleccionado por defecto: card > link > transfer según disponibilidad
+    $tabDefault = $stripeHabilitado ? 'card' : ($tieneLink ? 'link' : 'transfer');
 @endphp
 
-@if($inscripcion->voucherURL && !$inscripcion->pago)
+@if($inscripcion->voucherUrl && !$inscripcion->pago)
 <div class="container py-5 text-center" style="max-width:520px;margin:0 auto;">
     <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
          style="background:#F4A345;width:80px;height:80px;">
         <i class="fa fa-credit-card" style="font-size:32px;color:white;"></i>
     </div>
     <h2 class="font-weight-bold mb-3" style="color:#1A3A6B;">
-        ¡Proceso completado!<br>Ya estas pre-inscripto/a
+        {{ __('frontend.voucher_process_title') }}
     </h2>
     <p class="text-muted mb-4">
-        {{ __('frontend.payment_in_process') }}
+        {{ __('frontend.voucher_process_subtitle') }}
     </p>
     <div class="card mb-4" style="background:#F5F5F5;border:none;border-radius:12px;">
         <div class="card-body text-left">
-            <h6 class="font-weight-bold mb-3" style="color:#F4A345;">Resumen de la operación</h6>
+            <h6 class="font-weight-bold mb-3" style="color:#F4A345;">{{ __('frontend.operation_summary') }}</h6>
             <ul class="list-unstyled mb-0">
                 <li class="mb-2">
-                    <strong>Actividad:</strong>
+                    <strong>{{ __('frontend.activity_label') }}:</strong>
                     <span class="text-muted ml-1">{{ $actividad->nombreActividad }}</span>
                 </li>
-                @if($actividad->descripcionPago)
-                <li class="mb-2">
-                    <strong>Método:</strong>
-                    <span class="text-muted ml-1">{{ strip_tags($actividad->descripcionPago) }}</span>
-                </li>
-                @endif
                 <li>
-                    <strong style="color:#F4A345;">Comprobante en proceso de validación</strong>
+                    <strong style="color:#F4A345;">{{ __('frontend.voucher_validation_pending') }}</strong>
                 </li>
             </ul>
         </div>
@@ -130,22 +124,19 @@
                     </button>
                 </div>
 
-                {{-- TODO: link de pago — se implementa más adelante
                 @if($tieneLink)
                 <div class="col-md-4 mb-2">
-                    <a href="{{ $actividad->linkPago }}"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       class="pago-metodo-btn w-100 p-3 border rounded d-flex flex-column align-items-center justify-content-center text-decoration-none"
-                       style="color:inherit;">
-                        <i class="fas fa-external-link-alt fa-2x mb-2"></i>
+                    <button type="button"
+                        class="pago-metodo-btn w-100 p-3 border rounded d-flex flex-column align-items-center justify-content-center"
+                        data-metodo="link"
+                        onclick="pagoSelectMetodo('link')">
+                        <i class="fas fa-link fa-2x mb-2"></i>
                         <span class="font-weight-bold" style="font-size:.875rem;">
                             {{ __('frontend.payment_method_link') }}
                         </span>
-                    </a>
+                    </button>
                 </div>
                 @endif
-                --}}
 
             </div>
 
@@ -200,22 +191,55 @@
                 </div>
             </div>
 
-            {{-- TODO: panel link de pago — se implementa más adelante
+            {{-- ── Panel: Link de Pago ──────────────────────────────── --}}
             @if($tieneLink)
             <div id="pago-content-link" class="pago-panel" style="display:none;">
-                <div class="text-center py-4">
-                    <p class="text-muted mb-4">{{ __('frontend.payment_link_instructions') }}</p>
-                    <a href="{{ $actividad->linkPago }}"
-                       class="btn btn-primary px-5"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        <i class="fas fa-external-link-alt mr-2"></i>
-                        {{ __('frontend.go_to_payment_link') }}
-                    </a>
+                <div class="row">
+
+                    {{-- Left column: instructions + link button + scholarship --}}
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <p class="font-weight-bold mb-3">{{ __('frontend.payment_method_link') }}</p>
+                        <p class="text-muted mb-4" style="font-size:.9rem;">
+                            {{ __('frontend.payment_link_description') }}
+                        </p>
+                        <a href="{{ $actividad->linkPago }}"
+                           class="btn btn-outline-primary mb-4"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            {{ strtoupper(__('frontend.go_to_payment_link')) }}
+                        </a>
+                    </div>
+
+                    {{-- Right column: voucher upload (reutiliza componente y endpoint existentes) --}}
+                    <div class="col-md-6">
+                        <p class="font-weight-bold mb-3">{{ __('frontend.upload_voucher_title') }}</p>
+                        <confirmacion-pago
+                            id="{{ $inscripcion->idInscripcion }}"
+                            voucher="{{ $inscripcion->voucherUrl }}"
+                            csrf_token="{{ csrf_token() }}">
+                        </confirmacion-pago>
+                        @if($inscripcion->voucherUrl)
+                            <p class="text-success mt-2 small">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                {{ __('frontend.payment_in_process') }}
+                            </p>
+                        @endif
+                    </div>
+
                 </div>
             </div>
             @endif
-            --}}
+
+            {{-- ── Panel: Beca / Exención ───────────────────────────── --}}
+            @if(!empty($actividad->beca))
+            <div id="pago-content-beca" class="pago-panel" style="display:none;">
+                <solicitud-beca
+                    id="{{ $inscripcion->idInscripcion }}"
+                    csrf_token="{{ csrf_token() }}">
+                </solicitud-beca>
+            </div>
+            @endif
 
             {{-- ── Monto ────────────────────────────────────────────── --}}
             <div class="mt-4 pt-3 border-top">
@@ -231,7 +255,18 @@
                     </p>
                 @endif
             </div>
-
+            @if(!empty($actividad->beca))
+                <div class="mt-2">
+                    <p class="text-muted small mb-2">
+                        {{ __('frontend.payment_link_scholarship_note') }}
+                    </p>
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            onclick="mostrarBeca()">
+                        {{ __('frontend.payment_link_scholarship_btn') }}
+                    </button>
+                </div>
+            @endif
             {{-- ── Legacy: PayU / país específico (preservado) ────────── --}}
             @if($actividad->pais->id == 99999)
             <form action="{{ action('InscripcionesController@donacionCheckout', ['id' => $actividad->idActividad]) }}"
@@ -279,18 +314,18 @@
             </div>
         </div>
     </div>
-
+        {{-- ── Beca (solo si no hay link de pago; si hay link, aparece dentro del panel) --}}
+        @if(!empty($actividad->beca) && !$tieneLink)
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                {{ __('frontend.also_you_can') }}
+                <a href="{{ $actividad->beca }}" target="_blank">{{ __('frontend.ask_for_grant') }}</a>
+            </small>
+        </div>
+        @endif
     @endif
 
-    {{-- ── Beca ─────────────────────────────────────────────── --}}
-    @if(!empty($actividad->beca))
-    <div class="text-center mt-3">
-        <small class="text-muted">
-            {{ __('frontend.also_you_can') }}
-            <a href="{{ $actividad->beca }}" target="_blank">{{ __('frontend.ask_for_grant') }}</a>
-        </small>
-    </div>
-    @endif
+    
 
 </div>
 @endif
@@ -315,6 +350,27 @@
         });
         var panel = document.getElementById('pago-content-' + metodo);
         if (panel) panel.style.display = 'block';
+    };
+
+    var _becaTabAnterior = tabDefault;
+
+    window.mostrarBeca = function () {
+        var activo = document.querySelector('.pago-metodo-btn--activo');
+        _becaTabAnterior = activo ? activo.dataset.metodo : tabDefault;
+        document.querySelectorAll('.pago-metodo-btn').forEach(function (b) {
+            b.classList.remove('pago-metodo-btn--activo');
+        });
+        document.querySelectorAll('.pago-panel').forEach(function (p) {
+            p.style.display = 'none';
+        });
+        var panel = document.getElementById('pago-content-beca');
+        if (panel) panel.style.display = 'block';
+    };
+
+    window.becaGoBack = function () {
+        var panel = document.getElementById('pago-content-beca');
+        if (panel) panel.style.display = 'none';
+        pagoSelectMetodo(_becaTabAnterior);
     };
 
     document.addEventListener('DOMContentLoaded', function () {

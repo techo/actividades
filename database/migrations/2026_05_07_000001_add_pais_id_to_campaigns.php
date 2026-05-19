@@ -10,8 +10,7 @@ class AddPaisIdToCampaigns extends Migration
     public function up()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->unsignedInteger('pais_id')->nullable()->after('oficina_id');
-            $table->foreign('pais_id')->references('idPais')->on('Pais');
+            $table->integer('pais_id')->nullable()->after('oficina_id');
         });
 
         DB::statement('
@@ -26,7 +25,6 @@ class AddPaisIdToCampaigns extends Migration
     public function down()
     {
         Schema::table('campaigns', function (Blueprint $table) {
-            $table->dropForeign(['pais_id']);
             $table->dropColumn('pais_id');
         });
     }

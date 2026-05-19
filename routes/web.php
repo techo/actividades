@@ -163,6 +163,7 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
 });
 
 Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
+Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax

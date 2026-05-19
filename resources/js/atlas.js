@@ -33,6 +33,7 @@ Vue.component('app-banner', AppBanner);
 
 import Inscripcion from './components/inscripcion';
 import ConfirmacionPago from './components/confirmacionPago';
+import SolicitudBeca from './components/solicitudBeca';
 import Autenticar from './components/autenticar';
 import contenedorCheckProvincias from './components/contenedorCheckProvincias';
 import Registro from './components/registro';
@@ -92,6 +93,7 @@ Vue.component('contenedor-de-tarjetas', ContenedorDeTarjetas);
 Vue.component('carousel-de-tarjetas', CarouselDeTarjetas);
 Vue.component('inscripcion', Inscripcion);
 Vue.component('confirmacionPago', ConfirmacionPago);
+Vue.component('solicitud-beca', SolicitudBeca);
 Vue.component('contenedor-check-provincias', contenedorCheckProvincias);
 Vue.component('registro', Registro);
 Vue.component('perfil', Perfil);

@@ -85,6 +85,9 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             'roles Aplicados',
             'Tipo de Inscripcion',
             'Jornadas',
+            'beca_solicitada',
+            'beca_motivo',
+            'beca_evidencia',
         ];
 
         foreach ($this->preguntas as $pregunta) {
@@ -158,6 +161,9 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $query->roles_aplicados,
             $query->inscripciones_aplicadas,
             $jornadasString,
+            $query->scholarship_requested ? 'Si' : 'No',
+            $query->scholarship_reason ?? '',
+            $query->scholarship_evidence_url ? 'Si' : 'No',
         ];
 
         foreach ($this->preguntas as $pregunta) {

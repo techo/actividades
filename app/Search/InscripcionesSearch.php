@@ -112,7 +112,10 @@ class InscripcionesSearch
             'Persona.estadoPersona',
             'PersonaModificacion.mail as modificado_por',
             'Inscripcion.updated_at as modificado_en',
-            DB::raw('(SELECT GROUP_CONCAT(J.nombre ORDER BY J.fechaInicio SEPARATOR " | ") FROM InscripcionJornada IJ JOIN Jornada J ON J.idJornada = IJ.idJornada WHERE IJ.idInscripcion = Inscripcion.idInscripcion) as jornadas')
+            DB::raw('(SELECT GROUP_CONCAT(J.nombre ORDER BY J.fechaInicio SEPARATOR " | ") FROM InscripcionJornada IJ JOIN Jornada J ON J.idJornada = IJ.idJornada WHERE IJ.idInscripcion = Inscripcion.idInscripcion) as jornadas'),
+            'Inscripcion.scholarship_requested',
+            'Inscripcion.scholarship_reason',
+            'Inscripcion.scholarship_evidence_url',
         ]
     )
     ->whereNull('Inscripcion.deleted_at');

@@ -283,12 +283,43 @@ class InscripcionesController extends BaseController
         $oldPath = str_replace('storage', 'public', $inscripcion->voucherURL);
         if(Storage::exists($oldPath))
             Storage::delete($oldPath);
-    
+
         $inscripcion->voucherURL = str_replace('public', 'storage', $path);
         $inscripcion->save();
-        
+
         return $inscripcion;
-      
+
+    }
+
+    public function becaSolicitud(Request $request)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'reason'        => 'required|string|max:3000',
+            'evidence'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ]);
+
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $inscripcion->scholarship_requested    = true;
+        $inscripcion->scholarship_reason       = $request->input('reason');
+        $inscripcion->scholarship_requested_at = Carbon::now();
+
+        if ($request->hasFile('evidence')) {
+            $archivo  = $request->file('evidence');
+            $path     = $archivo->store('public/becaInscripcion/' . auth()->user()->idPersona);
+            $oldPath  = str_replace('storage', 'public', $inscripcion->scholarship_evidence_url ?? '');
+            if ($oldPath && Storage::exists($oldPath)) {
+                Storage::delete($oldPath);
+            }
+            $inscripcion->scholarship_evidence_url = str_replace('public', 'storage', $path);
+        }
+
+        $inscripcion->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function confirmarDonacion($id)
