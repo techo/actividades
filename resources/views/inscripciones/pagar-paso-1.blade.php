@@ -9,6 +9,7 @@
 @endsection
 
 @section('main_content')
+
 @php
     $stripeConfig     = json_decode($actividad->pais->config_pago);
     $stripeHabilitado = !empty($stripeConfig->stripe_secret) && $inscripcion->pago != 1;
@@ -18,6 +19,43 @@
     $tabDefault = $stripeHabilitado ? 'card' : 'transfer';
 @endphp
 
+@if($inscripcion->voucherURL && !$inscripcion->pago)
+<div class="container py-5 text-center" style="max-width:520px;margin:0 auto;">
+    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+         style="background:#F4A345;width:80px;height:80px;">
+        <i class="fa fa-credit-card" style="font-size:32px;color:white;"></i>
+    </div>
+    <h2 class="font-weight-bold mb-3" style="color:#1A3A6B;">
+        ¡Proceso completado!<br>Ya estas pre-inscripto/a
+    </h2>
+    <p class="text-muted mb-4">
+        {{ __('frontend.payment_in_process') }}
+    </p>
+    <div class="card mb-4" style="background:#F5F5F5;border:none;border-radius:12px;">
+        <div class="card-body text-left">
+            <h6 class="font-weight-bold mb-3" style="color:#F4A345;">Resumen de la operación</h6>
+            <ul class="list-unstyled mb-0">
+                <li class="mb-2">
+                    <strong>Actividad:</strong>
+                    <span class="text-muted ml-1">{{ $actividad->nombreActividad }}</span>
+                </li>
+                @if($actividad->descripcionPago)
+                <li class="mb-2">
+                    <strong>Método:</strong>
+                    <span class="text-muted ml-1">{{ strip_tags($actividad->descripcionPago) }}</span>
+                </li>
+                @endif
+                <li>
+                    <strong style="color:#F4A345;">Comprobante en proceso de validación</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <a href="/actividades" class="btn btn-secondary btn-block" style="border-radius:8px;padding:12px;">
+        {{ __('frontend.my_activities') }}
+    </a>
+</div>
+@else
 <div class="container py-4">
 
     {{-- ── Step indicator ─────────────────────────────────────── --}}
@@ -255,6 +293,7 @@
     @endif
 
 </div>
+@endif
 @endsection
 
 @push('additional_scripts')

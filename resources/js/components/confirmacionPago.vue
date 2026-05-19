@@ -100,9 +100,7 @@
                 const headers = { 'Content-Type': 'multipart/form-data' };
                 axios.post('/ajax/inscripcion/voucherPago', formData, { headers })
                     .then(response => {
-                        this.guardo         = true;
-                        this.nombre_voucher = null;
-                        this.voucher        = response.data.voucherURL;
+                       window.location.reload();
                     })
                     .catch(() => {});
             },
