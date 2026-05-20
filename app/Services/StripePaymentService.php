@@ -176,16 +176,18 @@ class StripePaymentService
     ): \Stripe\Subscription {
         $this->boot();
 
+        // Create a Price inline first — older Stripe SDK versions (v8.x) don't support
+        // product_data nested inside price_data in Subscription::create items.
+        $price = \Stripe\Price::create([
+            'unit_amount'  => $amount,
+            'currency'     => $currency,
+            'recurring'    => ['interval' => $interval],
+            'product_data' => ['name' => 'TECHO Donación Recurrente'],
+        ]);
+
         return \Stripe\Subscription::create([
             'customer' => $customerId,
-            'items'    => [[
-                'price_data' => [
-                    'currency'     => $currency,
-                    'unit_amount'  => $amount,
-                    'recurring'    => ['interval' => $interval],
-                    'product_data' => ['name' => 'TECHO Donación Recurrente'],
-                ],
-            ]],
+            'items'    => [['price' => $price->id]],
             'payment_behavior' => 'default_incomplete',
             'payment_settings' => [
                 'save_default_payment_method' => 'on_subscription',
