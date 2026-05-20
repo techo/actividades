@@ -49,6 +49,12 @@ Route::prefix('paises')->group(function () {
 
 Route::get('actividadesGeneral', 'ajax\ActividadesController@index');
 
+// ── Campañas (público) ────────────────────────────────────────────────────────
+Route::prefix('campanas')->group(function () {
+    Route::get('/',      'api\CampanasController@index');
+    Route::get('/{id}',  'api\CampanasController@show');
+});
+
 /////////////////////////////////
 // Rutas Privadas, por Token   //
 /////////////////////////////////
@@ -113,6 +119,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('personas/{persona}', 'api\PersonasController@show');
     Route::post('editPersona/{persona}', 'api\PersonasController@update');
     Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
+
+    // ── Campañas (autenticado) ────────────────────────────────────────────────
+    Route::prefix('campanas')->group(function () {
+        Route::post('/{id}/suscribir',  'api\CampanasController@suscribir');
+        Route::get('/{id}/suscripcion', 'api\CampanasController@suscripcion');
+    });
 
     // dispositivos para notificaciones push (OneSignal)
     Route::post('dispositivos', 'api\DispositivoController@registrar');
