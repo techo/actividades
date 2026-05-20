@@ -143,6 +143,7 @@ export default {
             .then(() => {
                 this.enviado = true;
                 this.$emit('submitted');
+                if (typeof window.notifyPagoListo === 'function') window.notifyPagoListo();
             })
             .catch(err => {
                 const msg = err.response && err.response.data && err.response.data.message

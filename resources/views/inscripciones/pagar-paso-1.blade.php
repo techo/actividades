@@ -19,7 +19,7 @@
     $tabDefault = $stripeHabilitado ? 'card' : ($tieneLink ? 'link' : 'transfer');
 @endphp
 
-@if($inscripcion->voucherUrl && !$inscripcion->pago)
+@if(($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$inscripcion->pago)
 <div class="container py-5 text-center" style="max-width:520px;margin:0 auto;">
     <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
          style="background:#F4A345;width:80px;height:80px;">
@@ -295,23 +295,17 @@
 
         {{-- ── Footer actions ──────────────────────────────────── --}}
         <div class="card-footer bg-white border-0 px-4 pb-4 d-flex justify-content-between align-items-center">
-            <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}"
-               class="btn btn-link text-danger px-0">
-                {{ __('frontend.cancel') }}
+            <a href="/actividades/{{ $actividad->idActividad }}"
+               class="btn btn-outline-secondary">
+                {{ __('frontend.go_back') }}
             </a>
-            <div class="d-flex align-items-center">
-                @if(Auth::check() && Auth::user()->estaPreInscripto($actividad->idActividad))
-                    <a href="/" class="btn btn-outline-secondary mr-2">{{ __('frontend.go_back') }}</a>
-                @else
-                    <a href="{{ action('InscripcionesController@puntoDeEncuentro', ['id' => $actividad->idActividad]) }}"
-                       class="btn btn-outline-secondary mr-2">
-                        {{ __('frontend.go_back') }}
-                    </a>
-                @endif
-                @if($inscripcion->voucherUrl || $inscripcion->pago == 1)
-                    <a href="/" class="btn btn-primary">{{ __('frontend.continue') }}</a>
-                @endif
-            </div>
+            <button id="btn-finalizar"
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="window.location.reload()"
+                    {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) ? '' : 'disabled' }}>
+                {{ __('frontend.finish') }}
+            </button>
         </div>
     </div>
         {{-- ── Beca (solo si no hay link de pago; si hay link, aparece dentro del panel) --}}
@@ -371,6 +365,12 @@
         var panel = document.getElementById('pago-content-beca');
         if (panel) panel.style.display = 'none';
         pagoSelectMetodo(_becaTabAnterior);
+    };
+
+    // Habilita el botón Finalizar cuando voucher o beca quedan listos
+    window.notifyPagoListo = function () {
+        var btn = document.getElementById('btn-finalizar');
+        if (btn) btn.disabled = false;
     };
 
     document.addEventListener('DOMContentLoaded', function () {
