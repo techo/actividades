@@ -5,6 +5,7 @@ namespace App\Services\Push;
 use App\Jobs\EnviarNotificacionPush;
 use App\Persona;
 use App\Services\OneSignal\OneSignalService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 class PushNotificationService
@@ -31,6 +32,20 @@ class PushNotificationService
      *       ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => 42]
      *   );
      */
+    /**
+     * Envía una notificación push resolviendo los textos en el idioma del usuario.
+     * Los parámetros $tituloKey y $mensajeKey son claves de traducción del archivo push.php.
+     */
+    public function enviarLocalizado(Persona $persona, string $tituloKey, string $mensajeKey, array $params = [], array $datos = []): void
+    {
+        $locale = optional($persona->pais)->locale ?? config('app.locale');
+        App::setLocale($locale);
+        $titulo  = __($tituloKey, $params);
+        $mensaje = __($mensajeKey, $params);
+        App::setLocale(config('app.locale'));
+        $this->enviar($persona, $titulo, $mensaje, $datos);
+    }
+
     public function enviar(Persona $persona, string $titulo, string $mensaje, array $datos = []): void
     {
         try {

@@ -16,6 +16,7 @@ use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\Persona;
 use App\PuntoEncuentro;
+use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -28,6 +29,13 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class InscripcionesController extends BaseController
 {
+    protected $pushService;
+
+    public function __construct(PushNotificationService $pushService)
+    {
+        $this->pushService = $pushService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -76,11 +84,27 @@ class InscripcionesController extends BaseController
         if($request->has('confirma')){
 
             if($request->confirma == true) {
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) 
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) {
                     $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+                    $this->pushService->enviarLocalizado(
+                        $inscripcion->persona,
+                        'push.inscripcion_confirmada_titulo',
+                        'push.inscripcion_confirmada_cuerpo',
+                        ['actividad' => $inscripcion->actividad->nombreActividad],
+                        ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+                    );
+                }
 
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1)
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1) {
                     $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
+                    $this->pushService->enviarLocalizado(
+                        $inscripcion->persona,
+                        'push.pago_pendiente_titulo',
+                        'push.pago_pendiente_cuerpo',
+                        ['actividad' => $inscripcion->actividad->nombreActividad],
+                        ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $inscripcion->actividad->idActividad]
+                    );
+                }
             }
 
             $inscripcion->confirma = $request->confirma;
@@ -89,6 +113,13 @@ class InscripcionesController extends BaseController
         if($request->has('pago')){
             if($inscripcion->actividad->pago == 1 && $request->pago == 1) {
                 $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+                $this->pushService->enviarLocalizado(
+                    $inscripcion->persona,
+                    'push.pago_exitoso_titulo',
+                    'push.pago_exitoso_cuerpo',
+                    ['actividad' => $inscripcion->actividad->nombreActividad],
+                    ['tipo' => 'inscripcion', 'estado' => 'PAGO_CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+                );
             }
 
             $inscripcion->pago = $request->pago;
@@ -173,6 +204,13 @@ class InscripcionesController extends BaseController
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
             $this->intentaEnviar(new ActualizacionActividad($inscripcion), $inscripcion->persona);
+            $this->pushService->enviarLocalizado(
+                $inscripcion->persona,
+                'push.cambio_actividad_titulo',
+                'push.cambio_actividad_cuerpo',
+                ['actividad' => $inscripcion->actividad->nombreActividad],
+                ['tipo' => 'actividad', 'estado' => 'CAMBIO', 'idActividad' => $inscripcion->actividad->idActividad]
+            );
         }
         return response()
             ->json("Punto de encuentro actualizado en " . count($request->inscripciones) . " voluntarios correctamente.", 200);

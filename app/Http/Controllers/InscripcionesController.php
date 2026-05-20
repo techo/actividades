@@ -137,12 +137,6 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
-                $this->pushService->enviar(
-                    $persona,
-                    '¡Inscripción recibida!',
-                    'Tu inscripción a "' . $actividad->nombreActividad . '" está pendiente de confirmación.',
-                    ['tipo' => 'inscripcion', 'estado' => 'PRE_INSCRIPTO', 'idActividad' => $actividad->idActividad]
-                );
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
@@ -168,12 +162,6 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
-                $this->pushService->enviar(
-                    $persona,
-                    '¡Ya casi estás!',
-                    'Falta completar el pago para confirmar tu inscripción a "' . $actividad->nombreActividad . '".',
-                    ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $actividad->idActividad]
-                );
 
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
@@ -193,10 +181,11 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
             $this->guardarRespuestasInscripcion($inscripcion, $request);
             $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), Auth::user());
-            $this->pushService->enviar(
+            $this->pushService->enviarLocalizado(
                 $persona,
-                '¡Inscripción confirmada! 🎉',
-                'Ya estás anotado en "' . $actividad->nombreActividad . '". ¡Nos vemos!',
+                'push.inscripcion_confirmada_titulo',
+                'push.inscripcion_confirmada_cuerpo',
+                ['actividad' => $actividad->nombreActividad],
                 ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $actividad->idActividad]
             );
             if ($request->expectsJson() || $request->is('api/*')) {

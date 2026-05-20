@@ -24,8 +24,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-      //$schedule->command('actividad:recordatorio')->cron('* * * * * *');
-      //$schedule->command('actividad:recordatorio')->dailyAt('08:00');
+        $schedule->command('actividad:recordatorio')->dailyAt('08:00');
+        $schedule->command('push:apertura-evaluacion')->dailyAt('09:00');
+        $schedule->command('push:recordatorio-evaluacion')->dailyAt('09:00');
+        $schedule->command('push:recordatorio-pago')->dailyAt('10:00');
+        $schedule->command('push:reactivacion-voluntarios')->monthlyOn(1, '10:00');
     }
 
     /**
