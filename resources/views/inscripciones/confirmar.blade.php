@@ -12,6 +12,9 @@
 
 <div class="container-fluid card" >
     <div class="card-body">
+
+    @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
+
     <div class="row">
         <div class="col-md-8">
             <div class="row">
@@ -74,8 +77,13 @@
                     <div class="row">
                     
                     @foreach($inscripcionesAplicadas as $rol)
+                        @php
+                            // $rol may be a full array {id, text} (manual submit)
+                            // or a bare integer/string (auto-submit via checkSubmit())
+                            $rolId = is_array($rol) && isset($rol['id']) ? $rol['id'] : $rol;
+                        @endphp
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.tipo_voluntariado_options.'.$rol['id']) }}
+                            {{ __('backend.tipo_voluntariado_options.'.$rolId) }}
                         </span>
                     @endforeach
                     </div>
@@ -120,8 +128,11 @@
                     <div class="row">
                     
                     @foreach($rolesAplicados as $rol)
+                        @php
+                            $rolId = is_array($rol) && isset($rol['id']) ? $rol['id'] : $rol;
+                        @endphp
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.roles_actividad_options.'.$rol['id']) }}
+                            {{ __('backend.roles_actividad_options.'.$rolId) }}
                         </span>
                     @endforeach
                     </div>

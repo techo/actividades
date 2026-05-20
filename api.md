@@ -18,6 +18,7 @@ Authorization: Bearer {token}
 - [Inscripciones](#inscripciones)
 - [Evaluaciones](#evaluaciones)
 - [Perfil médico y estudios](#perfil-médico-y-estudios)
+- [Campañas](#campañas)
 - [Dispositivos (Push)](#dispositivos-push)
 - [Datos maestros](#datos-maestros)
 - [Traducciones](#traducciones)
@@ -316,6 +317,113 @@ Obtener una institución educativa por ID.
 
 ### `GET /perfil/estudios/institucionEducativa/pais/{idPais}` 🔒
 Instituciones educativas filtradas por país.
+
+---
+
+## Campañas
+
+Permite listar campañas activas (colectas, captaciones) y suscribir usuarios a ellas.
+
+### `GET /campanas`
+Lista de campañas activas. Paginado.
+
+**Query params**
+
+| Param | Tipo | Descripción |
+|-------|------|-------------|
+| `pais_id` | int | Filtra por país (usar el `id` del endpoint `/paises`) |
+| `tipo` | string | `colecta` o `captacion` |
+| `per_page` | int | Resultados por página (default `20`, máx `50`) |
+
+**Response `200`**
+```json
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Colecta Anual 2025",
+      "descripcion": "...",
+      "tipo": "colecta",
+      "imagen": "/storage/campanas/abc.jpg",
+      "whatsapp_link": "https://chat.whatsapp.com/...",
+      "confirmation_message": "<p>¡Gracias por sumarte!</p>",
+      "fecha_inicio": "2025-06-01",
+      "fecha_fin": "2025-06-30",
+      "activa": true,
+      "preguntas": [
+        {
+          "id": 1,
+          "pregunta": "¿Podés colaborar los fines de semana?",
+          "tipo": "desplegable",
+          "opciones": ["Sí", "No", "A veces"],
+          "requerida": true,
+          "orden": 1
+        }
+      ]
+    }
+  ],
+  "per_page": 20,
+  "total": 5
+}
+```
+
+---
+
+### `GET /campanas/{id}`
+Detalle de una campaña activa. Incluye preguntas dinámicas y el `confirmation_message` (HTML) para mostrarlo post-suscripción.
+
+**Response `200`** — mismo objeto que en el listado, con todos los campos.
+
+**Response `404`** si la campaña no existe o está inactiva.
+
+---
+
+### `POST /campanas/{id}/suscribir` 🔒
+Suscribe al usuario autenticado a la campaña.
+
+> La app **no necesita enviar datos personales** (nombre, email, teléfono). El servidor los toma automáticamente del token Passport. Solo se envían las respuestas a preguntas dinámicas si las hay.
+
+**Body** (todo opcional)
+```json
+{
+  "respuestas": [
+    { "pregunta_id": 1, "respuesta": "Sí" },
+    { "pregunta_id": 2, "respuesta": "Los sábados" }
+  ]
+}
+```
+
+**Response `200`**
+```json
+{
+  "success": true,
+  "message": "Gracias por inscribirte.",
+  "whatsapp_link": "https://chat.whatsapp.com/...",
+  "confirmation_message": "<p>¡Te esperamos!</p>"
+}
+```
+> `whatsapp_link` y `confirmation_message` pueden ser `null` si la campaña no los tiene configurados. Mostrar solo si no son `null`.
+
+**Response `422`** — usuario ya inscripto en esta campaña:
+```json
+{
+  "already_registered": true,
+  "message": "Ya estás inscripto/a en esta campaña."
+}
+```
+
+**Response `404`** si la campaña no existe o está inactiva.
+
+---
+
+### `GET /campanas/{id}/suscripcion` 🔒
+Verifica si el usuario autenticado ya está suscripto a la campaña. Útil para mostrar/ocultar el botón de inscripción.
+
+**Response `200`**
+```json
+{ "inscripto": true }
+```
 
 ---
 

@@ -34,6 +34,13 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+
+    // Stripe account used for generic donations (independent from per-country
+    // enrollment payments which read their keys from atl_pais.config_pago).
+    'stripe_donations' => [
+        'secret'         => env('STRIPE_DONATIONS_SECRET'),
+        'webhook_secret' => env('STRIPE_DONATIONS_WEBHOOK_SECRET'),
+    ],
     'facebook' => [
         'client_id'     => env('FACEBOOK_CLIENT_ID'),
         'client_secret' => env('FACEBOOK_CLIENT_SECRET'),

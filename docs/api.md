@@ -372,6 +372,56 @@ array con puntajes, ej:
 - `inscripcion.voucherURL` 
 
 
+## 📣 Campañas
+
+### Listado de campañas
+- **URL:** `/api/campanas`
+- **Método:** `GET`
+- **Parámetros opcionales:**
+  - `pais_id={id}` → filtra por país
+  - `tipo=colecta` o `tipo=captacion`
+  - `per_page={n}` → resultados por página (default 20, máx 50)
+- **Devuelve:** Lista paginada de campañas activas con sus preguntas dinámicas
+
+---
+
+### Detalle de campaña
+- **URL:** `/api/campanas/{id}`
+- **Método:** `GET`
+- **Devuelve:** Datos completos de la campaña, incluyendo:
+  - `preguntas` → preguntas dinámicas del formulario de suscripción
+  - `confirmation_message` → mensaje HTML a mostrar luego de suscribirse (puede ser `null`)
+  - `whatsapp_link` → link al grupo de WhatsApp (puede ser `null`)
+
+---
+
+### Suscribir a campaña
+- **URL:** `/api/campanas/{id}/suscribir`
+- **Método:** `POST`
+- **Headers:** `Authorization: Bearer {token}`
+- **Parámetros opcionales:**
+  - `respuestas` → array de respuestas a preguntas dinámicas:
+    ```json
+    [{ "pregunta_id": 1, "respuesta": "Sí" }]
+    ```
+- **Nota:** No es necesario enviar nombre, email ni teléfono. El servidor los toma del usuario autenticado.
+- **Devuelve:**
+  - `success` → `true`
+  - `message` → mensaje de confirmación
+  - `whatsapp_link` → link al grupo de WhatsApp o `null`
+  - `confirmation_message` → HTML con mensaje personalizado o `null`
+- **Error `422`:** si el usuario ya está inscripto → `{ "already_registered": true, "message": "..." }`
+
+---
+
+### Verificar suscripción
+- **URL:** `/api/campanas/{id}/suscripcion`
+- **Método:** `GET`
+- **Headers:** `Authorization: Bearer {token}`
+- **Devuelve:** `{ "inscripto": true }` o `{ "inscripto": false }`
+
+---
+
 ## 🌍 Ubicaciones
 
 ### Paises

@@ -3,7 +3,7 @@
         <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
-                    <div v-if="estadoInscripcion && (actividad.estadoConstruccion == $t('backend.open'))" class="alert alert-info" role="alert" >
+                    <div v-if="estadoInscripcion" class="alert alert-info" role="alert" >
                         {{ $t('backend.open_registrations') }}
                     </div>
                     <div v-else class="alert alert-danger" role="alert" >
@@ -125,98 +125,148 @@
 
                 </div>
 
-                <div class="row border ">
-                    <div class="col-md-4">
-                        <div class="text-left">
-                            <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }} </input>
-                        </div>
-                        <label for="fechaInicio">{{ $t('backend.activity_start_date') }}</label>
-                        <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }" >
-                            <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
-                            <span class="help-block">{{ errors.fechaInicio }}</span>
-                            <span class="input-group-addon">
-                                <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
-                            </span>
-                        </div>
-                        <label for="fechaFin">{{ $t('backend.activity_end_date') }}</label>
-                        <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }" >
-                            <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
-                            <span class="help-block">{{ errors.fechaFin }}</span>
-                            <span class="input-group-addon">
-                                <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="fechaInicioInscripciones">{{ $t('backend.registrations_start') }}</label>
-                        <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }" >
-                            <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
-                            <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
-                            <span class="input-group-addon">
-                                <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
-                            </span>
-                        </div>
-                        <label for="fechaFinInscripciones">{{ $t('backend.ending') }}</label>
-                        <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }" >
-                            <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
-                            <span class="help-block">{{ errors.fechaFinInscripciones }}</span>
-                            <span class="input-group-addon">
-                                <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
-                            </span>
-                        </div>
-                    </div>       
-
-                    <div class="col-md-4">
-                        <div  v-show="edicion"  class="row m-2">
-                            <input type="checkbox" v-model="calculaFechas" :disabled="!edicion"> {{ $t('backend.schedule_evaluation_date') }} </input>
-                            <p v-show="!calculaFechas" class="help-block">{{ $t('backend.an_activity_needs_a_registration_range_text') }} <br> {{ $t('backend.if_not_specified_these_ranges_text') }}</p>
-                        </div>
-
-                        <div  v-show="!edicion || calculaFechas">
-                            <label for="fechaFin">{{ $t('backend.evaluations_start') }}</label>
-                            <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }" >
-                                <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
-                                <span class="help-block">{{ errors.fechaInicioEvaluaciones }}</span>
-                                <span class="input-group-addon">
-                                    <input v-model="horas.fechaInicioEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
-                                </span>
-                            </div>
-                            <label for="fechaFin">{{ $t('backend.ending') }}</label>
-                            <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }" >
-                                <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !calculaFechas">
-                                <span class="help-block">{{ errors.fechaFinEvaluaciones }}</span>
-                                <span class="input-group-addon">
-                                    <input v-model="horas.fechaFinEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !calculaFechas">
-                                </span>
-                            </div>
-                        </div>   
-                    </div>       
+                <!-- Fechas / Datas / Dates -->
+                <div class="box-header with-border bg-primary dates-section-header">
+                    <h3 class="box-title">{{ $t('backend.dates') }}</h3>
                 </div>
 
-                <div class="row mb-2">
+                <div class="row dates-cards-row">
+
+                    <!-- Card: Actividad -->
                     <div class="col-md-4">
-                        
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="limiteInscripciones">{{ $t('backend.slots') }}</label>
-                            <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required
-                            :disabled="!edicion" >
-                            <p class="help-block">{{ $t('backend.unlimited_slots') }}</p>
+                        <div class="dates-card">
+                            <div class="dates-card-header dates-card-header--activity">
+                                <span class="dates-card-icon">📅</span>
+                                <span class="dates-card-title">{{ $t('backend.dates_activity') }}</span>
+                            </div>
+                            <div class="dates-card-body">
+                                <div v-if="statusActividadChip" class="dates-status" :class="'dates-status--' + statusActividadChip.variant">
+                                    {{ statusActividadChip.label }}
+                                </div>
+                                <div class="dates-show-checkbox">
+                                    <input type="checkbox" v-model="actividad.show_dates" :disabled="!edicion"> {{ $t('backend.show_dates') }}
+                                </div>
+                                <label>{{ $t('backend.activity_start_date') }}</label>
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaInicio }">
+                                    <input v-model="fechas.fechaInicio" type="date" @change="fechas.fechaFin=fechas.fechaInicio;" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <span class="help-block">{{ errors.fechaInicio }}</span>
+                                    <span class="input-group-addon">
+                                        <input v-model="horas.fechaInicio" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                    </span>
+                                </div>
+                                <label>{{ $t('backend.activity_end_date') }}</label>
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFin }">
+                                    <input v-model="fechas.fechaFin" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion">
+                                    <span class="help-block">{{ errors.fechaFin }}</span>
+                                    <span class="input-group-addon">
+                                        <input v-model="horas.fechaFin" type="time" required style="border: none; height: 20px;" :disabled="!edicion">
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Card: Inscripciones -->
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="linkEvaluacion">{{ $t('backend.evaluation_link') }}
-                            <a v-if="actividad.linkEvaluacion" :href="actividad.linkEvaluacion+'viewform'" target="_blank"> {{ $t('backend.view') }} </a>
-                            </label>
-                            <input v-if="edicion"  type="text" class="form-control" v-model="actividad.linkEvaluacion" required
-                            :disabled="!edicion" >
-                            <span class="help-block">{{ errors.linkEvaluacion }}</span>
-                            <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
+                        <div class="dates-card">
+                            <div class="dates-card-header dates-card-header--registrations">
+                                <span class="dates-card-icon">📝</span>
+                                <span class="dates-card-title">{{ $t('backend.dates_registrations') }}</span>
+                                <span v-if="!modoManualInscripciones" class="dates-badge dates-badge--auto">{{ $t('backend.automatic') }}</span>
+                                <span v-else class="dates-badge dates-badge--manual">{{ $t('backend.manual') }}</span>
+                            </div>
+                            <div class="dates-card-body">
+                                <div v-if="statusInscripcionesChip" class="dates-status" :class="'dates-status--' + statusInscripcionesChip.variant">
+                                    {{ statusInscripcionesChip.label }}
+                                </div>
+                                <div v-if="edicion" class="dates-toggle">
+                                    <button v-if="!modoManualInscripciones" @click.prevent="modoManualInscripciones = true" class="btn btn-link btn-xs dates-toggle-btn">
+                                        {{ $t('backend.edit_manually') }}
+                                    </button>
+                                    <button v-else @click.prevent="restaurarInscripcionesAuto()" class="btn btn-link btn-xs dates-toggle-btn">
+                                        ↩ {{ $t('backend.restore_automatic') }}
+                                    </button>
+                                </div>
+                                <label>{{ $t('backend.registrations_start') }}</label>
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioInscripciones }">
+                                    <input v-model="fechas.fechaInicioInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !modoManualInscripciones">
+                                    <span class="help-block">{{ errors.fechaInicioInscripciones }}</span>
+                                    <span class="input-group-addon">
+                                        <input v-model="horas.fechaInicioInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !modoManualInscripciones">
+                                    </span>
+                                </div>
+                                <label>{{ $t('backend.ending') }}</label>
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }">
+                                    <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !modoManualInscripciones">
+                                    <span class="help-block">{{ errors.fechaFinInscripciones }}</span>
+                                    <span class="input-group-addon">
+                                        <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !modoManualInscripciones">
+                                    </span>
+                                </div>
+                                <p v-if="!modoManualInscripciones" class="dates-hint">{{ $t('backend.dates_auto_hint_registrations') }}</p>
+                                <hr class="dates-card-divider">
+                                <div class="form-group">
+                                    <label>{{ $t('backend.slots') }}</label>
+                                    <input type="number" min="0" class="form-control" v-model="actividad.limiteInscripciones" required :disabled="!edicion">
+                                    <p class="help-block">{{ $t('backend.unlimited_slots') }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Card: Evaluaciones -->
+                    <div class="col-md-4">
+                        <div class="dates-card">
+                            <div class="dates-card-header dates-card-header--evaluations">
+                                <span class="dates-card-icon">⭐</span>
+                                <span class="dates-card-title">{{ $t('backend.dates_evaluations') }}</span>
+                                <span v-if="!modoManualEvaluaciones" class="dates-badge dates-badge--auto">{{ $t('backend.automatic') }}</span>
+                                <span v-else class="dates-badge dates-badge--manual">{{ $t('backend.manual') }}</span>
+                            </div>
+                            <div class="dates-card-body">
+                                <div v-if="statusEvaluacionesChip" class="dates-status" :class="'dates-status--' + statusEvaluacionesChip.variant">
+                                    {{ statusEvaluacionesChip.label }}
+                                </div>
+                                <div v-if="edicion" class="dates-toggle">
+                                    <button v-if="!modoManualEvaluaciones" @click.prevent="modoManualEvaluaciones = true" class="btn btn-link btn-xs dates-toggle-btn">
+                                        {{ $t('backend.edit_manually') }}
+                                    </button>
+                                    <button v-else @click.prevent="restaurarEvaluacionesAuto()" class="btn btn-link btn-xs dates-toggle-btn">
+                                        ↩ {{ $t('backend.restore_automatic') }}
+                                    </button>
+                                </div>
+                                <div>
+                                    <label>{{ $t('backend.evaluations_start') }}</label>
+                                    <div :class="{ 'input-group': true, 'has-error': errors.fechaInicioEvaluaciones }">
+                                        <input v-model="fechas.fechaInicioEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !modoManualEvaluaciones">
+                                        <span class="help-block">{{ errors.fechaInicioEvaluaciones }}</span>
+                                        <span class="input-group-addon">
+                                            <input v-model="horas.fechaInicioEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !modoManualEvaluaciones">
+                                        </span>
+                                    </div>
+                                    <label>{{ $t('backend.ending') }}</label>
+                                    <div :class="{ 'input-group': true, 'has-error': errors.fechaFinEvaluaciones }">
+                                        <input v-model="fechas.fechaFinEvaluaciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !modoManualEvaluaciones">
+                                        <span class="help-block">{{ errors.fechaFinEvaluaciones }}</span>
+                                        <span class="input-group-addon">
+                                            <input v-model="horas.fechaFinEvaluaciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !modoManualEvaluaciones">
+                                        </span>
+                                    </div>
+                                    <p v-if="!modoManualEvaluaciones" class="dates-hint">{{ $t('backend.dates_auto_hint_evaluations') }}</p>
+                                </div>
+                                <hr class="dates-card-divider">
+                                <div class="form-group">
+                                    <label>{{ $t('backend.evaluation_link') }}
+                                        <a v-if="actividad.linkEvaluacion" :href="actividad.linkEvaluacion+'viewform'" target="_blank"> {{ $t('backend.view') }}</a>
+                                    </label>
+                                    <input v-if="edicion" type="text" class="form-control" v-model="actividad.linkEvaluacion" :disabled="!edicion">
+                                    <span class="help-block">{{ errors.linkEvaluacion }}</span>
+                                    <p class="help-block">{{ $t('backend.evaluation_link_description') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <br>
 
@@ -408,13 +458,20 @@
                         </div>
                     </div>
 
-                    <!-- <div class="col-md-6">
+                    <div class="col-md-6">
                         <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">Link para el Pago</label>
-                            <input type="text" class="form-control" v-model="actividad.linkPago" :disabled="!edicion" >
+                            <label for="">
+                                {{ $t('backend.payment_link_optional') }}
+                                <a v-if="actividad.linkPago" :href="actividad.linkPago" target="_blank" class="ml-2 small">
+                                    <i class="fas fa-external-link-alt"></i> {{ $t('backend.view') }}
+                                </a>
+                            </label>
+                            <input type="url" class="form-control" v-model="actividad.linkPago" :disabled="!edicion"
+                                placeholder="https://" >
+                            <p class="help-block">{{ $t('backend.payment_link_description') }}</p>
                             <span class="help-block">{{ errors.linkPago }}</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
 
                 <br>
@@ -830,7 +887,8 @@
                 tipos: [],
                 categorias: [],
                 comunidades: [],
-                calculaFechas: false,
+                modoManualInscripciones: false,
+                modoManualEvaluaciones: false,
                 edicion: false,
                 virtual: false,
                 updateArchivo: false,
@@ -952,32 +1010,72 @@
                     return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
                 });
             },
+
+            statusInscripcionesChip() {
+                return this._periodChip(
+                    this.fechas.fechaInicioInscripciones, this.horas.fechaInicioInscripciones,
+                    this.fechas.fechaFinInscripciones,   this.horas.fechaFinInscripciones,
+                    'registrations'
+                );
+            },
+            statusActividadChip() {
+                return this._periodChip(
+                    this.fechas.fechaInicio, this.horas.fechaInicio,
+                    this.fechas.fechaFin,    this.horas.fechaFin,
+                    'activity'
+                );
+            },
+            statusEvaluacionesChip() {
+                return this._periodChip(
+                    this.fechas.fechaInicioEvaluaciones, this.horas.fechaInicioEvaluaciones,
+                    this.fechas.fechaFinEvaluaciones,    this.horas.fechaFinEvaluaciones,
+                    'evaluations'
+                );
+            },
         },
         filters: {},
         watch: {
-            fechas: {
-                deep: true,
+            'fechas.fechaInicio': {
                 handler(){
                     this.calcularFechas();
                 }
             },
-            horas: {
-                deep: true,
+            'fechas.fechaFin': {
                 handler(){
                     this.calcularFechas();
                 }
             },
-            calculaFechas: {
+            'horas.fechaInicio': {
                 handler(){
-                    if (!this.calculaFechas) {
-                        this.calcularFechas();
-                    }
+                    this.calcularFechas();
+                }
+            },
+            'horas.fechaFin': {
+                handler(){
+                    this.calcularFechas();
                 }
             },
         },
         methods: {
             cargarFechas(){
-                this.calculaFechas = this.actividad.calculaFecha;
+                // Detectar si las inscripciones fueron modificadas manualmente:
+                // si fechaFinInscripciones != fechaInicio, el coordinador las editó
+                if (this.actividad.fechaFinInscripciones && this.actividad.fechaInicio) {
+                    const finInsc = moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
+                    const inicioAct = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
+                    this.modoManualInscripciones = finInsc !== inicioAct;
+                } else {
+                    this.modoManualInscripciones = false;
+                }
+
+                // Detectar si las evaluaciones fueron modificadas manualmente
+                if (this.actividad.fechaInicioEvaluaciones && this.actividad.fechaFin) {
+                    const inicioEval = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
+                    const autoInicioEval = moment(this.actividad.fechaFin).add(1, 'd').format('YYYY-MM-DD');
+                    this.modoManualEvaluaciones = inicioEval !== autoInicioEval;
+                } else {
+                    this.modoManualEvaluaciones = false;
+                }
 
                 this.fechas.fechaInicio = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
                 this.horas.fechaInicio = moment(this.actividad.fechaInicio).format('HH:mm:ss');
@@ -1000,59 +1098,84 @@
                 this.horas.fechaLimitePago = moment(this.actividad.fechaLimitePago).format('HH:mm:ss');
             },
             calcularFechas(){
-                    if (!this.calculaFechas){
-                        if (this.fechas.fechaFinInscripciones != this.fechas.fechaInicio ) {
-                            this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(10, 'd').format('YYYY-MM-DD');
-                            this.fechas.fechaFinInscripciones = this.fechas.fechaInicio;
-                        }
-                        if (this.fechas.fechaInicioEvaluaciones != moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD')) {
-                            this.fechas.fechaInicioEvaluaciones = moment(this.fechas.fechaFin).add(1,'d').format('YYYY-MM-DD');
-                            this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(30, 'd').format('YYYY-MM-DD');
-                        }
-                        
-                        if (this.horas.fechaInicioEvaluaciones != this.horas.fechaFin) {
-                            this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
-                            this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
-                        }
-                        
+                if (!this.modoManualInscripciones && this.fechas.fechaInicio) {
+                    this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(10, 'd').format('YYYY-MM-DD');
+                    this.fechas.fechaFinInscripciones = this.fechas.fechaInicio;
+                    this.horas.fechaInicioInscripciones = this.horas.fechaInicio;
+                    this.horas.fechaFinInscripciones = this.horas.fechaInicio;
+                }
 
+                if (!this.modoManualEvaluaciones && this.fechas.fechaFin) {
+                    this.fechas.fechaInicioEvaluaciones = moment(this.fechas.fechaFin).add(1, 'd').format('YYYY-MM-DD');
+                    this.fechas.fechaFinEvaluaciones = moment(this.fechas.fechaFin).add(30, 'd').format('YYYY-MM-DD');
+                    this.horas.fechaInicioEvaluaciones = this.horas.fechaFin;
+                    this.horas.fechaFinEvaluaciones = this.horas.fechaFin;
+                }
+
+                if (!this.actividad.pago)
+                    this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
+
+                this.estadoInscripcion = moment().isBetween(
+                    this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones,
+                    this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones
+                );
+
+                this.estadoEvaluaciones = moment().isBetween(
+                    this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones,
+                    this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones
+                );
+
+                this.estadoPago = moment().isBefore(this.fechas.fechaLimitePago);
+            },
+            restaurarInscripcionesAuto(){
+                this.modoManualInscripciones = false;
+                this.calcularFechas();
+            },
+            restaurarEvaluacionesAuto(){
+                this.modoManualEvaluaciones = false;
+                this.calcularFechas();
+            },
+            _periodChip(startDate, startTime, endDate, endTime, kind) {
+                if (!startDate || !endDate) return null;
+                const now = moment();
+                const inicio = moment(startDate + ' ' + (startTime || '00:00:00'));
+                const fin    = moment(endDate   + ' ' + (endTime   || '23:59:59'));
+                const daysToStart = inicio.diff(now, 'days');
+                const daysToEnd   = fin.diff(now, 'days');
+                const t = (k, p) => this.$t('backend.' + k, p);
+
+                if (now.isBefore(inicio)) {
+                    const d = Math.max(0, daysToStart);
+                    const label = d === 0 ? t(kind === 'activity' ? 'status_starts_today'    : 'status_opens_today')
+                                : d === 1 ? t(kind === 'activity' ? 'status_starts_tomorrow' : 'status_opens_tomorrow')
+                                :           t(kind === 'activity' ? 'status_starts_in_days'  : 'status_opens_in_days', { n: d });
+                    return { label, variant: d <= 2 ? 'warning' : 'upcoming' };
+                }
+
+                if (now.isBefore(fin)) {
+                    const d = Math.max(0, daysToEnd);
+                    let label;
+                    if (kind === 'activity') {
+                        label = d === 0 ? t('status_in_progress_ends_today')
+                              : d === 1 ? t('status_in_progress_ends_tomorrow')
+                              : d <= 7  ? t('status_in_progress_ends_in_days', { n: d })
+                              :           t('status_in_progress');
+                    } else {
+                        label = d === 0 ? t('status_closes_today')
+                              : d === 1 ? t('status_closes_tomorrow')
+                              :           t('status_closes_in_days', { n: d });
                     }
-                    if (this.fechas.fechaFinInscripciones != this.fechas.fechaInicio ) {
-                            this.fechas.fechaInicioInscripciones = moment(this.fechas.fechaInicio).subtract(90, 'd').format('YYYY-MM-DD');
-                            this.fechas.fechaFinInscripciones = this.fechas.fechaInicio;
-                        }
-                    if (this.horas.fechaFinInscripciones != this.horas.fechaInicio ) {
-                        this.horas.fechaInicioInscripciones = this.horas.fechaInicio;
-                        this.horas.fechaFinInscripciones = this.horas.fechaInicio;
-                    }    
-                    if(!this.actividad.pago)
-                        this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
+                    const variant = d === 0 ? 'danger' : d <= 3 ? 'warning' : 'active';
+                    return { label, variant };
+                }
 
-                    this.estadoInscripcion = moment().isBetween(
-                        this.fechas.fechaInicioInscripciones +' '+ this.horas.fechaInicioInscripciones,
-                        this.fechas.fechaFinInscripciones +' '+ this.horas.fechaFinInscripciones
-                        );
-
-                    this.estadoEvaluaciones = moment().isBetween(
-                        this.fechas.fechaInicioEvaluaciones +' '+ this.horas.fechaInicioEvaluaciones,
-                        this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
-                        );
-
-                    this.estadoPago = moment().isBefore(
-                        this.fechas.fechaLimitePago,
-                        );
+                const label = kind === 'activity' ? t('status_finished') : t('status_closed');
+                return { label, variant: 'closed' };
             },
             guardar(){
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
                 
-                if (this.calculaFechas == 1){
-                    this.actividad.calculaFecha = 1;
-                }
-                else{
-                    this.actividad.calculaFecha = 0 ;
-                }
-
                 if (this.virtual){
                     this.actividad.idProvincia = 44;
                     this.actividad.idLocalidad = 2663;
@@ -1294,5 +1417,136 @@
 </script>
 
 <style scoped>
+/* ── Dates section ─────────────────────────────────────── */
+.dates-section-header {
+    margin: 20px -10px 16px;
+    border-radius: 0;
+}
 
+.dates-cards-row {
+    margin-bottom: 16px;
+}
+
+/* Cards */
+.dates-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    height: 100%;
+    overflow: hidden;
+}
+
+.dates-card-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+.dates-card-header--activity {
+    border-left: 4px solid #3c8dbc;
+}
+.dates-card-header--registrations {
+    border-left: 4px solid #e67e22;
+}
+.dates-card-header--evaluations {
+    border-left: 4px solid #f1c40f;
+}
+
+.dates-card-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.dates-card-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+    margin: 0;
+}
+.dates-card-header--activity .dates-card-title  { color: #2c6f99; }
+.dates-card-header--registrations .dates-card-title { color: #c0621a; }
+.dates-card-header--evaluations .dates-card-title { color: #b8940a; }
+
+.dates-card-title--checkbox {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dates-card-body {
+    padding: 12px 14px;
+}
+
+.dates-show-checkbox {
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+
+/* Badges */
+.dates-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.dates-badge--auto {
+    background: #d6eaf8;
+    color: #1a6fa3;
+}
+.dates-badge--manual {
+    background: #fde8d8;
+    color: #b94a08;
+}
+
+/* Toggle link */
+.dates-toggle {
+    margin-bottom: 8px;
+}
+.dates-toggle-btn {
+    padding: 0;
+    font-size: 12px;
+    color: #3c8dbc;
+    text-decoration: none;
+    border: none;
+    background: none;
+}
+.dates-toggle-btn:hover {
+    color: #2c6f99;
+    text-decoration: underline;
+}
+
+/* Hint */
+.dates-hint {
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+}
+
+.dates-card-divider {
+    margin: 12px 0;
+    border-color: #f0f0f0;
+}
+
+/* Status chips */
+.dates-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    letter-spacing: 0.2px;
+}
+.dates-status--upcoming { background: #d6eaf8; color: #1a6fa3; }
+.dates-status--active   { background: #d5f5e3; color: #1a7a3c; }
+.dates-status--warning  { background: #fef9e7; color: #9a6e00; border: 1px solid #f5d76e; }
+.dates-status--danger   { background: #fde8d8; color: #b94a08; border: 1px solid #f5b09a; }
+.dates-status--closed   { background: #f0f0f0; color: #999; }
+.dates-status--finished { background: #f0f0f0; color: #999; }
 </style>

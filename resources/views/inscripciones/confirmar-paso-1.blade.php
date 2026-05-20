@@ -13,6 +13,9 @@
 @section('main_content')
     <div class="container-fluid card" >
 		<div class="card-body">
+
+            @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
+
             <div class="row">
                 <div class="col-md-12">
                     <br>

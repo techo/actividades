@@ -12,6 +12,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\InscripcionFlow;
 use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class InscripcionesController extends BaseController
         $jornadas = json_decode($request->input('jornadas'), true);
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
@@ -147,7 +149,8 @@ class InscripcionesController extends BaseController
                     ]);
                 }
                 return view('inscripciones.confirmar-paso-1')
-                    ->with('actividad', $actividad);
+                    ->with('actividad', $actividad)
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
             }
 
             if ($actividad->pago == 1) {
@@ -174,6 +177,7 @@ class InscripcionesController extends BaseController
                 }
                 return view('inscripciones.pagar-paso-1')
                     ->with('actividad', $actividad)
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'pago', 'blade'))
                     ->with('inscripcion', $inscripcion)
                     ->with('payment', $payment);
             }
@@ -198,7 +202,8 @@ class InscripcionesController extends BaseController
                     ]);
                 }
             return view('inscripciones.gracias')
-                ->with('actividad', $actividad);
+                ->with('actividad', $actividad)
+                ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
         }
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -211,6 +216,7 @@ class InscripcionesController extends BaseController
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
             ->with('punto_encuentro', $punto_encuentro)
             ->with('tipo', $actividad->tipo);
         }
@@ -266,12 +272,43 @@ class InscripcionesController extends BaseController
         $oldPath = str_replace('storage', 'public', $inscripcion->voucherURL);
         if(Storage::exists($oldPath))
             Storage::delete($oldPath);
-    
+
         $inscripcion->voucherURL = str_replace('public', 'storage', $path);
         $inscripcion->save();
-        
+
         return $inscripcion;
-      
+
+    }
+
+    public function becaSolicitud(Request $request)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'reason'        => 'required|string|max:3000',
+            'evidence'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ]);
+
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $inscripcion->scholarship_requested    = true;
+        $inscripcion->scholarship_reason       = $request->input('reason');
+        $inscripcion->scholarship_requested_at = Carbon::now();
+
+        if ($request->hasFile('evidence')) {
+            $archivo  = $request->file('evidence');
+            $path     = $archivo->store('public/becaInscripcion/' . auth()->user()->idPersona);
+            $oldPath  = str_replace('storage', 'public', $inscripcion->scholarship_evidence_url ?? '');
+            if ($oldPath && Storage::exists($oldPath)) {
+                Storage::delete($oldPath);
+            }
+            $inscripcion->scholarship_evidence_url = str_replace('public', 'storage', $path);
+        }
+
+        $inscripcion->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function confirmarDonacion($id)
@@ -291,6 +328,7 @@ class InscripcionesController extends BaseController
 
         return view('inscripciones.pagar-paso-1')
             ->with('actividad', $actividad)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'pago', 'blade'))
             ->with('inscripcion', $inscripcion)
             ->with('payment', $payment);
 

@@ -19,6 +19,14 @@ Route::get('/translate', 'api\TranslationController@getTranslation');
 Route::post('/translate/batch', 'api\TranslationController@getBatchTranslations');
 
 
+// ── Donations — Stripe webhook (no auth, signature-validated by Stripe) ──────
+// Must be declared BEFORE the auth:api group so it is not auth-protected.
+// API routes are already CSRF-exempt (VerifyCsrfToken does not run for api group).
+Route::post(
+    'donations/stripe/webhook',
+    'api\DonationWebhookController@handle'
+)->name('api.donations.webhook');
+
 // Rutas Publicas
 Route::post('login', 'api\PersonasController@login');
 Route::post('socialLogin', 'api\PersonasController@socialLogin');
@@ -40,6 +48,12 @@ Route::prefix('paises')->group(function () {
 
 
 Route::get('actividadesGeneral', 'ajax\ActividadesController@index');
+
+// ── Campañas (público) ────────────────────────────────────────────────────────
+Route::prefix('campanas')->group(function () {
+    Route::get('/',      'api\CampanasController@index');
+    Route::get('/{id}',  'api\CampanasController@show');
+});
 
 /////////////////////////////////
 // Rutas Privadas, por Token   //
@@ -106,9 +120,34 @@ Route::middleware('auth:api')->group(function () {
     Route::post('editPersona/{persona}', 'api\PersonasController@update');
     Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
 
+    // ── Campañas (autenticado) ────────────────────────────────────────────────
+    Route::prefix('campanas')->group(function () {
+        Route::post('/{id}/suscribir',  'api\CampanasController@suscribir');
+        Route::get('/{id}/suscripcion', 'api\CampanasController@suscripcion');
+    });
+
     // dispositivos para notificaciones push (OneSignal)
     Route::post('dispositivos', 'api\DispositivoController@registrar');
     Route::delete('dispositivos/{player_id}', 'api\DispositivoController@desactivar');
+
+    // ── Donations ─────────────────────────────────────────────────────────
+    Route::prefix('donations')->group(function () {
+        // One-time: create PaymentIntent and persist a donation record
+        Route::post('stripe/payment-intent', 'api\DonationController@createPaymentIntent')
+             ->name('api.donations.create-intent');
+
+        // Recurring: create Stripe Subscription and persist the record
+        Route::post('stripe/subscription', 'api\DonationController@createSubscription')
+             ->name('api.donations.create-subscription');
+
+        // Poll subscription status by Stripe Subscription ID
+        Route::get('stripe/subscription/{subscriptionId}/status', 'api\DonationController@getSubscriptionStatus')
+             ->name('api.donations.subscription-status');
+
+        // Poll one-time donation status by Stripe PaymentIntent ID
+        Route::get('{intentId}/status', 'api\DonationController@getStatus')
+             ->name('api.donations.status');
+    });
 
 
     Route::get('actividades/categoria/{nombre}', function ($nombre, Request $request) {

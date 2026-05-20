@@ -1,0 +1,281 @@
+<?php
+
+namespace App\Services;
+
+use App\StripeCustomer;
+use Stripe\Exception\ApiErrorException;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Webhook;
+
+/**
+ * Thin wrapper around the Stripe SDK for the generic donation flow.
+ *
+ * This service is intentionally separate from the per-country enrollment
+ * payment logic (StripeController + Pais.config_pago). It reads its
+ * credentials from config('services.stripe_donations').
+ */
+class StripePaymentService
+{
+    /** Currencies accepted by this endpoint (ISO 4217 lowercase). */
+    const ALLOWED_CURRENCIES = [
+        'usd', 'eur', 'brl', 'ars', 'mxn', 'clp', 'cop', 'pen', 'uyu',
+        'cad', 'gbp', 'aud',
+    ];
+
+    /** Minimum donation in minor units (1.00 of any currency). */
+    const AMOUNT_MIN = 100;
+
+    /** Maximum donation in minor units (10 000.00 of any currency). */
+    const AMOUNT_MAX = 1000000;
+
+    /** Valid values for the `source` field. */
+    const ALLOWED_SOURCES = ['login_us', 'home_pill', 'profile'];
+
+    /** Valid payment modes. */
+    const ALLOWED_MODES = ['one_time', 'recurring'];
+
+    /** Valid payment method identifiers accepted by the API. */
+    const ALLOWED_PAYMENT_METHODS = ['card', 'apple_pay', 'google_pay', 'pix'];
+
+    /** Valid billing intervals for recurring donations. */
+    const ALLOWED_INTERVALS = ['month', 'year'];
+
+    // ─────────────────────────────────────────────────────────────────────
+
+    public function __construct()
+    {
+        // Key validation is deferred to the first actual Stripe call.
+        // This prevents DI/boot failures when .env is not yet configured.
+    }
+
+    /**
+     * Bootstrap the Stripe SDK with the donations key.
+     * Called lazily before any SDK operation.
+     *
+     * @throws \RuntimeException if STRIPE_DONATIONS_SECRET is not set
+     */
+    private function boot(): void
+    {
+        $secret = config('services.stripe_donations.secret');
+
+        if (empty($secret)) {
+            throw new \RuntimeException(
+                'STRIPE_DONATIONS_SECRET is not configured. ' .
+                'Add it to .env and run `php artisan config:clear`.'
+            );
+        }
+
+        Stripe::setApiKey($secret);
+    }
+
+    // ── PaymentIntent ─────────────────────────────────────────────────────────
+
+    /**
+     * Create a Stripe PaymentIntent for a one-time donation.
+     *
+     * @param  int    $amount          Minor units (e.g. 1500 = 15.00)
+     * @param  string $currency        ISO 4217 lowercase
+     * @param  int    $personId        Persona.idPersona
+     * @param  string $source          Where the user initiated the donation
+     * @param  string $idempotencyKey  Unique key to prevent duplicate intents
+     * @param  string $paymentMethod   'card' | 'apple_pay' | 'google_pay' | 'pix'
+     * @param  array  $extra           Optional extra metadata stored on Stripe
+     * @return PaymentIntent
+     * @throws ApiErrorException
+     */
+    public function createPaymentIntent(
+        int $amount,
+        string $currency,
+        int $personId,
+        string $source,
+        string $idempotencyKey,
+        string $paymentMethod = 'card',
+        array $extra = []
+    ): PaymentIntent {
+        $this->boot();
+
+        $params = [
+            'amount'               => $amount,
+            'currency'             => $currency,
+            'payment_method_types' => self::resolvePaymentMethodTypes($paymentMethod),
+            'metadata'             => array_merge([
+                'person_id'      => $personId,
+                'source'         => $source,
+                'payment_method' => $paymentMethod,
+            ], $extra),
+        ];
+
+        return PaymentIntent::create(
+            $params,
+            ['idempotency_key' => $idempotencyKey]
+        );
+    }
+
+    // ── Customer ──────────────────────────────────────────────────────────────
+
+    /**
+     * Get the Stripe Customer ID for a persona, creating one if needed.
+     * Uses our local `stripe_customers` table to avoid duplicate customers.
+     *
+     * @throws ApiErrorException
+     */
+    public function getOrCreateCustomer(int $personId, string $email): string
+    {
+        $this->boot();
+
+        $existing = StripeCustomer::where('person_id', $personId)->first();
+
+        if ($existing) {
+            return $existing->stripe_customer_id;
+        }
+
+        $customer = \Stripe\Customer::create([
+            'email'    => $email,
+            'metadata' => ['person_id' => $personId],
+        ]);
+
+        StripeCustomer::create([
+            'person_id'          => $personId,
+            'stripe_customer_id' => $customer->id,
+        ]);
+
+        return $customer->id;
+    }
+
+    // ── Subscription ──────────────────────────────────────────────────────────
+
+    /**
+     * Create a Stripe Subscription for a recurring donation.
+     *
+     * Uses `payment_behavior: 'default_incomplete'` so the subscription starts
+     * in `incomplete` status and the app must confirm the first payment via the
+     * client_secret returned from `latest_invoice.payment_intent`.
+     * Subsequent charges are handled automatically by Stripe + webhooks.
+     *
+     * @param  string $customerId     Stripe Customer ID
+     * @param  int    $amount         Minor units
+     * @param  string $currency       ISO 4217 lowercase
+     * @param  string $interval       'month' | 'year'
+     * @param  int    $personId       Persona.idPersona (for metadata)
+     * @param  string $source         Where the donation originated
+     * @param  string $idempotencyKey Prevent duplicate subscriptions
+     * @param  array  $extra          Optional extra metadata
+     * @return \Stripe\Subscription   With latest_invoice.payment_intent expanded
+     * @throws ApiErrorException
+     */
+    public function createSubscription(
+        string $customerId,
+        int $amount,
+        string $currency,
+        string $interval,
+        int $personId,
+        string $source,
+        string $idempotencyKey,
+        array $extra = []
+    ): \Stripe\Subscription {
+        $this->boot();
+
+        // Create a Price inline first — older Stripe SDK versions (v8.x) don't support
+        // product_data nested inside price_data in Subscription::create items.
+        $price = \Stripe\Price::create([
+            'unit_amount'  => $amount,
+            'currency'     => $currency,
+            'recurring'    => ['interval' => $interval],
+            'product_data' => ['name' => 'TECHO Donación Recurrente'],
+        ]);
+
+        return \Stripe\Subscription::create([
+            'customer' => $customerId,
+            'items'    => [['price' => $price->id]],
+            'payment_behavior' => 'default_incomplete',
+            'payment_settings' => [
+                'save_default_payment_method' => 'on_subscription',
+            ],
+            'expand'   => ['latest_invoice.payment_intent'],
+            'metadata' => array_merge([
+                'person_id' => $personId,
+                'source'    => $source,
+            ], $extra),
+        ], ['idempotency_key' => $idempotencyKey]);
+    }
+
+    /**
+     * Retrieve a Stripe Subscription by ID (with latest_invoice expanded
+     * so we can re-fetch the client_secret on idempotent replays).
+     *
+     * @throws ApiErrorException
+     */
+    public function retrieveSubscription(string $subscriptionId): \Stripe\Subscription
+    {
+        $this->boot();
+
+        return \Stripe\Subscription::retrieve([
+            'id'     => $subscriptionId,
+            'expand' => ['latest_invoice.payment_intent'],
+        ]);
+    }
+
+    // ── Webhook ───────────────────────────────────────────────────────────────
+
+    /**
+     * Validate and parse a Stripe webhook payload.
+     *
+     * @param  string $rawPayload  Raw request body (do NOT decode first)
+     * @param  string $sigHeader   Value of the Stripe-Signature header
+     * @return \Stripe\Event
+     * @throws \Stripe\Exception\SignatureVerificationException
+     */
+    public function constructWebhookEvent(string $rawPayload, string $sigHeader): \Stripe\Event
+    {
+        $this->boot();
+
+        $webhookSecret = config('services.stripe_donations.webhook_secret');
+
+        if (empty($webhookSecret)) {
+            throw new \RuntimeException(
+                'STRIPE_DONATIONS_WEBHOOK_SECRET is not configured.'
+            );
+        }
+
+        return Webhook::constructEvent($rawPayload, $sigHeader, $webhookSecret);
+    }
+
+    // ── Static helpers ────────────────────────────────────────────────────────
+
+    /**
+     * Map a Stripe PaymentIntent status to our internal normalised status.
+     * Note: 'failed' is only set via webhook events, never from PI status.
+     */
+    public static function normalizeStatus(string $stripeStatus): string
+    {
+        switch ($stripeStatus) {
+            case 'succeeded':
+                return 'succeeded';
+            case 'canceled':
+                return 'canceled';
+            default:
+                // requires_payment_method | requires_confirmation |
+                // requires_action | processing | requires_capture
+                return 'pending';
+        }
+    }
+
+    /**
+     * Map our `paymentMethod` value to Stripe's `payment_method_types` array.
+     *
+     * Apple Pay and Google Pay are wallet methods that route through the card
+     * network on Stripe — ['card'] is correct server-side for both.
+     * The client SDK (Stripe.js / mobile) handles the wallet UX automatically.
+     * PIX is a separate method that requires its own type.
+     */
+    public static function resolvePaymentMethodTypes(string $paymentMethod): array
+    {
+        if ($paymentMethod === 'pix') {
+            return ['pix'];
+        }
+
+        // 'card', 'apple_pay', 'google_pay' → all use the 'card' type server-side
+        return ['card'];
+    }
+}

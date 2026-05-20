@@ -7,6 +7,7 @@ use App\Persona;
 use App\Search\filters\inscripciones\CantidadActividades;
 use App\Search\filters\inscripciones\IdActividad;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class InscripcionesSearch
 {
@@ -39,6 +40,11 @@ class InscripcionesSearch
     {
         return class_exists($decorator);
     }
+    public static function query($filters): Builder
+    {
+        return static::applyDecoratorsFromRequest($filters, static::newQuery());
+    }
+
     private static function getResults(Builder $query)
     {
         return $query->get();
@@ -59,13 +65,6 @@ class InscripcionesSearch
             ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
             ->leftJoin('atl_oficinas as oficinaPersona', 'personaProvincia.idOficina', '=', 'oficinaPersona.id')
             ->leftJoin('ficha_medicas as ficha', 'Persona.idPersona', '=', 'ficha.idPersona')
-            ->leftJoin('Grupo_Persona as Rol', function ($join) {
-                $join->on('Rol.idPersona', '=', 'Persona.idPersona');
-        $join->on('Rol.idActividad', '=', 'Inscripcion.idActividad');
-    })
-    ->leftJoin('Grupo', 'Rol.idGrupo', '=', 'Grupo.idGrupo')
-    ->leftJoin('InscripcionJornada', 'InscripcionJornada.idInscripcion', '=', 'Inscripcion.idInscripcion')
-    ->leftJoin('Jornada', 'Jornada.idJornada', '=', 'InscripcionJornada.idJornada')
     ->select(
         [
             'Inscripcion.idPersona',
@@ -106,14 +105,17 @@ class InscripcionesSearch
                     'atl_localidades.localidad as puntoLocalidad',
                     'Actividad.costo',
                     'Actividad.idActividad',
-                    'Grupo.nombre as nombreGrupo',
+                    DB::raw('(SELECT G.nombre FROM Grupo_Persona GP JOIN Grupo G ON G.idGrupo = GP.idGrupo WHERE GP.idPersona = Persona.idPersona AND GP.idActividad = Inscripcion.idActividad LIMIT 1) as nombreGrupo'),
                     'Inscripcion.rol as nombreRol',
                     'Inscripcion.roles_aplicados',
             'Inscripcion.inscripciones_aplicadas',
             'Persona.estadoPersona',
             'PersonaModificacion.mail as modificado_por',
             'Inscripcion.updated_at as modificado_en',
-            'Jornada.nombre as jornadas'
+            DB::raw('(SELECT GROUP_CONCAT(J.nombre ORDER BY J.fechaInicio SEPARATOR " | ") FROM InscripcionJornada IJ JOIN Jornada J ON J.idJornada = IJ.idJornada WHERE IJ.idInscripcion = Inscripcion.idInscripcion) as jornadas'),
+            'Inscripcion.scholarship_requested',
+            'Inscripcion.scholarship_reason',
+            'Inscripcion.scholarship_evidence_url',
         ]
     )
     ->whereNull('Inscripcion.deleted_at');

@@ -52,7 +52,29 @@
                   <label>{{ $t('backend.payment_file') }}: </label>
                   <a target="_blank" :href="'/'+rowData.voucherUrl"> {{ $t('backend.voucher') }}</a>
                 </div>
-            </div> 
+            </div>
+        </div>
+        <div v-if="rowData.scholarship_requested" class="row mt-3">
+            <div class="col-md-12">
+                <div class="scholarship-box">
+                    <div class="scholarship-box__header">
+                        <i class="fa fa-graduation-cap"></i> Beca / Exención solicitada
+                    </div>
+                    <div class="scholarship-box__body">
+                        <div v-if="rowData.scholarship_reason" class="scholarship-box__reason">
+                            {{ rowData.scholarship_reason }}
+                        </div>
+                        <div v-if="rowData.scholarship_evidence_url" class="scholarship-box__evidence">
+                            <a :href="'/'+rowData.scholarship_evidence_url" target="_blank">
+                                <i class="fa fa-paperclip"></i> Ver documentación adjunta
+                            </a>
+                        </div>
+                        <div v-if="!rowData.scholarship_reason && !rowData.scholarship_evidence_url" class="text-muted" style="font-size:.8rem;">
+                            Sin motivo ni documentación adjunta.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr>
         <div class="row">
@@ -139,3 +161,37 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.scholarship-box {
+    border: 1px solid #d1ecf1;
+    border-left: 4px solid #17a2b8;
+    border-radius: 4px;
+    background: #f8fdfe;
+    overflow: hidden;
+    font-size: .85rem;
+}
+.scholarship-box__header {
+    background: #e8f7fa;
+    padding: 6px 12px;
+    font-weight: 600;
+    color: #0c5460;
+    border-bottom: 1px solid #d1ecf1;
+}
+.scholarship-box__header .fa {
+    margin-right: 5px;
+}
+.scholarship-box__body {
+    padding: 10px 12px;
+    color: #333;
+}
+.scholarship-box__reason {
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+.scholarship-box__evidence a {
+    font-size: .82rem;
+    color: #17a2b8;
+}
+</style>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Exports\InscripcionesExport;
+use App\Search\InscripcionesSearch;
 use App\Grupo;
 use App\GrupoRolPersona;
 use App\Http\Controllers\BaseController;
@@ -60,9 +61,7 @@ class InscripcionesController extends BaseController
             }
             unset($filtros['condiciones']);
         }
-        $export = new InscripcionesExport($filtros);
-        $collection = $export->collection();
-        $result = $this->paginate($collection, 10);
+        $result = InscripcionesSearch::query($filtros)->paginate(10);
 
         //hack para solucionar problema con vuetable con checkboxes
         // https://github.com/ratiw/vuetable-2/issues/422
