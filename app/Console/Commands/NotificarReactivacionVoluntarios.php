@@ -23,8 +23,8 @@ class NotificarReactivacionVoluntarios extends Command
     public function handle()
     {
         Persona::where('recibir_push', true)
-            ->whereHas('dispositivos', fn($q) => $q->where('activo', true))
-            ->whereDoesntHave('inscripciones', fn($q) => $q->where('fechaInscripcion', '>=', now()->subDays(30)))
+            ->whereHas('dispositivos', function ($q) { $q->where('activo', true); })
+            ->whereDoesntHave('inscripciones', function ($q) { $q->where('fechaInscripcion', '>=', now()->subDays(30)); })
             ->with('pais')
             ->chunk(100, function ($personas) {
                 foreach ($personas as $persona) {
