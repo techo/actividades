@@ -35,7 +35,7 @@ class StripePaymentService
     /** Valid payment modes. */
     const ALLOWED_MODES = ['one_time', 'recurring'];
 
-    /** Valid payment method identifiers accepted by the API. */
+    /** Valid payment method identifiers accepted by the API (kept for backwards compat). */
     const ALLOWED_PAYMENT_METHODS = ['card', 'apple_pay', 'google_pay', 'pix'];
 
     /** Valid billing intervals for recurring donations. */
@@ -74,12 +74,16 @@ class StripePaymentService
     /**
      * Create a Stripe PaymentIntent for a one-time donation.
      *
+     * Uses `automatic_payment_methods` so Stripe enables all payment methods
+     * configured in the Dashboard for this account (cards, wallets, PIX, etc.)
+     * without needing explicit server-side configuration per method.
+     *
      * @param  int    $amount          Minor units (e.g. 1500 = 15.00)
      * @param  string $currency        ISO 4217 lowercase
      * @param  int    $personId        Persona.idPersona
      * @param  string $source          Where the user initiated the donation
      * @param  string $idempotencyKey  Unique key to prevent duplicate intents
-     * @param  string $paymentMethod   'card' | 'apple_pay' | 'google_pay' | 'pix'
+     * @param  string $paymentMethod   Kept for backwards compat / metadata only
      * @param  array  $extra           Optional extra metadata stored on Stripe
      * @return PaymentIntent
      * @throws ApiErrorException
@@ -96,10 +100,10 @@ class StripePaymentService
         $this->boot();
 
         $params = [
-            'amount'               => $amount,
-            'currency'             => $currency,
-            'payment_method_types' => self::resolvePaymentMethodTypes($paymentMethod),
-            'metadata'             => array_merge([
+            'amount'                      => $amount,
+            'currency'                    => $currency,
+            'automatic_payment_methods'   => ['enabled' => true],
+            'metadata'                    => array_merge([
                 'person_id'      => $personId,
                 'source'         => $source,
                 'payment_method' => $paymentMethod,
@@ -191,6 +195,8 @@ class StripePaymentService
             'payment_behavior' => 'default_incomplete',
             'payment_settings' => [
                 'save_default_payment_method' => 'on_subscription',
+                // No payment_method_types restriction — Stripe uses all methods
+                // enabled in the Dashboard for this account (wallets, cards, etc.)
             ],
             'expand'   => ['latest_invoice.payment_intent'],
             'metadata' => array_merge([

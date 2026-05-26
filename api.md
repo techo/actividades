@@ -535,6 +535,136 @@ Cuando el usuario toca un link `https://actividades.techo.org/actividades/{id}` 
 
 ---
 
+## Donaciones (Stripe)
+
+> 🔒 Todos los endpoints requieren Bearer Token, excepto el webhook.
+
+El sistema soporta dos modos: **pago único** (PaymentIntent) y **recurrente** (Subscription).  
+Stripe habilita automáticamente todos los métodos de pago configurados en el Dashboard de la cuenta (`automatic_payment_methods: enabled`), sin restricción server-side: tarjeta, Apple Pay, Google Pay, PIX, Link, etc.
+
+### `POST /donations/stripe/payment-intent` 🔒
+
+Crea un PaymentIntent para una donación única. El `client_secret` se usa en el cliente (Stripe.js / SDK mobile) para confirmar el pago.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `amount` | integer | ✅ | Monto en unidades menores (ej: `1500` = $15.00) |
+| `currency` | string | ✅ | ISO 4217 minúsculas (`usd`, `ars`, `brl`, etc.) |
+| `source` | string | ✅ | Origen: `login_us` \| `home_pill` \| `profile` |
+| `mode` | string | | `one_time` (default) \| `recurring` |
+| `paymentMethod` | string | | `card` \| `apple_pay` \| `google_pay` \| `pix` — solo se guarda como metadata |
+| `interval` | string | Si `mode=recurring` | `month` \| `year` |
+| `countryCode` | string | | Código de país (ej: `AR`, `US`) |
+| `idempotencyKey` | string | | Clave de idempotencia. Se genera automáticamente si se omite |
+
+**Response 200**
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "intent_id": "pi_xxx"
+}
+```
+
+---
+
+### `POST /donations/stripe/subscription` 🔒
+
+Crea una Subscription recurrente en Stripe. El `client_secret` devuelto corresponde al PaymentIntent del **primer cobro**, que debe confirmarse con el SDK de Stripe en el cliente. Los cobros siguientes son automáticos y se rastrean vía webhooks.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `amount` | integer | ✅ | Monto en unidades menores |
+| `currency` | string | ✅ | ISO 4217 minúsculas |
+| `source` | string | ✅ | `login_us` \| `home_pill` \| `profile` |
+| `mode` | string | ✅ | Debe ser `recurring` |
+| `interval` | string | ✅ | `month` \| `year` |
+| `countryCode` | string | | Código de país |
+| `idempotencyKey` | string | | Clave de idempotencia |
+
+**Response 200**
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "subscription_id": "sub_xxx",
+  "status": "incomplete"
+}
+```
+
+El status inicial siempre es `incomplete`. Pasa a `active` una vez que se confirma el primer pago.
+
+---
+
+### `GET /donations/stripe/subscription/{subscriptionId}/status` 🔒
+
+Devuelve el estado actual de una suscripción desde la base de datos local (sin llamar a Stripe).
+
+**Response 200**
+```json
+{
+  "subscription_id": "sub_xxx",
+  "status": "active",
+  "amount": 2500,
+  "currency": "usd",
+  "interval": "month",
+  "current_period_end": "2026-06-19T12:04:00+00:00",
+  "canceled_at": null
+}
+```
+
+**Valores de `status`**
+
+| Status | Descripción |
+|---|---|
+| `incomplete` | Primer pago aún no confirmado |
+| `incomplete_expired` | Primer pago no completado en ~23h (terminal) |
+| `active` | Suscripción activa y al día |
+| `past_due` | Cobro fallido, Stripe reintentará |
+| `canceled` | Cancelada (terminal) |
+| `unpaid` | Reintentos agotados sin pago |
+
+---
+
+### `GET /donations/{intentId}/status` 🔒
+
+Devuelve el estado de una donación única por su PaymentIntent ID.
+
+**Response 200**
+```json
+{
+  "intent_id": "pi_xxx",
+  "status": "succeeded",
+  "amount": 1500,
+  "currency": "usd",
+  "paid_at": "2026-05-19T12:04:00+00:00"
+}
+```
+
+**Valores de `status`**: `pending` | `succeeded` | `failed` | `canceled`
+
+---
+
+### `POST /donations/stripe/webhook` (sin auth)
+
+Endpoint para eventos de Stripe. La autenticidad se valida con la firma HMAC (`Stripe-Signature` header). Siempre responde `200` para evitar reintentos.
+
+Eventos manejados:
+
+| Evento | Efecto |
+|---|---|
+| `payment_intent.succeeded` | Donación → `succeeded`, guarda `paid_at` |
+| `payment_intent.payment_failed` | Donación → `failed` |
+| `payment_intent.canceled` | Donación → `canceled` |
+| `invoice.paid` | Suscripción → `active`, actualiza `current_period_end` |
+| `invoice.payment_failed` | Suscripción → `past_due` |
+| `customer.subscription.updated` | Sincroniza status y período |
+| `customer.subscription.deleted` | Suscripción → `canceled` |
+
+---
+
 ## Notas generales
 
 - 🔒 = requiere `Authorization: Bearer {token}`
