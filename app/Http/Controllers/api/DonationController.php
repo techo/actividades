@@ -145,10 +145,25 @@ class DonationController extends Controller
         ]);
 
         // ── 5. Respond ────────────────────────────────────────────────────
-        return response()->json([
-            'client_secret' => $intent->client_secret,
+        $response = [
             'intent_id'     => $intent->id,
-        ]);
+            'client_secret' => $intent->client_secret,
+        ];
+
+        // PIX: confirmed server-side, so Stripe already generated the QR code.
+        // Return it directly so the app can render it without an extra round-trip.
+        if ($paymentMethod === 'pix') {
+            $pix = $intent->next_action->pix_display_qr_code ?? null;
+            $response['pix'] = [
+                'copy_paste_code' => $pix->data          ?? null,
+                'qr_code_url'     => $pix->image_url_png ?? null,
+                'expires_at'      => isset($pix->expires_at)
+                    ? Carbon::createFromTimestamp($pix->expires_at)->toIso8601String()
+                    : null,
+            ];
+        }
+
+        return response()->json($response);
     }
 
     // =========================================================================
