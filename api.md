@@ -559,13 +559,31 @@ Crea un PaymentIntent para una donación única. El `client_secret` se usa en el
 | `countryCode` | string | | Código de país (ej: `AR`, `US`) |
 | `idempotencyKey` | string | | Clave de idempotencia. Se genera automáticamente si se omite |
 
-**Response 200**
+**Response 200 — métodos estándar (card, Apple Pay, Google Pay)**
 ```json
 {
-  "client_secret": "pi_xxx_secret_yyy",
-  "intent_id": "pi_xxx"
+  "intent_id": "pi_xxx",
+  "client_secret": "pi_xxx_secret_yyy"
 }
 ```
+
+**Response 200 — PIX**
+
+El PaymentIntent se confirma automáticamente en el servidor. El QR code y código copia-pega ya están disponibles en la respuesta, sin paso adicional del cliente.
+
+```json
+{
+  "intent_id": "pi_xxx",
+  "client_secret": "pi_xxx_secret_yyy",
+  "pix": {
+    "copy_paste_code": "00020126...",
+    "qr_code_url": "https://qr.stripe.com/...",
+    "expires_at": "2026-05-27T12:00:00Z"
+  }
+}
+```
+
+> **Nota:** Para card/wallets el cliente confirma con el SDK de Stripe (`confirmCardPayment`, etc.). Para PIX el pago ya está en curso — solo mostrar el QR y esperar el webhook `payment_intent.succeeded`.
 
 ---
 

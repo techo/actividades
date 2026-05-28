@@ -99,16 +99,35 @@ class StripePaymentService
     ): PaymentIntent {
         $this->boot();
 
-        $params = [
-            'amount'                      => $amount,
-            'currency'                    => $currency,
-            'automatic_payment_methods'   => ['enabled' => true],
-            'metadata'                    => array_merge([
-                'person_id'      => $personId,
-                'source'         => $source,
-                'payment_method' => $paymentMethod,
-            ], $extra),
-        ];
+        $metadata = array_merge([
+            'person_id'      => $personId,
+            'source'         => $source,
+            'payment_method' => $paymentMethod,
+        ], $extra);
+
+        if ($paymentMethod === 'pix') {
+            // PIX: confirm immediately server-side so Stripe generates the
+            // QR code / copy-paste code in next_action.pix_display_qr_code.
+            // automatic_payment_methods cannot be used with server-side confirmation.
+            $params = [
+                'amount'               => $amount,
+                'currency'             => $currency,
+                'payment_method_types' => ['pix'],
+                'payment_method_data'  => ['type' => 'pix'],
+                'confirm'              => true,
+                'metadata'             => $metadata,
+            ];
+        } else {
+            // Card / wallets: use automatic_payment_methods so Stripe enables
+            // everything configured in the Dashboard (Apple Pay, Google Pay, Link…).
+            // The client (Stripe.js / mobile SDK) completes the confirmation.
+            $params = [
+                'amount'                    => $amount,
+                'currency'                  => $currency,
+                'automatic_payment_methods' => ['enabled' => true],
+                'metadata'                  => $metadata,
+            ];
+        }
 
         return PaymentIntent::create(
             $params,
