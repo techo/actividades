@@ -84,11 +84,13 @@ class DonationController extends Controller
             'idempotencyKey' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $personId       = Auth::user()->idPersona;
+        $user           = Auth::user();
+        $personId       = $user->idPersona;
         $currency       = strtolower($data['currency']);
         $mode           = $data['mode'] ?? 'one_time';
         $paymentMethod  = $data['paymentMethod'] ?? 'card';
         $idempotencyKey = $data['idempotencyKey'] ?? (string) Str::uuid();
+        $payerName      = trim(($user->nombres ?? '') . ' ' . ($user->apellidoPaterno ?? ''));
 
         // ── 2. Idempotency check — return existing record if key was seen ──
         $existing = Donation::where('person_id', $personId)
@@ -97,10 +99,22 @@ class DonationController extends Controller
 
         if ($existing) {
             if ($existing->status === Donation::STATUS_PENDING) {
-                return response()->json([
-                    'client_secret' => $this->extractPaymentIntentSecret($existing),
+                $intent  = $this->stripe->retrievePaymentIntent($existing->stripe_payment_intent_id);
+                $reponse = [
                     'intent_id'     => $existing->stripe_payment_intent_id,
-                ]);
+                    'client_secret' => $intent->client_secret ?? null,
+                ];
+                if ($paymentMethod === 'pix') {
+                    $pix = $intent->next_action->pix_display_qr_code ?? null;
+                    $reponse['pix'] = [
+                        'copy_paste_code' => $pix->data          ?? null,
+                        'qr_code_url'     => $pix->image_url_png ?? null,
+                        'expires_at'      => isset($pix->expires_at)
+                            ? Carbon::createFromTimestamp($pix->expires_at)->toIso8601String()
+                            : null,
+                    ];
+                }
+                return response()->json($reponse);
             }
 
             return response()->json([
@@ -120,7 +134,8 @@ class DonationController extends Controller
                 array_filter([
                     'country_code' => $data['countryCode'] ?? null,
                     'mode'         => $mode,
-                ])
+                ]),
+                $payerName
             );
         } catch (ApiErrorException $e) {
             return response()->json([

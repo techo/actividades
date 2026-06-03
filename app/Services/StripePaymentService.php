@@ -95,7 +95,8 @@ class StripePaymentService
         string $source,
         string $idempotencyKey,
         string $paymentMethod = 'card',
-        array $extra = []
+        array $extra = [],
+        string $payerName = ''
     ): PaymentIntent {
         $this->boot();
 
@@ -108,12 +109,18 @@ class StripePaymentService
         if ($paymentMethod === 'pix') {
             // PIX: confirm immediately server-side so Stripe generates the
             // QR code / copy-paste code in next_action.pix_display_qr_code.
+            // Stripe requires billing_details.name for server-side PIX confirmation.
             // automatic_payment_methods cannot be used with server-side confirmation.
             $params = [
                 'amount'               => $amount,
                 'currency'             => $currency,
                 'payment_method_types' => ['pix'],
-                'payment_method_data'  => ['type' => 'pix'],
+                'payment_method_data'  => [
+                    'type'             => 'pix',
+                    'billing_details'  => [
+                        'name' => $payerName ?: 'Donante TECHO',
+                    ],
+                ],
                 'confirm'              => true,
                 'metadata'             => $metadata,
             ];
@@ -133,6 +140,17 @@ class StripePaymentService
             $params,
             ['idempotency_key' => $idempotencyKey]
         );
+    }
+
+    /**
+     * Retrieve an existing PaymentIntent by ID (with next_action expanded for PIX replays).
+     *
+     * @throws ApiErrorException
+     */
+    public function retrievePaymentIntent(string $intentId): PaymentIntent
+    {
+        $this->boot();
+        return PaymentIntent::retrieve($intentId);
     }
 
     // ── Customer ──────────────────────────────────────────────────────────────
