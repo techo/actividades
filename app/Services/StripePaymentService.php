@@ -97,7 +97,8 @@ class StripePaymentService
         string $paymentMethod = 'card',
         array $extra = [],
         string $payerName = '',
-        string $payerEmail = ''
+        string $payerEmail = '',
+        string $payerTaxId = ''
     ): PaymentIntent {
         $this->boot();
 
@@ -118,10 +119,11 @@ class StripePaymentService
                 'payment_method_types' => ['pix'],
                 'payment_method_data'  => [
                     'type'             => 'pix',
-                    'billing_details'  => [
-                        'name'  => $payerName  ?: 'Donante TECHO',
-                        'email' => $payerEmail ?: null,
-                    ],
+                    'billing_details'  => array_filter([
+                        'name'   => $payerName  ?: 'Donante TECHO',
+                        'email'  => $payerEmail  ?: null,
+                        'tax_id' => $payerTaxId ?: null,
+                    ]),
                 ],
                 'confirm'              => true,
                 'metadata'             => $metadata,
