@@ -22,6 +22,18 @@ class ActividadesPolicy
         //
     }
 
+    /**
+     * Verifica si el usuario es coordinador de la actividad o tiene rol admin.
+     * Útil para autorizar acciones que los coordis de actividad deben poder realizar
+     * (ej: ver equipos de la oficina al editar una actividad).
+     */
+    public function esCoordinadorOAdmin(Persona $user, Actividad $actividad)
+    {
+        return $user->hasRole('admin')
+            || $actividad->coordinadores->contains('idPersona', $user->idPersona)
+            || $actividad->idPersonaCreacion == $user->idPersona;
+    }
+
     public function evaluar(Persona $user, $id)
     {
         $actividad = Actividad::findOrFail($id);

@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class EquiposSearch
 {
-    public static function apply($filters, $sort = 'created_at desc', $per_page = 25, $idComunidad = null, $idOficina = null)
+    public static function apply($filters, $sort = 'created_at desc', $per_page = 25, $idComunidad = null, $idOficina = null, $forzarPorOficina = false)
     {
-        $query = static::applyDecoratorsFromRequest($filters, EquiposSearch::newQuery($idComunidad, $idOficina));
+        $query = static::applyDecoratorsFromRequest($filters, EquiposSearch::newQuery($idComunidad, $idOficina, $forzarPorOficina));
         return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
@@ -38,8 +38,8 @@ class EquiposSearch
         return $query->paginate($per_page);
     }
 
-    private static function newQuery($idComunidad=null, $idOficina=null){
-        $query = (new Equipo())->newQuery();        
+    private static function newQuery($idComunidad=null, $idOficina=null, $forzarPorOficina=false){
+        $query = (new Equipo())->newQuery();
 
         if ($idComunidad) {
             $query->join('equipo_comunidad', 'equipo_comunidad.idEquipo', '=', 'Equipo.idEquipo')
@@ -50,7 +50,7 @@ class EquiposSearch
             $query->where('Equipo.idOficina', $idOficina);
         }
 
-        if(auth()->user()->hasRole("admin")){
+        if(auth()->user()->hasRole("admin") || $forzarPorOficina){
             $query->where('idPais', '=', auth()->user()->idPaisPermitido);
         } else if(auth()->user()->hasRole("coordinador")){
             $query

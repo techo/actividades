@@ -324,9 +324,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         });
 
     });
+    // Ruta de equipos por oficina: accesible también para coordinadores de actividad.
+    // La autorización granular se maneja dentro del controller (EquiposController@index).
+    Route::get('ajax/equipos/oficina/{idOficina}', 'backoffice\ajax\EquiposController@index');
+
     Route::prefix('ajax/equipos')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\EquiposController@index');
-        Route::get('/oficina/{idOficina}', 'backoffice\ajax\EquiposController@index');
         
         Route::prefix('/{idEquipo}/integrante')->group(function() {
             Route::get('/estado/{estado}', 'backoffice\ajax\IntegrantesController@index'); 

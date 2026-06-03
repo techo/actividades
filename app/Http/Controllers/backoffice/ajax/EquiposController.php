@@ -3,17 +3,30 @@
 namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\RolResource;
 use App\Http\Resources\EquiposResource;
 use App\Search\EquiposSearch;
+use App\Actividad;
 use App\Equipo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class EquiposController extends Controller
 {
     public function index(Request $request, $idOficina = null)
     {
+        // Si viene idActividad, autorizar vía policy y usar la lógica de oficina
+        // para que el coordinador de la actividad vea los equipos disponibles.
+        $forzarPorOficina = false;
+        if ($request->filled('idActividad')) {
+            $actividad = Actividad::findOrFail($request->idActividad);
+            $this->authorize('esCoordinadorOAdmin', $actividad);
+
+            // Si no es admin, forzar el filtro por oficina (igual que admin pero sin
+            // restringir por coordinadores_equipos propios del usuario)
+            if (!auth()->user()->hasRole('admin')) {
+                $forzarPorOficina = true;
+            }
+        }
+
         $filtros = [];
         if($request->has('equipo')){
             $filtros['equipo'] = $request->equipo;
@@ -32,7 +45,7 @@ class EquiposController extends Controller
             $per_page = $request->per_page;
         }
 
-        $result = EquiposSearch::apply($filtros, $sort, $per_page, null, $idOficina);
+        $result = EquiposSearch::apply($filtros, $sort, $per_page, null, $idOficina, $forzarPorOficina);
         $equipos = EquiposResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }
