@@ -181,7 +181,7 @@
                             >
                             {{ __('frontend.accept') }} 
                             @if($actividad->idPais == 33)
-                            <a href="/carta-voluntariado-brasil" target="_blank">
+                            <a href="/carta-voluntariado-brasil?actividad={{ $actividad->idActividad }}" target="_blank">
                             @elseif($actividad->idPais == 172)
                                 <a href="/carta-voluntariado-paraguay" target="_blank">
                             @else
