@@ -29,15 +29,12 @@ class EvaluacionesPersonasDetalleSheet implements FromCollection, WithHeadings, 
         return EvaluacionPersona::where('EvaluacionPersona.idActividad', $this->actividad->idActividad)
             ->with('respuestas')
             ->join('Persona as evaluado', 'evaluado.idPersona', '=', 'EvaluacionPersona.idEvaluado')
-            ->join('Persona as evaluador', 'evaluador.idPersona', '=', 'EvaluacionPersona.idEvaluador')
             ->select(
                 'EvaluacionPersona.idEvaluacionPersona',
                 'EvaluacionPersona.comentario',
                 'evaluado.nombres as evaluado_nombres',
                 'evaluado.apellidoPaterno as evaluado_apellido',
-                'evaluado.dni as evaluado_dni',
-                'evaluador.nombres as evaluador_nombres',
-                'evaluador.apellidoPaterno as evaluador_apellido'
+                'evaluado.dni as evaluado_dni'
             )
             ->get();
     }
@@ -50,8 +47,6 @@ class EvaluacionesPersonasDetalleSheet implements FromCollection, WithHeadings, 
             $row->evaluado_nombres,
             $row->evaluado_apellido,
             $row->evaluado_dni,
-            $row->evaluador_nombres,
-            $row->evaluador_apellido,
             optional($respuestas->get('conexion_equipo'))->score,
             optional($respuestas->get('compromiso_colaboracion'))->score,
             optional($respuestas->get('actitud_propositiva'))->score,
@@ -66,8 +61,6 @@ class EvaluacionesPersonasDetalleSheet implements FromCollection, WithHeadings, 
             'Evaluado - Nombre',
             'Evaluado - Apellido',
             'Evaluado - DNI',
-            'Evaluador - Nombre',
-            'Evaluador - Apellido',
             'Conexión y Comunidad',
             'Compromiso y Colaboración',
             'Actitud Propositiva',

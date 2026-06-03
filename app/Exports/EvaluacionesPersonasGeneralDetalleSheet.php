@@ -40,16 +40,13 @@ class EvaluacionesPersonasGeneralDetalleSheet implements FromCollection, WithHea
             ->with('respuestas')
             ->join('Actividad', 'Actividad.idActividad', '=', 'EvaluacionPersona.idActividad')
             ->join('Persona as evaluado', 'evaluado.idPersona', '=', 'EvaluacionPersona.idEvaluado')
-            ->join('Persona as evaluador', 'evaluador.idPersona', '=', 'EvaluacionPersona.idEvaluador')
             ->select(
                 'EvaluacionPersona.idEvaluacionPersona',
                 'EvaluacionPersona.comentario',
                 'Actividad.nombreActividad',
                 'evaluado.nombres as evaluado_nombres',
                 'evaluado.apellidoPaterno as evaluado_apellido',
-                'evaluado.dni as evaluado_dni',
-                'evaluador.nombres as evaluador_nombres',
-                'evaluador.apellidoPaterno as evaluador_apellido'
+                'evaluado.dni as evaluado_dni'
             )
             ->get();
     }
@@ -63,8 +60,6 @@ class EvaluacionesPersonasGeneralDetalleSheet implements FromCollection, WithHea
             $row->evaluado_nombres,
             $row->evaluado_apellido,
             $row->evaluado_dni,
-            $row->evaluador_nombres,
-            $row->evaluador_apellido,
             optional($respuestas->get('conexion_equipo'))->score,
             optional($respuestas->get('compromiso_colaboracion'))->score,
             optional($respuestas->get('actitud_propositiva'))->score,
@@ -78,7 +73,6 @@ class EvaluacionesPersonasGeneralDetalleSheet implements FromCollection, WithHea
         return [
             'Actividad',
             'Evaluado - Nombre', 'Evaluado - Apellido', 'Evaluado - DNI',
-            'Evaluador - Nombre', 'Evaluador - Apellido',
             'Conexión y Comunidad', 'Compromiso y Colaboración',
             'Actitud Propositiva', 'Potencia a Otros',
             'Comentario',
