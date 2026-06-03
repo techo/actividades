@@ -96,7 +96,8 @@ class StripePaymentService
         string $idempotencyKey,
         string $paymentMethod = 'card',
         array $extra = [],
-        string $payerName = ''
+        string $payerName = '',
+        string $payerEmail = ''
     ): PaymentIntent {
         $this->boot();
 
@@ -118,7 +119,8 @@ class StripePaymentService
                 'payment_method_data'  => [
                     'type'             => 'pix',
                     'billing_details'  => [
-                        'name' => $payerName ?: 'Donante TECHO',
+                        'name'  => $payerName  ?: 'Donante TECHO',
+                        'email' => $payerEmail ?: null,
                     ],
                 ],
                 'confirm'              => true,

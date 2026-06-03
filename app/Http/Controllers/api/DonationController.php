@@ -91,6 +91,7 @@ class DonationController extends Controller
         $paymentMethod  = $data['paymentMethod'] ?? 'card';
         $idempotencyKey = $data['idempotencyKey'] ?? (string) Str::uuid();
         $payerName      = trim(($user->nombres ?? '') . ' ' . ($user->apellidoPaterno ?? ''));
+        $payerEmail     = $user->mail ?? '';
 
         // ── 2. Idempotency check — return existing record if key was seen ──
         $existing = Donation::where('person_id', $personId)
@@ -135,7 +136,8 @@ class DonationController extends Controller
                     'country_code' => $data['countryCode'] ?? null,
                     'mode'         => $mode,
                 ]),
-                $payerName
+                $payerName,
+                $payerEmail
             );
         } catch (ApiErrorException $e) {
             return response()->json([
