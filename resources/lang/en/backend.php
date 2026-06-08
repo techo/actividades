@@ -352,6 +352,7 @@ return [
     'status_in_progress_ends_today' => 'In progress · ends today',
     'status_in_progress_ends_tomorrow' => 'In progress · ends tomorrow',
     'status_finished' => 'Finished',
+    'validation_fin_inscripciones_after_inicio' => 'Registration end date must be before the activity start date.',
     'meeting_location' => 'In this space you can put either the medium where it will take place (eg, ZOOM, HANGOUTS) or directly put the meeting url. Keep in mind that it would be public in that case',
     'activity_location' => 'The location is the physical place where the activity will take place. An activity has a single physical place but can have multiple meeting points where volunteers gather before heading to the final location.',
     'activity_confirmation' => 'An activity may or may not require its registrants to confirm their participation. There are four options:',

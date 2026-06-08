@@ -168,12 +168,13 @@
 
                     <!-- Card: Inscripciones -->
                     <div class="col-md-4">
-                        <div class="dates-card">
+                        <div class="dates-card" :class="{ 'dates-card--error': errorFinInscripcionesPostInicio }">
                             <div class="dates-card-header dates-card-header--registrations">
                                 <span class="dates-card-icon">📝</span>
                                 <span class="dates-card-title">{{ $t('backend.dates_registrations') }}</span>
                                 <span v-if="!modoManualInscripciones" class="dates-badge dates-badge--auto">{{ $t('backend.automatic') }}</span>
                                 <span v-else class="dates-badge dates-badge--manual">{{ $t('backend.manual') }}</span>
+                                <span v-if="errorFinInscripcionesPostInicio" class="dates-card-error-icon" title="">⚠️</span>
                             </div>
                             <div class="dates-card-body">
                                 <div v-if="statusInscripcionesChip" class="dates-status" :class="'dates-status--' + statusInscripcionesChip.variant">
@@ -196,13 +197,16 @@
                                     </span>
                                 </div>
                                 <label>{{ $t('backend.ending') }}</label>
-                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones }">
+                                <div :class="{ 'input-group': true, 'has-error': errors.fechaFinInscripciones || errorFinInscripcionesPostInicio }">
                                     <input v-model="fechas.fechaFinInscripciones" type="date" class="form-control" required style="line-height: inherit;" :disabled="!edicion || !modoManualInscripciones">
                                     <span class="help-block">{{ errors.fechaFinInscripciones }}</span>
                                     <span class="input-group-addon">
                                         <input v-model="horas.fechaFinInscripciones" type="time" required style="border: none; height: 20px;" :disabled="!edicion || !modoManualInscripciones">
                                     </span>
                                 </div>
+                                <p v-if="errorFinInscripcionesPostInicio" class="dates-validation-error">
+                                    {{ $t('backend.validation_fin_inscripciones_after_inicio') }}
+                                </p>
                                 <p v-if="!modoManualInscripciones" class="dates-hint">{{ $t('backend.dates_auto_hint_registrations') }}</p>
                                 <hr class="dates-card-divider">
                                 <div class="form-group">
@@ -1011,6 +1015,11 @@
                 });
             },
 
+            errorFinInscripcionesPostInicio() {
+                if (!this.fechas.fechaFinInscripciones || !this.fechas.fechaInicio) return false;
+                return moment(this.fechas.fechaFinInscripciones).isAfter(moment(this.fechas.fechaInicio), 'day');
+            },
+
             statusInscripcionesChip() {
                 return this._periodChip(
                     this.fechas.fechaInicioInscripciones, this.horas.fechaInicioInscripciones,
@@ -1173,6 +1182,8 @@
                 return { label, variant: 'closed' };
             },
             guardar(){
+                if (this.errorFinInscripcionesPostInicio) return;
+
                 this.actividad.fechaInicio = moment(this.fechas.fechaInicio + ' ' + this.horas.fechaInicio).format('YYYY-MM-DD HH:mm:ss');
                 this.actividad.fechaFin = moment(this.fechas.fechaFin + ' ' + this.horas.fechaFin).format('YYYY-MM-DD HH:mm:ss');
                 
@@ -1343,7 +1354,8 @@
                     .then((datos) => { this.oficinas = datos.data; }).catch((error) => { debugger; });
             },
             getEquipos(){
-                axios.get('/admin/ajax/equipos/oficina/' + this.actividad.idOficina)
+                const params = this.actividad.idActividad ? { idActividad: this.actividad.idActividad } : {};
+                axios.get('/admin/ajax/equipos/oficina/' + this.actividad.idOficina, { params })
                     .then((datos) => { this.equipos = datos.data.data; }).catch((error) => { debugger; });
             },
             getTipos(id){
@@ -1531,6 +1543,34 @@
 .dates-card-divider {
     margin: 12px 0;
     border-color: #f0f0f0;
+}
+
+/* Validation */
+.dates-card--error {
+    border-color: #e74c3c;
+    box-shadow: 0 1px 4px rgba(231, 76, 60, 0.2);
+}
+.dates-card--error .dates-card-header--registrations {
+    border-left-color: #e74c3c;
+    background: #fdf0ef;
+}
+.dates-validation-error {
+    color: #c0392b;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.dates-validation-error::before {
+    content: '⚠';
+    font-size: 13px;
+}
+.dates-card-error-icon {
+    margin-left: auto;
+    font-size: 14px;
 }
 
 /* Status chips */

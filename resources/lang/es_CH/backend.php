@@ -352,6 +352,7 @@ return [
     'status_in_progress_ends_today' => 'En curso · termina hoy',
     'status_in_progress_ends_tomorrow' => 'En curso · termina mañana',
     'status_finished' => 'Finalizada',
+    'validation_fin_inscripciones_after_inicio' => 'La fecha de fin de inscripciones debe ser anterior al inicio de la actividad.',
     'meeting_location' => 'En este espacio podes poner tanto el medio donde se realizará (ej, ZOOM, HANHOUTS) o directemente poner la url de la reunión. Tener en cuenta que la misma sería pública en tal caso',
     'activity_location' => 'La ubicación es el lugar físico donde se realizará la actividad. Una actividad tiene un solo lugar físico, pero puede tener múltiples puntos de encuentro donde los voluntarios se juntan previo a llegar hasta la ubicación final.',
     'activity_confirmation' => 'Una actividad puede o no requerir que sus inscriptos confirmen su participación. Hay cuatro opciones:',

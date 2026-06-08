@@ -351,6 +351,7 @@ return [
     'status_in_progress_ends_today' => 'Em andamento · termina hoje',
     'status_in_progress_ends_tomorrow' => 'Em andamento · termina amanhã',
     'status_finished' => 'Finalizada',
+    'validation_fin_inscripciones_after_inicio' => 'A data de encerramento das inscrições deve ser anterior ao início da atividade.',
     'meeting_location' => 'Neste espaço, você pode colocar tanto o meio onde será realizado (por exemplo, ZOOM, HANGOUTS) ou inserir diretamente o URL da reunião. Tenha em mente que ela seria pública nesse caso.',
     'activity_location' => 'A localização é o local físico onde a atividade será realizada. Uma atividade tem apenas um local físico, mas pode ter múltiplos pontos de encontro onde os voluntários se reúnem antes de chegar ao local final.',
     'activity_confirmation' => 'Uma atividade pode ou não exigir que seus inscritos confirmem sua participação. Existem quatro opções:',
