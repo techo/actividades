@@ -330,6 +330,46 @@ class DonationController extends Controller
     }
 
     // =========================================================================
+    // GET /api/donations/stripe/subscription
+    // =========================================================================
+
+    /**
+     * List all non-terminal subscriptions for the authenticated user.
+     *
+     * Returns subscriptions with status: incomplete | active | past_due | unpaid
+     * Excludes: incomplete_expired | canceled
+     *
+     * Response 200:
+     *   { data: [ { subscription_id, status, amount, currency, interval,
+     *               current_period_end, created_at } ] }
+     */
+    public function listSubscriptions(): JsonResponse
+    {
+        $subscriptions = DonationSubscription::where('person_id', Auth::user()->idPersona)
+            ->whereNotIn('status', DonationSubscription::TERMINAL_STATUSES)
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function (DonationSubscription $sub) {
+                return [
+                    'subscription_id'    => $sub->stripe_subscription_id,
+                    'status'             => $sub->status,
+                    'amount'             => $sub->amount,
+                    'currency'           => $sub->currency,
+                    'interval'           => $sub->interval,
+                    'current_period_end' => $sub->current_period_end
+                        ? $sub->current_period_end->toIso8601String()
+                        : null,
+                    'canceled_at'        => $sub->canceled_at
+                        ? $sub->canceled_at->toIso8601String()
+                        : null,
+                    'created_at'         => $sub->created_at->toIso8601String(),
+                ];
+            });
+
+        return response()->json(['data' => $subscriptions]);
+    }
+
+    // =========================================================================
     // GET /api/donations/stripe/subscription/{subscriptionId}/status
     // =========================================================================
 

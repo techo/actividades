@@ -140,6 +140,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('stripe/subscription', 'api\DonationController@createSubscription')
              ->name('api.donations.create-subscription');
 
+        // List active subscriptions for the authenticated user
+        Route::get('stripe/subscription', 'api\DonationController@listSubscriptions')
+             ->name('api.donations.list-subscriptions');
+
         // Poll subscription status by Stripe Subscription ID
         Route::get('stripe/subscription/{subscriptionId}/status', 'api\DonationController@getSubscriptionStatus')
              ->name('api.donations.subscription-status');
