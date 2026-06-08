@@ -2,6 +2,7 @@
 
 namespace App\Services\OneSignal;
 
+use App\Dispositivo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
@@ -101,11 +102,17 @@ class OneSignalService
 
             $body = json_decode($response->getBody()->getContents(), true);
 
-            // OneSignal devuelve errors[] con player_ids inválidos — solo log, no falla
+            // OneSignal devuelve errors[] con player_ids inválidos.
+            // Los marcamos como inactivos para no volver a usarlos.
             if (!empty($body['errors'])) {
-                Log::warning('OneSignalService: player_ids inválidos', [
-                    'errors' => $body['errors'],
+                $invalidIds = is_array($body['errors']) ? $body['errors'] : [];
+                Log::warning('OneSignalService: player_ids inválidos — se desactivarán', [
+                    'errors' => $invalidIds,
                 ]);
+                if (!empty($invalidIds)) {
+                    Dispositivo::whereIn('player_id', $invalidIds)
+                        ->update(['activo' => false]);
+                }
             }
 
             return [
