@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Actividad;
 use App\Donation;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
@@ -433,6 +434,127 @@ class DonationController extends Controller
             'amount'    => $donation->amount,
             'currency'  => $donation->currency,
             'paid_at'   => $donation->paid_at ? $donation->paid_at->toIso8601String() : null,
+        ]);
+    }
+
+    // =========================================================================
+    // GET /api/donations/history
+    // =========================================================================
+
+    /**
+     * Unified donation history for the authenticated user.
+     * Merges one-time donations and subscriptions into a single chronological list.
+     *
+     * Query params (all optional):
+     *   type    = one_time | subscription
+     *   status  = succeeded | pending | failed | canceled | active | past_due …
+     *   from    = ISO date (e.g. 2026-01-01)
+     *   limit   = integer (default 20, max 100)
+     *   page    = integer (default 1)
+     *
+     * Response 200:
+     *   { data: [...], meta: { total, page, limit } }
+     */
+    public function history(Request $request): JsonResponse
+    {
+        $personId = Auth::user()->idPersona;
+        $type     = $request->query('type');
+        $status   = $request->query('status');
+        $from     = $request->query('from');
+        $limit    = min((int) ($request->query('limit', 20)), 100);
+        $page     = max((int) ($request->query('page', 1)), 1);
+
+        $oneTimeItems    = collect();
+        $subscriptionItems = collect();
+
+        // ── One-time donations ────────────────────────────────────────────────
+        if (!$type || $type === 'one_time') {
+            $q = Donation::where('person_id', $personId);
+            if ($status) $q->where('status', $status);
+            if ($from)   $q->where('created_at', '>=', Carbon::parse($from)->startOfDay());
+
+            $donations = $q->orderByDesc('created_at')->get();
+
+            // Bulk-load linked actividades to avoid N+1
+            $inscripcionIds = $donations->pluck('inscripcion_id')->filter()->unique()->values();
+            $actividadesMap = collect();
+            if ($inscripcionIds->isNotEmpty()) {
+                $actividadesMap = \App\Inscripcion::whereIn('idInscripcion', $inscripcionIds)
+                    ->with('actividad:idActividad,nombreActividad')
+                    ->get()
+                    ->keyBy('idInscripcion');
+            }
+
+            $oneTimeItems = $donations->map(function (Donation $d) use ($actividadesMap) {
+                $actividad = null;
+                if ($d->inscripcion_id && $actividadesMap->has($d->inscripcion_id)) {
+                    $act = $actividadesMap[$d->inscripcion_id]->actividad;
+                    $actividad = $act ? [
+                        'id'     => $act->idActividad,
+                        'nombre' => $act->nombreActividad,
+                    ] : null;
+                }
+                return [
+                    'type'           => 'one_time',
+                    'id'             => $d->stripe_payment_intent_id,
+                    'amount'         => $d->amount,
+                    'currency'       => $d->currency,
+                    'status'         => $d->status,
+                    'source'         => $d->source,
+                    'payment_method' => $d->payment_method_type,
+                    'inscripcion_id' => $d->inscripcion_id,
+                    'actividad'      => $actividad,
+                    'paid_at'        => $d->paid_at ? $d->paid_at->toIso8601String() : null,
+                    'created_at'     => $d->created_at->toIso8601String(),
+                ];
+            });
+        }
+
+        // ── Subscriptions ─────────────────────────────────────────────────────
+        if (!$type || $type === 'subscription') {
+            $q = DonationSubscription::where('person_id', $personId);
+            if ($status) $q->where('status', $status);
+            if ($from)   $q->where('created_at', '>=', Carbon::parse($from)->startOfDay());
+
+            $subscriptionItems = $q->orderByDesc('created_at')->get()
+                ->map(function (DonationSubscription $s) {
+                    return [
+                        'type'               => 'subscription',
+                        'id'                 => $s->stripe_subscription_id,
+                        'amount'             => $s->amount,
+                        'currency'           => $s->currency,
+                        'status'             => $s->status,
+                        'source'             => $s->source,
+                        'interval'           => $s->interval,
+                        'inscripcion_id'     => null,
+                        'actividad'          => null,
+                        'current_period_end' => $s->current_period_end
+                            ? $s->current_period_end->toIso8601String()
+                            : null,
+                        'canceled_at'        => $s->canceled_at
+                            ? $s->canceled_at->toIso8601String()
+                            : null,
+                        'created_at'         => $s->created_at->toIso8601String(),
+                    ];
+                });
+        }
+
+        // ── Merge, sort by date desc, paginate ────────────────────────────────
+        $all = $oneTimeItems->concat($subscriptionItems)
+            ->sortByDesc('created_at')
+            ->values();
+
+        $total  = $all->count();
+        $offset = ($page - 1) * $limit;
+        $paged  = $all->slice($offset, $limit)->values();
+
+        return response()->json([
+            'data' => $paged,
+            'meta' => [
+                'total' => $total,
+                'page'  => $page,
+                'limit' => $limit,
+            ],
         ]);
     }
 

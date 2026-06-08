@@ -10,6 +10,7 @@ class Donation extends Model
 
     protected $fillable = [
         'person_id',
+        'inscripcion_id',
         'stripe_payment_intent_id',
         'amount',
         'currency',

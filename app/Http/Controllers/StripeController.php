@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Donation;
 use App\Inscripcion;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionPagoFueraDeFecha;
@@ -171,11 +172,109 @@ class StripeController extends Controller
 
         Log::info('Stripe webhook recibido [país ' . $paisId . ']: ' . $event->type);
 
-        if ($event->type === 'checkout.session.completed') {
-            $this->handleCheckoutCompleted($event->data->object);
+        switch ($event->type) {
+            case 'checkout.session.completed':
+                $this->handleCheckoutCompleted($event->data->object);
+                break;
+
+            case 'payment_intent.succeeded':
+                $this->handlePaymentIntentSucceeded($event->data->object);
+                break;
+
+            case 'payment_intent.payment_failed':
+                $this->handlePaymentIntentFailed($event->data->object);
+                break;
         }
 
         return response('OK', 200);
+    }
+
+    /**
+     * payment_intent.succeeded — fired when a PI created by the mobile app
+     * (InscripcionStripeController) is confirmed by the user.
+     * Marks the inscription as paid and updates the linked Donation record.
+     * Idempotent: skips if already paid via Stripe.
+     */
+    protected function handlePaymentIntentSucceeded($intent): void
+    {
+        $inscripcionId = $intent->metadata->inscripcion_id ?? null;
+
+        if (!$inscripcionId) {
+            // PI not related to an inscription (could be a free donation PI from
+            // DonationController — let DonationWebhookController handle those).
+            return;
+        }
+
+        $inscripcion = Inscripcion::where('idInscripcion', $inscripcionId)
+            ->with(['actividad', 'persona'])
+            ->first();
+
+        if (!$inscripcion) {
+            Log::error('StripeWebhook PI succeeded: inscripcion ' . $inscripcionId . ' no encontrada.');
+            return;
+        }
+
+        // Idempotencia
+        if ($inscripcion->pago == 1 && $inscripcion->metodo_pago === 'stripe_api') {
+            Log::info('StripeWebhook PI succeeded: inscripcion ' . $inscripcionId . ' ya procesada.');
+            return;
+        }
+
+        $actividad = $inscripcion->actividad;
+
+        // Verificar fecha límite de pago
+        if ($actividad->fechaLimitePago && Carbon::now()->greaterThan($actividad->fechaLimitePago)) {
+            Log::warning('StripeWebhook PI succeeded: pago fuera de fecha para inscripcion ' . $inscripcionId);
+            try {
+                Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));
+            } catch (\Exception $e) {
+                Log::error('StripeWebhook PI: error enviando mail fuera de fecha: ' . $e->getMessage());
+            }
+            return;
+        }
+
+        // Marcar inscripcion como pagada
+        $inscripcion->pago                     = 1;
+        $inscripcion->montoPago                = $intent->amount_received / 100;
+        $inscripcion->moneda                   = strtoupper($intent->currency);
+        $inscripcion->fechaPago                = Carbon::now();
+        $inscripcion->metodo_pago              = 'stripe_api';
+        $inscripcion->stripe_payment_intent_id = $intent->id;
+        $inscripcion->save();
+
+        // Actualizar el registro Donation vinculado
+        $donation = Donation::where('stripe_payment_intent_id', $intent->id)->first();
+        if ($donation) {
+            $donation->transitionTo(Donation::STATUS_SUCCEEDED, [
+                'paid_at' => Carbon::now(),
+            ]);
+        }
+
+        Log::info('StripeWebhook PI succeeded: inscripcion ' . $inscripcionId . ' marcada como pagada.');
+
+        try {
+            Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($inscripcion));
+        } catch (\Exception $e) {
+            Log::error('StripeWebhook PI: error enviando mail de confirmación: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * payment_intent.payment_failed — only relevant for inscription PIs.
+     * Marks the linked Donation as failed so the app can prompt a retry.
+     */
+    protected function handlePaymentIntentFailed($intent): void
+    {
+        $inscripcionId = $intent->metadata->inscripcion_id ?? null;
+        if (!$inscripcionId) {
+            return;
+        }
+
+        $donation = Donation::where('stripe_payment_intent_id', $intent->id)->first();
+        if ($donation && !$donation->isTerminal()) {
+            $donation->update(['status' => Donation::STATUS_FAILED]);
+            Log::info('StripeWebhook PI failed: donation ' . $donation->id . ' marcada como failed.');
+        }
     }
 
     /**

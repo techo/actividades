@@ -542,6 +542,122 @@ Cuando el usuario toca un link `https://actividades.techo.org/actividades/{id}` 
 El sistema soporta dos modos: **pago único** (PaymentIntent) y **recurrente** (Subscription).  
 Stripe habilita automáticamente todos los métodos de pago configurados en el Dashboard de la cuenta (`automatic_payment_methods: enabled`), sin restricción server-side: tarjeta, Apple Pay, Google Pay, PIX, Link, etc.
 
+---
+
+### Flujos de integración para la app mobile
+
+#### A) Donación libre — pago único (card / Apple Pay / Google Pay)
+
+```
+1. POST /api/donations/stripe/payment-intent
+   body: { amount, currency, source, mode: "one_time" }
+   ← { client_secret, intent_id }
+
+2. SDK Stripe (React Native / Flutter / iOS / Android)
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+   ← PaymentIntent con status: 'succeeded' o 'requires_action'
+
+3. Polling opcional (si necesitás confirmar el estado en tu backend)
+   GET /api/donations/{intent_id}/status
+   ← { status: "succeeded", paid_at: "..." }
+
+   ⚠️  No dependas solo del resultado del SDK. El estado definitivo
+       llega vía webhook → tu backend ya actualiza la tabla donations.
+       Si el usuario cierra la app antes de recibir respuesta del SDK,
+       el polling resuelve el estado correcto.
+```
+
+---
+
+#### B) Donación libre — PIX
+
+```
+1. POST /api/donations/stripe/payment-intent
+   body: { amount, currency: "brl", source, paymentMethod: "pix" }
+   ← { client_secret, intent_id,
+       pix: { copy_paste_code, qr_code_url, expires_at } }
+
+   El PI ya viene confirmado — mostrar el QR directamente.
+   No llamar al SDK de Stripe para PIX.
+
+2. Polling hasta que el usuario pague en su banco
+   GET /api/donations/{intent_id}/status
+   ← { status: "pending" }  →  seguir esperando
+   ← { status: "succeeded" } →  mostrar confirmación
+
+   Stripe también notifica via webhook payment_intent.succeeded
+   cuando el banco confirma el pago.
+
+   ⏱  PIX expira en 24 hs. Si expires_at pasó y status sigue
+      "pending", mostrar opción de generar nuevo PIX.
+```
+
+---
+
+#### C) Donación recurrente (suscripción)
+
+```
+1. POST /api/donations/stripe/subscription
+   body: { amount, currency, source, mode: "recurring", interval: "month" }
+   ← { client_secret, subscription_id, status: "incomplete" }
+
+2. SDK Stripe — confirmar el PRIMER cobro (igual que pago único)
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+   ← status: 'succeeded'
+
+   Los cobros siguientes son automáticos — Stripe los cobra
+   sin intervención del usuario ni de la app.
+
+3. Polling del estado de la suscripción
+   GET /api/donations/stripe/subscription/{subscription_id}/status
+   ← { status: "active", current_period_end: "..." }
+
+4. Listar suscripciones activas del usuario
+   GET /api/donations/stripe/subscription
+   ← { data: [ { subscription_id, status, amount, ... } ] }
+```
+
+---
+
+#### D) Pago de inscripción a actividad (mobile)
+
+```
+1. POST /api/inscripciones/{idInscripcion}/stripe/payment-intent
+   body: {} (monto y moneda vienen de la actividad)
+   ← { client_secret, intent_id, amount, currency }
+
+2. SDK Stripe — confirmar el pago
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+
+3. Resultado del SDK:
+   ✅ succeeded  → mostrar pantalla de confirmación
+   ❌ failed     → mostrar error y opción de reintentar
+   ⏳ requires_action → el SDK maneja 3D Secure automáticamente
+
+   La inscripción queda marcada como pagada (pago = 1)
+   vía webhook — no es necesario llamar a ningún endpoint extra.
+
+4. Verificación opcional
+   GET /api/inscripciones  (endpoint existente)
+   El campo `pago` de la inscripción refleja el estado real.
+```
+
+---
+
+#### Manejo de errores del SDK — referencia rápida
+
+| Resultado SDK | Qué hacer |
+|---|---|
+| `succeeded` | Mostrar confirmación, actualizar UI |
+| `requires_payment_method` | Tarjeta rechazada — pedir otro método |
+| `requires_action` | 3DS — el SDK lo maneja solo, esperar resultado |
+| `canceled` | Usuario canceló — volver al formulario |
+| Error de red | Reintentar con el **mismo** `client_secret` (no crear nuevo PI) |
+
+> **Idempotencia**: si el usuario cierra la app y vuelve a intentar,
+> enviá el mismo `idempotencyKey` que la primera vez. El servidor
+> devuelve el mismo PI existente en vez de crear uno duplicado.
+
 ### `POST /donations/stripe/payment-intent` 🔒
 
 Crea un PaymentIntent para una donación única. El `client_secret` se usa en el cliente (Stripe.js / SDK mobile) para confirmar el pago.
@@ -584,6 +700,32 @@ El PaymentIntent se confirma automáticamente en el servidor. El QR code y códi
 ```
 
 > **Nota:** Para card/wallets el cliente confirma con el SDK de Stripe (`confirmCardPayment`, etc.). Para PIX el pago ya está en curso — solo mostrar el QR y esperar el webhook `payment_intent.succeeded`.
+
+---
+
+### `GET /donations/stripe/subscription` 🔒
+
+Lista las suscripciones activas (no terminales) del usuario autenticado. No llama a Stripe — lee solo la base de datos local.
+
+**Response 200**
+```json
+{
+  "data": [
+    {
+      "subscription_id": "sub_xxx",
+      "status": "active",
+      "amount": 2500,
+      "currency": "usd",
+      "interval": "month",
+      "current_period_end": "2026-07-08T12:00:00+00:00",
+      "canceled_at": null,
+      "created_at": "2026-06-08T12:00:00+00:00"
+    }
+  ]
+}
+```
+
+Devuelve `data: []` si no hay suscripciones. Excluye estados terminales (`canceled`, `incomplete_expired`).
 
 ---
 
@@ -662,6 +804,86 @@ Devuelve el estado de una donación única por su PaymentIntent ID.
 ```
 
 **Valores de `status`**: `pending` | `succeeded` | `failed` | `canceled`
+
+---
+
+### `GET /donations/history` 🔒
+
+Historial unificado de pagos únicos y suscripciones, ordenado por fecha descendente.
+
+**Query params (todos opcionales)**
+
+| Param | Ejemplo | Descripción |
+|---|---|---|
+| `type` | `one_time` \| `subscription` | Filtrar por tipo |
+| `status` | `succeeded` | Filtrar por estado |
+| `from` | `2026-01-01` | Desde fecha (ISO) |
+| `limit` | `20` | Items por página (máx 100, default 20) |
+| `page` | `1` | Número de página |
+
+**Response 200**
+```json
+{
+  "data": [
+    {
+      "type": "one_time",
+      "id": "pi_xxx",
+      "amount": 150000,
+      "currency": "ars",
+      "status": "succeeded",
+      "source": "inscripcion",
+      "payment_method": "card",
+      "inscripcion_id": 42,
+      "actividad": { "id": 17, "nombre": "Construcción Mar del Plata" },
+      "paid_at": "2026-05-19T12:04:00Z",
+      "created_at": "2026-05-19T11:58:00Z"
+    },
+    {
+      "type": "subscription",
+      "id": "sub_zzz",
+      "amount": 1000,
+      "currency": "brl",
+      "status": "active",
+      "source": "home_pill",
+      "interval": "month",
+      "inscripcion_id": null,
+      "actividad": null,
+      "current_period_end": "2026-07-08T00:00:00Z",
+      "canceled_at": null,
+      "created_at": "2026-06-08T12:00:00Z"
+    }
+  ],
+  "meta": { "total": 2, "page": 1, "limit": 20 }
+}
+```
+
+---
+
+### `POST /inscripciones/{idInscripcion}/stripe/payment-intent` 🔒
+
+Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la clave Stripe del país de la actividad. El monto y moneda se toman de la actividad — no se pasan en el body.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idempotencyKey` | string | | Se genera automáticamente si se omite |
+
+**Response 200**
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "intent_id": "pi_xxx",
+  "amount": 150000,
+  "currency": "ars"
+}
+```
+
+**Flujo**
+1. App llama este endpoint → recibe `client_secret`
+2. App confirma con el SDK nativo de Stripe (`stripe.confirmPayment`)
+3. Stripe dispara `payment_intent.succeeded` al webhook `/stripe/webhook/{paisId}`
+4. Webhook marca `Inscripcion.pago = 1`, actualiza el `Donation` vinculado y envía email de confirmación
 
 ---
 

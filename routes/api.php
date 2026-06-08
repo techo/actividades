@@ -151,7 +151,17 @@ Route::middleware('auth:api')->group(function () {
         // Poll one-time donation status by Stripe PaymentIntent ID
         Route::get('{intentId}/status', 'api\DonationController@getStatus')
              ->name('api.donations.status');
+
+        // Unified donation + subscription history
+        Route::get('history', 'api\DonationController@history')
+             ->name('api.donations.history');
     });
+
+    // ── Inscripcion Stripe (mobile payment for activity enrollment) ───────────
+    Route::post(
+        'inscripciones/{idInscripcion}/stripe/payment-intent',
+        'api\InscripcionStripeController@createPaymentIntent'
+    )->name('api.inscripciones.stripe.payment-intent');
 
 
     Route::get('actividades/categoria/{nombre}', function ($nombre, Request $request) {
