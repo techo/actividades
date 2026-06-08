@@ -226,7 +226,6 @@ class InscripcionesController extends BaseController
 
             if ($request->confirmacion == 1) {
                 if ($inscripcion->actividad->pago == 1) {
-                    $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.pago_pendiente_titulo',
@@ -235,7 +234,6 @@ class InscripcionesController extends BaseController
                         ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $inscripcion->actividad->idActividad]
                     );
                 } else {
-                    $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.inscripcion_confirmada_titulo',
@@ -249,7 +247,7 @@ class InscripcionesController extends BaseController
 
         $msg = $request->confirmacion == 1 ? "Confirmado" : "Sin Confirmar";
         return response()
-            ->json("Confirmación actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
     public function cambiarPago(CrearInscripcion $request, $id)
@@ -261,7 +259,6 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
 
             if ($request->pago == 1) {
-                $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                 $this->pushService->enviarLocalizado(
                     $inscripcion->persona,
                     'push.pago_exitoso_titulo',
@@ -274,7 +271,7 @@ class InscripcionesController extends BaseController
 
         $msg = $request->pago == 1 ? "Pagado" : "Sin Pagar";
         return response()
-            ->json("Pago actualizado a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
 
     public function cambiarAsistencia(CrearInscripcion $request, $id)
