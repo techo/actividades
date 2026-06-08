@@ -222,9 +222,29 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->confirma = $request->confirmacion;
             $inscripcion->save();
+
+            if ($request->confirmacion == 1) {
+                if ($inscripcion->actividad->pago == 1) {
+                    $this->pushService->enviarLocalizado(
+                        $inscripcion->persona,
+                        'push.pago_pendiente_titulo',
+                        'push.pago_pendiente_cuerpo',
+                        ['actividad' => $inscripcion->actividad->nombreActividad],
+                        ['tipo' => 'inscripcion', 'estado' => 'FALTA_PAGO', 'idActividad' => $inscripcion->actividad->idActividad]
+                    );
+                } else {
+                    $this->pushService->enviarLocalizado(
+                        $inscripcion->persona,
+                        'push.inscripcion_confirmada_titulo',
+                        'push.inscripcion_confirmada_cuerpo',
+                        ['actividad' => $inscripcion->actividad->nombreActividad],
+                        ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+                    );
+                }
+            }
         }
 
-        $msg = $request->confirma === 1 ? "Confirmado" : "Sin Confirmar";
+        $msg = $request->confirmacion == 1 ? "Confirmado" : "Sin Confirmar";
         return response()
             ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
@@ -236,9 +256,19 @@ class InscripcionesController extends BaseController
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->pago = $request->pago;
             $inscripcion->save();
+
+            if ($request->pago == 1) {
+                $this->pushService->enviarLocalizado(
+                    $inscripcion->persona,
+                    'push.pago_exitoso_titulo',
+                    'push.pago_exitoso_cuerpo',
+                    ['actividad' => $inscripcion->actividad->nombreActividad],
+                    ['tipo' => 'inscripcion', 'estado' => 'PAGO_CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+                );
+            }
         }
 
-        $msg = $request->pago === 1 ? "Pagado" : "Sin Pagar";
+        $msg = $request->pago == 1 ? "Pagado" : "Sin Pagar";
         return response()
             ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
     }
