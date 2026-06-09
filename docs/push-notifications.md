@@ -202,31 +202,6 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ## Diagnóstico
 
-### Comando `push:test` (solo desarrollo)
-
-Diagnóstico paso a paso para un usuario y tipo de notificación específico:
-
-```bash
-# Notificación por defecto (inscripcion_confirmada)
-php artisan push:test {idPersona}
-
-# Tipos disponibles:
-php artisan push:test {idPersona} --notificacion=pre_inscripto
-php artisan push:test {idPersona} --notificacion=inscripcion_confirmada
-php artisan push:test {idPersona} --notificacion=pago_pendiente
-php artisan push:test {idPersona} --notificacion=pago_exitoso
-php artisan push:test {idPersona} --notificacion=recordatorio_pago
-php artisan push:test {idPersona} --notificacion=apertura_evaluacion
-php artisan push:test {idPersona} --notificacion=recordatorio_evaluacion
-php artisan push:test {idPersona} --notificacion=reactivacion
-php artisan push:test {idPersona} --notificacion=recordatorio_asistencia
-php artisan push:test {idPersona} --notificacion=cambio_actividad
-```
-
-El comando verifica en orden: persona → `recibir_push` → dispositivos activos → credenciales OneSignal → locale → traducción → llamada directa a la API mostrando la respuesta.
-
----
-
 ### Checklist manual
 
 Si no llega ninguna push, verificar en este orden:
@@ -246,6 +221,17 @@ Si no llega ninguna push, verificar en este orden:
 5. **¿Está corriendo el worker de colas?**  
    Las notificaciones se envían de forma asíncrona. Si la cola no está procesando: `php artisan queue:work`.  
    En desarrollo, usar `QUEUE_CONNECTION=sync` en `.env` para que corran de forma inmediata (sin worker).
+
+---
+
+## Deuda técnica — Testing
+
+Pendiente incorporar a la suite de tests (actualmente en refactorización):
+
+- **Test unitario de `PushNotificationService::enviarLocalizado()`** — verificar que resuelve el locale desde `persona->pais->locale`, traduce correctamente y restaura el locale original.
+- **Test del flujo de inscripción** — mock de `PushNotificationService` para verificar que cada rama del `InscripcionesController` (`pre_inscripto`, `confirmado`, `falta_pago`) dispara la notificación correcta con los parámetros esperados.
+- **Test de los comandos cron** — para cada comando (`push:apertura-evaluacion`, `push:recordatorio-pago`, etc.) verificar que selecciona los registros correctos y llama al servicio el número esperado de veces.
+- **Comando artisan `push:test {idPersona}`** — existía un comando de diagnóstico interactivo que recorría: persona → `recibir_push` → dispositivos activos → credenciales → locale → traducción → llamada directa a OneSignal. Se eliminó por no poder usarse desde deploy; sería útil retomarlo o reemplazarlo por un test de integración equivalente.
 
 ---
 
