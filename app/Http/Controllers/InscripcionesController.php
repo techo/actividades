@@ -139,6 +139,13 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripcion), Auth::user());
+                $this->pushService->enviarLocalizado(
+                    $persona,
+                    'push.pre_inscripto_titulo',
+                    'push.pre_inscripto_cuerpo',
+                    ['actividad' => $actividad->nombreActividad],
+                    ['tipo' => 'inscripcion', 'estado' => 'PRE_INSCRIPTO', 'idActividad' => $actividad->idActividad]
+                );
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,

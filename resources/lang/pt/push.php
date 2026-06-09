@@ -2,6 +2,10 @@
 
 return [
 
+    // Inscripción recibida (esperando confirmación del admin)
+    'pre_inscripto_titulo' => 'Inscrição recebida! 📋',
+    'pre_inscripto_cuerpo' => 'Sua inscrição em :actividad está pendente de confirmação. Avisaremos quando houver novidades.',
+
     // Inscripción Confirmada (Sin pago)
     'inscripcion_confirmada_titulo' => 'Inscrição confirmada! 🎉',
     'inscripcion_confirmada_cuerpo' => 'Você está oficialmente inscrito na atividade :actividad. Toque para ver os detalhes.',
