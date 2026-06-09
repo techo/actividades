@@ -38,6 +38,9 @@ class EnviarRecordatorioActividad extends Command
                 ->when($actividad->confirmacion == 1, function ($q) {
                     $q->where('confirma', 1);
                 })
+                ->when($actividad->pago == 1, function ($q) {
+                    $q->where('pago', 1);
+                })
                 ->get();
 
             foreach ($inscripciones as $inscripcion) {

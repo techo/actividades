@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CrearActividad;
 use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Pais;
+use App\Services\Push\PushNotificationService;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Coordinador;
@@ -29,6 +30,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ActividadesController extends Controller
 {
+    protected $pushService;
+
+    public function __construct(PushNotificationService $pushService)
+    {
+        $this->pushService = $pushService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -139,17 +147,24 @@ class ActividadesController extends Controller
     public function update(CrearActividad $request, Actividad $actividad)
     {
         $validado = $validado = $request->validated();
-        
+
         $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
 
         if (!empty($validado['linkEvaluacion'])) {
             $validado['linkEvaluacion'] = rtrim(strstr($validado['linkEvaluacion'], '/viewform', true), '/') . '/';
         }
         $actividad->fill($validado);
+
+        $hayCambio = $actividad->isDirty('fechaInicio');
+
         $actividad->save();
 
         if ($request->has('comunidades_tags')) {
             $this->linkComunidades($actividad, $request->input('comunidades_tags'));
+        }
+
+        if ($hayCambio) {
+            $this->enviarPushCambio($actividad);
         }
 
         $actividad->tipo;
@@ -406,6 +421,7 @@ class ActividadesController extends Controller
             $grupos = Grupo::where('idActividad', '=', $actividad->idActividad)->delete();
             $grupo_persona = GrupoRolPersona::where('idActividad', '=', $actividad->idActividad)->delete();
             $this->enviarNotificaciones($actividad);
+            $this->enviarPushCambio($actividad);
             $actividad->delete();
 
         } catch (\Exception $exception) {
@@ -488,6 +504,20 @@ class ActividadesController extends Controller
             $this->clonarGrupo($grupo, $actividad, $nuevoGrupo->idGrupo);
         }
         return;
+    }
+
+    private function enviarPushCambio(Actividad $actividad)
+    {
+        $actividad->load('inscripciones.persona.pais', 'inscripciones.persona.dispositivos');
+        foreach ($actividad->inscripciones as $inscripcion) {
+            $this->pushService->enviarLocalizado(
+                $inscripcion->persona,
+                'push.cambio_actividad_titulo',
+                'push.cambio_actividad_cuerpo',
+                ['actividad' => $actividad->nombreActividad],
+                ['tipo' => 'actividad', 'estado' => 'CAMBIO', 'idActividad' => $actividad->idActividad]
+            );
+        }
     }
 
     private function enviarNotificaciones(Actividad $actividad)
