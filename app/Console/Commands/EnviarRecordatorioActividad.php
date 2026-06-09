@@ -34,7 +34,11 @@ class EnviarRecordatorioActividad extends Command
 
         foreach ($actividades as $actividad) {
             $hora = $actividad->fechaInicio ? $actividad->fechaInicio->format('H:i') : '';
-            $inscripciones = $actividad->inscripciones()->whereNotIn('estado', ['Pre-Inscripto'])->get();
+            $inscripciones = $actividad->inscripciones()
+                ->when($actividad->confirmacion == 1, function ($q) {
+                    $q->where('confirma', 1);
+                })
+                ->get();
 
             foreach ($inscripciones as $inscripcion) {
                 $job = (new EnviarMailsRecordatorioActividad($inscripcion))->delay(5);
