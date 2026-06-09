@@ -95,7 +95,8 @@ class TestPushNotificacion extends Command
 
         // ── 6. Claves de traducción ─────────────────────────────────────
         $notificaciones = [
-            'inscripcion_confirmada'  => ['push.inscripcion_confirmada_titulo',  'push.inscripcion_confirmada_cuerpo'],
+            'pre_inscripto'           => ['push.pre_inscripto_titulo',            'push.pre_inscripto_cuerpo'],
+            'inscripcion_confirmada'  => ['push.inscripcion_confirmada_titulo',   'push.inscripcion_confirmada_cuerpo'],
             'pago_pendiente'          => ['push.pago_pendiente_titulo',           'push.pago_pendiente_cuerpo'],
             'recordatorio_pago'       => ['push.recordatorio_pago_titulo',        'push.recordatorio_pago_cuerpo'],
             'pago_exitoso'            => ['push.pago_exitoso_titulo',             'push.pago_exitoso_cuerpo'],

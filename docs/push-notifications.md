@@ -40,15 +40,16 @@ $pushService->enviarLocalizado(
 
 | # | Nombre | Trigger | Tipo |
 |---|--------|---------|------|
-| 1 | [Inscripción Confirmada](#1-inscripción-confirmada) | Backend aprueba sin pago | Evento |
-| 2 | [Aviso de Pago Pendiente](#2-aviso-de-pago-pendiente) | Admin confirma + pago requerido | Evento |
-| 3 | [Confirmación de Pago Exitoso](#3-confirmación-de-pago-exitoso) | Admin valida el pago | Evento |
-| 4 | [Cambio en la Actividad](#4-cambio-en-la-actividad) | Admin cambia punto de encuentro | Evento |
-| 5 | [Recordatorio de Asistencia](#5-recordatorio-de-asistencia-24hs) | 24hs antes del inicio | Cron diario 08:00 |
-| 6 | [Apertura de Evaluación](#6-apertura-del-período-de-evaluación) | `fechaInicioEvaluaciones` == hoy | Cron diario 09:00 |
-| 7 | [Recordatorio de Evaluación](#7-recordatorio-de-evaluación) | `fechaFinEvaluaciones` == mañana | Cron diario 09:00 |
-| 8 | [Recordatorio de Pago](#8-recordatorio-de-pago-48hs) | 48hs desde confirmación sin pago | Cron diario 10:00 |
-| 9 | [Reactivación de Voluntarios](#9-reactivación-de-voluntarios) | 30 días sin inscripciones | Cron mensual día 1 |
+| 1 | [Pre-inscripto (pendiente de confirmación)](#1-pre-inscripto-pendiente-de-confirmación) | Voluntario se inscribe a actividad con confirmación requerida | Evento |
+| 2 | [Inscripción Confirmada](#2-inscripción-confirmada) | Admin aprueba sin pago | Evento |
+| 3 | [Aviso de Pago Pendiente](#3-aviso-de-pago-pendiente) | Admin confirma + pago requerido | Evento |
+| 4 | [Confirmación de Pago Exitoso](#4-confirmación-de-pago-exitoso) | Admin valida el pago | Evento |
+| 5 | [Cambio en la Actividad](#5-cambio-en-la-actividad) | Admin cambia punto de encuentro | Evento |
+| 6 | [Recordatorio de Asistencia](#6-recordatorio-de-asistencia-24hs) | 24hs antes del inicio | Cron diario 08:00 |
+| 7 | [Apertura de Evaluación](#7-apertura-del-período-de-evaluación) | `fechaInicioEvaluaciones` == hoy | Cron diario 09:00 |
+| 8 | [Recordatorio de Evaluación](#8-recordatorio-de-evaluación) | `fechaFinEvaluaciones` == mañana | Cron diario 09:00 |
+| 9 | [Recordatorio de Pago](#9-recordatorio-de-pago-48hs) | 48hs desde confirmación sin pago | Cron diario 10:00 |
+| 10 | [Reactivación de Voluntarios](#10-reactivación-de-voluntarios) | 30 días sin inscripciones | Cron mensual día 1 |
 
 ---
 
@@ -87,7 +88,20 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 1. Inscripción Confirmada
+### 1. Pre-inscripto (pendiente de confirmación)
+> 📲 *"¡Inscripción recibida! 📋"*
+
+**Desde:** La app o el sitio web (flujo del voluntario)
+
+1. Buscá una actividad con **Confirmación = Sí**
+2. Completá el formulario de inscripción y confirmá
+3. La push se envía automáticamente junto al mail de espera de confirmación
+
+> La inscripción queda en estado `PRE_INSCRIPTO` hasta que un admin la apruebe.
+
+---
+
+### 2. Inscripción Confirmada
 > 📲 *"¡Inscripción confirmada! 🎉"*
 
 **Desde:** La app o el sitio web (flujo del voluntario)
@@ -97,7 +111,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 2. Aviso de Pago Pendiente
+### 3. Aviso de Pago Pendiente
 > 📲 *"¡Tu cupo está casi listo! ⏳"*
 
 **Desde:** Backoffice → actividad con pago requerido
@@ -108,7 +122,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 3. Confirmación de Pago Exitoso
+### 4. Confirmación de Pago Exitoso
 > 📲 *"¡Pago recibido! ✅"*
 
 **Desde:** Backoffice → misma actividad con pago
@@ -118,7 +132,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 4. Cambio en la Actividad
+### 5. Cambio en la Actividad
 > 📲 *"⚠️ Cambio en tu actividad"*
 
 **Desde:** Backoffice → sección de inscriptos
@@ -129,7 +143,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 5. Recordatorio de Asistencia (24hs)
+### 6. Recordatorio de Asistencia (24hs)
 > 📲 *"¡Prepárate! Tu actividad es mañana 📅"*
 
 **Desde:** Backoffice → edición de actividad + terminal
@@ -142,7 +156,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 6. Apertura del Período de Evaluación
+### 7. Apertura del Período de Evaluación
 > 📲 *"¡Queremos escucharte! 🗣️"*
 
 **Desde:** Backoffice → edición de actividad + terminal
@@ -153,7 +167,7 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 7. Recordatorio de Evaluación
+### 8. Recordatorio de Evaluación
 > 📲 *"¡No te olvides de evaluar tu experiencia!"*
 
 **Desde:** Backoffice → edición de actividad + terminal
@@ -164,19 +178,19 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 
 ---
 
-### 8. Recordatorio de Pago (48hs)
+### 9. Recordatorio de Pago (48hs)
 > 📲 *"No pierdas tu lugar ⚠️"*
 
 **Desde:** Backoffice + terminal
 
-1. Confirmá la inscripción de un voluntario (caso 2) sin tocar el pago
+1. Confirmá la inscripción de un voluntario (caso 3) sin tocar el pago
 2. Ejecutá el comando: `php artisan push:recordatorio-pago`
 
 > El comando busca inscripciones confirmadas sin pago actualizadas entre 47 y 49 horas atrás. Para probar sin esperar, ajustá el `updated_at` de la inscripción en la base de datos.
 
 ---
 
-### 9. Reactivación de Voluntarios
+### 10. Reactivación de Voluntarios
 > 📲 *"¡Te extrañamos en el terreno! 👋"*
 
 **Desde:** Terminal (no tiene trigger de UI)
@@ -187,6 +201,33 @@ Cada notificación tiene título y cuerpo traducidos para los 5 locales del sist
 ---
 
 ## Diagnóstico
+
+### Comando `push:test` (solo desarrollo)
+
+Diagnóstico paso a paso para un usuario y tipo de notificación específico:
+
+```bash
+# Notificación por defecto (inscripcion_confirmada)
+php artisan push:test {idPersona}
+
+# Tipos disponibles:
+php artisan push:test {idPersona} --notificacion=pre_inscripto
+php artisan push:test {idPersona} --notificacion=inscripcion_confirmada
+php artisan push:test {idPersona} --notificacion=pago_pendiente
+php artisan push:test {idPersona} --notificacion=pago_exitoso
+php artisan push:test {idPersona} --notificacion=recordatorio_pago
+php artisan push:test {idPersona} --notificacion=apertura_evaluacion
+php artisan push:test {idPersona} --notificacion=recordatorio_evaluacion
+php artisan push:test {idPersona} --notificacion=reactivacion
+php artisan push:test {idPersona} --notificacion=recordatorio_asistencia
+php artisan push:test {idPersona} --notificacion=cambio_actividad
+```
+
+El comando verifica en orden: persona → `recibir_push` → dispositivos activos → credenciales OneSignal → locale → traducción → llamada directa a la API mostrando la respuesta.
+
+---
+
+### Checklist manual
 
 Si no llega ninguna push, verificar en este orden:
 
@@ -203,7 +244,8 @@ Si no llega ninguna push, verificar en este orden:
    Mismo log, buscar `OneSignalService`. Los `player_id` inválidos se loguean como warnings sin interrumpir el flujo.
 
 5. **¿Está corriendo el worker de colas?**  
-   Las notificaciones se envían de forma asíncrona. Si la cola no está procesando: `php artisan queue:work`.
+   Las notificaciones se envían de forma asíncrona. Si la cola no está procesando: `php artisan queue:work`.  
+   En desarrollo, usar `QUEUE_CONNECTION=sync` en `.env` para que corran de forma inmediata (sin worker).
 
 ---
 
