@@ -23,7 +23,9 @@ class NotificarRecordatorioEvaluacion extends Command
     public function handle()
     {
         Actividad::whereDate('fechaFinEvaluaciones', today()->addDay())
-            ->with(['inscripciones.persona.pais', 'inscripciones.persona.dispositivos'])
+            ->with(['inscripciones' => function ($q) {
+                $q->where('presente', 1)->with(['persona.pais', 'persona.dispositivos']);
+            }])
             ->chunk(50, function ($actividades) {
                 foreach ($actividades as $actividad) {
                     foreach ($actividad->inscripciones as $inscripcion) {
