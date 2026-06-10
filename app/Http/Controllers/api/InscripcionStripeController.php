@@ -81,7 +81,7 @@ class InscripcionStripeController extends Controller
             ], 422);
         }
 
-        $currency      = strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->id ?? null));
+        $currency      = strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->iso2 ?? null));
         $idempotencyKey = $request->input('idempotencyKey')
             ?? 'inscripcion-' . $idInscripcion . '-' . Auth::user()->idPersona;
 
@@ -161,30 +161,30 @@ class InscripcionStripeController extends Controller
     }
 
     /**
-     * Moneda ISO por defecto según el ID de país.
+     * Moneda ISO por defecto según el código ISO2 del país.
      * Fuente de verdad para cuando la actividad no tiene moneda seteada.
      */
-    private function monedaPorPais(?int $idPais): string
+    private function monedaPorPais(?string $iso2): string
     {
         $mapa = [
-             13 => 'ars', // Argentina
-             29 => 'bob', // Bolivia
-             33 => 'brl', // Brasil
-             52 => 'cop', // Colombia
-             60 => 'crc', // Costa Rica
-             65 => 'dop', // República Dominicana
-             66 => 'usd', // Ecuador (dolarizado)
-             68 => 'usd', // El Salvador (dolarizado)
-             94 => 'gtq', // Guatemala
-            102 => 'hnl', // Honduras
-            146 => 'mxn', // México
-            170 => 'usd', // Panamá (dolarizado)
-            172 => 'pyg', // Paraguay
-            173 => 'pen', // Perú
-            229 => 'uyu', // Uruguay
-            232 => 'usd', // Venezuela
+            'ar' => 'ars', // Argentina
+            'bo' => 'bob', // Bolivia
+            'br' => 'brl', // Brasil
+            'co' => 'cop', // Colombia
+            'cr' => 'crc', // Costa Rica
+            'do' => 'dop', // República Dominicana
+            'ec' => 'usd', // Ecuador (dolarizado)
+            'sv' => 'usd', // El Salvador (dolarizado)
+            'gt' => 'gtq', // Guatemala
+            'hn' => 'hnl', // Honduras
+            'mx' => 'mxn', // México
+            'pa' => 'usd', // Panamá (dolarizado)
+            'py' => 'pyg', // Paraguay
+            'pe' => 'pen', // Perú
+            'uy' => 'uyu', // Uruguay
+            've' => 'usd', // Venezuela
         ];
 
-        return $mapa[$idPais] ?? 'usd';
+        return $mapa[strtolower($iso2 ?? '')] ?? 'usd';
     }
 }
