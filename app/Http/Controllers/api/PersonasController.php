@@ -183,12 +183,12 @@ class PersonasController extends Controller
         $persona->unsubscribe_token = Uuid::generate()->string;
 
         if (!empty($request->google_id) || !empty($request->facebook_id)){
-            $persona->email_verified_at = now(); 
-        } else {
+            $persona->email_verified_at = now();
+        }
+        $persona->save();
+        if (empty($request->google_id) && empty($request->facebook_id)){
             $persona->notify(new \App\Notifications\RegistroUsuario);
         }
-
-        $persona->save();
 
         // 🔑 En API devolvés un token en lugar de usar Auth::login()
         $token = $persona->createToken('Token Name')->accessToken;

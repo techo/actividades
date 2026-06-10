@@ -64,11 +64,12 @@ class UsuarioController extends BaseController
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
       if (!empty($request->google_id) || !empty($request->facebook_id) || !empty($request->apple_id) || !empty($request->instagram_id)){
-        $persona->email_verified_at = now(); 
-      } else {
-        $persona->notify(new \App\Notifications\RegistroUsuario);
+        $persona->email_verified_at = now();
       }
       $persona->save();
+      if (empty($request->google_id) && empty($request->facebook_id) && empty($request->apple_id) && empty($request->instagram_id)){
+        $persona->notify(new \App\Notifications\RegistroUsuario);
+      }
      // event(new RegistroUsuario($persona));
 
       $pais = Pais::find($persona->idPais);
@@ -93,12 +94,12 @@ class UsuarioController extends BaseController
         $persona->unsubscribe_token = Uuid::generate()->string;
 
         if (!empty($request->google_id) || !empty($request->facebook_id)){
-            $persona->email_verified_at = now(); 
-        } else {
+            $persona->email_verified_at = now();
+        }
+        $persona->save();
+        if (empty($request->google_id) && empty($request->facebook_id)){
             $persona->notify(new \App\Notifications\RegistroUsuario);
         }
-
-        $persona->save();
 
         // 🔑 En API devolvés un token en lugar de usar Auth::login()
         $token = $persona->createToken('Token Name')->accessToken;
