@@ -81,7 +81,7 @@ class InscripcionStripeController extends Controller
             ], 422);
         }
 
-        $currency      = strtolower($actividad->moneda ?: 'ars');
+        $currency      = strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->id ?? null));
         $idempotencyKey = $request->input('idempotencyKey')
             ?? 'inscripcion-' . $idInscripcion . '-' . Auth::user()->idPersona;
 
@@ -158,5 +158,33 @@ class InscripcionStripeController extends Controller
             'amount'        => $montoCentavos,
             'currency'      => $currency,
         ]);
+    }
+
+    /**
+     * Moneda ISO por defecto según el ID de país.
+     * Fuente de verdad para cuando la actividad no tiene moneda seteada.
+     */
+    private function monedaPorPais(?int $idPais): string
+    {
+        $mapa = [
+             13 => 'ars', // Argentina
+             29 => 'bob', // Bolivia
+             33 => 'brl', // Brasil
+             52 => 'cop', // Colombia
+             60 => 'crc', // Costa Rica
+             65 => 'dop', // República Dominicana
+             66 => 'usd', // Ecuador (dolarizado)
+             68 => 'usd', // El Salvador (dolarizado)
+             94 => 'gtq', // Guatemala
+            102 => 'hnl', // Honduras
+            146 => 'mxn', // México
+            170 => 'usd', // Panamá (dolarizado)
+            172 => 'pyg', // Paraguay
+            173 => 'pen', // Perú
+            229 => 'uyu', // Uruguay
+            232 => 'usd', // Venezuela
+        ];
+
+        return $mapa[$idPais] ?? 'usd';
     }
 }

@@ -1,459 +1,1182 @@
-# 🌐 Documentación API
+# API Reference — MiTECHO
 
-Este documento describe los endpoints principales de la API.  
+Base URL: `https://{dominio}/api`
 
----
+Autenticación: **Bearer Token** en el header `Authorization` para todas las rutas privadas (marcadas con 🔒).
 
-## 🔑 Autenticación
-
-### Login
-- **URL:** `/api/login`  
-- **Método:** `POST`
-- **Parámetros:**  
-  - `user` → email de usuario  
-  - `password` → contraseña  
-- **Ejemplo:**  
-/api/login?user=agustin.vilas@techo.org&password=qwer1234
-
-- **Devuelve:** Token de autenticación  
-
----
-### Login Social
-- **URL:** `/api/socialLogin`  
-- **Método:** `POST`  
-- **Parámetros:**  
-  - `media` → red social utilizada (por ejemplo: google, facebook)  
-  - `id` → identificador único del usuario en esa red social  
-  - `email` → correo electrónico asociado a la cuenta  
-
-- **Devuelve:** Token de autenticación 
-
----
-### Login Social por Provider (NEW)
-- **URL:** `/api/providerLogin`  
-- **Método:** `POST`  
-- **Parámetros:**  
-  - `provider` → red social utilizada (por ejemplo: google, facebook)  
-  - `token` → identificador único enviado al hacer login  
-
-- **Devuelve:** Token de autenticación 
- 
----
-
-### Logout
-- **URL:** `/api/logout`  
-- **Método:** `GET`  
-- **Headers:** `Authorization: Bearer {token}`  
-- **Devuelve:** Cierra la sesión del usuario autenticado  
+```
+Authorization: Bearer {token}
+```
 
 ---
 
-### Reset Password
-- **URL:** `/api/password/reset`  
-- **Método:** `POST`  
-- **Headers:** `Authorization: Bearer {token}`  
-- **Devuelve:** Envia mail de reset password
+## Índice
+
+- [Autenticación](#autenticación)
+- [Usuario / Perfil](#usuario--perfil)
+- [Actividades](#actividades)
+- [Inscripciones](#inscripciones)
+- [Evaluaciones](#evaluaciones)
+- [Perfil médico y estudios](#perfil-médico-y-estudios)
+- [Campañas](#campañas)
+- [Dispositivos (Push)](#dispositivos-push)
+- [Donaciones (Stripe)](#donaciones-stripe)
+- [Datos maestros y ubicaciones](#datos-maestros-y-ubicaciones)
+- [Traducciones](#traducciones)
+- [Deep Linking](#deep-linking)
 
 ---
 
-### Delete Usuario
-- **URL:** `/api/usuario`  
-- **Método:** `DELETE`  
-- **Headers:** `Authorization: Bearer {token}`  
-- **Devuelve:** Elimina el usuario logueado 
+## Autenticación
+
+### `POST /login`
+
+Login con email y contraseña.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `mail` | string | ✅ | Email del usuario |
+| `password` | string | ✅ | Contraseña |
+
+**Response `200`**
+```json
+{ "access_token": "...", "token_type": "Bearer" }
+```
 
 ---
 
-### Registro
-- **URL:** `/api/create`  
-- **Método:** `POST`  
-- **Parámetros principales:**  
-- `dni`, `nombre`, `apellido`  
-- `email`  
-- `password`  
-- `fechaNacimiento`  
-- `telefono` (⚠️ con `+`, ej: `%2B5491123456789`)  
-- `recibirMails`, `acepta_marketing`  
-- `pais`, `provincia`, `localidad`, `idUnidadOrganizacional`  
-- **Ejemplo:**  
-/api/create?dni=123456&nombre=juio&apellido=zao&email=juios@mail.com&password=juju1234&telefono=%2B5491123456789&pais=13&provincia=1&localidad=22
+### `POST /socialLogin`
 
-- **Devuelve:** Registro de usuario o error de validación  
+Login con token de red social (Google / Facebook).
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `media` | string | ✅ | Red social (`google`, `facebook`) |
+| `id` | string | ✅ | ID único del usuario en esa red social |
+| `email` | string | ✅ | Email asociado a la cuenta |
+
+**Response `200`** — `{ "access_token": "...", "token_type": "Bearer" }`
 
 ---
 
-## 👤 Perfil
+### `POST /providerLogin`
 
-### Cambiar foto de perfil
-- **URL:** `/api/perfil/cambiar_photo`  
-- **Método:** `POST`  
-- **Parámetros:**  
-- `photo` (archivo de imagen)  
-- **Headers:** `Authorization: Bearer {token}`  
+Login con proveedor externo (Apple, etc).
 
----
+**Body**
 
-### Modificar o Crear Ficha Medica
-- **URL:** `/api/perfil/fichaMedica/?contacto_nombre=jorge&contacto_telefono=1233321&contacto_relacion=familiar&grupo_sanguinieo=a+&cobertura_tipo=social&cobertura_nombre=nombre cobert&cobertura_numero=1233312312&alergias=si tengo&vacunacion_covid=si&alimentacion=asdas&confirma_datos=1`  
-- **Método:** `POST`  
-- **Parámetros:**  
-- `contacto_nombre` (texto)  
-- `contacto_telefono` (texto)  
-- `contacto_relacion` (texto)  
-- `grupo_sanguinieo` (Valores: A+, A-, AB+, AB-, B+, B-, O+, 0-)  
-- `cobertura_tipo` (Valores: cobertura_paga, salud_publica)
-- `cobertura_nombre` (texto, solo si cobertura_tipo = 'cobertura_paga')  
-- `cobertura_numero` (texto, solo si cobertura_tipo = 'cobertura_paga')   
-- `alergias` (texto)  
-- `vacunacion_covid` (Valores : Si , No)  
-- `alimentacion` (texto)  
-- `confirma_datos` (Boolean: 1)  
-- **Headers:** `Authorization: Bearer {token}`  
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `provider` | string | ✅ | Proveedor (`apple`, `google`) |
+| `token` | string | ✅ | Token de autenticación del proveedor |
+
+**Response `200`** — `{ "access_token": "...", "token_type": "Bearer" }`
+
+**Errores posibles**
+
+| Código | Motivo |
+|--------|--------|
+| `400` | Proveedor inválido |
+| `401` | Token inválido |
+| `403` | Email no verificado |
+| `404` | Usuario no encontrado |
+| `409` | Cuenta ya asociada a otro proveedor |
 
 ---
 
-### Cambiar archivos Ficha Medica
-- **URL:** `/api/perfil/fichaMedica/archivo_medico`  
-- **Método:** `POST`  
-- **Parámetros:**  
-- `documento_frente` (archivo de imagen, opcional)  
-- `documento_dorso` (archivo de imagen, opcional)  
-- **Headers:** `Authorization: Bearer {token}`  
+### `POST /register`
+
+Registro de nuevo voluntario. Ver validaciones en `CrearPersona`.
 
 ---
 
-### Ficha Medica
-- **URL:** `/api/perfil/fichaMedica/`  
-- **Método:** `GET`  
-- **Headers:** `Authorization: Bearer {token}`  
+### `POST /create`
 
-------
----
+Creación de usuario.
 
-### Estudios
-- **URL:** `/api/perfil/estudios/`  
-- **Método:** `GET`  
-- **Headers:** `Authorization: Bearer {token}`  
+**Body**
 
-------
-
-### Crear Estudio
-- **URL:** `/api/perfil/estudios/`  
-- **Método:** `POST`  
-- **Parámetros:**  
-- `nivelDeEstudios` (Valores aceptados: secundario, universitario o posgrado)  
-- `disciplina_academica` (Disciplina académica, texto)  
-- `idPersona` (Igual al idPersona logueado)  
-- `idPaisInstitucion` (Pais donde se realizo estudio)  
-- `idInstitucionEducativa` (ID institucion, 0 en caso de ser Otra)  
-- `institucion_educativa` (Texto, en caso de no existir en bbdd la institucion)  
-- `descripcion_educacion` (descripcion, texto)  
-- **Headers:** `Authorization: Bearer {token}`  
-
-
-------
-
-### Editar Estudio
-- **URL:** `/api/perfil/estudios/archivo_medico`  
-- **Método:** `PUT`  
-- **Parámetros:**  
-- (repite parametros Crear Estudio)  
-- `id` (idEstudio a editar)  
-- **Headers:** `Authorization: Bearer {token}`  
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `dni` | string | ✅ | Documento de identidad |
+| `nombre` | string | ✅ | Nombre |
+| `apellido` | string | ✅ | Apellido |
+| `email` | string | ✅ | Email |
+| `password` | string | ✅ | Contraseña |
+| `fechaNacimiento` | string | | Fecha de nacimiento |
+| `telefono` | string | | Con `+` codificado: `%2B5491123456789` |
+| `recibirMails` | boolean | | Acepta comunicaciones |
+| `acepta_marketing` | boolean | | Acepta marketing |
+| `pais` | integer | | ID de país |
+| `provincia` | integer | | ID de provincia |
+| `localidad` | integer | | ID de localidad |
+| `idUnidadOrganizacional` | integer | | ID de unidad organizacional |
 
 ---
 
-### Insitutuciones Educativas por Pais
-- **URL:** `/api/perfil/estudios/institucionEducativa/pais/{idPais}`  
-- **Método:** `GET`  
-- **Parámetros:**  
-- `idPais` (en URL)  
-- **Headers:** `Authorization: Bearer {token}`  
+### `POST /resetPassword`
 
----
-## 📅 Actividades
+Envía email de recuperación de contraseña.
 
-### Listado general
-- **URL:** `/api/actividades/`  
-- **Método:** `GET`  
-- **Parámetros opcionales:**  
-- `destacada=1` → actividades destacadas  
-- `pais={id}` → filtra por país  
-- `tipos[]={json}` → lista de tipos de actividad  
-
----
-### Listado por categorias
-- **URL:** `/api/actividades/`  
-- **Método:** `GET`  
-- **Headers:** (Opcional) `Authorization: Bearer {token}`  
-- **Parámetros opcionales:**  
-- `destacada=1` → actividades destacadas  
-- `pais={id}` → filtra por país  
-- `tipos[]={json}` → lista de tipos de actividad  
+**Body**
+```json
+{ "email": "usuario@techo.org" }
+```
 
 ---
 
-### Actividad show
-- **URL:** `/api/actividades/{id}`  
-- **Ejemplo:**  
-/api/actividades/18402
-- **Devuelve:**
- Datos completos de la actividad, se detallan algunos importantes
-- `estadoInscripcion` →  confirmed, confirm_by_paying, confirmation_date_is_closed, waiting_for_confirmation
-- `ficha_medica` → devuelve ficha medica cargada para la persona logueada
-- `estudios` → estudios de la persona logueada  
-- `inscriptos` → inscriptos confirmados a la actividad  (solo si persona confirmed)
-- `coordinadores` → coordinadores de la actividad
-- `pago` → si la actividad tiene pago
-- `descripcionPago` 
-- `pedidoBeca` → Link para solicitar beca (ej:form de google)
-- `montoMin`
-- `montoMax`
-- `linkQR`
- 
----
+### `POST /logout` 🔒
 
-### Actividades destacadas
-- **URL:** `/api/actividades/?destacada=1`  
-- **Devuelve:** Solo las destacadas  
+Invalida el token actual.
+
+**Response `200`**
+```json
+{ "message": "Successfully logged out" }
+```
 
 ---
 
-### Actividades por país
-- **URL:** `/api/actividades/?pais={id}`  
-- **Ejemplo:**  
-/api/actividades/?pais=33
+### `POST /password/reset` 🔒
+
+Reset de contraseña para usuario ya autenticado.
 
 ---
 
-### Actividades por categoría
+## Usuario / Perfil
 
-#### Construcciones
+### `GET /user` 🔒
+
+Retorna los datos del usuario autenticado. Objeto `Persona` completo.
+
+---
+
+### `POST /ping` 🔒
+
+Registra actividad reciente de la app. Actualiza `ultimo_acceso_app` con el timestamp actual.
+
+> Llamar periódicamente mientras la app está en uso para trackear usuarios activos.
+
+**Response `200`** — `{ "success": true }`
+
+---
+
+### `GET /personas/{id}` 🔒
+
+Retorna los datos de una persona por su ID.
+
+---
+
+### `POST /editPersona/{id}` 🔒
+
+Actualiza los datos de una persona (nombres, apellido, teléfono, etc).
+
+---
+
+### `POST /perfil/cambiar_photo` 🔒
+
+Sube y actualiza la foto de perfil.
+
+**Body** — `multipart/form-data`
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `photo` | file | Imagen de perfil |
+
+---
+
+### `DELETE /usuario` 🔒
+
+Anonimiza la cuenta del usuario (soft delete de datos personales).
+
+**Response `204`** — sin cuerpo.
+
+---
+
+## Actividades
+
+### `GET /actividadesGeneral`
+
+Lista de actividades públicas (sin autenticación).
+
+**Query params**
+
+| Param | Tipo | Descripción |
+|---|---|---|
+| `destacada` | int | `1` para solo destacadas |
+| `pais` | int | Filtrar por ID de país |
+| `tipos[]` | string | JSON de tipos de actividad (ver [Actividades por categoría](#actividades-por-categoría)) |
+
+---
+
+### `GET /actividades` 🔒
+
+Lista de actividades para usuario autenticado. Mismos filtros que `/actividadesGeneral`.
+
+---
+
+### `GET /actividades/{id}` 🔒
+
+Detalle de una actividad.
+
+**Campos relevantes del response**
+
+| Campo | Descripción |
+|---|---|
+| `estadoInscripcion` | `confirmed`, `confirm_by_paying`, `confirmation_date_is_closed`, `waiting_for_confirmation` |
+| `ficha_medica` | Ficha médica cargada para la persona logueada |
+| `estudios` | Estudios de la persona logueada |
+| `inscriptos` | Inscriptos confirmados (solo si la persona está confirmada) |
+| `coordinadores` | Coordinadores de la actividad |
+| `pago` | Si la actividad tiene pago |
+| `descripcionPago` | Descripción del pago |
+| `pedidoBeca` | Link para solicitar beca (ej: formulario de Google) |
+| `montoMin` | Monto mínimo de pago |
+| `montoMax` | Monto máximo de pago |
+| `linkQR` | Link QR de pago |
+
+---
+
+### `GET /actividades/categoria/{nombre}` 🔒
+
+Actividades filtradas por categoría (shortcut del filtro por tipos).
+
+**Valores válidos de `{nombre}`**
+
+| Valor | Tipos de actividad incluidos |
+|-------|------------------------------|
+| `construcciones` | 11, 27, 65, 72, 73, 80, 81, 98, 105, 114, 115 |
+| `mesas` | 25, 28, 29, 75, 76, 82, 83, 85, 113, 117 |
+| `infraestructura` | 22, 32, 77, 79, 97, 103 |
+| `formativos` | 23, 30, 31, 33–36, 45–47, 49, 52, 53, 56, 58, 59, 62, 89 |
+| `encuentros` | 54, 55, 63, 64, 68, 69, 71, 86, 88, 90 |
+| `colecta` | 43, 96 |
+| `eventos` | 44, 48, 60, 101, 104 |
+
+**Response `404`** si la categoría no existe.
+
+---
+
+### Actividades por categoría — URLs raw
+
+Si necesitás pasar el filtro de tipos directamente (en lugar de usar el endpoint de categoría):
+
+**Construcciones**
+```
 /api/actividades/?tipos[]=[{"idTipo":11},{"idTipo":27},{"idTipo":65},{"idTipo":72},{"idTipo":73},{"idTipo":80},{"idTipo":81},{"idTipo":98},{"idTipo":105},{"idTipo":114},{"idTipo":115}]
+```
 
-#### Mesas de Trabajo
+**Mesas de Trabajo**
+```
 /api/actividades/?tipos[]=[{"idTipo":25},{"idTipo":28},{"idTipo":29},{"idTipo":75},{"idTipo":76},{"idTipo":82},{"idTipo":83},{"idTipo":85},{"idTipo":113},{"idTipo":117}]
+```
 
-#### Infraestructura
+**Infraestructura**
+```
 /api/actividades/?tipos[]=[{"idTipo":22},{"idTipo":32},{"idTipo":77},{"idTipo":79},{"idTipo":97},{"idTipo":103}]
+```
 
-#### Espacios Formativos
+**Espacios Formativos**
+```
 /api/actividades/?tipos[]=[{"idTipo":23},{"idTipo":30},{"idTipo":31},{"idTipo":33},{"idTipo":34},{"idTipo":35},{"idTipo":36},{"idTipo":45},{"idTipo":46},{"idTipo":47},{"idTipo":49},{"idTipo":52},{"idTipo":53},{"idTipo":56},{"idTipo":58},{"idTipo":59},{"idTipo":62},{"idTipo":89}]
+```
 
-#### Encuentros
+**Encuentros**
+```
 /api/actividades/?tipos[]=[{"idTipo":54},{"idTipo":55},{"idTipo":63},{"idTipo":64},{"idTipo":68},{"idTipo":69},{"idTipo":71},{"idTipo":86},{"idTipo":88},{"idTipo":90}]
+```
 
-#### Colecta
+**Colecta**
+```
 /api/actividades/?tipos[]=[{"idTipo":43},{"idTipo":96}]
+```
 
-#### Eventos y Otros
+**Eventos y Otros**
+```
 /api/actividades/?tipos[]=[{"idTipo":44},{"idTipo":48},{"idTipo":60},{"idTipo":101},{"idTipo":104}]
+```
 
-👉 Se puede combinar con `pais`, ej:  
-/api/actividades/?pais=33&tipos[]=[{"idTipo":11},{"idTipo":27}]
-
----
-
-## 📝 Inscripciones
-
-### Mis inscripciones
-- **URL:** `/api/inscripciones/`  
-- **Método:** `GET`  
-- **Headers:** `Authorization: Bearer {token}`  
-- **Devuelve:** Actividades en las que el usuario está inscripto  
+> Se puede combinar con `pais`, ej: `/api/actividades/?pais=33&tipos[]=[{"idTipo":11},{"idTipo":27}]`
 
 ---
 
-### Inscribir a Actividad
+## Inscripciones
 
-- **URL:** `/api/inscripciones/actividad/{idActividad}/`
-- **Método:** `POST`
-- **Parámetros:**
-- `punto_encuentro` → ID del punto de encuentro seleccionado
-- `aceptar_terminos` →  1 si el usuario acepta los términos y condiciones   
-- `jornadas` →  Lista de jornadas seleccionadas (array vacío [] si no aplica)   
-- `roles_aplicados` →  Lista de roles a los que el usuario aplica (array vacío [] si no aplica)   
-- `inscripciones_aplicadas` →  secundario, corporativo, universitario o voluntario (solo estos valores)   
-- **Devuelve:**
-- `message` 
-- `actividad_id` 
-- `inscripcion_id`
-- `estados_inscripcion` →  PRE_INSCRIPTO, FALTA_PAGO, CONFIRMADO, PUNTO_ENCUENTRO_CERRADO o FALTA_ACEPTAR_TERMINOS
+### `GET /inscripciones` 🔒
 
-### Ver Evaluacion por Actividad
+Lista de inscripciones del usuario autenticado.
 
-- **URL:** `/api/actividades/{idActividad}/evaluaciones`
-- **Método:** `GET`
-- **Devuelve:**
-- `actividad` 
-- `listado_presentes` - personas que deberian ser seleccionables
-- `listado_a_evaluar` - personas que deberia mostrarse en el listado
-- `respuesta_actividad` - evaluacion de actividad, si la hubiera 
-- `respuestas_persona` - evaluacion de impacto, si la hubiera 
-- `respuestas_impacto` - evaluacion de las personas, si la hubiera 
-- `preguntasEvaluacionPersona` - preguntas, descripcion y tags postitvos/negativos para personas
-- `preguntasEvaluacionImpacto` - preguntas de impacto
+---
 
-### Enviar Evaluacion por Actividad
+### `POST /inscripciones/actividad/{id}` 🔒
 
-- **URL:** `/api/actividades/{idActividad}/evaluaciones`
-- **Método:** `POST`
-- **Devuelve:**
-- `idActividad` 
-- `puntaje` - 1 a 10
-- `tagsPositivos` - array con codigo de los tags
-- `tagsNegativos` - array 
-- `comentario`
+Inscribirse a una actividad.
 
-### Enviar Evaluacion por Impacto
+**Body**
 
-- **URL:** `/api/actividades/{idActividad}/evaluaciones/impacto`
-- **Método:** `POST`
-- **Devuelve:**
-- `idActividad` 
-- `impacto_habilidades_capacidades` - 1 a 10
-- `impacto_percepcion_realidad` - 1 a 10
-- `impacto_recomendaria_experiencia` - 1 a 10
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `punto_encuentro` | integer | | ID del punto de encuentro seleccionado |
+| `aceptar_terminos` | integer | | `1` si el usuario acepta los términos |
+| `jornadas` | string (JSON) | | Array de jornadas: `[{"idJornada": 1, "selected": true}]` |
+| `roles_aplicados` | string (JSON) | | Array de roles: `[{"id": 2}]` |
+| `inscripciones_aplicadas` | string (JSON) | | Tipo: `secundario`, `corporativo`, `universitario` o `voluntario` |
+| `respuestas` | string (JSON) | | Respuestas a preguntas: `[{"pregunta_id": 1, "respuesta": "Sí"}]` |
 
-### Enviar Evaluacion por Persona
+**Response `200`**
+```json
+{
+  "success": true,
+  "message": "Inscripción confirmada",
+  "actividad_id": 42,
+  "inscripcion_id": 99,
+  "estado_inscripcion": "CONFIRMADO"
+}
+```
 
-- **URL:** `/api/actividades/{idActividad}/evaluaciones/persona/{idPersona}`
-- **Método:** `POST`
-- **Devuelve:**
-- `idActividad` 
-- `evaluado` - array con atributos idPersona
-- `puntajes` - 
-array con puntajes, ej:
-    {
-      "conexion_equipo": "4",
-      "compromiso_colaboracion": "7",
-      "actitud_propositiva": "3",
-      "potencia_otras": "5"
-    }
-- `tagsSeleccionados` - array de tags
-  {
-    "conexion_equipo": {
-      "positivos": [],
-      "negativos": [
-        "evitar_suposiciones"
-      ]
-    },
-    "compromiso_colaboracion": {
-      "positivos": [
-        "resolucion_autonoma",
-        "perseverancia"
-      ],
-      "negativos": []
-    },
-    "actitud_propositiva": {
-      "positivos": [
-        "actitud_positiva"
-      ],
-      "negativos": []
-    },
-    "potencia_otras": {
-      "positivos": [],
-      "negativos": [
-        "ser_paciente"
-      ]
-    }
+**Estados posibles de `estado_inscripcion`**
+
+| Estado | Descripción |
+|--------|-------------|
+| `CONFIRMADO` | Inscripción confirmada — se envía push + email |
+| `PRE_INSCRIPTO` | Espera confirmación manual — se envía push + email |
+| `FALTA_PAGO` | Requiere pago — se envía push + email |
+| `FALTA_ACEPTAR_TERMINOS` | No se enviaron términos aceptados |
+| `PUNTO_ENCUENTRO_CERRADO` | El punto de encuentro está cerrado |
+
+---
+
+### `DELETE /inscripciones/{id}` 🔒
+
+Desinscribirse de una actividad.
+
+---
+
+### `POST /inscripciones/voucher` 🔒
+
+Subir comprobante de pago para una inscripción.
+
+**Body** — `multipart/form-data`
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idInscripcion` | integer | ✅ | ID de la inscripción |
+| `voucher` | file | ✅ | Imagen del comprobante |
+
+**Response `200`** — incluye `inscripcion.voucherURL`
+
+---
+
+## Evaluaciones
+
+### `GET /actividades/{id}/evaluaciones` 🔒
+
+Datos para la pantalla de evaluación de una actividad.
+
+**Response `200`**
+
+| Campo | Descripción |
+|---|---|
+| `actividad` | Datos de la actividad |
+| `listado_presentes` | Personas seleccionables para evaluar |
+| `listado_a_evaluar` | Personas que deben mostrarse en el listado |
+| `respuesta_actividad` | Evaluación de actividad si ya existe |
+| `respuestas_persona` | Evaluaciones de personas si ya existen |
+| `respuestas_impacto` | Evaluación de impacto si ya existe |
+| `preguntasEvaluacionPersona` | Preguntas, descripción y tags positivos/negativos para personas |
+| `preguntasEvaluacionImpacto` | Preguntas de impacto |
+
+---
+
+### `GET /actividades/{id}/evaluaciones/tags` 🔒
+
+Tags disponibles para evaluar una actividad.
+
+---
+
+### `POST /actividades/{id}/evaluaciones` 🔒
+
+Evaluar una actividad.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idActividad` | integer | ✅ | ID de la actividad |
+| `puntaje` | integer | ✅ | Puntaje del 1 al 10 |
+| `tagsPositivos` | array | | Códigos de tags positivos |
+| `tagsNegativos` | array | | Códigos de tags negativos |
+| `comentario` | string | | Comentario libre |
+
+---
+
+### `POST /actividades/{id}/evaluaciones/impacto` 🔒
+
+Registrar evaluación de impacto.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idActividad` | integer | ✅ | ID de la actividad |
+| `impacto_habilidades_capacidades` | integer | ✅ | Puntaje 1 a 10 |
+| `impacto_percepcion_realidad` | integer | ✅ | Puntaje 1 a 10 |
+| `impacto_recomendaria_experiencia` | integer | ✅ | Puntaje 1 a 10 |
+
+---
+
+### `POST /actividades/{id}/evaluaciones/persona/{idPersona}` 🔒
+
+Evaluar a una persona dentro de una actividad.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idActividad` | integer | ✅ | ID de la actividad |
+| `evaluado` | object | ✅ | Objeto con `idPersona` |
+| `puntajes` | object | ✅ | Puntajes por dimensión (ver abajo) |
+| `tagsSeleccionados` | object | | Tags por dimensión (ver abajo) |
+| `comentario` | string | | Comentario libre |
+
+**Estructura de `puntajes`**
+```json
+{
+  "conexion_equipo": "4",
+  "compromiso_colaboracion": "7",
+  "actitud_propositiva": "3",
+  "potencia_otras": "5"
+}
+```
+
+**Estructura de `tagsSeleccionados`**
+```json
+{
+  "conexion_equipo": {
+    "positivos": [],
+    "negativos": ["evitar_suposiciones"]
+  },
+  "compromiso_colaboracion": {
+    "positivos": ["resolucion_autonoma", "perseverancia"],
+    "negativos": []
+  },
+  "actitud_propositiva": {
+    "positivos": ["actitud_positiva"],
+    "negativos": []
+  },
+  "potencia_otras": {
+    "positivos": [],
+    "negativos": ["ser_paciente"]
   }
-- `comentario` - string
-
-
-### 📤 Subir Voucher Pago
-
-- **URL:** `/api/inscripciones/voucher/`
-- **Método:** `POST`
-- **Parámetros:**
-- `idInscripcion` 
-- `voucher` →  imagen  
-- **Devuelve:**
-- `inscripcion.voucherURL` 
-
-
-## 📣 Campañas
-
-### Listado de campañas
-- **URL:** `/api/campanas`
-- **Método:** `GET`
-- **Parámetros opcionales:**
-  - `pais_id={id}` → filtra por país
-  - `tipo=colecta` o `tipo=captacion`
-  - `per_page={n}` → resultados por página (default 20, máx 50)
-- **Devuelve:** Lista paginada de campañas activas con sus preguntas dinámicas
+}
+```
 
 ---
 
-### Detalle de campaña
-- **URL:** `/api/campanas/{id}`
-- **Método:** `GET`
-- **Devuelve:** Datos completos de la campaña, incluyendo:
-  - `preguntas` → preguntas dinámicas del formulario de suscripción
-  - `confirmation_message` → mensaje HTML a mostrar luego de suscribirse (puede ser `null`)
-  - `whatsapp_link` → link al grupo de WhatsApp (puede ser `null`)
+## Perfil médico y estudios
+
+### `GET /perfil/fichaMedica` 🔒
+
+Obtener ficha médica del usuario.
 
 ---
 
-### Suscribir a campaña
-- **URL:** `/api/campanas/{id}/suscribir`
-- **Método:** `POST`
-- **Headers:** `Authorization: Bearer {token}`
-- **Parámetros opcionales:**
-  - `respuestas` → array de respuestas a preguntas dinámicas:
-    ```json
-    [{ "pregunta_id": 1, "respuesta": "Sí" }]
-    ```
-- **Nota:** No es necesario enviar nombre, email ni teléfono. El servidor los toma del usuario autenticado.
-- **Devuelve:**
-  - `success` → `true`
-  - `message` → mensaje de confirmación
-  - `whatsapp_link` → link al grupo de WhatsApp o `null`
-  - `confirmation_message` → HTML con mensaje personalizado o `null`
-- **Error `422`:** si el usuario ya está inscripto → `{ "already_registered": true, "message": "..." }`
+### `POST /perfil/fichaMedica` 🔒
+
+Crear o actualizar ficha médica.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `contacto_nombre` | string | | Nombre del contacto de emergencia |
+| `contacto_telefono` | string | | Teléfono del contacto de emergencia |
+| `contacto_relacion` | string | | Relación con el contacto |
+| `grupo_sanguinieo` | string | | `A+`, `A-`, `AB+`, `AB-`, `B+`, `B-`, `O+`, `O-` |
+| `cobertura_tipo` | string | | `cobertura_paga` o `salud_publica` |
+| `cobertura_nombre` | string | Si `cobertura_tipo=cobertura_paga` | Nombre de la obra social |
+| `cobertura_numero` | string | Si `cobertura_tipo=cobertura_paga` | Número de afiliado |
+| `alergias` | string | | Descripción de alergias |
+| `vacunacion_covid` | string | | `Si` o `No` |
+| `alimentacion` | string | | Restricciones alimentarias |
+| `confirma_datos` | boolean | ✅ | `1` para confirmar |
 
 ---
 
-### Verificar suscripción
-- **URL:** `/api/campanas/{id}/suscripcion`
-- **Método:** `GET`
-- **Headers:** `Authorization: Bearer {token}`
-- **Devuelve:** `{ "inscripto": true }` o `{ "inscripto": false }`
+### `POST /perfil/fichaMedica/archivo_medico` 🔒
+
+Subir archivo médico.
+
+**Body** — `multipart/form-data`
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `documento_frente` | file | Frente del documento (opcional) |
+| `documento_dorso` | file | Dorso del documento (opcional) |
 
 ---
 
-## 🌍 Ubicaciones
+### `GET /perfil/estudios` 🔒
 
-### Paises
-- **URL:** `/ajax/paises`  
-- **Método:** `GET`  
-
-### Paises habilitados (donde está Techo)
-- **URL:** `/ajax/paises/habilitados`  
-- **Método:** `GET`  
-
-### Provincias
-- **URL:** `/ajax/paises/{id}/provincias`  
-- **Ejemplo:**  
-/ajax/paises/13/provincias
-
-### Localidades
-- **URL:** `/ajax/paises/{id}/provincias/{id}/localidades`  
-- **Ejemplo:**  
-/ajax/paises/13/provincias/1/localidades
+Listar estudios del usuario.
 
 ---
 
-## 🏷️ Categorías
-- **URL:** `/api/categorias`  
-- **Método:** `GET`  
-- **Devuelve:** Lista de categorías de actividades
+### `POST /perfil/estudios` 🔒
 
-## 🏷️ Traduccion
-- **URL:** `/api/translate`  
-- **Método:** `GET`  
-- **Parámetros:**  
-- `code=frontend.name` → codido de diccionario, anteponer frontend.
-- `lang=es_AR` → lenguaje buscado (es_AR, es_CH, pt o en)   
-- **Devuelve:** Texto Traduccion
-- **Ejemplo:** /api/translate?code=frontend.name&lang=es_AR
+Agregar un estudio.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `nivelDeEstudios` | string | ✅ | `secundario`, `universitario` o `posgrado` |
+| `disciplina_academica` | string | | Disciplina académica |
+| `idPersona` | integer | ✅ | Igual al idPersona del usuario logueado |
+| `idPaisInstitucion` | integer | | País donde se realizó el estudio |
+| `idInstitucionEducativa` | integer | | ID de institución (`0` si es "Otra") |
+| `institucion_educativa` | string | Si `idInstitucionEducativa=0` | Nombre de la institución |
+| `descripcion_educacion` | string | | Descripción del estudio |
+
+---
+
+### `PUT /perfil/estudios` 🔒
+
+Actualizar un estudio. Mismos campos que el POST más:
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `id` | integer | ✅ | ID del estudio a editar |
+
+---
+
+### `DELETE /perfil/estudios/{id}` 🔒
+
+Eliminar un estudio.
+
+---
+
+### `GET /perfil/estudios/institucionEducativa` 🔒
+
+Listar instituciones educativas.
+
+### `GET /perfil/estudios/institucionEducativa/{id}` 🔒
+
+Obtener una institución educativa por ID.
+
+### `GET /perfil/estudios/institucionEducativa/pais/{idPais}` 🔒
+
+Instituciones educativas filtradas por país.
+
+---
+
+## Campañas
+
+Permite listar campañas activas (colectas, captaciones) y suscribir usuarios a ellas.
+
+### `GET /campanas`
+
+Lista de campañas activas. Paginado.
+
+**Query params**
+
+| Param | Tipo | Descripción |
+|---|---|---|
+| `pais_id` | int | Filtra por ID de país |
+| `tipo` | string | `colecta` o `captacion` |
+| `per_page` | int | Resultados por página (default `20`, máx `50`) |
+
+**Response `200`**
+```json
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Colecta Anual 2025",
+      "descripcion": "...",
+      "tipo": "colecta",
+      "imagen": "/storage/campanas/abc.jpg",
+      "whatsapp_link": "https://chat.whatsapp.com/...",
+      "confirmation_message": "<p>¡Gracias por sumarte!</p>",
+      "fecha_inicio": "2025-06-01",
+      "fecha_fin": "2025-06-30",
+      "activa": true,
+      "preguntas": [
+        {
+          "id": 1,
+          "pregunta": "¿Podés colaborar los fines de semana?",
+          "tipo": "desplegable",
+          "opciones": ["Sí", "No", "A veces"],
+          "requerida": true,
+          "orden": 1
+        }
+      ]
+    }
+  ],
+  "per_page": 20,
+  "total": 5
+}
+```
+
+---
+
+### `GET /campanas/{id}`
+
+Detalle de una campaña activa. Incluye preguntas dinámicas y el `confirmation_message` (HTML) para mostrarlo post-suscripción.
+
+**Response `404`** si la campaña no existe o está inactiva.
+
+---
+
+### `POST /campanas/{id}/suscribir` 🔒
+
+Suscribe al usuario autenticado a la campaña.
+
+> La app **no necesita enviar datos personales** — el servidor los toma automáticamente del token.
+
+**Body** (todo opcional)
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `respuestas` | array | Respuestas a preguntas dinámicas: `[{"pregunta_id": 1, "respuesta": "Sí"}]` |
+
+**Response `200`**
+```json
+{
+  "success": true,
+  "message": "Gracias por inscribirte.",
+  "whatsapp_link": "https://chat.whatsapp.com/...",
+  "confirmation_message": "<p>¡Te esperamos!</p>"
+}
+```
+> `whatsapp_link` y `confirmation_message` pueden ser `null`. Mostrar solo si no son `null`.
+
+**Response `422`** — usuario ya inscripto:
+```json
+{
+  "already_registered": true,
+  "message": "Ya estás inscripto/a en esta campaña."
+}
+```
+
+---
+
+### `GET /campanas/{id}/suscripcion` 🔒
+
+Verifica si el usuario autenticado ya está suscripto a la campaña.
+
+**Response `200`**
+```json
+{ "inscripto": true }
+```
+
+---
+
+## Dispositivos (Push)
+
+Integración de notificaciones push via **OneSignal**.
+El `player_id` es el identificador que genera el SDK de OneSignal en el dispositivo.
+
+### `POST /dispositivos` 🔒
+
+Registra o actualiza el dispositivo del usuario.
+
+> Llamar después del login y cuando el SDK de OneSignal entregue un nuevo `player_id`.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `player_id` | string | ✅ | UUID generado por OneSignal |
+| `plataforma` | string | | `ios` \| `android` \| `null` |
+
+**Response `200`**
+```json
+{
+  "success": true,
+  "dispositivo": {
+    "id": 1,
+    "player_id": "a3f2b1c8-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "plataforma": "android"
+  }
+}
+```
+
+> Si el `player_id` ya existe, se reasigna al usuario actual y se reactiva automáticamente.
+
+---
+
+### `DELETE /dispositivos/{player_id}` 🔒
+
+Desactiva el dispositivo al hacer logout. No elimina el registro, solo lo marca inactivo.
+
+**Response `200`** — `{ "success": true }`
+
+**Response `404`** si el `player_id` no pertenece al usuario autenticado.
+
+---
+
+## Donaciones (Stripe)
+
+> 🔒 Todos los endpoints requieren Bearer Token, excepto el webhook.
+
+El sistema soporta dos modos: **pago único** (PaymentIntent) y **recurrente** (Subscription).  
+Stripe habilita automáticamente todos los métodos de pago configurados en el Dashboard (`automatic_payment_methods: enabled`): tarjeta, Apple Pay, Google Pay, PIX, Link, etc.
+
+---
+
+### Flujos de integración para la app mobile
+
+#### A) Donación libre — pago único (card / Apple Pay / Google Pay)
+
+```
+1. POST /api/donations/stripe/payment-intent
+   body: { amount, currency, source, mode: "one_time" }
+   ← { client_secret, intent_id }
+
+2. SDK Stripe (React Native / Flutter / iOS / Android)
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+   ← PaymentIntent con status: 'succeeded' o 'requires_action'
+
+3. Polling opcional (para confirmar el estado en el backend)
+   GET /api/donations/{intent_id}/status
+   ← { status: "succeeded", paid_at: "..." }
+
+   ⚠️  No dependas solo del resultado del SDK. El estado definitivo
+       llega vía webhook → el backend ya actualiza la tabla donations.
+       Si el usuario cierra la app antes de recibir respuesta del SDK,
+       el polling resuelve el estado correcto.
+```
+
+---
+
+#### B) Donación libre — PIX
+
+```
+1. POST /api/donations/stripe/payment-intent
+   body: { amount, currency: "brl", source, paymentMethod: "pix" }
+   ← { client_secret, intent_id,
+       pix: { copy_paste_code, qr_code_url, expires_at } }
+
+   El PI ya viene confirmado — mostrar el QR directamente.
+   No llamar al SDK de Stripe para PIX.
+
+2. Polling hasta que el usuario pague en su banco
+   GET /api/donations/{intent_id}/status
+   ← { status: "pending" }  →  seguir esperando
+   ← { status: "succeeded" } →  mostrar confirmación
+
+   ⏱  PIX expira en 24 hs. Si expires_at pasó y status sigue
+      "pending", mostrar opción de generar nuevo PIX.
+```
+
+---
+
+#### C) Donación recurrente (suscripción)
+
+```
+1. POST /api/donations/stripe/subscription
+   body: { amount, currency, source, mode: "recurring", interval: "month" }
+   ← { client_secret, subscription_id, status: "incomplete" }
+
+2. SDK Stripe — confirmar el PRIMER cobro (igual que pago único)
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+   ← status: 'succeeded'
+
+   Los cobros siguientes son automáticos — Stripe los cobra
+   sin intervención del usuario ni de la app.
+
+3. Polling del estado de la suscripción
+   GET /api/donations/stripe/subscription/{subscription_id}/status
+   ← { status: "active", current_period_end: "..." }
+
+4. Listar suscripciones activas del usuario
+   GET /api/donations/stripe/subscription
+   ← { data: [ { subscription_id, status, amount, ... } ] }
+```
+
+---
+
+#### D) Pago de inscripción a actividad (mobile)
+
+```
+1. POST /api/inscripciones/{idInscripcion}/stripe/payment-intent
+   body: {} (monto y moneda vienen de la actividad)
+   ← { client_secret, intent_id, amount, currency }
+
+2. SDK Stripe — confirmar el pago
+   stripe.confirmPayment(client_secret, { type: 'Card', ... })
+
+3. Resultado del SDK:
+   ✅ succeeded  → mostrar pantalla de confirmación
+   ❌ failed     → mostrar error y opción de reintentar
+   ⏳ requires_action → el SDK maneja 3D Secure automáticamente
+
+   La inscripción queda marcada como pagada (pago = 1)
+   vía webhook — no es necesario llamar a ningún endpoint extra.
+
+4. Verificación opcional
+   GET /api/inscripciones  (endpoint existente)
+   El campo `pago` de la inscripción refleja el estado real.
+```
+
+---
+
+#### Manejo de errores del SDK — referencia rápida
+
+| Resultado SDK | Qué hacer |
+|---|---|
+| `succeeded` | Mostrar confirmación, actualizar UI |
+| `requires_payment_method` | Tarjeta rechazada — pedir otro método |
+| `requires_action` | 3DS — el SDK lo maneja solo, esperar resultado |
+| `canceled` | Usuario canceló — volver al formulario |
+| Error de red | Reintentar con el **mismo** `client_secret` (no crear nuevo PI) |
+
+> **Idempotencia**: si el usuario cierra la app y vuelve a intentar, enviá el mismo `idempotencyKey` que la primera vez. El servidor devuelve el mismo PI existente en lugar de crear uno duplicado.
+
+---
+
+### `POST /donations/stripe/payment-intent` 🔒
+
+Crea un PaymentIntent para una donación única.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `amount` | integer | ✅ | Monto en unidades menores (ej: `1500` = $15.00) |
+| `currency` | string | ✅ | ISO 4217 minúsculas (`usd`, `ars`, `brl`, etc.) |
+| `source` | string | ✅ | Origen: `login_us` \| `home_pill` \| `profile` |
+| `mode` | string | | `one_time` (default) \| `recurring` |
+| `paymentMethod` | string | | `card` \| `apple_pay` \| `google_pay` \| `pix` |
+| `interval` | string | Si `mode=recurring` | `month` \| `year` |
+| `countryCode` | string | | Código de país (ej: `AR`, `US`) |
+| `idempotencyKey` | string | | Se genera automáticamente si se omite |
+
+**Response `200` — métodos estándar (card, Apple Pay, Google Pay)**
+```json
+{
+  "intent_id": "pi_xxx",
+  "client_secret": "pi_xxx_secret_yyy"
+}
+```
+
+**Response `200` — PIX**
+
+El PaymentIntent se confirma automáticamente en el servidor. El QR code y código copia-pega están disponibles de inmediato.
+
+```json
+{
+  "intent_id": "pi_xxx",
+  "client_secret": "pi_xxx_secret_yyy",
+  "pix": {
+    "copy_paste_code": "00020126...",
+    "qr_code_url": "https://qr.stripe.com/...",
+    "expires_at": "2026-05-27T12:00:00Z"
+  }
+}
+```
+
+> Para card/wallets el cliente confirma con el SDK de Stripe. Para PIX el pago ya está en curso — solo mostrar el QR y esperar el webhook `payment_intent.succeeded`.
+
+---
+
+### `GET /donations/stripe/subscription` 🔒
+
+Lista las suscripciones activas (no terminales) del usuario autenticado. Lee solo la base de datos local, sin llamar a Stripe.
+
+**Response `200`**
+```json
+{
+  "data": [
+    {
+      "subscription_id": "sub_xxx",
+      "status": "active",
+      "amount": 2500,
+      "currency": "usd",
+      "interval": "month",
+      "current_period_end": "2026-07-08T12:00:00+00:00",
+      "canceled_at": null,
+      "created_at": "2026-06-08T12:00:00+00:00"
+    }
+  ]
+}
+```
+
+Devuelve `data: []` si no hay suscripciones. Excluye estados terminales (`canceled`, `incomplete_expired`).
+
+---
+
+### `POST /donations/stripe/subscription` 🔒
+
+Crea una Subscription recurrente en Stripe.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `amount` | integer | ✅ | Monto en unidades menores |
+| `currency` | string | ✅ | ISO 4217 minúsculas |
+| `source` | string | ✅ | `login_us` \| `home_pill` \| `profile` |
+| `mode` | string | ✅ | Debe ser `recurring` |
+| `interval` | string | ✅ | `month` \| `year` |
+| `countryCode` | string | | Código de país |
+| `idempotencyKey` | string | | Se genera automáticamente si se omite |
+
+**Response `200`**
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "subscription_id": "sub_xxx",
+  "status": "incomplete"
+}
+```
+
+> El status inicial siempre es `incomplete`. Pasa a `active` cuando se confirma el primer pago con el SDK.
+
+---
+
+### `GET /donations/stripe/subscription/{subscriptionId}/status` 🔒
+
+Devuelve el estado actual de una suscripción desde la base de datos local.
+
+**Response `200`**
+```json
+{
+  "subscription_id": "sub_xxx",
+  "status": "active",
+  "amount": 2500,
+  "currency": "usd",
+  "interval": "month",
+  "current_period_end": "2026-06-19T12:04:00+00:00",
+  "canceled_at": null
+}
+```
+
+**Valores de `status`**
+
+| Status | Descripción |
+|---|---|
+| `incomplete` | Primer pago aún no confirmado |
+| `incomplete_expired` | Primer pago no completado en ~23h (terminal) |
+| `active` | Suscripción activa y al día |
+| `past_due` | Cobro fallido, Stripe reintentará |
+| `canceled` | Cancelada (terminal) |
+| `unpaid` | Reintentos agotados sin pago |
+
+---
+
+### `GET /donations/{intentId}/status` 🔒
+
+Devuelve el estado de una donación única por su PaymentIntent ID.
+
+**Response `200`**
+```json
+{
+  "intent_id": "pi_xxx",
+  "status": "succeeded",
+  "amount": 1500,
+  "currency": "usd",
+  "paid_at": "2026-05-19T12:04:00+00:00"
+}
+```
+
+**Valores de `status`**: `pending` | `succeeded` | `failed` | `canceled`
+
+---
+
+### `GET /donations/history` 🔒
+
+Historial unificado de pagos únicos y suscripciones, ordenado por fecha descendente.
+
+**Query params (todos opcionales)**
+
+| Param | Ejemplo | Descripción |
+|---|---|---|
+| `type` | `one_time` \| `subscription` | Filtrar por tipo |
+| `status` | `succeeded` | Filtrar por estado |
+| `from` | `2026-01-01` | Desde fecha (ISO) |
+| `limit` | `20` | Items por página (máx 100, default 20) |
+| `page` | `1` | Número de página |
+
+**Response `200`**
+```json
+{
+  "data": [
+    {
+      "type": "one_time",
+      "id": "pi_xxx",
+      "amount": 150000,
+      "currency": "ars",
+      "status": "succeeded",
+      "source": "inscripcion",
+      "payment_method": "card",
+      "inscripcion_id": 42,
+      "actividad": { "id": 17, "nombre": "Construcción Mar del Plata" },
+      "paid_at": "2026-05-19T12:04:00Z",
+      "created_at": "2026-05-19T11:58:00Z"
+    },
+    {
+      "type": "subscription",
+      "id": "sub_zzz",
+      "amount": 1000,
+      "currency": "brl",
+      "status": "active",
+      "source": "home_pill",
+      "interval": "month",
+      "inscripcion_id": null,
+      "actividad": null,
+      "current_period_end": "2026-07-08T00:00:00Z",
+      "canceled_at": null,
+      "created_at": "2026-06-08T12:00:00Z"
+    }
+  ],
+  "meta": { "total": 2, "page": 1, "limit": 20 }
+}
+```
+
+---
+
+### `POST /inscripciones/{idInscripcion}/stripe/payment-intent` 🔒
+
+Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la clave Stripe del país de la actividad. El monto y moneda se toman de la actividad — no se pasan en el body.
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idempotencyKey` | string | | Se genera automáticamente si se omite |
+
+**Response `200`**
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "intent_id": "pi_xxx",
+  "amount": 150000,
+  "currency": "ars"
+}
+```
+
+**Flujo**
+1. App llama este endpoint → recibe `client_secret`
+2. App confirma con el SDK nativo de Stripe (`stripe.confirmPayment`)
+3. Stripe dispara `payment_intent.succeeded` al webhook `/stripe/webhook/{paisId}`
+4. Webhook marca `Inscripcion.pago = 1`, actualiza el `Donation` vinculado y envía email de confirmación
+
+---
+
+### `POST /donations/stripe/webhook` (sin auth)
+
+Endpoint para eventos de Stripe. La autenticidad se valida con la firma HMAC (`Stripe-Signature` header). Siempre responde `200` para evitar reintentos.
+
+**Eventos manejados**
+
+| Evento | Efecto |
+|---|---|
+| `payment_intent.succeeded` | Donación → `succeeded`, guarda `paid_at` |
+| `payment_intent.payment_failed` | Donación → `failed` |
+| `payment_intent.canceled` | Donación → `canceled` |
+| `invoice.paid` | Suscripción → `active`, actualiza `current_period_end` |
+| `invoice.payment_failed` | Suscripción → `past_due` |
+| `customer.subscription.updated` | Sincroniza status y período |
+| `customer.subscription.deleted` | Suscripción → `canceled` |
+
+---
+
+## Datos maestros y ubicaciones
+
+### `GET /categorias`
+
+Lista de categorías de actividades.
+
+### `GET /sedes`
+
+Lista de sedes/oficinas.
+
+---
+
+### `GET /paises`
+
+Lista de países (también disponible en `/ajax/paises`).
+
+### `GET /paises/habilitados`
+
+Lista de países habilitados en el sistema (también en `/ajax/paises/habilitados`).
+
+### `GET /paises/{id_pais}/provincias`
+
+Provincias de un país (también en `/ajax/paises/{id}/provincias`).
+
+**Ejemplo:** `/ajax/paises/13/provincias`
+
+### `GET /paises/{id_pais}/provincias/{id_provincia}/localidades`
+
+Localidades de una provincia (también en `/ajax/paises/{id}/provincias/{id}/localidades`).
+
+**Ejemplo:** `/ajax/paises/13/provincias/1/localidades`
+
+---
+
+## Traducciones
+
+### `GET /translate`
+
+Obtener una traducción.
+
+**Query params**
+
+| Param | Ejemplo | Descripción |
+|---|---|---|
+| `code` | `frontend.name` | Código de diccionario (prefijo `frontend.`) |
+| `lang` | `es_AR` | Idioma: `es_AR`, `es_CH`, `pt`, `en` |
+
+**Ejemplo:** `/api/translate?code=frontend.name&lang=es_AR`
+
+---
+
+### `POST /translate/batch`
+
+Obtener múltiples traducciones en una sola llamada.
+
+---
+
+## Deep Linking
+
+La app soporta los siguientes mecanismos para abrir pantallas directamente:
+
+### Custom URL Scheme
+```
+mitecho://actividades/{id}     → abre una actividad específica
+mitecho://                     → abre la app en la pantalla principal
+```
+
+### Universal Links (iOS) / App Links (Android)
+
+Los archivos de configuración están hosteados en:
+```
+https://actividades.techo.org/.well-known/apple-app-site-association
+https://actividades.techo.org/.well-known/assetlinks.json
+```
+
+Cuando el usuario toca un link `https://actividades.techo.org/actividades/{id}` y tiene la app instalada, el sistema operativo la abre directamente.
+
+### Datos de la app
+
+| | iOS | Android |
+|---|---|---|
+| **ID** | `org.techoapp.mitecho` | `com.techoapp.mitecho` |
+| **Team/Cert** | Team ID: `2WN59DZ37K` | SHA-256: `FA:28:B6:...` |
+| **Scheme** | `mitecho://` | `mitecho://` |
+
+---
+
+## Notas generales
+
+- 🔒 = requiere `Authorization: Bearer {token}`
+- Los endpoints de inscripción disparan automáticamente **notificaciones push** (OneSignal) y **email** al usuario según el estado resultante.
+- El payload de las notificaciones push incluye `idActividad` para que la app pueda navegar con `mitecho://actividades/{idActividad}`.
+- Los tokens se obtienen de los endpoints de login y son de tipo **Laravel Passport**.
