@@ -421,6 +421,10 @@ return [
 	'operation_summary'          => 'Resumen de la operación',
 	'activity_label'             => 'Actividad',
 	'voucher_validation_pending' => 'Comprobante en proceso de validación',
+	'voucher_rechazado_titulo'           => 'Tu comprobante fue rechazado',
+	'voucher_rechazado_subtitulo'        => 'El equipo revisó tu comprobante y no fue aceptado. Por favor, subí uno nuevo.',
+	'voucher_rechazado_motivo'           => 'Motivo',
+	'voucher_rechazado_nueva_instruccion' => 'Subí un nuevo comprobante de pago',
 	'confirm_later' => 'Guardar inscripción, finalizar después',
 
 	// pagar-paso-1: nuevo diseño

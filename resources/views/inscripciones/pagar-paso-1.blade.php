@@ -19,7 +19,13 @@
     $tabDefault = $stripeHabilitado ? 'card' : ($tieneLink ? 'link' : 'transfer');
 @endphp
 
-@if(($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$inscripcion->pago)
+@php
+    $voucherRechazado = $inscripcion->voucher_rechazado ?? false;
+    $voucherPendiente = ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$inscripcion->pago && !$voucherRechazado;
+@endphp
+
+@if($voucherPendiente)
+{{-- Estado: comprobante enviado, esperando validación --}}
 <div class="container py-5 text-center" style="max-width:520px;margin:0 auto;">
     <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
          style="background:#F4A345;width:80px;height:80px;">
@@ -49,8 +55,25 @@
         {{ __('frontend.my_activities') }}
     </a>
 </div>
+
 @else
 <div class="container py-4">
+
+    {{-- ── Banner: comprobante rechazado ─────────────────────── --}}
+    @if($voucherRechazado)
+    <div class="alert alert-danger d-flex align-items-start mb-4" style="border-radius:10px;">
+        <i class="fa fa-times-circle fa-2x mr-3 mt-1 text-danger flex-shrink-0"></i>
+        <div>
+            <strong>{{ __('frontend.voucher_rechazado_titulo') }}</strong>
+            <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.voucher_rechazado_subtitulo') }}</p>
+            @if($inscripcion->voucher_rechazo_motivo)
+                <p class="mb-0 mt-2 font-weight-bold" style="font-size:.85rem;">
+                    {{ __('frontend.voucher_rechazado_motivo') }}: {{ $inscripcion->voucher_rechazo_motivo }}
+                </p>
+            @endif
+        </div>
+    </div>
+    @endif
 
     {{-- ── Step indicator ─────────────────────────────────────── --}}
     @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
@@ -177,7 +200,7 @@
                         <p class="font-weight-bold mb-3">{{ __('frontend.upload_voucher_title') }}</p>
                         <confirmacion-pago
                             id="{{ $inscripcion->idInscripcion }}"
-                            voucher="{{ $inscripcion->voucherUrl }}"
+                            voucher="{{ $voucherRechazado ? '' : $inscripcion->voucherUrl }}"
                             csrf_token="{{ csrf_token() }}">
                         </confirmacion-pago>
                         @if($inscripcion->voucherUrl)
@@ -216,7 +239,7 @@
                         <p class="font-weight-bold mb-3">{{ __('frontend.upload_voucher_title') }}</p>
                         <confirmacion-pago
                             id="{{ $inscripcion->idInscripcion }}"
-                            voucher="{{ $inscripcion->voucherUrl }}"
+                            voucher="{{ $voucherRechazado ? '' : $inscripcion->voucherUrl }}"
                             csrf_token="{{ csrf_token() }}">
                         </confirmacion-pago>
                         @if($inscripcion->voucherUrl)
@@ -303,7 +326,7 @@
                     type="button"
                     class="btn btn-primary"
                     onclick="window.location.reload()"
-                    {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) ? '' : 'disabled' }}>
+                    {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$voucherRechazado ? '' : 'disabled' }}>
                 {{ __('frontend.finish') }}
             </button>
         </div>

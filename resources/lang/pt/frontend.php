@@ -416,6 +416,10 @@ return [
 	'operation_summary'          => 'Resumo da operação',
 	'activity_label'             => 'Atividade',
 	'voucher_validation_pending' => 'Comprovante em processo de validação',
+	'voucher_rechazado_titulo'           => 'Seu comprovante foi recusado',
+	'voucher_rechazado_subtitulo'        => 'A equipe revisou seu comprovante e não foi aceito. Por favor, envie um novo.',
+	'voucher_rechazado_motivo'           => 'Motivo',
+	'voucher_rechazado_nueva_instruccion' => 'Envie um novo comprovante de pagamento',
 	'confirm_later' => 'Confirmar Mais Tarde',
 
 	// pagar-paso-1: novo design

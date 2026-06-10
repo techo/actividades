@@ -35,30 +35,41 @@
             <div class="col-md-6">
                 <p class="font-weight-bold mb-3">{{ $t('frontend.scholarship_evidence_title') }}</p>
 
-                <div class="voucher-drop-area"
-                     :class="{ 'voucher-drop-area--hover': dragging }"
+                <!-- Archivo seleccionado: área azul con X -->
+                <div v-if="fileName" key="beca-saved"
+                     class="beca-saved-area"
+                     @click.stop="selectFile"
+                     :title="$t('frontend.voucher_click_to_browse')">
+                    <div class="d-flex align-items-center" style="min-width:0;">
+                        <i class="fas fa-check-circle mr-2" style="font-size:1.25rem;flex-shrink:0;"></i>
+                        <div class="font-weight-bold small text-truncate">{{ fileName }}</div>
+                    </div>
+                    <button type="button"
+                            class="btn btn-sm ml-3"
+                            style="flex-shrink:0;color:inherit;opacity:.75;"
+                            @click.stop="limpiarArchivo">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Drop zone vacío -->
+                <div v-else key="beca-empty"
+                     class="beca-drop-area"
+                     :class="{ 'beca-drop-area--hover': dragging }"
                      @click="selectFile"
                      @dragover.prevent="dragging = true"
                      @dragleave.prevent="dragging = false"
                      @drop.prevent="onDrop">
-
-                    <div v-if="!fileName" class="d-flex flex-column align-items-center py-3">
-                        <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
-                        <span class="font-weight-bold text-muted" style="font-size:.9rem;">
-                            {{ $t('frontend.voucher_click_to_browse') }}
-                        </span>
-                        <span class="text-muted mt-1" style="font-size:.8rem;">
-                            {{ $t('frontend.voucher_drag_drop') }}
-                        </span>
-                        <span class="text-muted mt-1" style="font-size:.75rem;">
-                            {{ $t('frontend.voucher_formats') }}
-                        </span>
-                    </div>
-
-                    <div v-if="fileName" class="d-flex flex-column align-items-center py-3">
-                        <i class="fas fa-file-alt fa-2x text-primary mb-2"></i>
-                        <span class="text-muted small">{{ fileName }}</span>
-                    </div>
+                    <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                    <span class="font-weight-bold text-muted" style="font-size:.9rem;">
+                        {{ $t('frontend.voucher_click_to_browse') }}
+                    </span>
+                    <span class="text-muted" style="font-size:.8rem;">
+                        {{ $t('frontend.voucher_drag_drop') }}
+                    </span>
+                    <span class="text-muted" style="font-size:.75rem;">
+                        {{ $t('frontend.voucher_formats') }}
+                    </span>
                 </div>
 
                 <input hidden type="file" accept=".jpg,.jpeg,.png,.pdf" ref="file_input" @change="onFileChange">
@@ -102,6 +113,7 @@ export default {
     },
     methods: {
         selectFile() {
+            this.$refs.file_input.value = '';
             this.$refs.file_input.click();
         },
         onFileChange() {
@@ -112,6 +124,10 @@ export default {
             this.dragging = false;
             const f = event.dataTransfer.files[0];
             if (f) { this.file = f; this.fileName = f.name; }
+        },
+        limpiarArchivo() {
+            this.file     = null;
+            this.fileName = null;
         },
         goBack() {
             if (typeof window.becaGoBack === 'function') window.becaGoBack();
@@ -160,19 +176,42 @@ export default {
 </script>
 
 <style scoped>
-.voucher-drop-area {
-    border: 2px dashed #dee2e6;
+/* Drop zone vacío */
+.beca-drop-area {
+    border: 2px dashed #ced4da;
+    background: #fafafa;
     border-radius: .5rem;
     cursor: pointer;
-    transition: border-color .15s, background .15s;
-    min-height: 130px;
+    min-height: 110px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
+    gap: .25rem;
+    transition: border-color .15s, background .15s;
 }
-.voucher-drop-area:hover,
-.voucher-drop-area--hover {
+.beca-drop-area:hover,
+.beca-drop-area--hover {
     border-color: #0d6efd;
-    background: #f5f8ff;
+    background: #f0f5ff;
+}
+
+/* Archivo seleccionado (azul) */
+.beca-saved-area {
+    border: 2px solid #0d6efd;
+    background: #e8f0fe;
+    color: #0d6efd;
+    border-radius: .5rem;
+    cursor: pointer;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem 1rem;
+    transition: opacity .15s;
+}
+.beca-saved-area:hover {
+    opacity: .88;
 }
 </style>

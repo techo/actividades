@@ -410,6 +410,10 @@ return [
 	'operation_summary'          => 'Operation summary',
 	'activity_label'             => 'Activity',
 	'voucher_validation_pending' => 'Voucher validation in progress',
+	'voucher_rechazado_titulo'           => 'Your payment proof was rejected',
+	'voucher_rechazado_subtitulo'        => 'Our team reviewed your proof of payment and it was not accepted. Please upload a new one.',
+	'voucher_rechazado_motivo'           => 'Reason',
+	'voucher_rechazado_nueva_instruccion' => 'Upload a new proof of payment',
 	'confirm_later' => 'Confirm Later',
 
 	// pagar-paso-1: new design
