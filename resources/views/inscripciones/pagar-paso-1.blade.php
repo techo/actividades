@@ -24,39 +24,6 @@
     $voucherPendiente = ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$inscripcion->pago && !$voucherRechazado;
 @endphp
 
-@if($voucherPendiente)
-{{-- Estado: comprobante enviado, esperando validación --}}
-<div class="container py-5 text-center" style="max-width:520px;margin:0 auto;">
-    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
-         style="background:#F4A345;width:80px;height:80px;">
-        <i class="fa fa-credit-card" style="font-size:32px;color:white;"></i>
-    </div>
-    <h2 class="font-weight-bold mb-3" style="color:#1A3A6B;">
-        {{ __('frontend.voucher_process_title') }}
-    </h2>
-    <p class="text-muted mb-4">
-        {{ __('frontend.voucher_process_subtitle') }}
-    </p>
-    <div class="card mb-4" style="background:#F5F5F5;border:none;border-radius:12px;">
-        <div class="card-body text-left">
-            <h6 class="font-weight-bold mb-3" style="color:#F4A345;">{{ __('frontend.operation_summary') }}</h6>
-            <ul class="list-unstyled mb-0">
-                <li class="mb-2">
-                    <strong>{{ __('frontend.activity_label') }}:</strong>
-                    <span class="text-muted ml-1">{{ $actividad->nombreActividad }}</span>
-                </li>
-                <li>
-                    <strong style="color:#F4A345;">{{ __('frontend.voucher_validation_pending') }}</strong>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <a href="/actividades" class="btn btn-secondary btn-block" style="border-radius:8px;padding:12px;">
-        {{ __('frontend.my_activities') }}
-    </a>
-</div>
-
-@else
 <div class="container py-4">
 
     {{-- ── Banner: comprobante rechazado ─────────────────────── --}}
@@ -109,7 +76,44 @@
     </div>
 
     @if($actividad->pago == 1)
-    <div class="card border-0 shadow-sm">
+
+    {{-- ── Sección completado (inline, sin reload) ────────────── --}}
+    <div id="completado-section" class="card border-0 shadow-sm mb-4 text-center"
+         style="{{ $voucherPendiente ? '' : 'display:none;' }}">
+        <div class="card-body py-5 px-4">
+            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                 style="background:#F4A345;width:72px;height:72px;">
+                <i class="fa fa-credit-card" style="font-size:28px;color:white;"></i>
+            </div>
+            <h4 class="font-weight-bold mb-3" style="color:#1A3A6B;">
+                {{ __('frontend.voucher_process_title') }}
+            </h4>
+            <p class="text-muted mb-4" style="font-size:.95rem;">
+                {{ __('frontend.voucher_process_subtitle') }}
+            </p>
+            <div class="text-left p-3 mb-4" style="background:#F5F5F5;border-radius:10px;">
+                <h6 class="font-weight-bold mb-3" style="color:#F4A345;">
+                    {{ __('frontend.operation_summary') }}
+                </h6>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <strong>{{ __('frontend.activity_label') }}:</strong>
+                        <span class="text-muted ml-1">{{ $actividad->nombreActividad }}</span>
+                    </li>
+                    <li>
+                        <strong style="color:#F4A345;">{{ __('frontend.voucher_validation_pending') }}</strong>
+                    </li>
+                </ul>
+            </div>
+            <a href="/actividades" class="btn btn-secondary btn-block" style="border-radius:8px;padding:12px;">
+                {{ __('frontend.my_activities') }}
+            </a>
+        </div>
+    </div>
+
+    {{-- ── Card de pago ────────────────────────────────────────── --}}
+    <div id="payment-card" class="card border-0 shadow-sm"
+         style="{{ $voucherPendiente ? 'display:none;' : '' }}">
         <div class="card-body p-4">
 
             {{-- ── Intro ──────────────────────────────────────────── --}}
@@ -325,7 +329,7 @@
             <button id="btn-finalizar"
                     type="button"
                     class="btn btn-primary"
-                    onclick="window.location.reload()"
+                    onclick="mostrarCompletado()"
                     {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$voucherRechazado ? '' : 'disabled' }}>
                 {{ __('frontend.finish') }}
             </button>
@@ -345,7 +349,6 @@
     
 
 </div>
-@endif
 @endsection
 
 @push('additional_scripts')
@@ -394,6 +397,15 @@
     window.notifyPagoListo = function () {
         var btn = document.getElementById('btn-finalizar');
         if (btn) btn.disabled = false;
+    };
+
+    // Muestra el completado inline sin recargar la página
+    window.mostrarCompletado = function () {
+        var card = document.getElementById('payment-card');
+        var completado = document.getElementById('completado-section');
+        if (card) card.style.display = 'none';
+        if (completado) completado.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     document.addEventListener('DOMContentLoaded', function () {

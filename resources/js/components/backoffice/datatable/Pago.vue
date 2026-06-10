@@ -12,7 +12,11 @@
         >
         </v-switch>
         <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
-        <i class="fa fa-exclamation text-warning" v-show="rowData.voucherUrl&&!pago"></i>
+        <i class="fa fa-times text-danger"
+           v-show="rowData.voucher_rechazado && !pago"
+           title="Comprobante rechazado"></i>
+        <i class="fa fa-exclamation text-warning"
+           v-show="rowData.voucherUrl && !pago && !rowData.voucher_rechazado"></i>
         <span v-if="rowData.scholarship_requested && !pago"
               title="Solicitó beca / exención"
               style="cursor:default;font-size:1.1em;">🎓</span>

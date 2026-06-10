@@ -15,6 +15,7 @@ use App\Mail\ActualizacionActividad;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
+use App\Mail\MailVoucherRechazado;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Services\Push\PushNotificationService;
@@ -271,6 +272,32 @@ class InscripcionesController extends BaseController
         $msg = $request->pago == 1 ? "Pagado" : "Sin Pagar";
         return response()
             ->json("Asistencia actualizada a " . $msg . " en " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+    }
+
+    public function rechazarVoucher(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'motivo'        => 'nullable|string|max:1000',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $motivo = $request->input('motivo');
+
+        $inscripcion->voucher_rechazado    = true;
+        $inscripcion->voucher_rechazo_motivo = $motivo;
+        $inscripcion->save();
+
+        try {
+            Mail::to($inscripcion->persona->mail)->send(new MailVoucherRechazado($inscripcion, $motivo));
+        } catch (\Exception $e) {
+            \Log::warning('No se pudo enviar mail de rechazo de voucher: ' . $e->getMessage());
+        }
+
+        return response()->json(['mensaje' => 'Comprobante rechazado y usuario notificado.'], 200);
     }
 
     public function cambiarAsistencia(CrearInscripcion $request, $id)

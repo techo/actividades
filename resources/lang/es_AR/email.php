@@ -103,4 +103,12 @@ return [
 	//VerificarMail
 	'verificar_mail_1' => 'Este email es para verificar tu dirección de email:',
 
+	// VoucherRechazado
+	'voucher_rechazado_subject'      => 'Comprobante de pago rechazado —',
+	'voucher_rechazado_intro'        => 'Te informamos que tu comprobante de pago fue revisado y no fue aceptado para la actividad',
+	'voucher_rechazado_estado'       => 'Tu comprobante fue rechazado.',
+	'voucher_rechazado_motivo_label' => 'Motivo',
+	'voucher_rechazado_instruccion'  => 'Por favor, ingresá al sistema y subí un nuevo comprobante para continuar con tu inscripción.',
+	'voucher_rechazado_link'         => 'Subir nuevo comprobante',
+
 ];

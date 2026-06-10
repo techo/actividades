@@ -38,6 +38,7 @@
                 <!-- Archivo seleccionado: área azul con X -->
                 <div v-if="fileName" key="beca-saved"
                      class="beca-saved-area"
+                     style="display:flex;align-items:center;justify-content:space-between;min-height:64px;padding:.75rem 1rem;"
                      @click.stop="selectFile"
                      :title="$t('frontend.voucher_click_to_browse')">
                     <div class="d-flex align-items-center" style="min-width:0;">
@@ -56,11 +57,12 @@
                 <div v-else key="beca-empty"
                      class="beca-drop-area"
                      :class="{ 'beca-drop-area--hover': dragging }"
+                     style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:110px;padding:1rem;gap:.25rem;"
                      @click="selectFile"
                      @dragover.prevent="dragging = true"
                      @dragleave.prevent="dragging = false"
                      @drop.prevent="onDrop">
-                    <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                    <i class="fas fa-cloud-upload-alt fa-2x text-muted" style="margin-bottom:.5rem;"></i>
                     <span class="font-weight-bold text-muted" style="font-size:.9rem;">
                         {{ $t('frontend.voucher_click_to_browse') }}
                     </span>

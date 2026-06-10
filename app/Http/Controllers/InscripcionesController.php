@@ -263,6 +263,32 @@ class InscripcionesController extends BaseController
              compact('actividad'));
     }
     
+    public function clearVoucher(Request $request){
+
+        $request->validate(['idInscripcion' => 'required|integer']);
+
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        // Solo se puede borrar si el pago aún no fue confirmado
+        if ($inscripcion->pago) {
+            return response()->json(['error' => 'Pago ya confirmado'], 403);
+        }
+
+        $oldPath = str_replace('storage', 'public', $inscripcion->voucherURL ?? '');
+        if ($oldPath && Storage::exists($oldPath)) {
+            Storage::delete($oldPath);
+        }
+
+        $inscripcion->voucherURL             = null;
+        $inscripcion->voucher_rechazado      = false;
+        $inscripcion->voucher_rechazo_motivo = null;
+        $inscripcion->save();
+
+        return response()->json(['success' => true]);
+    }
+
     public function voucherPago(Request $request){
 
         $validated = $request->validate([
@@ -280,7 +306,9 @@ class InscripcionesController extends BaseController
         if(Storage::exists($oldPath))
             Storage::delete($oldPath);
 
-        $inscripcion->voucherURL = str_replace('public', 'storage', $path);
+        $inscripcion->voucherURL             = str_replace('public', 'storage', $path);
+        $inscripcion->voucher_rechazado      = false;
+        $inscripcion->voucher_rechazo_motivo = null;
         $inscripcion->save();
 
         return $inscripcion;

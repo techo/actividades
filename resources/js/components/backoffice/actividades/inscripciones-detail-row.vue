@@ -51,6 +51,37 @@
                 <div v-if="rowData.voucherUrl">
                   <label>{{ $t('backend.payment_file') }}: </label>
                   <a target="_blank" :href="'/'+rowData.voucherUrl"> {{ $t('backend.voucher') }}</a>
+                  <span v-if="rowData.voucher_rechazado" class="label label-danger ml-1">Rechazado</span>
+                  <br>
+                  <button v-if="!rowData.voucher_rechazado && !rowData.pago"
+                          type="button"
+                          class="btn btn-xs btn-danger mt-1"
+                          @click="mostrarRechazoModal">
+                    <i class="fa fa-times"></i> Rechazar comprobante
+                  </button>
+                </div>
+
+                <!-- Modal rechazo voucher -->
+                <div v-if="showRechazoModal" class="rechazo-modal-backdrop" @click.self="showRechazoModal=false">
+                  <div class="rechazo-modal">
+                    <h5>Rechazar comprobante de pago</h5>
+                    <p class="text-muted" style="font-size:.85rem;">
+                      Se notificará al voluntario por mail y podrá subir un nuevo comprobante.
+                    </p>
+                    <div class="form-group">
+                      <label style="font-size:.85rem;">Motivo (opcional)</label>
+                      <textarea v-model="rechazoMotivo" class="form-control" rows="3"
+                                placeholder="Ej: La imagen no es legible, falta el monto..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end" style="gap:.5rem;">
+                      <button type="button" class="btn btn-default btn-sm" @click="showRechazoModal=false">Cancelar</button>
+                      <button type="button" class="btn btn-danger btn-sm" :disabled="rechazando" @click="confirmarRechazo">
+                        <span v-if="rechazando"><i class="fa fa-spinner fa-spin"></i> Enviando...</span>
+                        <span v-else>Rechazar y notificar</span>
+                      </button>
+                    </div>
+                    <div v-if="rechazoError" class="alert alert-danger mt-2" style="font-size:.8rem;">{{ rechazoError }}</div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -105,9 +136,13 @@ export default {
     tiposInscripcion: [],
   },
   data() {
-    return {  
+    return {
       items: [],
       tiposInscripcionSinComillas: [],
+      showRechazoModal: false,
+      rechazoMotivo:    '',
+      rechazando:       false,
+      rechazoError:     null,
     }
   },
   computed: {
@@ -157,12 +192,53 @@ export default {
     },
     cargarAuditoria: function(id) {
       Event.$emit('vuetable-cargarAuditoria', id);
-    }
+    },
+    mostrarRechazoModal() {
+      this.rechazoMotivo = '';
+      this.rechazoError  = null;
+      this.showRechazoModal = true;
+    },
+    confirmarRechazo() {
+      this.rechazando  = true;
+      this.rechazoError = null;
+      const idActividad = this.rowData.idActividad;
+      axios.post(
+        '/admin/ajax/actividades/' + idActividad + '/inscripciones/rechazar/voucher',
+        { idInscripcion: this.rowData.id, motivo: this.rechazoMotivo }
+      ).then(() => {
+        this.showRechazoModal = false;
+        this.$set(this.rowData, 'voucher_rechazado', true);
+        this.$set(this.rowData, 'voucher_rechazo_motivo', this.rechazoMotivo);
+        Event.$emit('vuetable:refresh');
+      }).catch(err => {
+        this.rechazoError = 'Error al rechazar. Intentá nuevamente.';
+        console.error(err);
+      }).finally(() => {
+        this.rechazando = false;
+      });
+    },
   },
 }
 </script>
 
 <style scoped>
+.rechazo-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rechazo-modal {
+    background: #fff;
+    border-radius: 6px;
+    padding: 1.5rem;
+    width: 420px;
+    max-width: 95vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,.2);
+}
 .scholarship-box {
     border: 1px solid #d1ecf1;
     border-left: 4px solid #17a2b8;

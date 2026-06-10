@@ -94,7 +94,13 @@ export default {
             if (f) this.upload(f);
         },
         limpiar() {
-            // Quita el voucher local; el usuario puede subir otro
+            // Borra el voucher del servidor y limpia el estado local
+            axios.post('/ajax/inscripcion/clearVoucher', {
+                idInscripcion: this.id,
+            }, {
+                headers: { 'X-CSRF-TOKEN': this.csrf_token },
+            }).catch(() => {});  // fire-and-forget; si falla igual limpiamos UI
+
             this.localVoucher = null;
             this.displayName  = null;
             this.errorMsg     = null;

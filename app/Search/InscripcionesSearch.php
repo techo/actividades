@@ -116,6 +116,8 @@ class InscripcionesSearch
             'Inscripcion.scholarship_requested',
             'Inscripcion.scholarship_reason',
             'Inscripcion.scholarship_evidence_url',
+            'Inscripcion.voucher_rechazado',
+            'Inscripcion.voucher_rechazo_motivo',
         ]
     )
     ->whereNull('Inscripcion.deleted_at');

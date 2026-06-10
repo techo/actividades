@@ -169,6 +169,7 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
 });
 
 Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
+Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
 Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
@@ -478,6 +479,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/pago', 'backoffice\ajax\InscripcionesController@cambiarPago')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/asistencia', 'backoffice\ajax\InscripcionesController@cambiarAsistencia')->middleware('can:verInscripciones,App\Inscripcion,id');
+
+    Route::post('/ajax/actividades/{id}/inscripciones/rechazar/voucher', 'backoffice\ajax\InscripcionesController@rechazarVoucher')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
 

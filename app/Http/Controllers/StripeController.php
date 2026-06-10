@@ -54,7 +54,7 @@ class StripeController extends Controller
                 'payment_method_types' => ['card'],
                 'line_items' => [[
                     'price_data' => [
-                        'currency'     => strtolower($actividad->moneda ?: 'ars'),
+                        'currency'     => strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->iso2 ?? null)),
                         'unit_amount'  => $montoCentavos,
                         'product_data' => [
                             'name'        => $actividad->nombreActividad,
@@ -128,10 +128,13 @@ class StripeController extends Controller
             ->with(['actividad'])
             ->first();
 
-        return view('stripe.cancel', [
-            'inscripcion' => $inscripcion,
-            'actividad'   => $inscripcion ? $inscripcion->actividad : null,
-        ]);
+        if ($inscripcion && $inscripcion->actividad) {
+            return redirect()
+                ->action('InscripcionesController@confirmarDonacion', ['id' => $inscripcion->actividad->idActividad])
+                ->with('error', __('frontend.stripe_payment_cancelled'));
+        }
+
+        return redirect('/')->with('error', __('frontend.stripe_payment_cancelled'));
     }
 
     /**
@@ -340,5 +343,33 @@ class StripeController extends Controller
         } catch (\Exception $e) {
             Log::error('Stripe: error enviando mail de confirmación para inscripcion ' . $inscripcionId . ': ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Moneda ISO por defecto según el código ISO2 del país.
+     * Fuente de verdad para cuando la actividad no tiene moneda seteada.
+     */
+    private function monedaPorPais(?string $iso2): string
+    {
+        $mapa = [
+            'ar' => 'ars', // Argentina
+            'bo' => 'bob', // Bolivia
+            'br' => 'brl', // Brasil
+            'co' => 'cop', // Colombia
+            'cr' => 'crc', // Costa Rica
+            'do' => 'dop', // República Dominicana
+            'ec' => 'usd', // Ecuador (dolarizado)
+            'sv' => 'usd', // El Salvador (dolarizado)
+            'gt' => 'gtq', // Guatemala
+            'hn' => 'hnl', // Honduras
+            'mx' => 'mxn', // México
+            'pa' => 'usd', // Panamá (dolarizado)
+            'py' => 'pyg', // Paraguay
+            'pe' => 'pen', // Perú
+            'uy' => 'uyu', // Uruguay
+            've' => 'usd', // Venezuela
+        ];
+
+        return $mapa[strtolower($iso2 ?? '')] ?? 'usd';
     }
 }

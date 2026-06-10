@@ -97,4 +97,12 @@ return [
 	//VerificarMail
 	'verificar_mail_1' => "We have send this to verify your account: ",
 
+	// VoucherRechazado
+	'voucher_rechazado_subject'      => 'Payment proof rejected —',
+	'voucher_rechazado_intro'        => 'We reviewed your proof of payment and it was not accepted for the activity',
+	'voucher_rechazado_estado'       => 'Your payment proof was rejected.',
+	'voucher_rechazado_motivo_label' => 'Reason',
+	'voucher_rechazado_instruccion'  => 'Please log in and upload a new proof of payment to continue with your registration.',
+	'voucher_rechazado_link'         => 'Upload new proof of payment',
+
 ];
