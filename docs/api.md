@@ -357,16 +357,60 @@ Desinscribirse de una actividad.
 
 ### `POST /inscripciones/voucher` 🔒
 
-Subir comprobante de pago para una inscripción.
+Subir comprobante de pago para una inscripción (transferencia o link de pago).
 
 **Body** — `multipart/form-data`
 
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
 | `idInscripcion` | integer | ✅ | ID de la inscripción |
-| `voucher` | file | ✅ | Imagen del comprobante |
+| `voucher` | file | ✅ | Imagen del comprobante (jpg, jpeg, png, pdf) |
 
-**Response `200`** — incluye `inscripcion.voucherURL`
+**Response `200`** — objeto `Inscripcion` con `voucherUrl` actualizado. También resetea `voucher_rechazado` y `voucher_rechazo_motivo` si el comprobante había sido rechazado previamente.
+
+> El archivo se almacena en `storage/voucherInscipcion/{idPersona}/`. El typo histórico en el nombre del directorio es intencional — no corregir para no romper archivos existentes.
+
+---
+
+### `POST /inscripciones/voucher/clear` 🔒
+
+Eliminar el comprobante subido. Solo funciona si el pago aún no fue confirmado (`pago != 1`).
+
+**Body** — `application/json`
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idInscripcion` | integer | ✅ | ID de la inscripción |
+
+**Response `200`**
+```json
+{ "success": true }
+```
+
+**Response `403`** — si `pago == 1` (ya confirmado).
+
+---
+
+### `POST /inscripciones/beca` 🔒
+
+Solicitar beca/exención de pago para una inscripción.
+
+**Body** — `multipart/form-data`
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `idInscripcion` | integer | ✅ | ID de la inscripción |
+| `reason` | string | ✅ | Motivo de la solicitud (max 3000 caracteres) |
+| `evidence` | file | — | Comprobante opcional (jpg, jpeg, png, pdf, max 10 MB) |
+
+**Response `200`**
+```json
+{ "success": true }
+```
+
+Guarda `scholarship_requested = true`, `scholarship_reason`, `scholarship_requested_at` y, si se adjunta archivo, `scholarship_evidence_url` en `storage/becaInscripcion/{idPersona}/`. El coordinador revisa desde el backoffice.
+
+> `Actividad.beca` es distinto: es un link a un formulario externo (Google Forms, etc.). Los campos `scholarship_*` de `Inscripcion` son el flujo interno, independiente de ese link.
 
 ---
 

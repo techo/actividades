@@ -113,6 +113,8 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('{id}', 'ajax\UsuarioController@desinscribir');
         Route::post('/actividad/{id}', 'InscripcionesController@create');
         Route::post('/voucher', 'InscripcionesController@voucherPago');
+        Route::post('/voucher/clear', 'InscripcionesController@clearVoucher');
+        Route::post('/beca', 'InscripcionesController@becaSolicitud');
     });
 
     // personas
