@@ -1,0 +1,407 @@
+{
+  "project": "actividades",
+  "description": "Plataforma de voluntariado TECHO (actividades.techo.org). Laravel 5.7 monolito: API mobile (Passport), backoffice web (Blade+Vue 2), frontend público.",
+  "rules": {
+    "one_task_at_a_time": true,
+    "backward_compatibility": true,
+    "no_breaking_changes_without_discussion": true,
+    "upgrade_protocol": "cada fase en branch propio — solo mergear cuando phpunit pase 100% verde",
+    "valid_status": ["pending", "in_progress", "done", "blocked"]
+  },
+  "tasks": [
+
+    {
+      "id": 1,
+      "group": "mantenimiento",
+      "name": "claude_md",
+      "title": "Crear CLAUDE.md con mapa del proyecto",
+      "status": "done",
+      "completed_at": "2026-06-09"
+    },
+    {
+      "id": 2,
+      "group": "mantenimiento",
+      "name": "bower_gitignore",
+      "title": "Dejar de trackear bower_components en git",
+      "description": ".gitignore actualizado. Pendiente: usuario debe ejecutar en su terminal: rm .git/index.lock && git rm --cached -r public/bower_components/",
+      "acceptance": [
+        "/public/bower_components está en .gitignore",
+        "git rm --cached -r public/bower_components/ ejecutado por el usuario",
+        "Directorio ya no aparece en git status"
+      ],
+      "status": "in_progress"
+    },
+    {
+      "id": 3,
+      "group": "mantenimiento",
+      "name": "readme_cleanup",
+      "title": "Limpiar README: eliminar instrucciones de instalación legacy",
+      "status": "done",
+      "completed_at": "2026-06-09"
+    },
+    {
+      "id": 4,
+      "group": "mantenimiento",
+      "name": "remove_duplicate_api_md",
+      "title": "Eliminar api.md duplicado en la raíz",
+      "description": "Existen docs/api.md (canónico) y api.md en la raíz (duplicado). Eliminar el de la raíz.",
+      "acceptance": [
+        "api.md en la raíz eliminado",
+        "docs/api.md sigue existiendo",
+        "README u otros archivos actualizados si referenciaban al duplicado"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "group": "mantenimiento",
+      "name": "move_hardcoded_category_ids",
+      "title": "Mover IDs de categorías hardcodeados fuera de routes/api.php",
+      "description": "routes/api.php líneas 167-190: array de IDs de categorías en un closure. Mover a config o modelo.",
+      "acceptance": [
+        "El array ya no está en routes/api.php",
+        "La API sigue respondiendo igual (backward compatible)",
+        "Documentado dónde vive ahora la configuración"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "group": "mantenimiento",
+      "name": "remove_dead_user_code",
+      "title": "Eliminar código muerto: App\\User y RegisterController",
+      "description": "app/User.php y RegisterController.php no se usan. Verificar con grep exhaustivo antes de eliminar.",
+      "acceptance": [
+        "grep sin referencias activas a App\\User",
+        "Ambos archivos eliminados o documentados como intencionales"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "group": "mantenimiento",
+      "name": "unify_estado_inscripcion",
+      "title": "Unificar lógica de estadoInscripcion() duplicada",
+      "description": "Duplicada en Actividad.php (~L95) y Persona.php (~L115). Unificar en un único lugar.",
+      "acceptance": [
+        "Lógica en un único lugar (InscripcionFlow o trait)",
+        "Tests existentes siguen pasando"
+      ],
+      "risk": "medium",
+      "notes": "Hacer con tests corriendo. Leer InscripcionFlow.php primero.",
+      "status": "pending"
+    },
+    {
+      "id": 8,
+      "group": "mantenimiento",
+      "name": "document_get_miembros_side_effect",
+      "title": "Mitigar/documentar efecto secundario de getMiembrosAttribute()",
+      "description": "Actividad::getMiembrosAttribute() crea un grupo raíz si no existe. Documentar y evaluar fix.",
+      "acceptance": [
+        "Efecto secundario documentado en el código",
+        "Verificado si hay llamadas en contextos masivos",
+        "Fix aplicado si hay riesgo"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+
+    {
+      "id": 9,
+      "group": "cobertura-tests",
+      "name": "test-0-baseline",
+      "title": "Baseline: correr phpunit y documentar estado real",
+      "description": "Correr phpunit completo y documentar el estado real: cuántos tests pasan, fallan, se saltean. Este es el punto de referencia antes de agregar tests y antes del upgrade.",
+      "acceptance": [
+        "docker compose exec app vendor/bin/phpunit --testdox ejecutado",
+        "Resultado documentado en progress/history.md (fecha + conteo passed/failed/skipped)",
+        "Fallos preexistentes documentados como deuda, no como introducidos por cambios"
+      ],
+      "risk": "none",
+      "agent_notes": "Solo lectura. El Líder hace este paso, no se modifica código.",
+      "status": "pending"
+    },
+
+    {
+      "id": 10,
+      "group": "cobertura-tests",
+      "name": "test-web-auth",
+      "title": "Tests web: flujos de autenticación",
+      "description": "Cobertura de los flujos de login/logout/registro/reset password/email verification del frontend web. Actualmente solo LoginSocialTest existe y cubre OAuth, no el login por formulario.",
+      "acceptance": [
+        "Test: POST /login con credenciales correctas → redirect autenticado",
+        "Test: POST /login con credenciales incorrectas → error de validación",
+        "Test: POST /logout → sesión destruida",
+        "Test: POST /password/email → mail de reset encolado (Mail::fake())",
+        "Test: GET /email/verify/{id} → email verificado",
+        "Test: GET /desuscribirse/{uuid} y POST → usuario desuscripto de mailing"
+      ],
+      "blockedBy": [9],
+      "risk": "none",
+      "status": "pending"
+    },
+    {
+      "id": 11,
+      "group": "cobertura-tests",
+      "name": "test-web-perfil",
+      "title": "Tests web: perfil del voluntario",
+      "description": "Cobertura del área /perfil: edición de datos, inscripciones del usuario, historial de actividades.",
+      "acceptance": [
+        "Test: GET /perfil → accesible cuando autenticado",
+        "Test: GET /perfil → redirect a login cuando no autenticado",
+        "Test: PUT /perfil/editar → actualiza datos correctamente",
+        "Test: GET /perfil/inscripciones → lista las inscripciones del usuario"
+      ],
+      "blockedBy": [9],
+      "risk": "none",
+      "status": "pending"
+    },
+    {
+      "id": 12,
+      "group": "cobertura-tests",
+      "name": "test-web-stripe-webhook",
+      "title": "Tests web: Stripe webhook",
+      "description": "StripeController@webhook es un endpoint crítico que procesa confirmaciones de pago. No tiene tests. Un fallo silencioso acá deja inscripciones sin confirmar.",
+      "acceptance": [
+        "Test: POST /stripe/webhook/{paisId} con evento checkout.session.completed → inscripción marcada como paga",
+        "Test: POST /stripe/webhook/{paisId} con firma inválida → 403",
+        "Test: POST /stripe/webhook/{paisId} con evento desconocido → 200 sin efectos",
+        "Usar Stripe\\Webhook::constructEvent() con mock o fixture de payload",
+        "Tests corren sin llamadas reales a la API de Stripe"
+      ],
+      "blockedBy": [9],
+      "risk": "none",
+      "notes": "Ver StripeController.php para entender qué eventos procesa. Buscar cómo el proyecto actual hace los tests de pago en InscripcionesConPagoTest.php para reusar el patrón.",
+      "status": "pending"
+    },
+    {
+      "id": 13,
+      "group": "cobertura-tests",
+      "name": "test-web-campanas",
+      "title": "Tests web: Campañas y Suscripciones",
+      "description": "CampaniaController y SuscribeController no tienen tests. Son flujos de captación de voluntarios.",
+      "acceptance": [
+        "Test: GET de una campaña pública → 200",
+        "Test: POST de suscripción a una campaña → persona suscripta en BD",
+        "Test: POST con email ya suscripto → respuesta correcta (no error 500)",
+        "Test: flujo de desuscripción via UUID"
+      ],
+      "blockedBy": [9],
+      "risk": "none",
+      "status": "pending"
+    },
+    {
+      "id": 14,
+      "group": "cobertura-tests",
+      "name": "test-api-auth",
+      "title": "Tests API mobile: autenticación y registro",
+      "description": "Los endpoints de auth de la API mobile (PersonasController) no tienen tests. Son la puerta de entrada de la app MiTECHO.",
+      "acceptance": [
+        "Test: POST /api/login con credenciales válidas → token Passport + datos de persona",
+        "Test: POST /api/login con credenciales inválidas → 401 con mensaje claro",
+        "Test: POST /api/register con datos válidos → persona creada + token",
+        "Test: POST /api/register con email duplicado → error de validación",
+        "Test: POST /api/socialLogin con token Google/Facebook válido → token Passport",
+        "Todos usan RefreshDatabase"
+      ],
+      "blockedBy": [9],
+      "risk": "none",
+      "agent_notes": "Usar Passport::actingAs() para endpoints auth:api. Para registro, verificar que el campo es 'mail' no 'email' (ver CLAUDE.md §Autenticación).",
+      "status": "pending"
+    },
+    {
+      "id": 15,
+      "group": "cobertura-tests",
+      "name": "test-api-actividades",
+      "title": "Tests API mobile: listado y detalle de actividades",
+      "description": "Los endpoints GET de actividades de la API mobile son los más consumidos por la app. Sin tests.",
+      "acceptance": [
+        "Test: GET /api/actividadesGeneral → 200 con estructura de paginación correcta",
+        "Test: GET /api/actividades/categoria/{nombre} → filtra correctamente",
+        "Test: GET /api/actividades/{id} → detalle completo con campos esperados por la app",
+        "Test: GET /api/actividades/{id} → 404 si no existe",
+        "Verificar estructura JSON de respuesta (campos que la app espera)"
+      ],
+      "blockedBy": [14],
+      "risk": "none",
+      "notes": "Estos son los tests más importantes para detectar regressions de API durante el upgrade.",
+      "status": "pending"
+    },
+    {
+      "id": 16,
+      "group": "cobertura-tests",
+      "name": "test-api-inscripciones",
+      "title": "Tests API mobile: inscripciones desde la app",
+      "description": "El flujo de inscripción desde la app mobile usa endpoints propios distintos al flujo web. Sin tests.",
+      "acceptance": [
+        "Test: POST /api/inscripciones/{id} autenticado → inscripción creada",
+        "Test: GET /api/mis-inscripciones → lista inscripciones del usuario autenticado",
+        "Test: cancelar inscripción si el flujo lo permite → estado actualizado",
+        "Test: inscribirse a actividad cerrada → error con mensaje claro"
+      ],
+      "blockedBy": [14],
+      "risk": "none",
+      "status": "pending"
+    },
+    {
+      "id": 17,
+      "group": "cobertura-tests",
+      "name": "test-api-dispositivos-push",
+      "title": "Tests API mobile: registro de dispositivos y push",
+      "description": "DispositivoController registra tokens de push de OneSignal. Sin tests. Crítico: si falla, los voluntarios dejan de recibir notificaciones.",
+      "acceptance": [
+        "Test: POST /api/dispositivos autenticado → token guardado en BD",
+        "Test: POST /api/dispositivos con token ya existente → actualizado, no duplicado",
+        "Test: POST /api/dispositivos sin auth → 401",
+        "Test: PushNotificationService → dispara job EnviarNotificacionPush (Queue::fake())"
+      ],
+      "blockedBy": [14],
+      "risk": "none",
+      "notes": "Ver docs/push-notifications.md para entender la arquitectura antes de escribir estos tests.",
+      "status": "pending"
+    },
+    {
+      "id": 18,
+      "group": "cobertura-tests",
+      "name": "test-api-donations",
+      "title": "Tests API mobile: donaciones y webhooks",
+      "description": "DonationController y DonationWebhookController manejan donaciones Stripe. Sin tests. Similar al webhook web pero por canal API.",
+      "acceptance": [
+        "Test: POST /api/donations → crea donación y retorna URL de Stripe Checkout",
+        "Test: POST /api/donations/webhook con evento válido → donación confirmada en BD",
+        "Test: POST /api/donations/webhook con firma inválida → 403",
+        "Tests no hacen llamadas reales a Stripe (mock o fixture)"
+      ],
+      "blockedBy": [14],
+      "risk": "none",
+      "status": "pending"
+    },
+
+    {
+      "id": 19,
+      "group": "upgrade-fase1",
+      "name": "upgrade-1-laravel6",
+      "title": "Fase 1: Laravel 5.7 → 6.x + PHP 7.4",
+      "description": "Primera fase del upgrade. Ver docs/upgrade-laravel.md §Fase 1 para breaking changes y versiones target.",
+      "acceptance": [
+        "composer.json: laravel/framework ^6.0, passport ^8.0, spatie/permission ^3.0, phpunit ^8.0",
+        "PHP en Docker actualizado a 7.4",
+        "str_*() y array_*() globales reemplazados por Str:: y Arr:: en código propio",
+        "phpunit 100% verde",
+        "Tests de API mobile (task 10) pasan"
+      ],
+      "risk": "low",
+      "blockedBy": [18],
+      "branch": "upgrade/laravel-6x",
+      "agent_notes": "Branch: upgrade/laravel-6x. Mergear a main solo cuando todos los tests estén verdes.",
+      "status": "pending"
+    },
+    {
+      "id": 20,
+      "group": "upgrade-fase2",
+      "name": "upgrade-2-laravel7",
+      "title": "Fase 2: Laravel 6.x → 7.x",
+      "description": "Ver docs/upgrade-laravel.md §Fase 2.",
+      "acceptance": [
+        "composer.json: laravel/framework ^7.0, passport ^9.0, socialite ^4.0",
+        "phpunit 100% verde",
+        "MailingTest.php pasa"
+      ],
+      "risk": "low",
+      "blockedBy": [19],
+      "branch": "upgrade/laravel-7x",
+      "status": "pending"
+    },
+    {
+      "id": 21,
+      "group": "upgrade-fase3",
+      "name": "upgrade-3a-factories",
+      "title": "Fase 3a: Migrar factories a clases (Laravel 8 prep)",
+      "description": "Los 17 archivos en database/factories/ deben convertirse a clases con namespace Database\\Factories. Los tests deben actualizarse de factory('App\\Persona') a Persona::factory(). Ver docs/upgrade-laravel.md §Fase 3.1.",
+      "acceptance": [
+        "Los 17 factories migrados a Database\\Factories\\*Factory extends Factory",
+        "Todos los Feature tests actualizados con Model::factory()",
+        "phpunit sigue verde en Laravel 7.x (no cambiar framework aún)"
+      ],
+      "risk": "high",
+      "blockedBy": [20],
+      "branch": "upgrade/laravel-8x",
+      "agent_notes": "Este es el cambio más extenso. Hacerlo en el mismo branch que el upgrade de L8 pero como primer sub-paso. Archivos factory: PersonaFactory, ActividadFactory, InscripcionFactory, PaisFactory, PuntoEncuentroFactory, GrupoFactory, LocalidadFactory, ProvinciaFactory, OficinaFactory, TipoFactory, CoordinadorFactory, NovedadFactory, CategoriaActividadFactory, GrupoRolPersonaFactory, EvaluacionActividad, EvaluacionPersona, UserFactory.",
+      "status": "pending"
+    },
+    {
+      "id": 22,
+      "group": "upgrade-fase3",
+      "name": "upgrade-3b-laravel8",
+      "title": "Fase 3b: Laravel 7.x → 8.x + PHP 8.0",
+      "description": "Ver docs/upgrade-laravel.md §Fase 3. Después de migrar factories.",
+      "acceptance": [
+        "composer.json: laravel/framework ^8.0, passport ^10.0, permission ^4.0, lcobucci/jwt ^4.0, phpunit ^9.0, stripe ^10.0",
+        "PHP en Docker actualizado a 8.0",
+        "Seeders con namespace Database\\Seeders",
+        "phpunit 100% verde",
+        "php artisan passport:install completa sin errores"
+      ],
+      "risk": "high",
+      "blockedBy": [21],
+      "branch": "upgrade/laravel-8x",
+      "status": "pending"
+    },
+    {
+      "id": 23,
+      "group": "upgrade-fase4",
+      "name": "upgrade-4-laravel9",
+      "title": "Fase 4: Laravel 8.x → 9.x",
+      "description": "Ver docs/upgrade-laravel.md §Fase 4. Flysystem y Doctrine DBAL.",
+      "acceptance": [
+        "composer.json: laravel/framework ^9.0, passport ^11.0, doctrine/dbal ^3.0, permission ^5.0",
+        "phpunit 100% verde",
+        "No hay uso de API deprecated de DBAL"
+      ],
+      "risk": "medium",
+      "blockedBy": [22],
+      "branch": "upgrade/laravel-9x",
+      "status": "pending"
+    },
+    {
+      "id": 24,
+      "group": "upgrade-fase5",
+      "name": "upgrade-5-laravel10",
+      "title": "Fase 5: Laravel 9.x → 10.x + PHP 8.1",
+      "description": "Ver docs/upgrade-laravel.md §Fase 5.",
+      "acceptance": [
+        "composer.json: laravel/framework ^10.0, passport ^12.0, phpunit ^10.0",
+        "PHP en Docker actualizado a 8.1",
+        "phpunit 100% verde con PHPUnit 10 (return types en setUp/tearDown)",
+        "No hay warnings de tipos en PHP 8.1"
+      ],
+      "risk": "low",
+      "blockedBy": [23],
+      "branch": "upgrade/laravel-10x",
+      "status": "pending"
+    },
+    {
+      "id": 25,
+      "group": "upgrade-fase6",
+      "name": "upgrade-6-laravel11",
+      "title": "Fase 6: Laravel 10.x → 11.x + PHP 8.2",
+      "description": "Ver docs/upgrade-laravel.md §Fase 6. Mantener estructura existente (modo compatibilidad), no migrar a la nueva estructura de L11.",
+      "acceptance": [
+        "composer.json: laravel/framework ^11.0",
+        "PHP en Docker actualizado a 8.2",
+        "phpunit 100% verde",
+        "php artisan route:list sin errores",
+        "php artisan config:cache sin errores",
+        "Smoke test en staging: login mobile, inscripción, backoffice"
+      ],
+      "risk": "low",
+      "blockedBy": [24],
+      "branch": "upgrade/laravel-11x",
+      "status": "pending"
+    }
+
+  ]
+}
