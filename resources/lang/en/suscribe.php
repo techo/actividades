@@ -59,6 +59,7 @@ return [
     'additional_questions'  => 'Additional questions',
     'select_option'         => 'Select an option',
     'already_registered'    => 'You are already registered for this campaign.',
+    'missing_required'      => 'Please answer all required questions.',
     'user_exists_warning'   => 'This email already belongs to a registered user. You can log in to subscribe more easily.',
     'logged_in_as'          => 'Subscribing as',
     'join_whatsapp_group'   => 'Join the WhatsApp group',

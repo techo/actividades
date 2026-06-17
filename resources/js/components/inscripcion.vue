@@ -236,7 +236,7 @@
                     <h2 class="card-title text-center">{{ $t('frontend.preguntas_inscripcion') }}</h2>
 
                     <div class="card-body">
-                        <div v-for="(pregunta, index) in actividad.preguntas" :key="pregunta.id" class="form-group">
+                        <div v-for="(pregunta, index) in actividad.preguntas" v-if="esVisible(pregunta)" :key="pregunta.id" class="form-group">
                             <label>
                                 {{ pregunta.pregunta }}
                                 <span v-if="pregunta.requerida" class="text-danger">*</span>
@@ -336,6 +336,7 @@
 <script>
     import axios from 'axios';
     import VueTagsInput from '@johmun/vue-tags-input';
+    import { esVisible as evalVisible } from '../conditionEvaluator';
     export default {
         name: "inscripcion",
         props: ['id','csrf_token'],
@@ -460,6 +461,14 @@
                 return this.actividad.puntosEncuentro.filter(function (punto) {
                     return punto.estado
                 })
+            },
+            // Mapa pregunta_id => respuesta(texto), para evaluar condicionales.
+            respuestasMap: function () {
+                var m = {};
+                (this.respuestas || []).forEach(function (r) {
+                    if (r && r.pregunta_id != null) m[r.pregunta_id] = r.respuesta;
+                });
+                return m;
             },
             esConstruccion() {
                 return this.actividad.tipo ? this.actividad.tipo.flujo == "CONSTRUCCION" : false;
@@ -595,13 +604,26 @@
             convertToJSONRespuestas: function() {
                 return JSON.stringify(this.respuestas);
             },
+            // ¿La pregunta debe mostrarse según sus condiciones?
+            esVisible: function(pregunta) {
+                return evalVisible(pregunta, this.actividad.preguntas || [], this.respuestasMap);
+            },
             avanzarPreguntas: function() {
-                // Validar requeridas
+                // Validar requeridas SOLO de las preguntas visibles.
                 var preguntas = this.actividad.preguntas || [];
+                var map = this.respuestasMap;
                 for (var i = 0; i < preguntas.length; i++) {
+                    if (!evalVisible(preguntas[i], preguntas, map)) continue;
                     if (preguntas[i].requerida && !this.respuestas[i].respuesta) {
                         this.errorPreguntas = true;
                         return;
+                    }
+                }
+                // Limpiar respuestas de preguntas que quedaron ocultas (no se envían
+                // como respondidas; el backend igualmente descarta las ocultas).
+                for (var j = 0; j < preguntas.length; j++) {
+                    if (!evalVisible(preguntas[j], preguntas, map) && this.respuestas[j] && this.respuestas[j].respuesta) {
+                        this.respuestas[j].respuesta = '';
                     }
                 }
                 this.errorPreguntas = false;

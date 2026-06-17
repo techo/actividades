@@ -603,6 +603,18 @@ return [
     'saving'                => 'Salvando...',
     'no_preguntas'          => 'Nenhuma pergunta configurada para esta atividade.',
     'error_guardando'       => 'Ocorreu um erro ao salvar. Tente novamente.',
+    'hacer_obligatoria'     => 'Tornar obrigatória',
+    'opciones_disponibles'  => 'Opções disponíveis',
+    'opcion'                => 'Opção',
+    'agregar_opcion'        => 'Adicionar opção',
+    'filtro_condicional'    => 'Filtro condicional',
+    'filtro_condicional_ayuda' => 'Se você configurar um filtro, esta pergunta só aparecerá quando o usuário escolher uma resposta específica em uma pergunta anterior.',
+    'filtro_especifico'     => 'Filtro específico',
+    'filtro_sin_preguntas'  => 'Para usar um filtro você precisa de ao menos uma pergunta suspensa anterior (com ordem menor).',
+    'mostrar_si'            => 'Mostrar esta pergunta se',
+    'pregunta_padre'        => 'Pergunta',
+    'respuesta_esperada'    => 'Resposta',
+    'eliminar_configuracion' => 'Remover configuração',
     'confirm_delete'        => 'Tem certeza de que deseja excluir este registro? Esta ação não pode ser desfeita.',
 
     // Avaliações - novo dashboard

@@ -604,6 +604,18 @@ return [
     'saving'                => 'Saving...',
     'no_preguntas'          => 'No questions configured for this activity.',
     'error_guardando'       => 'An error occurred while saving. Please try again.',
+    'hacer_obligatoria'     => 'Make required',
+    'opciones_disponibles'  => 'Available options',
+    'opcion'                => 'Option',
+    'agregar_opcion'        => 'Add option',
+    'filtro_condicional'    => 'Conditional filter',
+    'filtro_condicional_ayuda' => 'If you set a filter, this question will only appear when the user selects a specific answer to a previous question.',
+    'filtro_especifico'     => 'Specific filter',
+    'filtro_sin_preguntas'  => 'To use a filter you need at least one previous dropdown question (with a lower order).',
+    'mostrar_si'            => 'Show this question if',
+    'pregunta_padre'        => 'Question',
+    'respuesta_esperada'    => 'Answer',
+    'eliminar_configuracion' => 'Remove configuration',
     'confirm_delete'        => 'Are you sure you want to delete this record? This action cannot be undone.',
 
     // Evaluations - new dashboard

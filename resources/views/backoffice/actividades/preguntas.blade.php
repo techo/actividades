@@ -15,7 +15,7 @@
                     <h3 class="pull-left">{{ __('backend.preguntas_inscripcion') }}</h3>
                 </div>
             </div>
-            <preguntas-actividad :actividad-id="{{ $actividad->idActividad }}"></preguntas-actividad>
+            <preguntas-manager base-url="/admin/ajax/actividades/{{ $actividad->idActividad }}/preguntas"></preguntas-manager>
         </div>
 
     </div>

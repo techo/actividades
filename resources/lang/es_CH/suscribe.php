@@ -61,6 +61,7 @@ return [
     'additional_questions'  => 'Preguntas adicionales',
     'select_option'         => 'Selecciona una opción',
     'already_registered'    => 'Ya estás inscrito/a en esta campaña.',
+    'missing_required'      => 'Por favor responde todas las preguntas obligatorias.',
     'user_exists_warning'   => 'Este email ya pertenece a un usuario registrado. Puedes iniciar sesión para inscribirte más fácil.',
     'logged_in_as'          => 'Inscribiéndote como',
     'join_whatsapp_group'   => 'Unirte al grupo de WhatsApp',
