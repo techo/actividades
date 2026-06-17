@@ -263,6 +263,35 @@ class StripePaymentService
         ]);
     }
 
+    // ── Billing Portal ──────────────────────────────────────────────────────────
+
+    /**
+     * Create a Stripe Customer Portal session and return its URL.
+     *
+     * The portal lets the customer self-manage their recurring donations
+     * (update payment method, change/cancel the subscription). Any change made
+     * there is reflected back into our DB through the subscription webhooks.
+     *
+     * Requires the Customer Portal to be activated/configured in the Stripe
+     * Dashboard for the donations account.
+     *
+     * @param  string $customerId Stripe Customer ID
+     * @param  string $returnUrl  Where Stripe sends the user back when they exit
+     * @return string             Absolute URL to open the portal
+     * @throws ApiErrorException
+     */
+    public function createBillingPortalSession(string $customerId, string $returnUrl): string
+    {
+        $this->boot();
+
+        $session = \Stripe\BillingPortal\Session::create([
+            'customer'   => $customerId,
+            'return_url' => $returnUrl,
+        ]);
+
+        return $session->url;
+    }
+
     // ── Webhook ───────────────────────────────────────────────────────────────
 
     /**

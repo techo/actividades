@@ -257,16 +257,34 @@ class DonationWebhookController extends Controller
             return;
         }
 
-        // Sync status and billing period from Stripe's source of truth
+        // Don't resurrect a subscription we've already marked terminal
+        // (canceled / incomplete_expired). A late, out-of-order `updated`
+        // event must not overwrite a final state set by `deleted`.
+        if ($sub->isTerminal()) {
+            return;
+        }
+
+        // Sync status, billing period and amount from Stripe's source of truth.
         $updates = [
-            'stripe_event_id' => $event->id,
-            'status'          => $stripeSubscription->status,
+            'stripe_event_id'      => $event->id,
+            'status'               => $stripeSubscription->status,
+            'cancel_at_period_end' => (bool) $stripeSubscription->cancel_at_period_end,
         ];
 
         if ($stripeSubscription->current_period_end) {
             $updates['current_period_end'] = Carbon::createFromTimestamp(
                 $stripeSubscription->current_period_end
             );
+        }
+
+        // Amount can change if the user switches plans from the Customer Portal.
+        // Read it from the first subscription item's price (fallback to plan).
+        $item        = $stripeSubscription->items->data[0] ?? null;
+        $stripeAmount = $item->price->unit_amount
+            ?? $item->plan->amount
+            ?? null;
+        if ($stripeAmount !== null) {
+            $updates['amount'] = (int) $stripeAmount;
         }
 
         $sub->update($updates);
