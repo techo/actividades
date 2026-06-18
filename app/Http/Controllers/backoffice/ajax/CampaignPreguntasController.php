@@ -41,4 +41,9 @@ class CampaignPreguntasController extends Controller
     {
         return $this->eliminarPregunta($campana->id, $preguntaId);
     }
+
+    public function mover(Request $request, Campaign $campana, $preguntaId)
+    {
+        return $this->moverPregunta($request, $campana->id, $preguntaId);
+    }
 }

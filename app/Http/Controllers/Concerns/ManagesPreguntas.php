@@ -43,6 +43,10 @@ trait ManagesPreguntas
         $pregunta = new $class();
         $pregunta->{$this->ownerColumn()} = $ownerId;
         $this->llenarPregunta($pregunta, $request);
+        // El orden se autoasigna al final (máximo + 1) para que cada pregunta
+        // nueva quede después de las existentes. Así "anterior = orden menor"
+        // tiene sentido sin que el usuario tenga que numerar a mano.
+        $pregunta->orden = $this->siguienteOrden($class, $ownerId);
         $pregunta->save();
 
         $this->sincronizarCondicion($pregunta, $request->input('condicion'));
@@ -85,7 +89,108 @@ trait ManagesPreguntas
         return response()->json(null, 204);
     }
 
+    /**
+     * Mueve una pregunta una posición arriba/abajo intercambiándola con su vecina.
+     *
+     * Reindexa el orden a una secuencia contigua (0..n) — lo que de paso arregla
+     * datos viejos que quedaron todos en orden 0 — y rechaza el movimiento si
+     * dejaría una pregunta condicional ANTES de la pregunta de la que depende.
+     */
+    protected function moverPregunta(Request $request, $ownerId, $preguntaId)
+    {
+        $request->validate([
+            'direccion' => 'required|in:arriba,abajo',
+        ]);
+
+        $class = $this->preguntaClass();
+
+        $preguntas = $class::where($this->ownerColumn(), $ownerId)
+            ->orderBy('orden')
+            ->orderBy('id')
+            ->get()
+            ->values();
+
+        $idx = $preguntas->search(function ($p) use ($preguntaId) {
+            return (int) $p->id === (int) $preguntaId;
+        });
+
+        if ($idx === false) {
+            abort(404);
+        }
+
+        $vecino = $request->input('direccion') === 'arriba' ? $idx - 1 : $idx + 1;
+
+        // Si hay vecino válido, intercambiamos. En un extremo es un no-op
+        // (igual reindexamos para normalizar el orden).
+        if ($vecino >= 0 && $vecino < $preguntas->count()) {
+            $tmp = $preguntas[$idx];
+            $preguntas[$idx] = $preguntas[$vecino];
+            $preguntas[$vecino] = $tmp;
+        }
+
+        // Orden propuesto = posición en el array.
+        $nuevoOrden = [];
+        foreach ($preguntas as $pos => $p) {
+            $nuevoOrden[(int) $p->id] = $pos;
+        }
+
+        if (!$this->ordenRespetaCondiciones($class, array_keys($nuevoOrden), $nuevoOrden)) {
+            return response()->json([
+                'message' => 'No se puede mover: una pregunta condicional quedaría antes de la pregunta de la que depende.',
+            ], 422);
+        }
+
+        foreach ($preguntas as $pos => $p) {
+            if ((int) $p->orden !== $pos) {
+                $p->orden = $pos;
+                $p->save();
+            }
+        }
+
+        return $this->respondPreguntas($ownerId);
+    }
+
     // ── Internos ────────────────────────────────────────────────────────────
+
+    /** Próximo valor de orden para el dueño (máximo actual + 1; 0 si no hay). */
+    private function siguienteOrden($class, $ownerId)
+    {
+        $max = $class::where($this->ownerColumn(), $ownerId)->max('orden');
+
+        return is_null($max) ? 0 : ((int) $max + 1);
+    }
+
+    /**
+     * Verifica que, con el orden propuesto, toda condición tenga a su pregunta
+     * padre con orden menor que el de la pregunta condicional (hija).
+     */
+    private function ordenRespetaCondiciones($class, array $ids, array $nuevoOrden)
+    {
+        if (empty($ids)) {
+            return true;
+        }
+
+        $morph = (new $class())->getMorphClass();
+
+        $condiciones = \App\PreguntaCondicion::where('target_type', $morph)
+            ->whereIn('target_id', $ids)
+            ->get();
+
+        foreach ($condiciones as $cond) {
+            $hijo  = (int) $cond->target_id;
+            $padre = (int) $cond->parent_id;
+
+            if (!isset($nuevoOrden[$hijo], $nuevoOrden[$padre])) {
+                continue;
+            }
+
+            if ($nuevoOrden[$padre] >= $nuevoOrden[$hijo]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     private function validarPregunta(Request $request, $ownerId, $preguntaId = null)
     {
@@ -111,7 +216,8 @@ trait ManagesPreguntas
         // El mutator del trait Preguntable normaliza a [{id,label}] y conserva ids.
         $pregunta->opciones    = $request->tipo === 'desplegable' ? $request->opciones : null;
         $pregunta->requerida   = $request->input('requerida', false);
-        $pregunta->orden       = $request->input('orden', isset($pregunta->orden) ? $pregunta->orden : 0);
+        // `orden` NO se toma del request: se autoasigna al crear y se preserva al
+        // actualizar. El reordenamiento se hace por el endpoint `mover`.
     }
 
     /**

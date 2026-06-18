@@ -130,6 +130,9 @@
         <!-- Tabla -->
         <div class="box">
             <div class="box-body">
+                <div v-if="errorGeneral" class="callout callout-danger">
+                    <p>{{ errorGeneral }}</p>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <span class="pull-right">
@@ -161,8 +164,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="pregunta in preguntas" :key="pregunta.id">
-                                <td>{{ pregunta.orden }}</td>
+                            <tr v-for="(pregunta, index) in preguntas" :key="pregunta.id">
+                                <td class="text-nowrap">
+                                    <button class="btn btn-xs btn-default" type="button"
+                                            :disabled="index === 0 || reordenando"
+                                            @click.prevent="mover(pregunta, 'arriba')">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </button>
+                                    <button class="btn btn-xs btn-default" type="button"
+                                            :disabled="index === preguntas.length - 1 || reordenando"
+                                            @click.prevent="mover(pregunta, 'abajo')">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </button>
+                                </td>
                                 <td>
                                     {{ pregunta.pregunta }}
                                     <small v-if="pregunta.descripcion" class="text-muted d-block">{{ pregunta.descripcion }}</small>
@@ -218,6 +232,7 @@ export default {
             preguntas: [],
             cargando: false,
             guardando: false,
+            reordenando: false,
             errorGeneral: null,
             errors: {},
             form: this.formVacio(),
@@ -228,8 +243,12 @@ export default {
             return !!this.form.id;
         },
         // Candidatas a pregunta padre: desplegables ANTERIORES (orden menor), no la actual.
+        // Una pregunta NUEVA todavía no tiene orden; se creará al final, así que
+        // cualquier desplegable existente es válida como padre (orden < Infinity).
         preguntasPadrePosibles() {
-            const ordenActual = this.form.orden != null ? this.form.orden : 0;
+            const ordenActual = this.form.id != null
+                ? (this.form.orden != null ? this.form.orden : 0)
+                : Infinity;
             const idActual = this.form.id;
             return this.preguntas.filter((p) => {
                 return p.id !== idActual
@@ -267,6 +286,21 @@ export default {
                 .then((res) => { this.preguntas = res.data; })
                 .catch(() => {})
                 .finally(() => { this.cargando = false; });
+        },
+        mover(pregunta, direccion) {
+            if (this.reordenando) return;
+            this.reordenando = true;
+            this.errorGeneral = null;
+            axios.put(this.baseUrl + '/' + pregunta.id + '/mover', { direccion: direccion })
+                .then((res) => { this.preguntas = res.data; })
+                .catch((error) => {
+                    if (error.response && error.response.status === 422 && error.response.data && error.response.data.message) {
+                        this.errorGeneral = error.response.data.message;
+                    } else {
+                        this.errorGeneral = this.$t('backend.error_guardando');
+                    }
+                })
+                .finally(() => { this.reordenando = false; });
         },
         condicionDe(pregunta) {
             return pregunta.condiciones && pregunta.condiciones.length ? pregunta.condiciones[0] : null;

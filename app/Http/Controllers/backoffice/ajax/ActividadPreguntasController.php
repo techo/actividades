@@ -41,4 +41,9 @@ class ActividadPreguntasController extends Controller
     {
         return $this->eliminarPregunta($actividad->idActividad, $preguntaId);
     }
+
+    public function mover(Request $request, Actividad $actividad, $preguntaId)
+    {
+        return $this->moverPregunta($request, $actividad->idActividad, $preguntaId);
+    }
 }
