@@ -90,7 +90,7 @@ class EvaluacionesTest extends TestCase
             ->agregarInscripto($jose , ['presente'])
             ->create();
 
-        \App\Inscripcion::where(['idPersona', '=', $jose->idPersona ])->delete();
+        \App\Inscripcion::where('idPersona', $jose->idPersona)->delete();
 
         $this->actingAs($maria)
             ->get('/actividades/' . $actividad->idActividad . '/evaluaciones')

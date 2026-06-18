@@ -131,9 +131,9 @@ class UsuariosTest extends TestCase
             'privacidad' => "true",
             'provincia' => "",
             'genero' => "F",
-            'telefono' => "432342344",
+            'telefono' => "+5491145678901",
             'user' => "",
-            'acepta_marketing' => "true"
+            'acepta_marketing' => 1
         ];
 
         $response = $this->post('/ajax/usuario', $datos)
