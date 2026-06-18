@@ -7,6 +7,7 @@ use App\Donation;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
 use App\Services\StripePaymentService;
+use App\StripeCustomer;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -357,17 +358,76 @@ class DonationController extends Controller
                     'amount'             => $sub->amount,
                     'currency'           => $sub->currency,
                     'interval'           => $sub->interval,
-                    'current_period_end' => $sub->current_period_end
+                    'current_period_end'   => $sub->current_period_end
                         ? $sub->current_period_end->toIso8601String()
                         : null,
-                    'canceled_at'        => $sub->canceled_at
+                    'cancel_at_period_end' => (bool) $sub->cancel_at_period_end,
+                    'canceled_at'          => $sub->canceled_at
                         ? $sub->canceled_at->toIso8601String()
                         : null,
-                    'created_at'         => $sub->created_at->toIso8601String(),
+                    'created_at'           => $sub->created_at->toIso8601String(),
                 ];
             });
 
         return response()->json(['data' => $subscriptions]);
+    }
+
+    // =========================================================================
+    // POST /api/donations/stripe/billing-portal
+    // =========================================================================
+
+    /**
+     * Create a Stripe Customer Portal session and return its URL so the app
+     * can open it in the browser. From the portal the user can update or cancel
+     * their recurring donations; the resulting changes flow back into our DB
+     * via the subscription webhooks.
+     *
+     * Request body (optional):
+     *   return_url | returnUrl  (string) — where Stripe sends the user on exit.
+     *                                       Defaults to the MiTECHO deep link.
+     *
+     * Response 200:
+     *   { url }
+     *
+     * Errors:
+     *   404 — the user has no Stripe customer yet (never started a subscription)
+     *   502 — Stripe could not create the portal session
+     */
+    public function billingPortal(Request $request): JsonResponse
+    {
+        // Accept both snake_case and camelCase. Validate as a plain string —
+        // NOT the `url` rule — because the mobile return URL is a custom scheme
+        // deep link (e.g. mitecho://…) which the `url` rule would reject.
+        $request->validate([
+            'return_url' => ['nullable', 'string', 'max:500'],
+            'returnUrl'  => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $returnUrl = $request->input('return_url')
+            ?? $request->input('returnUrl')
+            ?? 'mitecho://stripe-billing-portal-return';
+
+        $customer = StripeCustomer::where('person_id', Auth::user()->idPersona)->first();
+
+        if (!$customer) {
+            return response()->json([
+                'message' => 'No Stripe customer found for this user.',
+            ], 404);
+        }
+
+        try {
+            $url = $this->stripe->createBillingPortalSession(
+                $customer->stripe_customer_id,
+                $returnUrl
+            );
+        } catch (ApiErrorException $e) {
+            return response()->json([
+                'message' => 'Could not create billing portal session.',
+                'error'   => $e->getMessage(),
+            ], 502);
+        }
+
+        return response()->json(['url' => $url]);
     }
 
     // =========================================================================
@@ -397,11 +457,12 @@ class DonationController extends Controller
             'status'             => $subscription->status,
             'amount'             => $subscription->amount,
             'currency'           => $subscription->currency,
-            'interval'           => $subscription->interval,
-            'current_period_end' => $subscription->current_period_end
+            'interval'             => $subscription->interval,
+            'current_period_end'   => $subscription->current_period_end
                 ? $subscription->current_period_end->toIso8601String()
                 : null,
-            'canceled_at'        => $subscription->canceled_at
+            'cancel_at_period_end' => (bool) $subscription->cancel_at_period_end,
+            'canceled_at'          => $subscription->canceled_at
                 ? $subscription->canceled_at->toIso8601String()
                 : null,
         ]);
@@ -528,13 +589,14 @@ class DonationController extends Controller
                         'interval'           => $s->interval,
                         'inscripcion_id'     => null,
                         'actividad'          => null,
-                        'current_period_end' => $s->current_period_end
+                        'current_period_end'   => $s->current_period_end
                             ? $s->current_period_end->toIso8601String()
                             : null,
-                        'canceled_at'        => $s->canceled_at
+                        'cancel_at_period_end' => (bool) $s->cancel_at_period_end,
+                        'canceled_at'          => $s->canceled_at
                             ? $s->canceled_at->toIso8601String()
                             : null,
-                        'created_at'         => $s->created_at->toIso8601String(),
+                        'created_at'           => $s->created_at->toIso8601String(),
                     ];
                 });
         }

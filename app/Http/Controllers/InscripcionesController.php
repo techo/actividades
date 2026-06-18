@@ -408,8 +408,28 @@ class InscripcionesController extends BaseController
 
         if (!is_array($respuestas) || empty($respuestas)) return;
 
+        // Mapa pregunta_id => texto, para evaluar la visibilidad de condicionales.
+        $map = [];
+        foreach ($respuestas as $r) {
+            if (isset($r['pregunta_id'])) {
+                $map[$r['pregunta_id']] = isset($r['respuesta']) ? $r['respuesta'] : null;
+            }
+        }
+
+        // Preguntas de la actividad con sus condiciones: calculamos cuáles quedan
+        // visibles dado lo respondido. Las ocultas NO se persisten (su respuesta se
+        // descarta) y tampoco se consideran obligatorias.
+        $preguntas = \App\ActividadPregunta::where('actividad_id', $inscripcion->idActividad)
+            ->with('condiciones')
+            ->get();
+        $visibles = array_flip(
+            \App\Services\Preguntas\ConditionEvaluator::visibleIds($preguntas, $map)
+        );
+
         foreach ($respuestas as $respuesta) {
             if (!isset($respuesta['pregunta_id'])) continue;
+            // Descartar respuestas de preguntas ocultas por condición.
+            if (!isset($visibles[$respuesta['pregunta_id']])) continue;
 
             InscripcionRespuesta::updateOrCreate(
                 [

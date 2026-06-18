@@ -60,19 +60,54 @@ class SuscribeController extends Controller
             $data['idPersona'] = $user->idPersona;
         }
 
+        // Resolver respuestas y visibilidad ANTES de crear la suscripción, para
+        // poder rechazar si falta una pregunta obligatoria visible.
+        $respuestasIn = ($request->filled('respuestas') && is_array($request->respuestas))
+            ? $request->respuestas
+            : [];
+
+        $map = [];
+        foreach ($respuestasIn as $r) {
+            if (!empty($r['pregunta_id'])) {
+                $map[$r['pregunta_id']] = isset($r['respuesta']) ? $r['respuesta'] : null;
+            }
+        }
+
+        $preguntas = !empty($data['campaign_id'])
+            ? \App\CampaignPregunta::where('campaign_id', $data['campaign_id'])
+                ->with('condiciones')->get()
+            : collect();
+
+        $visibles = array_flip(
+            \App\Services\Preguntas\ConditionEvaluator::visibleIds($preguntas, $map)
+        );
+
+        // Validar obligatorias SOLO entre las visibles. Las ocultas nunca son
+        // obligatorias y sus respuestas se descartan.
+        foreach ($preguntas as $pregunta) {
+            if (!isset($visibles[$pregunta->id])) continue;
+            if (!$pregunta->requerida) continue;
+            $valor = isset($map[$pregunta->id]) ? trim((string) $map[$pregunta->id]) : '';
+            if ($valor === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('suscribe.missing_required'),
+                ], 422);
+            }
+        }
+
         $suscripcion = Suscribe::create($data);
 
-        // Guardar respuestas a preguntas dinámicas si las hay
-        if ($request->filled('respuestas') && is_array($request->respuestas)) {
-            foreach ($request->respuestas as $respuesta) {
-                if (!empty($respuesta['pregunta_id'])) {
-                    SuscribeRespuesta::create([
-                        'suscripcion_id' => $suscripcion->id,
-                        'pregunta_id'    => $respuesta['pregunta_id'],
-                        'respuesta'      => $respuesta['respuesta'] ?? null,
-                    ]);
-                }
-            }
+        // Guardar solo las respuestas de preguntas visibles.
+        foreach ($respuestasIn as $respuesta) {
+            if (empty($respuesta['pregunta_id'])) continue;
+            if (!isset($visibles[$respuesta['pregunta_id']])) continue;
+
+            SuscribeRespuesta::create([
+                'suscripcion_id' => $suscripcion->id,
+                'pregunta_id'    => $respuesta['pregunta_id'],
+                'respuesta'      => $respuesta['respuesta'] ?? null,
+            ]);
         }
 
         return response()->json([

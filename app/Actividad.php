@@ -54,6 +54,7 @@ class Actividad extends Model
     public function preguntas()
     {
         return $this->hasMany(ActividadPregunta::class, 'actividad_id', 'idActividad')
+                    ->with('condiciones')
                     ->orderBy('orden');
     }
 

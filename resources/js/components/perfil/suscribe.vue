@@ -166,7 +166,7 @@
                         <!-- Preguntas dinámicas de la campaña -->
                         <div v-if="preguntas && preguntas.length" class="mt-3">
                             <h4>{{ $t('suscribe.additional_questions') }}</h4>
-                            <div v-for="pregunta in preguntas" :key="pregunta.id" class="form-group mt-2">
+                            <div v-for="pregunta in preguntas" v-if="esVisible(pregunta)" :key="pregunta.id" class="form-group mt-2">
                                 <label>
                                     {{ pregunta.pregunta }}
                                     <span v-if="pregunta.requerida" class="text-danger">*</span>
@@ -211,7 +211,7 @@
                         <!-- Preguntas dinámicas de la campaña -->
                         <div v-if="preguntas && preguntas.length" class="mt-3">
                             <h4>{{ $t('suscribe.additional_questions') }}</h4>
-                            <div v-for="pregunta in preguntas" :key="pregunta.id" class="form-group mt-2">
+                            <div v-for="pregunta in preguntas" v-if="esVisible(pregunta)" :key="pregunta.id" class="form-group mt-2">
                                 <label>
                                     {{ pregunta.pregunta }}
                                     <span v-if="pregunta.requerida" class="text-danger">*</span>
@@ -297,6 +297,7 @@
 
 <script>
 import { VueTelInput } from 'vue-tel-input';
+import { esVisible as evalVisible } from '../../conditionEvaluator';
 
 export default {
     name: 'SuscripcionTecho',
@@ -375,6 +376,12 @@ export default {
         },
     },
     mounted() {
+        // Pre-inicializar `respuestas` con una clave reactiva por pregunta. En Vue 2
+        // agregar claves nuevas a un objeto no es reactivo, así que sin esto responder
+        // la pregunta padre no dispara el re-render que revela las condicionales.
+        (this.preguntas || []).forEach((p) => {
+            if (p && p.id != null) this.$set(this.respuestas, p.id, '');
+        });
         this.removeUndefinedText();
         if (this.pais) {
             this.suscriptor.idPais = this.pais.id;
@@ -408,6 +415,12 @@ export default {
         },
     },
     methods: {
+        // ¿La pregunta debe mostrarse según sus condiciones?
+        // En suscribe, `respuestas` ya es un mapa { pregunta_id: texto }.
+        esVisible(pregunta) {
+            return evalVisible(pregunta, this.preguntas || [], this.respuestas || {});
+        },
+
         // REQ 2 — Verificar si el email ya existe como usuario
         verificarEmail() {
             const email = this.suscriptor.mail;
@@ -436,12 +449,23 @@ export default {
 
             this.enviando = true;
 
-            const respuestasArray = Object.keys(this.respuestas).map(function(preguntaId) {
-                return {
-                    pregunta_id: parseInt(preguntaId),
-                    respuesta:   this.respuestas[preguntaId],
-                };
+            // Solo enviar respuestas de preguntas visibles (las ocultas por
+            // condición se descartan; el backend igualmente las prunea).
+            const visibles = {};
+            (this.preguntas || []).forEach(function(p) {
+                visibles[p.id] = this.esVisible(p);
             }.bind(this));
+
+            const respuestasArray = Object.keys(this.respuestas)
+                .filter(function(preguntaId) {
+                    return visibles[preguntaId] !== false;
+                })
+                .map(function(preguntaId) {
+                    return {
+                        pregunta_id: parseInt(preguntaId),
+                        respuesta:   this.respuestas[preguntaId],
+                    };
+                }.bind(this));
 
             const payload = Object.assign({}, this.suscriptor, {
                 fecha_nacimiento: this.formatFecha(this.suscriptor.fecha_nacimiento),

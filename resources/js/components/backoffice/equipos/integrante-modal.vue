@@ -177,16 +177,16 @@
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.meta }">
                                 <label for="meta">{{ $t('backend.goal') }}</label>
-
-                                <textarea v-model="form.meta" name="meta" class="form-control" rows="3" required></textarea>
+                                <small class="pull-right" :class="contadorClase(form.meta)">{{ largo(form.meta) }}/{{ maxMetaHitos }}</small>
+                                <textarea v-model="form.meta" name="meta" class="form-control" rows="3" :maxlength="maxMetaHitos" required></textarea>
                                 <span v-if="errors.meta" v-text="errors.meta[0]" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div :class="{ 'form-group': true, 'has-error': errors.hitos }">
                                 <label for="hitos">{{ $t('backend.milestones') }}</label>
-                                <textarea v-model="form.hitos" name="hitos" class="form-control" rows="3" required></textarea>
-
+                                <small class="pull-right" :class="contadorClase(form.hitos)">{{ largo(form.hitos) }}/{{ maxMetaHitos }}</small>
+                                <textarea v-model="form.hitos" name="hitos" class="form-control" rows="3" :maxlength="maxMetaHitos" required></textarea>
                                 <span v-if="errors.hitos" v-text="errors.hitos[0]" class="help-block"></span>
                             </div>
                         </div>
@@ -235,6 +235,11 @@
                     <div v-if="guardado" class="row">
                         <p class="text-center bg-success">
                             {{ $t('backend.changes_saved') }}
+                        </p>
+                    </div>
+                    <div v-if="errorMsg" class="row">
+                        <p class="text-center bg-danger">
+                            {{ errorMsg }}
                         </p>
                     </div>
                     <button ref="cancelar" class="btn" @click="cancelar()">{{ $t('backend.cancel') }}</button>
@@ -294,14 +299,24 @@ export default {
             tag: '',
             errors: {},
             guardado: false,
+            errorMsg: '',
             estadoOriginal: null,
+            maxMetaHitos: 500,
         }
     },
     mounted() {
-        Event.$on('integrante:crear', this.show);
+        Event.$on('integrante:crear', this.nuevo);
         Event.$on('integrante:editar', this.editar);
         this.guardado = false;
         this.getComunidades();
+
+        // El cierre nativo del modal (tecla ESC o clic en el backdrop) no pasa
+        // por cancelar(), así que limpiamos el form también acá para que el
+        // próximo "crear/editar" no arrastre datos del integrante anterior.
+        $('#inscribir-modal').on('hidden.bs.modal', () => {
+            this.reset();
+            this.reset_errors();
+        });
     },
     watch: {
         persona(v, vv) {
@@ -370,9 +385,11 @@ export default {
             } else if (this.idEquipo){
                 this.form.idComunidad = null;
             }
+            this.errorMsg = '';
             axios.post('/admin/ajax/equipos/' + this.idEquipo + '/integrante/crear', this.form)
                 .then((datos) => {
-                    this.submitFiles(datos.data.idIntegrante);
+                    this.form.idIntegrante = datos.data.idIntegrante;
+                    this.submitFiles();
                     this.guardado = true;
                     setTimeout(() => {
                         this.guardado = false;
@@ -380,7 +397,7 @@ export default {
                         this.cancelar();
                     }, 2000);
                 })
-                .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+                .catch((error) => { this.handleSaveError(error); });
 
         },
 
@@ -390,6 +407,7 @@ export default {
             } else if (this.idEquipo){
                 this.form.idComunidad = null;
             }
+            this.errorMsg = '';
             axios.put('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + this.form.idIntegrante, this.form)
                 .then((datos) => {
                     if (this.archivo_carta_compromiso)
@@ -401,7 +419,21 @@ export default {
                         this.cancelar();
                     }, 2000);
                 })
-                .catch((error) => { this.errors = this.errors = error.response.data.errors; });
+                .catch((error) => { this.handleSaveError(error); });
+        },
+        handleSaveError(error) {
+            const data = error.response && error.response.data;
+            if (data && data.errors) {
+                // 422: errores de validación por campo (ej: meta/hitos > 500).
+                this.errors = data.errors;
+                this.errorMsg = '';
+            } else {
+                // 500 o error de red: no hay errores por campo. Avisamos al
+                // usuario en vez de dejar el modal sin feedback (antes quedaba
+                // errors = undefined y el guardado parecía silencioso).
+                this.errors = {};
+                this.errorMsg = this.$t('backend.save_generic_error');
+            }
         },
         confirmarReactivacion() {
             this.$refs.confirmar.openSimplert({
@@ -424,9 +456,9 @@ export default {
 
         getComunidades(){
             axios.get('/ajax/comunidades/equipo/'+ this.idEquipo )
-                .then((datos) => { 
+                .then((datos) => {
                     this.autocompleteComunidadesTags = this.formatComunidades(datos.data);
-                }).catch((error) => { debugger; });
+                }).catch((error) => { console.error('No se pudieron cargar las comunidades', error); });
         },
         formatComunidades(response) {
             return response.map(comunidad => ({
@@ -476,7 +508,12 @@ export default {
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         editar(p) {
-            axios.get('/admin/ajax/equipos/' + this.form.idEquipo + '/integrante/' + p.idIntegrante)
+            // Limpiamos antes del fetch para no mostrar datos del integrante
+            // anterior mientras llega la respuesta (el modal se abre sincrónico).
+            this.reset();
+            this.reset_errors();
+            this.show();
+            axios.get('/admin/ajax/equipos/' + this.idEquipo + '/integrante/' + p.idIntegrante)
                 .then((datos) => {
                     this.form = datos.data;
                     this.estadoOriginal = datos.data.estado;
@@ -500,7 +537,29 @@ export default {
                     } else {
                         this.comunidades = [];
                     }
-                }).catch((error) => { debugger; });
+                }).catch((error) => {
+                    // Si el GET falla no dejamos el modal con datos a medias:
+                    // avisamos y lo cerramos para que el usuario reintente.
+                    console.error('No se pudo cargar el integrante', error);
+                    this.errorMsg = this.$t('backend.save_generic_error');
+                    this.hide();
+                });
+        },
+        largo(valor) {
+            return (valor || '').length;
+        },
+        contadorClase(valor) {
+            const len = this.largo(valor);
+            if (len >= this.maxMetaHitos) return 'text-danger';
+            if (len >= this.maxMetaHitos - 50) return 'text-warning';
+            return 'text-muted';
+        },
+        nuevo() {
+            // Alta: limpiamos el form para no arrastrar el idIntegrante ni los
+            // datos del integrante editado previamente (sino guardar() llamaría
+            // a update() en vez de store() y pisaría otro registro).
+            this.reset();
+            this.reset_errors();
             this.show();
         },
         show: function () {
@@ -522,6 +581,8 @@ export default {
                 this.errors[field] = null;
                 delete this.errors[field];
             }
+            this.errorMsg = '';
+            this.guardado = false;
         },
         cancelar() {
             this.reset();

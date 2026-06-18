@@ -21,15 +21,17 @@ class DonationSubscription extends Model
         'idempotency_key',
         'stripe_event_id',
         'current_period_end',
+        'cancel_at_period_end',
         'canceled_at',
         'metadata',
     ];
 
     protected $casts = [
-        'amount'             => 'integer',
-        'current_period_end' => 'datetime',
-        'canceled_at'        => 'datetime',
-        'metadata'           => 'array',
+        'amount'               => 'integer',
+        'current_period_end'   => 'datetime',
+        'cancel_at_period_end' => 'boolean',
+        'canceled_at'          => 'datetime',
+        'metadata'             => 'array',
     ];
 
     // ── Possible status values (mirrors Stripe subscription statuses) ─────────

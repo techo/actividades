@@ -146,6 +146,10 @@ Route::middleware('auth:api')->group(function () {
         Route::get('stripe/subscription', 'api\DonationController@listSubscriptions')
              ->name('api.donations.list-subscriptions');
 
+        // Create a Stripe Customer Portal session (self-manage subscriptions)
+        Route::post('stripe/billing-portal', 'api\DonationController@billingPortal')
+             ->name('api.donations.billing-portal');
+
         // Poll subscription status by Stripe Subscription ID
         Route::get('stripe/subscription/{subscriptionId}/status', 'api\DonationController@getSubscriptionStatus')
              ->name('api.donations.subscription-status');
