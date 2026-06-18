@@ -23,9 +23,22 @@
         </whitelist>
     </filter>
     <php>
+        <!-- La suite necesita >128M; lo fijamos acá para no pasar -d memory_limit. -->
+        <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:xc96OYdkAs2f6P+htocUwf45w4VVf+B/BQNYILn8H7M="/>
+        <!-- Tests corren contra MySQL (no SQLite: la suite está rota sobre SQLite
+             por nombres de índice globales). Estos valores apuntan al contenedor
+             docker laravel_mysql. force="false": el entorno real (CI) los pisa. -->
+        <env name="DB_CONNECTION" value="mysql"/>
+        <env name="DB_HOST" value="mysql"/>
+        <env name="DB_PORT" value="3306"/>
+        <env name="DB_DATABASE" value="laravel_test"/>
+        <env name="DB_USERNAME" value="laravel"/>
+        <env name="DB_PASSWORD" value="password"/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
-        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="MAIL_DRIVER" value="log"/>
     </php>
 </phpunit>
