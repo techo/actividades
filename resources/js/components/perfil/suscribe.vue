@@ -376,6 +376,12 @@ export default {
         },
     },
     mounted() {
+        // Pre-inicializar `respuestas` con una clave reactiva por pregunta. En Vue 2
+        // agregar claves nuevas a un objeto no es reactivo, así que sin esto responder
+        // la pregunta padre no dispara el re-render que revela las condicionales.
+        (this.preguntas || []).forEach((p) => {
+            if (p && p.id != null) this.$set(this.respuestas, p.id, '');
+        });
         this.removeUndefinedText();
         if (this.pais) {
             this.suscriptor.idPais = this.pais.id;
