@@ -41,6 +41,17 @@ class StripePaymentService
     /** Valid billing intervals for recurring donations. */
     const ALLOWED_INTERVALS = ['month', 'year'];
 
+    /**
+     * Stripe API version this donation flow is written against.
+     *
+     * Subscription creation/retrieval rely on `latest_invoice.payment_intent`
+     * (the first-payment client_secret) and `current_period_end` on the
+     * subscription object. Stripe removed/relocated both in later default API
+     * versions, so we pin the version on those calls to keep the response
+     * shape the code expects. PaymentIntent and webhook flows are unaffected.
+     */
+    const PINNED_API_VERSION = '2020-08-27';
+
     // ─────────────────────────────────────────────────────────────────────
 
     public function __construct()
@@ -244,7 +255,14 @@ class StripePaymentService
                 'person_id' => $personId,
                 'source'    => $source,
             ], $extra),
-        ], ['idempotency_key' => $idempotencyKey]);
+        ], [
+            'idempotency_key' => $idempotencyKey,
+            // Pin the API version this flow was written against. Newer default
+            // versions no longer expose `latest_invoice.payment_intent` (the
+            // client_secret source) nor `current_period_end` on the subscription
+            // object, which would make both come back null.
+            'stripe_version'  => self::PINNED_API_VERSION,
+        ]);
     }
 
     /**
@@ -260,7 +278,7 @@ class StripePaymentService
         return \Stripe\Subscription::retrieve([
             'id'     => $subscriptionId,
             'expand' => ['latest_invoice.payment_intent'],
-        ]);
+        ], ['stripe_version' => self::PINNED_API_VERSION]);
     }
 
     // ── Billing Portal ──────────────────────────────────────────────────────────
