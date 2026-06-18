@@ -127,7 +127,7 @@ class InscripcionesController extends BaseController
             }
 
             $jornadas = json_decode($request->input('jornadas'), true);
-            if(count($jornadas)>0){
+            if(is_array($jornadas) && count($jornadas)>0){
                 $inscripcion->save();
                 foreach ($jornadas as $jornada) {
                     if($jornada['selected'])
