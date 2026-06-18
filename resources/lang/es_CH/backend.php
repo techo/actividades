@@ -147,6 +147,7 @@ return [
     'impact' => 'Impacto',
     'skills' => 'Capacidades',
     'changes_saved' => 'Cambios guardados',
+    'save_generic_error' => 'No se pudieron guardar los cambios. Intenta nuevamente.',
     'activity_coordination' => 'Coordinación de la actividad',
     'all_these_people_can_edit_the_team' => 'Todas estas Personas tienen acceso a editar el equipo.',
     'point' => 'Punto',

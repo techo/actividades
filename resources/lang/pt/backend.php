@@ -143,6 +143,7 @@ return [
     'impact' => 'Impacto',
     'skills' => 'Capacidades',
     'changes_saved' => 'Alterações salvas',
+    'save_generic_error' => 'Não foi possível salvar as alterações. Tente novamente.',
     'activity_coordination' => 'Coordenação da atividade',
     'all_these_people_can_edit_the_team' => 'Todas essas pessoas têm acesso para editar a Equipe. Para isso, devem primeiro ter permissão de coordenador.',
     'all_these_people_can_edit_the_community' => 'Todas essas pessoas têm acesso para editar a Comunidade. Para isso, devem primeiro ter permissão de coordenador.',
