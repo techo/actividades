@@ -133,6 +133,35 @@ class DonationSubscriptionWebhookTest extends TestCase
     }
 
     /** @test */
+    public function subscription_updated_reads_current_period_end_from_item_when_absent_on_subscription()
+    {
+        // Newer Stripe API versions deliver `current_period_end` on the
+        // subscription item, not the subscription object.
+        $persona = $this->persona();
+        $sub     = $this->makeSubscription($persona);
+
+        $periodEnd = 1815000000;
+        $event = $this->subscriptionEvent('customer.subscription.updated', [
+            'status'               => 'active',
+            'cancel_at_period_end' => false,
+            'current_period_end' => null, // absent at subscription level
+            'items'              => ['object' => 'list', 'data' => [
+                ['id' => 'si_x', 'current_period_end' => $periodEnd, 'price' => ['unit_amount' => 2500]],
+            ]],
+        ]);
+        $this->mockWebhook($event);
+
+        $this->postJson('/api/donations/stripe/webhook')->assertStatus(200);
+
+        $sub->refresh();
+        $this->assertNotNull($sub->current_period_end);
+        $this->assertEquals(
+            Carbon::createFromTimestamp($periodEnd)->timestamp,
+            $sub->current_period_end->timestamp
+        );
+    }
+
+    /** @test */
     public function subscription_updated_does_not_revive_a_terminal_subscription()
     {
         $persona = $this->persona();
