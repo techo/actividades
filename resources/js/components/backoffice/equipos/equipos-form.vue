@@ -39,23 +39,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="estado">{{ $t('backend.area') }}</label>
-                                    <select name="estado" class="form-control" v-model="data.area" required
+                                    <select name="estado" class="form-control" v-model="data.area_id" required
                                         :disabled="this.readonly">
-                                        <option value="Administración y Finanzas">{{ $t('backend.administration_and_finance') }}</option>
-                                        <option value="Comunicaciones">{{ $t('backend.communications') }}</option>
-                                        <option value="Construcción y Logística">{{ $t('backend.construction_and_logistics') }}</option>
-                                        <option value="Desarrollo de Fondos">{{ $t('backend.fund_development') }}</option>
-                                        <option value="Vivienda y Hábitat">{{ $t('backend.housing_and_habitat') }}</option>
-                                        <option value="Detección y Asignación">{{ $t('backend.detection_and_assignment') }}</option>
-                                        <option value="Dirección General">{{ $t('backend.general_management') }}</option>
-                                        <option value="Formación y Voluntariado">{{ $t('backend.training_and_volunteering') }}</option>
-                                        <option value="Legal">{{ $t('backend.legal') }}</option>
-                                        <option value="Personas">{{ $t('backend.people') }}</option>
-                                        <option value="Gestión Comunitaria">{{ $t('backend.community_management') }}</option>
-                                        <option value="Programas y Proyectos">{{ $t('backend.programs_and_projects') }}</option>
-                                        <option value="Equipos">{{ $t('backend.teams') }}</option>
-                                        <option value="Centro de Investigación Social">{{ $t('backend.social_research_center') }}</option>
-                                        <option value="Procesos Comunitarios">{{ $t('backend.community_processes') }}</option>
+                                        <option v-for="area in areas" :key="area.id" :value="area.id">
+                                            {{ $te('backend.' + area.clave) ? $t('backend.' + area.clave) : area.nombre }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -119,8 +107,10 @@ export default {
                 fechaFin: null,
                 activo: 1,
                 area: null,
+                area_id: null,
                 tagComunidades: [],
             },
+            areas: [],
             autocompleteComunidadesTags: [],
             tag: [],
 
@@ -139,6 +129,7 @@ export default {
     },
     created() {
         this.getOficinas();
+        this.getAreas();
         if (this.equipo) {
             this.data = this.equipo;
       
@@ -183,6 +174,13 @@ export default {
         editar() {
             this.oficinaSeleccionado = Object.values(this.dataOficinas).find(oficina => oficina.id === this.data.idOficina);
             this.readonly = false;
+        },
+        getAreas: function () {
+            axios.get("/admin/ajax/areas")
+                .then((respuesta) => {
+                    this.areas = respuesta.data;
+                })
+                .catch(() => { debugger });
         },
         getOficinas: function () {
             axios.get("/admin/ajax/oficinas")

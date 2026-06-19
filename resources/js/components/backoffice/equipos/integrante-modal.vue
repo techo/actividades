@@ -86,11 +86,11 @@
                                     v-model="form.rol"
                                 >
                                     <option
-                                        v-for="(label, key) in rolesFallback"
-                                        :key="key"
-                                        :value="key"
+                                        v-for="rol in roles"
+                                        :key="rol.id"
+                                        :value="rol.clave"
                                     >
-                                        {{ label }}
+                                        {{ $te('backend.roles_integrantes.' + rol.clave) ? $t('backend.roles_integrantes.' + rol.clave) : rol.nombre }}
                                     </option>
                                 </select>
                                 <span v-if="errors.rol" v-text="errors.rol[0]" class="help-block"></span>
@@ -265,6 +265,7 @@ export default {
             nombre_carta_compromiso: '',
             archivo_plan_de_trabajo: null,
             personas: [],
+            roles: [],
             form: {
                 idEquipo: this.idEquipo,
                 idIntegrante: null,
@@ -302,6 +303,7 @@ export default {
         Event.$on('integrante:editar', this.editar);
         this.guardado = false;
         this.getComunidades();
+        this.getRoles();
     },
     watch: {
         persona(v, vv) {
@@ -341,14 +343,18 @@ export default {
                 return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
             });
         },
-        rolesFallback() {
-            return this.$i18n.messages[this.$i18n.locale].backend.roles_integrantes;
-        },
         estadoEraInactivo() {
             return this.estadoOriginal == 0;
         }
     },
     methods: {
+        getRoles() {
+            axios.get('/admin/ajax/roles-integrante')
+                .then((respuesta) => {
+                    this.roles = respuesta.data;
+                })
+                .catch(() => { debugger });
+        },
         guardar() {
             if (
                 this.editando &&
