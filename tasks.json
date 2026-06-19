@@ -6,10 +6,14 @@
     "backward_compatibility": true,
     "no_breaking_changes_without_discussion": true,
     "upgrade_protocol": "cada fase en branch propio — solo mergear cuando phpunit pase 100% verde",
-    "valid_status": ["pending", "in_progress", "done", "blocked"]
+    "valid_status": [
+      "pending",
+      "in_progress",
+      "done",
+      "blocked"
+    ]
   },
   "tasks": [
-
     {
       "id": 1,
       "group": "mantenimiento",
@@ -108,7 +112,6 @@
       "risk": "low",
       "status": "pending"
     },
-
     {
       "id": 9,
       "group": "cobertura-tests",
@@ -125,7 +128,6 @@
       "status": "done",
       "completed_at": "2026-06-17"
     },
-
     {
       "id": 10,
       "group": "cobertura-tests",
@@ -140,7 +142,9 @@
         "Test: GET /email/verify/{id} → email verificado",
         "Test: GET /desuscribirse/{uuid} y POST → usuario desuscripto de mailing"
       ],
-      "blockedBy": [9],
+      "blockedBy": [
+        9
+      ],
       "risk": "none",
       "status": "pending"
     },
@@ -156,7 +160,9 @@
         "Test: PUT /perfil/editar → actualiza datos correctamente",
         "Test: GET /perfil/inscripciones → lista las inscripciones del usuario"
       ],
-      "blockedBy": [9],
+      "blockedBy": [
+        9
+      ],
       "risk": "none",
       "status": "pending"
     },
@@ -173,7 +179,9 @@
         "Usar Stripe\\Webhook::constructEvent() con mock o fixture de payload",
         "Tests corren sin llamadas reales a la API de Stripe"
       ],
-      "blockedBy": [9],
+      "blockedBy": [
+        9
+      ],
       "risk": "none",
       "notes": "Ver StripeController.php para entender qué eventos procesa. Buscar cómo el proyecto actual hace los tests de pago en InscripcionesConPagoTest.php para reusar el patrón.",
       "status": "pending"
@@ -190,7 +198,9 @@
         "Test: POST con email ya suscripto → respuesta correcta (no error 500)",
         "Test: flujo de desuscripción via UUID"
       ],
-      "blockedBy": [9],
+      "blockedBy": [
+        9
+      ],
       "risk": "none",
       "status": "pending"
     },
@@ -208,7 +218,9 @@
         "Test: POST /api/socialLogin con token Google/Facebook válido → token Passport",
         "Todos usan RefreshDatabase"
       ],
-      "blockedBy": [9],
+      "blockedBy": [
+        9
+      ],
       "risk": "none",
       "agent_notes": "Usar Passport::actingAs() para endpoints auth:api. Para registro, verificar que el campo es 'mail' no 'email' (ver CLAUDE.md §Autenticación). Destapó: /api/register daba 403 siempre (CrearPersona::authorize() vacío, corregido); la ruta /api/socialLogin apunta a un método inexistente (ruta muerta). socialLogin no se cubre; se cubre providerLogin (validación + proveedor inválido).",
       "status": "done",
@@ -227,7 +239,9 @@
         "Test: GET /api/actividades/{id} → 404 si no existe",
         "Verificar estructura JSON de respuesta (campos que la app espera)"
       ],
-      "blockedBy": [14],
+      "blockedBy": [
+        14
+      ],
       "risk": "none",
       "notes": "Estos son los tests más importantes para detectar regressions de API durante el upgrade. Incluye un test de contrato de fechas (formato dd-mm-aaaa) como ancla anti-regresión. Destapó: GET /api/actividades/{id} inexistente daba 500 (find() + acceso a propiedad), corregido a 404 con findOrFail.",
       "status": "done",
@@ -245,9 +259,12 @@
         "Test: cancelar inscripción si el flujo lo permite → estado actualizado",
         "Test: inscribirse a actividad cerrada → error con mensaje claro"
       ],
-      "blockedBy": [14],
+      "blockedBy": [
+        14
+      ],
       "risk": "none",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17"
     },
     {
       "id": 17,
@@ -261,10 +278,14 @@
         "Test: POST /api/dispositivos sin auth → 401",
         "Test: PushNotificationService → dispara job EnviarNotificacionPush (Queue::fake())"
       ],
-      "blockedBy": [14],
+      "blockedBy": [
+        14
+      ],
       "risk": "none",
       "notes": "Ver docs/push-notifications.md para entender la arquitectura antes de escribir estos tests.",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "agent_notes": "DispositivosApiTest: registrar (upsert por player_id, sin duplicar), 401 sin auth, y PushNotificationService despacha/omite EnviarNotificacionPush segun recibir_push (Queue::fake())."
     },
     {
       "id": 18,
@@ -278,11 +299,14 @@
         "Test: POST /api/donations/webhook con firma inválida → 403",
         "Tests no hacen llamadas reales a Stripe (mock o fixture)"
       ],
-      "blockedBy": [14],
+      "blockedBy": [
+        14
+      ],
       "risk": "none",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "notes": "DonationsApiTest: StripePaymentService mockeado por el container (sin Stripe real). Cubre validacion (422), auth (401), webhook firma invalida (400 -el codigo real, no 403-) y webhook payment_intent.succeeded -> donacion confirmada. Pendiente: el camino feliz de createPaymentIntent (creacion del intent en Stripe) no esta cubierto."
     },
-
     {
       "id": 19,
       "group": "upgrade-fase1",
@@ -297,7 +321,9 @@
         "Tests de API mobile (task 10) pasan"
       ],
       "risk": "low",
-      "blockedBy": [18],
+      "blockedBy": [
+        18
+      ],
       "branch": "upgrade/laravel-6x",
       "agent_notes": "Branch: upgrade/laravel-6x. Mergear a main solo cuando todos los tests estén verdes.",
       "status": "pending"
@@ -314,7 +340,9 @@
         "MailingTest.php pasa"
       ],
       "risk": "low",
-      "blockedBy": [19],
+      "blockedBy": [
+        19
+      ],
       "branch": "upgrade/laravel-7x",
       "status": "pending"
     },
@@ -330,7 +358,9 @@
         "phpunit sigue verde en Laravel 7.x (no cambiar framework aún)"
       ],
       "risk": "high",
-      "blockedBy": [20],
+      "blockedBy": [
+        20
+      ],
       "branch": "upgrade/laravel-8x",
       "agent_notes": "Este es el cambio más extenso. Hacerlo en el mismo branch que el upgrade de L8 pero como primer sub-paso. Archivos factory: PersonaFactory, ActividadFactory, InscripcionFactory, PaisFactory, PuntoEncuentroFactory, GrupoFactory, LocalidadFactory, ProvinciaFactory, OficinaFactory, TipoFactory, CoordinadorFactory, NovedadFactory, CategoriaActividadFactory, GrupoRolPersonaFactory, EvaluacionActividad, EvaluacionPersona, UserFactory.",
       "status": "pending"
@@ -349,7 +379,9 @@
         "php artisan passport:install completa sin errores"
       ],
       "risk": "high",
-      "blockedBy": [21],
+      "blockedBy": [
+        21
+      ],
       "branch": "upgrade/laravel-8x",
       "status": "pending"
     },
@@ -365,7 +397,9 @@
         "No hay uso de API deprecated de DBAL"
       ],
       "risk": "medium",
-      "blockedBy": [22],
+      "blockedBy": [
+        22
+      ],
       "branch": "upgrade/laravel-9x",
       "status": "pending"
     },
@@ -382,7 +416,9 @@
         "No hay warnings de tipos en PHP 8.1"
       ],
       "risk": "low",
-      "blockedBy": [23],
+      "blockedBy": [
+        23
+      ],
       "branch": "upgrade/laravel-10x",
       "status": "pending"
     },
@@ -401,10 +437,11 @@
         "Smoke test en staging: login mobile, inscripción, backoffice"
       ],
       "risk": "low",
-      "blockedBy": [24],
+      "blockedBy": [
+        24
+      ],
       "branch": "upgrade/laravel-11x",
       "status": "pending"
     }
-
   ]
 }

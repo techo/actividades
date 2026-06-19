@@ -2,6 +2,22 @@
 
 ---
 
+## 2026-06-17 — Cobertura API mobile #16–18 (resto de la API)
+
+**Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`
+
+Con #14–18 cerradas, **toda la API mobile queda cubierta** (grupo cobertura-tests: falta solo la parte web #10–13).
+
+- **#16** `InscripcionesApiTest` (4): inscribirse a actividad simple, mis inscripciones, cancelar, y error con punto cerrado.
+- **#17** `DispositivosApiTest` (5): registrar (upsert por player_id sin duplicar), 401 sin auth, y PushNotificationService despacha/omite `EnviarNotificacionPush` según `recibir_push` (Queue::fake()).
+- **#18** `DonationsApiTest` (4): StripePaymentService mockeado por el container (sin Stripe real) — validación (422), auth (401), webhook firma inválida (400), y webhook `payment_intent.succeeded` → donación confirmada.
+
+**Hallazgo anotado:** el webhook de donaciones devuelve **400** ante firma inválida (el plan decía 403). Pendiente: el camino feliz de `createPaymentIntent` (creación del intent en Stripe) no está cubierto.
+
+Suite: **129/129 verde**.
+
+---
+
 ## 2026-06-17 — Cobertura API mobile #14–15 + más bugs reales
 
 **Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`
