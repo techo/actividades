@@ -17,12 +17,9 @@ class EstadisticasController extends Controller
 
     public function index()
     {
-        // Movilizados del ciclo (presente=1) = por fecha de la actividad.
+        // Movilizados del ciclo (presente=1) = definición única en MovilizacionMetrics.
         $estadisticas['inscripciones_ciclo'] =
-        \App\Inscripcion::join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->whereYear('Actividad.fechaInicio', Carbon::now()->format('Y'))
-            ->where('Inscripcion.presente', 1)
-            ->count();
+            \App\Reporting\MovilizacionMetrics::movilizadosTotal(Carbon::now()->format('Y'));
 
         return view('backoffice.estadisticas.index', $estadisticas);
     }

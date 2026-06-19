@@ -12,14 +12,7 @@ class EstadisticasController extends Controller
 
     public function voluntades_movilizadas()
     {
-        // Canónico: "movilizado" = participaciones con presente=1, ubicadas por la
-        // fecha de la actividad (Actividad.fechaInicio), NO por fechaInscripcion.
-        $inscriptosPresentes = \App\Inscripcion::join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->whereYear('Actividad.fechaInicio', now()->year)
-            ->where('Inscripcion.presente', 1)
-            ->count();
-
-        return $inscriptosPresentes;
+        return \App\Reporting\MovilizacionMetrics::movilizadosTotal(now()->year);
     }
 
     public function actividades()
@@ -39,13 +32,7 @@ class EstadisticasController extends Controller
 
     public function personas_movilizadas()
     {
-        // Canónico: personas únicas movilizadas, por fecha de la actividad.
-        $personas = \App\Inscripcion::join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
-            ->whereYear('Actividad.fechaInicio', now()->year)
-            ->where('Inscripcion.presente', 1)
-            ->select(DB::raw('count(distinct Inscripcion.idPersona) as cantidad'))
-            ->first();
-
-        return $personas;
+        // Se preserva la forma de respuesta {cantidad} que consume estadisticas-publicas.vue.
+        return ['cantidad' => \App\Reporting\MovilizacionMetrics::personasUnicas(now()->year)];
     }
 }
