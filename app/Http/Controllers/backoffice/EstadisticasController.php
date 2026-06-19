@@ -17,9 +17,11 @@ class EstadisticasController extends Controller
 
     public function index()
     {
-        $estadisticas['inscripciones_ciclo'] = 
-        \App\Inscripcion::whereYear('created_at', Carbon::now()->format('Y')) 
-            ->where('presente', 1)
+        // Movilizados del ciclo (presente=1) = por fecha de la actividad.
+        $estadisticas['inscripciones_ciclo'] =
+        \App\Inscripcion::join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+            ->whereYear('Actividad.fechaInicio', Carbon::now()->format('Y'))
+            ->where('Inscripcion.presente', 1)
             ->count();
 
         return view('backoffice.estadisticas.index', $estadisticas);
@@ -58,10 +60,11 @@ class EstadisticasController extends Controller
         $pais = ($request->filled('pais'))?$request->pais:null;
         $oficina = ($request->filled('oficina'))?$request->oficina:null;
 
+        // Actividades realizadas por mes = por fecha de la actividad (fechaInicio).
         $consulta = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
-            ->select(DB::raw('MONTH(fechaCreacion) mes, atl_CategoriaActividad.nombre, color, count(*) cantidad'))
-            ->whereYear('fechaCreacion', $año) 
+            ->select(DB::raw('MONTH(Actividad.fechaInicio) mes, atl_CategoriaActividad.nombre, color, count(*) cantidad'))
+            ->whereYear('Actividad.fechaInicio', $año)
             ->groupBy('mes', 'atl_CategoriaActividad.color', 'atl_CategoriaActividad.nombre');
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
