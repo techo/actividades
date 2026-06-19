@@ -239,23 +239,10 @@ class Actividad extends Model
 
         $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
 
-        if(!$inscripcion) return false;
-
-        if($this->confirmacion == $inscripcion->confirma && $this->pago == $inscripcion->pago) {
-            return "confirmed";
-        }
-
-        if($this->confirmacion == $inscripcion->confirma && $this->pago != $inscripcion->pago) {
-            if( !$this->fechaLimitePago || $this->fechaLimitePago && $this->fechaLimitePago > \Carbon\Carbon::now() )
-                return "confirm_by_paying";
-            else 
-                return "confirmation_date_is_closed";
-        }
-
-        if($this->confirmacion != $inscripcion->confirma) {
-            return "waiting_for_confirmation";
-        }
-
+        // Fuente única: App\Services\EstadoInscripcion. Vocabulario inglés.
+        return \App\Services\EstadoInscripcion::toEnglish(
+            \App\Services\EstadoInscripcion::resolve($this, $inscripcion)
+        );
     }
 
     public function setFechaFinInscripcionesAttribute($value)

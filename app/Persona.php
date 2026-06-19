@@ -146,42 +146,10 @@ class Persona extends Authenticatable implements MustVerifyEmail
         $inscripcion = $this->inscripciones->where('idActividad',$idActividad)->first();
         $actividad = Actividad::findOrFail($idActividad);
 
-        if(!$inscripcion) { 
-            return false;
-        }
-
-        if($actividad->confirmacion == 1 && $actividad->pago == 1) {
-            if ($inscripcion->confirma && $inscripcion->pago) return 'CONFIRMADO';
-            elseif ($inscripcion->confirma == 0) return 'ESPERAR CONFIRMACIÓN';
-            else {
-                if(!$actividad->fechaLimitePago || 
-                    $actividad->fechaLimitePago && $actividad->fechaLimitePago->greaterThan(Carbon::now()))
-                    return 'CONFIRMAR PARTICIPACIÓN';
-                else
-                    return 'FECHA DE CONFIRMACIÓN VENCIDA';
-            }
-        }
-
-        if($actividad->confirmacion == 1) {
-            if ($inscripcion->confirma) return 'CONFIRMADO';
-            else return 'ESPERAR CONFIRMACIÓN';
-        }
-
-        if($actividad->pago == 1) {
-            if ($inscripcion->pago) return 'CONFIRMADO';
-            else {
-                if(!$actividad->fechaLimitePago || 
-                    $actividad->fechaLimitePago && $actividad->fechaLimitePago->greaterThan(Carbon::now()))
-                    return 'CONFIRMAR PARTICIPACIÓN';
-                else
-                    return 'FECHA DE CONFIRMACIÓN VENCIDA';
-            }
-        }
-
-        if($actividad->confirmacion == 0 && $actividad->pago == 0) {
-            return "CONFIRMADO";
-        }
-
+        // Fuente única: App\Services\EstadoInscripcion. Vocabulario español (backoffice).
+        return \App\Services\EstadoInscripcion::toSpanish(
+            \App\Services\EstadoInscripcion::resolve($actividad, $inscripcion)
+        );
     }
 
     public function noEstaInscripto($idActividad) {
