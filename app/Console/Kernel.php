@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('push:recordatorio-evaluacion')->dailyAt('09:00');
         $schedule->command('push:recordatorio-pago')->dailyAt('10:00');
         $schedule->command('push:reactivacion-voluntarios')->monthlyOn(1, '10:00');
+        $schedule->command('reporting:snapshot-lifecycle')->monthlyOn(1, '06:00');
     }
 
     /**
