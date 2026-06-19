@@ -13,6 +13,9 @@ class CrearPersona extends FormRequest
      */
     public function authorize()
     {
+        // El registro es público. Un authorize() vacío devolvía null, que Laravel
+        // interpreta como no autorizado → /api/register respondía 403 siempre.
+        return true;
     }
 
     /**

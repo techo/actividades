@@ -2,6 +2,26 @@
 
 ---
 
+## 2026-06-17 — Cobertura API mobile #14–15 + más bugs reales
+
+**Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`
+
+- `tasks.json` al día: #9 (baseline) y #14, #15 marcados como done.
+- Runner directo: `./test.sh` + config autocontenida en `phpunit.xml` (`vendor/bin/phpunit` corre sin flags). CI (`.travis.yml`) ahora corre PHPUnit contra MySQL.
+- **#14** `tests/Feature/api/AuthApiTest.php` (6 tests): login válido/ inválido, register válido/duplicado, providerLogin (validación + proveedor inválido).
+- **#15** `tests/Feature/api/ActividadesApiTest.php` (6 tests): listado paginado, detalle con campos esperados, **contrato de fechas dd-mm-aaaa** (ancla anti-regresión del upgrade), 404 inexistente, filtro por categoría.
+
+**Bugs reales destapados y corregidos:**
+- `/api/register` daba **403 siempre** — `CrearPersona::authorize()` estaba vacío (devolvía null). Corregido a `return true` (registro público).
+- `GET /api/actividades/{id}` inexistente daba **500** (`find()` + acceso a propiedad sobre null). Corregido a 404 con `findOrFail`.
+
+**Hallazgos anotados (no corregidos):**
+- La ruta `POST /api/socialLogin` apunta a `PersonasController@socialLogin`, método que **no existe** (ruta muerta). El social login real es `providerLogin`.
+
+Suite: **116/116 verde**.
+
+---
+
 ## 2026-06-17 — Suite 100% verde (97/97) + bugs reales corregidos
 
 **Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`

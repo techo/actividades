@@ -46,7 +46,8 @@ class actividadesController extends BaseController
      */
     public function show($id)
     {
-        $actividad = Actividad::find($id);
+        // findOrFail → 404 si no existe. Con find() + acceso a propiedad daba 500.
+        $actividad = Actividad::findOrFail($id);
         $actividad->descripcion = clean_string($actividad->descripcion);
         return new ActividadResource($actividad);
     }

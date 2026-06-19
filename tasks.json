@@ -114,15 +114,16 @@
       "group": "cobertura-tests",
       "name": "test-0-baseline",
       "title": "Baseline: correr phpunit y documentar estado real",
-      "description": "Correr phpunit completo y documentar el estado real: cuántos tests pasan, fallan, se saltean. Este es el punto de referencia antes de agregar tests y antes del upgrade.",
+      "description": "Correr phpunit completo y documentar el estado real. El baseline reveló que la suite estaba ROTA (no corría: sobre SQLite por nombres de índice globales). Se reparó el entorno (corre sobre MySQL/laravel_test), se corrigieron 5 bugs reales de producción y datos de tests, y se dejó 104/104 en verde. Además: ./test.sh (un comando), config en phpunit.xml, CI corriendo PHPUnit contra MySQL, y tests de caracterización de país/locale. Ver progress/history.md.",
       "acceptance": [
-        "docker compose exec app vendor/bin/phpunit --testdox ejecutado",
-        "Resultado documentado en progress/history.md (fecha + conteo passed/failed/skipped)",
-        "Fallos preexistentes documentados como deuda, no como introducidos por cambios"
+        "phpunit ejecutado y estado documentado en progress/history.md",
+        "Fallos preexistentes documentados como deuda (no introducidos por cambios)",
+        "Suite reparada y 100% verde (104/104) corriendo en MySQL"
       ],
       "risk": "none",
-      "agent_notes": "Solo lectura. El Líder hace este paso, no se modifica código.",
-      "status": "pending"
+      "agent_notes": "Terminó siendo más que solo-lectura: el baseline destapó una suite rota que hubo que reparar. Ver commits 78096d11 (bugs), 4e4337d9 (suite verde), 41000df4 (test.sh), dc359515 (CI).",
+      "status": "done",
+      "completed_at": "2026-06-17"
     },
 
     {
@@ -209,8 +210,9 @@
       ],
       "blockedBy": [9],
       "risk": "none",
-      "agent_notes": "Usar Passport::actingAs() para endpoints auth:api. Para registro, verificar que el campo es 'mail' no 'email' (ver CLAUDE.md §Autenticación).",
-      "status": "pending"
+      "agent_notes": "Usar Passport::actingAs() para endpoints auth:api. Para registro, verificar que el campo es 'mail' no 'email' (ver CLAUDE.md §Autenticación). Destapó: /api/register daba 403 siempre (CrearPersona::authorize() vacío, corregido); la ruta /api/socialLogin apunta a un método inexistente (ruta muerta). socialLogin no se cubre; se cubre providerLogin (validación + proveedor inválido).",
+      "status": "done",
+      "completed_at": "2026-06-17"
     },
     {
       "id": 15,
@@ -227,8 +229,9 @@
       ],
       "blockedBy": [14],
       "risk": "none",
-      "notes": "Estos son los tests más importantes para detectar regressions de API durante el upgrade.",
-      "status": "pending"
+      "notes": "Estos son los tests más importantes para detectar regressions de API durante el upgrade. Incluye un test de contrato de fechas (formato dd-mm-aaaa) como ancla anti-regresión. Destapó: GET /api/actividades/{id} inexistente daba 500 (find() + acceso a propiedad), corregido a 404 con findOrFail.",
+      "status": "done",
+      "completed_at": "2026-06-17"
     },
     {
       "id": 16,
