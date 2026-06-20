@@ -40,13 +40,9 @@ consumidores quedan consistentes automáticamente.
   etc.). Eso ya está resuelto en la vista.
 - **Fechas**: no hay `reporting_dim_tiempo`; Power BI genera su propia tabla de
   fechas (time intelligence nativo) sobre las columnas `fecha_*` / `anio` / `mes`.
-
-> ⚠️ **Seguridad (pendiente — Fase 4)**: hoy las vistas **no** tienen Row Level
-> Security ni `person_key` anonimizada: una conexión ve todos los países y las
-> dimensiones de persona todavía traen `idPersona`. Hasta implementar RLS +
-> surrogate key, restringir el acceso a nivel de credencial/usuario de BD y no
-> publicar datasets a nivel registro fuera de la organización. Ver
-> "Privacidad y seguridad" más abajo.
+- **Personas**: las vistas exponen `person_key` (UUID pseudónimo), no el
+  `idPersona` real. Es estable y permite cruzar vistas entre sí, pero no
+  identifica a la persona. Ver "Privacidad y seguridad".
 
 ---
 
@@ -62,7 +58,7 @@ dimensiones (atributos para filtrar/agrupar).
 | Columna | Descripción |
 |---|---|
 | `idInscripcion` | PK de la inscripción |
-| `idActividad`, `idPersona` | claves de cruce |
+| `idActividad`, `person_key` | claves de cruce (persona pseudonimizada) |
 | `idPais`, `idOficina` | de la actividad |
 | `tipo_indicador` | categoría canónica de la actividad (de `Tipo`) |
 | `fecha_actividad`, `anio`, `mes` | por `Actividad.fechaInicio` |
@@ -71,7 +67,7 @@ dimensiones (atributos para filtrar/agrupar).
 | `es_kpi` | 1 si presente **y** `tipo_indicador` ∈ (`territorio`, `construccion_de_viviendas`) |
 
 Métricas: movilizados = `SUM(es_presente)`; personas únicas =
-`COUNT(DISTINCT idPersona)` con `es_presente=1`; movilizados KPI =
+`COUNT(DISTINCT person_key)` con `es_presente=1`; movilizados KPI =
 `SUM(es_kpi)`; inscriptos = `COUNT(*)`; asistencia = movilizados / inscriptos.
 
 ### `reporting_fact_membresia`
@@ -80,13 +76,13 @@ Permanente*.
 
 | Columna | Descripción |
 |---|---|
-| `idIntegrante`, `idPersona`, `idEquipo` | claves |
+| `idIntegrante`, `person_key`, `idEquipo` | claves |
 | `idOficina`, `idPais`, `area_id` | del equipo |
 | `idComunidad`, `rol` | atributos de la membresía |
 | `fechaInicio`, `fechaFin` | vigencia |
 | `vigente` | 1 si `fechaFin` es NULL o futura |
 
-Equipo permanente = `SUM(vigente)`; personas únicas = `COUNT(DISTINCT idPersona)`
+Equipo permanente = `SUM(vigente)`; personas únicas = `COUNT(DISTINCT person_key)`
 con `vigente=1`.
 
 ### `reporting_fact_evaluacion_actividad`
@@ -94,7 +90,7 @@ con `vigente=1`.
 
 | Columna | Descripción |
 |---|---|
-| `idEvaluacion`, `idActividad`, `idPersona` | claves |
+| `idEvaluacion`, `idActividad`, `person_key` | claves |
 | `idPais`, `idOficina`, `tipo_indicador`, `fecha_actividad`, `anio` | contexto |
 | `puntaje` | nota de la actividad |
 | `tags_positivos`, `tags_negativos` | **JSON** (Power BI los desanida; MySQL 5.7 no tiene `JSON_TABLE`) |
@@ -107,7 +103,7 @@ Puntaje promedio = `AVG(puntaje)`; encuestas = `COUNT(*)`.
 
 | Columna | Descripción |
 |---|---|
-| `idEvaluacionImpacto`, `idActividad`, `idPersona`, `idPais`, `idOficina`, `fecha_actividad`, `anio` | claves/contexto |
+| `idEvaluacionImpacto`, `idActividad`, `person_key`, `idPais`, `idOficina`, `fecha_actividad`, `anio` | claves/contexto |
 | `impacto_habilidades_capacidades`, `impacto_percepcion_realidad`, `impacto_recomendaria_experiencia` | scores 1-10 |
 | `es_promotor` | 1 si recomienda ≥ 9 |
 | `es_detractor` | 1 si recomienda ≤ 6 |
@@ -121,7 +117,7 @@ voluntariado. Alimenta los embudos.
 
 | Columna | Descripción |
 |---|---|
-| `idPersona`, `idPais` | claves |
+| `person_key`, `idPais` | claves |
 | `es_integrante_vigente`, `fue_integrante`, `tiene_presencia`, `es_suscripto` | flags base |
 | `etapa` | `transformacion` > `cierre` > `insercion` > `captado` > `sin_etapa` |
 
@@ -137,7 +133,7 @@ Definición de etapa (en orden de prioridad):
   `fechaInicio`, `fechaFin`, `anio`, `mes`, `vida_escuela`.
 - **`reporting_dim_equipo`**: `idEquipo`, `nombre`, `idOficina`, `idPais`,
   `idEquipoPadre`, `area_id`, `area`, `activo`, `fechaInicio`, `fechaFin`.
-- **`reporting_dim_persona`** (sin PII): `idPersona`, `genero`, `rango_edad`
+- **`reporting_dim_persona`** (sin PII): `person_key`, `genero`, `rango_edad`
   (`18 a 21` / `22 a 25` / `26 o más`), `canal_contacto`, `idPais`,
   `idProvincia`, `idLocalidad`. Alimenta las donas de demografía.
 - **`reporting_dim_geografia`**: `idLocalidad`, `localidad`, `idProvincia`,
@@ -149,6 +145,16 @@ Columnas: `snapshot_date`, `idPais`, `etapa`, `cantidad`. La llena el comando
 `php artisan reporting:snapshot-lifecycle` (programado el día 1 de cada mes en
 `App\Console\Kernel`). Re-ejecutarlo el mismo día reemplaza el snapshot del día.
 
+### `reporting_acceso_usuario` (vista — para RLS de Power BI)
+Mapeo usuario → país para Row Level Security. Una fila por usuario de backoffice
+(rol `admin` o `coordinador`). Columnas: `email`, `idPais`, `es_global`
+(1 = ve todos los países). Ver "Privacidad y seguridad".
+
+### `reporting_person` (tabla — INTERNA, no exponer)
+Mapeo `idPersona` → `person_key` (UUID). Es la tabla de re-identificación;
+**no debe exponerse a ningún consumidor de analytics**. La mantiene el comando
+`reporting:sync-person-keys` (diario).
+
 ---
 
 ## Glosario canónico (las definiciones, en un solo lugar)
@@ -156,7 +162,7 @@ Columnas: `snapshot_date`, `idPais`, `etapa`, `cantidad`. La llena el comando
 | Término | Definición |
 |---|---|
 | **Movilizado** | participación con `presente=1`. Cuenta presencias, no personas. |
-| **Personas únicas** | `COUNT(DISTINCT idPersona)` movilizadas. |
+| **Personas únicas** | `COUNT(DISTINCT person_key)` movilizadas. |
 | **Movilizados KPI** | movilizados con `tipo_indicador` ∈ (`territorio`, `construccion_de_viviendas`). |
 | **Período** | por fecha de la actividad (`Actividad.fechaInicio`). |
 | **Equipo permanente** | membresía (`Integrantes`) con `fechaFin` NULL o futura. |
@@ -172,16 +178,41 @@ etc.) — algo que las consultas directas solían olvidar.
 
 ## Privacidad y seguridad
 
+### Pseudonimización (person_key)
+- Las vistas exponen `person_key` (UUID), nunca el `idPersona` real. El mapeo
+  vive en `reporting_person`, tabla **interna** que no se expone a analytics:
+  sin ella no se puede re-identificar a la persona.
 - `reporting_dim_persona` **no** expone PII: ni nombre, ni mail, ni DNI, ni
   teléfono, ni fecha de nacimiento (solo `rango_edad` bucketizado). Las métricas
   demográficas se calculan sin datos personales.
 - **Nunca** exponer las tablas operativas a un consumidor de analytics: contienen
   PII y ficha médica.
-- **Pendiente (Fase 4)**: `person_key` surrogate (para que Power BI no vea
-  `idPersona` real) y **Row Level Security** por país/oficina derivado del
-  usuario autenticado. Hasta entonces, una conexión a estas vistas ve todos los
-  países; restringir por credencial de BD y no compartir datasets a nivel
-  registro fuera de la organización.
+
+### Row Level Security (por país)
+MySQL 5.7 no tiene RLS nativo, así que el filtrado por país se hace en el
+**modelo de Power BI** (roles RLS con DAX) usando la vista
+`reporting_acceso_usuario` (mapea `email` → `idPais`, con `es_global`).
+
+Pasos en Power BI:
+1. Importar `reporting_acceso_usuario` al modelo (no usarla en visuales; solo RLS).
+2. Crear un rol RLS y aplicar este filtro DAX a cada tabla de hechos con `idPais`:
+   ```DAX
+   VAR u = LOOKUPVALUE(
+       reporting_acceso_usuario[idPais],
+       reporting_acceso_usuario[email], USERPRINCIPALNAME())
+   VAR g = LOOKUPVALUE(
+       reporting_acceso_usuario[es_global],
+       reporting_acceso_usuario[email], USERPRINCIPALNAME())
+   RETURN g = 1 || [idPais] = u
+   ```
+3. Publicar y asignar a los usuarios el rol RLS en el servicio de Power BI.
+
+Convención de scope: `idPaisPermitido` NULL o 0 en `Persona` ⇒ `es_global = 1`
+(ve todos los países). El resto ve solo su país.
+
+> Limitación actual: el scope es a nivel **país** (no oficina), porque el modelo
+> de usuario hoy solo tiene `idPaisPermitido`. Un scope por oficina o un rol
+> regional requeriría extender ese modelo.
 
 ---
 
@@ -191,8 +222,9 @@ etc.) — algo que las consultas directas solían olvidar.
   Se calcula en Power BI agregando sobre las columnas/flags de las vistas, o se
   agrega una columna calculada a la vista correspondiente.
 - **Nuevo hecho o dimensión**: agregar una vista `reporting_*` en una migración
-  (ver `database/migrations/2026_06_18_000004..0007`). Codificar la regla en la
-  vista, no en el consumidor.
+  (ver `database/migrations/2026_06_18_000004..0009`). Codificar la regla en la
+  vista, no en el consumidor. Si la vista expone persona, usar `person_key`
+  (join a `reporting_person`).
 - **Métrica que la app también muestra**: además de la vista, crear/usar un
   servicio en `app/Reporting/` que **lea de la vista** (ej.
   `App\Reporting\MovilizacionMetrics`), para que app y Power BI compartan la
@@ -208,5 +240,7 @@ etc.) — algo que las consultas directas solían olvidar.
 | Vistas de membresía / equipo / persona | `..._000005_create_reporting_membresia_persona_views.php` |
 | Vistas de evaluación / geografía | `..._000006_create_reporting_evaluacion_geografia_views.php` |
 | Ciclo de voluntariado + snapshot | `..._000007_create_reporting_lifecycle.php` |
-| Comando de snapshot | `app/Console/Commands/SnapshotLifecycle.php` |
+| person_key (pseudonimización) | `..._000008_create_reporting_person_key.php` |
+| Mapeo de acceso para RLS | `..._000009_create_reporting_acceso_usuario_view.php` |
+| Comandos (snapshot, sync de person_key) | `app/Console/Commands/SnapshotLifecycle.php`, `SyncPersonKeys.php` |
 | Servicios de métricas (consumo desde la app) | `app/Reporting/` |

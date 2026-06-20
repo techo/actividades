@@ -207,7 +207,7 @@ La app MiTECHO usa `mitecho://actividades/{id}` como custom URL scheme. Los arch
 
 `docs/reporting.md` — vistas `reporting_*` (datamart) que consume Power BI y otros: qué significa cada hecho/dimensión, el glosario canónico de métricas (movilizado, KPI, NPS, etapas del ciclo), cómo conectarse y las definiciones que **no** deben re-implementarse en BI.
 
-> Regla clave: las métricas se definen **una sola vez** en las vistas `reporting_*`; app y Power BI leen de ahí. Nunca conectar un consumidor de analytics a las tablas operativas (PII + reglas no aplicadas). Pendiente: RLS por país/oficina y `person_key` anonimizada (Fase 4).
+> Regla clave: las métricas se definen **una sola vez** en las vistas `reporting_*`; app y Power BI leen de ahí. Nunca conectar un consumidor de analytics a las tablas operativas (PII + reglas no aplicadas). Las vistas exponen `person_key` (UUID pseudónimo, mapeo interno en `reporting_person`), no `idPersona`. RLS por país vía `reporting_acceso_usuario` (se aplica en el modelo de Power BI; ver doc). Limitación: scope a nivel país (no oficina), porque el usuario solo tiene `idPaisPermitido`.
 
 ---
 
