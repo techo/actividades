@@ -44,7 +44,7 @@ class MovilizacionMetrics
         return (int) static::base($anio, $pais, $oficina)
             ->where('es_presente', 1)
             ->distinct()
-            ->count('idPersona');
+            ->count('person_key');
     }
 
     /** Movilizados que cuentan para la meta institucional (territorio + construcción). */
