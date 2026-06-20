@@ -2,6 +2,21 @@
 
 ---
 
+## 2026-06-17 — Cobertura web #10–13 (cierra el grupo cobertura-tests)
+
+**Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`
+
+Con #10–13, **todo el grupo cobertura-tests (#9–18) queda done**.
+
+- **#10** `AuthWebTest` (6): login (200/403), logout, reset password (Mail::fake), verificación de email (id-only en 5.7), baja de mailing via UUID.
+- **#11** `PerfilWebTest` (4): /perfil accesible (auth+verificado), redirige si no auth, /perfil/actividades, actualizar_email (cambia mail, desverifica, reenvía VerifyEmail).
+- **#12** `StripeWebhookWebTest` (4): **firma Stripe generada con HMAC en el test** (sin red) — checkout.session.completed marca pago, firma inválida 400, evento desconocido 200 sin efectos, país inexistente 404.
+- **#13** `CampaniasWebTest` (4): campaña activa accesible, inactiva 404, suscribirse persiste, doble suscripción → 422 (no 500).
+
+Suite: **147/147 verde**.
+
+---
+
 ## 2026-06-17 — Cobertura API mobile #16–18 (resto de la API)
 
 **Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`

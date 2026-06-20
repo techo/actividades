@@ -146,7 +146,9 @@
         9
       ],
       "risk": "none",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "agent_notes": "AuthWebTest: login (200/403), logout, reset password (Mail::fake), verificación de email (id-only en 5.7), baja de mailing via UUID. El 'registro' del acceptance se omitió: RegisterController es código muerto; el registro real va por api/create y api/register (ya cubierto en #14)."
     },
     {
       "id": 11,
@@ -164,7 +166,9 @@
         9
       ],
       "risk": "none",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "agent_notes": "PerfilWebTest: /perfil accesible (auth+verificado), redirige si no auth, /perfil/actividades, y actualizar_email (cambia mail, desverifica, reenvía VerifyEmail). Nota: las vistas chequean hasPermissionTo('ver_backoffice') → requieren PermisosSeeder."
     },
     {
       "id": 12,
@@ -184,7 +188,9 @@
       ],
       "risk": "none",
       "notes": "Ver StripeController.php para entender qué eventos procesa. Buscar cómo el proyecto actual hace los tests de pago en InscripcionesConPagoTest.php para reusar el patrón.",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "agent_notes": "StripeWebhookWebTest: firma Stripe generada con HMAC en el test (sin red). checkout.session.completed marca pago, firma inválida 400 (el plan decía 403), evento desconocido 200 sin efectos, país inexistente 404."
     },
     {
       "id": 13,
@@ -202,7 +208,9 @@
         9
       ],
       "risk": "none",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-06-17",
+      "agent_notes": "CampaniasWebTest: campaña activa accesible, inactiva 404, suscribirse persiste, doble suscripción a la misma campaña → 422 (no 500). La desuscripción via UUID está cubierta en #10."
     },
     {
       "id": 14,
