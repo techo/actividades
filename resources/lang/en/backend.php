@@ -147,6 +147,7 @@ return [
     'impact' => 'Impact',
     'skills' => 'Skills',
     'changes_saved' => 'Changes saved',
+    'save_generic_error' => 'The changes could not be saved. Please try again.',
     'activity_coordination' => 'Activity Coordination',
     'all_these_people_can_edit_the_team' => 'All these people have access to edit the team.',
     'point' => 'Point',

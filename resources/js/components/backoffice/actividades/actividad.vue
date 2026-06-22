@@ -1068,20 +1068,25 @@
         methods: {
             cargarFechas(){
                 // Detectar si las inscripciones fueron modificadas manualmente:
-                // si fechaFinInscripciones != fechaInicio, el coordinador las editó
-                if (this.actividad.fechaFinInscripciones && this.actividad.fechaInicio) {
-                    const finInsc = moment(this.actividad.fechaFinInscripciones).format('YYYY-MM-DD');
-                    const inicioAct = moment(this.actividad.fechaInicio).format('YYYY-MM-DD');
-                    this.modoManualInscripciones = finInsc !== inicioAct;
+                // comparamos AMBOS extremos (inicio y fin) contra lo que generaría
+                // el cálculo automático. Si cualquiera difiere, fueron editadas a mano.
+                if (this.actividad.fechaInicio && this.actividad.fechaInicioInscripciones && this.actividad.fechaFinInscripciones) {
+                    const autoInicioInsc = moment(this.actividad.fechaInicio).subtract(10, 'd');
+                    const autoFinInsc    = moment(this.actividad.fechaInicio);
+                    this.modoManualInscripciones =
+                        !moment(this.actividad.fechaInicioInscripciones).isSame(autoInicioInsc, 'minute') ||
+                        !moment(this.actividad.fechaFinInscripciones).isSame(autoFinInsc, 'minute');
                 } else {
                     this.modoManualInscripciones = false;
                 }
 
                 // Detectar si las evaluaciones fueron modificadas manualmente
-                if (this.actividad.fechaInicioEvaluaciones && this.actividad.fechaFin) {
-                    const inicioEval = moment(this.actividad.fechaInicioEvaluaciones).format('YYYY-MM-DD');
-                    const autoInicioEval = moment(this.actividad.fechaFin).add(1, 'd').format('YYYY-MM-DD');
-                    this.modoManualEvaluaciones = inicioEval !== autoInicioEval;
+                if (this.actividad.fechaFin && this.actividad.fechaInicioEvaluaciones && this.actividad.fechaFinEvaluaciones) {
+                    const autoInicioEval = moment(this.actividad.fechaFin).add(1, 'd');
+                    const autoFinEval    = moment(this.actividad.fechaFin).add(30, 'd');
+                    this.modoManualEvaluaciones =
+                        !moment(this.actividad.fechaInicioEvaluaciones).isSame(autoInicioEval, 'minute') ||
+                        !moment(this.actividad.fechaFinEvaluaciones).isSame(autoFinEval, 'minute');
                 } else {
                     this.modoManualEvaluaciones = false;
                 }
