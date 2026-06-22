@@ -17,56 +17,44 @@ distintas de "movilizado").
 La capa de reporting resuelve eso con un principio único:
 
 > **La definición de cada métrica vive UNA sola vez, en una vista `reporting_*`.
-> El backoffice y Power BI leen de la misma vista. Nadie redefine reglas en DAX.**
+> Los consumidores leen esas definiciones a través de la API. Nadie redefine
+> reglas en DAX ni toca la base directamente.**
 
 Así, si "movilizado" o el NPS cambian, se cambian en un solo lugar y todos los
 consumidores quedan consistentes automáticamente.
 
 ---
 
-## Cómo conectarse
+## Cómo conectarse — SOLO vía API
 
-- **Motor**: MySQL (la misma base del sistema). Las vistas tienen prefijo
-  `reporting_` (MySQL no tiene *schemas* separados como Postgres).
-- **Power BI**: conector *MySQL database* → seleccionar **solo objetos
-  `reporting_*`**. Usar modo *Import* (o DirectQuery si se necesita frescura).
-- **Regla de oro para cualquier consumidor (Power BI, otra BI, scripts, APIs)**:
-  **conectarse únicamente a las vistas `reporting_*`. Nunca a las tablas
-  operativas** (`Actividad`, `Inscripcion`, `Persona`, …). Las tablas crudas
-  cambian de estructura, no aplican las reglas de negocio y contienen PII.
+**El único punto de acceso para consumidores externos (Power BI, otras apps,
+integraciones, scripts) es la API REST de reporting. No se ofrece conexión MySQL
+directa a la base.**
+
+- **No** se entregan credenciales de base de datos a ningún consumidor de
+  analytics. La frontera es la API: se obtiene un token y se consume por HTTP.
+- Internamente, la aplicación sí lee las vistas `reporting_*` (la API y los
+  servicios de `app/Reporting/` corren dentro de la app). Eso es uso interno; lo
+  que queda fuera es el acceso SQL externo.
 - **Agregación sí, definición no**: el consumidor puede sumar, contar y agrupar
-  sobre columnas ya calculadas (`es_presente`, `es_kpi`, `es_promotor`, `etapa`,
-  …), pero **no** debe re-derivar reglas (qué es movilizado, los cortes de NPS,
-  etc.). Eso ya está resuelto en la vista.
-- **Fechas**: no hay `reporting_dim_tiempo`; Power BI genera su propia tabla de
-  fechas (time intelligence nativo) sobre las columnas `fecha_*` / `anio` / `mes`.
-- **Personas**: las vistas exponen `person_key` (UUID pseudónimo), no el
-  `idPersona` real. Es estable y permite cruzar vistas entre sí, pero no
-  identifica a la persona. Ver "Privacidad y seguridad".
-
----
-
-## Acceso vía API (alternativa a SQL)
-
-Para no dar acceso directo a la BD —y para que cualquier app futura use el mismo
-contrato HTTP— la capa de reporting también se expone como **API REST read-only**
-sobre las mismas vistas (las vistas siguen siendo la fuente de verdad; la API es
-solo transporte). Vive en `app/Http/Controllers/api/reporting/ReportingController.php`.
-
-- **Auth**: Passport (`auth:api`). El consumidor envía `Authorization: Bearer <token>`.
-- **Scope**: hoy **no** filtra por país (trae todo). `idPais` / `idOficina` quedan
-  como filtros **opcionales**; el scope server-side por token se puede activar
-  después sin cambiar el contrato.
-- **Solo** se exponen los datasets de la whitelist; **no** se exponen
-  `reporting_person` ni `reporting_acceso_usuario` (internos/seguridad).
+  sobre las columnas/flags que devuelve la API (`es_presente`, `es_kpi`,
+  `es_promotor`, `etapa`, …), pero **no** debe re-derivar reglas de negocio. Eso
+  ya está resuelto en la vista que hay detrás del endpoint.
+- **Fechas**: Power BI genera su propia tabla de fechas (time intelligence) sobre
+  las columnas `fecha_*` / `anio` / `mes` que devuelve la API.
+- **Personas**: la API expone `person_key` (UUID pseudónimo), nunca el
+  `idPersona` real. Ver "Privacidad y seguridad".
 
 ### Endpoints
+
+Implementación: `app/Http/Controllers/api/reporting/ReportingController.php`.
+Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 
 | Método | Ruta | Qué devuelve |
 |---|---|---|
 | GET | `/api/reporting/catalog` | Datasets disponibles, sus columnas y los filtros soportados (autodescriptivo). |
 | GET | `/api/reporting/datasets/{name}` | Filas paginadas de un dataset, con filtros opcionales. |
-| GET | `/api/reporting/metrics/movilizacion` | KPIs de movilización (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
+| GET | `/api/reporting/metrics/movilizacion` | KPIs (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
 `fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
@@ -80,31 +68,26 @@ la respuesta es el paginador de Laravel (`data`, `current_page`, `total`,
 
 Ejemplos:
 ```
+GET /api/reporting/catalog
 GET /api/reporting/datasets/fact_participacion?anio=2026&es_presente=1&per_page=2000
 GET /api/reporting/metrics/movilizacion?anio=2026
-GET /api/reporting/catalog
 ```
 
-### Conectar Power BI a la API
+### Conectar Power BI
 *Obtener datos → Web*, header `Authorization: Bearer <token>`, y una función M
 que recorra las páginas con `next_page_url` (o `?page=N`) hasta agotarlas.
 A esta escala (miles/decenas de miles de filas) el refresh por API es viable.
 
-> Nota: el refresh de Power BI usa una sola credencial de servicio (no la
-> identidad del usuario final). Si un mismo dataset sirve a usuarios de distintos
-> países, el RLS de Power BI (sección "Privacidad y seguridad") sigue siendo
-> complementario para segmentarlos.
-
 ---
 
-## Catálogo de objetos
+## Catálogo de objetos (lo que hay detrás de la API)
 
-Convención: `reporting_fact_*` = hechos (eventos contables), `reporting_dim_*` =
-dimensiones (atributos para filtrar/agrupar).
+Cada `dataset` de la API se respalda en una vista `reporting_*`. Convención:
+`fact_*` = hechos (eventos contables), `dim_*` = dimensiones.
 
-### `reporting_fact_participacion`
-**Grano**: 1 fila por inscripción (haya asistido o no). Backbone del tablero
-*Voluntariado Movilizado*.
+### `fact_participacion`
+**Grano**: 1 fila por inscripción (haya asistido o no). Tablero *Voluntariado
+Movilizado*.
 
 | Columna | Descripción |
 |---|---|
@@ -121,9 +104,8 @@ Métricas: movilizados = `SUM(es_presente)`; personas únicas =
 `COUNT(DISTINCT person_key)` con `es_presente=1`; movilizados KPI =
 `SUM(es_kpi)`; inscriptos = `COUNT(*)`; asistencia = movilizados / inscriptos.
 
-### `reporting_fact_membresia`
-**Grano**: 1 fila por integrante de equipo. Backbone del tablero *Equipo
-Permanente*.
+### `fact_membresia`
+**Grano**: 1 fila por integrante de equipo. Tablero *Equipo Permanente*.
 
 | Columna | Descripción |
 |---|---|
@@ -136,7 +118,7 @@ Permanente*.
 Equipo permanente = `SUM(vigente)`; personas únicas = `COUNT(DISTINCT person_key)`
 con `vigente=1`.
 
-### `reporting_fact_evaluacion_actividad`
+### `fact_evaluacion_actividad`
 **Grano**: 1 fila por evaluación de actividad.
 
 | Columna | Descripción |
@@ -144,12 +126,12 @@ con `vigente=1`.
 | `idEvaluacion`, `idActividad`, `person_key` | claves |
 | `idPais`, `idOficina`, `tipo_indicador`, `fecha_actividad`, `anio` | contexto |
 | `puntaje` | nota de la actividad |
-| `tags_positivos`, `tags_negativos` | **JSON** (Power BI los desanida; MySQL 5.7 no tiene `JSON_TABLE`) |
+| `tags_positivos`, `tags_negativos` | **JSON** (se desanidan en el consumidor; MySQL 5.7 no tiene `JSON_TABLE`) |
 | `tiene_comentario` | 1 si hay comentario |
 
 Puntaje promedio = `AVG(puntaje)`; encuestas = `COUNT(*)`.
 
-### `reporting_fact_evaluacion_impacto`
+### `fact_evaluacion_impacto`
 **Grano**: 1 fila por evaluación de impacto. Alimenta NPS e *Impacto personal*.
 
 | Columna | Descripción |
@@ -160,9 +142,9 @@ Puntaje promedio = `AVG(puntaje)`; encuestas = `COUNT(*)`.
 | `es_detractor` | 1 si recomienda ≤ 6 |
 | `nps_categoria` | `promotor` / `pasivo` (7-8) / `detractor` |
 
-**NPS** = `(SUM(es_promotor) - SUM(es_detractor)) / COUNT(*) * 100` (lo arma Power BI).
+**NPS** = `(SUM(es_promotor) - SUM(es_detractor)) / COUNT(*) * 100`.
 
-### `reporting_fact_lifecycle`
+### `fact_lifecycle`
 **Grano**: 1 fila por persona, con su etapa **actual** en el ciclo de
 voluntariado. Alimenta los embudos.
 
@@ -179,32 +161,29 @@ Definición de etapa (en orden de prioridad):
 - **captado**: está suscripto (campaña) sin presencia ni membresía.
 
 ### Dimensiones
-- **`reporting_dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`,
+- **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`,
   `tipo_indicador`, `idCategoria`, `categoria`, `alcance`, `idPais`, `idOficina`,
   `fechaInicio`, `fechaFin`, `anio`, `mes`, `vida_escuela`.
-- **`reporting_dim_equipo`**: `idEquipo`, `nombre`, `idOficina`, `idPais`,
+- **`dim_equipo`**: `idEquipo`, `nombre`, `idOficina`, `idPais`,
   `idEquipoPadre`, `area_id`, `area`, `activo`, `fechaInicio`, `fechaFin`.
-- **`reporting_dim_persona`** (sin PII): `person_key`, `genero`, `rango_edad`
+- **`dim_persona`** (sin PII): `person_key`, `genero`, `rango_edad`
   (`18 a 21` / `22 a 25` / `26 o más`), `canal_contacto`, `idPais`,
-  `idProvincia`, `idLocalidad`. Alimenta las donas de demografía.
-- **`reporting_dim_geografia`**: `idLocalidad`, `localidad`, `idProvincia`,
-  `provincia`, `idOficina`, `oficina`, `idPais`, `pais`.
+  `idProvincia`, `idLocalidad`.
+- **`dim_geografia`**: `idLocalidad`, `localidad`, `idProvincia`, `provincia`,
+  `idOficina`, `oficina`, `idPais`, `pais`.
 
-### `reporting_snapshot_lifecycle` (tabla, no vista)
+### `snapshot_lifecycle`
 Histórico mensual de etapas para "Var. vs Año Ant." y embudos en el tiempo.
 Columnas: `snapshot_date`, `idPais`, `etapa`, `cantidad`. La llena el comando
 `php artisan reporting:snapshot-lifecycle` (programado el día 1 de cada mes en
-`App\Console\Kernel`). Re-ejecutarlo el mismo día reemplaza el snapshot del día.
+`App\Console\Kernel`).
 
-### `reporting_acceso_usuario` (vista — para RLS de Power BI)
-Mapeo usuario → país para Row Level Security. Una fila por usuario de backoffice
-(rol `admin` o `coordinador`). Columnas: `email`, `idPais`, `es_global`
-(1 = ve todos los países). Ver "Privacidad y seguridad".
-
-### `reporting_person` (tabla — INTERNA, no exponer)
-Mapeo `idPersona` → `person_key` (UUID). Es la tabla de re-identificación;
-**no debe exponerse a ningún consumidor de analytics**. La mantiene el comando
-`reporting:sync-person-keys` (diario).
+### Objetos internos (NO se exponen por la API)
+- **`reporting_person`** (tabla): mapeo `idPersona` → `person_key` (UUID). Tabla de
+  re-identificación; sin ella no se puede volver a la persona. La mantiene el
+  comando `reporting:sync-person-keys` (diario).
+- **`reporting_acceso_usuario`** (vista): mapeo usuario → país permitido. Insumo
+  para el scope server-side de la API (ver "Privacidad y seguridad").
 
 ---
 
@@ -229,57 +208,46 @@ etc.) — algo que las consultas directas solían olvidar.
 
 ## Privacidad y seguridad
 
+### Sin acceso a la base
+Los consumidores no reciben credenciales de BD; el único acceso es la API, detrás
+de `auth:api` (Passport). Esto da frontera (no se expone el esquema ni PII),
+auditabilidad (cada request queda logueado) y revocabilidad (tokens).
+
 ### Pseudonimización (person_key)
-- Las vistas exponen `person_key` (UUID), nunca el `idPersona` real. El mapeo
-  vive en `reporting_person`, tabla **interna** que no se expone a analytics:
-  sin ella no se puede re-identificar a la persona.
-- `reporting_dim_persona` **no** expone PII: ni nombre, ni mail, ni DNI, ni
-  teléfono, ni fecha de nacimiento (solo `rango_edad` bucketizado). Las métricas
-  demográficas se calculan sin datos personales.
-- **Nunca** exponer las tablas operativas a un consumidor de analytics: contienen
-  PII y ficha médica.
+- La API expone `person_key` (UUID), nunca el `idPersona` real. El mapeo vive en
+  `reporting_person`, tabla **interna** que no se expone.
+- `dim_persona` **no** expone PII: ni nombre, ni mail, ni DNI, ni teléfono, ni
+  fecha de nacimiento (solo `rango_edad` bucketizado).
 
-### Row Level Security (por país)
-MySQL 5.7 no tiene RLS nativo, así que el filtrado por país se hace en el
-**modelo de Power BI** (roles RLS con DAX) usando la vista
-`reporting_acceso_usuario` (mapea `email` → `idPais`, con `es_global`).
+### Scope por país (server-side, en la API)
+El filtrado por país se hace —cuando se active— **en la API, derivándolo del
+token** del consumidor (el `idPaisPermitido` del usuario autenticado), no en el
+cliente. La vista `reporting_acceso_usuario` es el insumo de ese mapeo
+(`email` → `idPais`, con `es_global` cuando `idPaisPermitido` es NULL/0).
 
-Pasos en Power BI:
-1. Importar `reporting_acceso_usuario` al modelo (no usarla en visuales; solo RLS).
-2. Crear un rol RLS y aplicar este filtro DAX a cada tabla de hechos con `idPais`:
-   ```DAX
-   VAR u = LOOKUPVALUE(
-       reporting_acceso_usuario[idPais],
-       reporting_acceso_usuario[email], USERPRINCIPALNAME())
-   VAR g = LOOKUPVALUE(
-       reporting_acceso_usuario[es_global],
-       reporting_acceso_usuario[email], USERPRINCIPALNAME())
-   RETURN g = 1 || [idPais] = u
-   ```
-3. Publicar y asignar a los usuarios el rol RLS en el servicio de Power BI.
+> Estado actual: **el scope está desactivado** por decisión de negocio — la API
+> trae todos los países. `idPais` / `idOficina` quedan como filtros opcionales.
+> Activarlo es un cambio aditivo (filtrar por el país del token) que **no cambia
+> el contrato** de la API.
 
-Convención de scope: `idPaisPermitido` NULL o 0 en `Persona` ⇒ `es_global = 1`
-(ve todos los países). El resto ve solo su país.
-
-> Limitación actual: el scope es a nivel **país** (no oficina), porque el modelo
-> de usuario hoy solo tiene `idPaisPermitido`. Un scope por oficina o un rol
+> Limitación: el scope es a nivel **país** (no oficina), porque el modelo de
+> usuario hoy solo tiene `idPaisPermitido`. Un scope por oficina o un rol
 > regional requeriría extender ese modelo.
 
 ---
 
 ## Cómo extender
 
-- **Nueva métrica sobre datos existentes**: en general **no requiere backend**.
-  Se calcula en Power BI agregando sobre las columnas/flags de las vistas, o se
-  agrega una columna calculada a la vista correspondiente.
+- **Nueva métrica sobre datos existentes**: agregar una columna calculada a la
+  vista correspondiente, o un endpoint/parametro en la API. No re-derivar reglas
+  en el consumidor.
 - **Nuevo hecho o dimensión**: agregar una vista `reporting_*` en una migración
-  (ver `database/migrations/2026_06_18_000004..0009`). Codificar la regla en la
-  vista, no en el consumidor. Si la vista expone persona, usar `person_key`
-  (join a `reporting_person`).
-- **Métrica que la app también muestra**: además de la vista, crear/usar un
-  servicio en `app/Reporting/` que **lea de la vista** (ej.
-  `App\Reporting\MovilizacionMetrics`), para que app y Power BI compartan la
-  misma fuente.
+  (ver `database/migrations/2026_06_18_000004..0009`) y sumar su alias a la
+  whitelist del `ReportingController`. Si la vista expone persona, usar
+  `person_key` (join a `reporting_person`).
+- **Métrica que la app también muestra**: usar un servicio en `app/Reporting/`
+  que lea de la vista (ej. `App\Reporting\MovilizacionMetrics`), para que app y
+  API compartan la misma fuente.
 
 ---
 
@@ -287,11 +255,12 @@ Convención de scope: `idPaisPermitido` NULL o 0 en `Persona` ⇒ `es_global = 1
 
 | Qué | Dónde |
 |---|---|
+| API de reporting (único acceso externo) | `app/Http/Controllers/api/reporting/ReportingController.php`, rutas en `routes/api.php` |
 | Vistas de participación | `database/migrations/2026_06_18_000004_create_reporting_participacion_views.php` |
 | Vistas de membresía / equipo / persona | `..._000005_create_reporting_membresia_persona_views.php` |
 | Vistas de evaluación / geografía | `..._000006_create_reporting_evaluacion_geografia_views.php` |
 | Ciclo de voluntariado + snapshot | `..._000007_create_reporting_lifecycle.php` |
 | person_key (pseudonimización) | `..._000008_create_reporting_person_key.php` |
-| Mapeo de acceso para RLS | `..._000009_create_reporting_acceso_usuario_view.php` |
+| Mapeo de acceso (insumo de scope) | `..._000009_create_reporting_acceso_usuario_view.php` |
 | Comandos (snapshot, sync de person_key) | `app/Console/Commands/SnapshotLifecycle.php`, `SyncPersonKeys.php` |
-| Servicios de métricas (consumo desde la app) | `app/Reporting/` |
+| Servicios de métricas (consumo interno) | `app/Reporting/` |
