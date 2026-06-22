@@ -46,6 +46,57 @@ consumidores quedan consistentes automáticamente.
 
 ---
 
+## Acceso vía API (alternativa a SQL)
+
+Para no dar acceso directo a la BD —y para que cualquier app futura use el mismo
+contrato HTTP— la capa de reporting también se expone como **API REST read-only**
+sobre las mismas vistas (las vistas siguen siendo la fuente de verdad; la API es
+solo transporte). Vive en `app/Http/Controllers/api/reporting/ReportingController.php`.
+
+- **Auth**: Passport (`auth:api`). El consumidor envía `Authorization: Bearer <token>`.
+- **Scope**: hoy **no** filtra por país (trae todo). `idPais` / `idOficina` quedan
+  como filtros **opcionales**; el scope server-side por token se puede activar
+  después sin cambiar el contrato.
+- **Solo** se exponen los datasets de la whitelist; **no** se exponen
+  `reporting_person` ni `reporting_acceso_usuario` (internos/seguridad).
+
+### Endpoints
+
+| Método | Ruta | Qué devuelve |
+|---|---|---|
+| GET | `/api/reporting/catalog` | Datasets disponibles, sus columnas y los filtros soportados (autodescriptivo). |
+| GET | `/api/reporting/datasets/{name}` | Filas paginadas de un dataset, con filtros opcionales. |
+| GET | `/api/reporting/metrics/movilizacion` | KPIs de movilización (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
+
+`{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
+`fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
+`dim_persona`, `dim_geografia`, `snapshot_lifecycle`.
+
+**Filtros opcionales** (se aplican solo si la columna existe en el dataset):
+`anio`, `mes`, `idPais`, `idOficina`, `tipo_indicador`, `etapa`, `es_presente`,
+`es_kpi`, `vigente`. **Paginación**: `per_page` (default 1000, máx 5000) y `page`;
+la respuesta es el paginador de Laravel (`data`, `current_page`, `total`,
+`next_page_url`, …).
+
+Ejemplos:
+```
+GET /api/reporting/datasets/fact_participacion?anio=2026&es_presente=1&per_page=2000
+GET /api/reporting/metrics/movilizacion?anio=2026
+GET /api/reporting/catalog
+```
+
+### Conectar Power BI a la API
+*Obtener datos → Web*, header `Authorization: Bearer <token>`, y una función M
+que recorra las páginas con `next_page_url` (o `?page=N`) hasta agotarlas.
+A esta escala (miles/decenas de miles de filas) el refresh por API es viable.
+
+> Nota: el refresh de Power BI usa una sola credencial de servicio (no la
+> identidad del usuario final). Si un mismo dataset sirve a usuarios de distintos
+> países, el RLS de Power BI (sección "Privacidad y seguridad") sigue siendo
+> complementario para segmentarlos.
+
+---
+
 ## Catálogo de objetos
 
 Convención: `reporting_fact_*` = hechos (eventos contables), `reporting_dim_*` =
