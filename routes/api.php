@@ -196,4 +196,13 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
+// ── API de reporting (read-only sobre las vistas reporting_*) ────────────────
+// Puerta de entrada para Power BI y otros consumidores sin acceso directo a BD.
+// Detrás de auth:api (Passport). Hoy sin scope por país: trae todo.
+Route::middleware('auth:api')->prefix('reporting')->group(function () {
+    Route::get('catalog', 'api\reporting\ReportingController@catalog');
+    Route::get('datasets/{name}', 'api\reporting\ReportingController@dataset');
+    Route::get('metrics/movilizacion', 'api\reporting\ReportingController@movilizacion');
+});
+
 
