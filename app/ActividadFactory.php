@@ -35,9 +35,19 @@ class ActividadFactory
 
         if($this->estado)
             $actividad = factory(Actividad::class)->states($this->estado)->create($atributos);
-        else 
+        else
             $actividad = factory(Actividad::class)->create($atributos);
-		
+
+        // En producción un coordinador/creador solo administra actividades de su
+        // idPaisPermitido; los FormRequests CrearInscripcion y CrearPunto lo exigen.
+        // Sincronizamos para que el creador/coordinador pueda operar la actividad.
+        foreach ([$this->creador, $this->coordinador] as $persona) {
+            if ($persona instanceof Persona && $persona->idPaisPermitido != $actividad->idPais) {
+                $persona->idPaisPermitido = $actividad->idPais;
+                $persona->save();
+            }
+        }
+
 		foreach ($this->cantidad_inscriptos_por_punto_encuentro as $cantidad_inscriptos) 
 		{
 			$punto_encuentro = factory(PuntoEncuentro::class)->create([

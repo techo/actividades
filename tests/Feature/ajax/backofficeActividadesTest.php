@@ -55,6 +55,9 @@ class backofficeActividadesTest extends TestCase
 
         $actividad = factory('App\Actividad')->make();
 
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
+
         $this->actingAs($persona)
             ->post('/admin/actividades/crear', $actividad->toArray())
             ->assertJsonFragment([ 'nombreActividad' => $actividad->nombreActividad ]);
@@ -80,6 +83,9 @@ class backofficeActividadesTest extends TestCase
 
         $actividad = factory('App\Actividad')->make();
 
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
+
         $a = $actividad->toArray();
 
         unset($a['fechaInicioInscripciones']);
@@ -103,6 +109,9 @@ class backofficeActividadesTest extends TestCase
 
         $actividad = factory('App\Actividad')->make();
 
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
+
         $a = $actividad->toArray();
 
         $a['fechaInicioInscripciones'] = null;
@@ -123,6 +132,9 @@ class backofficeActividadesTest extends TestCase
 
         $actividad = factory('App\Actividad')->make();
 
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
+
         $a = $actividad->toArray();
 
         unset($a['fechaFinInscripciones']);
@@ -142,6 +154,9 @@ class backofficeActividadesTest extends TestCase
         $persona->assignRole('coordinador');
 
         $actividad = factory('App\Actividad')->make();
+
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
 
         $a = $actividad->toArray();
 
@@ -165,6 +180,9 @@ class backofficeActividadesTest extends TestCase
             ->conEstado('fechas explicitas incorrectas')
             ->create();
 
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
+
         $this->actingAs($persona)
             ->post('/admin/actividades/crear', $actividad->toArray())
             ->assertSessionHasErrors();
@@ -178,10 +196,13 @@ class backofficeActividadesTest extends TestCase
         $persona = factory('App\Persona')->create();
         $persona->assignRole('coordinador');
 
-        $actividad = factory('App\Actividad')->make([ 
+        $actividad = factory('App\Actividad')->make([
             'pago' => "0",
             'montoMin' => "0.00"
         ]);
+
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
 
         $a = $actividad->toArray();
 
@@ -198,9 +219,12 @@ class backofficeActividadesTest extends TestCase
         $persona = factory('App\Persona')->create();
         $persona->assignRole('coordinador');
 
-        $actividad = factory('App\Actividad')->make([ 
+        $actividad = factory('App\Actividad')->make([
             'pago' => "0",
         ]);
+
+        $persona->idPaisPermitido = $actividad->idPais;
+        $persona->save();
 
         $a = $actividad->toArray();
 
@@ -210,8 +234,9 @@ class backofficeActividadesTest extends TestCase
             ->post('/admin/actividades/crear', $a)
             ->assertSessionHasNoErrors();
 
-        $actividad = factory('App\Actividad')->make([ 
+        $actividad = factory('App\Actividad')->make([
             'pago' => "1",
+            'idPais' => $persona->idPaisPermitido,
             //'montoMin' => "0.00"
         ]);
 
@@ -248,14 +273,21 @@ class backofficeActividadesTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed('PermisosSeeder');
 
-        $admin = factory('App\Persona')->create();
+        $pais = factory('App\Pais')->create();
+        $provincia = factory('App\Provincia')->create([ 'id_pais' => $pais->id ]);
+
+        $admin = factory('App\Persona')->create([ 'idPaisPermitido' => $pais->id ]);
         $admin->assignRole('admin');
 
         $actividad = app(ActividadFactory::class)
+            ->conPais($pais->id)
             ->agregarPuntoConInscriptos(0)
             ->create();
 
-        $punto = factory('App\PuntoEncuentro')->make();
+        $punto = factory('App\PuntoEncuentro')->make([
+            'idPais' => $pais->id,
+            'idProvincia' => $provincia->id,
+        ]);
 
         $this->actingAs($admin)
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
@@ -268,15 +300,20 @@ class backofficeActividadesTest extends TestCase
         $this->withoutExceptionHandling();
         $this->seed('PermisosSeeder');
 
-        $admin = factory('App\Persona')->create();
+        $pais = factory('App\Pais')->create();
+        $provincia = factory('App\Provincia')->create([ 'id_pais' => $pais->id ]);
+
+        $admin = factory('App\Persona')->create([ 'idPaisPermitido' => $pais->id ]);
         $admin->assignRole('admin');
 
         $actividad = app(ActividadFactory::class)
+            ->conPais($pais->id)
             ->agregarPuntoConInscriptos(0)
             ->create();
 
         $punto = $actividad->PuntosEncuentro[0];
 
+        $punto->idProvincia = $provincia->id;
         $punto->punto = "modificado";
 
         $this->actingAs($admin)

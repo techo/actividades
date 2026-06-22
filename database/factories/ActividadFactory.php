@@ -36,6 +36,12 @@ $factory->define(App\Actividad::class, function (Faker $faker) {
       'confirmacion' => 0,
       'pago' => 0,
 
+      'requiere_ficha_medica' => false,
+      'ficha_medica_campos' => [],
+      'requiere_estudios' => false,
+      'show_dates' => 1,
+      'show_location' => 1,
+
       'fechaCreacion' => $fecha->format('Y-m-d H:i:s'),
       'fechaModificacion' => $fecha->format('Y-m-d H:i:s'),
       'idPersonaCreacion' => 1,

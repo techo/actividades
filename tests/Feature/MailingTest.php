@@ -35,7 +35,13 @@ class MailingTest extends TestCase
 
 		$persona_que_quiere_recibir_mail = factory('App\Persona')->create(['recibirMails' => true ]);
 
-    	$actividad = factory('App\Actividad')->create();
+    	$actividad = factory('App\Actividad')->create([ 'idPersonaModificacion' => $persona->idPersona ]);
+
+    	// destroy() exige que el país de la actividad coincida con el idPaisPermitido
+    	// del usuario (scope por país). Alineamos el país administrado del usuario.
+    	$persona->idPaisPermitido = $actividad->idPais;
+    	$persona->save();
+
     	$punto = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
     	$inscripcion = $punto->inscripciones()->save(factory('App\Inscripcion')->make([
     		'idActividad' => $actividad->idActividad,
@@ -44,12 +50,14 @@ class MailingTest extends TestCase
 
         $this->actingAs($persona)
         	->delete('/admin/actividades/' . $actividad->idActividad)
-        	->assertRedirect('/admin/actividades/usuario');
+        	->assertRedirect('/admin/actividades');
 
         $this->assertSoftDeleted('Actividad', [ 'nombreActividad' => $actividad->nombreActividad]);
 
+        // enviarNotificaciones() pasa la actividad como array (toArray) a propósito,
+        // para sobrevivir a la serialización del job cuando el modelo ya fue borrado.
         Mail::assertQueued(CancelacionActividad::class, function ($mail) use ($actividad) {
-            return $mail->actividad->nombreActividad === $actividad->nombreActividad;
+            return $mail->actividad['nombreActividad'] === $actividad->nombreActividad;
         });
     }
 

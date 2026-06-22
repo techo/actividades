@@ -93,6 +93,35 @@ Conectar desde cualquier cliente SQL (TablePlus, DBeaver, etc.) con esos datos.
 
 ---
 
+## Correr los tests (PHPUnit)
+
+Desde la raíz del repo (o de un worktree), con los contenedores levantados:
+
+```bash
+./test.sh                      # toda la suite
+./test.sh --testdox            # con nombres legibles
+./test.sh --filter fusionar    # un test puntual
+./test.sh tests/Feature/PaisYLocaleTest.php
+```
+
+`test.sh` crea la base de test si no existe, resuelve la ruta dentro del
+contenedor y, en un worktree nuevo, copia `vendor` del repo principal (el
+contenedor no tiene red). No hace falta pasar flags ni exportar variables.
+
+> **Los tests corren contra MySQL, no SQLite.** La suite está rota sobre SQLite
+> (varias migraciones crean índices con el mismo nombre y SQLite los trata como
+> globales). La config de test (conexión MySQL `laravel_test`, `APP_ENV=testing`,
+> `memory_limit`) vive en `phpunit.xml`, por eso `vendor/bin/phpunit` a secas ya
+> funciona dentro del contenedor.
+
+Equivalente manual (sin el wrapper):
+
+```bash
+docker exec laravel_app bash -c "cd /var/www/html && vendor/bin/phpunit"
+```
+
+---
+
 ## Variables de entorno relevantes para desarrollo
 
 ```bash

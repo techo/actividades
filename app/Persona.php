@@ -204,6 +204,12 @@ class Persona extends Authenticatable implements MustVerifyEmail
         Actividad::where('idCoordinador', $target->idPersona)
             ->update(['idCoordinador' => $this->idPersona]);
 
+        // Membresías de coordinador (tabla join `coordinadores`), que alimentan
+        // la relación actividades(). Sin esto, la fusión perdía los accesos de
+        // coordinador de la cuenta secundaria y dejaba registros huérfanos.
+        Coordinador::where('idPersona', $target->idPersona)
+            ->update(['idPersona' => $this->idPersona]);
+
         Actividad::where('idPersonaCreacion', $target->idPersona)
             ->update(['idPersonaCreacion' => $this->idPersona]);
 

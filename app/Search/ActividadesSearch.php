@@ -58,9 +58,15 @@ class ActividadesSearch
             ->where('fechaInicio', '>=', date('Y-m-d H:i'))
             ->where('PuntoEncuentro.estado', 1);
 
-        if (auth('web')->check() || \Session::get('pais')){
-                $query->where('Actividad.idPais', \Session::get('pais'));
-        }  
+        // El país activo se resuelve en config('app.pais') (lo popula el middleware
+        // SeleccionarPais desde la sesión o APP_PAIS_DEFAULT). Filtramos solo si hay
+        // un país concreto: así un usuario autenticado sin país en contexto no recibe
+        // un listado vacío (where idPais = null), y se unifica la fuente del país con
+        // el resto de la app (provincias, tipos, etc. ya leen config('app.pais')).
+        $paisActivo = config('app.pais');
+        if ($paisActivo) {
+                $query->where('Actividad.idPais', $paisActivo);
+        }
 
         return $query;
     }

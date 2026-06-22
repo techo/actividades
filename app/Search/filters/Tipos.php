@@ -8,25 +8,27 @@ class Tipos implements Filter
 {
     public static function apply(Builder $builder, $value)
     {
-        if( !is_null($value) && !empty($value)) {
-            
-            // Extraer el JSON del primer índice del array
-            $jsonString = $value[0] ?? null;
-
-            if ($jsonString) {
-                // Decodificar el JSON a un array asociativo
-                $decodedArray = json_decode($jsonString, true);
-
-                // Extraer solo los valores de idTipo
-                $idTipos = array_column($decodedArray, 'idTipo');
-
-                // Aplicar la consulta con whereIn
-                return $builder->whereIn('Tipo.idTipo', $idTipos);
-            } else {
-                return $builder->whereIn('Tipo.idTipo', $value);
-            }
+        if (is_null($value) || empty($value)) {
+            return $builder;
         }
 
-        return $builder;
+        // Formato del frontend: el valor (o su primer índice) es un JSON string
+        // con la forma [{"idTipo": N}, ...]. La ruta de categorías hace
+        // $request->merge(['tipos' => json_encode([['idTipo'=>N], ...])]).
+        $first = is_array($value) ? ($value[0] ?? null) : $value;
+
+        if (is_string($first)) {
+            $decoded = json_decode($first, true);
+
+            if (is_array($decoded)) {
+                $idTipos = array_column($decoded, 'idTipo') ?: $decoded;
+                return $builder->whereIn('Tipo.idTipo', $idTipos);
+            }
+
+            return $builder;
+        }
+
+        // Formato alternativo: array plano de ids [N, ...]
+        return $builder->whereIn('Tipo.idTipo', (array) $value);
     }
 }

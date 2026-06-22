@@ -38,11 +38,15 @@ class PushNotificationService
      */
     public function enviarLocalizado(Persona $persona, string $tituloKey, string $mensajeKey, array $params = [], array $datos = []): void
     {
+        // Guardamos el locale real previo. No usamos config('app.locale') para
+        // restaurar porque App::setLocale() también sobreescribe esa config, y
+        // leerla después devolvería el locale ya cambiado (fuga al resto del request).
+        $localeAnterior = App::getLocale();
         $locale = optional($persona->pais)->locale ?? config('app.locale');
         App::setLocale($locale);
         $titulo  = __($tituloKey, $params);
         $mensaje = __($mensajeKey, $params);
-        App::setLocale(config('app.locale'));
+        App::setLocale($localeAnterior);
         $this->enviar($persona, $titulo, $mensaje, $datos);
     }
 

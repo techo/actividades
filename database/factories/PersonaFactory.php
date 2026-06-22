@@ -14,11 +14,11 @@ $factory->define(App\Persona::class, function (Faker $faker) {
     'idProvincia'   => 3,
     'telefonoMovil' => $faker->phoneNumber,
     'apellidoPaterno'   => $faker->lastName,
-    'fechaNacimiento'   => $faker->date('Y-m-d', '2000-2-31'),
+    'fechaNacimiento'   => $faker->date('Y-m-d', '2000-01-01'),
     'idUnidadOrganizacional' => 0,
     'google_id' => '',
     'facebook_id' => '',
     'recibirMails' => 0,
-    'email_verified_at' => $faker->date('Y-m-d', '2000-2-31'),
+    'email_verified_at' => $faker->dateTimeBetween('-5 years', 'now')->format('Y-m-d H:i:s'),
     ];
 });
