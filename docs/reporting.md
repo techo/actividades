@@ -70,7 +70,7 @@ permite localizar/renombrar en un solo lugar).
 
 **Filtros opcionales** (se aplican solo si la columna existe en el dataset):
 `anio`, `mes`, `idPais`, `idOficina`, `tipo_indicador`, `etapa`, `es_presente`,
-`es_kpi`, `vigente`. **Paginación**: `per_page` (default 1000, máx 5000) y `page`;
+`es_kpi`, `vigente`. **Paginación**: `per_page` (default 5000, máx 50000) y `page`;
 la respuesta es el paginador de Laravel (`data`, `current_page`, `total`,
 `next_page_url`, …).
 
@@ -110,7 +110,7 @@ let
 
     TraerPagina = (pagina as number) as record =>
         let
-            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "2000" ] }),
+            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "5000" ] }),
             json = Json.Document(Web.Contents(BaseUrl & dataset, [ Headers = Headers, Query = q ]))
         in
             json,

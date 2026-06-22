@@ -81,7 +81,7 @@ class ReportingController extends Controller
             }
         }
 
-        $perPage = min((int) $request->input('per_page', 1000), 5000);
+        $perPage = min((int) $request->input('per_page', 5000), 50000);
 
         return response()->json($query->paginate($perPage));
     }
