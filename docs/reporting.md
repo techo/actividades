@@ -58,7 +58,15 @@ Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
 `fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
-`dim_persona`, `dim_geografia`, `snapshot_lifecycle`.
+`dim_persona`, `dim_geografia`, `dim_pais`, `dim_oficina`, `dim_indicador`,
+`snapshot_lifecycle`.
+
+**Convención id ↔ nombre (modelo estrella)**: los hechos (`fact_*`) llevan los
+**ids** (`idPais`, `idOficina`, `idCategoria`, `tipo_indicador`); los **nombres**
+viven en las dimensiones (`dim_pais`, `dim_oficina`, `dim_actividad`,
+`dim_indicador`, …). El consumidor relaciona hecho→dimensión y muestra el nombre.
+No se denormalizan nombres dentro de los hechos (evita duplicar la etiqueta y
+permite localizar/renombrar en un solo lugar).
 
 **Filtros opcionales** (se aplican solo si la columna existe en el dataset):
 `anio`, `mes`, `idPais`, `idOficina`, `tipo_indicador`, `etapa`, `es_presente`,
@@ -74,9 +82,50 @@ GET /api/reporting/metrics/movilizacion?anio=2026
 ```
 
 ### Conectar Power BI
-*Obtener datos → Web*, header `Authorization: Bearer <token>`, y una función M
-que recorra las páginas con `next_page_url` (o `?page=N`) hasta agotarlas.
-A esta escala (miles/decenas de miles de filas) el refresh por API es viable.
+
+La API pagina (`current_page`, `last_page`, `data[]`), así que se usa una función
+**Power Query M** que recorre las páginas y concatena. Se escribe una vez y se
+reutiliza para cualquier dataset. A esta escala (miles/decenas de miles de filas)
+el refresh por API es viable.
+
+Pasos:
+1. Generar un token Passport y guardarlo en un **parámetro** de Power BI llamado
+   `TokenAPI`.
+2. *Power Query → Nueva consulta → Consulta en blanco → Editor avanzado*, pegar la
+   función y nombrarla `fnReportingDataset`.
+3. Invocarla por cada tabla, p. ej. `fnReportingDataset("fact_participacion", [anio = "2026"])`,
+   `fnReportingDataset("dim_pais")`, `fnReportingDataset("dim_indicador")`.
+4. Crear las relaciones (`fact[idPais]` ↔ `dim_pais[idPais]`,
+   `fact[tipo_indicador]` ↔ `dim_indicador[tipo_indicador]`, …) y usar en los
+   visuales los **nombres** de las dimensiones.
+
+```m
+// fnReportingDataset: trae un dataset completo de /api/reporting paginando.
+(dataset as text, optional filtros as record) as table =>
+let
+    BaseUrl = "https://actividades.techo.org/api/reporting/datasets/",
+    Token   = TokenAPI,  // parámetro de Power BI con el bearer token
+    Headers = [ Authorization = "Bearer " & Token, Accept = "application/json" ],
+    Filtros = if filtros = null then [] else filtros,
+
+    TraerPagina = (pagina as number) as record =>
+        let
+            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "2000" ] }),
+            json = Json.Document(Web.Contents(BaseUrl & dataset, [ Headers = Headers, Query = q ]))
+        in
+            json,
+
+    Primera   = TraerPagina(1),
+    UltimaPag = Primera[last_page],
+    Paginas   = List.Transform({1..UltimaPag}, each TraerPagina(_)[data]),
+    Filas     = List.Combine(Paginas),
+    Tabla     = Table.FromRecords(Filas)
+in
+    Tabla
+```
+
+> Ejemplo ilustrativo: los nombres `last_page` / `data` son los del paginador de
+> Laravel (lo que devuelve la API). Ajustar el dominio al real.
 
 ---
 
@@ -161,9 +210,10 @@ Definición de etapa (en orden de prioridad):
 - **captado**: está suscripto (campaña) sin presencia ni membresía.
 
 ### Dimensiones
-- **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`,
-  `tipo_indicador`, `idCategoria`, `categoria`, `alcance`, `idPais`, `idOficina`,
-  `fechaInicio`, `fechaFin`, `anio`, `mes`, `vida_escuela`.
+- **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`, `tipo`
+  (nombre del tipo), `tipo_indicador`, `idCategoria`, `categoria` (nombre),
+  `alcance`, `idPais`, `idOficina`, `fechaInicio`, `fechaFin`, `anio`, `mes`,
+  `vida_escuela`.
 - **`dim_equipo`**: `idEquipo`, `nombre`, `idOficina`, `idPais`,
   `idEquipoPadre`, `area_id`, `area`, `activo`, `fechaInicio`, `fechaFin`.
 - **`dim_persona`** (sin PII): `person_key`, `genero`, `rango_edad`
@@ -171,6 +221,11 @@ Definición de etapa (en orden de prioridad):
   `idProvincia`, `idLocalidad`.
 - **`dim_geografia`**: `idLocalidad`, `localidad`, `idProvincia`, `provincia`,
   `idOficina`, `oficina`, `idPais`, `pais`.
+- **`dim_pais`**: `idPais`, `pais` (nombre), `iso2`, `abreviacion`.
+- **`dim_oficina`**: `idOficina`, `oficina` (nombre), `idPais`.
+- **`dim_indicador`**: `tipo_indicador` (código), `indicador` (etiqueta es).
+  Mapea los códigos de `tipo_indicador` a su nombre para mostrar. Las etiquetas
+  viven en `lang/*/backend.php`; esta vista las refleja para BI (es).
 
 ### `snapshot_lifecycle`
 Histórico mensual de etapas para "Var. vs Año Ant." y embudos en el tiempo.

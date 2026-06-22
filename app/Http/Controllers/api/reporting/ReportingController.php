@@ -34,6 +34,9 @@ class ReportingController extends Controller
         'dim_equipo'                => 'reporting_dim_equipo',
         'dim_persona'               => 'reporting_dim_persona',
         'dim_geografia'             => 'reporting_dim_geografia',
+        'dim_pais'                  => 'reporting_dim_pais',
+        'dim_oficina'               => 'reporting_dim_oficina',
+        'dim_indicador'             => 'reporting_dim_indicador',
         'snapshot_lifecycle'        => 'reporting_snapshot_lifecycle',
     ];
 
