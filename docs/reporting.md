@@ -58,7 +58,15 @@ Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
 `fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
-`dim_persona`, `dim_geografia`, `snapshot_lifecycle`.
+`dim_persona`, `dim_geografia`, `dim_pais`, `dim_oficina`, `dim_indicador`,
+`snapshot_lifecycle`.
+
+**Convención id ↔ nombre (modelo estrella)**: los hechos (`fact_*`) llevan los
+**ids** (`idPais`, `idOficina`, `idCategoria`, `tipo_indicador`); los **nombres**
+viven en las dimensiones (`dim_pais`, `dim_oficina`, `dim_actividad`,
+`dim_indicador`, …). El consumidor relaciona hecho→dimensión y muestra el nombre.
+No se denormalizan nombres dentro de los hechos (evita duplicar la etiqueta y
+permite localizar/renombrar en un solo lugar).
 
 **Filtros opcionales** (se aplican solo si la columna existe en el dataset):
 `anio`, `mes`, `idPais`, `idOficina`, `tipo_indicador`, `etapa`, `es_presente`,
@@ -161,9 +169,10 @@ Definición de etapa (en orden de prioridad):
 - **captado**: está suscripto (campaña) sin presencia ni membresía.
 
 ### Dimensiones
-- **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`,
-  `tipo_indicador`, `idCategoria`, `categoria`, `alcance`, `idPais`, `idOficina`,
-  `fechaInicio`, `fechaFin`, `anio`, `mes`, `vida_escuela`.
+- **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`, `tipo`
+  (nombre del tipo), `tipo_indicador`, `idCategoria`, `categoria` (nombre),
+  `alcance`, `idPais`, `idOficina`, `fechaInicio`, `fechaFin`, `anio`, `mes`,
+  `vida_escuela`.
 - **`dim_equipo`**: `idEquipo`, `nombre`, `idOficina`, `idPais`,
   `idEquipoPadre`, `area_id`, `area`, `activo`, `fechaInicio`, `fechaFin`.
 - **`dim_persona`** (sin PII): `person_key`, `genero`, `rango_edad`
@@ -171,6 +180,11 @@ Definición de etapa (en orden de prioridad):
   `idProvincia`, `idLocalidad`.
 - **`dim_geografia`**: `idLocalidad`, `localidad`, `idProvincia`, `provincia`,
   `idOficina`, `oficina`, `idPais`, `pais`.
+- **`dim_pais`**: `idPais`, `pais` (nombre), `iso2`, `abreviacion`.
+- **`dim_oficina`**: `idOficina`, `oficina` (nombre), `idPais`.
+- **`dim_indicador`**: `tipo_indicador` (código), `indicador` (etiqueta es).
+  Mapea los códigos de `tipo_indicador` a su nombre para mostrar. Las etiquetas
+  viven en `lang/*/backend.php`; esta vista las refleja para BI (es).
 
 ### `snapshot_lifecycle`
 Histórico mensual de etapas para "Var. vs Año Ant." y embudos en el tiempo.
