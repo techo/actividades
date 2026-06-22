@@ -82,9 +82,50 @@ GET /api/reporting/metrics/movilizacion?anio=2026
 ```
 
 ### Conectar Power BI
-*Obtener datos → Web*, header `Authorization: Bearer <token>`, y una función M
-que recorra las páginas con `next_page_url` (o `?page=N`) hasta agotarlas.
-A esta escala (miles/decenas de miles de filas) el refresh por API es viable.
+
+La API pagina (`current_page`, `last_page`, `data[]`), así que se usa una función
+**Power Query M** que recorre las páginas y concatena. Se escribe una vez y se
+reutiliza para cualquier dataset. A esta escala (miles/decenas de miles de filas)
+el refresh por API es viable.
+
+Pasos:
+1. Generar un token Passport y guardarlo en un **parámetro** de Power BI llamado
+   `TokenAPI`.
+2. *Power Query → Nueva consulta → Consulta en blanco → Editor avanzado*, pegar la
+   función y nombrarla `fnReportingDataset`.
+3. Invocarla por cada tabla, p. ej. `fnReportingDataset("fact_participacion", [anio = "2026"])`,
+   `fnReportingDataset("dim_pais")`, `fnReportingDataset("dim_indicador")`.
+4. Crear las relaciones (`fact[idPais]` ↔ `dim_pais[idPais]`,
+   `fact[tipo_indicador]` ↔ `dim_indicador[tipo_indicador]`, …) y usar en los
+   visuales los **nombres** de las dimensiones.
+
+```m
+// fnReportingDataset: trae un dataset completo de /api/reporting paginando.
+(dataset as text, optional filtros as record) as table =>
+let
+    BaseUrl = "https://actividades.techo.org/api/reporting/datasets/",
+    Token   = TokenAPI,  // parámetro de Power BI con el bearer token
+    Headers = [ Authorization = "Bearer " & Token, Accept = "application/json" ],
+    Filtros = if filtros = null then [] else filtros,
+
+    TraerPagina = (pagina as number) as record =>
+        let
+            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "2000" ] }),
+            json = Json.Document(Web.Contents(BaseUrl & dataset, [ Headers = Headers, Query = q ]))
+        in
+            json,
+
+    Primera   = TraerPagina(1),
+    UltimaPag = Primera[last_page],
+    Paginas   = List.Transform({1..UltimaPag}, each TraerPagina(_)[data]),
+    Filas     = List.Combine(Paginas),
+    Tabla     = Table.FromRecords(Filas)
+in
+    Tabla
+```
+
+> Ejemplo ilustrativo: los nombres `last_page` / `data` son los del paginador de
+> Laravel (lo que devuelve la API). Ajustar el dominio al real.
 
 ---
 
