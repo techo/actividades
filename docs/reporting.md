@@ -3,6 +3,9 @@
 > Cómo está expuesta la información del sistema para Power BI y otros consumidores
 > externos, qué significa cada objeto, y cómo conectarse sin romper consistencia
 > ni privacidad.
+>
+> ¿Power BI o un sistema de dashboards propio para visualizar esto? Ver
+> [reporting-visualizacion-decision.md](reporting-visualizacion-decision.md).
 
 ---
 
