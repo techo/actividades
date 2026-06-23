@@ -56,19 +56,18 @@ personas únicas (`COUNT(DISTINCT person_key)`).
 
 ---
 
-## C. Campañas y encuentros
+## C. Campañas y encuentros — ✅ C1 y C2 (total) · 🔴 split local/nacional
 
-| # | Métrica | Cálculo propuesto | Fuente | Estado |
-|---|---|---|---|---|
-| C1 | Campañas nacionales de captación ejecutadas | `COUNT(campaigns)` con `tipo='captacion'`, alcance nacional, ejecutadas en el período | `campaigns` (`tipo`, `pais_id`, `oficina_id`, `estado`/`activa`, fechas) | 🟡 |
-| C2 | Encuentros locales/nacionales realizados | `COUNT(Actividad)` de tipo "encuentro", separados por alcance local/nacional | `Actividad` (`tipo_indicador='encuentros'`) + `alcance` | 🔴 |
+| # | Métrica | Cálculo | Estado |
+|---|---|---|---|
+| C1 | Campañas nacionales de captación ejecutadas | `COUNT(campaigns)` con `tipo='captacion'` y `oficina_id` NULL (nacional) que **solapan** el período (`fecha_inicio <= fin AND fecha_fin >= inicio`) | ✅ |
+| C2 | Encuentros realizados (TOTAL) | `COUNT(Actividad)` con `tipo_indicador='encuentros'` en el período (por `fechaInicio`) | ✅ |
+| C2b | Encuentros — split local / nacional | igual que C2 separando por `Actividad.alcance` | 🔴 |
 
-**Preguntas C**:
-- C1: ¿"nacional" = `campaigns.oficina_id` nulo (a nivel país)? ¿"ejecutada" =
-  `estado`/`activa` o fecha dentro del período (`fecha_inicio`/`fecha_fin`)?
-- C2: el campo `Actividad.alcance` existe pero **no tiene datos** (sin backfill).
-  Hasta poblarlo no se puede separar local/nacional. ¿Cómo se determina el alcance
-  de una actividad? (¿manual, o se infiere de oficina vs país?)
+> C1: "nacional" = `oficina_id` null (opción "sin oficina" del form); "ejecutada" =
+> solapamiento de fechas con el período (no hay estado "ejecutada", solo fechas/`activa`).
+> C2b: bloqueado — `Actividad.alcance` está vacío y **no** se puede inferir de la
+> oficina (todas las actividades tienen oficina). Pendiente: definir y backfillear `alcance`.
 
 ---
 
