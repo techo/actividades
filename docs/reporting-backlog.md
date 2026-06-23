@@ -13,24 +13,24 @@ membresía vigente (`fechaFin` null/futura).
 
 ---
 
-## A. Movilización (base: `reporting_fact_participacion` + `dim_actividad`)
+## A. Movilización (base: `reporting_fact_participacion`) — ✅ DEFINIDA
 
-| # | Métrica | Cálculo propuesto | Fuente | Estado |
-|---|---|---|---|---|
-| A1 | Movilizados en construcciones | `SUM(es_presente)` donde la actividad es construcción unifamiliar **con vida de escuela** | `fact_participacion` + `Actividad.vida_escuela` + tipo | 🟡 |
-| A2 | Movilizados a territorio | `SUM(es_presente)` en actividades de territorio **que NO** sean construcción unifamiliar con vida de escuela | `fact_participacion` + `tipo_indicador` + `vida_escuela` | 🟡 |
-| A3 | Movilizados en Colecta | `SUM(es_presente)` en actividades de colecta | `fact_participacion` + (`tipo_indicador='colecta'` o campaña tipo colecta) | 🟡 |
-| A4 | Movilizados en otras actividades | `SUM(es_presente)` en lo no cubierto por A1–A3 (formación, escuela, encuentros…) | `fact_participacion` (complemento) | 🟡 |
-| A5 | Movilizados en actividades (TOTAL) | `SUM(es_presente)` total = A1+A2+A3+A4 | `fact_participacion` | ✅ |
+Corte por `tipo_indicador` **puro** (decisión confirmada: sin refinar por
+`vida_escuela`). Partición exacta: A1+A2+A3+A4 = A5. Cada métrica =
+`SUM(es_presente)` de `reporting_fact_participacion` en el período, filtrando por
+el bucket.
 
-**Preguntas A**:
-- ¿"Construcciones" (A1) = `vida_escuela=1`? ¿y se restringe a algún `tipo_indicador`
-  (p. ej. `construccion_de_viviendas`) o basta `vida_escuela`?
-- "Territorio" (A2): ¿qué `tipo_indicador` cuentan? ¿`territorio` menos los de A1?
-- "Colecta" (A3): ¿se identifica por `tipo_indicador='colecta'`, por la actividad
-  ligada a una `campaign` tipo `colecta`, o ambos?
-- Hoy **muchos `Tipo` no tienen `tipo_indicador` cargado** → estos números saldrán
-  incompletos hasta etiquetarlos (calidad de dato).
+| # | Métrica | Bucket (`tipo_indicador`) | Estado |
+|---|---|---|---|
+| A1 | Movilizados en construcciones | `construccion_de_viviendas` | ✅ |
+| A2 | Movilizados a territorio | `territorio` | ✅ |
+| A3 | Movilizados en Colecta | `colecta` | ✅ |
+| A4 | Movilizados en otras actividades | el resto: `captacion`, `encuentros`, `gestion_y_acompañamiento`, `insercion`, `renovacion`, `otras_actividades`, y los `NULL`/sin indicador | ✅ |
+| A5 | Movilizados en actividades (TOTAL) | todos los buckets = `SUM(es_presente)` | ✅ |
+
+> Calidad de dato: los tipos **sin `tipo_indicador` cargado** caen en "Otras" (A4)
+> hasta que se etiqueten desde el backoffice. No afecta la definición, sí los
+> números hasta completar el etiquetado.
 
 ---
 
