@@ -127,6 +127,20 @@ in
 > Ejemplo ilustrativo: los nombres `last_page` / `data` son los del paginador de
 > Laravel (lo que devuelve la API). Ajustar el dominio al real.
 
+#### Filtrar por país (operación individual por país)
+Todos los datasets con columna `idPais` (todos salvo `dim_indicador`) aceptan
+`?idPais=<id>`. Para reportes por país, lo recomendado es un **parámetro `Pais`**
+(el `idPais`) en Power BI que se pasa a la función M, así cada reporte trae solo
+su país (más liviano que traer todo y filtrar):
+```
+GET /api/reporting/datasets/fact_participacion?idPais=13&anio=2026
+fnReportingDataset("fact_participacion", [ idPais = "13", anio = "2026" ])
+```
+Si se deja sin `idPais`, trae todos los países y se puede filtrar con un slicer
+sobre `dim_pais[pais]` (sirve para vistas multi-país). Hoy el filtro es del lado
+del cliente; el scope obligatorio por token (server-side) queda listo para
+activar cuando se necesite (ver "Privacidad y seguridad").
+
 ---
 
 ## Catálogo de objetos (lo que hay detrás de la API)
