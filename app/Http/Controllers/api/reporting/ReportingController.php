@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\reporting;
 
 use App\Http\Controllers\Controller;
+use App\Reporting\MetricRegistry;
 use App\Reporting\MovilizacionMetrics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +38,18 @@ class ReportingController extends Controller
         'dim_pais'                  => 'reporting_dim_pais',
         'dim_oficina'               => 'reporting_dim_oficina',
         'dim_indicador'             => 'reporting_dim_indicador',
+        'dim_comunidad'             => 'reporting_dim_comunidad',
+        'fact_solucion'             => 'reporting_fact_solucion',
+        'fact_campania'             => 'reporting_fact_campania',
         'snapshot_lifecycle'        => 'reporting_snapshot_lifecycle',
     ];
 
     /** Columnas por las que se permite filtrar (se aplican solo si existen en el dataset). */
-    const FILTROS = ['anio', 'mes', 'idPais', 'idOficina', 'tipo_indicador', 'etapa', 'es_presente', 'es_kpi', 'vigente'];
+    const FILTROS = [
+        'anio', 'mes', 'idPais', 'idOficina', 'tipo_indicador', 'etapa',
+        'es_presente', 'es_kpi', 'vigente', 'rol', 'tipo_solucion', 'tipo',
+        'activo', 'es_nacional', 'estado_legalizacion',
+    ];
 
     /** Catálogo autodescriptivo: qué datasets hay, sus columnas y filtros. */
     public function catalog()
@@ -81,7 +89,7 @@ class ReportingController extends Controller
             }
         }
 
-        $perPage = min((int) $request->input('per_page', 1000), 5000);
+        $perPage = min((int) $request->input('per_page', 5000), 50000);
 
         return response()->json($query->paginate($perPage));
     }
@@ -99,5 +107,27 @@ class ReportingController extends Controller
             'movilizados_kpi'   => MovilizacionMetrics::movilizadosKpi($anio, $pais, $oficina),
             'personas_unicas'   => MovilizacionMetrics::personasUnicas($anio, $pais, $oficina),
         ]);
+    }
+
+    /** Catálogo de métricas: los indicadores institucionales disponibles. */
+    public function metricsCatalog()
+    {
+        return response()->json([
+            'metrics' => MetricRegistry::catalogo(),
+            'filtros' => ['anio', 'mes', 'idPais', 'idOficina', 'group_by'],
+        ]);
+    }
+
+    /**
+     * Métrica institucional por key (registry). Devuelve el número ya agregado,
+     * filtrable por idPais / anio / mes / idOficina y con group_by opcional.
+     */
+    public function metric($key, Request $request)
+    {
+        if (!MetricRegistry::existe($key)) {
+            return response()->json(['error' => 'Métrica no encontrada'], 404);
+        }
+
+        return response()->json(MetricRegistry::resolver($key, $request));
     }
 }

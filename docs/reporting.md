@@ -3,6 +3,9 @@
 > Cómo está expuesta la información del sistema para Power BI y otros consumidores
 > externos, qué significa cada objeto, y cómo conectarse sin romper consistencia
 > ni privacidad.
+>
+> ¿Power BI o un sistema de dashboards propio para visualizar esto? Ver
+> [reporting-visualizacion-decision.md](reporting-visualizacion-decision.md).
 
 ---
 
@@ -54,12 +57,14 @@ Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 |---|---|---|
 | GET | `/api/reporting/catalog` | Datasets disponibles, sus columnas y los filtros soportados (autodescriptivo). |
 | GET | `/api/reporting/datasets/{name}` | Filas paginadas de un dataset, con filtros opcionales. |
-| GET | `/api/reporting/metrics/movilizacion` | KPIs (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
+| GET | `/api/reporting/metrics` | Catálogo de métricas (indicadores) disponibles: `key` + `nombre`. |
+| GET | `/api/reporting/metrics/{key}` | Un indicador ya agregado, filtrable y con `group_by` opcional. |
+| GET | `/api/reporting/metrics/movilizacion` | Resumen de movilización (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
-`fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
-`dim_persona`, `dim_geografia`, `dim_pais`, `dim_oficina`, `dim_indicador`,
-`snapshot_lifecycle`.
+`fact_evaluacion_impacto`, `fact_lifecycle`, `fact_solucion`, `fact_campania`,
+`dim_actividad`, `dim_equipo`, `dim_persona`, `dim_geografia`, `dim_pais`,
+`dim_oficina`, `dim_indicador`, `dim_comunidad`, `snapshot_lifecycle`.
 
 **Convención id ↔ nombre (modelo estrella)**: los hechos (`fact_*`) llevan los
 **ids** (`idPais`, `idOficina`, `idCategoria`, `tipo_indicador`); los **nombres**
@@ -70,7 +75,7 @@ permite localizar/renombrar en un solo lugar).
 
 **Filtros opcionales** (se aplican solo si la columna existe en el dataset):
 `anio`, `mes`, `idPais`, `idOficina`, `tipo_indicador`, `etapa`, `es_presente`,
-`es_kpi`, `vigente`. **Paginación**: `per_page` (default 1000, máx 5000) y `page`;
+`es_kpi`, `vigente`. **Paginación**: `per_page` (default 5000, máx 50000) y `page`;
 la respuesta es el paginador de Laravel (`data`, `current_page`, `total`,
 `next_page_url`, …).
 
@@ -80,6 +85,40 @@ GET /api/reporting/catalog
 GET /api/reporting/datasets/fact_participacion?anio=2026&es_presente=1&per_page=2000
 GET /api/reporting/metrics/movilizacion?anio=2026
 ```
+
+### Métricas (indicadores institucionales)
+
+Además de los datasets (filas para agregar en el consumidor), la API sirve los
+**indicadores ya agregados** vía un **registry** (`app/Reporting/MetricRegistry.php`):
+una entrada por indicador define su vista, medida y filtros. La definición vive una
+sola vez; agregar un indicador = una entrada, no una ruta nueva.
+
+- `GET /api/reporting/metrics` → catálogo (`key` + `nombre` + nota).
+- `GET /api/reporting/metrics/{key}` → el número, filtrable por **`idPais`, `anio`,
+  `mes`, `idOficina`** y con **`group_by`** opcional (cuando el indicador lo permite).
+
+```
+GET /api/reporting/metrics/movilizados_territorio?anio=2026&idPais=13
+→ { "key":"movilizados_territorio", "nombre":"Nº Voluntarios/as movilizados/as a actividades en territorio", "value": 1234, "filtros": {...} }
+
+GET /api/reporting/metrics/movilizados_total?anio=2026&group_by=tipo_indicador
+→ { "key":"movilizados_total", "group_by":"tipo_indicador", "data":[ {"grupo":"territorio","value":...}, ... ] }
+```
+
+Los `key` son los 30 indicadores del backlog (`docs/reporting-backlog.md`):
+`movilizados_{territorio,colecta,construcciones,otras,total}`,
+`equipo_permanente_total`, `permanentes_{areas,comunidades}`,
+`coordinaciones_comunidad`, `campanas_captacion_nacional`, `encuentros`,
+`comunidades_{activas,ficha_finalizada,inicio_trabajo,tenencia_regularizada,fin_trabajo}`,
+`mesas_{activas,implementadas}`, `vecinos_mesa`, `viviendas_{emergencia,transitorias,permanentes}`,
+`familias_{agua,saneamiento,energia}`, `infraestructura_comunitaria`,
+`soluciones_{agua,energia,saneamiento}_comunitaria`, `sedes_comunitarias`.
+
+> Notas: el período se aplica según cada indicador (por `anio`/`mes` en los hechos;
+> por solapamiento de fechas en campañas; por la fecha propia en comunidades). El
+> equipo permanente es estado actual (vigente), no admite `anio`/`mes`. Algunos
+> traen `nota` (ej. el split local/nacional de `encuentros` está vacío hasta
+> backfillear `alcance`).
 
 ### Conectar Power BI
 
@@ -110,7 +149,7 @@ let
 
     TraerPagina = (pagina as number) as record =>
         let
-            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "2000" ] }),
+            q    = Record.Combine({ Filtros, [ page = Text.From(pagina), per_page = "5000" ] }),
             json = Json.Document(Web.Contents(BaseUrl & dataset, [ Headers = Headers, Query = q ]))
         in
             json,
@@ -126,6 +165,20 @@ in
 
 > Ejemplo ilustrativo: los nombres `last_page` / `data` son los del paginador de
 > Laravel (lo que devuelve la API). Ajustar el dominio al real.
+
+#### Filtrar por país (operación individual por país)
+Todos los datasets con columna `idPais` (todos salvo `dim_indicador`) aceptan
+`?idPais=<id>`. Para reportes por país, lo recomendado es un **parámetro `Pais`**
+(el `idPais`) en Power BI que se pasa a la función M, así cada reporte trae solo
+su país (más liviano que traer todo y filtrar):
+```
+GET /api/reporting/datasets/fact_participacion?idPais=13&anio=2026
+fnReportingDataset("fact_participacion", [ idPais = "13", anio = "2026" ])
+```
+Si se deja sin `idPais`, trae todos los países y se puede filtrar con un slicer
+sobre `dim_pais[pais]` (sirve para vistas multi-país). Hoy el filtro es del lado
+del cliente; el scope obligatorio por token (server-side) queda listo para
+activar cuando se necesite (ver "Privacidad y seguridad").
 
 ---
 
@@ -209,6 +262,31 @@ Definición de etapa (en orden de prioridad):
 - **inserción**: tiene ≥ 1 presencia y no es integrante.
 - **captado**: está suscripto (campaña) sin presencia ni membresía.
 
+### `fact_solucion`
+**Grano**: 1 fila por informe de cierre. Familia de impacto/soluciones.
+
+| Columna | Descripción |
+|---|---|
+| `idActividadInformeCierre`, `idActividad`, `idComunidad` | claves |
+| `idPais`, `idOficina`, `fecha_actividad`, `anio` | de la actividad |
+| `tipo_solucion` | clave del desplegable `soluciones_entregadas` (ej. `vivienda_emergencia`) |
+| `total_soluciones` | suma de las 5 `cant_soluciones_*` (el TOTAL del informe) |
+| `numero_participantes`, `numero_beneficiados` | vecinos participando / personas beneficiadas |
+
+Métrica de impacto = `SUM(total_soluciones)` con `tipo_solucion = <clave>`.
+
+### `fact_campania`
+**Grano**: 1 fila por campaña.
+
+| Columna | Descripción |
+|---|---|
+| `idCampania`, `nombre`, `tipo` (`captacion`/`colecta`) | |
+| `idPais`, `idOficina` | `es_nacional` = 1 si `oficina_id` es null |
+| `activa`, `fecha_inicio`, `fecha_fin`, `anio_inicio` | |
+
+C1 (campañas nacionales de captación) = `COUNT` con `tipo='captacion'`, `es_nacional=1`
+y solapamiento de fechas con el período.
+
 ### Dimensiones
 - **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`, `tipo`
   (nombre del tipo), `tipo_indicador`, `idCategoria`, `categoria` (nombre),
@@ -226,6 +304,11 @@ Definición de etapa (en orden de prioridad):
 - **`dim_indicador`**: `tipo_indicador` (código), `indicador` (etiqueta es).
   Mapea los códigos de `tipo_indicador` a su nombre para mostrar. Las etiquetas
   viven en `lang/*/backend.php`; esta vista las refleja para BI (es).
+- **`dim_comunidad`**: `idComunidad`, `nombre`, `idPais`, `idOficina`, `activo`,
+  `tiene_diagnostico` + `fecha_diagnostico` (mesa generada/activa), `tiene_plan` +
+  `fecha_plan_de_accion` (mesa implementada), `tiene_ficha`, `anio_inicio_techo`,
+  `estado_legalizacion`. Soporta comunidades activas, mesas de trabajo, inicio de
+  trabajo y tenencia.
 
 ### `snapshot_lifecycle`
 Histórico mensual de etapas para "Var. vs Año Ant." y embudos en el tiempo.

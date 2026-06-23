@@ -509,6 +509,7 @@ return [
     'numero_beneficiados' => 'Número de pessoas beneficiadas',
     'programa' => 'Programa',
     'soluciones_entregadas' => 'Soluções entregues',
+    'fin_de_trabajo' => 'Data de fim do trabalho',
     'quienes_financiaron' => 'Quem financiou este projeto',
     'link_adicional' => 'Link adicional',
     'comentarios_adicionales' => 'Comentários adicionais',
@@ -531,7 +532,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Solução de infraestrutura comunitária',
         'solucion_agua_comunitaria' => 'Solução de água comunitária',
         'solucion_saneamiento_comunitario' => 'Solução de saneamento comunitário',
-        'solucion_energia_comunitaria' => 'Solução de energia elétrica comunitária'
+        'solucion_energia_comunitaria' => 'Solução de energia elétrica comunitária',
+        'sede_comunitaria' => 'Sede comunitária'
     ],
 
     'tipo_voluntariado_options' => [
