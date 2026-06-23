@@ -140,7 +140,11 @@ class MetricRegistry
             $rows = $base()
                 ->selectRaw($groupBy . ' as grupo, ' . $selectExpr . ' as value')
                 ->groupBy($groupBy)
-                ->get();
+                ->get()
+                ->map(function ($r) {
+                    $r->value = (int) $r->value;
+                    return $r;
+                });
             return [
                 'key'      => $key,
                 'nombre'   => $def['nombre'],
