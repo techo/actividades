@@ -34,21 +34,25 @@ el bucket.
 
 ---
 
-## B. Equipo permanente (base: `reporting_fact_membresia`)
+## B. Equipo permanente (base: `reporting_fact_membresia`) — ✅ DEFINIDA
 
-| # | Métrica | Cálculo propuesto | Fuente | Estado |
-|---|---|---|---|---|
-| B1 | Equipo permanente (TOTAL) | `COUNT(DISTINCT person_key)` con `vigente=1` (comunidad + oficina/área) | `fact_membresia` | 🟡 |
-| B2 | Permanentes en equipos de comunidad | `COUNT(DISTINCT person_key)` vigentes en equipos **de comunidad** | `fact_membresia` + vínculo equipo↔comunidad | 🟡 |
-| B3 | Permanentes en áreas | `COUNT(DISTINCT person_key)` vigentes en equipos que **no** son de comunidad, por `area` | `fact_membresia` + `area` | 🟡 |
-| B4 | Voluntarios en coordinaciones de comunidad | `COUNT(DISTINCT idPersona)` activos en `coordinadores_comunidad` | `coordinadores_comunidad` | 🟡 |
+Comunidad vs área por **`idComunidad` de la membresía**. Vigente = `fechaFin`
+null/futura (ya en la vista). Se exponen **dos conteos**: membresías vigentes y
+personas únicas (`COUNT(DISTINCT person_key)`).
 
-**Preguntas B**:
-- ¿Cómo se distingue un **equipo de comunidad** de uno de área/oficina? Opciones:
-  el equipo está ligado a una comunidad (`equipo_comunidad` / `Integrante.idComunidad`),
-  o el `area` indica comunidad. Hay que fijar la regla (define B1/B2/B3).
-- B4: ¿"activo" en `coordinadores_comunidad` cómo se determina? (la tabla no tiene
-  flag de vigencia visible). ¿Cuenta también `coordinadores_equipos`/`Coordinadores`?
+| # | Métrica | Cálculo | Estado |
+|---|---|---|---|
+| B1 | Equipo permanente (TOTAL) | vigentes (todas) — membresías y DISTINCT `person_key` | ✅ |
+| B2 | Permanentes en equipos de comunidad | vigentes con `idComunidad` **no nulo** | ✅ |
+| B3 | Permanentes en áreas | vigentes con `idComunidad` **nulo** (agrupable por `area`) | ✅ |
+| B4 | Voluntarios en coordinaciones de comunidad | `COUNT(DISTINCT person_key)` vigentes con `rol='coordinacion'` e `idComunidad` no nulo | ✅ |
+
+> Notas: B1 en personas únicas puede ser < B2+B3 si alguien está en un equipo de
+> comunidad y uno de área a la vez (solapamiento a nivel persona); en membresías es
+> aditivo. B4 sale del mismo `fact_membresia` (rol + comunidad + vigencia), no de
+> `coordinadores_comunidad`. Se podría incluir `subcoordinacion` en B4 si se decide.
+> Calidad de dato: `idComunidad` y `rol='coordinacion'` están poco cargados hoy →
+> B2/B4 subcontarán hasta completarlos.
 
 ---
 
@@ -140,7 +144,8 @@ quedan para otras métricas, no para el conteo de soluciones.
 2. **`Actividad.alcance` sin backfill** (afecta C2) → definir y poblar.
 3. **`Comunidad` sin fechas de inicio/fin de trabajo ni "tipo mesa"** (afecta D3,
    D5, D6, D7) → posible cambio de modelo.
-4. **Regla equipo de comunidad vs área** (afecta B1–B3) → definir.
+4. ✅ **Equipo permanente (B)** — resuelto: comunidad vs área por `idComunidad`,
+   dos conteos (membresías y personas únicas), B4 por rol `coordinacion`.
 5. ✅ **Impacto/soluciones (E)** — resuelto: se suma el TOTAL (suma de las 5
    `cant_soluciones_*`). Solo queda **preguntar** por agregar la opción
    `sede_comunitaria` al desplegable (E11).
