@@ -32,6 +32,7 @@ class CrearComunidad extends FormRequest
             'fecha_diagnostico' => 'nullable|date',
             'plan_de_accion' => 'nullable',
             'fecha_plan_de_accion' => 'nullable|date',
+            'fecha_fin_trabajo' => 'nullable|date',
             'activo' => 'required|boolean',
         ];
     }

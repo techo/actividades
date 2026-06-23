@@ -507,6 +507,7 @@ return [
     'programa' => 'Program',
     'soluciones_entregadas' => 'Solutions delivered',
     'solucion_entregada' => 'Solution delivered',
+    'fin_de_trabajo' => 'Work end date',
 
     'soluciones_entregadas_por' => 'Number of solutions delivered by',
 
@@ -532,7 +533,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Community infrastructure solution',
         'solucion_agua_comunitaria' => 'Community water solution',
         'solucion_saneamiento_comunitario' => 'Community sanitation solution',
-        'solucion_energia_comunitaria' => 'Community electricity solution'
+        'solucion_energia_comunitaria' => 'Community electricity solution',
+        'sede_comunitaria' => 'Community hall'
     ],
 
     'tipo_voluntariado_options' => [

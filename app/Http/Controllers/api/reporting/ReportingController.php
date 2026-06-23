@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\reporting;
 
 use App\Http\Controllers\Controller;
+use App\Reporting\MetricRegistry;
 use App\Reporting\MovilizacionMetrics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -106,5 +107,27 @@ class ReportingController extends Controller
             'movilizados_kpi'   => MovilizacionMetrics::movilizadosKpi($anio, $pais, $oficina),
             'personas_unicas'   => MovilizacionMetrics::personasUnicas($anio, $pais, $oficina),
         ]);
+    }
+
+    /** Catálogo de métricas: los indicadores institucionales disponibles. */
+    public function metricsCatalog()
+    {
+        return response()->json([
+            'metrics' => MetricRegistry::catalogo(),
+            'filtros' => ['anio', 'mes', 'idPais', 'idOficina', 'group_by'],
+        ]);
+    }
+
+    /**
+     * Métrica institucional por key (registry). Devuelve el número ya agregado,
+     * filtrable por idPais / anio / mes / idOficina y con group_by opcional.
+     */
+    public function metric($key, Request $request)
+    {
+        if (!MetricRegistry::existe($key)) {
+            return response()->json(['error' => 'Métrica no encontrada'], 404);
+        }
+
+        return response()->json(MetricRegistry::resolver($key, $request));
     }
 }
