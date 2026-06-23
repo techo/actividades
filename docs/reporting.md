@@ -57,9 +57,9 @@ Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 | GET | `/api/reporting/metrics/movilizacion` | KPIs (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
-`fact_evaluacion_impacto`, `fact_lifecycle`, `dim_actividad`, `dim_equipo`,
-`dim_persona`, `dim_geografia`, `dim_pais`, `dim_oficina`, `dim_indicador`,
-`snapshot_lifecycle`.
+`fact_evaluacion_impacto`, `fact_lifecycle`, `fact_solucion`, `fact_campania`,
+`dim_actividad`, `dim_equipo`, `dim_persona`, `dim_geografia`, `dim_pais`,
+`dim_oficina`, `dim_indicador`, `dim_comunidad`, `snapshot_lifecycle`.
 
 **Convención id ↔ nombre (modelo estrella)**: los hechos (`fact_*`) llevan los
 **ids** (`idPais`, `idOficina`, `idCategoria`, `tipo_indicador`); los **nombres**
@@ -209,6 +209,31 @@ Definición de etapa (en orden de prioridad):
 - **inserción**: tiene ≥ 1 presencia y no es integrante.
 - **captado**: está suscripto (campaña) sin presencia ni membresía.
 
+### `fact_solucion`
+**Grano**: 1 fila por informe de cierre. Familia de impacto/soluciones.
+
+| Columna | Descripción |
+|---|---|
+| `idActividadInformeCierre`, `idActividad`, `idComunidad` | claves |
+| `idPais`, `idOficina`, `fecha_actividad`, `anio` | de la actividad |
+| `tipo_solucion` | clave del desplegable `soluciones_entregadas` (ej. `vivienda_emergencia`) |
+| `total_soluciones` | suma de las 5 `cant_soluciones_*` (el TOTAL del informe) |
+| `numero_participantes`, `numero_beneficiados` | vecinos participando / personas beneficiadas |
+
+Métrica de impacto = `SUM(total_soluciones)` con `tipo_solucion = <clave>`.
+
+### `fact_campania`
+**Grano**: 1 fila por campaña.
+
+| Columna | Descripción |
+|---|---|
+| `idCampania`, `nombre`, `tipo` (`captacion`/`colecta`) | |
+| `idPais`, `idOficina` | `es_nacional` = 1 si `oficina_id` es null |
+| `activa`, `fecha_inicio`, `fecha_fin`, `anio_inicio` | |
+
+C1 (campañas nacionales de captación) = `COUNT` con `tipo='captacion'`, `es_nacional=1`
+y solapamiento de fechas con el período.
+
 ### Dimensiones
 - **`dim_actividad`**: `idActividad`, `nombreActividad`, `idTipo`, `tipo`
   (nombre del tipo), `tipo_indicador`, `idCategoria`, `categoria` (nombre),
@@ -226,6 +251,11 @@ Definición de etapa (en orden de prioridad):
 - **`dim_indicador`**: `tipo_indicador` (código), `indicador` (etiqueta es).
   Mapea los códigos de `tipo_indicador` a su nombre para mostrar. Las etiquetas
   viven en `lang/*/backend.php`; esta vista las refleja para BI (es).
+- **`dim_comunidad`**: `idComunidad`, `nombre`, `idPais`, `idOficina`, `activo`,
+  `tiene_diagnostico` + `fecha_diagnostico` (mesa generada/activa), `tiene_plan` +
+  `fecha_plan_de_accion` (mesa implementada), `tiene_ficha`, `anio_inicio_techo`,
+  `estado_legalizacion`. Soporta comunidades activas, mesas de trabajo, inicio de
+  trabajo y tenencia.
 
 ### `snapshot_lifecycle`
 Histórico mensual de etapas para "Var. vs Año Ant." y embudos en el tiempo.

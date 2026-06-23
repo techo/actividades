@@ -37,11 +37,18 @@ class ReportingController extends Controller
         'dim_pais'                  => 'reporting_dim_pais',
         'dim_oficina'               => 'reporting_dim_oficina',
         'dim_indicador'             => 'reporting_dim_indicador',
+        'dim_comunidad'             => 'reporting_dim_comunidad',
+        'fact_solucion'             => 'reporting_fact_solucion',
+        'fact_campania'             => 'reporting_fact_campania',
         'snapshot_lifecycle'        => 'reporting_snapshot_lifecycle',
     ];
 
     /** Columnas por las que se permite filtrar (se aplican solo si existen en el dataset). */
-    const FILTROS = ['anio', 'mes', 'idPais', 'idOficina', 'tipo_indicador', 'etapa', 'es_presente', 'es_kpi', 'vigente'];
+    const FILTROS = [
+        'anio', 'mes', 'idPais', 'idOficina', 'tipo_indicador', 'etapa',
+        'es_presente', 'es_kpi', 'vigente', 'rol', 'tipo_solucion', 'tipo',
+        'activo', 'es_nacional', 'estado_legalizacion',
+    ];
 
     /** Catálogo autodescriptivo: qué datasets hay, sus columnas y filtros. */
     public function catalog()
