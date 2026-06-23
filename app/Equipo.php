@@ -10,11 +10,16 @@ class Equipo extends Model
     use SoftDeletes;
     protected $table = "Equipo";
     protected $primaryKey = "idEquipo";
-    protected $fillable = ['idOficina', 'nombre', 'idPais', 'activo', 'fechaInicio', 'fechaFin', 'idEquipoPadre', 'area'];
+    protected $fillable = ['idOficina', 'nombre', 'idPais', 'activo', 'fechaInicio', 'fechaFin', 'idEquipoPadre', 'area', 'area_id'];
     protected $dates =
         [
             'fechaInicio', 'fechaFin'
         ];
+
+    public function areaCatalogo()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
 
     public function oficina()
     {

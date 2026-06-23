@@ -59,6 +59,6 @@ class Campaign extends Model
 
     public function preguntas()
     {
-        return $this->hasMany(CampaignPregunta::class, 'campaign_id')->orderBy('orden');
+        return $this->hasMany(CampaignPregunta::class, 'campaign_id')->with('condiciones')->orderBy('orden');
     }
 }

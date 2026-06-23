@@ -12,37 +12,27 @@ class EstadisticasController extends Controller
 
     public function voluntades_movilizadas()
     {
-        $inscriptosPresentes = \App\Inscripcion::whereYear('fechaInscripcion', now()->year)
-        ->where('presente', 1)
-        ->count();
-
-
-
-        return $inscriptosPresentes;
+        return \App\Reporting\MovilizacionMetrics::movilizadosTotal(now()->year);
     }
 
     public function actividades()
     {
+        // Conteo de actividades realizadas en el año = por fecha de la actividad.
         $actividades = \App\Actividad::join('Tipo', 'Tipo.idTipo', '=', 'Actividad.idTipo')
             ->join('atl_CategoriaActividad', 'atl_CategoriaActividad.id', '=', 'Tipo.idCategoria')
             ->select(DB::raw('atl_CategoriaActividad.nombre, count(*) cantidad'))
-            ->whereYear('fechaCreacion', now()->year) 
+            ->whereYear('Actividad.fechaInicio', now()->year)
             ->whereIn('atl_CategoriaActividad.id', ['2', '1'])
             ->groupBy('atl_CategoriaActividad.nombre')
             ->orderBy('cantidad', 'DESC');
 
-        
+
         return $actividades->get();
     }
 
     public function personas_movilizadas()
     {
-
-        $personas = \App\Inscripcion::whereYear('Inscripcion.fechaInscripcion', now()->year)
-            ->where('Inscripcion.presente', 1)
-            ->select(DB::raw('count(distinct Inscripcion.idPersona) as cantidad'))
-            ->first();
-
-        return $personas; 
+        // Se preserva la forma de respuesta {cantidad} que consume estadisticas-publicas.vue.
+        return ['cantidad' => \App\Reporting\MovilizacionMetrics::personasUnicas(now()->year)];
     }
 }

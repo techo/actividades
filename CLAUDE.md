@@ -203,6 +203,14 @@ La app MiTECHO usa `mitecho://actividades/{id}` como custom URL scheme. Los arch
 
 ---
 
+## Capa de reporting / analytics
+
+`docs/reporting.md` — capa de reporting: vistas `reporting_*` (datamart) expuestas **solo vía API REST** (`/api/reporting/*`, `ReportingController`, auth Passport). Qué significa cada hecho/dimensión, el glosario canónico de métricas (movilizado, KPI, NPS, etapas del ciclo), cómo conectarse y las definiciones que **no** deben re-implementarse en BI.
+
+> Regla clave: las métricas se definen **una sola vez** en las vistas `reporting_*`; los consumidores externos (Power BI, otras apps) acceden **únicamente por la API**, nunca por MySQL directo ni a las tablas operativas (PII + reglas no aplicadas). La app sí lee las vistas internamente. Se expone `person_key` (UUID pseudónimo, mapeo interno en `reporting_person`), no `idPersona`. El scope por país es server-side en la API derivado del token (hoy desactivado: trae todo); `reporting_acceso_usuario` es el insumo. Limitación: scope a nivel país (no oficina), porque el usuario solo tiene `idPaisPermitido`.
+
+---
+
 ## Testing
 
 ```bash

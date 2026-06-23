@@ -134,6 +134,10 @@ Route::middleware('auth:api')->group(function () {
 
     // ── Donations ─────────────────────────────────────────────────────────
     Route::prefix('donations')->group(function () {
+        // Config de checkout: moneda y montos sugeridos según el país del usuario
+        Route::get('stripe/checkout-config', 'api\DonationController@checkoutConfig')
+             ->name('api.donations.checkout-config');
+
         // One-time: create PaymentIntent and persist a donation record
         Route::post('stripe/payment-intent', 'api\DonationController@createPaymentIntent')
              ->name('api.donations.create-intent');
@@ -145,6 +149,10 @@ Route::middleware('auth:api')->group(function () {
         // List active subscriptions for the authenticated user
         Route::get('stripe/subscription', 'api\DonationController@listSubscriptions')
              ->name('api.donations.list-subscriptions');
+
+        // Create a Stripe Customer Portal session (self-manage subscriptions)
+        Route::post('stripe/billing-portal', 'api\DonationController@billingPortal')
+             ->name('api.donations.billing-portal');
 
         // Poll subscription status by Stripe Subscription ID
         Route::get('stripe/subscription/{subscriptionId}/status', 'api\DonationController@getSubscriptionStatus')
@@ -190,6 +198,18 @@ Route::middleware('auth:api')->group(function () {
 
         return app(\App\Http\Controllers\ajax\ActividadesController::class)->index($request);
     });
+});
+
+// ── API de reporting (read-only sobre las vistas reporting_*) ────────────────
+// Puerta de entrada para Power BI y otros consumidores sin acceso directo a BD.
+// Detrás de auth:api (Passport). Hoy sin scope por país: trae todo.
+Route::middleware('auth:api')->prefix('reporting')->group(function () {
+    Route::get('catalog', 'api\reporting\ReportingController@catalog');
+    Route::get('datasets/{name}', 'api\reporting\ReportingController@dataset');
+    // metrics: rutas específicas antes del genérico {key}.
+    Route::get('metrics', 'api\reporting\ReportingController@metricsCatalog');
+    Route::get('metrics/movilizacion', 'api\reporting\ReportingController@movilizacion');
+    Route::get('metrics/{key}', 'api\reporting\ReportingController@metric');
 });
 
 

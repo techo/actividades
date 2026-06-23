@@ -775,6 +775,37 @@ Stripe habilita automáticamente todos los métodos de pago configurados en el D
 
 ### Flujos de integración para la app mobile
 
+#### 0) Config de checkout — montos sugeridos por país
+
+Antes de iniciar cualquier flujo de pago, la app pide la configuración del país
+del usuario autenticado (`Persona.idPais`): moneda local y tres montos sugeridos
+(fijados por producto en BD, **no** por tipo de cambio).
+
+```
+GET /api/donations/stripe/checkout-config
+Authorization: Bearer <token>
+
+← 200 (ejemplo México):
+{
+  "id_pais": 146,
+  "country_code": "MX",
+  "currency": "mxn",
+  "presets_major": { "bajo": 34, "medio": 85, "alto": 170 },
+  "minor_unit_exponent": 2,
+  "pix_enabled": false
+}
+```
+
+- `presets_major` están en **unidad mayor**. Para llamar a Stripe convertir a
+  unidad menor: `monto_minor = monto_major * 10^minor_unit_exponent`
+  (ej. mxn `34 → 3400`; CLP tiene `minor_unit_exponent: 0`, así que `5000 → 5000`).
+- Si el país del usuario no tiene montos configurados, se devuelve el **default
+  global**: `currency: "usd"`, `presets_major: { bajo: 5, medio: 10, alto: 20 }`.
+- `pix_enabled` indica si el país ofrece PIX (hoy solo Brasil).
+- `country_code` sale del `iso2` del país; puede ser `null` si no está cargado.
+
+---
+
 #### A) Donación libre — pago único (card / Apple Pay / Google Pay)
 
 ```
@@ -840,7 +871,13 @@ Stripe habilita automáticamente todos los métodos de pago configurados en el D
 
 4. Listar suscripciones activas del usuario
    GET /api/donations/stripe/subscription
-   ← { data: [ { subscription_id, status, amount, ... } ] }
+   ← { data: [ { subscription_id, status, amount, cancel_at_period_end, ... } ] }
+
+5. Autogestión (cambiar medio de pago / cancelar)
+   POST /api/donations/stripe/billing-portal
+   body: { return_url: "mitecho://stripe-billing-portal-return" }
+   ← { url: "https://billing.stripe.com/session/..." }
+   Abrir la URL en el navegador. Los cambios se reflejan vía webhooks.
 ```
 
 ---
@@ -944,6 +981,7 @@ Lista las suscripciones activas (no terminales) del usuario autenticado. Lee sol
       "currency": "usd",
       "interval": "month",
       "current_period_end": "2026-07-08T12:00:00+00:00",
+      "cancel_at_period_end": false,
       "canceled_at": null,
       "created_at": "2026-06-08T12:00:00+00:00"
     }
@@ -952,6 +990,38 @@ Lista las suscripciones activas (no terminales) del usuario autenticado. Lee sol
 ```
 
 Devuelve `data: []` si no hay suscripciones. Excluye estados terminales (`canceled`, `incomplete_expired`).
+
+> `cancel_at_period_end` (boolean): `true` cuando el usuario programó la cancelación desde el Customer Portal. La suscripción sigue `active` hasta `current_period_end` y luego se cancela. Se sincroniza vía webhook `customer.subscription.updated`.
+
+---
+
+### `POST /donations/stripe/billing-portal` 🔒
+
+Crea una sesión del Stripe Customer Portal y devuelve la URL para abrirla en el navegador. Desde el portal el usuario puede actualizar el medio de pago o cancelar sus donaciones recurrentes; los cambios se reflejan en la base local vía los webhooks de suscripción.
+
+Requiere que el Customer Portal esté activado/configurado en el Dashboard de Stripe (cuenta de donaciones).
+
+**Body (opcional)**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `return_url` | string | | URL de retorno al salir del portal. También acepta `returnUrl`. Default: `mitecho://stripe-billing-portal-return` |
+
+> El `return_url` se valida como string (no como URL) para permitir deep links con scheme custom. Tener en cuenta que Stripe puede rechazar schemes no http(s); en ese caso usar una Universal Link / App Link https que redirija a la app.
+
+**Response `200`**
+```json
+{
+  "url": "https://billing.stripe.com/session/..."
+}
+```
+
+**Errores**
+
+| Código | Causa |
+|---|---|
+| `404` | El usuario no tiene Stripe customer (nunca inició una suscripción) |
+| `502` | Stripe no pudo crear la sesión del portal |
 
 ---
 
@@ -997,6 +1067,7 @@ Devuelve el estado actual de una suscripción desde la base de datos local.
   "currency": "usd",
   "interval": "month",
   "current_period_end": "2026-06-19T12:04:00+00:00",
+  "cancel_at_period_end": false,
   "canceled_at": null
 }
 ```
@@ -1126,8 +1197,8 @@ Endpoint para eventos de Stripe. La autenticidad se valida con la firma HMAC (`S
 | `payment_intent.canceled` | Donación → `canceled` |
 | `invoice.paid` | Suscripción → `active`, actualiza `current_period_end` |
 | `invoice.payment_failed` | Suscripción → `past_due` |
-| `customer.subscription.updated` | Sincroniza status y período |
-| `customer.subscription.deleted` | Suscripción → `canceled` |
+| `customer.subscription.updated` | Sincroniza `status`, `current_period_end`, `amount` y `cancel_at_period_end` (ignora suscripciones ya terminales) |
+| `customer.subscription.deleted` | Suscripción → `canceled`, guarda `canceled_at` |
 
 ---
 

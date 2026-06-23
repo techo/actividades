@@ -54,7 +54,6 @@ import UsuariosDatatable from './components/backoffice/datatable/UsuariosDatatab
 import SuscriptosDatatable from './components/backoffice/datatable/SuscriptosDatatable';
 import CampanasDatatable from './components/backoffice/campanas/CampanasDatatable';
 import CampanaForm from './components/backoffice/campanas/CampanaForm';
-import CampanaPreguntas from './components/backoffice/campanas/CampanaPreguntas';
 import CampanaSuscriptosDatatable from './components/backoffice/campanas/CampanaSuscriptosDatatable';
 import EquiposDatatable from './components/backoffice/datatable/EquiposDatatable';
 import ComunidadesDatatable from './components/backoffice/datatable/ComunidadesDatatable';
@@ -68,8 +67,9 @@ Vue.component('red-modal', RedModal);
 import informesCierre from './components/backoffice/actividades/informes-cierre';
 Vue.component('informes-cierre', informesCierre);
 
-import preguntasActividad from './components/backoffice/actividades/preguntas-actividad';
-Vue.component('preguntas-actividad', preguntasActividad);
+// Gestor unificado de preguntas configurables (Actividades + Campañas).
+import PreguntasManager from './components/backoffice/preguntas/PreguntasManager';
+Vue.component('preguntas-manager', PreguntasManager);
 
 import ReferentesDatatable from './components/backoffice/datatable/ReferentesDatatable';
 import ReferenteModal from './components/backoffice/comunidad/referente-modal';
@@ -210,7 +210,6 @@ Vue.component('usuarios-datatable', UsuariosDatatable);
 Vue.component('suscriptos-datatable', SuscriptosDatatable);
 Vue.component('campanas-datatable', CampanasDatatable);
 Vue.component('campana-form', CampanaForm);
-Vue.component('campana-preguntas', CampanaPreguntas);
 Vue.component('campana-suscriptos-datatable', CampanaSuscriptosDatatable);
 Vue.component('comunidades-datatable', ComunidadesDatatable);
 Vue.component('equipos-datatable', EquiposDatatable);

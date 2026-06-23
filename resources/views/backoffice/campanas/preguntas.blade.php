@@ -9,7 +9,7 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="preguntas">
-                <campana-preguntas :campana-id="{{ $campana->id }}"></campana-preguntas>
+                <preguntas-manager base-url="/admin/ajax/campanas/{{ $campana->id }}/preguntas"></preguntas-manager>
             </div>
         </div>
 

@@ -79,6 +79,8 @@ class EquiposController extends Controller
         $equipo->fill($validado);
         $equipo->idPais = $oficina->id_pais;
         $equipo->activo = true;
+        // Mantener sincronizado el texto legacy `area` con el catálogo.
+        $equipo->area = optional(\App\Area::find($validado['area_id']))->nombre;
 
         $equipo->save();
 
@@ -104,6 +106,8 @@ class EquiposController extends Controller
         $oficina = Oficina::findOrFail($validado['idOficina']);
         $equipo->fill($validado);
         $equipo->idPais = $oficina->id_pais;
+        // Mantener sincronizado el texto legacy `area` con el catálogo.
+        $equipo->area = optional(\App\Area::find($validado['area_id']))->nombre;
         $equipo->save();
 
         if ($request->has('tagComunidades')) {

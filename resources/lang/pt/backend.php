@@ -143,6 +143,7 @@ return [
     'impact' => 'Impacto',
     'skills' => 'Capacidades',
     'changes_saved' => 'Alterações salvas',
+    'save_generic_error' => 'Não foi possível salvar as alterações. Tente novamente.',
     'activity_coordination' => 'Coordenação da atividade',
     'all_these_people_can_edit_the_team' => 'Todas essas pessoas têm acesso para editar a Equipe. Para isso, devem primeiro ter permissão de coordenador.',
     'all_these_people_can_edit_the_community' => 'Todas essas pessoas têm acesso para editar a Comunidade. Para isso, devem primeiro ter permissão de coordenador.',
@@ -508,6 +509,7 @@ return [
     'numero_beneficiados' => 'Número de pessoas beneficiadas',
     'programa' => 'Programa',
     'soluciones_entregadas' => 'Soluções entregues',
+    'fin_de_trabajo' => 'Data de fim do trabalho',
     'quienes_financiaron' => 'Quem financiou este projeto',
     'link_adicional' => 'Link adicional',
     'comentarios_adicionales' => 'Comentários adicionais',
@@ -530,7 +532,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Solução de infraestrutura comunitária',
         'solucion_agua_comunitaria' => 'Solução de água comunitária',
         'solucion_saneamiento_comunitario' => 'Solução de saneamento comunitário',
-        'solucion_energia_comunitaria' => 'Solução de energia elétrica comunitária'
+        'solucion_energia_comunitaria' => 'Solução de energia elétrica comunitária',
+        'sede_comunitaria' => 'Sede comunitária'
     ],
 
     'tipo_voluntariado_options' => [
@@ -603,6 +606,18 @@ return [
     'saving'                => 'Salvando...',
     'no_preguntas'          => 'Nenhuma pergunta configurada para esta atividade.',
     'error_guardando'       => 'Ocorreu um erro ao salvar. Tente novamente.',
+    'hacer_obligatoria'     => 'Tornar obrigatória',
+    'opciones_disponibles'  => 'Opções disponíveis',
+    'opcion'                => 'Opção',
+    'agregar_opcion'        => 'Adicionar opção',
+    'filtro_condicional'    => 'Filtro condicional',
+    'filtro_condicional_ayuda' => 'Se você configurar um filtro, esta pergunta só aparecerá quando o usuário escolher uma resposta específica em uma pergunta anterior.',
+    'filtro_especifico'     => 'Filtro específico',
+    'filtro_sin_preguntas'  => 'Para usar um filtro você precisa de ao menos uma pergunta suspensa anterior (com ordem menor).',
+    'mostrar_si'            => 'Mostrar esta pergunta se',
+    'pregunta_padre'        => 'Pergunta',
+    'respuesta_esperada'    => 'Resposta',
+    'eliminar_configuracion' => 'Remover configuração',
     'confirm_delete'        => 'Tem certeza de que deseja excluir este registro? Esta ação não pode ser desfeita.',
 
     // Avaliações - novo dashboard

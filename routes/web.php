@@ -240,6 +240,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::post('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@store');
         Route::put('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@update');
         Route::delete('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@destroy');
+        Route::put('/{campana}/preguntas/{preguntaId}/mover', 'backoffice\ajax\CampaignPreguntasController@mover');
     });
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
@@ -420,6 +421,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/actividades/{actividad}/preguntas', 'backoffice\ajax\ActividadPreguntasController@store')->middleware('can:ver,actividad');
     Route::put('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@update')->middleware('can:ver,actividad');
     Route::delete('/ajax/actividades/{actividad}/preguntas/{preguntaId}', 'backoffice\ajax\ActividadPreguntasController@destroy')->middleware('can:ver,actividad');
+    Route::put('/ajax/actividades/{actividad}/preguntas/{preguntaId}/mover', 'backoffice\ajax\ActividadPreguntasController@mover')->middleware('can:ver,actividad');
 
     Route::post('ajax/actividades/{id}/jornadas', 'backoffice\ajax\JornadasController@store')->middleware('can:ver,App\Actividad,id');;
 
@@ -494,6 +496,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@getOficinas');
     Route::get('/ajax/oficinas/pais/{idpais}', 'backoffice\ajax\OficinasController@getOficinasPais');
+    Route::get('/ajax/areas', 'backoffice\ajax\AreasController@index');
+    Route::get('/ajax/roles-integrante', 'backoffice\ajax\RolesIntegranteController@index');
     Route::get('/ajax/configuracion/oficinas', 'backoffice\ajax\OficinasController@index');
 
     Route::get('/ajax/usuarios', 'backoffice\ajax\UsuariosController@index')->middleware('permission:ver_usuarios');

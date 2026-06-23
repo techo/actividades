@@ -147,6 +147,7 @@ return [
     'impact' => 'Impact',
     'skills' => 'Skills',
     'changes_saved' => 'Changes saved',
+    'save_generic_error' => 'The changes could not be saved. Please try again.',
     'activity_coordination' => 'Activity Coordination',
     'all_these_people_can_edit_the_team' => 'All these people have access to edit the team.',
     'point' => 'Point',
@@ -506,6 +507,7 @@ return [
     'programa' => 'Program',
     'soluciones_entregadas' => 'Solutions delivered',
     'solucion_entregada' => 'Solution delivered',
+    'fin_de_trabajo' => 'Work end date',
 
     'soluciones_entregadas_por' => 'Number of solutions delivered by',
 
@@ -531,7 +533,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Community infrastructure solution',
         'solucion_agua_comunitaria' => 'Community water solution',
         'solucion_saneamiento_comunitario' => 'Community sanitation solution',
-        'solucion_energia_comunitaria' => 'Community electricity solution'
+        'solucion_energia_comunitaria' => 'Community electricity solution',
+        'sede_comunitaria' => 'Community hall'
     ],
 
     'tipo_voluntariado_options' => [
@@ -604,6 +607,18 @@ return [
     'saving'                => 'Saving...',
     'no_preguntas'          => 'No questions configured for this activity.',
     'error_guardando'       => 'An error occurred while saving. Please try again.',
+    'hacer_obligatoria'     => 'Make required',
+    'opciones_disponibles'  => 'Available options',
+    'opcion'                => 'Option',
+    'agregar_opcion'        => 'Add option',
+    'filtro_condicional'    => 'Conditional filter',
+    'filtro_condicional_ayuda' => 'If you set a filter, this question will only appear when the user selects a specific answer to a previous question.',
+    'filtro_especifico'     => 'Specific filter',
+    'filtro_sin_preguntas'  => 'To use a filter you need at least one previous dropdown question (with a lower order).',
+    'mostrar_si'            => 'Show this question if',
+    'pregunta_padre'        => 'Question',
+    'respuesta_esperada'    => 'Answer',
+    'eliminar_configuracion' => 'Remove configuration',
     'confirm_delete'        => 'Are you sure you want to delete this record? This action cannot be undone.',
 
     // Evaluations - new dashboard

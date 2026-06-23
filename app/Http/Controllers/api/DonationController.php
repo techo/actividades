@@ -4,9 +4,11 @@ namespace App\Http\Controllers\api;
 
 use App\Actividad;
 use App\Donation;
+use App\DonationPreset;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
 use App\Services\StripePaymentService;
+use App\StripeCustomer;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,6 +25,62 @@ class DonationController extends Controller
     public function __construct(StripePaymentService $stripe)
     {
         $this->stripe = $stripe;
+    }
+
+    // =========================================================================
+    // GET /api/donations/stripe/checkout-config
+    // =========================================================================
+
+    /**
+     * Devuelve la moneda local y los tres montos sugeridos para el país del
+     * usuario autenticado (Persona.idPais). Los montos están fijados en BD por
+     * país (tabla donation_presets), no se calculan por tipo de cambio.
+     *
+     * Si el país no tiene presets configurados, cae al default global USD 5/10/20.
+     *
+     * Los montos van en UNIDAD MAYOR (presets_major). El cliente debe convertir
+     * a unidad menor usando minor_unit_exponent antes de llamar a Stripe
+     * (ej. mxn: 34 → 34 * 10^2 = 3400).
+     *
+     * Response 200:
+     *   { id_pais, country_code, currency, presets_major{bajo,medio,alto},
+     *     minor_unit_exponent, pix_enabled }
+     */
+    public function checkoutConfig(): JsonResponse
+    {
+        $user   = Auth::user();
+        $idPais = $user->idPais;
+        $iso2   = optional($user->pais)->iso2;
+
+        $preset = $idPais
+            ? DonationPreset::where('id_pais', $idPais)->first()
+            : null;
+
+        if ($preset) {
+            $currency = $preset->currency;
+            $presets  = [
+                'bajo'  => $preset->preset_low,
+                'medio' => $preset->preset_mid,
+                'alto'  => $preset->preset_high,
+            ];
+            $exponent = $preset->minor_unit_exponent;
+            $pix      = $preset->pix_enabled;
+        } else {
+            // País sin presets configurados → default global.
+            $currency = DonationPreset::DEFAULT_CURRENCY;
+            $presets  = DonationPreset::DEFAULT_PRESETS;
+            $exponent = DonationPreset::DEFAULT_EXPONENT;
+            $pix      = false;
+        }
+
+        return response()->json([
+            'id_pais'             => $idPais !== null ? (int) $idPais : null,
+            'country_code'        => $iso2 ? strtoupper($iso2) : null,
+            'currency'            => $currency,
+            'presets_major'       => $presets,
+            'minor_unit_exponent' => $exponent,
+            'pix_enabled'         => $pix,
+        ]);
     }
 
     // =========================================================================
@@ -357,17 +415,76 @@ class DonationController extends Controller
                     'amount'             => $sub->amount,
                     'currency'           => $sub->currency,
                     'interval'           => $sub->interval,
-                    'current_period_end' => $sub->current_period_end
+                    'current_period_end'   => $sub->current_period_end
                         ? $sub->current_period_end->toIso8601String()
                         : null,
-                    'canceled_at'        => $sub->canceled_at
+                    'cancel_at_period_end' => (bool) $sub->cancel_at_period_end,
+                    'canceled_at'          => $sub->canceled_at
                         ? $sub->canceled_at->toIso8601String()
                         : null,
-                    'created_at'         => $sub->created_at->toIso8601String(),
+                    'created_at'           => $sub->created_at->toIso8601String(),
                 ];
             });
 
         return response()->json(['data' => $subscriptions]);
+    }
+
+    // =========================================================================
+    // POST /api/donations/stripe/billing-portal
+    // =========================================================================
+
+    /**
+     * Create a Stripe Customer Portal session and return its URL so the app
+     * can open it in the browser. From the portal the user can update or cancel
+     * their recurring donations; the resulting changes flow back into our DB
+     * via the subscription webhooks.
+     *
+     * Request body (optional):
+     *   return_url | returnUrl  (string) — where Stripe sends the user on exit.
+     *                                       Defaults to the MiTECHO deep link.
+     *
+     * Response 200:
+     *   { url }
+     *
+     * Errors:
+     *   404 — the user has no Stripe customer yet (never started a subscription)
+     *   502 — Stripe could not create the portal session
+     */
+    public function billingPortal(Request $request): JsonResponse
+    {
+        // Accept both snake_case and camelCase. Validate as a plain string —
+        // NOT the `url` rule — because the mobile return URL is a custom scheme
+        // deep link (e.g. mitecho://…) which the `url` rule would reject.
+        $request->validate([
+            'return_url' => ['nullable', 'string', 'max:500'],
+            'returnUrl'  => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $returnUrl = $request->input('return_url')
+            ?? $request->input('returnUrl')
+            ?? 'mitecho://stripe-billing-portal-return';
+
+        $customer = StripeCustomer::where('person_id', Auth::user()->idPersona)->first();
+
+        if (!$customer) {
+            return response()->json([
+                'message' => 'No Stripe customer found for this user.',
+            ], 404);
+        }
+
+        try {
+            $url = $this->stripe->createBillingPortalSession(
+                $customer->stripe_customer_id,
+                $returnUrl
+            );
+        } catch (ApiErrorException $e) {
+            return response()->json([
+                'message' => 'Could not create billing portal session.',
+                'error'   => $e->getMessage(),
+            ], 502);
+        }
+
+        return response()->json(['url' => $url]);
     }
 
     // =========================================================================
@@ -397,11 +514,12 @@ class DonationController extends Controller
             'status'             => $subscription->status,
             'amount'             => $subscription->amount,
             'currency'           => $subscription->currency,
-            'interval'           => $subscription->interval,
-            'current_period_end' => $subscription->current_period_end
+            'interval'             => $subscription->interval,
+            'current_period_end'   => $subscription->current_period_end
                 ? $subscription->current_period_end->toIso8601String()
                 : null,
-            'canceled_at'        => $subscription->canceled_at
+            'cancel_at_period_end' => (bool) $subscription->cancel_at_period_end,
+            'canceled_at'          => $subscription->canceled_at
                 ? $subscription->canceled_at->toIso8601String()
                 : null,
         ]);
@@ -528,13 +646,14 @@ class DonationController extends Controller
                         'interval'           => $s->interval,
                         'inscripcion_id'     => null,
                         'actividad'          => null,
-                        'current_period_end' => $s->current_period_end
+                        'current_period_end'   => $s->current_period_end
                             ? $s->current_period_end->toIso8601String()
                             : null,
-                        'canceled_at'        => $s->canceled_at
+                        'cancel_at_period_end' => (bool) $s->cancel_at_period_end,
+                        'canceled_at'          => $s->canceled_at
                             ? $s->canceled_at->toIso8601String()
                             : null,
-                        'created_at'         => $s->created_at->toIso8601String(),
+                        'created_at'           => $s->created_at->toIso8601String(),
                     ];
                 });
         }

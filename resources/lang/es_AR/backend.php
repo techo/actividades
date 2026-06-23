@@ -147,6 +147,7 @@ return [
     'impact' => 'Impacto',
     'skills' => 'Capacidades',
     'changes_saved' => 'Cambios guardados',
+    'save_generic_error' => 'No se pudieron guardar los cambios. Probá de nuevo.',
     'activity_coordination' => 'Coordinación de la actividad',
     'all_these_people_can_edit_the_team' => 'Todas estas Personas tienen acceso a editar el equipo.',
     'point' => 'Punto',
@@ -506,6 +507,7 @@ return [
     'programa' => 'Programa ',
     'soluciones_entregadas' => 'Soluciones entregadas',
     'solucion_entregada' => 'Solución entregada',
+    'fin_de_trabajo' => 'Fecha de fin de trabajo',
 
     'soluciones_entregadas_por' => 'Cantidad de soluciones entregadas por',
 
@@ -531,7 +533,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Solución de infraestructura comunitaria',
         'solucion_agua_comunitaria' => 'Solución de agua comunitaria',
         'solucion_saneamiento_comunitario' => 'Solución de saneamiento comunitario',
-        'solucion_energia_comunitaria' => 'Solución de energía eléctrica comunitaria'
+        'solucion_energia_comunitaria' => 'Solución de energía eléctrica comunitaria',
+        'sede_comunitaria' => 'Sede comunitaria'
     ],
 
     'tipo_voluntariado_options' => [
@@ -644,6 +647,18 @@ return [
     'saving'                => 'Guardando...',
     'no_preguntas'          => 'No hay preguntas configuradas para esta actividad.',
     'error_guardando'       => 'Ocurrió un error al guardar. Intentá nuevamente.',
+    'hacer_obligatoria'     => 'Hacer obligatoria',
+    'opciones_disponibles'  => 'Opciones disponibles',
+    'opcion'                => 'Opción',
+    'agregar_opcion'        => 'Agregar opción',
+    'filtro_condicional'    => 'Filtro condicional',
+    'filtro_condicional_ayuda' => 'Si configurás un filtro, esta pregunta solo aparecerá si el usuario elige una respuesta específica en una pregunta anterior.',
+    'filtro_especifico'     => 'Filtro específico',
+    'filtro_sin_preguntas'  => 'Para usar un filtro necesitás al menos una pregunta desplegable anterior (con menor orden).',
+    'mostrar_si'            => 'Mostrar esta pregunta si',
+    'pregunta_padre'        => 'Pregunta',
+    'respuesta_esperada'    => 'Respuesta',
+    'eliminar_configuracion' => 'Eliminar configuración',
     'confirm_delete'        => '¿Estás seguro de que querés eliminar este registro? Esta acción no se puede deshacer.',
 
     // Campañas

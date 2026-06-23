@@ -29,7 +29,10 @@ class CrearEquipo extends FormRequest
             'fechaInicio' => 'required|date',
             'fechaFin' => 'required_if:activo,false|nullable|date|after:fechaInicio',
             'activo' => 'required|boolean',
-            'area' => 'required',
+            // El área ahora se elige desde el catálogo (area_id). Se mantiene 'area'
+            // como texto opcional por compatibilidad (se sincroniza en el controller).
+            'area_id' => 'required|exists:areas,id',
+            'area' => 'nullable',
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Oficina;
 use App\Services\OneSignal\OneSignalService;
 use App\Services\Push\PushNotificationService;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use App\Providers\TelescopeServiceProvider;
@@ -21,6 +22,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        // Alias estables para las relaciones polimórficas de condiciones de
+        // preguntas. Desacopla la BD de los namespaces PHP.
+        Relation::morphMap([
+            'actividad_pregunta' => \App\ActividadPregunta::class,
+            'campaign_pregunta'  => \App\CampaignPregunta::class,
+        ]);
+
         View::composer('*', function ($view) {
             if (Auth::check() && Auth::user()->hasRole('admin')) { // o el campo que uses
                 $oficinas = Oficina::with('pais')
