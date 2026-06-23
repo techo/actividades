@@ -97,37 +97,41 @@ membresía vigente (`fechaFin` null/futura).
 
 ---
 
-## E. Soluciones / impacto (base: `actividad_informe_cierre`)
+## E. Soluciones / impacto (base: `actividad_informe_cierre`) — ✅ DEFINIDA
 
 `soluciones_entregadas` es un **select único** por informe. Cada métrica filtra por
-su clave y **suma una cantidad** (a definir cuál). Período por la fecha de la
-actividad asociada.
+su clave y suma el **TOTAL de soluciones del informe** (confirmado), que es la suma
+de las 5 cantidades por grupo (lo que el formulario ya muestra como TOTAL):
+
+```
+total_soluciones = cant_soluciones_voluntariado + cant_soluciones_corporativos
+                 + cant_soluciones_secundarios + cant_soluciones_universitarios
+                 + cant_soluciones_familias
+```
+
+Métrica = `SUM(total_soluciones)` de los informes con `soluciones_entregadas = <clave>`
+en el período. Las de "familias con…" (E4–E6) usan el TOTAL de su clave `*_familiar`
+(cada solución familiar ≈ 1 familia). `numero_participantes` y `numero_beneficiados`
+quedan para otras métricas, no para el conteo de soluciones.
 
 | # | Métrica | Clave `soluciones_entregadas` | Estado |
 |---|---|---|---|
-| E1 | Viviendas de emergencia construidas | `vivienda_emergencia` | 🟡 |
-| E2 | Viviendas transitorias/progresivas construidas | `vivienda_transitoria` | 🟡 |
-| E3 | Viviendas permanentes/sociales construidas | `vivienda_social` | 🟡 |
-| E4 | Familias con solución de agua | `solucion_agua_familiar` | 🟡 |
-| E5 | Familias con solución de saneamiento | `solucion_saneamiento_familiar` | 🟡 |
-| E6 | Familias con solución de energía eléctrica | `solucion_energia_familiar` | 🟡 |
-| E7 | Proyectos de infraestructura comunitaria | `solucion_infraestructura_comunitaria` | 🟡 |
-| E8 | Soluciones comunitarias de agua | `solucion_agua_comunitaria` | 🟡 |
-| E9 | Soluciones comunitarias de saneamiento | `solucion_saneamiento_comunitario` | 🟡 |
-| E10 | Soluciones comunitarias de energía/iluminación | `solucion_energia_comunitaria` | 🟡 |
-| E11 | Sedes comunitarias construidas | **(no hay clave)** | 🔴 |
+| E1 | Viviendas de emergencia construidas | `vivienda_emergencia` | ✅ |
+| E2 | Viviendas transitorias/progresivas construidas | `vivienda_transitoria` | ✅ |
+| E3 | Viviendas permanentes/sociales construidas | `vivienda_social` | ✅ |
+| E4 | Familias con solución de agua | `solucion_agua_familiar` | ✅ |
+| E5 | Familias con solución de saneamiento | `solucion_saneamiento_familiar` | ✅ |
+| E6 | Familias con solución de energía eléctrica | `solucion_energia_familiar` | ✅ |
+| E7 | Proyectos de infraestructura comunitaria | `solucion_infraestructura_comunitaria` | ✅ |
+| E8 | Soluciones comunitarias de agua | `solucion_agua_comunitaria` | ✅ |
+| E9 | Soluciones comunitarias de saneamiento | `solucion_saneamiento_comunitario` | ✅ |
+| E10 | Soluciones comunitarias de energía/iluminación | `solucion_energia_comunitaria` | ✅ |
+| E11 | Sedes comunitarias construidas | **(no hay clave)** | ⛔ |
 
-**Preguntas E** (una sola decisión resuelve casi todas):
-- **¿Qué cantidad se suma por informe?** Las opciones del modelo son:
-  `numero_beneficiados`, o la suma de `cant_soluciones_voluntariado +
-  _corporativos + _secundarios + _universitarios + _familias`, o `COUNT` de informes.
-  Probable: las de "familias que cuentan con…" (E4–E6) suman **familias**
-  (`numero_beneficiados`/`cant_soluciones_familias`), y las de "construidas/
-  soluciones" (E1–E3, E7–E10) suman **soluciones** (sumatoria de `cant_soluciones_*`).
-  Hay que confirmarlo.
-- E11 (sedes): no existe la clave en el desplegable. ¿Se agrega una opción
-  `sede_comunitaria`, o se deriva de `infraestructura_comunitaria`?
-- ¿Filtramos informes por algún estado (validado/completo) o cuentan todos?
+**Pendiente E**:
+- E11 (sedes): no existe la clave en el desplegable. **Preguntar** si está OK
+  agregar la opción `sede_comunitaria`, o si las sedes se reportan dentro de
+  `solucion_infraestructura_comunitaria`.
 
 ---
 
@@ -137,4 +141,6 @@ actividad asociada.
 3. **`Comunidad` sin fechas de inicio/fin de trabajo ni "tipo mesa"** (afecta D3,
    D5, D6, D7) → posible cambio de modelo.
 4. **Regla equipo de comunidad vs área** (afecta B1–B3) → definir.
-5. **Qué cantidad se suma en impacto** (afecta todo E) → una decisión.
+5. ✅ **Impacto/soluciones (E)** — resuelto: se suma el TOTAL (suma de las 5
+   `cant_soluciones_*`). Solo queda **preguntar** por agregar la opción
+   `sede_comunitaria` al desplegable (E11).
