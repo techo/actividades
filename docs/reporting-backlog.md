@@ -71,32 +71,26 @@ personas únicas (`COUNT(DISTINCT person_key)`).
 
 ---
 
-## D. Comunidades (base: `Comunidad`, `comunidad_ficha_inicial`)
+## D. Comunidades, mesas, vecinos (base: `Comunidad`, `comunidad_ficha_inicial`)
 
-| # | Métrica | Cálculo propuesto | Fuente | Estado |
-|---|---|---|---|---|
-| D1 | Comunidades activas | `COUNT(Comunidad)` con `activo=1` | `Comunidad.activo` | ✅ |
-| D2 | Comunidades con ficha de asentamiento finalizada | `COUNT` de comunidades con `comunidad_ficha_inicial` (¿completa?) | `comunidad_ficha_inicial` | 🟡 |
-| D3 | Comunidades con las que iniciamos trabajo en el período | `COUNT` con fecha de inicio dentro del período | `Comunidad` (¿`created_at`? ¿`fecha_diagnostico`?) | 🔴 |
-| D4 | Comunidades con tenencia regularizada | `COUNT` con `estado_legalizacion` = "legal" | `comunidad_ficha_inicial.estado_legalizacion` | 🟡 |
-| D5 | Comunidades donde finalizamos trabajo | `COUNT` con fin de trabajo en el período | `Comunidad` (no hay fecha de fin) | 🔴 |
-| D6 | Mesas de trabajo activas | `COUNT` de comunidades con "mesa de trabajo" generada hace < 6 meses | ¿`Actividad` tipo mesa? ↔ comunidad | 🔴 |
-| D7 | Mesas de trabajo implementadas en el período | `COUNT` de mesas implementadas en el período | mismo que D6 | 🔴 |
-| D8 | Vecinas/os participando en mesa de trabajo | `SUM(numero_participantes)` de informes de actividades tipo mesa | `actividad_informe_cierre.numero_participantes` + tipo mesa | 🟡 |
+**Mesa de trabajo** = comunidad con diagnóstico/plan cargado: **diagnóstico = mesa
+generada/activa**, **plan de acción = mesa implementada**.
 
-**Preguntas D**:
-- D2: no hay flag "finalizada" en la ficha. ¿"finalizada" = existe la fila, o que
-  ciertos campos estén completos? ¿Cuáles?
-- D3/D5: `Comunidad` **no tiene** fecha de inicio ni de fin de trabajo. ¿Usamos
-  `created_at` para inicio? ¿"finalizamos" = pasó a `activo=0` (pero no hay fecha)?
-  → probablemente haya que **agregar campos de fecha** (inicio/fin de trabajo).
-- D4: `estado_legalizacion` está vacío en dev. ¿Cuáles son los valores y cuál(es)
-  cuentan como "regularizada/legal"?
-- D6/D7: **no existe "tipo mesa de trabajo" en `Comunidad`**. ¿Una "mesa de trabajo"
-  es un `Tipo` de actividad? ¿una comunidad? ¿un equipo? Hay que definir qué es y
-  cómo se la marca/fecha antes de contar.
-- D8: ¿qué identifica a una actividad como "mesa de trabajo"? (¿`tipo_indicador`?
-  ¿`Tipo.nombre`?)
+| # | Métrica | Cálculo | Estado |
+|---|---|---|---|
+| D1 | Comunidades activas | `COUNT(Comunidad)` con `activo=1` | ✅ |
+| D2 | Comunidades con ficha de asentamiento finalizada | `COUNT` con `comunidad_ficha_inicial` que tenga **los campos clave completos** | 🟡 (falta enumerar los campos clave) |
+| D3 | Comunidades con las que iniciamos el trabajo en el período | `COUNT` con `ficha.anio_inicio_techo` dentro del período (a nivel **año**) | ✅ |
+| D4 | Comunidades con tenencia regularizada | `COUNT` con `ficha.estado_legalizacion = 'legal'` | ✅ (confirmar valor exacto del select) |
+| D5 | Comunidades donde finalizamos el trabajo | requiere campo nuevo `Comunidad.fecha_fin_trabajo` (no existe) | ⛔ (cambio de modelo) |
+| D6 | Mesas de trabajo activas | `COUNT(Comunidad)` `activo=1` con `diagnostico` cargado y `fecha_diagnostico` en los últimos 6 meses | ✅ |
+| D7 | Mesas de trabajo implementadas en el período | `COUNT(Comunidad)` con `plan_de_accion` cargado y `fecha_plan_de_accion` dentro del período | ✅ |
+| D8 | Vecinas/os participando en mesa de trabajo | `SUM(numero_participantes)` de informes de actividades ligadas a comunidades-mesa (con diagnóstico/plan) | ✅ |
+
+> Pendientes D: **D2** enumerar qué campos clave de la ficha marcan "finalizada";
+> **D4** confirmar el valor de `estado_legalizacion` que cuenta como regularizada;
+> **D5** agregar `Comunidad.fecha_fin_trabajo` (cambio de modelo); **D8** confirmar
+> el cruce informe→actividad→comunidad-mesa (`actividad_comunidad`).
 
 ---
 
@@ -141,8 +135,10 @@ quedan para otras métricas, no para el conteo de soluciones.
 ## Resumen de bloqueos transversales
 1. **`tipo_indicador` incompleto** en `Tipo` (afecta A, C2) → etiquetar tipos.
 2. **`Actividad.alcance` sin backfill** (afecta C2) → definir y poblar.
-3. **`Comunidad` sin fechas de inicio/fin de trabajo ni "tipo mesa"** (afecta D3,
-   D5, D6, D7) → posible cambio de modelo.
+3. **Comunidades (D)** — mayormente resuelto: mesa = diagnóstico/plan; D3 por
+   `anio_inicio_techo`; D6/D7 por `fecha_diagnostico`/`fecha_plan_de_accion`. Queda
+   **D5** (agregar `Comunidad.fecha_fin_trabajo`) y precisar D2 (campos clave) y D4
+   (valor de `estado_legalizacion`).
 4. ✅ **Equipo permanente (B)** — resuelto: comunidad vs área por `idComunidad`,
    dos conteos (membresías y personas únicas), B4 por rol `coordinacion`.
 5. ✅ **Impacto/soluciones (E)** — resuelto: se suma el TOTAL (suma de las 5
