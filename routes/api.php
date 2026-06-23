@@ -134,6 +134,10 @@ Route::middleware('auth:api')->group(function () {
 
     // ── Donations ─────────────────────────────────────────────────────────
     Route::prefix('donations')->group(function () {
+        // Config de checkout: moneda y montos sugeridos según el país del usuario
+        Route::get('stripe/checkout-config', 'api\DonationController@checkoutConfig')
+             ->name('api.donations.checkout-config');
+
         // One-time: create PaymentIntent and persist a donation record
         Route::post('stripe/payment-intent', 'api\DonationController@createPaymentIntent')
              ->name('api.donations.create-intent');
