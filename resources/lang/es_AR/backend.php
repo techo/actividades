@@ -506,6 +506,7 @@ return [
     'programa' => 'Programa ',
     'soluciones_entregadas' => 'Soluciones entregadas',
     'solucion_entregada' => 'Solución entregada',
+    'fin_de_trabajo' => 'Fecha de fin de trabajo',
 
     'soluciones_entregadas_por' => 'Cantidad de soluciones entregadas por',
 
@@ -531,7 +532,8 @@ return [
         'solucion_infraestructura_comunitaria' => 'Solución de infraestructura comunitaria',
         'solucion_agua_comunitaria' => 'Solución de agua comunitaria',
         'solucion_saneamiento_comunitario' => 'Solución de saneamiento comunitario',
-        'solucion_energia_comunitaria' => 'Solución de energía eléctrica comunitaria'
+        'solucion_energia_comunitaria' => 'Solución de energía eléctrica comunitaria',
+        'sede_comunitaria' => 'Sede comunitaria'
     ],
 
     'tipo_voluntariado_options' => [

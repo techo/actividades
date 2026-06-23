@@ -97,6 +97,12 @@
                                     <input type="date" class="form-control" v-model="data.fecha_plan_de_accion" :disabled="this.readonly">
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="fecha_fin_trabajo">{{ $t('backend.fin_de_trabajo') }}</label>
+                                    <input type="date" class="form-control" v-model="data.fecha_fin_trabajo" :disabled="this.readonly">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -125,7 +131,8 @@ export default {
                 diagnostico: null, 
                 plan_de_accion: null, 
                 fecha_diagnostico: '',
-                fecha_plan_de_accion: ''
+                fecha_plan_de_accion: '',
+                fecha_fin_trabajo: ''
             },
             guardado: false,
             mensajeGuardado: '',
