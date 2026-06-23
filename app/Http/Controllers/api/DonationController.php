@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Actividad;
 use App\Donation;
+use App\DonationPreset;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
 use App\Services\StripePaymentService;
@@ -24,6 +25,62 @@ class DonationController extends Controller
     public function __construct(StripePaymentService $stripe)
     {
         $this->stripe = $stripe;
+    }
+
+    // =========================================================================
+    // GET /api/donations/stripe/checkout-config
+    // =========================================================================
+
+    /**
+     * Devuelve la moneda local y los tres montos sugeridos para el país del
+     * usuario autenticado (Persona.idPais). Los montos están fijados en BD por
+     * país (tabla donation_presets), no se calculan por tipo de cambio.
+     *
+     * Si el país no tiene presets configurados, cae al default global USD 5/10/20.
+     *
+     * Los montos van en UNIDAD MAYOR (presets_major). El cliente debe convertir
+     * a unidad menor usando minor_unit_exponent antes de llamar a Stripe
+     * (ej. mxn: 34 → 34 * 10^2 = 3400).
+     *
+     * Response 200:
+     *   { id_pais, country_code, currency, presets_major{bajo,medio,alto},
+     *     minor_unit_exponent, pix_enabled }
+     */
+    public function checkoutConfig(): JsonResponse
+    {
+        $user   = Auth::user();
+        $idPais = $user->idPais;
+        $iso2   = optional($user->pais)->iso2;
+
+        $preset = $idPais
+            ? DonationPreset::where('id_pais', $idPais)->first()
+            : null;
+
+        if ($preset) {
+            $currency = $preset->currency;
+            $presets  = [
+                'bajo'  => $preset->preset_low,
+                'medio' => $preset->preset_mid,
+                'alto'  => $preset->preset_high,
+            ];
+            $exponent = $preset->minor_unit_exponent;
+            $pix      = $preset->pix_enabled;
+        } else {
+            // País sin presets configurados → default global.
+            $currency = DonationPreset::DEFAULT_CURRENCY;
+            $presets  = DonationPreset::DEFAULT_PRESETS;
+            $exponent = DonationPreset::DEFAULT_EXPONENT;
+            $pix      = false;
+        }
+
+        return response()->json([
+            'id_pais'             => $idPais !== null ? (int) $idPais : null,
+            'country_code'        => $iso2 ? strtoupper($iso2) : null,
+            'currency'            => $currency,
+            'presets_major'       => $presets,
+            'minor_unit_exponent' => $exponent,
+            'pix_enabled'         => $pix,
+        ]);
     }
 
     // =========================================================================

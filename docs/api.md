@@ -775,6 +775,37 @@ Stripe habilita automáticamente todos los métodos de pago configurados en el D
 
 ### Flujos de integración para la app mobile
 
+#### 0) Config de checkout — montos sugeridos por país
+
+Antes de iniciar cualquier flujo de pago, la app pide la configuración del país
+del usuario autenticado (`Persona.idPais`): moneda local y tres montos sugeridos
+(fijados por producto en BD, **no** por tipo de cambio).
+
+```
+GET /api/donations/stripe/checkout-config
+Authorization: Bearer <token>
+
+← 200 (ejemplo México):
+{
+  "id_pais": 146,
+  "country_code": "MX",
+  "currency": "mxn",
+  "presets_major": { "bajo": 34, "medio": 85, "alto": 170 },
+  "minor_unit_exponent": 2,
+  "pix_enabled": false
+}
+```
+
+- `presets_major` están en **unidad mayor**. Para llamar a Stripe convertir a
+  unidad menor: `monto_minor = monto_major * 10^minor_unit_exponent`
+  (ej. mxn `34 → 3400`; CLP tiene `minor_unit_exponent: 0`, así que `5000 → 5000`).
+- Si el país del usuario no tiene montos configurados, se devuelve el **default
+  global**: `currency: "usd"`, `presets_major: { bajo: 5, medio: 10, alto: 20 }`.
+- `pix_enabled` indica si el país ofrece PIX (hoy solo Brasil).
+- `country_code` sale del `iso2` del país; puede ser `null` si no está cargado.
+
+---
+
 #### A) Donación libre — pago único (card / Apple Pay / Google Pay)
 
 ```
