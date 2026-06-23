@@ -57,7 +57,9 @@ Auth: Passport (`auth:api`) — header `Authorization: Bearer <token>`.
 |---|---|---|
 | GET | `/api/reporting/catalog` | Datasets disponibles, sus columnas y los filtros soportados (autodescriptivo). |
 | GET | `/api/reporting/datasets/{name}` | Filas paginadas de un dataset, con filtros opcionales. |
-| GET | `/api/reporting/metrics/movilizacion` | KPIs (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
+| GET | `/api/reporting/metrics` | Catálogo de métricas (indicadores) disponibles: `key` + `nombre`. |
+| GET | `/api/reporting/metrics/{key}` | Un indicador ya agregado, filtrable y con `group_by` opcional. |
+| GET | `/api/reporting/metrics/movilizacion` | Resumen de movilización (`movilizados_total`, `movilizados_kpi`, `personas_unicas`). |
 
 `{name}` ∈ `fact_participacion`, `fact_membresia`, `fact_evaluacion_actividad`,
 `fact_evaluacion_impacto`, `fact_lifecycle`, `fact_solucion`, `fact_campania`,
@@ -83,6 +85,40 @@ GET /api/reporting/catalog
 GET /api/reporting/datasets/fact_participacion?anio=2026&es_presente=1&per_page=2000
 GET /api/reporting/metrics/movilizacion?anio=2026
 ```
+
+### Métricas (indicadores institucionales)
+
+Además de los datasets (filas para agregar en el consumidor), la API sirve los
+**indicadores ya agregados** vía un **registry** (`app/Reporting/MetricRegistry.php`):
+una entrada por indicador define su vista, medida y filtros. La definición vive una
+sola vez; agregar un indicador = una entrada, no una ruta nueva.
+
+- `GET /api/reporting/metrics` → catálogo (`key` + `nombre` + nota).
+- `GET /api/reporting/metrics/{key}` → el número, filtrable por **`idPais`, `anio`,
+  `mes`, `idOficina`** y con **`group_by`** opcional (cuando el indicador lo permite).
+
+```
+GET /api/reporting/metrics/movilizados_territorio?anio=2026&idPais=13
+→ { "key":"movilizados_territorio", "nombre":"Nº Voluntarios/as movilizados/as a actividades en territorio", "value": 1234, "filtros": {...} }
+
+GET /api/reporting/metrics/movilizados_total?anio=2026&group_by=tipo_indicador
+→ { "key":"movilizados_total", "group_by":"tipo_indicador", "data":[ {"grupo":"territorio","value":...}, ... ] }
+```
+
+Los `key` son los 30 indicadores del backlog (`docs/reporting-backlog.md`):
+`movilizados_{territorio,colecta,construcciones,otras,total}`,
+`equipo_permanente_total`, `permanentes_{areas,comunidades}`,
+`coordinaciones_comunidad`, `campanas_captacion_nacional`, `encuentros`,
+`comunidades_{activas,ficha_finalizada,inicio_trabajo,tenencia_regularizada,fin_trabajo}`,
+`mesas_{activas,implementadas}`, `vecinos_mesa`, `viviendas_{emergencia,transitorias,permanentes}`,
+`familias_{agua,saneamiento,energia}`, `infraestructura_comunitaria`,
+`soluciones_{agua,energia,saneamiento}_comunitaria`, `sedes_comunitarias`.
+
+> Notas: el período se aplica según cada indicador (por `anio`/`mes` en los hechos;
+> por solapamiento de fechas en campañas; por la fecha propia en comunidades). El
+> equipo permanente es estado actual (vigente), no admite `anio`/`mes`. Algunos
+> traen `nota` (ej. el split local/nacional de `encuentros` está vacío hasta
+> backfillear `alcance`).
 
 ### Conectar Power BI
 

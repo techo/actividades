@@ -202,7 +202,10 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->prefix('reporting')->group(function () {
     Route::get('catalog', 'api\reporting\ReportingController@catalog');
     Route::get('datasets/{name}', 'api\reporting\ReportingController@dataset');
+    // metrics: rutas específicas antes del genérico {key}.
+    Route::get('metrics', 'api\reporting\ReportingController@metricsCatalog');
     Route::get('metrics/movilizacion', 'api\reporting\ReportingController@movilizacion');
+    Route::get('metrics/{key}', 'api\reporting\ReportingController@metric');
 });
 
 
