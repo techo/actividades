@@ -150,6 +150,10 @@ Route::middleware('auth:api')->group(function () {
         Route::get('stripe/subscription', 'api\DonationController@listSubscriptions')
              ->name('api.donations.list-subscriptions');
 
+        // Update amount/interval of an existing subscription
+        Route::patch('stripe/subscription/{subscriptionId}', 'api\DonationController@updateSubscription')
+             ->name('api.donations.update-subscription');
+
         // Create a Stripe Customer Portal session (self-manage subscriptions)
         Route::post('stripe/billing-portal', 'api\DonationController@billingPortal')
              ->name('api.donations.billing-portal');

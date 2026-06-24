@@ -389,6 +389,126 @@ class DonationController extends Controller
     }
 
     // =========================================================================
+    // PATCH /api/donations/stripe/subscription/{subscriptionId}
+    // =========================================================================
+
+    /**
+     * Change the amount and/or billing interval of an existing subscription.
+     *
+     * The new amount applies from the next billing cycle (proration: none).
+     * The currency cannot change (Stripe doesn't allow it) and is kept as-is.
+     *
+     * Request body:
+     *   amount         (integer, minor units, required — same range as create)
+     *   interval       (string, 'month'|'year', required)
+     *   idempotencyKey (string, optional — generated if omitted)
+     *
+     * Response 200: the updated subscription (same shape as the status endpoint).
+     *
+     * Errors:
+     *   404 — subscription not found or not owned by the user
+     *   422 — invalid interval | subscription_unchanged | subscription_not_editable
+     *   502 — Stripe could not update the subscription
+     */
+    public function updateSubscription(Request $request, string $subscriptionId): JsonResponse
+    {
+        $data = $request->validate([
+            'amount'         => [
+                'required',
+                'integer',
+                'min:' . StripePaymentService::AMOUNT_MIN,
+                'max:' . StripePaymentService::AMOUNT_MAX,
+            ],
+            'interval'       => [
+                'required',
+                'string',
+                Rule::in(StripePaymentService::ALLOWED_INTERVALS),
+            ],
+            'idempotencyKey' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $subscription = DonationSubscription::where('stripe_subscription_id', $subscriptionId)
+            ->where('person_id', Auth::user()->idPersona)
+            ->first();
+
+        if (!$subscription) {
+            return response()->json(['message' => 'Subscription not found.'], 404);
+        }
+
+        // Only live subscriptions can be edited. Incomplete ones still reference
+        // the first PaymentIntent on the old price; terminal ones are final.
+        $editableStatuses = [
+            DonationSubscription::STATUS_ACTIVE,
+            DonationSubscription::STATUS_PAST_DUE,
+        ];
+        if (!in_array($subscription->status, $editableStatuses, true)) {
+            return response()->json([
+                'code'    => 'subscription_not_editable',
+                'message' => 'subscription_not_editable',
+            ], 422);
+        }
+
+        $amount   = (int) $data['amount'];
+        $interval = $data['interval'];
+
+        // Nothing to do — avoid creating an orphan Price on Stripe for a no-op.
+        if ($subscription->amount === $amount && $subscription->interval === $interval) {
+            return response()->json([
+                'code'    => 'subscription_unchanged',
+                'message' => 'subscription_unchanged',
+            ], 422);
+        }
+
+        $idempotencyKey = $data['idempotencyKey'] ?? (string) Str::uuid();
+
+        try {
+            $stripeSub = $this->stripe->updateSubscriptionAmount(
+                $subscriptionId,
+                $amount,
+                $interval,
+                $idempotencyKey
+            );
+        } catch (ApiErrorException $e) {
+            return response()->json([
+                'message' => 'Could not update subscription.',
+                'error'   => $e->getMessage(),
+            ], 502);
+        }
+
+        // Reflect the change locally now so the response is fresh. The
+        // customer.subscription.updated webhook will re-sync idempotently.
+        $item      = $stripeSub->items->data[0] ?? null;
+        $periodEnd = $stripeSub->current_period_end ?? ($item->current_period_end ?? null);
+
+        $updates = [
+            'amount'               => $amount,
+            'interval'             => $interval,
+            'status'               => $stripeSub->status,
+            'cancel_at_period_end' => (bool) $stripeSub->cancel_at_period_end,
+        ];
+        if ($periodEnd) {
+            $updates['current_period_end'] = Carbon::createFromTimestamp($periodEnd);
+        }
+        $subscription->update($updates);
+
+        return response()->json([
+            'subscription_id'      => $subscription->stripe_subscription_id,
+            'status'               => $subscription->status,
+            'amount'               => $subscription->amount,
+            'currency'             => $subscription->currency,
+            'interval'             => $subscription->interval,
+            'current_period_end'   => $subscription->current_period_end
+                ? $subscription->current_period_end->toIso8601String()
+                : null,
+            'cancel_at_period_end' => (bool) $subscription->cancel_at_period_end,
+            'canceled_at'          => $subscription->canceled_at
+                ? $subscription->canceled_at->toIso8601String()
+                : null,
+            'created_at'           => $subscription->created_at->toIso8601String(),
+        ]);
+    }
+
+    // =========================================================================
     // GET /api/donations/stripe/subscription
     // =========================================================================
 
