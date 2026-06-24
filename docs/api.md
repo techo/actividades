@@ -873,7 +873,13 @@ Authorization: Bearer <token>
    GET /api/donations/stripe/subscription
    ← { data: [ { subscription_id, status, amount, cancel_at_period_end, ... } ] }
 
-5. Autogestión (cambiar medio de pago / cancelar)
+5. Cambiar el monto / intervalo (input libre en la app)
+   PATCH /api/donations/stripe/subscription/{subscription_id}
+   body: { amount, interval }
+   ← { subscription_id, status, amount, interval, current_period_end, ... }
+   El nuevo monto aplica desde el próximo ciclo (sin prorrateo).
+
+6. Autogestión (cambiar medio de pago / cancelar)
    POST /api/donations/stripe/billing-portal
    body: { return_url: "mitecho://stripe-billing-portal-return" }
    ← { url: "https://billing.stripe.com/session/..." }
@@ -992,6 +998,49 @@ Lista las suscripciones activas (no terminales) del usuario autenticado. Lee sol
 Devuelve `data: []` si no hay suscripciones. Excluye estados terminales (`canceled`, `incomplete_expired`).
 
 > `cancel_at_period_end` (boolean): `true` cuando el usuario programó la cancelación desde el Customer Portal. La suscripción sigue `active` hasta `current_period_end` y luego se cancela. Se sincroniza vía webhook `customer.subscription.updated`.
+
+---
+
+### `PATCH /donations/stripe/subscription/{subscriptionId}` 🔒
+
+Cambia el monto y/o el intervalo de una suscripción existente. Input libre, mismo rango que al crear. El nuevo monto **aplica desde el próximo ciclo** (sin prorrateo). La **moneda no cambia** (Stripe no lo permite) y se mantiene la de la suscripción.
+
+**Path** — `subscriptionId`: Stripe Subscription ID (`sub_...`).
+
+**Body**
+
+| Campo | Tipo | Requerido | Descripción |
+|---|---|---|---|
+| `amount` | integer | ✅ | Nuevo monto en unidad menor (mismo rango que al crear) |
+| `interval` | string | ✅ | `month` o `year` |
+| `idempotencyKey` | string | | Evita aplicar dos veces en reintentos (se genera si se omite) |
+
+**Response `200`** — misma forma que el item de `GET /donations/stripe/subscription`.
+```json
+{
+  "subscription_id": "sub_xxx",
+  "status": "active",
+  "amount": 3500,
+  "currency": "usd",
+  "interval": "month",
+  "current_period_end": "2026-07-08T12:00:00+00:00",
+  "cancel_at_period_end": false,
+  "canceled_at": null,
+  "created_at": "2026-06-08T12:00:00+00:00"
+}
+```
+
+**Errores**
+
+| Código | Cuerpo | Motivo |
+|--------|--------|--------|
+| `404` | `{ "message": "Subscription not found." }` | No existe o no pertenece al usuario |
+| `422` | `{ "errors": { "interval": [...] } }` | `interval` inválido (o `amount` fuera de rango) |
+| `422` | `{ "code": "subscription_unchanged", "message": "subscription_unchanged" }` | `amount` + `interval` iguales a los actuales |
+| `422` | `{ "code": "subscription_not_editable", "message": "subscription_not_editable" }` | Estado no editable (solo `active` / `past_due`) |
+| `502` | `{ "message": "Could not update subscription.", "error": "..." }` | Falla en Stripe |
+
+> Internamente crea un `Price` nuevo (los precios de Stripe son inmutables) y repunta el item de la suscripción. El cambio se refleja en la BD en el mismo request; el webhook `customer.subscription.updated` re-sincroniza de forma idempotente.
 
 ---
 

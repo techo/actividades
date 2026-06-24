@@ -281,6 +281,60 @@ class StripePaymentService
         ], ['stripe_version' => self::PINNED_API_VERSION]);
     }
 
+    /**
+     * Change the amount and/or billing interval of an existing subscription.
+     *
+     * Stripe Prices are immutable, so a new Price is created and the existing
+     * subscription item is repointed to it. The currency cannot change — it is
+     * read from the current item's price and reused.
+     *
+     * `proration_behavior: 'none'` → the new amount applies from the next
+     * billing cycle; nothing is charged or credited mid-period (the natural
+     * behaviour for a donation).
+     *
+     * @param  string $subscriptionId Stripe Subscription ID (sub_...)
+     * @param  int    $amount         New amount, minor units
+     * @param  string $interval       'month' | 'year'
+     * @param  string $idempotencyKey Prevent double-applying on retries
+     * @return \Stripe\Subscription   Updated subscription
+     * @throws ApiErrorException
+     */
+    public function updateSubscriptionAmount(
+        string $subscriptionId,
+        int $amount,
+        string $interval,
+        string $idempotencyKey
+    ): \Stripe\Subscription {
+        $this->boot();
+
+        // Current subscription — needed for the item id (to replace, not add)
+        // and the currency (immutable, must be reused on the new price).
+        $current  = \Stripe\Subscription::retrieve(
+            ['id' => $subscriptionId, 'expand' => ['items']],
+            ['stripe_version' => self::PINNED_API_VERSION]
+        );
+        $item     = $current->items->data[0];
+        $currency = $item->price->currency;
+
+        // New immutable Price for the new amount/interval.
+        $price = \Stripe\Price::create([
+            'unit_amount'  => $amount,
+            'currency'     => $currency,
+            'recurring'    => ['interval' => $interval],
+            'product_data' => ['name' => 'TECHO Donación Recurrente'],
+        ], ['idempotency_key' => $idempotencyKey . ':price']);
+
+        // Repoint the existing item to the new price. No proration: applies next cycle.
+        return \Stripe\Subscription::update($subscriptionId, [
+            'items'              => [['id' => $item->id, 'price' => $price->id]],
+            'proration_behavior' => 'none',
+            'expand'             => ['latest_invoice.payment_intent'],
+        ], [
+            'idempotency_key' => $idempotencyKey,
+            'stripe_version'  => self::PINNED_API_VERSION,
+        ]);
+    }
+
     // ── Billing Portal ──────────────────────────────────────────────────────────
 
     /**
