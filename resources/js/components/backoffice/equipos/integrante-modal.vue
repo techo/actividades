@@ -310,6 +310,7 @@ export default {
         Event.$on('integrante:editar', this.editar);
         this.guardado = false;
         this.getComunidades();
+        this.getRoles();
 
         // El cierre nativo del modal (tecla ESC o clic en el backdrop) no pasa
         // por cancelar(), así que limpiamos el form también acá para que el
