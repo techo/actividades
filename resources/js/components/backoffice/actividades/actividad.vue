@@ -370,110 +370,138 @@
         <div class="box">
             <div class="box-header with-border bg-primary">
                 <h3 class="box-title bg-primary">{{ $t('backend.confirmation') }}</h3>
-                
+
             </div>
 
             <div class="box-body">
-                <p class="help-block">{{ $t('backend.activity_confirmation') }}
-                    <ul>
-                        <li><b>{{ $t('backend.automatic') }}</b>: {{ $t('backend.auto_confirm_instruction') }}</li>
-                        <li><b>{{ $t('backend.by_donation') }}</b>: {{ $t('backend.payment_verification_instruction') }}</li>
-                        <li><b>{{ $t('backend.manual') }}</b>: {{ $t('backend.manual_confirmation_instruction') }}</li>
-                        <li><b>{{ $t('backend.manual_and_donation') }}</b>: {{ $t('backend.combined_confirmation_instruction') }} </li>
-                    </ul>
-                </p>
+                <p class="help-block">{{ $t('backend.confirmation_intro') }}</p>
 
-                <div class="row">
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="pago">{{ $t('backend.by_payment') }}</label>
-                            <select name="pago" class="form-control" v-model="actividad.pago" required :disabled="!edicion">
-                                <option value="1" :selected="actividad.pago == 1" >{{ $t('backend.activated') }}</option>
-                                <option value="0" :selected="actividad.pago == 0" >{{ $t('backend.deactivated') }}</option>
-                            </select>
+                <!-- Selector de modo: 4 tarjetas que setean pago + confirmacion -->
+                <div class="modo-cards row">
+                    <div class="col-md-6" v-for="modo in modosConfirmacion" :key="modo.key">
+                        <div class="modo-card"
+                             :class="{
+                                'modo-card--active': modoActual === modo.key,
+                                'modo-card--disabled': !edicion
+                             }"
+                             @click="seleccionarModo(modo.key)">
+                            <span class="modo-card__icon">{{ modo.icon }}</span>
+                            <div class="modo-card__body">
+                                <strong>{{ modo.title }}</strong>
+                                <p>{{ modo.desc }}</p>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="confirmacion">{{ $t('backend.manual') }}</label>
-                            <select name="confirmacion" class="form-control" v-model="actividad.confirmacion" required :disabled="!edicion">
-                                <option value="1" :selected="actividad.confirmacion == 1" >{{ $t('backend.activated') }}</option>
-                                <option value="0" :selected="actividad.confirmacion == 0" >{{ $t('backend.deactivated') }}</option>
-                            </select>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="row" v-show="actividad.pago == 1">
+                <!-- Bloque de pago: sólo visible en "Por donación / Pago" y "Mixto" -->
+                <div v-show="actividad.pago == 1">
 
-                    <div class="col-md-2">
-                        <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
-                            <label for="">{{ $t('backend.amount') }}</label>
-                            <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
-                            <span class="help-block">{{ errors.montoMin }}</span>
+                    <h4 class="pago-section-title">{{ $t('backend.amount_details') }}</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div :class="{ 'form-group': true, 'has-error': errors.montoMin }" >
+                                <label for="">{{ $t('backend.amount') }} *</label>
+                                <input type="number" class="form-control" v-model="actividad.montoMin" :disabled="!edicion" >
+                                <span class="help-block">{{ errors.montoMin }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <label for="">{{ $t('backend.max_amount_optional') }}</label>
-                            <input type="number" class="form-control" v-model="actividad.montoMax" :disabled="!edicion">
+                        <div class="col-md-3">
+                            <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
+                                <label for="">{{ $t('backend.payment_deadline') }}</label>
+                                <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
+                                <p class="help-block">
+                                    {{ $t('backend.registration_deadline_instruction') }}
+                                </p>
+                                <span class="help-block">{{ errors.fechaLimitePago }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3">
-                        <div :class="{ 'form-group': true, 'has-error': errors.fechaLimitePago }" >
-                            <label for="">{{ $t('backend.payment_deadline') }}</label>
-                            <input v-model="fechas.fechaLimitePago" type="date" class="form-control" :disabled="!edicion">
-                            <p class="help-block">
-                                {{ $t('backend.registration_deadline_instruction') }}
-                            </p>
-                            <span class="help-block">{{ errors.fechaLimitePago }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
-                            <label for="">{{ $t('backend.payment_steps') }} </label>
-                            <tinymce-editor 
-                                v-model="actividad.descripcionPago" 
-                                :init="{
-                                    menubar: 'false',
-                                    file_picker_callback: tiny_mce_filemanager_callback,
-                                    relative_urls: false,
-                                    resize: true,
-                                }"
-                                toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image" 
-                                plugins="paste autoresize image preview paste link"
-                                :disabled="!edicion"
-                            ></tinymce-editor>
-                            <span class="help-block">{{ errors.descripcionPago }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.beca }" >
-                            <label for="">{{ $t('backend.scholarship_form_link_optional') }} </label>
-                            <input type="text" class="form-control" v-model="actividad.beca" :disabled="!edicion" >
-                            <span class="help-block">{{ errors.beca }}</span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
-                            <label for="">
-                                {{ $t('backend.payment_link_optional') }}
-                                <a v-if="actividad.linkPago" :href="actividad.linkPago" target="_blank" class="ml-2 small">
-                                    <i class="fas fa-external-link-alt"></i> {{ $t('backend.view') }}
-                                </a>
+                        <div class="col-md-6">
+                            <label class="exencion-box"
+                                   :class="{ 'exencion-box--active': actividad.permite_exencion, 'exencion-box--disabled': !edicion }">
+                                <input type="checkbox" v-model="actividad.permite_exencion" :disabled="!edicion">
+                                <span>
+                                    <strong>{{ $t('backend.allow_scholarship_request') }}</strong>
+                                    <small>{{ $t('backend.allow_scholarship_request_help') }}</small>
+                                </span>
                             </label>
-                            <input type="url" class="form-control" v-model="actividad.linkPago" :disabled="!edicion"
-                                placeholder="https://" >
-                            <p class="help-block">{{ $t('backend.payment_link_description') }}</p>
-                            <span class="help-block">{{ errors.linkPago }}</span>
+                        </div>
+                    </div>
+
+                    <h4 class="pago-section-title">{{ $t('backend.payment_methods_enabled') }}</h4>
+                    <div class="row metodos-row">
+                        <div class="col-md-4">
+                            <label class="metodo-card"
+                                   :class="{ 'metodo-card--active': actividad.metodos_pago.transferencia, 'metodo-card--disabled': !edicion }">
+                                <input type="checkbox" v-model="actividad.metodos_pago.transferencia" :disabled="!edicion">
+                                <span>
+                                    <strong>🏦 {{ $t('backend.method_bank_transfer') }}</strong>
+                                    <small>{{ $t('backend.method_bank_transfer_help') }}</small>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="metodo-card"
+                                   :class="{ 'metodo-card--active': actividad.metodos_pago.link_pix, 'metodo-card--disabled': !edicion }">
+                                <input type="checkbox" v-model="actividad.metodos_pago.link_pix" :disabled="!edicion">
+                                <span>
+                                    <strong>🔗 {{ $t('backend.method_link_pix') }}</strong>
+                                    <small>{{ $t('backend.method_link_pix_help') }}</small>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="metodo-card"
+                                   :class="{ 'metodo-card--active': actividad.metodos_pago.tarjeta, 'metodo-card--disabled': !edicion }">
+                                <input type="checkbox" v-model="actividad.metodos_pago.tarjeta" :disabled="!edicion">
+                                <span>
+                                    <strong>💳 {{ $t('backend.method_card') }}</strong>
+                                    <small>{{ $t('backend.method_card_help') }}</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Datos bancarios: sólo si Transferencia está habilitada -->
+                    <div class="row" v-show="actividad.metodos_pago.transferencia">
+                        <div class="col-md-12">
+                            <div :class="{ 'form-group': true, 'has-error': errors.descripcionPago }" >
+                                <label for="">{{ $t('backend.bank_transfer_data') }}</label>
+                                <p class="help-block">{{ $t('backend.bank_transfer_data_help') }}</p>
+                                <tinymce-editor
+                                    v-model="actividad.descripcionPago"
+                                    :init="{
+                                        menubar: 'false',
+                                        file_picker_callback: tiny_mce_filemanager_callback,
+                                        relative_urls: false,
+                                        resize: true,
+                                    }"
+                                    toolbar="undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                    plugins="paste autoresize image preview paste link"
+                                    :disabled="!edicion"
+                                ></tinymce-editor>
+                                <span class="help-block">{{ errors.descripcionPago }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- URL del link de pago: sólo si Pago por Link / Pix está habilitado -->
+                    <div class="row" v-show="actividad.metodos_pago.link_pix">
+                        <div class="col-md-6">
+                            <div :class="{ 'form-group': true, 'has-error': errors.linkPago }" >
+                                <label for="">
+                                    🔗 {{ $t('backend.payment_link_url') }}
+                                    <a v-if="actividad.linkPago" :href="actividad.linkPago" target="_blank" class="ml-2 small">
+                                        <i class="fas fa-external-link-alt"></i> {{ $t('backend.view') }}
+                                    </a>
+                                </label>
+                                <input type="url" class="form-control" v-model="actividad.linkPago" :disabled="!edicion"
+                                    placeholder="https://" >
+                                <p class="help-block">{{ $t('backend.payment_link_url_help') }}</p>
+                                <span class="help-block">{{ errors.linkPago }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -844,6 +872,12 @@
 
                     descripcionPago: null,
                     linkPago: null,
+                    permite_exencion: false,
+                    metodos_pago: {
+                        transferencia: false,
+                        link_pix: false,
+                        tarjeta: false,
+                    },
 
                     show_dates: true,
                     show_location: true,
@@ -911,8 +945,9 @@
 
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
-                    .then((datos) => { 
-                        this.actividad = datos.data; 
+                    .then((datos) => {
+                        this.actividad = datos.data;
+                        this.normalizarMetodosPago();
                         if (this.actividad.ficha_medica_campos)
                             this.fichaMedicaCampos = this.actividad.ficha_medica_campos;
                         else
@@ -961,6 +996,45 @@
 
         },
         computed: {
+            // Deriva el modo activo a partir de los dos booleanos pago + confirmacion.
+            // automatica: 0/0 · donacion: pago=1/conf=0 · manual: pago=0/conf=1 · mixto: 1/1
+            modoActual() {
+                const pago = this.actividad.pago == 1;
+                const conf = this.actividad.confirmacion == 1;
+                if (pago && conf) return 'mixto';
+                if (pago) return 'donacion';
+                if (conf) return 'manual';
+                return 'automatica';
+            },
+            modosConfirmacion() {
+                const t = (k) => this.$t('backend.' + k);
+                return [
+                    {
+                        key: 'automatica',
+                        icon: '⚡',
+                        title: t('automatic'),
+                        desc: t('mode_automatic_desc'),
+                    },
+                    {
+                        key: 'donacion',
+                        icon: '💵',
+                        title: t('mode_donation_title'),
+                        desc: t('mode_donation_desc'),
+                    },
+                    {
+                        key: 'manual',
+                        icon: '🔧',
+                        title: t('manual'),
+                        desc: t('mode_manual_desc'),
+                    },
+                    {
+                        key: 'mixto',
+                        icon: '🔁',
+                        title: t('mode_mixed_title'),
+                        desc: t('mode_mixed_desc'),
+                    },
+                ];
+            },
             tipoVoluntarioFallback() {
                 const roles =
                     this.$i18n.messages[this.$i18n.locale]
@@ -1186,6 +1260,28 @@
                 const label = kind === 'activity' ? t('status_finished') : t('status_closed');
                 return { label, variant: 'closed' };
             },
+            // Setea pago + confirmacion según la tarjeta de modo elegida.
+            seleccionarModo(modo){
+                if (!this.edicion) return;
+                switch (modo) {
+                    case 'automatica': this.actividad.pago = 0; this.actividad.confirmacion = 0; break;
+                    case 'donacion':   this.actividad.pago = 1; this.actividad.confirmacion = 0; break;
+                    case 'manual':     this.actividad.pago = 0; this.actividad.confirmacion = 1; break;
+                    case 'mixto':      this.actividad.pago = 1; this.actividad.confirmacion = 1; break;
+                }
+                this.normalizarMetodosPago();
+            },
+            // metodos_pago viene como null/objeto parcial desde la BD; garantiza las 3 claves
+            // y que sea reactivo (Vue.set no hace falta al reemplazar el objeto entero).
+            normalizarMetodosPago(){
+                const mp = this.actividad.metodos_pago || {};
+                this.actividad.metodos_pago = {
+                    transferencia: !!mp.transferencia,
+                    link_pix: !!mp.link_pix,
+                    tarjeta: !!mp.tarjeta,
+                };
+                this.actividad.permite_exencion = !!this.actividad.permite_exencion;
+            },
             guardar(){
                 if (this.errorFinInscripcionesPostInicio) return;
 
@@ -1227,6 +1323,7 @@
                             this.guardarImagenTarjeta();
                             this.guardarImagenDestacada();
                             this.actividad = datos.data;
+                            this.normalizarMetodosPago();
                             Event.$emit('success');
                             this.edicion = false;
                             this.reset_errors();
@@ -1594,4 +1691,147 @@
 .dates-status--danger   { background: #fde8d8; color: #b94a08; border: 1px solid #f5b09a; }
 .dates-status--closed   { background: #f0f0f0; color: #999; }
 .dates-status--finished { background: #f0f0f0; color: #999; }
+
+/* ── Confirmación y Pago: selector de modo ─────────────── */
+.modo-cards {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.modo-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    height: calc(100% - 16px);
+}
+.modo-card:hover {
+    border-color: #b8d4e6;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+.modo-card--active {
+    border-color: #3c8dbc;
+    box-shadow: 0 0 0 2px rgba(60,141,188,0.35);
+    background: #f4f9fc;
+}
+.modo-card--disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+.modo-card__icon {
+    font-size: 22px;
+    line-height: 1.2;
+}
+.modo-card__body strong {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 3px;
+}
+.modo-card__body p {
+    margin: 0;
+    font-size: 12px;
+    color: #777;
+    line-height: 1.4;
+}
+
+/* ── Sección de pago ───────────────────────────────────── */
+.pago-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    text-transform: none;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px;
+    margin: 18px 0 14px;
+}
+
+/* Caja naranja de exención */
+.exencion-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    font-weight: normal;
+    margin: 24px 0 0;
+    padding: 12px 14px;
+    border: 1px solid #f0d9b5;
+    border-radius: 8px;
+    background: #fdf6ec;
+    cursor: pointer;
+}
+.exencion-box--active {
+    border-color: #e6a23c;
+    background: #fbefd8;
+}
+.exencion-box--disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+.exencion-box input {
+    margin-top: 3px;
+}
+.exencion-box strong {
+    display: block;
+    font-size: 13px;
+    color: #8a5a00;
+}
+.exencion-box small {
+    display: block;
+    font-size: 11px;
+    color: #a07840;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+/* Tarjetas de método de pago */
+.metodos-row {
+    margin-bottom: 6px;
+}
+.metodo-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    font-weight: normal;
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border: 1px solid #dcd6ec;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s;
+    height: calc(100% - 12px);
+}
+.metodo-card:hover {
+    border-color: #b9a9e0;
+}
+.metodo-card--active {
+    border-color: #7e57c2;
+    box-shadow: 0 0 0 2px rgba(126,87,194,0.25);
+}
+.metodo-card--disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+.metodo-card input {
+    margin-top: 3px;
+}
+.metodo-card strong {
+    display: block;
+    font-size: 13px;
+    color: #333;
+}
+.metodo-card small {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.4;
+    margin-top: 2px;
+}
 </style>
