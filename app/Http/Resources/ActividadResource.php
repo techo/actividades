@@ -37,6 +37,11 @@ class ActividadResource extends Resource
             'fechaFinInscripciones'     => empty($this->fechaFinInscripciones) ? '' : $this->fechaFinInscripciones->format('d-m-Y'),
             'nombreActividad'           => $this->nombreActividad,
             'descripcion'   => $this->descripcion,
+            // Solo la app mobile (rutas /api/*) recibe el HTML crudo de la descripción
+            // (con estilos e imágenes embebidas). Se lee con getOriginal() porque el
+            // controller sobreescribe descripcion con clean_string() antes de llegar acá;
+            // getOriginal() devuelve el valor original de la BD, sin tocar el flujo web.
+            'descripcion_html'   => $this->when($request->is('api/*'), $this->getOriginal('descripcion')),
             'compromiso'    => $this->compromiso,
             'descripcionPago'         => $this->descripcionPago,
             'pedidoBeca'         => $this->beca,
