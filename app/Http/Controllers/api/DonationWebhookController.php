@@ -119,10 +119,18 @@ class DonationWebhookController extends Controller
             return;
         }
 
-        $donation->transitionTo(Donation::STATUS_SUCCEEDED, [
+        // Receipt URL lives on the charge, not the PaymentIntent itself.
+        // (API 2020-08-27 exposes charges.data[] inline on the PI.)
+        $extra = [
             'stripe_event_id' => $event->id,
             'paid_at'         => Carbon::createFromTimestamp($event->created),
-        ]);
+        ];
+        $receiptUrl = $intent->charges->data[0]->receipt_url ?? null;
+        if ($receiptUrl) {
+            $extra['stripe_receipt_url'] = $receiptUrl;
+        }
+
+        $donation->transitionTo(Donation::STATUS_SUCCEEDED, $extra);
 
         Log::info('DonationWebhook: donation succeeded', [
             'donation_id' => $donation->id,

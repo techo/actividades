@@ -25,7 +25,9 @@ class Actividad extends Model
         'ficha_medica_campos' => 'array',
         'roles_tags' => 'array',
         'actividades_tags' => 'array',
-        'tipo_inscriptos_tag' => 'array'
+        'tipo_inscriptos_tag' => 'array',
+        'metodos_pago' => 'array',
+        'permite_exencion' => 'boolean',
     ];
 
     const CREATED_AT = 'fechaCreacion';

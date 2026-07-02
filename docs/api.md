@@ -1182,6 +1182,7 @@ Historial unificado de pagos únicos y suscripciones, ordenado por fecha descend
       "inscripcion_id": 42,
       "actividad": { "id": 17, "nombre": "Construcción Mar del Plata" },
       "paid_at": "2026-05-19T12:04:00Z",
+      "stripe_receipt_url": "https://pay.stripe.com/receipts/...",
       "created_at": "2026-05-19T11:58:00Z"
     },
     {
@@ -1194,6 +1195,7 @@ Historial unificado de pagos únicos y suscripciones, ordenado por fecha descend
       "interval": "month",
       "inscripcion_id": null,
       "actividad": null,
+      "stripe_receipt_url": null,
       "current_period_end": "2026-07-08T00:00:00Z",
       "canceled_at": null,
       "created_at": "2026-06-08T12:00:00Z"
@@ -1202,6 +1204,8 @@ Historial unificado de pagos únicos y suscripciones, ordenado por fecha descend
   "meta": { "total": 2, "page": 1, "limit": 20 }
 }
 ```
+
+> `stripe_receipt_url`: URL del recibo de Stripe. Se persiste al confirmarse el pago (webhook `payment_intent.succeeded`, donde vive en el charge). En items `one_time` puede ser `null` si el pago aún no se confirmó o si la donación es anterior a este campo (backfill pendiente). En items `subscription` es siempre `null` — los recibos de una suscripción son por cobro (invoice), no por suscripción.
 
 ---
 

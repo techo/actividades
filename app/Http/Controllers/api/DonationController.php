@@ -740,10 +740,11 @@ class DonationController extends Controller
                     'status'         => $d->status,
                     'source'         => $d->source,
                     'payment_method' => $d->payment_method_type,
-                    'inscripcion_id' => $d->inscripcion_id,
-                    'actividad'      => $actividad,
-                    'paid_at'        => $d->paid_at ? $d->paid_at->toIso8601String() : null,
-                    'created_at'     => $d->created_at->toIso8601String(),
+                    'inscripcion_id'    => $d->inscripcion_id,
+                    'actividad'         => $actividad,
+                    'paid_at'           => $d->paid_at ? $d->paid_at->toIso8601String() : null,
+                    'stripe_receipt_url' => $d->stripe_receipt_url,
+                    'created_at'        => $d->created_at->toIso8601String(),
                 ];
             });
         }
@@ -766,6 +767,10 @@ class DonationController extends Controller
                         'interval'           => $s->interval,
                         'inscripcion_id'     => null,
                         'actividad'          => null,
+                        // Los recibos de una suscripción son por cobro (invoice),
+                        // no por suscripción. Se expone null acá para mantener el
+                        // mismo shape que los items one_time.
+                        'stripe_receipt_url' => null,
                         'current_period_end'   => $s->current_period_end
                             ? $s->current_period_end->toIso8601String()
                             : null,

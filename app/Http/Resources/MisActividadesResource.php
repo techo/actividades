@@ -35,6 +35,9 @@ class MisActividadesResource extends Resource
             'presente' => (isset($this->presente) && $this->presente == 1) ? 1 : 0,
             'img' => $this->imagen,
             'descripcion' => clean_string($this->descripcion),
+            // Solo la app mobile (rutas /api/*) recibe el HTML crudo. La web (/ajax/*)
+            // sigue recibiendo 'descripcion' en texto plano, sin cambios.
+            'descripcion_html' => $this->when($request->is('api/*'), $this->descripcion),
             'evaluacion_actividad' => $this->evaluaciones,
             'imagen_tarjeta'           => $this->imagen_tarjeta,
             'imagen_destacada'           => $this->imagen_destacada,

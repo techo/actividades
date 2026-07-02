@@ -22,6 +22,7 @@ class Donation extends Model
         'idempotency_key',
         'stripe_event_id',
         'paid_at',
+        'stripe_receipt_url',
         'metadata',
     ];
 
