@@ -45,17 +45,38 @@ class PagosController extends Controller
         $payment = new $paymentClass($inscripcion);
         $payment->setRequest($request);
 
+        // La ruta de confirmación es un webhook público (sin auth, exento de
+        // CSRF): la única garantía de que la notificación viene realmente de
+        // la pasarela de pago y no de un tercero es esta verificación de
+        // firma. Sin esto, cualquiera podía marcar una inscripción como
+        // pagada forjando el POST. Ver docs/master-plan-estabilizacion.md.
+        if (!$payment->verifyConfirmationSignature()) {
+            \Log::warning('Confirmación de pago rechazada: firma inválida o no correspondiente a la inscripción', [
+                'idInscripcion' => $idInscripcion,
+                'ip' => $request->ip(),
+            ]);
+            abort(403, 'Firma inválida');
+        }
+
         $fecha_transaccion = Carbon::parse($request->transaction_date);
 
         if(!$inscripcion->actividad->fechaLimitePago ||
             $inscripcion->actividad->fechaLimitePago && $fecha_transaccion->lessThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
             $payment->updateUserStatus();
             Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($inscripcion));
-            \Log::info('Confirmación recibida exitosamente desde PAYU: ' . $request);
+            \Log::info('Confirmación de pago recibida y aplicada', [
+                'idInscripcion' => $idInscripcion,
+                'reference_sale' => $request->input('reference_sale'),
+                'state_pol' => $request->input('state_pol'),
+            ]);
         }
         else {
             Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));
-            \Log::info('Confirmación recibida fuera de fecha desde PAYU: ' . $request);
+            \Log::info('Confirmación de pago recibida fuera de fecha límite', [
+                'idInscripcion' => $idInscripcion,
+                'reference_sale' => $request->input('reference_sale'),
+                'state_pol' => $request->input('state_pol'),
+            ]);
         }
     }
 }

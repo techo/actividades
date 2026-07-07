@@ -60,4 +60,13 @@ interface PaymentGateway
      * @return mixed
      */
     public function getConfig();
+
+    /**
+     * Verifica que la notificación de confirmación recibida provenga
+     * realmente de la pasarela de pago (firma válida) y corresponda a esta
+     * transacción puntual. Debe llamarse antes de confiar en cualquier otro
+     * dato del request (por ejemplo, antes de updateUserStatus()).
+     * @return bool
+     */
+    public function verifyConfirmationSignature();
 }

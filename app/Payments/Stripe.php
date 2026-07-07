@@ -41,4 +41,11 @@ class Stripe implements PaymentGateway
     {
         return json_decode($this->actividad->pais->config_pago);
     }
+
+    // El flujo real de Stripe usa su propia verificación de firma de webhook
+    // (Stripe\Webhook::constructEvent, ver StripeController::webhook()), no
+    // este método. Se devuelve false para que, si algún día un país llegara a
+    // configurarse con payment_class=Stripe, PagosController::confirmation()
+    // rechace la notificación en vez de procesarla sin verificar nada.
+    public function verifyConfirmationSignature() { return false; }
 }

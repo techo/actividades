@@ -5,11 +5,14 @@ namespace App\Payments;
 use App\Inscripcion;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionPagoFueraDeFecha;
+use App\Payments\Concerns\VerifiesPayuSignature;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DefaultPago implements PaymentGateway
 {
+    use VerifiesPayuSignature;
+
     public $request;
     public $actividad;
     public $persona;

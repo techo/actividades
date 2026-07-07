@@ -2,6 +2,33 @@
 
 ---
 
+## 2026-07-07 — Etapa 0 del Master Plan: verificación de firma PayU (fraude de pago)
+
+**Agente:** Claude (Sonnet 5) · **Branch:** `claude/etapa0-payu-signature`, luego integrada al contenido de `upgradee` (ver nota de integración al final de esta entrada)
+
+Ejecución de la tarea 26 (`fix_payu_signature_verification`, grupo `seguridad-critica`), el primer hallazgo crítico de `docs/master-plan-estabilizacion.md`.
+
+### Qué se hizo
+`PagosController::confirmation()` (webhook público de PayU, sin auth ni CSRF) marcaba una inscripción como pagada mirando solo `state_pol` del POST entrante, sin verificar que la notificación viniera realmente de PayU — cualquiera podía forjar el POST y marcar cualquier inscripción como pagada sin pagar. Se implementó verificación de firma según la documentación oficial de PayU Latam (`md5(apiKey~merchant_id~reference_sale~value~currency~state_pol)`, con la regla de formato de `value` documentada oficialmente, usando siempre los valores del POST entrante salvo el `api_key`, que sale de la config del país y nunca del request), más un chequeo de que `reference_sale` corresponda a la inscripción de la URL (evita reutilizar una notificación válida de OTRA transacción contra un `idInscripcion` distinto).
+
+Archivos: nuevo trait `app/Payments/Concerns/VerifiesPayuSignature.php` (compartido por `PayU.php` y `DefaultPago.php`, que son casi duplicados — deuda ya señalada para la Etapa 2, no se resolvió acá para no mezclar alcance), `PaymentGateway.php` (nueva firma de interfaz `verifyConfirmationSignature()`), `Stripe.php` (stub que devuelve `false`, no afecta su flujo real que vive en `StripeController`), `PagosController.php` (aborta 403 antes de procesar, y se sacaron los dos `Log::info` que volcaban la request completa con PII de pago en texto plano). `tests/Feature/InscripcionesConPagoTest.php`: los 3 tests existentes que POSTeaban a `/pagos/{id}/confirmation` ahora firman su payload (antes no hacía falta, porque no se verificaba nada); se agregaron 2 tests nuevos (`sistema_rechaza_confirmacion_de_pago_con_firma_invalida`, `sistema_rechaza_confirmacion_de_pago_con_reference_sale_de_otra_inscripcion`).
+
+### Verificación
+La fórmula de firma se confirmó contra la documentación oficial de PayU Latam (developers.payulatam.com/latam/en/docs/integrations/confirmation-url.html, incluye ejemplo de implementación PHP de referencia). **No se pudo ejecutar `phpunit`**: el sandbox de esta sesión no tiene PHP, MySQL ni Docker disponibles (sin permisos para instalar vía apt). Pendiente correr `docker compose exec app vendor/bin/phpunit --filter InscripcionesConPagoTest` antes de mergear — está anotado como criterio de aceptación pendiente en `tasks.json` (tarea 26).
+
+### Bloqueo operativo encontrado (no de código)
+Al intentar comitear en una branch nueva, `git` dejó un `.git/index.lock` que el sandbox no pudo borrar (`Operation not permitted` pese a ser el mismo owner del archivo — parece una restricción del punto de montaje, no de permisos Unix normales). Los cambios de código están completos y escritos en el working tree (confirmado archivo por archivo), y la branch `claude/etapa0-payu-signature` quedó creada y con los 7 archivos relevantes en stage, pero el commit no se pudo finalizar desde este entorno. Se necesita correr `rm .git/index.lock` desde una terminal local antes de poder comitear.
+
+### Sesiones anteriores relacionadas
+Este trabajo parte de dos documentos nuevos: `docs/arquitectura-ia-soporte-continuo.md` (diseño de sistema de soporte con IA, luego pausado a pedido del usuario) y `docs/master-plan-estabilizacion.md` (plan de estabilización que reordenó las prioridades — este es el que se está ejecutando ahora, tarea por tarea).
+
+### Nota de integración con `upgradee` (mismo día)
+Se detectó que la rama `upgradee` (11 commits sobre `develop`, sin mergear) ya resuelve gran parte de la Etapa 1 del Master Plan: CI real corriendo PHPUnit contra MySQL, y los 9 archivos de tests que cierran completo el grupo `cobertura-tests` (`tasks.json` ids 9-18, ver las 5 entradas siguientes de este historial). A pedido del usuario, se integró el contenido de `upgradee` en el working tree (los 15 archivos que la diferencian de `develop`, extraídos vía `git show upgradee:<archivo>` y verificados byte a byte) junto con el fix de PayU de esta entrada, y se reconciliaron `tasks.json` (base = el de `upgradee`, que ya tiene 9-18 en `done`, + las tareas 26-28 agregadas acá) y este mismo `progress/history.md` (base = el de `upgradee`, con esta entrada agregada como la más reciente).
+
+**Importante:** no se pudo formalizar esto como commits/merge real de git — mismo bloqueo de `.git/index.lock` de esta sesión. El contenido en el working tree ya es exactamente el que debería quedar, pero el historial de git todavía no lo refleja. Ver instrucciones para cerrarlo desde una terminal local en la respuesta de esa sesión.
+
+---
+
 ## 2026-06-17 — Cobertura web #10–13 (cierra el grupo cobertura-tests)
 
 **Agente:** Claude (Opus 4.8) · **Branch:** `claude/goofy-mclaren-e7f8eb`

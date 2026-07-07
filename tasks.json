@@ -450,6 +450,53 @@
       ],
       "branch": "upgrade/laravel-11x",
       "status": "pending"
+    },
+    {
+      "id": 26,
+      "group": "seguridad-critica",
+      "name": "fix_payu_signature_verification",
+      "title": "Verificar firma de PayU en confirmación de pago (bypass de fraude)",
+      "description": "PagosController::confirmation() marcaba una inscripción como pagada mirando solo state_pol del POST entrante, sin verificar que la notificación viniera realmente de PayU (la ruta no tiene auth ni CSRF). Hallazgo A crítico de docs/master-plan-estabilizacion.md, Etapa 0. Resuelto con App\\Payments\\Concerns\\VerifiesPayuSignature (verificación de firma según documentación oficial de PayU Latam + chequeo de reference_sale contra la inscripción de la URL, para evitar replay de una notificación válida de otra transacción).",
+      "acceptance": [
+        "PaymentGateway exige verifyConfirmationSignature() en todos los gateways (PayU, DefaultPago, Stripe stub)",
+        "PagosController::confirmation() rechaza con 403 si la firma es inválida o no corresponde a la inscripción",
+        "Logs de PagosController ya no vuelcan la request completa (PII de pago) en texto plano",
+        "tests/Feature/InscripcionesConPagoTest.php actualizado: 3 tests existentes firman su payload, 2 tests nuevos cubren firma inválida y replay de reference_sale",
+        "PENDIENTE: correr phpunit real (docker compose exec app vendor/bin/phpunit --filter InscripcionesConPagoTest) — no se pudo ejecutar en el sandbox de la sesión que hizo el fix (sin PHP/MySQL/Docker disponibles ahí)"
+      ],
+      "risk": "high",
+      "branch": "integrado al working tree sobre contenido de upgradee (ver nota de integración en progress/history.md, entrada 2026-07-07)",
+      "agent_notes": "Cambios completos en el working tree, verificados byte a byte contra upgradee + el fix. No se pudo formalizar como commit/merge real de git: .git/index.lock que el sandbox de ejecución no pudo borrar (permiso denegado incluso siendo el mismo owner) — correr 'rm .git/index.lock' desde una terminal local antes de cualquier git add/commit/checkout en este repo.",
+      "status": "done",
+      "completed_at": "2026-07-07"
+    },
+    {
+      "id": 27,
+      "group": "seguridad-critica",
+      "name": "fix_idor_personas_show",
+      "title": "IDOR en api/PersonasController@show — fuga de PII de cualquier usuario",
+      "description": "GET /api/personas/{persona} devuelve el perfil completo (mail, DNI, teléfono, fecha de nacimiento, género) de cualquier usuario autenticado que iteres el idPersona, sin chequeo de ownership. Hallazgo C crítico de docs/master-plan-estabilizacion.md, Etapa 0.",
+      "acceptance": [
+        "Investigar si el endpoint se usa legítimamente para ver perfiles de terceros (compañeros de equipo, coordinador) antes de restringir",
+        "Chequeo de ownership o de rol autorizado agregado",
+        "Test de regresión: usuario autenticado no puede leer el perfil de otro por id"
+      ],
+      "risk": "high",
+      "status": "pending"
+    },
+    {
+      "id": 28,
+      "group": "seguridad-critica",
+      "name": "fix_idor_personas_update",
+      "title": "IDOR en api/PersonasController@update — cualquiera puede sobrescribir datos de otro usuario",
+      "description": "POST /api/editPersona/{persona} permite a cualquier usuario autenticado sobrescribir mail/DNI/teléfono/etc. de cualquier otra Persona, sin chequeo de ownership. Vector de account takeover vía cambio de mail + reset de contraseña. Hallazgo B crítico de docs/master-plan-estabilizacion.md, Etapa 0.",
+      "acceptance": [
+        "Chequeo de ownership agregado (solo la propia persona, o un rol explícitamente autorizado, puede editar)",
+        "Test de regresión: usuario autenticado no puede modificar datos de otro por id",
+        "Verificar que el flujo legítimo de edición de perfil desde la app mobile sigue funcionando igual"
+      ],
+      "risk": "high",
+      "status": "pending"
     }
   ]
 }

@@ -18,6 +18,39 @@ class InscripcionesConPagoTest extends TestCase
 {
 	use RefreshDatabase;
 
+    /**
+     * Replica la regla de firma de PayU Latam para la Confirmation URL, para
+     * poder armar en los tests el mismo `sign` que PayU calcularía en
+     * producción. Ver App\Payments\Concerns\VerifiesPayuSignature.
+     */
+    private function payuConfirmationSign($apiKey, $merchantId, $referenceSale, $value, $currency, $statePol)
+    {
+        $parts = explode('.', $value);
+
+        if (!isset($parts[1]) || $parts[1] === '') {
+            $formatted = $parts[0] . '.0';
+        } elseif (strlen($parts[1]) > 1 && $parts[1][1] !== '0') {
+            $formatted = $parts[0] . '.' . substr($parts[1], 0, 2);
+        } else {
+            $formatted = $parts[0] . '.' . $parts[1][0];
+        }
+
+        return md5(implode('~', [$apiKey, $merchantId, $referenceSale, $formatted, $currency, $statePol]));
+    }
+
+    /**
+     * Arma el mismo reference_sale que App\Payments\PayU::referenceCode()
+     * generaría para una inscripción real, para poder firmarlo en los tests.
+     */
+    private function payuReferenceSale($actividad, $persona, $inscripcion)
+    {
+        return $actividad->tipo->nombre . '-'
+            . 'Voluntario-'
+            . $persona->dni . '-'
+            . $actividad->idActividad . '-'
+            . $inscripcion->idInscripcion;
+    }
+
     /** @test */
     public function usuario_puede_preinscribirse_con_pago()
     {
@@ -266,9 +299,16 @@ class InscripcionesConPagoTest extends TestCase
             'idPersona' => $jose->idPersona
         ]);
 
+        $referenceSale = $this->payuReferenceSale($actividad, $jose, $i);
+
         $datos = [
             'state_pol' => '4',
             'transaction_date' => $fecha_limite->subDay()->format('Y-m-d H:i:s'),
+            'merchant_id' => '1234',
+            'reference_sale' => $referenceSale,
+            'value' => '100.00',
+            'currency' => 'ARS',
+            'sign' => $this->payuConfirmationSign('7890', '1234', $referenceSale, '100.00', 'ARS', '4'),
         ];
 
         $this->actingAs($jose)
@@ -327,9 +367,16 @@ class InscripcionesConPagoTest extends TestCase
 
         $fecha_transaccion = Carbon::now()->format('Y-m-d');
 
+        $referenceSale = $this->payuReferenceSale($actividad, $jose, $i);
+
         $datos = [
             'state_pol' => '4',
             'transaction_date' => $fecha_transaccion,
+            'merchant_id' => '1234',
+            'reference_sale' => $referenceSale,
+            'value' => '100.00',
+            'currency' => 'ARS',
+            'sign' => $this->payuConfirmationSign('7890', '1234', $referenceSale, '100.00', 'ARS', '4'),
         ];
 
         $this->actingAs($jose)
@@ -384,9 +431,16 @@ class InscripcionesConPagoTest extends TestCase
             'idPersona' => $jose->idPersona
         ]);
 
+        $referenceSale = $this->payuReferenceSale($actividad, $jose, $i);
+
         $datos = [
             'state_pol' => '4',
             'transaction_date' => Carbon::now()->addDay()->format('Y-m-d H:i:s'),
+            'merchant_id' => '1234',
+            'reference_sale' => $referenceSale,
+            'value' => '100.00',
+            'currency' => 'ARS',
+            'sign' => $this->payuConfirmationSign('7890', '1234', $referenceSale, '100.00', 'ARS', '4'),
         ];
 
         $this->actingAs($jose)
@@ -408,6 +462,119 @@ class InscripcionesConPagoTest extends TestCase
             ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)
             ->assertSeeText('¡Pago fuera de fecha!')
             ->assertOk();
+    }
+
+    /** @test */
+    public function sistema_rechaza_confirmacion_de_pago_con_firma_invalida()
+    {
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->conPais($pais_con_config_de_pago->id)
+            ->conEstado('con pago')
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+        ]);
+
+        $referenceSale = $this->payuReferenceSale($actividad, $jose, $i);
+
+        // Payload con todos los datos correctos salvo la firma, que es la que
+        // forjaría un atacante que no conoce el api_key del país.
+        $datos = [
+            'state_pol' => '4',
+            'transaction_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'merchant_id' => '1234',
+            'reference_sale' => $referenceSale,
+            'value' => '100.00',
+            'currency' => 'ARS',
+            'sign' => 'firma-forjada-por-un-atacante',
+        ];
+
+        $this->actingAs($jose)
+            ->post('/pagos/' . $i->idInscripcion . '/confirmation', $datos)
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('Inscripcion', [
+            'idInscripcion' => $i->idInscripcion,
+            'pago' => 1,
+        ]);
+
+        Mail::assertNothingQueued();
+    }
+
+    /** @test */
+    public function sistema_rechaza_confirmacion_de_pago_con_reference_sale_de_otra_inscripcion()
+    {
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->conPais($pais_con_config_de_pago->id)
+            ->conEstado('con pago')
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+        ]);
+
+        // Firma válida y matemáticamente correcta, pero calculada para un
+        // reference_sale de OTRA transacción (por ejemplo, una compra real y
+        // legítima de $1 que hizo el propio atacante). Reenviarla contra el
+        // idInscripcion de esta URL debe rechazarse igual, aunque la firma en
+        // sí sea válida para esos otros datos.
+        $referenceSaleDeOtraTransaccion = 'Otro-Tipo-Voluntario-99999999-1-1';
+
+        $datos = [
+            'state_pol' => '4',
+            'transaction_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'merchant_id' => '1234',
+            'reference_sale' => $referenceSaleDeOtraTransaccion,
+            'value' => '100.00',
+            'currency' => 'ARS',
+            'sign' => $this->payuConfirmationSign('7890', '1234', $referenceSaleDeOtraTransaccion, '100.00', 'ARS', '4'),
+        ];
+
+        $this->actingAs($jose)
+            ->post('/pagos/' . $i->idInscripcion . '/confirmation', $datos)
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('Inscripcion', [
+            'idInscripcion' => $i->idInscripcion,
+            'pago' => 1,
+        ]);
+
+        Mail::assertNothingQueued();
     }
 
     /** @test */
