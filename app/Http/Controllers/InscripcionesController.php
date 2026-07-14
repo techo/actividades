@@ -12,6 +12,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\ImageUploadService;
 use App\Services\InscripcionFlow;
 use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
@@ -301,7 +302,7 @@ class InscripcionesController extends BaseController
         ->firstOrFail();
 
         $archivo = $request->file('voucher');
-        $path = $archivo->store('public/voucherInscipcion/'.auth()->user()->idPersona);
+        $path = ImageUploadService::store($archivo, 'public/voucherInscipcion/'.auth()->user()->idPersona);
         $oldPath = str_replace('storage', 'public', $inscripcion->voucherURL);
         if(Storage::exists($oldPath))
             Storage::delete($oldPath);
@@ -333,7 +334,7 @@ class InscripcionesController extends BaseController
 
         if ($request->hasFile('evidence')) {
             $archivo  = $request->file('evidence');
-            $path     = $archivo->store('public/becaInscripcion/' . auth()->user()->idPersona);
+            $path     = ImageUploadService::store($archivo, 'public/becaInscripcion/' . auth()->user()->idPersona);
             $oldPath  = str_replace('storage', 'public', $inscripcion->scholarship_evidence_url ?? '');
             if ($oldPath && Storage::exists($oldPath)) {
                 Storage::delete($oldPath);

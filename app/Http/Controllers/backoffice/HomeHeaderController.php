@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\HomeHeader;
+use App\Services\ImageUploadService;
 
 class HomeHeaderController extends Controller
 {
@@ -46,7 +47,7 @@ class HomeHeaderController extends Controller
 
         $imagen = $request->file('imagen');
         if($imagen){
-            $path = $request->file('imagen')->store('public/header');
+            $path = ImageUploadService::store($request->file('imagen'), 'public/header');
             $homeHeader->imagen = str_replace('public', 'storage', '/'.$path);
         }
         $homeHeader->header = $validados['header'];

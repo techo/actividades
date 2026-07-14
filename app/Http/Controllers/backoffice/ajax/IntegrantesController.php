@@ -12,6 +12,7 @@ use App\Http\Requests\Equipo\CrearIntegrante;
 use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\Http\Requests\Equipo\GetIntegrante;
 use App\Persona;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Storage;
 
 class IntegrantesController extends Controller
@@ -127,7 +128,7 @@ class IntegrantesController extends Controller
 
         if ($request->file('archivo_carta_compromiso')){
             $archivo = $request->file('archivo_carta_compromiso');
-            $path = $archivo->store('public/integrante');
+            $path = ImageUploadService::store($archivo, 'public/integrante');
             $oldPath = str_replace('storage', 'public', $integrante->archivo_carta_compromiso);
             if(Storage::exists($oldPath))
                 Storage::delete($oldPath);
@@ -138,7 +139,7 @@ class IntegrantesController extends Controller
 
         if ($request->file('archivo_plan_de_trabajo')){
             $archivo = $request->file('archivo_plan_de_trabajo');
-            $path = $archivo->store('public/integrante');
+            $path = ImageUploadService::store($archivo, 'public/integrante');
             $oldPath = str_replace('storage', 'public', $integrante->archivo_plan_de_trabajo);
             if(Storage::exists($oldPath))
                 Storage::delete($oldPath);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 use App\Http\Controllers\Controller;
 use App\Tipo;
 use App\Search\TiposActividadSearch;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -67,7 +68,7 @@ class TiposActividadController extends Controller
 
         $imagen = $request->file('imagen');
         if($imagen){
-            $path = $request->file('imagen')->store('public/tipos');
+            $path = ImageUploadService::store($request->file('imagen'), 'public/tipos');
             $tipoActividad->imagen = str_replace('public', 'storage', '/'.$path);
         }
         $tipoActividad->nombre = $validados['nombre'];

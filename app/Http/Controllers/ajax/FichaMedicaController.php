@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\FichaMedica;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Storage;
 
 class FichaMedicaController extends Controller
@@ -68,7 +69,7 @@ class FichaMedicaController extends Controller
 
     if ($request->file('archivo_medico')){
       $archivo = $request->file('archivo_medico');
-      $path = $archivo->store('public/perfil/fichaMedica');
+      $path = ImageUploadService::store($archivo, 'public/perfil/fichaMedica');
       $oldPath = str_replace('storage', 'public', $fichaMedica->archivo_medico);
       if(Storage::exists($oldPath))
           Storage::delete($oldPath);
@@ -79,7 +80,7 @@ class FichaMedicaController extends Controller
 
     if ($request->file('documento_frente')){
       $archivo = $request->file('documento_frente');
-      $path = $archivo->store('public/perfil/fichaMedica');
+      $path = ImageUploadService::store($archivo, 'public/perfil/fichaMedica');
       $oldPath = str_replace('storage', 'public', $fichaMedica->documento_frente);
       if(Storage::exists($oldPath))
           Storage::delete($oldPath);
@@ -90,7 +91,7 @@ class FichaMedicaController extends Controller
 
     if ($request->file('documento_dorso')){
       $archivo = $request->file('documento_dorso');
-      $path = $archivo->store('public/perfil/fichaMedica');
+      $path = ImageUploadService::store($archivo, 'public/perfil/fichaMedica');
       $oldPath = str_replace('storage', 'public', $fichaMedica->documento_dorso);
       if(Storage::exists($oldPath))
           Storage::delete($oldPath);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Integrante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\Storage;
 
 class EquiposController extends Controller
@@ -43,7 +44,7 @@ class EquiposController extends Controller
     
         if ($request->file('carta_compromiso')){
           $archivo = $request->file('carta_compromiso');
-          $path = $archivo->store('public/perfil/equipos');
+          $path = ImageUploadService::store($archivo, 'public/perfil/equipos');
           $oldPath = str_replace('storage', 'public', $integrante->archivo_carta_compromiso);
           if(Storage::exists($oldPath))
               Storage::delete($oldPath);

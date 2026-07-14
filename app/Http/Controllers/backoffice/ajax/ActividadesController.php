@@ -9,6 +9,7 @@ use App\Exports\JornadasExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\CrearCoordinador;
 use App\PuntoEncuentro;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 
 class ActividadesController extends BaseController
@@ -63,7 +64,7 @@ class ActividadesController extends BaseController
         $actividad = Actividad::findorFail($id);
 
         if($imagen){
-            $path = $request->file('imagen_tarjeta')->store('public/actividades');
+            $path = ImageUploadService::store($request->file('imagen_tarjeta'), 'public/actividades');
             $actividad->imagen_tarjeta = str_replace('public', 'storage', '/'.$path);
             $actividad->save();
         }
@@ -81,7 +82,7 @@ class ActividadesController extends BaseController
         $actividad = Actividad::findorFail($id);
 
         if($imagen){
-            $path = $request->file('imagen_destacada')->store('public/actividades');
+            $path = ImageUploadService::store($request->file('imagen_destacada'), 'public/actividades');
             $actividad->imagen_destacada = str_replace('public', 'storage', '/'.$path);
             $actividad->save();
         }

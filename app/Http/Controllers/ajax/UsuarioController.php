@@ -14,6 +14,7 @@ use App\Persona;
 use App\Rules\PassExiste;
 use App\Search\CoordinadoresSearch;
 use App\Search\MisActividadesSearch;
+use App\Services\ImageUploadService;
 use App\VerificacionMailPersona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -160,7 +161,7 @@ class UsuarioController extends BaseController
 
 		if ($request->file('photo')){
 			$archivo = $request->file('photo');
-			$path = $archivo->store('public/perfil/img');
+			$path = ImageUploadService::store($archivo, 'public/perfil/img');
 			$oldPath = str_replace('storage', 'public', $persona->photo);
 			if(Storage::exists($oldPath))
 				Storage::delete($oldPath);

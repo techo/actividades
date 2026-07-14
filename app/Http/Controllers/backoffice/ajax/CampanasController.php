@@ -9,6 +9,7 @@ use App\Persona;
 use App\Suscribe;
 use App\Http\Resources\SuscriptosResource;
 use App\Search\SuscriptosSearch;
+use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -110,7 +111,7 @@ class CampanasController extends Controller
             'imagen' => 'required|file|image|max:4096',
         ]);
 
-        $path = $request->file('imagen')->store('public/campanas');
+        $path = ImageUploadService::store($request->file('imagen'), 'public/campanas');
         $campana->imagen = str_replace('public', 'storage', '/' . $path);
         $campana->save();
 
