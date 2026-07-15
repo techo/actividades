@@ -1,7 +1,8 @@
 <table border="0" cellpadding="0" cellspacing="0" style="text-align:center" bgcolor="#D9D9D9" width="100%">
     <tr>
         <td width="25%" align="left">
-            <img src="{{ asset('/img/logo_negro_154x41.png') }}" alt="Techo Argentina" style="padding-top: 5px;" height="30">
+            @php($esBrasil = app()->getLocale() === 'pt')
+            <img src="{{ asset($esBrasil ? '/img/logo_negro_154x41_pt.png' : '/img/logo_negro_154x41.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" style="padding-top: 5px;" height="30">
         </td>
         <td width="50%">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">

@@ -34,8 +34,9 @@
             <table class="content" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr bgcolor="#0092dd">
                     <td align="left">
+                        @php($esBrasil = app()->getLocale() === 'pt')
                         <a href="{{ url('/') }}">
-                            <img src="{{ url('img/logo_b.png') }}" alt="Techo" width="170">
+                            <img src="{{ url($esBrasil ? 'img/logo_b_pt.png' : 'img/logo_b.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" width="170">
                         </a>
                         {{--@yield('header')--}}
                     </td>
