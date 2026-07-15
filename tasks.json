@@ -482,7 +482,7 @@
         "Test de regresión: usuario autenticado no puede leer el perfil de otro por id"
       ],
       "risk": "high",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 28,
@@ -496,7 +496,7 @@
         "Verificar que el flujo legítimo de edición de perfil desde la app mobile sigue funcionando igual"
       ],
       "risk": "high",
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

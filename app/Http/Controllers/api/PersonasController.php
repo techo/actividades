@@ -23,6 +23,8 @@ class PersonasController extends Controller
 
     public function show(Persona $persona)
     {
+        $this->autorizarPersonaPropia($persona);
+
         return $persona;
     }
 
@@ -242,7 +244,8 @@ class PersonasController extends Controller
 
 
     public function update(Request $request, Persona $persona)
-    {   
+    {
+        $this->autorizarPersonaPropia($persona);
 
         $fields = $this->validate($request, [
             'mail' => 'required',
@@ -295,5 +298,16 @@ class PersonasController extends Controller
         $persona->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * La API mobile solo opera sobre el perfil del usuario autenticado.
+     * El backoffice usa ajax\PersonasController (middleware admin), no este controlador.
+     */
+    private function autorizarPersonaPropia(Persona $persona)
+    {
+        if (auth('api')->user()->idPersona !== $persona->idPersona) {
+            abort(403, 'No autorizado para operar sobre otra persona.');
+        }
     }
 }
