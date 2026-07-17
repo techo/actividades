@@ -14,7 +14,9 @@ class PaisesSeeder extends Seeder
     {
         DB::statement("DELETE FROM `atl_pais` WHERE `nombre` = 'Argentina';");
 
-        DB::statement("INSERT INTO `atl_pais` (`id`, `nombre`)
+        // INSERT IGNORE para que el seeder sea re-ejecutable (los países ya
+        // insertados con su id fijo se conservan).
+        DB::statement("INSERT IGNORE INTO `atl_pais` (`id`, `nombre`)
                         VALUES
                             (1, 'Afganistán'),
                             (2, 'Islas Gland'),
@@ -266,8 +268,11 @@ class PaisesSeeder extends Seeder
             ->where('idPais', 1)
             ->update(['idPais' => 13]);
 
-        DB::table('Persona')
-            ->where('idPaisResidencia', 1)
-            ->update(['idPaisResidencia' => 13]);
+        // Columna de un schema viejo: solo migrar si existe.
+        if (\Schema::hasColumn('Persona', 'idPaisResidencia')) {
+            DB::table('Persona')
+                ->where('idPaisResidencia', 1)
+                ->update(['idPaisResidencia' => 13]);
+        }
     }
 }

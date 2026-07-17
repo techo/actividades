@@ -22,6 +22,13 @@ class DatabaseTestSeeder extends Seeder
         $this->call(PermissionsTableSeeder::class);
         $this->call(RolePermissionsSeeder::class);
 
+        // Países y headers ANTES que los factories: los países reales usan IDs
+        // fijos (13 = Argentina = APP_PAIS_DEFAULT) y si un factory crea países
+        // fake primero, el autoincrement pisa esos IDs y el sistema no arranca.
+        $this->call(PaisesSeeder::class);
+        $this->call(PaisesHabilitadosSeeder::class);
+        $this->call(HomeHeadersSeeder::class);
+
         $this->call(ActividadesSeeder::class);
         $this->call(ActividadesConPagoSeeder::class);
         $this->call(ActividadesSinLocalidadSeeder::class);
