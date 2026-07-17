@@ -13,7 +13,8 @@ describe ('Modal de inscripción', () => {
 
 	beforeEach(function () {
       moxios.install()
-      wrapper = mount(Test, { propsData: { idActividad: 1 }, });
+      // El componente usa $t() de vue-i18n; acá no se prueban traducciones.
+      wrapper = mount(Test, { propsData: { idActividad: 1 }, mocks: { $t: key => key, $tc: key => key } });
     });
 
     afterEach(function () {
