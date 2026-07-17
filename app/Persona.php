@@ -38,7 +38,14 @@ class Persona extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new \App\Notifications\VerifyEmail);
+        \Log::info('Mail de verificación encolado para ' . $this->mail);
+        $this->notify((new \App\Notifications\VerifyEmail)->locale(app()->getLocale()));
+    }
+
+    public function sendRegistroUsuarioNotification()
+    {
+        \Log::info('Mail de registro encolado para ' . $this->mail);
+        $this->notify((new \App\Notifications\RegistroUsuario)->locale(app()->getLocale()));
     }
 
     public function puntosEncuentro()

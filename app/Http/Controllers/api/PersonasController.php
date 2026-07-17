@@ -189,7 +189,7 @@ class PersonasController extends Controller
         }
         $persona->save();
         if (empty($request->google_id) && empty($request->facebook_id)){
-            $persona->notify(new \App\Notifications\RegistroUsuario);
+            $persona->sendRegistroUsuarioNotification();
         }
 
         // 🔑 En API devolvés un token en lugar de usar Auth::login()
@@ -224,6 +224,7 @@ class PersonasController extends Controller
             'idProvincia' => $fields['idProvincia'],
             'idLocalidad' => $fields['idLocalidad'],
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
+            'unsubscribe_token' => (string) Uuid::generate(),
         ]);
 
         $persona->sendEmailVerificationNotification();

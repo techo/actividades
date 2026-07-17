@@ -85,7 +85,7 @@ class PerfilController extends Controller
 
 		$persona->save();
 
-		$persona->notify(new \App\Notifications\VerifyEmail);
+		$persona->sendEmailVerificationNotification();
 
 		Redirect::setIntendedUrl("/");
 
