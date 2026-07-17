@@ -109,6 +109,11 @@ jobs:
           node-version: '10'
           cache: npm
 
+      - name: Dependencias de sistema para el build JS
+        # pngquant-bin (vía laravel-mix 1.x) compila desde fuente en el runner
+        # y necesita libpng; sin esto npm ci falla en el postinstall.
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libpng-dev
+
       - name: Instalar dependencias JS
         run: npm ci --no-audit --no-fund
 
