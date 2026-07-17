@@ -16,7 +16,8 @@ describe ('Pestaña de inscripciones de usuario', () => {
 
 	beforeEach(function () {
 		moxios.install()
-		wrapper = mount(Test);
+		// El componente usa $t() de vue-i18n; acá no se prueban traducciones.
+		wrapper = mount(Test, { mocks: { $t: key => key, $tc: key => key } });
 	});
 
 	afterEach(function () {

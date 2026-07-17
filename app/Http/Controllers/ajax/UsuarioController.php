@@ -69,7 +69,7 @@ class UsuarioController extends BaseController
       }
       $persona->save();
       if (empty($request->google_id) && empty($request->facebook_id) && empty($request->apple_id) && empty($request->instagram_id)){
-        $persona->notify(new \App\Notifications\RegistroUsuario);
+        $persona->sendRegistroUsuarioNotification();
       }
      // event(new RegistroUsuario($persona));
 

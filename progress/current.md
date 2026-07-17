@@ -7,34 +7,31 @@
 
 ## Estado
 
-- **Tarea en progreso:** cerrar la integración de `upgradee` (formalizar en git desde una terminal local); después sigue `fix_idor_personas_show` (id 27)
-- **Inicio:** 2026-07-07
-- **Agente / desarrollador:** Claude (Sonnet 5), ejecutando Etapa 0 de `docs/master-plan-estabilizacion.md`
+- **Tarea en progreso:** Etapa 1 — CI en GitHub Actions (task 29) + reconciliación de tasks.json (task 33)
+- **Inicio:** 2026-07-15
+- **Agente / desarrollador:** Claude (Fable 5)
 
 ## Plan
 
-Ejecución secuencial de la Etapa 0 (contención de emergencia) del Master Plan, una tarea a la vez:
-
-1. ~~`fix_payu_signature_verification` (id 26)~~ — **done**, ver `progress/history.md` 2026-07-07.
-2. **Integración de `upgradee`** — a pedido del usuario, se integró en el working tree el contenido de `upgradee` (CI real + cobertura de tests, tasks 9-18) junto con el fix de PayU. Contenido verificado byte a byte, **pendiente de formalizar en git** (ver Bloqueos).
-3. `fix_idor_personas_show` (id 27) — pendiente: investigar si `GET /api/personas/{persona}` tiene uso legítimo de terceros antes de restringir a self-only.
-4. `fix_idor_personas_update` (id 28) — pendiente.
+1. ~~Workflow de GitHub Actions~~ (`.github/workflows/ci.yml`): job PHPUnit (PHP 7.2 + MySQL 5.7 servicio) + job frontend (node 10). Reemplaza `.travis.yml` (eliminado).
+2. ~~Reconciliación de tasks.json~~ (task 33): ids 4 y 7 → done (verificados en código), id 2 → pending, nuevas tasks 29-35 (Etapa 1 + TODOs segurizar).
+3. Pendiente: push + primer run verde en GitHub + branch protection (task 29 queda `in_progress` hasta eso).
 
 ## Progreso
 
-- [x] Tarea 26 — verificación de firma PayU
-- [x] Integración de contenido de `upgradee` (CI + tests 9-18) en el working tree
-- [ ] Formalizar la integración en git (acción del usuario, ver Bloqueos)
-- [ ] Tarea 27 — IDOR en PersonasController@show
-- [ ] Tarea 28 — IDOR en PersonasController@update
+- [x] Workflow ci.yml escrito; pipeline frontend validado completo en node:10 limpio (npm ci → build → tests)
+- [x] Tests de Vue arreglados: 3 fallaban con `$t is not a function` (componentes con vue-i18n, specs sin mock — rotos desde que se agregó i18n, nadie los corría). Fix: `mocks: { $t, $tc }` en los mount(). Ahora 10/10.
+- [x] tasks.json reconciliado + backlog Etapa 1 agregado (tasks 29-35)
+- [x] CLAUDE.md: estadoInscripcion unificado (ya no es deuda), líneas de deuda corregidas, sección Testing con MySQL + CI
+- [x] Push y primer run verde del workflow en GitHub (2026-07-17, run 29582487888). El primer run falló y atrapó 2 bugs reales: `app/Mail/actualizacionActividad.php` con case incorrecto (funcionaba en macOS/autoload optimizado, rompía con PSR-4 en Linux) y `libpng-dev` faltante para `pngquant-bin`. Ambos arreglados en `0824f8f9`.
+- [ ] Branch protection exigiendo los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` para mergear a master/develop — **requiere admin del repo en GitHub** (Settings → Branches)
 
 ## Contexto relevante
 
-- `docs/master-plan-estabilizacion.md` §2.1 y §5 punto 1: las 3 tareas de esta etapa y su orden.
-- `upgradee` (11 commits sobre `develop`, merge-base = tip de `develop`, sin conflictos detectados con `git merge-tree`) trae CI real (PHPUnit contra MySQL) y cierra el grupo `cobertura-tests` completo (tasks.json ids 9-18). El working tree ya tiene ese contenido + el fix de PayU + `tasks.json`/`progress/history.md` reconciliados.
-- Pendiente de verificar (no lo pude correr yo): la suite de `upgradee` no se re-corrió después de los últimos 5 commits que se le mergearon encima (reporting, powerbi, donation-checkout-config, develop). Correr `phpunit` completo antes de dar el merge por bueno.
-- Antes de tocar `api/PersonasController@show`/`@update` (tareas 27/28), revisar si algún flujo legítimo depende de leer/editar una `Persona` que no sea la propia — si existe, es una decisión de producto y hay que consultar antes de restringir.
+- El job PHP genera claves de Passport (`passport:keys`) y el `mix-manifest.json` identidad (deploy usa `npm run dev`, sin versionado — verificado en `deploy.sh:47` y `webpack.mix.js`). Sin manifest, los tests web dan 500 (verificado).
+- El job frontend necesita `artisan vue-i18n:generate` antes del build: `resources/js/vue-i18n-locales.generated.js` no está trackeado y ambos entry points lo importan.
+- Cómo correr la suite local: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`. Si Docker no corre: `colima start` y `docker start laravel_app`. Estado al 2026-07-15: 167/167 en verde.
 
 ## Bloqueos
 
-`.git/index.lock` en el working tree no se puede borrar desde este sandbox (`Operation not permitted`, mismo owner del archivo — parece restricción del punto de montaje, no permisos Unix normales). Bloquea cualquier `git add`/`commit`/`checkout` desde esta sesión. El contenido de los archivos en el working tree ya es correcto; falta que el usuario, desde una terminal local, corra `rm .git/index.lock` y formalice los commits (ver instrucciones detalladas en la respuesta de la sesión 2026-07-07).
+Ninguno.

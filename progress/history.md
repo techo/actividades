@@ -2,6 +2,24 @@
 
 ---
 
+## 2026-07-15 — Etapa 0 completa: verificación post-merge + IDOR show/update (tareas 27 y 28)
+
+**Agente:** Claude (Fable 5) · **Branch:** `upgradee`
+
+Cierre de la Etapa 0 (contención de emergencia) de `docs/master-plan-estabilizacion.md`:
+
+1. **Verificación pendiente del merge de `upgradee`**: la sesión 2026-07-07 dejó anotado que la suite no se había re-corrido tras los merges de reporting/powerbi/donations. Se corrió completa en Docker (`laravel_app` contra MySQL `laravel_test`): **162/162 en verde** (creció desde los 97 de junio con los tests que trajeron esos merges). El bloqueo de `.git/index.lock` de esa sesión ya no existía: el usuario formalizó los commits desde su terminal (hasta `85f4d4d9`).
+
+2. **Tarea 27 (`fix_idor_personas_show`)**: investigación previa confirmó que restringir a self-only es seguro — `GET /api/personas/{persona}` y `POST /api/editPersona/{persona}` están detrás de `auth:api`, el único consumidor es la app MiTECHO para el perfil propio (ningún flujo mobile lee perfiles de terceros), y el backoffice usa `ajax\PersonasController` detrás de `/admin`. Fix: helper privado `autorizarPersonaPropia()` en `api\PersonasController` que aborta con 403 si la Persona ruteada no es la autenticada, aplicado en `show()`.
+
+3. **Tarea 28 (`fix_idor_personas_update`)**: mismo helper aplicado en `update()`. Nota: `index()`, `delete()` y `getPersonaxMail()` del mismo controlador también carecen de chequeos pero **no tienen ruta** — no son alcanzables hoy; si alguna vez se rutean, necesitan autorización.
+
+4. **Regresión**: `tests/Feature/api/PerfilApiTest.php` (5 tests) — leer/editar el propio perfil funciona (el flujo legítimo de la app no cambia), leer/editar el de otro da 403 con datos de la víctima intactos, y ambos endpoints requieren auth. Dato de esquema que costó un intento: `Persona.genero` es `varchar(1)` (`'F'`/`'M'`).
+
+Suite completa final: **167/167 en verde (552 aserciones)**. `tasks.json` ids 27-28 → `done`; §2.1 del master plan actualizado. Con esto los 3 hallazgos críticos están resueltos: empieza la **Etapa 1** (CI real con gate de merge como primer ítem).
+
+---
+
 ## 2026-07-07 — Etapa 0 del Master Plan: verificación de firma PayU (fraude de pago)
 
 **Agente:** Claude (Sonnet 5) · **Branch:** `claude/etapa0-payu-signature`, luego integrada al contenido de `upgradee` (ver nota de integración al final de esta entrada)

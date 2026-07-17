@@ -72,9 +72,7 @@ Relación Persona↔Actividad. Tabla: `Inscripcion`. PK: `idInscripcion`.
 
 Campos de estado: `confirma` (0/1), `pago` (0/1), `presente` (0/1).
 
-El estado resultante depende de la combinación de `Actividad.confirmacion`, `Actividad.pago`, `Inscripcion.confirma`, `Inscripcion.pago`. Ver `Actividad::estadoInscripcion()`.
-
-> **Deuda conocida**: la lógica de `estadoInscripcion()` está duplicada en `Actividad.php` y en `Persona.php` con diferente granularidad. Cambios en reglas de inscripción deben tocarse en ambos lados hasta que se unifiquen.
+El estado resultante depende de la combinación de `Actividad.confirmacion`, `Actividad.pago`, `Inscripcion.confirma`, `Inscripcion.pago`. La fuente única de esa lógica es `app/Services/EstadoInscripcion.php`; tanto `Actividad::estadoInscripcion()` (vocabulario inglés) como `Persona::estadoInscripcion()` (vocabulario español, backoffice) delegan ahí.
 
 ### Campaign (`app/Campaign.php`)
 Campañas de captación de voluntarios (colectas, captaciones). Sistema actual. Tabla: `campaigns` (snake_case, inglés).
@@ -237,9 +235,9 @@ vendor/bin/phpunit
 npm run test
 ```
 
-Los tests PHP usan `RefreshDatabase` + factories (no un seeder) y requieren base de datos activa. No hay mocks de BD.
+Los tests PHP corren **contra MySQL, no SQLite** (la suite está rota sobre SQLite por nombres de índice globales) y requieren base de datos activa. No hay mocks de BD. En local: contenedor `laravel_app` contra la BD `laravel_test` (ver `progress/current.md` para el comando exacto).
 
-Para dejar una BD nueva **usable** (instalación o pruebas manuales): `php artisan migrate:fresh && php artisan db:seed --class=DatabaseTestSeeder`. Siembra roles y permisos, países (con los IDs canónicos de producción: 13 = Argentina = `APP_PAIS_DEFAULT`, y los países habilitados con su locale), los home headers (sin el header del país activo toda vista pública da 500), actividades (incluye con pago y sin localidad) y los usuarios `administrador@administrador.com` / `coordinador@coordinador.com` (password = la parte local del mail). El orden importa: los países van antes que cualquier factory, porque los factories crean países fake y el autoincrement pisaría los IDs canónicos.
+CI: `.github/workflows/ci.yml` corre PHPUnit (MySQL 5.7 de servicio) y los tests de Vue en cada push/PR.
 
 Deuda conocida: los tests de push notifications (PushNotificationService, comandos cron) están pendientes. Ver `docs/push-notifications.md#deuda-técnica`.
 
@@ -265,9 +263,8 @@ Deuda conocida: los tests de push notifications (PushNotificationService, comand
 |-------|---------|---------|
 | Laravel 5.7 sin soporte desde 2020 | `composer.json` | Seguridad |
 | `App\User` es código muerto | `app/User.php`, `RegisterController.php` | Confusión |
-| `estadoInscripcion()` duplicado | `Actividad.php` L95, `Persona.php` L115 | Bugs potenciales |
-| IDs de categorías hardcodeados en ruta | `routes/api.php` L167-190 | Fragilidad |
-| `getMiembrosAttribute()` con efecto secundario | `Actividad.php` L70 | Bugs potenciales |
+| IDs de categorías hardcodeados en ruta | `routes/api.php` L181-204 | Fragilidad |
+| `getMiembrosAttribute()` con efecto secundario | `Actividad.php` L109 | Bugs potenciales |
 | `bower_components` en git (67 MB) | `public/bower_components/` | Repo pesado |
 | Dos clases Search con nombres casi iguales | `TiposActividadSearch.php` vs `TiposActividadesSearch.php` | Confusión |
 | Vue 2 EOL | `resources/js/` | Deuda frontend |

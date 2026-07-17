@@ -1,0 +1,127 @@
+# CI — gate de merge (Etapa 1 del master plan de estabilización).
+#
+# Reemplaza a .travis.yml (Travis ya no corre builds del proyecto). Dos jobs
+# independientes para que la suite PHP —el gate crítico— no dependa del build
+# de frontend legacy (node 10 / laravel-mix 1.x), que es la pieza más frágil.
+#
+# La config de phpunit.xml usa force="false": los env de este workflow la pisan
+# (DB_HOST=127.0.0.1 en lugar del hostname docker `mysql`).
+
+name: CI
+
+on:
+  push:
+    branches: [master, develop, upgradee]
+  pull_request:
+
+jobs:
+  php-tests:
+    name: PHPUnit (PHP 7.2 + MySQL 5.7)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: laravel_test
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DB_HOST: 127.0.0.1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 7.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          extensions: mbstring, pdo_mysql, gd, exif, zip, bcmath
+          coverage: none
+
+      - name: Cache de Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Instalar dependencias PHP
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Claves de Passport
+        # createToken() en los tests de auth firma JWTs con la clave privada.
+        run: php artisan passport:keys --force
+
+      - name: mix-manifest.json
+        # Las vistas Blade usan mix(); sin manifest los tests web dan 500.
+        # En dev y en deploy (npm run dev) el manifest es el mapa identidad,
+        # así que lo generamos directo sin depender del build de node acá.
+        run: |
+          cat > public/mix-manifest.json <<'MANIFEST'
+          {
+              "/js/app.js": "/js/app.js",
+              "/js/atlas.js": "/js/atlas.js",
+              "/css/app.css": "/css/app.css",
+              "/bundle.js": "/bundle.js"
+          }
+          MANIFEST
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit
+
+  frontend-tests:
+    name: Vue (mocha-webpack, node 10)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 7.2
+        # Solo para `artisan vue-i18n:generate`, que el build de webpack requiere.
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          extensions: mbstring
+          coverage: none
+
+      - name: Cache de Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Instalar dependencias PHP
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Setup Node 10
+        # El stack de frontend (laravel-mix 1.x / webpack 3) es de la era node 10.
+        uses: actions/setup-node@v4
+        with:
+          node-version: '10'
+          cache: npm
+
+      - name: Dependencias de sistema para el build JS
+        # pngquant-bin (vía laravel-mix 1.x) compila desde fuente en el runner
+        # y necesita libpng; sin esto npm ci falla en el postinstall.
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libpng-dev
+
+      - name: Instalar dependencias JS
+        run: npm ci --no-audit --no-fund
+
+      - name: Generar locales de vue-i18n
+        run: php artisan vue-i18n:generate
+
+      - name: Build de assets
+        run: npm run dev
+
+      - name: Tests de Vue
+        run: npm run test
