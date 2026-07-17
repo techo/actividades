@@ -23,8 +23,8 @@
 - [x] Tests de Vue arreglados: 3 fallaban con `$t is not a function` (componentes con vue-i18n, specs sin mock — rotos desde que se agregó i18n, nadie los corría). Fix: `mocks: { $t, $tc }` en los mount(). Ahora 10/10.
 - [x] tasks.json reconciliado + backlog Etapa 1 agregado (tasks 29-35)
 - [x] CLAUDE.md: estadoInscripcion unificado (ya no es deuda), líneas de deuda corregidas, sección Testing con MySQL + CI
-- [ ] Push y primer run verde del workflow en GitHub
-- [ ] Branch protection exigiendo el check de CI
+- [x] Push y primer run verde del workflow en GitHub (2026-07-17, run 29582487888). El primer run falló y atrapó 2 bugs reales: `app/Mail/actualizacionActividad.php` con case incorrecto (funcionaba en macOS/autoload optimizado, rompía con PSR-4 en Linux) y `libpng-dev` faltante para `pngquant-bin`. Ambos arreglados en `0824f8f9`.
+- [ ] Branch protection exigiendo los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` para mergear a master/develop — **requiere admin del repo en GitHub** (Settings → Branches)
 
 ## Contexto relevante
 

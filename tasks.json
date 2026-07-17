@@ -503,7 +503,7 @@
       "group": "etapa1-estabilizacion",
       "name": "ci_github_actions",
       "title": "CI real en GitHub Actions con gate de merge",
-      "description": "Reemplaza el .travis.yml (Travis ya no corre builds). Workflow con dos jobs: PHPUnit (PHP 7.2 + MySQL 5.7 de servicio, genera claves Passport y mix-manifest) y frontend (node 10, npm ci, build de mix, tests de Vue). Falta: primer run verde en GitHub y activar branch protection para exigirlo en PRs.",
+      "description": "Reemplaza el .travis.yml (Travis ya no corre builds). Workflow con dos jobs: PHPUnit (PHP 7.2 + MySQL 5.7 de servicio) y frontend (node 10). Primer run verde 2026-07-17 (run 29582487888), tras dos fixes que el propio CI atrapó: case-sensitivity en app/Mail/ActualizacionActividad.php y libpng-dev faltante. Falta solo: branch protection para exigir los checks en PRs (requiere admin del repo).",
       "acceptance": [
         "Workflow corre en push/PR y queda verde",
         "Branch protection exige el check para mergear a master/develop"
