@@ -12,7 +12,7 @@ class Referente implements Filter
         $palabras = explode(' ', $value);
 
     	foreach ($palabras as $palabra) {
-    		$builder->whereRaw("nombre like '%" . $palabra . "%'");
+    		$builder->whereRaw("nombre like ?", ['%' . $palabra . '%']);
 		}
 
         return $builder;

@@ -70,7 +70,7 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);
             foreach ($palabras as $palabra)
-                $result->whereRaw("concat( COALESCE(nombreActividad,''), ' ', COALESCE(Tipo.nombre,''), ' ', COALESCE(atl_oficinas.nombre,'')) like '%". $palabra ."%' ");
+                $result->whereRaw("concat( COALESCE(nombreActividad,''), ' ', COALESCE(Tipo.nombre,''), ' ', COALESCE(atl_oficinas.nombre,'')) like ?", ['%' . $palabra . '%']);
         }
         $var = $result->get();
         $act = Actividad::hydrate($var->toArray());

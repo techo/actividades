@@ -12,7 +12,7 @@ class Equipo implements Filter
         $palabras = explode(' ', $value);
 
     	foreach ($palabras as $palabra) {
-    		$builder->whereRaw("concat(' ', Equipo.nombre, ' ', Equipo.area) like '%" . $palabra . "%'");
+    		$builder->whereRaw("concat(' ', Equipo.nombre, ' ', Equipo.area) like ?", ['%' . $palabra . '%']);
 		}
 
         return $builder;

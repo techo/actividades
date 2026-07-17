@@ -57,7 +57,7 @@ class SuscriptosExport implements FromCollection, WithHeadings, WithColumnFormat
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);
             foreach ($palabras as $palabra)
-                $result->whereRaw("mail like '%". $palabra ."%' ");
+                $result->whereRaw("mail like ?", ['%' . $palabra . '%']);
         }
         $var = $result->get();
         $act = Suscribe::hydrate($var->toArray());

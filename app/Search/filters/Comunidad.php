@@ -12,7 +12,7 @@ class Comunidad implements Filter
         $palabras = explode(' ', $value);
 
     	foreach ($palabras as $palabra) {
-    		$builder->whereRaw("concat(' ', Comunidad.nombre) like '%" . $palabra . "%'");
+    		$builder->whereRaw("concat(' ', Comunidad.nombre) like ?", ['%' . $palabra . '%']);
 		}
 
         return $builder;
