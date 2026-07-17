@@ -33,7 +33,7 @@
         "git rm --cached -r public/bower_components/ ejecutado por el usuario",
         "Directorio ya no aparece en git status"
       ],
-      "status": "in_progress"
+      "status": "pending"
     },
     {
       "id": 3,
@@ -55,7 +55,7 @@
         "README u otros archivos actualizados si referenciaban al duplicado"
       ],
       "risk": "low",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 5,
@@ -96,7 +96,7 @@
       ],
       "risk": "medium",
       "notes": "Hacer con tests corriendo. Leer InscripcionFlow.php primero.",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 8,
@@ -497,6 +497,98 @@
       ],
       "risk": "high",
       "status": "done"
+    },
+    {
+      "id": 29,
+      "group": "etapa1-estabilizacion",
+      "name": "ci_github_actions",
+      "title": "CI real en GitHub Actions con gate de merge",
+      "description": "Reemplaza el .travis.yml (Travis ya no corre builds). Workflow con dos jobs: PHPUnit (PHP 7.2 + MySQL 5.7 de servicio, genera claves Passport y mix-manifest) y frontend (node 10, npm ci, build de mix, tests de Vue). Falta: primer run verde en GitHub y activar branch protection para exigirlo en PRs.",
+      "acceptance": [
+        "Workflow corre en push/PR y queda verde",
+        "Branch protection exige el check para mergear a master/develop"
+      ],
+      "risk": "low",
+      "status": "in_progress"
+    },
+    {
+      "id": 30,
+      "group": "etapa1-estabilizacion",
+      "name": "cobertura_flujos_dinero_stripe",
+      "title": "Tests de los flujos de cobro Stripe (web checkout + mobile)",
+      "description": "StripeController (checkout web) e InscripcionStripeController/StripePaymentService (pago mobile) no tienen ni un test. Son los flujos donde un bug cuesta dinero real. La regresión de PayU ya existe (InscripcionesConPagoTest).",
+      "acceptance": [
+        "Tests de creación de checkout/PaymentIntent y de webhook de confirmación para ambos flujos",
+        "Casos de firma inválida / pago rechazado cubiertos"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 31,
+      "group": "etapa1-estabilizacion",
+      "name": "backup_restore_probado",
+      "title": "Backup de BD + restore probado de punta a punta",
+      "description": "No existe estrategia de backup en el repo y deploy.sh corre migrate --force sin backup previo. Definir dump automatizado (cron) + retención, y probar un restore completo al menos una vez, documentando el procedimiento. Ver memoria prod-ops: el disco ya acumula dumps SQL manuales viejos — ordenar eso en el mismo cambio.",
+      "acceptance": [
+        "Backup automatizado corriendo",
+        "Un restore completo ejecutado y documentado",
+        "deploy.sh hace backup antes de migrar"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 32,
+      "group": "etapa1-estabilizacion",
+      "name": "health_check_endpoint",
+      "title": "Endpoint de health-check",
+      "description": "No hay /health ni /up: deploys y monitoreo a ciegas. Endpoint sin auth que verifique app + conexión a BD, apto para uptime monitoring.",
+      "acceptance": [
+        "GET /health devuelve 200 con estado de BD",
+        "Integrado a algún monitor de uptime"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 33,
+      "group": "etapa1-estabilizacion",
+      "name": "reconciliar_tasks_json",
+      "title": "Reconciliar tasks.json contra el código real",
+      "description": "Primera acción de la Etapa 1 según master plan §8. Hecho 2026-07-15: ids 4 y 7 estaban resueltos en el código (api.md eliminado; EstadoInscripcion unificado), id 2 seguía trackeado y volvió a pending, e ids 27-28 cerrados en esta misma fecha.",
+      "acceptance": [
+        "Todo task pending verificado contra el código",
+        "Tasks resueltos marcados done"
+      ],
+      "risk": "low",
+      "status": "done"
+    },
+    {
+      "id": 34,
+      "group": "seguridad-critica",
+      "name": "segurizar_descarga_template",
+      "title": "TODO segurizar: descarga de template de importación sin permisos",
+      "description": "routes/web.php:493 — GET /inscripciones/importar/template marcado '//TODO: segurizar' por el propio equipo. Master plan §8: resolver ahora, sin esperar etapa. Verificar qué middleware/permiso corresponde en el grupo backoffice.",
+      "acceptance": [
+        "Ruta protegida con el permiso adecuado",
+        "Test de que un usuario sin permiso recibe 403"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 35,
+      "group": "seguridad-critica",
+      "name": "segurizar_endpoint_logs",
+      "title": "TODO segurizar: endpoint de logs de procesos sin permisos",
+      "description": "routes/web.php:512 — GET /logs/{proceso} marcado '//TODO: segurizar' por el propio equipo. Expone logs internos. Master plan §8: resolver ahora, sin esperar etapa.",
+      "acceptance": [
+        "Ruta protegida con el permiso adecuado",
+        "Test de que un usuario sin permiso recibe 403"
+      ],
+      "risk": "low",
+      "status": "pending"
     }
   ]
 }
