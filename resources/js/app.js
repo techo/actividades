@@ -13,6 +13,8 @@ import Simplert from "vue2-simplert";
 import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
+import ColumnSelectorPanel from './components/backoffice/datatable/columnas/ColumnSelectorPanel'
+import CeldaSeguimiento from './components/backoffice/datatable/columnas/CeldaSeguimiento'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
@@ -187,6 +189,10 @@ import GenericDatatable from './components/backoffice/datatable/GenericDatatable
 Vue.component('generic-datatable', GenericDatatable);
 
 Vue.component('inscripciones-table', InscripcionesTable);
+// Listados con columnas configurables: el panel se usa desde varias tablas y
+// la celda se resuelve por nombre desde los fields (__component:celda-seguimiento).
+Vue.component('column-selector-panel', ColumnSelectorPanel);
+Vue.component('celda-seguimiento', CeldaSeguimiento);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);

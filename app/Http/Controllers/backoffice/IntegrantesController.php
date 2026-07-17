@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice;
 
 use App\Equipo;
 use App\Http\Controllers\Controller;
+use App\Services\Listados\IntegrantesCatalogo;
 
 use Illuminate\Http\Request;
 
@@ -17,18 +18,18 @@ class IntegrantesController extends Controller
     public function indexAll(Request $request, $idEquipo)
     {
         $equipo = Equipo::findOrFail($idEquipo);
-        $datatableConfig = config('datatables.integrantes');
-        $fields = json_encode($datatableConfig['fields']);
-        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        // Primer render: fijas + columnas por defecto. La configuración real del
+        // usuario la carga el selector de columnas vía GET ajax/listados/.../config.
+        $fields = json_encode((new IntegrantesCatalogo)->defaultFields($idEquipo));
+        $sortOrder = json_encode(config('datatables.integrantes.sortOrder'));
         return view('backoffice.equipos.personas.indexAll', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
     }
 
     public function indexActive(Request $request, $idEquipo)
     {
         $equipo = Equipo::findOrFail($idEquipo);
-        $datatableConfig = config('datatables.integrantes');
-        $fields = json_encode($datatableConfig['fields']);
-        $sortOrder = json_encode($datatableConfig['sortOrder']);
+        $fields = json_encode((new IntegrantesCatalogo)->defaultFields($idEquipo));
+        $sortOrder = json_encode(config('datatables.integrantes.sortOrder'));
         return view('backoffice.equipos.personas.indexActive', compact('fields', 'sortOrder', 'idEquipo', 'equipo'));
     }
 

@@ -32,6 +32,7 @@
                 <button class="btn btn-default" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> {{ $t('backend.export_to_excel') }}
                 </button>
+                <column-selector-panel list-key="inscripciones" :context-id="idActividad"></column-selector-panel>
             </div>
         </div>
         <br>

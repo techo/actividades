@@ -187,8 +187,18 @@ return [
             ]
         ],
     ],
+    /*
+     * Listado con columnas configurables (ver config/listados.php):
+     *  - fijas:    siempre visibles, no aparecen en el selector de columnas.
+     *  - catalogo: campos opcionales agrupados; cada uno lleva una `key` estable
+     *              que se usa en el selector y en las preferencias persistidas.
+     *  - defaults: keys visibles cuando el usuario todavía no guardó preferencias
+     *              (equivalen a las columnas históricas del listado).
+     * Los campos condicionales (confirma/pago según la actividad) y los grupos
+     * dinámicos (preguntas, ficha médica, seguimiento) los arma InscripcionesCatalogo.
+     */
     'inscripciones' => [
-        'fields' => [
+        'fijas' => [
             [
                 'name' => '__checkbox',
                 'titleClass' => 'center aligned',
@@ -204,12 +214,6 @@ return [
                 'title' => '',
             ],
             [
-                'name' => 'dni',
-                'sortField' => 'dni',
-                'title' => 'backend.dni',
-                'visible' => false
-            ],
-            [
                 'name' => 'nombres',
                 'sortField' => 'nombres',
                 'title' => 'backend.name'
@@ -219,40 +223,157 @@ return [
                 'sortField' => 'apellidoPaterno',
                 'title' => 'backend.last_name'
             ],
-            [
-                'name' => 'nombreGrupo',
-                'sortField' => 'nombreGrupo',
-                'title' => 'backend.group'
-            ],
-
-            [
-                'name' => '__component:translateBackend_rolesActividad',
-                'title' => 'backend.role'
-            ],
-            [
-                'name' => 'oficina',
-                'sortField' => 'oficina',
-                'title' => 'backend.office'
-            ],
-            // [
-            //     'name' => '__component:inscripciones_aplicadas',
-            //     'sortField' => 'inscripciones_aplicadas',
-            //     'title' => 'Tipo Inscripción'
-            // ],
-            [
-                'name' => '__component:estado_persona',
-                'sortField' => 'estadoPersona',
-                'title' => 'backend.state'
-            ],
-            [
-                'name' => '__component:asistencia',
-                'title' => 'backend.present',
-                'titleClass' => 'text-center',
-                'sortField' => 'presente',
-                'dataClass' => 'text-center'
-            ],
-
         ],
+        'catalogo' => [
+            'datos_generales' => [
+                [
+                    'key' => 'dni',
+                    'name' => 'dni',
+                    'sortField' => 'dni',
+                    'title' => 'backend.dni'
+                ],
+                [
+                    'key' => 'telefonoMovil',
+                    'name' => 'telefonoMovil',
+                    'title' => 'backend.mobile'
+                ],
+                [
+                    'key' => 'mail',
+                    'name' => 'mail',
+                    'sortField' => 'mail',
+                    'title' => 'backend.email'
+                ],
+                [
+                    'key' => 'edad',
+                    'name' => 'fechaNacimiento',
+                    'sortField' => 'fechaNacimiento',
+                    'title' => 'backend.age',
+                    'callback' => 'edad'
+                ],
+                [
+                    'key' => 'genero',
+                    'name' => 'genero',
+                    'sortField' => 'genero',
+                    'title' => 'backend.gender'
+                ],
+                [
+                    'key' => 'pPais',
+                    'name' => 'pPais',
+                    'title' => 'backend.country'
+                ],
+                [
+                    'key' => 'pProvincia',
+                    'name' => 'pProvincia',
+                    'title' => 'backend.province'
+                ],
+                [
+                    'key' => 'pLocalidad',
+                    'name' => 'pLocalidad',
+                    'title' => 'backend.locality'
+                ],
+                [
+                    'key' => 'oficina',
+                    'name' => 'oficina',
+                    'sortField' => 'oficina',
+                    'title' => 'backend.office'
+                ],
+                [
+                    'key' => 'fechaInscripcion',
+                    'name' => 'fechaInscripcion',
+                    'sortField' => 'fechaInscripcion',
+                    'title' => 'backend.registration_date',
+                    'callback' => 'formatDate|DD/MM/YYYY HH:mm'
+                ],
+                [
+                    'key' => 'punto',
+                    'name' => 'punto',
+                    'title' => 'backend.meeting_point'
+                ],
+                [
+                    'key' => 'jornadas',
+                    'name' => 'jornadas',
+                    'title' => 'backend.days'
+                ],
+                [
+                    'key' => 'tipoInscripcion',
+                    'name' => '__component:inscripciones_aplicadas',
+                    'title' => 'backend.inscription_type'
+                ],
+                [
+                    'key' => 'nombreGrupo',
+                    'name' => 'nombreGrupo',
+                    'sortField' => 'nombreGrupo',
+                    'title' => 'backend.group'
+                ],
+                [
+                    'key' => 'rolesActividad',
+                    'name' => '__component:translateBackend_rolesActividad',
+                    'title' => 'backend.role'
+                ],
+                [
+                    'key' => 'estado_persona',
+                    'name' => '__component:estado_persona',
+                    'sortField' => 'estadoPersona',
+                    'title' => 'backend.state'
+                ],
+                [
+                    'key' => 'asistencia',
+                    'name' => '__component:asistencia',
+                    'title' => 'backend.present',
+                    'titleClass' => 'text-center',
+                    'sortField' => 'presente',
+                    'dataClass' => 'text-center'
+                ],
+            ],
+            'ficha_medica' => [
+                [
+                    'key' => 'grupo_sanguinieo',
+                    'name' => 'grupo_sanguinieo',
+                    'title' => 'backend.blood_group'
+                ],
+                [
+                    'key' => 'cobertura_nombre',
+                    'name' => 'cobertura_nombre',
+                    'title' => 'backend.medical_coverage'
+                ],
+                [
+                    'key' => 'cobertura_numero',
+                    'name' => 'cobertura_numero',
+                    'title' => 'backend.medical_coverage_number'
+                ],
+                [
+                    'key' => 'contacto_nombre',
+                    'name' => 'contacto_nombre',
+                    'title' => 'backend.emergency_contact'
+                ],
+                [
+                    'key' => 'contacto_telefono',
+                    'name' => 'contacto_telefono',
+                    'title' => 'backend.emergency_contact_phone'
+                ],
+                [
+                    'key' => 'contacto_relacion',
+                    'name' => 'contacto_relacion',
+                    'title' => 'backend.emergency_contact_relation'
+                ],
+                [
+                    'key' => 'alergias',
+                    'name' => 'alergias',
+                    'title' => 'backend.allergies'
+                ],
+                [
+                    'key' => 'vacunacion_covid',
+                    'name' => 'vacunacion_covid',
+                    'title' => 'backend.covid_vaccination'
+                ],
+                [
+                    'key' => 'alimentacion',
+                    'name' => 'alimentacion',
+                    'title' => 'backend.diet'
+                ],
+            ],
+        ],
+        'defaults' => ['nombreGrupo', 'rolesActividad', 'oficina', 'estado_persona', 'asistencia'],
         'sortOrder' => [
             [
                 'field' => 'fechaInscripcion',
@@ -571,8 +692,9 @@ return [
         ]
     ],
 
+    // Listado con columnas configurables (ver nota en la sección 'inscripciones').
     'integrantes' => [
-        'fields' => [
+        'fijas' => [
             [
                 'name' => 'id',
                 'sortField' => 'idIntegrante',
@@ -583,40 +705,99 @@ return [
                 'sortField' => 'nombre',
                 'title' => 'backend.name'
             ],
-            [
-                'name' => 'despliegue',
-                'sortField' => 'despliegue',
-                'title' => 'backend.deployment'
-            ],
-            [
-                'name' => 'comunidad',
-                'title' => 'backend.community',
-            ],
-            [
-                'name' => 'rol',
-                'sortField' => 'rol',
-                'title' => 'backend.role',
-            ],
-            [
-                'name' => 'relacion',
-                'sortField' => 'relacion',
-                'title' => 'backend.relationship'
-            ],
-            [
-                'name' => '__component:participacion',
-                'title' => 'Semaforo'
-            ],
-            [
-                'name' => 'fechaInicio',
-                'sortField' => 'fechaInicio',
-                'title' => 'backend.start_date'
-            ],
-            [
-                'name' => 'estado',
-                'sortField' => 'estado',
-                'title' => 'backend.state'
+        ],
+        'catalogo' => [
+            'datos_generales' => [
+                [
+                    'key' => 'despliegue',
+                    'name' => 'despliegue',
+                    'sortField' => 'despliegue',
+                    'title' => 'backend.deployment'
+                ],
+                [
+                    'key' => 'comunidad',
+                    'name' => 'comunidad',
+                    'title' => 'backend.community',
+                ],
+                [
+                    'key' => 'rol',
+                    'name' => 'rol',
+                    'sortField' => 'rol',
+                    'title' => 'backend.role',
+                ],
+                [
+                    'key' => 'cargo',
+                    'name' => 'cargo',
+                    'sortField' => 'cargo',
+                    'title' => 'backend.cargo',
+                ],
+                [
+                    'key' => 'relacion',
+                    'name' => 'relacion',
+                    'sortField' => 'relacion',
+                    'title' => 'backend.relationship'
+                ],
+                [
+                    'key' => 'participacion',
+                    'name' => '__component:participacion',
+                    'title' => 'Semaforo'
+                ],
+                [
+                    'key' => 'fechaInicio',
+                    'name' => 'fechaInicio',
+                    'sortField' => 'fechaInicio',
+                    'title' => 'backend.start_date'
+                ],
+                [
+                    'key' => 'fechaFin',
+                    'name' => 'fechaFin',
+                    'sortField' => 'fechaFin',
+                    'title' => 'backend.end_date'
+                ],
+                [
+                    'key' => 'estado',
+                    'name' => 'estado',
+                    'sortField' => 'estado',
+                    'title' => 'backend.state'
+                ],
+                [
+                    'key' => 'descripcion_rol',
+                    'name' => 'descripcion_rol',
+                    'title' => 'backend.role_description'
+                ],
+                [
+                    'key' => 'meta',
+                    'name' => 'meta',
+                    'title' => 'backend.goal'
+                ],
+                [
+                    'key' => 'hitos',
+                    'name' => 'hitos',
+                    'title' => 'backend.milestones'
+                ],
+                [
+                    'key' => 'dia_hora_reunion',
+                    'name' => 'dia_hora_reunion',
+                    'title' => 'backend.meeting_day_and_time'
+                ],
+                [
+                    'key' => 'periodicidad_reunion',
+                    'name' => 'periodicidad_reunion',
+                    'title' => 'backend.meeting_frequency'
+                ],
+                [
+                    'key' => 'impacto',
+                    'name' => 'impacto',
+                    'title' => 'backend.impact'
+                ],
+                [
+                    'key' => 'capacidades',
+                    'name' => 'capacidades',
+                    'title' => 'backend.capabilities'
+                ],
             ],
         ],
+        'defaults' => ['despliegue', 'comunidad', 'rol', 'relacion', 'participacion', 'fechaInicio', 'estado'],
         'sortOrder' => [
             [
                 'field' => 'estado',

@@ -18,6 +18,7 @@ use App\Mail\MailInscripcionFaltaPago;
 use App\Mail\MailVoucherRechazado;
 use App\Persona;
 use App\PuntoEncuentro;
+use App\Services\Listados\EnriquecedorFilas;
 use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -63,6 +64,10 @@ class InscripcionesController extends BaseController
             unset($filtros['condiciones']);
         }
         $result = InscripcionesSearch::query($filtros)->paginate(10);
+
+        // Inyecta respuestas a preguntas (pregunta_{id}) y valores de columnas
+        // de seguimiento (custom_{id}) solo sobre la página actual.
+        (new EnriquecedorFilas)->enriquecer($result->getCollection(), 'inscripciones', $id, $id);
 
         //hack para solucionar problema con vuetable con checkboxes
         // https://github.com/ratiw/vuetable-2/issues/422

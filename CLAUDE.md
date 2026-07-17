@@ -161,6 +161,22 @@ Locales disponibles: `es_AR` (Argentina), `es_CH` (Chile y resto de LatAm), `pt`
 
 ---
 
+## Listados con columnas configurables (backoffice)
+
+Sistema genérico para que cada usuario elija qué columnas ver en un listado (persistido por usuario + listado + contexto) y para que el equipo cree columnas de seguimiento editables inline (tipos: casilla, estado, etiquetas, texto, fecha, persona), compartidas por contexto.
+
+- **Registry**: `config/listados.php` — por `list_key`: clase de catálogo, regla de autorización y validación de pertenencia del registro al contexto.
+- **Catálogos**: `app/Services/Listados/*Catalogo.php` arman los grupos de campos del selector; los campos base viven en `config/datatables.php` (secciones `fijas` / `catalogo` / `defaults` en vez del viejo `fields`).
+- **Datos dinámicos**: `app/Services/Listados/EnriquecedorFilas.php` inyecta `pregunta_{id}` (respuestas) y `custom_{id}` (valores de seguimiento) sobre la página ya paginada. ⚠ Lo que se renderiza vía campos comunes pasa por `v-html` en el wrapper Vuetable → escapar con `e()`.
+- **Endpoints**: `/admin/ajax/listados/{listKey}/{contextId}/...` (`backoffice\ajax\ListadoConfigController`): config, preferencias, CRUD de columnas, upsert de valores.
+- **Tablas**: `listado_preferencias` (unique usuario+list_key+context), `listado_columnas` (definiciones, soft delete, tipo/opciones inmutables), `listado_columna_valores` (unique columna+record; valor vacío borra la fila).
+- **Front**: `resources/js/components/backoffice/datatable/columnas/` (`ColumnSelectorPanel`, `NuevaColumnaModal`, `CeldaSeguimiento`) + mixin `resources/js/mixins/columnasConfigurables.js`. El wrapper `Vuetable.vue` pasa `:field-def` a las celdas componente y re-normaliza los fields cuando cambian.
+- **Instancias**: `inscripciones` (contexto = idActividad) e `integrantes` (contexto = idEquipo). Para sumar un listado (ej. Suscriptos): catálogo nuevo + entrada en el registry + `EnriquecedorFilas` en su index + mixin/panel en su datatable. Nada de lógica duplicada por listado.
+
+El viejo detalle inline del listado de inscripciones (click en fila) fue eliminado; esos datos ahora se agregan como columnas.
+
+---
+
 ## Patrón Search Objects
 
 Los filtros de listados usan un patrón propio en `app/Search/`. Cada clase `*Search` recibe los parámetros de request y aplica filtros encadenados usando clases en `app/Search/filters/`.
@@ -221,7 +237,9 @@ vendor/bin/phpunit
 npm run test
 ```
 
-Los tests PHP usan `DatabaseTestSeeder` y requieren base de datos activa. No hay mocks de BD.
+Los tests PHP usan `RefreshDatabase` + factories (no un seeder) y requieren base de datos activa. No hay mocks de BD.
+
+Para dejar una BD nueva **usable** (instalación o pruebas manuales): `php artisan migrate:fresh && php artisan db:seed --class=DatabaseTestSeeder`. Siembra roles y permisos, países (con los IDs canónicos de producción: 13 = Argentina = `APP_PAIS_DEFAULT`, y los países habilitados con su locale), los home headers (sin el header del país activo toda vista pública da 500), actividades (incluye con pago y sin localidad) y los usuarios `administrador@administrador.com` / `coordinador@coordinador.com` (password = la parte local del mail). El orden importa: los países van antes que cualquier factory, porque los factories crean países fake y el autoincrement pisaría los IDs canónicos.
 
 Deuda conocida: los tests de push notifications (PushNotificationService, comandos cron) están pendientes. Ver `docs/push-notifications.md#deuda-técnica`.
 

@@ -1,0 +1,128 @@
+<?php
+
+namespace App\Services\Listados;
+
+use App\ActividadPregunta;
+use App\InscripcionRespuesta;
+use App\ListadoColumna;
+use App\ListadoColumnaValor;
+use App\Persona;
+use Illuminate\Support\Collection;
+
+/**
+ * Inyecta en las filas ya paginadas de un listado los datos de columnas
+ * dinámicas: respuestas a preguntas de inscripción (pregunta_{id}) y valores
+ * de columnas de seguimiento (custom_{id}).
+ *
+ * Trabaja sobre la página (10-25 filas): 2-4 queries con whereIn, sin tocar
+ * la query principal del listado ni su paginación.
+ *
+ * IMPORTANTE: los valores de texto se escapan con e() porque el wrapper
+ * Vuetable renderiza los campos comunes con v-html, y tanto las respuestas
+ * como los valores de seguimiento los escriben usuarios.
+ */
+class EnriquecedorFilas
+{
+    /**
+     * @param Collection $filas    filas de la página (modelos Eloquent)
+     * @param string     $listKey  key del registry (config/listados.php)
+     * @param int        $contextId
+     * @param int|null   $idActividad para inyectar respuestas de preguntas (solo inscripciones)
+     * @param string     $recordKey  atributo de la fila con la PK del registro
+     */
+    public function enriquecer(Collection $filas, string $listKey, $contextId, $idActividad = null, $recordKey = 'id')
+    {
+        if ($filas->isEmpty()) {
+            return $filas;
+        }
+
+        $ids = $filas->pluck($recordKey);
+
+        if ($idActividad !== null) {
+            $this->inyectarRespuestas($filas, $ids, $idActividad, $recordKey);
+        }
+
+        $this->inyectarValoresSeguimiento($filas, $ids, $listKey, $contextId, $recordKey);
+
+        return $filas;
+    }
+
+    private function inyectarRespuestas(Collection $filas, Collection $ids, $idActividad, $recordKey)
+    {
+        $preguntas = ActividadPregunta::where('actividad_id', $idActividad)->pluck('id');
+        if ($preguntas->isEmpty()) {
+            return;
+        }
+
+        $respuestas = InscripcionRespuesta::whereIn('inscripcion_id', $ids)
+            ->whereIn('pregunta_id', $preguntas)
+            ->get()
+            ->groupBy('inscripcion_id');
+
+        foreach ($filas as $fila) {
+            foreach ($respuestas->get($fila->{$recordKey}, collect()) as $respuesta) {
+                $fila->setAttribute('pregunta_' . $respuesta->pregunta_id, e($respuesta->respuesta));
+            }
+        }
+    }
+
+    private function inyectarValoresSeguimiento(Collection $filas, Collection $ids, $listKey, $contextId, $recordKey)
+    {
+        $columnas = ListadoColumna::where('list_key', $listKey)
+            ->where('context_id', $contextId)
+            ->get();
+        if ($columnas->isEmpty()) {
+            return;
+        }
+
+        $valores = ListadoColumnaValor::whereIn('columna_id', $columnas->pluck('id'))
+            ->whereIn('record_id', $ids)
+            ->get();
+
+        // Las columnas tipo persona guardan idPersona: se resuelve a nombre en un solo query.
+        $idsPersona = $valores->whereIn('columna_id', $columnas->where('tipo', 'persona')->pluck('id'))
+            ->pluck('valor')
+            ->unique()
+            ->filter();
+        $personas = $idsPersona->isEmpty()
+            ? collect()
+            : Persona::whereIn('idPersona', $idsPersona)
+                ->get(['idPersona', 'nombres', 'apellidoPaterno'])
+                ->keyBy('idPersona');
+
+        $porRegistro = $valores->groupBy('record_id');
+        $tipos = $columnas->pluck('tipo', 'id');
+
+        foreach ($filas as $fila) {
+            foreach ($porRegistro->get($fila->{$recordKey}, collect()) as $valor) {
+                $fila->setAttribute(
+                    'custom_' . $valor->columna_id,
+                    $this->presentar($tipos->get($valor->columna_id), $valor->valor, $personas)
+                );
+            }
+        }
+    }
+
+    /**
+     * Forma en que la celda Vue recibe el valor según el tipo. A diferencia de
+     * las respuestas a preguntas (campos comunes, renderizados con v-html),
+     * estos valores solo se muestran dentro del componente celda-seguimiento
+     * con interpolación de Vue, que ya escapa — no se aplica e() para no
+     * double-escapar.
+     */
+    private function presentar($tipo, $valor, Collection $personas)
+    {
+        switch ($tipo) {
+            case 'etiquetas':
+                return json_decode($valor, true) ?: [];
+            case 'persona':
+                $persona = $personas->get($valor);
+                return [
+                    'id' => (int) $valor,
+                    'nombre' => $persona ? trim($persona->nombres . ' ' . $persona->apellidoPaterno) : '',
+                ];
+            default: // casilla, fecha, texto, estado
+                return $valor;
+        }
+    }
+}

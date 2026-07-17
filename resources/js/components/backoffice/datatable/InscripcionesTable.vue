@@ -14,11 +14,9 @@
               :sort-order="dataSortOrder"
               :multi-sort="true"
               :append-params="moreParams"
-              detail-row-component="inscripciones-detail-row"
               @vuetable:pagination-data="onPaginationData"
               @vuetable:checkbox-toggled="checkboxToggledEmitter"
               @vuetable:checkbox-toggled-all="checkboxToggledEmitter"
-              @vuetable:cell-clicked="mostrarDetalle"
       ></vuetable>
     </div>
     <div class="vuetable-pagination">
@@ -46,7 +44,6 @@ import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePagination
 import Vue from 'vue'
 import VueEvents from 'vue-events'
 import CustomActions from './CustomActions'
-import DetailRow from '../actividades/inscripciones-detail-row'
 import InscripcionesFilterBar from './InscripcionesFilterBar'
 import InscripcionesToolbar from '../actividades/inscripciones-toolbar'
 import Pago from './Pago';
@@ -55,11 +52,11 @@ import Confirma from './Confirma';
 import ActualizarInscripcion from './actualizarInscripcion';
 import axios from 'axios';
 import Simplert from 'vue2-simplert';
+import columnasConfigurables from '../../../mixins/columnasConfigurables';
 
 
 Vue.use(VueEvents);
   Vue.component('custom-actions', CustomActions);
-  Vue.component('inscripciones-detail-row', DetailRow);
   Vue.component('inscripciones-filter-bar', InscripcionesFilterBar);
   Vue.component('inscripciones-toolbar', InscripcionesToolbar);
   Vue.component('asistencia', Asistencia);
@@ -69,6 +66,7 @@ Vue.use(VueEvents);
   Vue.component('simple-alert', Simplert);
 
 export default {
+  mixins: [columnasConfigurables],
   components: {
     Vuetable,
     'filter-bar': InscripcionesFilterBar,
@@ -78,6 +76,7 @@ export default {
     props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
     data () {
     return {
+        listadoKey: 'inscripciones',
         dataPlaceholderText: this.placeholderText,
         dataSortOrder: [],
         dataFields: [],
@@ -136,9 +135,6 @@ export default {
     },
     onChangePage (page) {
       this.$refs.inscripcionesVuetable.changePage(page)
-    },
-    mostrarDetalle (data, field, event) {
-      this.$refs.inscripcionesVuetable.toggleDetailRow(data.id)
     },
      // Custom
       axiosPost(url, fCallback, params = []) {
@@ -427,13 +423,5 @@ export default {
 }
 .pagination-info {
   float: left;
-}
-
-.vuetable tr {
-  cursor: pointer;
-}
-
-.vuetable tr td:hover{
-  text-decoration: underline;
 }
 </style>

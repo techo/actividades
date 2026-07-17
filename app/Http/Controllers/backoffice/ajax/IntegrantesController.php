@@ -13,6 +13,7 @@ use App\Http\Requests\Equipo\DeleteIntegrante;
 use App\Http\Requests\Equipo\GetIntegrante;
 use App\Persona;
 use App\Services\ImageUploadService;
+use App\Services\Listados\EnriquecedorFilas;
 use Illuminate\Support\Facades\Storage;
 
 class IntegrantesController extends Controller
@@ -42,6 +43,11 @@ class IntegrantesController extends Controller
         }
 
         $result = IntegrantesSearch::apply($filtros, $sort, $per_page);
+
+        // Inyecta valores de columnas de seguimiento (custom_{id}) en los modelos;
+        // IntegranteResource los expone en el payload.
+        (new EnriquecedorFilas)->enriquecer($result->getCollection(), 'integrantes', $idEquipo, null, 'idIntegrante');
+
         $equipos = IntegranteResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }

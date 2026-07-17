@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CrearActividad;
 use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Pais;
+use App\Services\Listados\InscripcionesCatalogo;
 use App\Services\Push\PushNotificationService;
 use App\Persona;
 use App\PuntoEncuentro;
@@ -236,18 +237,9 @@ class ActividadesController extends Controller
     {
         $actividad = $id;
 
-        $fields = config('datatables.inscripciones.fields');
-
-        if ($actividad->confirmacion == 1) {
-            $checkConfirma = [[ 'name' => '__component:confirma', 'title' => 'Confirma', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
-            array_splice($fields, count($fields) - 1, 0, $checkConfirma);
-        }
-        if ($actividad->pago == 1) {
-            $checkPago = [[ 'name' => '__component:pago', 'title' => 'Pago', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
-            array_splice($fields, count($fields) - 1, 0, $checkPago);
-        }
-
-        $fields = json_encode($fields);
+        // Primer render: fijas + columnas por defecto. La configuración real del
+        // usuario la carga el selector de columnas vía GET ajax/listados/.../config.
+        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
         $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
@@ -266,18 +258,7 @@ class ActividadesController extends Controller
 
     public function confirmarInscripcion(Actividad $actividad, Inscripcion $inscripcion, $idPersona)
     {
-        $fields = config('datatables.inscripciones.fields');
-
-        if ($actividad->confirmacion == 1) {
-            $checkConfirma = [[ 'name' => '__component:confirma', 'title' => 'Confirma', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
-            array_splice($fields, count($fields) - 1, 0, $checkConfirma);
-        }
-        if ($actividad->pago == 1) {
-            $checkPago = [[ 'name' => '__component:pago', 'title' => 'Pago', 'titleClass' => 'text-center', 'dataClass' => 'text-center' ]];
-            array_splice($fields, count($fields) - 1, 0, $checkPago);
-        }
-
-        $fields = json_encode($fields);
+        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
         $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));

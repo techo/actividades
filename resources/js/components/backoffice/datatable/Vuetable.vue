@@ -107,6 +107,7 @@
                   >
                     <component :is="extractArgs(field.name)"
                       :row-data="item" :row-index="itemIndex" :row-field="field.sortField"
+                      :field-def="field"
                     ></component>
                   </td>
                   <td v-if="extractName(field.name) === '__slot'"
@@ -247,6 +248,7 @@
               >
                 <component :is="extractArgs(field.name)"
                   :row-data="item" :row-index="itemIndex" :row-field="field.sortField"
+                  :field-def="field"
                 ></component>
               </td>
               <td v-if="extractName(field.name) === '__slot'"
@@ -625,7 +627,9 @@ export default {
             visible: true,
           }
         } else {
-          obj = {
+          // Object.assign preserva keys extra del fieldDef (ej. columnaMeta,
+          // usada por las celdas de seguimiento vía :field-def).
+          obj = Object.assign({}, field, {
             name: field.name,
             width: field.width,
             title: (field.title === undefined) ? self.setTitle(field.name) : field.title,
@@ -634,7 +638,7 @@ export default {
             dataClass: (field.dataClass === undefined) ? '' : field.dataClass,
             callback: (field.callback === undefined) ? '' : field.callback,
             visible: (field.visible === undefined) ? true : field.visible,
-          }
+          })
         }
         self.tableFields.push(obj)
       })
@@ -1279,6 +1283,11 @@ export default {
     }
   }, // end: methods
   watch: {
+    // Permite reemplazar los fields en runtime (selector de columnas):
+    // sin esto solo se normalizan en mounted y el cambio no re-renderiza.
+    'fields' () {
+      this.normalizeFields()
+    },
     'multiSort' (newVal, oldVal) {
       if (newVal === false && this.sortOrder.length > 1) {
         this.sortOrder.splice(1);

@@ -438,6 +438,18 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');
     Route::get('/actividades/{id}/inscripciones/exportar', 'backoffice\ReportController@exportarInscripcionesActividad')->middleware('can:verInscripciones,App\Inscripcion,id');
+
+    // Listados con columnas configurables (registry: config/listados.php).
+    // La autorización por list_key/context la resuelve el propio controller.
+    Route::prefix('ajax/listados/{listKey}/{contextId}')->group(function () {
+        Route::get('/config', 'backoffice\ajax\ListadoConfigController@config');
+        Route::put('/preferencias', 'backoffice\ajax\ListadoConfigController@guardarPreferencias');
+        Route::post('/columnas', 'backoffice\ajax\ListadoConfigController@crearColumna');
+        Route::put('/columnas/{columnaId}', 'backoffice\ajax\ListadoConfigController@actualizarColumna');
+        Route::delete('/columnas/{columnaId}', 'backoffice\ajax\ListadoConfigController@eliminarColumna');
+        Route::put('/columnas/{columnaId}/valores/{recordId}', 'backoffice\ajax\ListadoConfigController@guardarValor');
+    });
+
     Route::get('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@index')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones', 'backoffice\ajax\InscripcionesController@store')->middleware('can:verInscripciones,App\Inscripcion,id');
 

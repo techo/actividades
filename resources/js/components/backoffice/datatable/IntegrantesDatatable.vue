@@ -4,6 +4,7 @@
     <div v-if="idEquipo" class="row">
       <div class="col-md-12">
           <span class="pull-right">
+              <column-selector-panel list-key="integrantes" :context-id="idEquipo"></column-selector-panel>
               <a class="btn btn-secondary" :href="toggleRoute">
                 {{ toggleLabel }}
               </a>
@@ -44,25 +45,32 @@
 
 <script>
     //https://github.com/ratiw/vuetable-2-tutorial/wiki
-  import Vuetable from 'vuetable-2/src/components/Vuetable'
+  // Wrapper propio (no el vuetable-2 stock): soporta field-def en celdas
+  // componente y re-normaliza los fields cuando cambian en runtime.
+  import Vuetable from './Vuetable'
   import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
   import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
   import Vue from 'vue'
   import VueEvents from 'vue-events'
   import FilterBar from './FilterBar'
+  import ColumnSelectorPanel from './columnas/ColumnSelectorPanel'
+  import columnasConfigurables from '../../../mixins/columnasConfigurables'
 
   Vue.use(VueEvents);
   Vue.component('filter-bar', FilterBar);
 
 export default {
+  mixins: [columnasConfigurables],
   components: {
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
+    'column-selector-panel': ColumnSelectorPanel,
   },
     props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detail-url', 'idEquipo'],
     data () {
     return {
+        listadoKey: 'integrantes',
         dataPlaceholderText: this.placeholderText,
         dataSortOrder: [],
         dataFields: [],

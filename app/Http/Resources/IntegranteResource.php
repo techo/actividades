@@ -14,10 +14,12 @@ class IntegranteResource extends Resource
      */
     public function toArray($request)
     {
-        return [
+        $data = [
             'equipo'          => $this->equipo,
             'nombreEquipo'          => $this->equipo?$this->equipo->nombre:"",
             'idIntegrante' => $this->idIntegrante,
+            // PK genérica: la usan vuetable (track-by) y las celdas de seguimiento.
+            'id' => $this->idIntegrante,
             'nombre' => $this->persona->getNombreCompletoAttribute(),
             'idPersona' => $this->persona->idPersona,
             'rol' => $this->rol,
@@ -38,5 +40,14 @@ class IntegranteResource extends Resource
             'comunidad'          => ($this->comunidad)?$this->comunidad->nombre:'',
             'participacion_status'          => $this->participacion_status,
         ];
+
+        // Valores de columnas de seguimiento inyectados por EnriquecedorFilas.
+        foreach ($this->resource->getAttributes() as $key => $value) {
+            if (strpos($key, 'custom_') === 0) {
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
     }
 }
