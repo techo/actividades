@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\ActividadFactory;
+use App\Donation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -127,5 +128,119 @@ class StripeWebhookWebTest extends TestCase
         $event = ['id' => 'evt_1', 'type' => 'checkout.session.completed', 'data' => ['object' => []]];
 
         $this->postWebhook(999999, $event)->assertStatus(404);
+    }
+
+    // =========================================================================
+    // Tarea #30 — Confirmación del flujo mobile: payment_intent.succeeded/failed.
+    // El pago mobile crea un PI (InscripcionStripeController) y se confirma por
+    // este webhook, no por checkout.session.completed.
+    // =========================================================================
+
+    /** Arma una inscripción impaga con su Donation pendiente vinculada al PI. */
+    private function inscripcionConPiPendiente($pais, $piId, array $actividadExtra = [])
+    {
+        $persona   = factory('App\Persona')->create();
+        $actividad = app(ActividadFactory::class)->conPais($pais->id)->agregarPuntoConInscriptos(0)->create($actividadExtra);
+        $inscripcion = factory('App\Inscripcion')->create([
+            'idActividad'              => $actividad->idActividad,
+            'idPuntoEncuentro'         => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idPersona'                => $persona->idPersona,
+            'pago'                     => 0,
+            'stripe_payment_intent_id' => $piId,
+        ]);
+        $donation = Donation::create([
+            'person_id'                => $persona->idPersona,
+            'inscripcion_id'           => $inscripcion->idInscripcion,
+            'stripe_payment_intent_id' => $piId,
+            'amount'                   => 10000,
+            'currency'                 => 'ars',
+            'mode'                     => 'one_time',
+            'status'                   => Donation::STATUS_PENDING,
+            'source'                   => 'inscripcion',
+            'idempotency_key'          => 'idem-' . $piId,
+        ]);
+
+        return [$inscripcion, $donation];
+    }
+
+    private function piEvent($type, $piId, array $extra = [])
+    {
+        return [
+            'id'   => 'evt_' . $piId,
+            'type' => $type,
+            'data' => ['object' => array_merge([
+                'id'              => $piId,
+                'object'          => 'payment_intent',
+                'amount_received' => 10000,
+                'currency'        => 'ars',
+                'metadata'        => [], // lo completa cada test
+            ], $extra)],
+        ];
+    }
+
+    /** @test */
+    public function payment_intent_succeeded_marca_la_inscripcion_pagada_y_confirma_la_donation()
+    {
+        Mail::fake();
+        $pais = $this->paisConStripe();
+        [$inscripcion, $donation] = $this->inscripcionConPiPendiente($pais, 'pi_ok_1');
+
+        $event = $this->piEvent('payment_intent.succeeded', 'pi_ok_1', [
+            'metadata' => ['inscripcion_id' => $inscripcion->idInscripcion],
+        ]);
+
+        $this->postWebhook($pais->id, $event)->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', [
+            'idInscripcion' => $inscripcion->idInscripcion,
+            'pago'          => 1,
+            'metodo_pago'   => 'stripe_api',
+        ]);
+        $this->assertDatabaseHas('donations', [
+            'id'     => $donation->id,
+            'status' => Donation::STATUS_SUCCEEDED,
+        ]);
+    }
+
+    /** @test */
+    public function payment_intent_succeeded_es_idempotente()
+    {
+        Mail::fake();
+        $pais = $this->paisConStripe();
+        [$inscripcion] = $this->inscripcionConPiPendiente($pais, 'pi_ok_2');
+        // Ya procesada por el mismo método.
+        $inscripcion->update(['pago' => 1, 'metodo_pago' => 'stripe_api']);
+
+        $event = $this->piEvent('payment_intent.succeeded', 'pi_ok_2', [
+            'metadata' => ['inscripcion_id' => $inscripcion->idInscripcion],
+        ]);
+
+        $this->postWebhook($pais->id, $event)->assertStatus(200);
+
+        // No se reenvía el mail de confirmación en la segunda pasada.
+        Mail::assertNothingQueued();
+    }
+
+    /** @test */
+    public function payment_intent_payment_failed_marca_la_donation_como_failed()
+    {
+        $pais = $this->paisConStripe();
+        [$inscripcion, $donation] = $this->inscripcionConPiPendiente($pais, 'pi_fail_1');
+
+        $event = $this->piEvent('payment_intent.payment_failed', 'pi_fail_1', [
+            'metadata' => ['inscripcion_id' => $inscripcion->idInscripcion],
+        ]);
+
+        $this->postWebhook($pais->id, $event)->assertStatus(200);
+
+        $this->assertDatabaseHas('donations', [
+            'id'     => $donation->id,
+            'status' => Donation::STATUS_FAILED,
+        ]);
+        // El pago rechazado NO marca la inscripción como pagada.
+        $this->assertDatabaseHas('Inscripcion', [
+            'idInscripcion' => $inscripcion->idInscripcion,
+            'pago'          => 0,
+        ]);
     }
 }

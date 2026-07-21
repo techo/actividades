@@ -516,13 +516,13 @@
       "group": "etapa1-estabilizacion",
       "name": "cobertura_flujos_dinero_stripe",
       "title": "Tests de los flujos de cobro Stripe (web checkout + mobile)",
-      "description": "StripeController (checkout web) e InscripcionStripeController/StripePaymentService (pago mobile) no tienen ni un test. Son los flujos donde un bug cuesta dinero real. La regresión de PayU ya existe (InscripcionesConPagoTest).",
+      "description": "StripeController (checkout web) e InscripcionStripeController/StripePaymentService (pago mobile) no tienen ni un test. Son los flujos donde un bug cuesta dinero real. La regresión de PayU ya existe (InscripcionesConPagoTest). HECHO 2026-07-15: 15 tests nuevos — StripeCheckoutWebTest (checkout web), InscripcionStripeApiTest (PI mobile), y payment_intent.succeeded/failed agregados a StripeWebhookWebTest. HTTP client falso de Stripe inyectado vía tests/Support/FakeStripeHttpClient + trait tests/Concerns/FakesStripe (sin red). Suite 182/182 verde.",
       "acceptance": [
         "Tests de creación de checkout/PaymentIntent y de webhook de confirmación para ambos flujos",
         "Casos de firma inválida / pago rechazado cubiertos"
       ],
       "risk": "medium",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 31,
