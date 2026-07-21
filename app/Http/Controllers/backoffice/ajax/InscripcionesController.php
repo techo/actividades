@@ -67,7 +67,11 @@ class InscripcionesController extends BaseController
 
         // Inyecta respuestas a preguntas (pregunta_{id}) y valores de columnas
         // de seguimiento (custom_{id}) solo sobre la página actual.
-        (new EnriquecedorFilas)->enriquecer($result->getCollection(), 'inscripciones', $id, $id);
+        $enriquecedor = new EnriquecedorFilas;
+        $enriquecedor->enriquecer($result->getCollection(), 'inscripciones', $id, $id);
+        // Métricas por voluntario para las columnas opcionales (participaciones,
+        // nivel, evaluación general).
+        $enriquecedor->inyectarMetricasVoluntario($result->getCollection(), 'idPersona');
 
         //hack para solucionar problema con vuetable con checkboxes
         // https://github.com/ratiw/vuetable-2/issues/422
@@ -303,6 +307,35 @@ class InscripcionesController extends BaseController
         }
 
         return response()->json(['mensaje' => 'Comprobante rechazado y usuario notificado.'], 200);
+    }
+
+    public function rechazarDocumento(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'motivo'        => 'nullable|string|max:1000',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        // La ficha médica es por persona: el rechazo del documento aplica a la
+        // persona en todas sus actividades.
+        $ficha = \App\FichaMedica::where('idPersona', $inscripcion->idPersona)->firstOrFail();
+
+        $motivo = $request->input('motivo');
+        $ficha->documento_rechazado = true;
+        $ficha->documento_rechazo_motivo = $motivo;
+        $ficha->save();
+
+        try {
+            Mail::to($inscripcion->persona->mail)->send(new \App\Mail\MailDocumentoRechazado($inscripcion, $motivo));
+        } catch (\Exception $e) {
+            \Log::warning('No se pudo enviar mail de rechazo de documento: ' . $e->getMessage());
+        }
+
+        return response()->json(['mensaje' => 'Documento rechazado y usuario notificado.'], 200);
     }
 
     public function cambiarAsistencia(CrearInscripcion $request, $id)

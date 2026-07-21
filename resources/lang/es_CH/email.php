@@ -111,4 +111,12 @@ return [
 	'voucher_rechazado_instruccion'  => 'Por favor, ingresa al sistema y sube un nuevo comprobante para continuar con tu inscripción.',
 	'voucher_rechazado_link'         => 'Subir nuevo comprobante',
 
+
+    'documento_rechazado_subject'      => 'Documento de identidad rechazado —',
+    'documento_rechazado_intro'        => 'Revisamos el documento de identidad que subiste y no pudo ser aceptado para la actividad',
+    'documento_rechazado_estado'       => 'Tu documento de identidad fue rechazado.',
+    'documento_rechazado_motivo_label' => 'Motivo',
+    'documento_rechazado_instruccion'  => 'Por favor ingresá y volvé a subir tu documento (frente y dorso) para continuar.',
+    'documento_rechazado_link'         => 'Volver a subir el documento',
+
 ];

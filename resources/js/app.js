@@ -17,6 +17,9 @@ import ColumnSelectorPanel from './components/backoffice/datatable/columnas/Colu
 import CeldaSeguimiento from './components/backoffice/datatable/columnas/CeldaSeguimiento'
 import CeldaVoucher from './components/backoffice/datatable/columnas/CeldaVoucher'
 import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
+import CeldaWhatsapp from './components/backoffice/datatable/columnas/CeldaWhatsapp'
+import CeldaNivel from './components/backoffice/datatable/columnas/CeldaNivel'
+import CeldaDocumento from './components/backoffice/datatable/columnas/CeldaDocumento'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
@@ -199,6 +202,9 @@ Vue.component('celda-seguimiento', CeldaSeguimiento);
 // resueltas por nombre desde los fields (__component:celda-voucher / celda-beca).
 Vue.component('celda-voucher', CeldaVoucher);
 Vue.component('celda-beca', CeldaBeca);
+Vue.component('celda-whatsapp', CeldaWhatsapp);
+Vue.component('celda-nivel', CeldaNivel);
+Vue.component('celda-documento', CeldaDocumento);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);

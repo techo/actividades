@@ -505,6 +505,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/actividades/{id}/inscripciones/cambiar/asistencia', 'backoffice\ajax\InscripcionesController@cambiarAsistencia')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/rechazar/voucher', 'backoffice\ajax\InscripcionesController@rechazarVoucher')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::post('/ajax/actividades/{id}/inscripciones/rechazar/documento', 'backoffice\ajax\InscripcionesController@rechazarDocumento')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
 

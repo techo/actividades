@@ -8,6 +8,7 @@ use App\ListadoColumna;
 use App\ListadoColumnaValor;
 use App\Persona;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Inyecta en las filas ya paginadas de un listado los datos de columnas
@@ -43,6 +44,53 @@ class EnriquecedorFilas
         }
 
         $this->inyectarValoresSeguimiento($filas, $ids, $listKey, $contextId, $recordKey);
+
+        return $filas;
+    }
+
+    /**
+     * Métricas del voluntario por persona (historial completo), para las
+     * columnas opcionales de inscripciones. Dos queries agregadas sobre las
+     * personas de la página (sin N+1):
+     *  - participaciones: cantidad de actividades donde estuvo PRESENTE
+     *    (definición canónica: participación = presencia). El "nivel"
+     *    (Rookie/Champion/Guardian) lo deriva la celda desde este número.
+     *  - evaluacion_general: promedio histórico de los puntajes de competencia
+     *    que la persona RECIBIÓ (evaluacion_persona_respuestas.score).
+     */
+    public function inyectarMetricasVoluntario(Collection $filas, $personaKey = 'idPersona')
+    {
+        if ($filas->isEmpty()) {
+            return $filas;
+        }
+
+        $idsPersona = $filas->pluck($personaKey)->filter()->unique();
+        if ($idsPersona->isEmpty()) {
+            return $filas;
+        }
+
+        $participaciones = DB::table('Inscripcion')
+            ->select('idPersona', DB::raw('COUNT(*) as total'))
+            ->where('presente', 1)
+            ->whereNull('deleted_at')
+            ->whereIn('idPersona', $idsPersona)
+            ->groupBy('idPersona')
+            ->pluck('total', 'idPersona');
+
+        $evaluaciones = DB::table('EvaluacionPersona')
+            ->join('evaluacion_persona_respuestas', 'evaluacion_persona_respuestas.idEvaluacionPersona', '=', 'EvaluacionPersona.idEvaluacionPersona')
+            ->select('EvaluacionPersona.idEvaluado', DB::raw('AVG(evaluacion_persona_respuestas.score) as promedio'))
+            ->whereIn('EvaluacionPersona.idEvaluado', $idsPersona)
+            ->whereNotNull('evaluacion_persona_respuestas.score')
+            ->groupBy('EvaluacionPersona.idEvaluado')
+            ->pluck('promedio', 'idEvaluado');
+
+        foreach ($filas as $fila) {
+            $idPersona = $fila->{$personaKey};
+            $fila->setAttribute('participaciones', (int) $participaciones->get($idPersona, 0));
+            $promedio = $evaluaciones->get($idPersona);
+            $fila->setAttribute('evaluacion_general', $promedio !== null ? round($promedio, 1) : null);
+        }
 
         return $filas;
     }
