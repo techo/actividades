@@ -70,35 +70,25 @@
             @change="guardar($event.target.value || null)"
         >
 
-        <!-- persona -->
-        <select
+        <!-- persona: buscador con typeahead sobre personas del país -->
+        <v-select
             v-else-if="tipo === 'persona'"
-            class="form-control input-sm"
+            class="celda-seguimiento__persona"
+            :options="personas"
+            :value="valorSelect"
+            label="nombre"
+            :filterable="false"
             :disabled="guardando"
-            @focus="cargarCoordinadores"
-            @change="guardar($event.target.value || null)"
+            @search="onSearch"
+            @input="onSelectPersona"
         >
-            <option value="" :selected="!persona.id"></option>
-            <option
-                v-if="persona.id && !coordinadores.length"
-                :value="persona.id"
-                selected
-            >{{ persona.nombre }}</option>
-            <option
-                v-for="coordinador in coordinadores"
-                :key="coordinador.idPersona"
-                :value="coordinador.idPersona"
-                :selected="coordinador.idPersona === persona.id"
-            >{{ coordinador.nombre }}</option>
-        </select>
+            <template slot="no-options">{{ $t('backend.enter_name_lastname_or_dni') }}</template>
+        </v-select>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
-
-// caché a nivel módulo: un solo GET /ajax/coordinadores por página
-let coordinadoresCache = null
 
 export default {
     name: 'celda-seguimiento',
@@ -114,7 +104,8 @@ export default {
             abierto: false,
             editando: false,
             borrador: '',
-            coordinadores: [],
+            personas: [],       // resultados del buscador (persona)
+            _buscarTimer: null,
         }
     },
     computed: {
@@ -132,6 +123,10 @@ export default {
         },
         persona() {
             return this.valor && typeof this.valor === 'object' ? this.valor : {}
+        },
+        // Opción seleccionada del v-select (label="nombre").
+        valorSelect() {
+            return this.persona.id ? { idPersona: this.persona.id, nombre: this.persona.nombre } : null
         },
     },
     created() {
@@ -166,10 +161,28 @@ export default {
             if (nuevoValor === null) return null
             if (this.tipo === 'etiquetas') return nuevoValor
             if (this.tipo === 'persona') {
-                const coordinador = this.coordinadores.find(c => c.idPersona == nuevoValor)
-                return { id: parseInt(nuevoValor, 10), nombre: coordinador ? coordinador.nombre : '' }
+                return { id: parseInt(nuevoValor, 10), nombre: this._personaNombre || '' }
             }
             return nuevoValor
+        },
+        // Buscador de personas del país: mismo patrón que el modal de inscribir.
+        // El scope por país lo garantiza CoordinadoresSearch en el backend.
+        onSearch(texto, loading) {
+            if (!texto || texto.length <= 3) return
+            loading(true)
+            clearTimeout(this._buscarTimer)
+            this._buscarTimer = setTimeout(() => {
+                axios.get('/ajax/coordinadores?coordinador=' + encodeURIComponent(texto))
+                    .then(({ data }) => {
+                        this.personas = data.data || data
+                        loading(false)
+                    })
+                    .catch(() => loading(false))
+            }, 400)
+        },
+        onSelectPersona(opcion) {
+            this._personaNombre = opcion ? opcion.nombre : ''
+            this.guardar(opcion ? opcion.idPersona : null)
         },
         toggleEtiqueta(opcion) {
             const nuevas = this.etiquetas.includes(opcion)
@@ -189,16 +202,6 @@ export default {
             if (texto === (this.valor || '')) return
             this.guardar(texto || null)
         },
-        cargarCoordinadores() {
-            if (coordinadoresCache) {
-                this.coordinadores = coordinadoresCache
-                return
-            }
-            axios.get('/ajax/coordinadores').then(({ data }) => {
-                coordinadoresCache = data.data || data
-                this.coordinadores = coordinadoresCache
-            })
-        },
     },
 }
 </script>
@@ -214,5 +217,8 @@ export default {
 .celda-seguimiento .dropdown-menu input[type='checkbox'] {
     margin-right: 6px;
     pointer-events: none;
+}
+.celda-seguimiento__persona {
+    min-width: 200px;
 }
 </style>

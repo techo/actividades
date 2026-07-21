@@ -15,6 +15,8 @@ import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import ColumnSelectorPanel from './components/backoffice/datatable/columnas/ColumnSelectorPanel'
 import CeldaSeguimiento from './components/backoffice/datatable/columnas/CeldaSeguimiento'
+import CeldaVoucher from './components/backoffice/datatable/columnas/CeldaVoucher'
+import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
@@ -193,6 +195,10 @@ Vue.component('inscripciones-table', InscripcionesTable);
 // la celda se resuelve por nombre desde los fields (__component:celda-seguimiento).
 Vue.component('column-selector-panel', ColumnSelectorPanel);
 Vue.component('celda-seguimiento', CeldaSeguimiento);
+// Celdas de solo lectura para columnas de inscripciones (voucher / beca-exención),
+// resueltas por nombre desde los fields (__component:celda-voucher / celda-beca).
+Vue.component('celda-voucher', CeldaVoucher);
+Vue.component('celda-beca', CeldaBeca);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);

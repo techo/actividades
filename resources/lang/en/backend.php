@@ -756,4 +756,22 @@ return [
     'error' => 'An error occurred',
 
     'capabilities' => 'Capabilities',
+
+    // Columnas voucher / beca-exención + buscador de persona
+    'view_voucher' => 'View voucher',
+    'voucher_column' => 'Payment voucher',
+    'scholarship_column' => 'Scholarship / Exemption',
+    'requested' => 'Requested',
+    'view_evidence' => 'View documentation',
+    'rejected' => 'Rejected',
+    'reject_voucher' => 'Reject voucher',
+    'reject_voucher_title' => 'Reject payment voucher',
+    'reject_voucher_help' => 'The volunteer will be notified by email and can upload a new voucher.',
+    'reason_optional' => 'Reason (optional)',
+    'reject_voucher_placeholder' => 'E.g.: The image is not legible, amount is missing...',
+    'sending' => 'Sending...',
+    'reject_and_notify' => 'Reject and notify',
+    'voucher_rejected_ok' => 'Voucher rejected and user notified.',
+    'search_person' => 'Search person...',
+
 ];
