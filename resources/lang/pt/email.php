@@ -106,4 +106,12 @@ return [
     'voucher_rechazado_instruccion'  => 'Por favor, acesse o sistema e envie um novo comprovante para continuar com sua inscrição.',
     'voucher_rechazado_link'         => 'Enviar novo comprovante',
 
+
+    'documento_rechazado_subject'      => 'Documento de identidade rejeitado —',
+    'documento_rechazado_intro'        => 'Revisamos o documento de identidade que você enviou e não pôde ser aceito para a atividade',
+    'documento_rechazado_estado'       => 'Seu documento de identidade foi rejeitado.',
+    'documento_rechazado_motivo_label' => 'Motivo',
+    'documento_rechazado_instruccion'  => 'Por favor, acesse e envie novamente seu documento (frente e verso) para continuar.',
+    'documento_rechazado_link'         => 'Enviar documento novamente',
+
 ];

@@ -238,6 +238,11 @@ return [
                     'title' => 'backend.mobile'
                 ],
                 [
+                    'key' => 'whatsapp',
+                    'name' => '__component:celda-whatsapp',
+                    'title' => 'backend.whatsapp'
+                ],
+                [
                     'key' => 'mail',
                     'name' => 'mail',
                     'sortField' => 'mail',
@@ -324,8 +329,32 @@ return [
                     'sortField' => 'presente',
                     'dataClass' => 'text-center'
                 ],
+                [
+                    'key' => 'participaciones',
+                    'name' => 'participaciones',
+                    'title' => 'backend.participations',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ],
+                [
+                    'key' => 'nivel',
+                    'name' => '__component:celda-nivel',
+                    'title' => 'backend.volunteer_level'
+                ],
+                [
+                    'key' => 'evaluacion_general',
+                    'name' => 'evaluacion_general',
+                    'title' => 'backend.general_evaluation',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ],
             ],
             'ficha_medica' => [
+                [
+                    'key' => 'documento',
+                    'name' => '__component:celda-documento',
+                    'title' => 'backend.id_document'
+                ],
                 [
                     'key' => 'grupo_sanguinieo',
                     'name' => 'grupo_sanguinieo',

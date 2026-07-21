@@ -90,6 +90,8 @@ class InscripcionesSearch
                     'ficha.archivo_medico',
                     'ficha.documento_frente',
                     'ficha.documento_dorso',
+                    'ficha.documento_rechazado',
+                    'ficha.documento_rechazo_motivo',
                     'personaPais.nombre as pPais',
                     'personaProvincia.provincia as pProvincia',
                     'personaLocalidad.localidad as pLocalidad',

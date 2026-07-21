@@ -105,4 +105,12 @@ return [
 	'voucher_rechazado_instruccion'  => 'Please log in and upload a new proof of payment to continue with your registration.',
 	'voucher_rechazado_link'         => 'Upload new proof of payment',
 
+
+    'documento_rechazado_subject'      => 'ID document rejected —',
+    'documento_rechazado_intro'        => 'We reviewed the ID document you uploaded and it was not accepted for the activity',
+    'documento_rechazado_estado'       => 'Your ID document was rejected.',
+    'documento_rechazado_motivo_label' => 'Reason',
+    'documento_rechazado_instruccion'  => 'Please log in and upload your ID document (front and back) again to continue.',
+    'documento_rechazado_link'         => 'Upload ID document again',
+
 ];

@@ -774,4 +774,21 @@ return [
     'voucher_rejected_ok' => 'Voucher rejected and user notified.',
     'search_person' => 'Search person...',
 
+
+    // Columnas: whatsapp, nivel, evaluación, ID/documento
+    'whatsapp' => 'WhatsApp',
+    'participations' => 'Participations',
+    'volunteer_level' => 'Level',
+    'level_rookie' => 'Rookie',
+    'level_champion' => 'Champion',
+    'level_guardian' => 'Guardian',
+    'general_evaluation' => 'General evaluation',
+    'id_document' => 'ID / Document',
+    'front' => 'Front',
+    'back' => 'Back',
+    'reject_document' => 'Reject document',
+    'reject_document_title' => 'Reject ID document',
+    'reject_document_help' => 'The volunteer will be notified by email and can upload the document again.',
+    'reject_document_placeholder' => 'E.g.: The image is not legible, the name doesn\'t match...',
+    'document_rejected_ok' => 'Document rejected and user notified.',
 ];
