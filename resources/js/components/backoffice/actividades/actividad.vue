@@ -1694,8 +1694,14 @@
 
 /* ── Confirmación y Pago: selector de modo ─────────────── */
 .modo-cards {
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 8px;
     margin-bottom: 8px;
+}
+/* Cada columna como flex-container para que la tarjeta estire a la altura de la fila */
+.modo-cards > [class*="col-"] {
+    display: flex;
 }
 .modo-card {
     display: flex;

@@ -49,19 +49,32 @@ class EnriquecedorFilas
 
     private function inyectarRespuestas(Collection $filas, Collection $ids, $idActividad, $recordKey)
     {
-        $preguntas = ActividadPregunta::where('actividad_id', $idActividad)->pluck('id');
+        $preguntas = ActividadPregunta::where('actividad_id', $idActividad)->get(['id', 'tipo']);
         if ($preguntas->isEmpty()) {
             return;
         }
 
+        $tipos = $preguntas->pluck('tipo', 'id');
+
         $respuestas = InscripcionRespuesta::whereIn('inscripcion_id', $ids)
-            ->whereIn('pregunta_id', $preguntas)
+            ->whereIn('pregunta_id', $preguntas->pluck('id'))
             ->get()
             ->groupBy('inscripcion_id');
 
         foreach ($filas as $fila) {
             foreach ($respuestas->get($fila->{$recordKey}, collect()) as $respuesta) {
-                $fila->setAttribute('pregunta_' . $respuesta->pregunta_id, e($respuesta->respuesta));
+                // Las preguntas tipo 'archivo' guardan el path privado del archivo:
+                // se renderiza como link a la descarga autenticada, no como texto.
+                if ($tipos->get($respuesta->pregunta_id) === 'archivo') {
+                    $valor = $respuesta->respuesta
+                        ? '<a href="' . e(url('/admin/actividades/' . $idActividad . '/respuesta/' . $respuesta->id . '/archivo'))
+                            . '" target="_blank" rel="noopener">' . e(__('backend.ver_archivo')) . '</a>'
+                        : '';
+                } else {
+                    $valor = e($respuesta->respuesta);
+                }
+
+                $fila->setAttribute('pregunta_' . $respuesta->pregunta_id, $valor);
             }
         }
     }

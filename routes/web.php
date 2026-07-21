@@ -172,6 +172,10 @@ Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago
 Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
 Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
 
+// Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
+Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
+    ->middleware('requiere.auth');
+
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
@@ -225,6 +229,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{id}/preguntas', 'backoffice\CampanasController@preguntas');
         Route::get('/{id}/suscriptos', 'backoffice\CampanasController@suscriptos');
         Route::get('/{id}/exportar', 'backoffice\CampanasController@exportar');
+        // Descarga del archivo de una respuesta (pregunta tipo 'archivo') de la campaña.
+        Route::get('/{id}/suscripcion-respuesta/{respuesta}/archivo', 'backoffice\ArchivoRespuestaController@campana');
         Route::get('/{id}', 'backoffice\CampanasController@show');
     });
     Route::prefix('ajax/campanas')->middleware(['role:admin'])->group(function () {
@@ -394,6 +400,10 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades/{id}', 'backoffice\ActividadesController@show')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/puntos', 'backoffice\ActividadesController@puntos')->middleware('can:ver,App\Actividad,id');
     Route::get('/actividades/{id}/inscripciones', 'backoffice\ActividadesController@inscripciones')->middleware('can:ver,App\Actividad,id');
+
+    // Descarga del archivo de una respuesta (pregunta tipo 'archivo') de la actividad.
+    Route::get('/actividades/{id}/respuesta/{respuesta}/archivo', 'backoffice\ArchivoRespuestaController@inscripcion')
+        ->middleware('can:ver,App\Actividad,id');
 
     Route::prefix('/actividades/{id}/informe_cierre')->middleware(['role:admin'])->group(function() {
         Route::get('', 'backoffice\ActividadInformeCierreController@index');
@@ -654,6 +664,11 @@ Route::get('/autotest', 'PerfilController@quiz_techero');
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
     Route::get('/suscribe', 'SuscribeController@get');
     Route::post('/suscribe', 'SuscribeController@create');
+    // Upload de archivo de una respuesta a pregunta tipo 'archivo' (campaña).
+    // Público, igual que el submit de suscripción anónima; con throttle porque
+    // no exige autenticación.
+    Route::post('/suscribe/pregunta-archivo', 'ajax\PreguntaArchivoController@campana')
+        ->middleware('throttle:30,1');
     Route::get('/check-email', 'SuscribeController@checkEmail');
     Route::get('/filtro', 'ActividadesController@index');
     Route::get('/', 'HomeController@index');

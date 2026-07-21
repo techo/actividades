@@ -78,13 +78,23 @@ class CampanaSuscriptosExport implements FromCollection, WithHeadings, WithMappi
 
         $respuestasPorPregunta = [];
         foreach ($suscripto->respuestas as $respuesta) {
-            $respuestasPorPregunta[$respuesta->pregunta_id] = $respuesta->respuesta;
+            $respuestasPorPregunta[$respuesta->pregunta_id] = $respuesta;
         }
 
         foreach ($this->preguntas as $pregunta) {
-            $row[] = isset($respuestasPorPregunta[$pregunta->id])
+            $respuesta = isset($respuestasPorPregunta[$pregunta->id])
                 ? $respuestasPorPregunta[$pregunta->id]
                 : null;
+
+            if (!$respuesta || $respuesta->respuesta === null || $respuesta->respuesta === '') {
+                $row[] = null;
+            } elseif ($pregunta->tipo === 'archivo') {
+                // Archivo privado: se exporta el link de descarga autenticada.
+                $row[] = url('/admin/campanas/' . $this->campana->id
+                    . '/suscripcion-respuesta/' . $respuesta->id . '/archivo');
+            } else {
+                $row[] = $respuesta->respuesta;
+            }
         }
 
         return $row;

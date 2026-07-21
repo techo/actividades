@@ -15,7 +15,15 @@
                     <tbody>
                         <tr v-for="respuesta in rowData.respuestas" :key="respuesta.id">
                             <td>{{ respuesta.pregunta ? respuesta.pregunta.pregunta : '-' }}</td>
-                            <td>{{ respuesta.respuesta || '-' }}</td>
+                            <td>
+                                <a
+                                    v-if="esArchivo(respuesta) && respuesta.respuesta"
+                                    :href="urlArchivo(respuesta)"
+                                    target="_blank"
+                                    rel="noopener"
+                                >{{ $t('backend.ver_archivo') }}</a>
+                                <span v-else>{{ respuesta.respuesta || '-' }}</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -38,6 +46,15 @@ export default {
         },
         rowIndex: {
             type: Number,
+        },
+    },
+    methods: {
+        esArchivo(respuesta) {
+            return respuesta.pregunta && respuesta.pregunta.tipo === 'archivo';
+        },
+        urlArchivo(respuesta) {
+            return '/admin/campanas/' + this.rowData.campaign_id
+                + '/suscripcion-respuesta/' + respuesta.id + '/archivo';
         },
     },
 };

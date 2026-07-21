@@ -38,6 +38,7 @@
                                     <select v-model="form.tipo" class="form-control">
                                         <option value="abierta">{{ $t('backend.tipo_abierta') }}</option>
                                         <option value="desplegable">{{ $t('backend.tipo_desplegable') }}</option>
+                                        <option value="archivo">{{ $t('backend.tipo_archivo') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -185,7 +186,7 @@
                                         {{ resumenCondicion(pregunta) }}
                                     </small>
                                 </td>
-                                <td>{{ pregunta.tipo === 'desplegable' ? $t('backend.tipo_desplegable') : $t('backend.tipo_abierta') }}</td>
+                                <td>{{ tipoLabel(pregunta.tipo) }}</td>
                                 <td>
                                     <i :class="pregunta.requerida ? 'fa fa-check text-success' : 'fa fa-times text-muted'"></i>
                                 </td>
@@ -267,6 +268,11 @@ export default {
         this.cargarPreguntas();
     },
     methods: {
+        tipoLabel(tipo) {
+            if (tipo === 'desplegable') return this.$t('backend.tipo_desplegable');
+            if (tipo === 'archivo') return this.$t('backend.tipo_archivo');
+            return this.$t('backend.tipo_abierta');
+        },
         formVacio() {
             return {
                 id: null,

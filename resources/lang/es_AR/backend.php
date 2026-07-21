@@ -661,6 +661,8 @@ return [
     'tipo'                  => 'Tipo',
     'tipo_abierta'          => 'Campo abierto',
     'tipo_desplegable'      => 'Desplegable',
+    'tipo_archivo'          => 'Subir archivo',
+    'ver_archivo'           => 'Ver archivo',
     'opciones'              => 'Opciones',
     'opciones_placeholder'  => 'Escribí una opción y presioná Enter',
     'opciones_ayuda'        => 'Presioná Enter o coma para agregar cada opción.',

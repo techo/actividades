@@ -170,7 +170,16 @@ class InscripcionesExport implements FromCollection, WithHeadings, WithColumnFor
             $respuesta = isset($this->respuestasMap[$query->id])
                 ? $this->respuestasMap[$query->id]->firstWhere('pregunta_id', $pregunta->id)
                 : null;
-            $row[] = $respuesta ? $respuesta->respuesta : '';
+
+            if (!$respuesta || $respuesta->respuesta === null || $respuesta->respuesta === '') {
+                $row[] = '';
+            } elseif ($pregunta->tipo === 'archivo') {
+                // Archivo privado: se exporta el link de descarga autenticada.
+                $row[] = url('/admin/actividades/' . $this->filter['idActividad']
+                    . '/respuesta/' . $respuesta->id . '/archivo');
+            } else {
+                $row[] = $respuesta->respuesta;
+            }
         }
 
         return $row;

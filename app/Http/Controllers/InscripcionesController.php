@@ -426,11 +426,27 @@ class InscripcionesController extends BaseController
         $visibles = array_flip(
             \App\Services\Preguntas\ConditionEvaluator::visibleIds($preguntas, $map)
         );
+        $tipos = $preguntas->pluck('tipo', 'id');
 
         foreach ($respuestas as $respuesta) {
             if (!isset($respuesta['pregunta_id'])) continue;
             // Descartar respuestas de preguntas ocultas por condición.
             if (!isset($visibles[$respuesta['pregunta_id']])) continue;
+
+            $valor = $respuesta['respuesta'] ?? null;
+
+            $existente = InscripcionRespuesta::where('inscripcion_id', $inscripcion->idInscripcion)
+                ->where('pregunta_id', $respuesta['pregunta_id'])
+                ->first();
+
+            // Si es una pregunta tipo 'archivo' y se reemplaza el archivo,
+            // borrar el anterior del disco privado para no dejarlo huérfano.
+            if ($tipos->get($respuesta['pregunta_id']) === 'archivo'
+                && $existente && $existente->respuesta
+                && $existente->respuesta !== $valor
+                && \Illuminate\Support\Facades\Storage::exists($existente->respuesta)) {
+                \Illuminate\Support\Facades\Storage::delete($existente->respuesta);
+            }
 
             InscripcionRespuesta::updateOrCreate(
                 [
@@ -438,7 +454,7 @@ class InscripcionesController extends BaseController
                     'pregunta_id'    => $respuesta['pregunta_id'],
                 ],
                 [
-                    'respuesta' => $respuesta['respuesta'] ?? null,
+                    'respuesta' => $valor,
                 ]
             );
         }

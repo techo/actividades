@@ -257,6 +257,22 @@
                                 <option value="">—</option>
                                 <option v-for="opcion in pregunta.opciones" :key="opcion" :value="opcion">{{ opcion }}</option>
                             </select>
+                            <div v-else-if="pregunta.tipo === 'archivo'">
+                                <input
+                                    type="file"
+                                    accept="image/jpeg,image/png,application/pdf"
+                                    class="form-control-file"
+                                    @change="subirArchivo($event, index)"
+                                >
+                                <small class="form-text text-muted">{{ $t('frontend.archivo_formatos') }}</small>
+                                <div v-if="subiendoArchivo[index]" class="text-muted small mt-1">
+                                    <i class="fa fa-spinner fa-spin"></i> {{ $t('frontend.subiendo_archivo') }}
+                                </div>
+                                <div v-else-if="respuestas[index].respuesta" class="text-success small mt-1">
+                                    <i class="fa fa-check"></i> {{ nombresArchivo[index] || $t('frontend.archivo_cargado') }}
+                                </div>
+                                <div v-if="erroresArchivo[index]" class="text-danger small mt-1">{{ erroresArchivo[index] }}</div>
+                            </div>
                         </div>
                     </div>
 
@@ -363,6 +379,9 @@
             preguntasAplicado: true,
             respuestas: [],
             errorPreguntas: false,
+            subiendoArchivo: {},
+            nombresArchivo: {},
+            erroresArchivo: {},
             showCompleteEstudios: false,
             tag: "",
             tag2: "",
@@ -603,6 +622,45 @@
             },
             convertToJSONRespuestas: function() {
                 return JSON.stringify(this.respuestas);
+            },
+            // Sube el archivo de una pregunta tipo 'archivo' de forma asíncrona y
+            // guarda el path devuelto como valor de la respuesta (enfoque A).
+            subirArchivo: function(event, index) {
+                var self = this;
+                var file = event.target.files && event.target.files[0];
+                this.$set(this.erroresArchivo, index, '');
+                if (!file) return;
+
+                var tiposOk = ['image/jpeg', 'image/png', 'application/pdf'];
+                if (tiposOk.indexOf(file.type) === -1) {
+                    this.$set(this.erroresArchivo, index, this.$t('frontend.archivo_tipo_invalido'));
+                    event.target.value = '';
+                    return;
+                }
+                if (file.size > 5 * 1024 * 1024) {
+                    this.$set(this.erroresArchivo, index, this.$t('frontend.archivo_muy_grande'));
+                    event.target.value = '';
+                    return;
+                }
+
+                var fd = new FormData();
+                fd.append('archivo', file);
+                fd.append('pregunta_id', this.respuestas[index].pregunta_id);
+
+                this.$set(this.subiendoArchivo, index, true);
+                axios.post('/ajax/inscripcion/pregunta-archivo', fd)
+                    .then(function(response) {
+                        self.respuestas[index].respuesta = response.data.path;
+                        self.$set(self.nombresArchivo, index, response.data.nombre);
+                    })
+                    .catch(function() {
+                        self.respuestas[index].respuesta = '';
+                        self.$set(self.erroresArchivo, index, self.$t('frontend.archivo_error'));
+                        event.target.value = '';
+                    })
+                    .finally(function() {
+                        self.$set(self.subiendoArchivo, index, false);
+                    });
             },
             // ¿La pregunta debe mostrarse según sus condiciones?
             esVisible: function(pregunta) {

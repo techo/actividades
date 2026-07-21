@@ -620,6 +620,8 @@ return [
     'tipo'                  => 'Tipo',
     'tipo_abierta'          => 'Campo aberto',
     'tipo_desplegable'      => 'Lista suspensa',
+    'tipo_archivo'          => 'Enviar arquivo',
+    'ver_archivo'           => 'Ver arquivo',
     'opciones'              => 'Opções',
     'opciones_placeholder'  => 'Digite uma opção e pressione Enter',
     'opciones_ayuda'        => 'Pressione Enter ou vírgula para adicionar cada opção.',

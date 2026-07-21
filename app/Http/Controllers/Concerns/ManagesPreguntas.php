@@ -197,7 +197,7 @@ trait ManagesPreguntas
         $request->validate([
             'pregunta'            => 'required|string|max:500',
             'descripcion'         => 'nullable|string|max:1000',
-            'tipo'                => 'required|in:abierta,desplegable',
+            'tipo'                => 'required|in:abierta,desplegable,archivo',
             'opciones'            => 'nullable|array',
             'requerida'           => 'boolean',
             'orden'               => 'integer',
@@ -245,14 +245,15 @@ trait ManagesPreguntas
             return;
         }
 
-        // El padre debe ser una pregunta del mismo dueño.
+        // El padre debe ser una pregunta del mismo dueño y no puede ser tipo
+        // 'archivo': un archivo no tiene un valor comparable con 'equals'.
         $class = $this->preguntaClass();
         $ownerId = $pregunta->{$this->ownerColumn()};
-        $padreValido = $class::where($this->ownerColumn(), $ownerId)
+        $padre = $class::where($this->ownerColumn(), $ownerId)
             ->where('id', $parentId)
-            ->exists();
+            ->first();
 
-        if (!$padreValido) {
+        if (!$padre || $padre->tipo === 'archivo') {
             return;
         }
 

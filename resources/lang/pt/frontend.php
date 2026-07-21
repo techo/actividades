@@ -562,4 +562,13 @@ return [
     'preguntas_inscripcion'       => 'Perguntas de inscrição',
     'complete_required_questions' => 'Por favor responda todas as perguntas obrigatórias.',
 
+    // Perguntas do tipo arquivo
+    'archivo_formatos'       => 'Formatos permitidos: imagem (JPG, PNG) ou PDF. Máximo 5 MB.',
+    'subiendo_archivo'       => 'Enviando arquivo...',
+    'archivo_cargado'        => 'Arquivo enviado',
+    'archivo_tipo_invalido'  => 'O arquivo deve ser uma imagem (JPG, PNG) ou PDF.',
+    'archivo_muy_grande'     => 'O arquivo excede o tamanho máximo de 5 MB.',
+    'archivo_error'          => 'Não foi possível enviar o arquivo. Tente novamente.',
+    'archivo_requerido'      => 'Este arquivo é obrigatório.',
+
 ];

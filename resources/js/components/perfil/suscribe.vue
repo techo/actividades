@@ -185,6 +185,23 @@
                                     </option>
                                 </select>
 
+                                <div v-else-if="pregunta.tipo === 'archivo'">
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,application/pdf"
+                                        class="form-control-file"
+                                        @change="subirArchivo($event, pregunta)"
+                                    >
+                                    <small class="text-muted d-block">{{ $t('frontend.archivo_formatos') }}</small>
+                                    <div v-if="subiendoArchivo[pregunta.id]" class="text-muted small mt-1">
+                                        <i class="fa fa-spinner fa-spin"></i> {{ $t('frontend.subiendo_archivo') }}
+                                    </div>
+                                    <div v-else-if="respuestas[pregunta.id]" class="text-success small mt-1">
+                                        <i class="fa fa-check"></i> {{ nombresArchivo[pregunta.id] || $t('frontend.archivo_cargado') }}
+                                    </div>
+                                    <div v-if="erroresArchivo[pregunta.id]" class="text-danger small mt-1">{{ erroresArchivo[pregunta.id] }}</div>
+                                </div>
+
                                 <input
                                     v-else
                                     class="form-control"
@@ -229,6 +246,23 @@
                                         {{ opcion }}
                                     </option>
                                 </select>
+
+                                <div v-else-if="pregunta.tipo === 'archivo'">
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,application/pdf"
+                                        class="form-control-file"
+                                        @change="subirArchivo($event, pregunta)"
+                                    >
+                                    <small class="text-muted d-block">{{ $t('frontend.archivo_formatos') }}</small>
+                                    <div v-if="subiendoArchivo[pregunta.id]" class="text-muted small mt-1">
+                                        <i class="fa fa-spinner fa-spin"></i> {{ $t('frontend.subiendo_archivo') }}
+                                    </div>
+                                    <div v-else-if="respuestas[pregunta.id]" class="text-success small mt-1">
+                                        <i class="fa fa-check"></i> {{ nombresArchivo[pregunta.id] || $t('frontend.archivo_cargado') }}
+                                    </div>
+                                    <div v-if="erroresArchivo[pregunta.id]" class="text-danger small mt-1">{{ erroresArchivo[pregunta.id] }}</div>
+                                </div>
 
                                 <input
                                     v-else
@@ -355,6 +389,9 @@ export default {
             enviando:          false,
             errores:           {},
             respuestas:        {},
+            subiendoArchivo:   {},
+            nombresArchivo:    {},
+            erroresArchivo:    {},
         };
     },
     computed: {
@@ -421,6 +458,49 @@ export default {
             return evalVisible(pregunta, this.preguntas || [], this.respuestas || {});
         },
 
+        // Sube el archivo de una pregunta tipo 'archivo' (endpoint público de
+        // campaña) y guarda el path devuelto como valor de la respuesta.
+        subirArchivo(event, pregunta) {
+            const file = event.target.files && event.target.files[0];
+            this.$set(this.erroresArchivo, pregunta.id, '');
+            if (!file) return;
+
+            const tiposOk = ['image/jpeg', 'image/png', 'application/pdf'];
+            if (tiposOk.indexOf(file.type) === -1) {
+                this.$set(this.erroresArchivo, pregunta.id, this.$t('frontend.archivo_tipo_invalido'));
+                event.target.value = '';
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                this.$set(this.erroresArchivo, pregunta.id, this.$t('frontend.archivo_muy_grande'));
+                event.target.value = '';
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append('archivo', file);
+            fd.append('pregunta_id', pregunta.id);
+
+            const url = this.pais
+                ? ('/' + this.pais.abreviacion + '/suscribe/pregunta-archivo')
+                : '/suscribe/pregunta-archivo';
+
+            this.$set(this.subiendoArchivo, pregunta.id, true);
+            axios.post(url, fd)
+                .then((response) => {
+                    this.$set(this.respuestas, pregunta.id, response.data.path);
+                    this.$set(this.nombresArchivo, pregunta.id, response.data.nombre);
+                })
+                .catch(() => {
+                    this.$set(this.respuestas, pregunta.id, '');
+                    this.$set(this.erroresArchivo, pregunta.id, this.$t('frontend.archivo_error'));
+                    event.target.value = '';
+                })
+                .finally(() => {
+                    this.$set(this.subiendoArchivo, pregunta.id, false);
+                });
+        },
+
         // REQ 2 — Verificar si el email ya existe como usuario
         verificarEmail() {
             const email = this.suscriptor.mail;
@@ -445,6 +525,20 @@ export default {
                     this.errores.telefono = true;
                     return;
                 }
+            }
+
+            // Validar preguntas archivo obligatorias visibles: el input file no
+            // lleva atributo required (se sube async), así que checkValidity no
+            // las cubre. Se marca el error inline en cada pregunta que falte.
+            let faltaArchivo = false;
+            (this.preguntas || []).forEach((p) => {
+                if (p.tipo === 'archivo' && p.requerida && this.esVisible(p) && !this.respuestas[p.id]) {
+                    this.$set(this.erroresArchivo, p.id, this.$t('frontend.archivo_requerido'));
+                    faltaArchivo = true;
+                }
+            });
+            if (faltaArchivo) {
+                return;
             }
 
             this.enviando = true;

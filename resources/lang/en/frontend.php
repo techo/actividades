@@ -555,4 +555,13 @@ return [
     'preguntas_inscripcion'       => 'Registration questions',
     'complete_required_questions' => 'Please answer all required questions.',
 
+    // File-type questions
+    'archivo_formatos'       => 'Allowed formats: image (JPG, PNG) or PDF. Max 5 MB.',
+    'subiendo_archivo'       => 'Uploading file...',
+    'archivo_cargado'        => 'File uploaded',
+    'archivo_tipo_invalido'  => 'The file must be an image (JPG, PNG) or PDF.',
+    'archivo_muy_grande'     => 'The file exceeds the 5 MB maximum size.',
+    'archivo_error'          => 'The file could not be uploaded. Please try again.',
+    'archivo_requerido'      => 'This file is required.',
+
 ];
