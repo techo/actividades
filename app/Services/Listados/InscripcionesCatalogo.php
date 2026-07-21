@@ -95,6 +95,21 @@ class InscripcionesCatalogo implements CatalogoListado
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
             ];
+            // Comprobante de pago: solo tiene sentido si la actividad cobra.
+            $campos[] = [
+                'key' => 'voucher',
+                'name' => '__component:celda-voucher',
+                'title' => 'backend.voucher_column',
+            ];
+        }
+
+        // Beca/exención: solo si la actividad la habilita (permite_exencion).
+        if ($actividad->permite_exencion) {
+            $campos[] = [
+                'key' => 'beca',
+                'name' => '__component:celda-beca',
+                'title' => 'backend.scholarship_column',
+            ];
         }
 
         return $campos;

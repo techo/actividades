@@ -757,4 +757,22 @@ return [
     'error' => 'Ocurrió un error',
 
     'capabilities' => 'Capacidades',
+
+    // Columnas voucher / beca-exención + buscador de persona
+    'view_voucher' => 'Ver comprobante',
+    'voucher_column' => 'Comprobante de pago',
+    'scholarship_column' => 'Beca / Exención',
+    'requested' => 'Solicitada',
+    'view_evidence' => 'Ver documentación',
+    'rejected' => 'Rechazado',
+    'reject_voucher' => 'Rechazar comprobante',
+    'reject_voucher_title' => 'Rechazar comprobante de pago',
+    'reject_voucher_help' => 'Se notificará al voluntario por mail y podrá subir un nuevo comprobante.',
+    'reason_optional' => 'Motivo (opcional)',
+    'reject_voucher_placeholder' => 'Ej: La imagen no es legible, falta el monto...',
+    'sending' => 'Enviando...',
+    'reject_and_notify' => 'Rechazar y notificar',
+    'voucher_rejected_ok' => 'Comprobante rechazado y usuario notificado.',
+    'search_person' => 'Buscar persona...',
+
 ];
