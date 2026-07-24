@@ -169,7 +169,9 @@ class InscripcionesController extends BaseController
                 } catch (\Exception $e) {
                     return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
                 }
-                $payment->setMonto($request->monto);
+                // El monto se deriva server-side de la actividad, nunca del request
+                // (evita iniciar un pago por un importe manipulado por el cliente).
+                $payment->setMonto($actividad->montoMin ?? $actividad->costo ?? 0);
                 $inscripcion->save();
                 $this->guardarRespuestasInscripcion($inscripcion, $request);
                 $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), Auth::user());
