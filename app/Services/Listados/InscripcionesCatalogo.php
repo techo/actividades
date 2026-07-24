@@ -148,6 +148,9 @@ class InscripcionesCatalogo implements CatalogoListado
                     'key' => 'pregunta_' . $pregunta->id,
                     'name' => 'pregunta_' . $pregunta->id,
                     'title' => $pregunta->pregunta,
+                    // El valor lo escapa/arma EnriquecedorFilas server-side (texto con e()
+                    // o link de archivo): se renderiza como HTML confiable, sin re-escapar.
+                    'html' => true,
                 ];
             })
             ->all();
