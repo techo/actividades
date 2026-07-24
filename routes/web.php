@@ -48,8 +48,12 @@ Route::prefix('ajax')->group(function () {
     Route::get('categorias/{id}', 'ajax\CategoriasController@show');
     Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
     Route::get('categorias/{id}/tipos/activas', 'ajax\CategoriasController@tiposActivas');
-    Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
-    Route::get('personas', 'ajax\UsuarioController@getPersonas');
+    // Ambos endpoints exponen PII de Persona: exigen sesión autenticada + acceso al backoffice.
+    // (Sus únicos consumidores son pantallas del backoffice.)
+    Route::middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
+        Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
+        Route::get('personas', 'ajax\UsuarioController@getPersonas');
+    });
 
 
     Route::get('comunidades', 'ajax\ComunidadesController@index');
@@ -65,7 +69,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
         Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
-    Route::middleware(['requiere.auth'])->group(function () {
+    // `auth` hace el enforcement real (requiere.auth es solo un flag de vista, no bloquea).
+    Route::middleware(['auth', 'requiere.auth'])->group(function () {
         Route::prefix('institucionEducativa')->group(function() {
             Route::get('', 'ajax\InstitucionEducativaController@index');
             Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
@@ -90,6 +95,7 @@ Route::prefix('ajax')->group(function () {
 
 	Route::prefix('usuario')->group(
 	    function(){
+		// Rutas públicas: registro y flujo de login social. NO deben exigir sesión.
 		Route::get('', function(){
 			if(Auth::check()) {
 				return Auth::user();
@@ -97,15 +103,19 @@ Route::prefix('ajax')->group(function () {
 			return '';
 		});
         Route::get('validar/{verbo}', 'ajax\UsuarioController@validar');
-        Route::get('perfil', 'ajax\UsuarioController@perfil');
-        Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
         Route::post('', 'ajax\UsuarioController@create');
-        Route::put('', 'ajax\UsuarioController@update');
-        Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail'); //TODO revisar si se está usando
-        Route::put('linkear', 'ajax\UsuarioController@linkear');
-        Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
-        Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+        Route::put('linkear', 'ajax\UsuarioController@linkear'); // segurizada por sesión (link_social)
+
+        // Rutas sobre los datos del usuario autenticado: requieren sesión real.
+        Route::middleware('auth')->group(function () {
+            Route::get('perfil', 'ajax\UsuarioController@perfil');
+            Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
+            Route::put('', 'ajax\UsuarioController@update');
+            Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
+            Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
+            Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+        });
     });
     
     Route::get('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
@@ -130,18 +140,19 @@ Route::get('/registro', function (Request $request) {
     return view('registro');
 })->middleware('guest');
 
-Route::post('login', 'Auth\LoginController@login');
+// throttle: mitiga fuerza bruta / credential stuffing (el login custom no usa ThrottlesLogins).
+Route::post('login', 'Auth\LoginController@login')->middleware('throttle:10,1');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::post('register', 'Auth\RegisterController@register')->middleware('throttle:10,1');
 
 // Password Reset Routes...
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware('throttle:6,1');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->middleware('throttle:6,1');
 
 Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
@@ -168,13 +179,15 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
 
-Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
-Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
-Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
+Route::middleware('auth')->group(function () {
+    Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
+    Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
+    Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
 
-// Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
-Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
-    ->middleware('requiere.auth');
+    // Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
+    Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
+        ->middleware('requiere.auth');
+});
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
@@ -202,9 +215,11 @@ Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
 
 //Backoffice
 //TODO: Agrupar rutas
-Route::get('admin/ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
 Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
+
+    // Movido dentro del grupo autenticado: antes quedaba fuera y era accesible sin sesión.
+    Route::get('ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
     Route::get('/novedades', function(){
         $n = \App\Novedad::latest('created_at')->first();
@@ -387,7 +402,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
-    Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update');
+    Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,actividad');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
@@ -439,11 +454,11 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::put('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@update');
     Route::delete('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@delete');
     
-    Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
-    Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinadores');
-    Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador')->middleware('can:ver,App\Actividad,actividad');
-    Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/borrar', 'backoffice\ActividadesController@eliminarCoordinador')->middleware('can:ver,App\Actividad,actividad');
-    Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/activaWhatsapp', 'backoffice\ajax\ActividadesController@activaWhatsappAccesos')->middleware('can:ver,App\Actividad,actividad');
+    Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad')->middleware('can:ver,App\Actividad,id');
+    Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinadores')->middleware('can:ver,App\Actividad,id');
+    Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador')->middleware('can:editar,App\Actividad,actividad');
+    Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/borrar', 'backoffice\ActividadesController@eliminarCoordinador')->middleware('can:editar,App\Actividad,actividad');
+    Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/activaWhatsapp', 'backoffice\ajax\ActividadesController@activaWhatsappAccesos')->middleware('can:editar,App\Actividad,actividad');
     Route::delete('/actividades/{id}', 'backoffice\ActividadesController@destroy')->middleware('can:borrar,App\Actividad,id');
     Route::get('/actividades/{id}/editar', 'backoffice\ActividadesController@edit')->middleware('can:editar,App\Actividad,id');
     Route::post('/actividades/{id}/editar', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,id');
@@ -473,13 +488,13 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@puntos')->middleware('can:editar,App\Actividad,id');
 
-    Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta');
-    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada');
+    Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada')->middleware('can:editar,App\Actividad,id');
 
     Route::get('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@show');
     Route::post('/ajax/actividades/{id}/puntos', 'backoffice\ajax\PuntosController@store')->middleware('can:editar,App\Actividad,id');
-    Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@update');
-    Route::delete('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@delete');
+    Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@update')->middleware('can:editar,App\Actividad,id');
+    Route::delete('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@delete')->middleware('can:editar,App\Actividad,id');
 
     Route::post('/ajax/actividades/{id}/enviar-evaluaciones', 'backoffice\ajax\EvaluacionesController@enviar')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/stats', 'backoffice\ajax\EvaluacionesController@getActividadStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
@@ -491,12 +506,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/evaluaciones/tags', 'backoffice\ajax\EvaluacionesController@getTagsResumen')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/evaluaciones/competencias', 'backoffice\ajax\EvaluacionesController@getCompetenciasStats')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/evaluaciones/impacto', 'backoffice\ajax\EvaluacionesController@getImpactoStats')->middleware('can:verInscripciones,App\Inscripcion,id');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink');
-    Route::post('/ajax/actividades/{id}/grupos/borrar', 'backoffice\ajax\GruposActividadesController@delete');
-    Route::get('/ajax/actividades/{id}/grupos', 'backoffice\ajax\ActividadesController@grupos');
-    Route::post('/ajax/actividades/{id}/clonar', 'backoffice\ActividadesController@clonar');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/borrar', 'backoffice\ajax\GruposActividadesController@delete')->middleware('can:editar,App\Actividad,id');
+    Route::get('/ajax/actividades/{id}/grupos', 'backoffice\ajax\ActividadesController@grupos')->middleware('can:ver,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/clonar', 'backoffice\ActividadesController@clonar')->middleware('can:editar,App\Actividad,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/desinscribir',
     'backoffice\ajax\InscripcionesController@desinscribir')->middleware('can:verInscripciones,App\Inscripcion,id');

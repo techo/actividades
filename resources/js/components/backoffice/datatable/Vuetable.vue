@@ -272,7 +272,7 @@
               <td v-else
                 :key="fieldIndex"
                 :class="field.dataClass"
-                v-html="getObjectValue(item, field.name, '')"
+                v-html="renderNormalField(field, item)"
                 @click="onCellClicked(item, field, $event)"
                 @dblclick="onCellDoubleClicked(item, field, $event)"
                 @contextmenu="onCellRightClicked(item, field, $event)"
@@ -697,9 +697,26 @@ export default {
         : index
     },
     renderNormalField (field, item) {
-      return this.hasCallback(field)
-        ? this.callCallback(field, item)
-        : this.getObjectValue(item, field.name, '')
+      // Los callbacks producen HTML definido por el desarrollador (badges, links) y los
+      // campos marcados `html: true` traen HTML ya escapado en el servidor (ej. respuestas
+      // enriquecidas por EnriquecedorFilas): ambos se confían.
+      // El resto son datos de usuario y se renderizan vía v-html, así que se escapan para
+      // evitar XSS almacenado (ej. el nombre de un voluntario con <script> ejecutándose en
+      // la sesión de un coordinador en el backoffice).
+      if (this.hasCallback(field)) {
+        return this.callCallback(field, item)
+      }
+      var valor = this.getObjectValue(item, field.name, '')
+      return field.html ? valor : this.escapeHtml(valor)
+    },
+    escapeHtml (value) {
+      if (value === null || value === undefined) return ''
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
     },
     isSpecialField (fieldName) {
       return fieldName.slice(0, 2) === '__'

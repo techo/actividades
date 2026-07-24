@@ -60,9 +60,9 @@ class FichaMedicaController extends Controller
   public function uploadArchivoMedico(Request $request)
   {
     $this->validate($request, array(
-        'archivo_medico' => 'nullable',
-        'documento_frente' => 'nullable',
-        'documento_dorso' => 'nullable',
+        'archivo_medico' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        'documento_frente' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        'documento_dorso' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
     ));
 
     $fichaMedica = Auth::user()->fichaMedica;
