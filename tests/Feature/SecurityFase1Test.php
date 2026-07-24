@@ -235,4 +235,20 @@ class SecurityFase1Test extends TestCase
         $this->assertNotNull($persona->email_verified_at);
         $this->assertEquals('gid-verificado', $persona->google_id);
     }
+
+    /**
+     * A-4: el login web está limitado por rate limit (throttle:10,1) contra fuerza bruta.
+     *
+     * @test
+     */
+    public function login_web_esta_limitado_por_rate_limit()
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->post('/login', ['mail' => 'x@x.com', 'password' => 'incorrecta']);
+        }
+
+        // El intento 11 en el mismo minuto debe ser bloqueado.
+        $this->post('/login', ['mail' => 'x@x.com', 'password' => 'incorrecta'])
+            ->assertStatus(429);
+    }
 }

@@ -140,18 +140,19 @@ Route::get('/registro', function (Request $request) {
     return view('registro');
 })->middleware('guest');
 
-Route::post('login', 'Auth\LoginController@login');
+// throttle: mitiga fuerza bruta / credential stuffing (el login custom no usa ThrottlesLogins).
+Route::post('login', 'Auth\LoginController@login')->middleware('throttle:10,1');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::post('register', 'Auth\RegisterController@register')->middleware('throttle:10,1');
 
 // Password Reset Routes...
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware('throttle:6,1');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->middleware('throttle:6,1');
 
 Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
