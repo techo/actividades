@@ -126,7 +126,15 @@ class LoginController extends Controller
         $url = $request->session()->get('login_callback','');
         $personaData = new \stdClass();
         if($provider == 'google') {
-            $user = Socialite::driver($provider)->stateless()->user();
+            // Sin stateless(): Socialite valida el parámetro OAuth `state` guardado en
+            // sesión por redirectToProvider (protección CSRF del callback de login).
+            $user = Socialite::driver($provider)->user();
+            // Google solo devuelve el email primario verificado; si explícitamente
+            // viene sin verificar, no lo confiamos.
+            $emailVerificado = $user->user['email_verified'] ?? $user->user['verified_email'] ?? true;
+            if ($emailVerificado === false || $emailVerificado === 'false') {
+                return view('registro')->with('persona', null)->with('mensaje', "El email de la cuenta de Google no está verificado.");
+            }
             $personaData->nombre = $user->user['given_name'];
             $personaData->apellido = $user->user['family_name'];
             $personaData->email = $user->email;
@@ -134,7 +142,7 @@ class LoginController extends Controller
             $personaData->facebook_id = '';
             $personaData->genero = '';
         } else {
-           $user = Socialite::driver($provider)->stateless()->fields([
+           $user = Socialite::driver($provider)->fields([
                    'first_name', 'last_name', 'email', 'gender'
            ])->user();
             $personaData->nombre = $user->user['first_name'];
