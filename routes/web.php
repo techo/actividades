@@ -69,7 +69,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
         Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
-    Route::middleware(['requiere.auth'])->group(function () {
+    // `auth` hace el enforcement real (requiere.auth es solo un flag de vista, no bloquea).
+    Route::middleware(['auth', 'requiere.auth'])->group(function () {
         Route::prefix('institucionEducativa')->group(function() {
             Route::get('', 'ajax\InstitucionEducativaController@index');
             Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
@@ -94,6 +95,7 @@ Route::prefix('ajax')->group(function () {
 
 	Route::prefix('usuario')->group(
 	    function(){
+		// Rutas públicas: registro y flujo de login social. NO deben exigir sesión.
 		Route::get('', function(){
 			if(Auth::check()) {
 				return Auth::user();
@@ -101,15 +103,19 @@ Route::prefix('ajax')->group(function () {
 			return '';
 		});
         Route::get('validar/{verbo}', 'ajax\UsuarioController@validar');
-        Route::get('perfil', 'ajax\UsuarioController@perfil');
-        Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
         Route::post('', 'ajax\UsuarioController@create');
-        Route::put('', 'ajax\UsuarioController@update');
-        Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
 		Route::get('valid_new_mail', 'ajax\UsuarioController@validar_nuevo_mail'); //TODO revisar si se está usando
-        Route::put('linkear', 'ajax\UsuarioController@linkear');
-        Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
-        Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+        Route::put('linkear', 'ajax\UsuarioController@linkear'); // segurizada por sesión (link_social)
+
+        // Rutas sobre los datos del usuario autenticado: requieren sesión real.
+        Route::middleware('auth')->group(function () {
+            Route::get('perfil', 'ajax\UsuarioController@perfil');
+            Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
+            Route::put('', 'ajax\UsuarioController@update');
+            Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
+            Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
+            Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+        });
     });
     
     Route::get('actividades/provincias', 'ajax\ActividadesController@filtrarProvinciasYLocalidades');
@@ -172,13 +178,15 @@ Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can
     Route::post('/confirmar', 'InscripcionesController@confirmar');
 });
 
-Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
-Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
-Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
+Route::middleware('auth')->group(function () {
+    Route::post('/ajax/inscripcion/voucherPago','InscripcionesController@voucherPago');
+    Route::post('/ajax/inscripcion/clearVoucher','InscripcionesController@clearVoucher');
+    Route::post('/ajax/inscripcion/becaSolicitud','InscripcionesController@becaSolicitud');
 
-// Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
-Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
-    ->middleware('requiere.auth');
+    // Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
+    Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
+        ->middleware('requiere.auth');
+});
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
