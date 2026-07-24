@@ -49,6 +49,14 @@ class PersonasController extends Controller
     public function show($id)
     {
         $persona = Persona::findOrFail($id);
+
+        // Aislamiento por país: salvo admin, solo se puede ver PII de personas del
+        // país permitido del usuario (evita enumeración cross-tenant).
+        abort_unless(
+            auth()->user()->hasRole('admin') || $persona->idPais == auth()->user()->idPaisPermitido,
+            404
+        );
+
         return new PersonaDatosResource($persona);
     }
 
