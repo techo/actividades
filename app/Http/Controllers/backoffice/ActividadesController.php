@@ -197,7 +197,11 @@ class ActividadesController extends Controller
     }
 
     public function guardarCoordinador(CrearCoordinador $request, Actividad $actividad, Persona $persona)
-    {    
+    {
+        // La persona a agregar como coordinador debe pertenecer al país de la actividad
+        // (evita otorgar acceso cross-país a cuentas de otro tenant).
+        abort_unless($persona->idPais == $actividad->idPais, 403, 'La persona no pertenece al país de la actividad.');
+
         $coordinador = new Coordinador();
         $coordinador->idPersona = $persona->idPersona;
         $actividad->coordinadores()->save($coordinador);

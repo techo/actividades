@@ -143,4 +143,39 @@ class SecurityFase1Test extends TestCase
             ])
             ->assertStatus(404);
     }
+
+    /**
+     * A-2: no se puede agregar como coordinador a una persona de otro país
+     * (antes la ruta usaba can:ver y no validaba el país del destino).
+     *
+     * @test
+     */
+    public function no_se_puede_agregar_coordinador_de_otro_pais()
+    {
+        $this->seed('PermisosSeeder');
+
+        $pais     = factory('App\Pais')->create();
+        $otroPais = factory('App\Pais')->create();
+
+        $admin = factory('App\Persona')->create([
+            'idPais'          => $pais->id,
+            'idPaisPermitido' => $pais->id,
+        ]);
+        $admin->assignRole('admin');
+
+        $actividad = factory('App\Actividad')->create(['idPais' => $pais->id]);
+
+        $mismoPais = factory('App\Persona')->create(['idPais' => $pais->id]);
+        $otroPaisP = factory('App\Persona')->create(['idPais' => $otroPais->id]);
+
+        // Persona del mismo país: se agrega correctamente.
+        $this->actingAs($admin)
+            ->post("/admin/ajax/actividades/{$actividad->idActividad}/accesos/{$mismoPais->idPersona}")
+            ->assertStatus(200);
+
+        // Persona de otro país: rechazada.
+        $this->actingAs($admin)
+            ->post("/admin/ajax/actividades/{$actividad->idActividad}/accesos/{$otroPaisP->idPersona}")
+            ->assertStatus(403);
+    }
 }
