@@ -55,30 +55,88 @@ class UsuarioController extends BaseController
         return ['success' => true, 'params' => array_keys($rules)];
     }
 
+  /**
+   * Devuelve las credenciales sociales VERIFICADAS del registro, o null.
+   *
+   * Nunca se confía en un id social suelto del request (permitía crear cuentas
+   * pre-verificadas para emails ajenos y obtener token). Las fuentes válidas son:
+   *  - Web: la sesión `registro_social`, seteada por LoginController tras el flujo OAuth.
+   *  - Mobile: un `token` de proveedor validado server-side contra el proveedor real.
+   *
+   * @return array{provider:string,social_id:string,email:string}|null
+   */
+  private function socialVerificado(Request $request)
+  {
+      $sesion = $request->session()->get('registro_social');
+      if (is_array($sesion) && !empty($sesion['social_id']) && !empty($sesion['email'])) {
+          return $sesion;
+      }
+
+      if ($request->filled('provider') && $request->filled('token')) {
+          try {
+              $data = \App\Services\SocialAuth\SocialProviderFactory::make($request->provider)
+                  ->validate($request->token);
+          } catch (\Exception $e) {
+              return null;
+          }
+          if ($data && !empty($data['email']) && !empty($data['email_verified']) && !empty($data['social_id'])) {
+              return [
+                  'provider'  => $data['provider'],
+                  'social_id' => $data['social_id'],
+                  'email'     => $data['email'],
+              ];
+          }
+      }
+
+      return null;
+  }
+
+  /**
+   * Aplica sobre la persona las credenciales sociales verificadas (o las limpia).
+   * Solo aquí se setean google_id/facebook_id/apple_id, el email verificado y
+   * la marca email_verified_at.
+   */
+  private function aplicarSocialVerificado(Persona $persona, $social)
+  {
+      $persona->google_id   = null;
+      $persona->facebook_id = null;
+      $persona->apple_id    = null;
+
+      if ($social) {
+          $columna = $social['provider'] . '_id';
+          $persona->{$columna} = $social['social_id'];
+          // El email debe ser el verificado por el proveedor, no el del request.
+          $persona->mail = $social['email'];
+          $persona->email_verified_at = now();
+      }
+  }
+
   public function create(Request $request) {
       $url = $request->session()->get('login_callback','');
       $this->validar($request,'create');
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
-      $persona->password = (!empty($request->google_id) || !empty($request->facebook_id) || !empty($request->apple_id) || !empty($request->instagram_id)) ? Hash::make(str_random(30)) : Hash::make($request->pass);
+
+      $social = $this->socialVerificado($request);
+      $this->aplicarSocialVerificado($persona, $social);
+
+      $persona->password = $social ? Hash::make(str_random(30)) : Hash::make($request->pass);
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
-      if (!empty($request->google_id) || !empty($request->facebook_id) || !empty($request->apple_id) || !empty($request->instagram_id)){
-        $persona->email_verified_at = now();
-      }
       $persona->save();
-      if (empty($request->google_id) && empty($request->facebook_id) && empty($request->apple_id) && empty($request->instagram_id)){
+
+      if (!$social) {
         $persona->sendRegistroUsuarioNotification();
       }
-     // event(new RegistroUsuario($persona));
+      $request->session()->forget('registro_social');
 
       $pais = Pais::find($persona->idPais);
       $request->session()->regenerate();
       Auth::login($persona, true);
       $request->session()->flash('mensaje', __('messages.account_created'));
 
-      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (empty($request->google_id) || empty($request->facebook_id))];
+      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (bool) $social];
   }
 
   public function apiCreate(Request $request) {
@@ -86,19 +144,17 @@ class UsuarioController extends BaseController
 
         $persona = new Persona();
         $this->cargar_cambios($request, $persona);
-        $persona->password = (!empty($request->google_id) || !empty($request->facebook_id)) 
-            ? Hash::make(str_random(30)) 
-            : Hash::make($request->pass);
 
+        $social = $this->socialVerificado($request);
+        $this->aplicarSocialVerificado($persona, $social);
+
+        $persona->password = $social ? Hash::make(str_random(30)) : Hash::make($request->pass);
         $persona->idUnidadOrganizacional = 0;
         $persona->recibirMails = 1;
         $persona->unsubscribe_token = Uuid::generate()->string;
-
-        if (!empty($request->google_id) || !empty($request->facebook_id)){
-            $persona->email_verified_at = now();
-        }
         $persona->save();
-        if (empty($request->google_id) && empty($request->facebook_id)){
+
+        if (!$social) {
             $persona->notify(new \App\Notifications\RegistroUsuario);
         }
 
@@ -112,7 +168,7 @@ class UsuarioController extends BaseController
             'token' => $token,
             'persona' => $persona,
             'abreviacionPais' => $pais->abreviacion,
-            'loginSocial' => (!empty($request->google_id) || !empty($request->facebook_id)),
+            'loginSocial' => (bool) $social,
         ]);
     }
 
@@ -140,10 +196,9 @@ class UsuarioController extends BaseController
       $persona->idProvincia = $request->provincia;
       $persona->genero = $request->genero;
       $persona->telefonoMovil = $request->telefono;
-      $persona->google_id = $request->google_id;
-      $persona->facebook_id = $request->facebook_id;
-      $persona->apple_id = $request->apple_id;
-      $persona->instagram_id = $request->instagram_id;
+      // Los ids sociales NO se toman del request (no son confiables): se setean solo
+      // desde una fuente verificada (sesión OAuth en web / token validado en mobile),
+      // ver aplicarSocialVerificado().
       $persona->acepta_marketing = $request->acepta_marketing;
       $persona->canal_contacto = $request->canal_contacto;
       $persona->estadoPersona = $request->estadoPersona;

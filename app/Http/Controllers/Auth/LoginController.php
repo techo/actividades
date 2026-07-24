@@ -154,6 +154,14 @@ class LoginController extends Controller
         if(!$persona) {
             if($personaData->email == null)
                 return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");
+            // Guardamos en sesión el email + id social verificados por el proveedor OAuth.
+            // El registro (UsuarioController::create) usa SOLO estos valores para marcar
+            // el email como verificado y asociar el id social; nunca los del request.
+            $request->session()->put('registro_social', [
+                'email'     => $personaData->email,
+                'provider'  => $provider,
+                'social_id' => $provider == 'google' ? $personaData->google_id : $personaData->facebook_id,
+            ]);
             return view('registro')->with('persona', $personaData);
         } else {
             if($provider == 'google') {

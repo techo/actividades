@@ -178,4 +178,61 @@ class SecurityFase1Test extends TestCase
             ->post("/admin/ajax/actividades/{$actividad->idActividad}/accesos/{$otroPaisP->idPersona}")
             ->assertStatus(403);
     }
+
+    /**
+     * C-6: el registro NO debe confiar en el google_id del request. Sin un flujo OAuth
+     * real (sesión registro_social), la cuenta no queda verificada ni se asocia el id social.
+     *
+     * @test
+     */
+    public function registro_no_confia_en_el_google_id_del_request()
+    {
+        $pais = factory('App\Pais')->create();
+
+        $this->post('/ajax/usuario', [
+            'nombre'     => 'Ataque',
+            'apellido'   => 'Test',
+            'email'      => 'nuevo-victima@ejemplo.com',
+            'pais'       => $pais->id,
+            'google_id'  => 'id-falso-del-atacante',
+            'telefono'   => '+5491100000000',
+            'privacidad' => true,
+        ])->assertStatus(200);
+
+        $persona = \App\Persona::where('mail', 'nuevo-victima@ejemplo.com')->first();
+        $this->assertNotNull($persona);
+        $this->assertNull($persona->email_verified_at, 'No debe quedar verificada sin OAuth real');
+        $this->assertNull($persona->google_id, 'No debe asociarse el google_id del request');
+    }
+
+    /**
+     * C-6: con datos verificados por OAuth en sesión, el registro social sí marca el
+     * email como verificado y asocia el id social.
+     *
+     * @test
+     */
+    public function registro_social_con_sesion_verificada_queda_verificado()
+    {
+        $pais = factory('App\Pais')->create();
+
+        $this->withSession(['registro_social' => [
+            'email'     => 'social@ejemplo.com',
+            'provider'  => 'google',
+            'social_id' => 'gid-verificado',
+        ]]);
+
+        $this->post('/ajax/usuario', [
+            'nombre'     => 'Social',
+            'apellido'   => 'User',
+            'email'      => 'social@ejemplo.com',
+            'pais'       => $pais->id,
+            'google_id'  => 'lo-que-mande-el-cliente-se-ignora',
+            'telefono'   => '+5491100000000',
+            'privacidad' => true,
+        ])->assertStatus(200);
+
+        $persona = \App\Persona::where('mail', 'social@ejemplo.com')->first();
+        $this->assertNotNull($persona->email_verified_at);
+        $this->assertEquals('gid-verificado', $persona->google_id);
+    }
 }
