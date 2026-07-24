@@ -285,4 +285,14 @@ class SecurityFase1Test extends TestCase
         // Tras el reset no debe quedar ningún token activo.
         $this->assertEquals(0, $persona->tokens()->where('revoked', false)->count());
     }
+
+    /**
+     * M-9: la cookie de sesión usa SameSite=lax por defecto (defensa CSRF en profundidad).
+     *
+     * @test
+     */
+    public function la_cookie_de_sesion_usa_same_site_lax()
+    {
+        $this->assertEquals('lax', config('session.same_site'));
+    }
 }
