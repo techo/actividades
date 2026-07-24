@@ -127,8 +127,11 @@ class EvaluacionesController extends Controller
             return response('La evaluación ya existe', 400);
         }
 
-        $request->request->add(['idPersona' => $persona->idPersona]);
-        if (EvaluacionActividad::create($request->all())) {
+        // Se crea desde una whitelist explícita (no $request->all()): evita que un
+        // campo extra del request se asigne masivamente a la evaluación.
+        $datos = $request->only(['idActividad', 'puntaje', 'tagsPositivos', 'tagsNegativos', 'comentario']);
+        $datos['idPersona'] = $persona->idPersona;
+        if (EvaluacionActividad::create($datos)) {
             return response('ok');
         }
 
