@@ -381,16 +381,18 @@ Objetivo: cerrar lo explotable por bajo/nulo privilegio con mínimo riesgo funci
 - **Hallazgo nuevo derivado:** A-8 (`requiere.auth` es no-op). Los endpoints de C-2 se aseguraron con `auth` real, sin depender de `requiere.auth`.
 - **Riesgo funcional:** bajo. Verificado sin regresiones sobre la suite completa.
 
-### Fase 1 — AuthZ y auth hardening (semanas 2-4 · P1)
-- [ ] **A-8** reemplazar grupos `requiere.auth`-solos por `auth` real (subida ficha médica, estudios, equipos).
-- [ ] **A-1** `can:editar`/scope en rutas mutadoras de actividad; validar hijo⊂padre.
-- [ ] **A-2** `can:editar` en gestión de coordinadores + país.
-- [ ] **C-5** escapar campos base en Vuetable (server-side o `{{ }}`).
-- [ ] **C-6** enrutar alta social por `providerLogin`; no confiar en id social del cliente.
-- [ ] **A-4** throttle en login web/API y endpoints de auth.
-- [ ] **A-5 + M-13** TTL de Passport + revocación en reset/cambio de contraseña.
-- [ ] **A-6 + M-9** `SESSION_SECURE_COOKIE=true`, `same_site=lax`, forzar HTTPS.
-- **Tests:** *Permission tests* por rol (coordinador vs admin) sobre cada ruta de actividad; *tenant isolation test* (user país A no puede tocar recurso país B); *auth flow test* (registro social sin token válido → rechazo); *throttle test*.
+### Fase 1 — AuthZ y auth hardening — ✅ IMPLEMENTADA (2026-07-24)
+**Estado: completa y verificada — 225/225 tests en verde (23 Unit + 202 Feature).** Un commit por hallazgo.
+- [x] **A-8** grupos `requiere.auth`-solos → `auth` real (ficha médica, estudios, equipos, voucher/beca, pregunta-archivo); grupo `usuario` separado en público (registro/login) vs privado (perfil/update/delete/inscripciones). `15f114f4`.
+- [x] **A-1** `can:editar`/`can:ver` en rutas mutadoras/lectoras de actividad (update, actividad, accesos, imágenes, puntos, grupos, clonar); type-hint `Actividad $id` para que el `can` reciba la instancia; validación hijo⊂padre en puntos; `clonar` usa la actividad de la ruta. `5e297038`.
+- [x] **A-2** gestión de coordinadores `can:ver`→`can:editar` + validación de país del destino en `guardarCoordinador`. `9582c80e`.
+- [x] **C-6** registro no confía en `google_id`/`facebook_id` del request; social verificado solo por sesión OAuth (web) o token validado (`SocialProviderFactory`, mobile). `19bc876a`. **Pendiente mobile:** `POST /api/create` debe enviar `provider`+`token` (coordinar con la app).
+- [x] **C-5** Vuetable escapa los campos comunes (datos de usuario) salvo callbacks / `html:true`; `pregunta_*` marcados `html:true`. `2687f590`.
+- [x] **A-4** throttle en login/register/reset web y grupo de auth API. `a41eee5e`.
+- [x] **A-5 + M-13** TTL de Passport (30/60/30 días) + revocación de tokens en reset. `5f5b944c`.
+- [x] **A-6 + M-9** cookies `secure` (auto en prod) + `same_site=lax` + HTTPS forzado en prod. `eb89a40b`.
+- **Tests añadidos:** `tests/Feature/SecurityFase1Test.php` (A-8, A-1, A-2, C-6, A-4, M-13, M-9) y `tests/Vue/datatable-escape-xss.spec.js` (C-5).
+- **Nota:** el escape de C-5 es server-consistente: los campos enriquecidos (`EnriquecedorFilas`, `html:true`) siguen renderizando su HTML; solo se escapan los valores planos.
 
 ### Fase 2 — XSS, config y aislamiento tenant (mes 2 · P2)
 - [ ] **A-7, M-14** sanitizar rich-text con allow-list (descripción, campaign message).
