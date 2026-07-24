@@ -201,7 +201,9 @@ class UsuarioController extends BaseController
       // ver aplicarSocialVerificado().
       $persona->acepta_marketing = $request->acepta_marketing;
       $persona->canal_contacto = $request->canal_contacto;
-      $persona->estadoPersona = $request->estadoPersona;
+      // estadoPersona NO se toma del request: es un estado administrativo (Activo/
+      // Suspendido/Desvinculado) que el usuario no debe poder auto-modificar
+      // (si no, podría des-suspenderse a sí mismo). Lo gestiona solo el backoffice.
       $persona->instagram = $request->instagram;
 
       return $persona;
