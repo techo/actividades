@@ -251,4 +251,38 @@ class SecurityFase1Test extends TestCase
         $this->post('/login', ['mail' => 'x@x.com', 'password' => 'incorrecta'])
             ->assertStatus(429);
     }
+
+    /**
+     * M-13: al resetear la contraseña se revocan los tokens de API activos
+     * (un token robado deja de valer).
+     *
+     * @test
+     */
+    public function reset_de_password_revoca_los_tokens_de_api()
+    {
+        // Passport necesita un personal access client para que createToken() funcione.
+        app(\Laravel\Passport\ClientRepository::class)->createPersonalAccessClient(
+            null,
+            'Test Personal Access Client',
+            config('app.url') ?: 'http://localhost'
+        );
+
+        $persona = factory('App\Persona')->create(['mail' => 'reset@ejemplo.com']);
+
+        // Token de API activo antes del reset.
+        $persona->createToken('test-token');
+        $this->assertEquals(1, $persona->tokens()->where('revoked', false)->count());
+
+        $resetToken = \Illuminate\Support\Facades\Password::broker()->createToken($persona);
+
+        $this->post('/password/reset', [
+            'token'                 => $resetToken,
+            'mail'                  => 'reset@ejemplo.com',
+            'password'              => 'nuevaClaveSegura123',
+            'password_confirmation' => 'nuevaClaveSegura123',
+        ]);
+
+        // Tras el reset no debe quedar ningún token activo.
+        $this->assertEquals(0, $persona->tokens()->where('revoked', false)->count());
+    }
 }
