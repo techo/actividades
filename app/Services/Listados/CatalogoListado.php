@@ -30,4 +30,39 @@ interface CatalogoListado
      * equivalentes a lo que el Blade siempre pasó al componente Vue.
      */
     public function defaultFields($contextId): array;
+
+    /**
+     * Campos por los que se puede FILTRAR, para el constructor de condiciones y
+     * el recuento. Mapa key => descriptor:
+     *   [
+     *     'dni'       => ['type' => 'text', 'sql' => 'Persona.dni'],
+     *     'estado'    => ['type' => 'enum', 'sql' => '__estado', 'opciones' => [...]],
+     *     'custom_5'  => ['type' => 'estado', 'sql' => '__custom:5', 'opciones' => [...]],
+     *     'pregunta_3'=> ['type' => 'text', 'sql' => '__pregunta:3'],
+     *   ]
+     * `type` ∈ {text|number|enum|multi|bool|date|person}.
+     * `sql` es una columna/expresión real o un marcador que FiltroGenerico sabe
+     * resolver: __custom:{id}, __pregunta:{id}, __estado, __subquery:{name}, __edad.
+     * SOLO campos consultables en SQL: nunca agregados post-paginación
+     * (participaciones, evaluacion_general, nivel).
+     */
+    public function filterableFields($contextId): array;
+
+    /**
+     * Subconjunto de keys de filterableFields por las que tiene sentido AGRUPAR
+     * (enum/bool/estado/persona/texto de baja cardinalidad). Excluye texto libre
+     * de alta cardinalidad (dni, mail) y fechas/números crudos.
+     *
+     * @return string[]
+     */
+    public function groupableFields($contextId): array;
+
+    /**
+     * Vistas predefinidas del listado (definidas en código, read-only).
+     * Cada una: ['nombre' => ..., 'color' => ..., 'config' => [...]].
+     * El `config` solo puede referenciar campos de filterableFields/groupableFields.
+     *
+     * @return array
+     */
+    public function defaultViews($contextId): array;
 }

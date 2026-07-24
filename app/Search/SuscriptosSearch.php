@@ -3,6 +3,7 @@
 namespace App\Search;
 
 
+use App\Services\Listados\Filtros\FiltroGenerico;
 use App\Suscribe;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -13,9 +14,24 @@ class SuscriptosSearch
         $query = static::applyDecoratorsFromRequest($filters, SuscriptosSearch::newQuery());
         return static::getResults($query, $sort, $per_page);
     }
+
+    public static function query($filters): Builder
+    {
+        return static::applyDecoratorsFromRequest($filters, static::newQuery());
+    }
+
     private static function applyDecoratorsFromRequest($filters, Builder $query)
     {
+        $meta = $filters['__filterable'] ?? [];
+        unset($filters['__filterable']);
+
         foreach ($filters as $filterName => $value) {
+            // Las clases hardcodeadas (filters\usuario\*) son escalares: el filtro
+            // genérico tiene precedencia para condiciones avanzadas registradas.
+            if (FiltroGenerico::esCondicion($value) && FiltroGenerico::soporta($filterName, $meta)) {
+                $query = FiltroGenerico::apply($query, $filterName, $value, $meta);
+                continue;
+            }
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);

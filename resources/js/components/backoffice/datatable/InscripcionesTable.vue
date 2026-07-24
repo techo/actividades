@@ -168,6 +168,12 @@ export default {
           this.$refs.inscripcionesVuetable.resetData();
           Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
       },
+      // Reemplaza todo el set de condiciones (filtro genérico <filtros-listado>).
+      aplicarFiltros(condiciones){
+          this.moreParams.condiciones = Array.isArray(condiciones) ? condiciones : [];
+          this.$refs.inscripcionesVuetable.resetData();
+          Vue.nextTick( () => this.$refs.inscripcionesVuetable.refresh());
+      },
       checkboxToggledEmitter: function (status) {
           let info = {
               status: status,
@@ -356,6 +362,8 @@ export default {
       // Custom
       Event.$on('agregar-condicion', this.agregarCondicion);
       Event.$on('remover-condicion', this.removerCondicion);
+      // Filtros genéricos (componente <filtros-listado>): reemplaza el set completo.
+      Event.$on('filtros:cambio:inscripciones', this.aplicarFiltros);
       Event.$on('rol-asignado', this.asignarRol);
       Event.$on('grupo-asignado', this.asignarGrupo);
       Event.$on('punto-asignado', this.asignarPunto);

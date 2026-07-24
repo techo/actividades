@@ -453,6 +453,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // La autorización por list_key/context la resuelve el propio controller.
     Route::prefix('ajax/listados/{listKey}/{contextId}')->group(function () {
         Route::get('/config', 'backoffice\ajax\ListadoConfigController@config');
+        Route::get('/count', 'backoffice\ajax\ListadoConfigController@count');
+        Route::get('/facets', 'backoffice\ajax\ListadoConfigController@facets');
+        Route::get('/vistas', 'backoffice\ajax\ListadoConfigController@vistas');
+        Route::post('/vistas', 'backoffice\ajax\ListadoConfigController@guardarVista');
+        Route::put('/vistas/{vistaId}', 'backoffice\ajax\ListadoConfigController@actualizarVista');
+        Route::delete('/vistas/{vistaId}', 'backoffice\ajax\ListadoConfigController@eliminarVista');
         Route::put('/preferencias', 'backoffice\ajax\ListadoConfigController@guardarPreferencias');
         Route::post('/columnas', 'backoffice\ajax\ListadoConfigController@crearColumna');
         Route::put('/columnas/{columnaId}', 'backoffice\ajax\ListadoConfigController@actualizarColumna');

@@ -45,7 +45,12 @@ class CampanasController extends Controller
     {
         $campana = Campaign::findOrFail($id);
         $this->authorize('view', $campana);
-        return view('backoffice.campanas.suscriptos', compact('campana'));
+
+        // Fields para el listado configurable (mismo patrón que inscripciones/integrantes).
+        $fields = json_encode((new \App\Services\Listados\SuscriptosCatalogo)->defaultFields($id));
+        $sortOrder = json_encode(config('datatables.suscriptos.sortOrder'));
+
+        return view('backoffice.campanas.suscriptos', compact('campana', 'fields', 'sortOrder'));
     }
 
     public function exportar($id)

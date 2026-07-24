@@ -2,6 +2,31 @@
 
 return [
 
+    'contact_channel' => 'Contact channel',
+    'occupation' => 'Occupation',
+    'previous_experience' => 'Previous experience',
+    'subscription_date' => 'Subscription date',
+    'converted' => 'Converted',
+    'vista_convertidos' => 'Converted',
+    'save_as_view' => 'Save as view',
+    'save_view_help' => 'The view saves your current setup as a reusable tab.',
+    'view_name' => 'View name',
+    'view_name_placeholder' => 'e.g. Potential staff, Payment pending...',
+    'color' => 'Color',
+    'what_is_saved' => 'What is saved',
+    'no_filters' => 'No filters',
+    'active_filters' => 'active filters',
+    'save_view' => 'Save view',
+    'group_by' => 'Group by',
+    'no_grouping' => 'No grouping',
+    'count_by_group' => 'Count by group',
+    'build_condition' => 'Build condition',
+    'matches_for_condition' => 'Matches for this condition',
+    'clear_all' => 'Clear all',
+    'records' => 'records',
+    'choose' => 'Choose',
+    'vista_todos' => 'All',
+    'vista_confirmados' => 'Confirmed',
 	/*
 	|--------------------------------------------------------------------------
 	| Backend Language Lines

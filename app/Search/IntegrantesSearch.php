@@ -3,19 +3,36 @@
 namespace App\Search;
 
 use App\Integrante;
+use App\Services\Listados\Filtros\FiltroGenerico;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
 class IntegrantesSearch
 {
     public static function apply($filters, $sort = 'created_at desc', $per_page = 25)
-    {   
+    {
         $query = static::applyDecoratorsFromRequest($filters, IntegrantesSearch::newQuery());
         return static::getResults($query, $sort, $per_page);
     }
+
+    public static function query($filters): Builder
+    {
+        return static::applyDecoratorsFromRequest($filters, static::newQuery());
+    }
+
     private static function applyDecoratorsFromRequest($filters, Builder $query)
     {
+        $meta = $filters['__filterable'] ?? [];
+        unset($filters['__filterable']);
+
         foreach ($filters as $filterName => $value) {
+            // En integrantes las clases hardcodeadas globales son escalares (no
+            // entienden {condicion, valor}), así que el filtro genérico tiene
+            // precedencia para condiciones avanzadas sobre campos registrados.
+            if (FiltroGenerico::esCondicion($value) && FiltroGenerico::soporta($filterName, $meta)) {
+                $query = FiltroGenerico::apply($query, $filterName, $value, $meta);
+                continue;
+            }
             $decorator = static::createFilterDecorator($filterName);
             if (static::isValidDecorator($decorator)) {
                 $query = $decorator::apply($query, $value);
