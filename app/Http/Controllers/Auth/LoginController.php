@@ -161,6 +161,14 @@ class LoginController extends Controller
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
+                    // Guardamos en sesión los datos verificados por el proveedor OAuth.
+                    // El endpoint `linkear` usa SOLO estos valores, nunca los del request,
+                    // para evitar el linkeo/login a partir de un email arbitrario.
+                    $request->session()->put('link_social', [
+                        'email'     => $personaData->email,
+                        'provider'  => 'google',
+                        'social_id' => $personaData->google_id,
+                    ]);
                     return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }
@@ -169,6 +177,11 @@ class LoginController extends Controller
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
+                    $request->session()->put('link_social', [
+                        'email'     => $personaData->email,
+                        'provider'  => 'facebook',
+                        'social_id' => $personaData->facebook_id,
+                    ]);
                     return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }

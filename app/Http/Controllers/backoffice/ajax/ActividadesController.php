@@ -56,7 +56,7 @@ class ActividadesController extends BaseController
     public function storeImagenTarjeta(Request $request, $id){
         
         $validate = $request->validate([
-            'imagen_tarjeta' => 'nullable|file',
+            'imagen_tarjeta' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $imagen = $validate['imagen_tarjeta'];
@@ -74,7 +74,7 @@ class ActividadesController extends BaseController
     public function storeImagenDestacada(Request $request, $id){
         
         $validate = $request->validate([
-            'imagen_destacada' => 'nullable|file',
+            'imagen_destacada' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $imagen = $validate['imagen_destacada'];

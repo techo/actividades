@@ -39,7 +39,7 @@ class LocalidadesDataSearch
     private static function getResults(Builder $query, $sort, $per_page)
     {
         // return $query->get();
-        $query->orderByRaw($sort);
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc'));
         return $query->paginate($per_page);
     }
 

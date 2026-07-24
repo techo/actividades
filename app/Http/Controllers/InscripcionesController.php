@@ -294,7 +294,7 @@ class InscripcionesController extends BaseController
 
         $validated = $request->validate([
             'idInscripcion' => 'required',
-            'voucher' => 'required',
+            'voucher' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
         ]);
 
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)

@@ -48,8 +48,12 @@ Route::prefix('ajax')->group(function () {
     Route::get('categorias/{id}', 'ajax\CategoriasController@show');
     Route::get('categorias/{id}/tipos', 'ajax\CategoriasController@tipos');
     Route::get('categorias/{id}/tipos/activas', 'ajax\CategoriasController@tiposActivas');
-    Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
-    Route::get('personas', 'ajax\UsuarioController@getPersonas');
+    // Ambos endpoints exponen PII de Persona: exigen sesión autenticada + acceso al backoffice.
+    // (Sus únicos consumidores son pantallas del backoffice.)
+    Route::middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
+        Route::get('coordinadores', 'ajax\UsuarioController@getCoordinadores');
+        Route::get('personas', 'ajax\UsuarioController@getPersonas');
+    });
 
 
     Route::get('comunidades', 'ajax\ComunidadesController@index');
@@ -202,9 +206,11 @@ Route::prefix('/perfil')->middleware('verified', 'auth')->group(function (){
 
 //Backoffice
 //TODO: Agrupar rutas
-Route::get('admin/ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
 Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice'])->group(function () {
+
+    // Movido dentro del grupo autenticado: antes quedaba fuera y era accesible sin sesión.
+    Route::get('ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
     Route::get('/novedades', function(){
         $n = \App\Novedad::latest('created_at')->first();

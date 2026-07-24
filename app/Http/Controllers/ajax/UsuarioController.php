@@ -156,8 +156,8 @@ class UsuarioController extends BaseController
 	{
 		$persona = Auth::user();
 		$this->validate($request, array(
-			'photo' => 'nullable',
-		));        
+			'photo' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
+		));
 
 		if ($request->file('photo')){
 			$archivo = $request->file('photo');
@@ -187,20 +187,28 @@ class UsuarioController extends BaseController
   public function linkear(Request $request) {
       $url = $request->session()->get('login_callback','');
       $success = false;
-      $persona = Persona::where('mail', $request->email)->first();
-      if($persona) {
-          $success = true;
-          if($request->media == 'google') {
-              $persona->google_id = $request->id;
+
+      // El email y el id social provienen EXCLUSIVAMENTE de la sesión, seteados por
+      // LoginController::callbackFromProvider tras validar el flujo OAuth con el proveedor.
+      // Nunca se confía en el request: de lo contrario cualquiera podría loguearse como
+      // otro usuario enviando un email arbitrario (account takeover no autenticado).
+      $link = $request->session()->get('link_social');
+
+      if(is_array($link) && !empty($link['email']) && !empty($link['social_id'])) {
+          $persona = Persona::where('mail', $link['email'])->first();
+          if($persona) {
+              $success = true;
+              if($link['provider'] == 'google') {
+                  $persona->google_id = $link['social_id'];
+              }
+              if($link['provider'] == 'facebook') {
+                  $persona->facebook_id = $link['social_id'];
+              }
+              $persona->save();
+              Auth::login($persona, true);
+              $request->session()->regenerate();
+              $request->session()->forget('link_social');
           }
-          if($request->media == 'facebook') {
-              $persona->facebook_id = $request->id;
-          }
-      }
-      if($success) {
-          $persona->save();
-          Auth::login($persona, true);
-          $request->session()->regenerate();
       }
       return ['success' => $success, 'login_callback' => $url];
   }
@@ -256,16 +264,21 @@ class UsuarioController extends BaseController
     public function getPersonas(Request $request)
     {
         $query = (new Persona)->newQuery();
-        
+
         $palabras = explode(' ', $request->q);
 
         foreach ($palabras as $palabra) {
+          // Parámetro bindeado (?): no concatenar input en SQL.
           $query->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like ?", ['%' . $palabra . '%']);
         }
 
+        // Aislamiento por país: solo personas del país permitido del usuario autenticado.
+        $query->where('idPais', auth()->user()->idPaisPermitido);
+
         $query->take(25)->orderBy('nombres', 'asc');
 
-        return $query->get();
+        // Devolvemos un Resource con campos acotados, nunca el modelo Eloquent crudo.
+        return CoordinadorResource::collection($query->get());
     }
 
     public function delete(Request $request)
