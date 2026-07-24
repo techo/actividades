@@ -675,6 +675,46 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function el_index_de_inscripciones_aplica_los_filtros_avanzados()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M', 'F', 'F']);
+
+        $cond = json_encode(['campo' => 'genero', 'condicion' => '=', 'valor' => 'F']);
+        $data = $this->actingAs($admin)
+            ->getJson('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones?condiciones[]=' . urlencode($cond))
+            ->assertStatus(200)
+            ->json();
+
+        // El index (refactorizado a ListadoQuery) devuelve solo las 2 coincidencias.
+        $this->assertEquals(2, $data['total']);
+    }
+
+    /** @test */
+    public function el_filtro_generico_ignora_campos_no_registrados()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M', 'F']);
+
+        // Un campo arbitrario (no está en filterableFields ni tiene clase de filtro)
+        // se ignora en silencio: no filtra ni rompe el query (gate anti-inyección).
+        $filas = InscripcionesSearch::query(
+            $this->filtros($actividad->idActividad, [
+                'campo_inventado' => ['condicion' => '=', 'valor' => 'x'],
+                'custom_999999' => ['condicion' => '=', 'valor' => 'y'],
+            ])
+        )->get();
+
+        $this->assertCount(2, $filas);
+    }
+
+    /** @test */
     public function filterable_fields_excluye_los_agregados_post_paginacion()
     {
         $this->seed('PermisosSeeder');
