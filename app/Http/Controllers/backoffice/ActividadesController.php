@@ -414,11 +414,13 @@ class ActividadesController extends Controller
 
 
 
-    public function clonar(Request $request)
+    public function clonar(Request $request, Actividad $id)
     {
         DB::beginTransaction();
         try {
-            $original = Actividad::find($request->idActividad);
+            // Se clona la actividad de la ruta (sobre la que ya autorizó `can:editar`),
+            // no un id arbitrario del body.
+            $original = $id;
             $clon = $original->replicate();
             $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
             $clon->idPersonaCreacion = auth()->user()->idPersona;

@@ -401,7 +401,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
-    Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update');
+    Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,actividad');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
@@ -453,8 +453,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::put('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@update');
     Route::delete('/ajax/actividades/{id}/jornadas/{jornada}', 'backoffice\ajax\JornadasController@delete');
     
-    Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad');
-    Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinadores');
+    Route::get('/ajax/actividades/{id}', 'backoffice\ActividadesController@actividad')->middleware('can:ver,App\Actividad,id');
+    Route::get('/ajax/actividades/{id}/accesos', 'backoffice\ActividadesController@coordinadores')->middleware('can:ver,App\Actividad,id');
     Route::post('/ajax/actividades/{actividad}/accesos/{persona}', 'backoffice\ActividadesController@guardarCoordinador')->middleware('can:ver,App\Actividad,actividad');
     Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/borrar', 'backoffice\ActividadesController@eliminarCoordinador')->middleware('can:ver,App\Actividad,actividad');
     Route::post('/ajax/actividades/{actividad}/accesos/{coordinador}/activaWhatsapp', 'backoffice\ajax\ActividadesController@activaWhatsappAccesos')->middleware('can:ver,App\Actividad,actividad');
@@ -481,13 +481,13 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/actividades/{id}/puntos', 'backoffice\ajax\ActividadesController@puntos')->middleware('can:editar,App\Actividad,id');
 
-    Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta');
-    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada');
+    Route::post('/ajax/actividades/{id}/imagen-tarjeta', 'backoffice\ajax\ActividadesController@storeImagenTarjeta')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/imagen-destacada', 'backoffice\ajax\ActividadesController@storeImagenDestacada')->middleware('can:editar,App\Actividad,id');
 
     Route::get('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@show');
     Route::post('/ajax/actividades/{id}/puntos', 'backoffice\ajax\PuntosController@store')->middleware('can:editar,App\Actividad,id');
-    Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@update');
-    Route::delete('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@delete');
+    Route::post('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@update')->middleware('can:editar,App\Actividad,id');
+    Route::delete('/ajax/actividades/{id}/puntos/{punto}', 'backoffice\ajax\PuntosController@delete')->middleware('can:editar,App\Actividad,id');
 
     Route::post('/ajax/actividades/{id}/enviar-evaluaciones', 'backoffice\ajax\EvaluacionesController@enviar')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
     Route::get('/ajax/actividades/{id}/evaluaciones/stats', 'backoffice\ajax\EvaluacionesController@getActividadStats')->middleware('can:verInscripciones,App\Inscripcion,id'); //TODO: Revisar el middleware debería ser un permiso relacionado con evaluaciones
@@ -499,12 +499,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/actividades/{id}/evaluaciones/tags', 'backoffice\ajax\EvaluacionesController@getTagsResumen')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/evaluaciones/competencias', 'backoffice\ajax\EvaluacionesController@getCompetenciasStats')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::get('/ajax/actividades/{id}/evaluaciones/impacto', 'backoffice\ajax\EvaluacionesController@getImpactoStats')->middleware('can:verInscripciones,App\Inscripcion,id');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol');
-    Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink');
-    Route::post('/ajax/actividades/{id}/grupos/borrar', 'backoffice\ajax\GruposActividadesController@delete');
-    Route::get('/ajax/actividades/{id}/grupos', 'backoffice\ajax\ActividadesController@grupos');
-    Route::post('/ajax/actividades/{id}/clonar', 'backoffice\ActividadesController@clonar');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/grupo', 'backoffice\ajax\GruposActividadesController@update')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/rol', 'backoffice\ajax\GruposActividadesController@updateRol')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/cambiar/link', 'backoffice\ajax\GruposActividadesController@updateLink')->middleware('can:editar,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/grupos/borrar', 'backoffice\ajax\GruposActividadesController@delete')->middleware('can:editar,App\Actividad,id');
+    Route::get('/ajax/actividades/{id}/grupos', 'backoffice\ajax\ActividadesController@grupos')->middleware('can:ver,App\Actividad,id');
+    Route::post('/ajax/actividades/{id}/clonar', 'backoffice\ActividadesController@clonar')->middleware('can:editar,App\Actividad,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/desinscribir',
     'backoffice\ajax\InscripcionesController@desinscribir')->middleware('can:verInscripciones,App\Inscripcion,id');

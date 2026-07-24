@@ -53,15 +53,15 @@ class ActividadesController extends BaseController
 
 
 
-    public function storeImagenTarjeta(Request $request, $id){
-        
+    public function storeImagenTarjeta(Request $request, Actividad $id){
+
         $validate = $request->validate([
             'imagen_tarjeta' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $imagen = $validate['imagen_tarjeta'];
-        
-        $actividad = Actividad::findorFail($id);
+
+        $actividad = $id;
 
         if($imagen){
             $path = ImageUploadService::store($request->file('imagen_tarjeta'), 'public/actividades');
@@ -71,15 +71,15 @@ class ActividadesController extends BaseController
         return $actividad->imagen_tarjeta;
     }
 
-    public function storeImagenDestacada(Request $request, $id){
-        
+    public function storeImagenDestacada(Request $request, Actividad $id){
+
         $validate = $request->validate([
             'imagen_destacada' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $imagen = $validate['imagen_destacada'];
-        
-        $actividad = Actividad::findorFail($id);
+
+        $actividad = $id;
 
         if($imagen){
             $path = ImageUploadService::store($request->file('imagen_destacada'), 'public/actividades');

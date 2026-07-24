@@ -34,8 +34,11 @@ class PuntosController extends Controller
 		return response()->json($punto->fresh());
 	}
 
-	public function update(Request $request, $id, PuntoEncuentro $punto)
+	public function update(Request $request, Actividad $id, PuntoEncuentro $punto)
 	{
+		// El punto debe pertenecer a la actividad de la ruta (evita editar puntos de otra actividad).
+		abort_unless((int) $punto->idActividad === (int) $id->idActividad, 404);
+
 		$validado = $request->validate([
 			'punto' => 'required',
 			'horario' => 'required',
@@ -53,6 +56,9 @@ class PuntosController extends Controller
 
 	public function delete(Actividad $id, PuntoEncuentro $punto)
 	{
+		// El punto debe pertenecer a la actividad de la ruta.
+		abort_unless((int) $punto->idActividad === (int) $id->idActividad, 404);
+
 		if($punto->inscripciones()->count() > 0)
 			return response()->json([ 'errors' => [ 'idPuntoEncuentro' => [ 'No se puede eliminar un punto con inscriptos' ] ] ], 422);
 
