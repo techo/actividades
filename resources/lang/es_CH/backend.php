@@ -17,7 +17,7 @@ return [
     'no_filters' => 'Sin filtros',
     'active_filters' => 'filtros activos',
     'save_view' => 'Guardar vista',
-    'group_by' => 'Agrupar por',
+    'group_by' => 'Contar por',
     'no_grouping' => 'Sin agrupar',
     'count_by_group' => 'Recuento por grupo',
     'build_condition' => 'Construir condición',

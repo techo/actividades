@@ -675,6 +675,32 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function los_filtrables_de_columnas_custom_traen_sus_opciones_para_el_select()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+
+        $columna = ListadoColumna::create([
+            'list_key' => 'inscripciones', 'context_id' => $actividad->idActividad,
+            'nombre' => 'Canal', 'tipo' => 'estado',
+            'opciones' => ['WhatsApp', 'Email'], 'orden' => 1, 'created_by' => $admin->idPersona,
+        ]);
+
+        $data = $this->actingAs($admin)
+            ->getJson('/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/config')
+            ->assertStatus(200)->json();
+
+        $filtrable = collect($data['filtrables'])->firstWhere('key', 'custom_' . $columna->id);
+        $this->assertNotNull($filtrable, 'La columna custom debe ser filtrable');
+        // Trae sus opciones → el front la resuelve como <select>, no input de texto.
+        $this->assertEquals(['WhatsApp', 'Email'], $filtrable['opciones']);
+        $this->assertEquals('enum', $filtrable['type']);
+    }
+
+    /** @test */
     public function el_index_de_inscripciones_aplica_los_filtros_avanzados()
     {
         $this->withoutExceptionHandling();

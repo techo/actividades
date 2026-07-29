@@ -327,7 +327,10 @@ return [
                     'title' => 'backend.present',
                     'titleClass' => 'text-center',
                     'sortField' => 'presente',
-                    'dataClass' => 'text-center'
+                    'dataClass' => 'text-center',
+                    // Se fija a la derecha para verse siempre en scroll horizontal.
+                    'pinnedRight' => true,
+                    'width' => '90px',
                 ],
                 [
                     'key' => 'participaciones',

@@ -6,7 +6,7 @@
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarRolModal">{{ $t('backend.assign') }} {{ $t('backend.role') }}</button>
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarGrupoModal">{{ $t('backend.assign') }} {{ $t('backend.group') }}</button>
                 <button type="button" class="btn btn-sm btn-default" :class="{'disabled': disabled}" @click="this.mostrarPuntoModal">{{ $t('backend.assign') }} {{ $t('backend.point') }}</button>
-                <div class="btn-group" role="group">
+                <div class="btn-group" role="group" v-if="requiereConfirmacion">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ $t('backend.change_confirmation') }}
                         <span class="caret"></span>
@@ -16,7 +16,7 @@
                         <li><a @click="cambiarConfirmacion(0, $event)">{{ $t('backend.unconfirmed') }}</a></li>
                     </ul>
                 </div>
-                <div class="btn-group" role="group">
+                <div class="btn-group" role="group" v-if="requierePago">
                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" :class="{'disabled': disabled}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ $t('backend.change_payment') }}
                         <span class="caret"></span>
@@ -49,10 +49,19 @@
 <script>
     export default {
         name: "inscripciones-toolbar",
+        props: {
+            // Flags de la actividad: gatean qué acciones masivas se ofrecen.
+            confirmacion: { default: 0 },
+            pago: { default: 0 },
+        },
         data() {
            return {
                 disabled: true
             }
+        },
+        computed: {
+            requiereConfirmacion() { return Number(this.confirmacion) === 1; },
+            requierePago() { return Number(this.pago) === 1; },
         },
         created(){
             Event.$on('checkbox-toggled', this.toggleButtons);

@@ -85,6 +85,8 @@ class InscripcionesCatalogo implements CatalogoListado
                 'title' => 'Confirma',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
+                'pinnedRight' => true,
+                'width' => '90px',
             ];
         }
         if ($actividad->pago == 1) {
@@ -94,6 +96,8 @@ class InscripcionesCatalogo implements CatalogoListado
                 'title' => 'Pago',
                 'titleClass' => 'text-center',
                 'dataClass' => 'text-center',
+                'pinnedRight' => true,
+                'width' => '90px',
             ];
             // Comprobante de pago: solo tiene sentido si la actividad cobra.
             $campos[] = [

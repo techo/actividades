@@ -17,7 +17,7 @@
               </th>
               <th v-if="extractName(field.name) == '__component'"
                 :key="fieldIndex"
-                :style="{width: field.width}"
+                :style="[{width: field.width}, stickyStyle(field)]"
                 :class="['vuetable-th-component-'+trackBy, field.titleClass, sortClass(field), {'sortable': isSortable(field)}]"
                 v-html="renderTitle(field)"
                 @click="orderBy(field, $event)"
@@ -104,6 +104,7 @@
                   <td v-if="extractName(field.name) === '__component'"
                     :key="fieldIndex"
                     :class="['vuetable-component', field.dataClass]"
+                    :style="stickyStyle(field)"
                   >
                     <component :is="extractArgs(field.name)"
                       :row-data="item" :row-index="itemIndex" :row-field="field.sortField"
@@ -176,7 +177,7 @@
             </th>
             <th v-if="extractName(field.name) == '__component'"
               :key="fieldIndex"
-              :style="{width: field.width}"
+              :style="[{width: field.width}, stickyStyle(field)]"
               :class="['vuetable-th-component-'+trackBy, field.titleClass, sortClass(field), {'sortable': isSortable(field)}]"
               v-html="renderTitle(field)"
               @click="orderBy(field, $event)"
@@ -245,6 +246,7 @@
               <td v-if="extractName(field.name) === '__component'"
                 :key="fieldIndex"
                 :class="['vuetable-component', field.dataClass]"
+                :style="stickyStyle(field)"
               >
                 <component :is="extractArgs(field.name)"
                   :row-data="item" :row-index="itemIndex" :row-field="field.sortField"
@@ -642,6 +644,27 @@ export default {
         }
         self.tableFields.push(obj)
       })
+
+      // Columnas fijadas a la derecha (pinnedRight) van al final preservando su
+      // orden, para pegarlas con position:sticky sin taparse con las siguientes.
+      const pinned = this.tableFields.filter(f => f.pinnedRight)
+      if (pinned.length) {
+        this.tableFields = this.tableFields.filter(f => !f.pinnedRight).concat(pinned)
+      }
+    },
+    /**
+     * Estilo sticky para las columnas fijadas a la derecha. El offset de cada una
+     * es la suma de anchos de las pinned que quedan a su derecha (default 90px).
+     */
+    stickyStyle (field) {
+      if (!field || !field.pinnedRight) return {}
+      const pinned = this.tableFields.filter(f => f.pinnedRight && f.visible)
+      const idx = pinned.indexOf(field)
+      let right = 0
+      for (let i = idx + 1; i < pinned.length; i++) {
+        right += parseInt(pinned[i].width, 10) || 90
+      }
+      return { position: 'sticky', right: right + 'px', zIndex: 3, background: '#fff' }
     },
     setData (data) {
       if (data === null || typeof(data) === 'undefined') return
