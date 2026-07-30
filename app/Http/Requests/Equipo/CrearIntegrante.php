@@ -37,7 +37,7 @@ class CrearIntegrante extends FormRequest
             'hitos' => 'nullable|max:500',
             'dia_hora_reunion' => 'nullable',
             'periodicidad_reunion' => 'nullable',
-            'impacto' => 'nullable',
+            'impacto' => 'nullable|max:500',
             'capacidades' => 'nullable',
             'fechaInicio' => 'required|date',
             'fechaFin' => 'nullable|date|required_if:estado,0',
