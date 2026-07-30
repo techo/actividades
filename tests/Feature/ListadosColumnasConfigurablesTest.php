@@ -701,6 +701,28 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function los_campos_agrupables_traen_opciones_remotas_y_el_endpoint_las_devuelve()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M', 'F', 'F']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad;
+
+        // /config marca los campos de dominio finito como opciones_remotas (select).
+        $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
+        $genero = collect($config['filtrables'])->firstWhere('key', 'genero');
+        $this->assertTrue($genero['opciones_remotas'], 'genero debe resolverse como select dinámico');
+        $dni = collect($config['filtrables'])->firstWhere('key', 'dni');
+        $this->assertFalse($dni['opciones_remotas'], 'dni es texto libre, no select');
+
+        // El endpoint devuelve los valores distintos presentes en el contexto.
+        $data = $this->actingAs($admin)->getJson($url . '/opciones?campo=genero')->assertStatus(200)->json();
+        $this->assertEquals(['F', 'M'], collect($data['opciones'])->sort()->values()->all());
+    }
+
+    /** @test */
     public function el_index_de_inscripciones_aplica_los_filtros_avanzados()
     {
         $this->withoutExceptionHandling();

@@ -2,6 +2,7 @@
 
 return [
 
+    'loading' => 'Loading',
     'contact_channel' => 'Contact channel',
     'occupation' => 'Occupation',
     'previous_experience' => 'Previous experience',

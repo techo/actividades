@@ -330,7 +330,7 @@ return [
                     'dataClass' => 'text-center',
                     // Se fija a la derecha para verse siempre en scroll horizontal.
                     'pinnedRight' => true,
-                    'width' => '90px',
+                    'width' => '110px',
                 ],
                 [
                     'key' => 'participaciones',

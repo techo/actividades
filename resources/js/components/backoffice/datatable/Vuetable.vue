@@ -659,12 +659,27 @@ export default {
     stickyStyle (field) {
       if (!field || !field.pinnedRight) return {}
       const pinned = this.tableFields.filter(f => f.pinnedRight && f.visible)
+      const ancho = f => parseInt(f.width, 10) || 110
       const idx = pinned.indexOf(field)
       let right = 0
       for (let i = idx + 1; i < pinned.length; i++) {
-        right += parseInt(pinned[i].width, 10) || 90
+        right += ancho(pinned[i])
       }
-      return { position: 'sticky', right: right + 'px', zIndex: 3, background: '#fff' }
+      const w = ancho(field) + 'px'
+      // Ancho FIJO (min = max = width) para que el offset de la sticky de al lado
+      // coincida exacto y no quede un hueco donde se ven las columnas de atrás.
+      return {
+        position: 'sticky',
+        right: right + 'px',
+        width: w,
+        minWidth: w,
+        maxWidth: w,
+        zIndex: 3,
+        background: '#fff',
+        // Sombra en el borde izquierdo de la sticky más a la izquierda del grupo,
+        // para separarla visualmente de las columnas que pasan por detrás.
+        boxShadow: idx === 0 ? '-6px 0 6px -4px rgba(0,0,0,.15)' : null,
+      }
     },
     setData (data) {
       if (data === null || typeof(data) === 'undefined') return

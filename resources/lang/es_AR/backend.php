@@ -2,6 +2,7 @@
 
 return [
 
+    'loading' => 'Cargando',
     'contact_channel' => 'Canal de contacto',
     'occupation' => 'Ocupación',
     'previous_experience' => 'Experiencia previa',
