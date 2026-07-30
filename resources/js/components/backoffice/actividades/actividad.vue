@@ -1510,15 +1510,14 @@
             clonar: function() {
                 let url = '/admin/ajax/actividades/'+ this.actividad.idActividad +'/clonar';
                 let params = { idActividad: this.actividad.idActividad };
-                debugger;
                 this.axiosPost(url, function(response, self) {
                     if (response.idActividad) {
                         window.location = '/admin/actividades/' + response.idActividad
                     }
                 }, params,
-                    function (response, self) {
+                    function (error, self) {
                     // Si hay error
-                        this.errors = error.response.data.errors;
+                        self.errors = error.response && error.response.data ? error.response.data.errors : null;
                         Event.$emit('error');
                     })
             },
