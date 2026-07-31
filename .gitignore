@@ -29,3 +29,5 @@ web.dockerfile
 worker.log
 /resources/js/vue-i18n-locales.generated.js
 /public/bower_components
+# Credenciales locales de deploy (n8n, etc.) - NUNCA commitear
+.deploy.env

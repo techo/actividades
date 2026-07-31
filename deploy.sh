@@ -6,15 +6,55 @@
 #   ./deploy.sh                      # deploya la branch que ya esté checkouteada en el server
 #   ./deploy.sh preguntas-condicionales   # fuerza checkout + pull de esa branch
 #
+# Notificaciones n8n (opcional):
+#   Exportá N8N_WEBHOOK_URL y N8N_WEBHOOK_TOKEN antes de correr, o dejalos
+#   en un archivo .deploy.env (gitignoreado) que se sourcea automáticamente.
+#   Si N8N_WEBHOOK_URL no está seteada, el deploy corre igual sin notificar.
+#
 set -euo pipefail
 
 HOST="techo@actividades.techo.org"
 DIR="/var/www/html/sandbox-voluntariado-eventual"
 BRANCH="${1:-}"
 
+# --- Config de notificación n8n (secretos NUNCA hardcodeados acá) -----------
+# Cargá credenciales desde un archivo local gitignoreado si existe.
+if [ -f "$(dirname "$0")/.deploy.env" ]; then
+  # shellcheck disable=SC1091
+  source "$(dirname "$0")/.deploy.env"
+fi
+N8N_WEBHOOK_URL="${N8N_WEBHOOK_URL:-}"
+N8N_WEBHOOK_TOKEN="${N8N_WEBHOOK_TOKEN:-}"
+
+notify_n8n() {
+  local status="$1"       # "success" o "failure"
+  local started_at="$2"
+
+  # Sin URL configurada => no notificamos (el deploy no depende de esto).
+  [ -z "$N8N_WEBHOOK_URL" ] && return 0
+
+  # Un fallo del curl no debe tumbar el script (el deploy ya terminó).
+  curl -fsS -m 10 -X POST "$N8N_WEBHOOK_URL" \
+    -H "Content-Type: application/json" \
+    -H "X-Deploy-Token: $N8N_WEBHOOK_TOKEN" \
+    -d @- <<JSON || echo "⚠️  Falló la notificación a n8n (el deploy siguió normalmente)"
+{
+  "project": "sandbox-voluntariado-eventual",
+  "status": "$status",
+  "branch": "${BRANCH:-branch-actual-del-server}",
+  "host": "$HOST",
+  "started_at": "$started_at",
+  "finished_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "user": "$(whoami)"
+}
+JSON
+}
+
+START_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
 echo "🚀 Deploying to $HOST (${BRANCH:-branch actual del server})..."
 
-ssh "$HOST" bash -s <<EOF
+if ssh "$HOST" bash -s <<EOF
   set -euo pipefail
   cd "$DIR"
 
@@ -54,5 +94,11 @@ ssh "$HOST" bash -s <<EOF
 
   echo "✅ Code deployed. (El EXIT trap deja el sitio arriba.)"
 EOF
-
-echo "✅ Deploy complete."
+then
+  echo "✅ Deploy complete."
+  notify_n8n "success" "$START_TIME"
+else
+  echo "❌ Deploy falló."
+  notify_n8n "failure" "$START_TIME"
+  exit 1
+fi
