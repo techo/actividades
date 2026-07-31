@@ -413,6 +413,25 @@ Objetivo: cerrar lo explotable por bajo/nulo privilegio con mínimo riesgo funci
 - [ ] **D-1** plan de upgrade de Laravel/Vue; `composer/npm audit` en CI; pipeline de security scanning (SAST).
 - **Tests:** suite de *authorization matrix* (rol × ruta × país), integrada a CI.
 
+### Roadmap unificado con el upgrade de Laravel/Vue (D-1)
+
+El **D-1 (dependencias EOL)** es el plan de upgrade ya escrito en `docs/upgrade-laravel.md` (`upgrade-fase1..6`, Laravel 5.7→11 + PHP→8.2) y trackeado en `tasks.json`. La secuencia recomendada intercala seguridad y upgrade:
+
+**Bloque A — Hardening restante sobre 5.7 (ANTES del upgrade)** · grupo `seguridad-hardening` + B-1 (`tasks.json` 34/35)
+Por qué antes: el código está en idiomas 5.7 y cada fix suma tests de regresión que refuerzan el baseline que el upgrade necesita.
+- A-7/M-14 (sanitizar rich-text), M-6 (PII a disco privado), B-1 (template + logs → `role:admin`), B-2/B-3/B-6 (password, anti-enumeración, login de inactivos), B-4/B-5/B-7 (CSRF gate, sort whitelist, sesión/tokens).
+
+**Bloque B — Upgrade incremental (D-1)** · grupos `upgrade-fase1..6`
+- Regla: cada fase en branch propio, mergear solo con PHPUnit 100% verde. **Los tests de seguridad (SecurityFase0/1/2, Sort/ImageUpload) son la red de seguridad que se re-corre en cada fase.**
+- `upgrade-3a-factories` migrará esos tests de `factory('App\X')` a `X::factory()`.
+- Fase 3 del upgrade toca Spatie 4.x / Passport 10.x / lcobucci 4.x → revalidar A-4/A-5 (TTL de tokens) y M-3 (roles) tras esa fase.
+
+**Bloque C — Arquitectura objetivo (DESPUÉS del upgrade)** · grupo `seguridad-arquitectura`
+Más limpio y seguro sobre Laravel moderno:
+- `BelongsToCountry` Global Scope (reemplaza los checks de país dispersos de Fase 1/2), API Resources en todo endpoint, Policies obligatorias + authorization-matrix como gate de CI, CSP nonce-based (follow-up de M-8), `composer/npm audit` en CI.
+
+> Estado: Fases 0/1 y la mayor parte de la Fase 2 del audit están **done** en la rama de seguridad. Lo que queda son los Bloques A y C de arriba, más el upgrade (Bloque B).
+
 ---
 
 ## 5. Estrategia de tests automáticos anti-regresión
