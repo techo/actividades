@@ -28,6 +28,9 @@ class FichaMedicaController extends Controller
               'confirma_datos' => 'required',
               ]);
       $persona = Auth::user();
+      if (!$persona) {
+          abort(401, 'Sesión no válida.');
+      }
       $countFichas = FichaMedica::where('idPersona', $persona->idPersona)->count();
 
       if($countFichas>0)
@@ -53,6 +56,9 @@ class FichaMedicaController extends Controller
 
   public function getFichaMedica(Request $request) {
       $persona = Auth::user();
+      if (!$persona) {
+          abort(401, 'Sesión no válida.');
+      }
       $fichaMedica = FichaMedica::where('idPersona', $persona->idPersona)->first();
       return response()->json($fichaMedica);
   }
@@ -65,7 +71,11 @@ class FichaMedicaController extends Controller
         'documento_dorso' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
     ));
 
-    $fichaMedica = Auth::user()->fichaMedica;
+    $persona = Auth::user();
+    if (!$persona) {
+        abort(401, 'Sesión no válida.');
+    }
+    $fichaMedica = $persona->fichaMedica;
 
     if ($request->file('archivo_medico')){
       $archivo = $request->file('archivo_medico');

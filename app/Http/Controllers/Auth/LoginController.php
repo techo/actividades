@@ -138,7 +138,7 @@ class LoginController extends Controller
             $personaData->nombre = $user->user['given_name'];
             $personaData->apellido = $user->user['family_name'];
             $personaData->email = $user->email;
-            $personaData->google_id = $user->user['id'];
+            $personaData->google_id = $user->user['id'] ?? '';
             $personaData->facebook_id = '';
             $personaData->genero = '';
         } else {

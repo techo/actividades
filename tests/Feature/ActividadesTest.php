@@ -181,4 +181,36 @@ class ActividadesTest extends TestCase
             ->assertSeeText("confirm");
     }
 
+    /**
+     * El home (index.vue) pide actividades categoría por categoría. Antes solo
+     * recorría el set hardcodeado [1,2,3,5]; ahora recorre TODAS las categorías
+     * de la DB. Este test fija que el endpoint que consume el home devuelve la
+     * actividad cuando se filtra por una categoría fuera de ese set legacy.
+     * @test
+     */
+    public function actividades_de_una_categoria_fuera_del_set_legacy_del_home_se_listan()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $pais = factory('App\Pais')->create();
+
+        // id 999 => explícitamente fuera del hardcode viejo [1,2,3,5].
+        $categoria = factory('App\CategoriaActividad')->create(['id' => 999]);
+        $tipo = factory('App\Tipo')->create(['idCategoria' => $categoria->id]);
+
+        $actividad = app(ActividadFactory::class)
+            ->deTipo($tipo->idTipo)
+            ->agregarPuntoConInscriptos(0)
+            ->conPais($pais->id)
+            ->create();
+
+        Config::set('app.pais', $pais->id);
+
+        $this->get('/ajax/actividades?categoria=' . $categoria->id)
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment(['idActividad' => $actividad->idActividad]);
+    }
+
 }

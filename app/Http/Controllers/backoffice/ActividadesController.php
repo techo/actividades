@@ -420,6 +420,11 @@ class ActividadesController extends Controller
 
     public function clonar(Request $request, Actividad $id)
     {
+        $original = Actividad::find($request->idActividad);
+        if (is_null($original)) {
+            return response('La actividad a clonar no existe.', 404);
+        }
+
         DB::beginTransaction();
         try {
             // Se clona la actividad de la ruta (sobre la que ya autorizó `can:editar`),
@@ -428,28 +433,99 @@ class ActividadesController extends Controller
             $clon = $original->replicate();
             $clon->nombreActividad = 'Copia de '. $original->nombreActividad;
             $clon->idPersonaCreacion = auth()->user()->idPersona;
-            $clon->push();
+            $clon->save();
+
             foreach ($original->puntosEncuentro as $punto) {
                 $nuevoPunto = $punto->replicate();
+                $nuevoPunto->setRelations([]);
                 $nuevoPunto->idActividad = $clon->idActividad;
-                $nuevoPunto->push();
+                $nuevoPunto->save();
             }
+
             foreach ($original->coordinadores as $coordinador) {
                 $nuevoCoordinador = $coordinador->replicate();
+                $nuevoCoordinador->setRelations([]);
                 $nuevoCoordinador->idActividad = $clon->idActividad;
-                $nuevoCoordinador->push();
+                $nuevoCoordinador->save();
             }
+
+            foreach ($original->jornadas as $jornada) {
+                $nuevaJornada = $jornada->replicate();
+                $nuevaJornada->setRelations([]);
+                $nuevaJornada->idActividad = $clon->idActividad;
+                $nuevaJornada->save();
+            }
+
+            $this->clonarPreguntas($original, $clon);
 
             $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
                 ->where('idPadre', 0)
                 ->first();
-            $this->clonarGrupo($grupoRaizOriginal, $clon);
-        } catch (\Exception $exception) {
+
+            if (!is_null($grupoRaizOriginal)) {
+                $this->clonarGrupo($grupoRaizOriginal, $clon);
+            } else {
+                // Actividades legacy sin grupo raíz: creamos uno vacío, igual que store().
+                Grupo::create([
+                    'nombre'      => $clon->nombreActividad,
+                    'idPadre'     => 0,
+                    'idActividad' => $clon->idActividad,
+                ]);
+            }
+        } catch (\Throwable $exception) {
             DB::rollBack();
-            return response($exception->getMessage(), 500);
+            Log::error('Error al clonar actividad', [
+                'idActividad' => $request->idActividad,
+                'idPersona'   => optional(auth()->user())->idPersona,
+                'exception'   => $exception,
+            ]);
+            return response('No se pudo clonar la actividad: ' . $exception->getMessage(), 500);
         }
         DB::commit();
         return $clon;
+    }
+
+    /**
+     * Clona las preguntas configurables de una actividad y sus condiciones de
+     * visibilidad, remapeando los IDs de pregunta (parent_id / target_id) a las
+     * preguntas recién creadas. El `value` de la condición referencia el id
+     * estable de la opción (opt_xxxx), que se preserva al copiar `opciones`, así
+     * que no requiere remapeo.
+     *
+     * @param Actividad $original
+     * @param Actividad $clon
+     */
+    private function clonarPreguntas(Actividad $original, Actividad $clon)
+    {
+        // preguntas() ya trae las condiciones eager-loaded.
+        $preguntasOriginales = $original->preguntas;
+
+        // 1) Clonar preguntas y armar el mapa idViejo => idNuevo.
+        $mapaPreguntas = [];
+        foreach ($preguntasOriginales as $pregunta) {
+            $nuevaPregunta = $pregunta->replicate();
+            $nuevaPregunta->setRelations([]);
+            $nuevaPregunta->actividad_id = $clon->idActividad;
+            $nuevaPregunta->save();
+            $mapaPreguntas[$pregunta->id] = $nuevaPregunta->id;
+        }
+
+        // 2) Clonar las condiciones remapeando parent_id / target_id.
+        foreach ($preguntasOriginales as $pregunta) {
+            foreach ($pregunta->condiciones as $condicion) {
+                // Si alguna punta de la condición no fue clonada, la saltamos
+                // para no dejar referencias colgadas.
+                if (!isset($mapaPreguntas[$condicion->target_id]) ||
+                    !isset($mapaPreguntas[$condicion->parent_id])) {
+                    continue;
+                }
+                $nuevaCondicion = $condicion->replicate();
+                $nuevaCondicion->setRelations([]);
+                $nuevaCondicion->target_id = $mapaPreguntas[$condicion->target_id];
+                $nuevaCondicion->parent_id = $mapaPreguntas[$condicion->parent_id];
+                $nuevaCondicion->save();
+            }
+        }
     }
 
     /**

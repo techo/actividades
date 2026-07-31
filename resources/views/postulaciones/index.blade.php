@@ -6,7 +6,7 @@
 
 @section('main_image')
     <div class="techo-hero actividades" style="
-        background: url({{$homeHeader->imagen}}); 
+        background: url({{ optional($homeHeader)->imagen }}); 
         background-size: cover;
         max-width: 100%;">
         <h2 class="text-uppercase">
