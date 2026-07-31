@@ -21,8 +21,10 @@ class SeleccionarPaisActividad
    {
        $idActividad = $request->route('id');  //get country part from url
        $actividad = Actividad::findOrFail($idActividad);
-       config([ 'app.pais' => $actividad->pais->id ]);
-       config([ 'app.pais_abreviacion' => $actividad->pais->abreviacion ]);
+       if ($actividad->pais) {
+           config([ 'app.pais' => $actividad->pais->id ]);
+           config([ 'app.pais_abreviacion' => $actividad->pais->abreviacion ]);
+       }
 
        return $next($request);
    }

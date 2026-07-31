@@ -91,9 +91,11 @@
         <div class="row">
             <div class="col-md-12 p-1 ">
                     @foreach($actividad->coordinadores as $coordinador)
+                    @if($coordinador->persona)
                     <span style="display: none;">
                         {{ $coordinador->persona->nombres }} {{ $coordinador->persona->apellidoPaterno }}
-                    </span>                   
+                    </span>
+                    @endif
                     @endforeach
                     <persona-tooltip
                         :personas='@json($actividad->coordinadores)'

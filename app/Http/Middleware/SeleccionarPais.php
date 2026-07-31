@@ -22,8 +22,10 @@ class SeleccionarPais
         else {
             if(config('app.pais_default')){
                 $pais = \App\Pais::find(config('app.pais_default'));
-                config([ 'app.pais' => $pais->id ]);
-                config([ 'app.pais_abreviacion' => $pais->abreviacion ]);
+                if($pais){
+                    config([ 'app.pais' => $pais->id ]);
+                    config([ 'app.pais_abreviacion' => $pais->abreviacion ]);
+                }
             }
         }
         return $next($request);

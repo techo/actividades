@@ -22,6 +22,9 @@ class ComunidadesController extends Controller
     public function indexEquipo($idEquipo)
     {
         $equipo = Equipo::where('idEquipo', $idEquipo)->first();
+        if (!$equipo) {
+            return collect();
+        }
         return Comunidad::where('idOficina', $equipo->idOficina)->get();
     }
 

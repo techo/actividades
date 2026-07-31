@@ -132,7 +132,7 @@ class InscripcionesController extends BaseController
                 $inscripcion->save();
                 foreach ($jornadas as $jornada) {
                     if($jornada['selected'])
-                        $inscripcion->jornadas()->attach($jornada['idJornada']);
+                        $inscripcion->jornadas()->syncWithoutDetaching([$jornada['idJornada']]);
                 }
             }
             
@@ -258,7 +258,7 @@ class InscripcionesController extends BaseController
      */
     public function puntoDeEncuentro($id)
     {
-        $actividad = Actividad::find($id);
+        $actividad = Actividad::findOrFail($id);
 
         return view('inscripciones.seleccionar_puntos_encuentro',
              compact('actividad'));
