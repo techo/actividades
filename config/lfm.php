@@ -78,7 +78,7 @@ return [
     'alphanumeric_directory' => false,
 
     // If true, the uploading file's size will be verified for over than max_image_size/max_file_size.
-    'should_validate_size' => false,
+    'should_validate_size' => true,
 
     'max_image_size' => 2000,
     'max_file_size' => 2000,
@@ -92,7 +92,7 @@ return [
         'image/pjpeg',
         'image/png',
         'image/gif',
-        'image/svg+xml',
+        // 'image/svg+xml' excluido: los SVG pueden llevar <script> (stored XSS).
     ],
 
     // If true, image thumbnails would be created during upload
@@ -121,7 +121,7 @@ return [
         'image/pjpeg',
         'image/png',
         'image/gif',
-        'image/svg+xml',
+        // 'image/svg+xml' excluido: vector de stored XSS.
 //        'application/pdf',
 //        'text/plain',
     ],

@@ -37,11 +37,13 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Localization::class,
             \App\Http\Middleware\SeleccionarPais::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ],
 
         'api' => [
             'throttle:60,1',
             'bindings',
+            \App\Http\Middleware\SecurityHeaders::class,
         ],
 
         'pais' => [

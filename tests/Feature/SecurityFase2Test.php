@@ -99,4 +99,19 @@ class SecurityFase2Test extends TestCase
         $persona->refresh();
         $this->assertEquals('Suspendido', $persona->estadoPersona);
     }
+
+    /**
+     * M-8: las respuestas web incluyen cabeceras de seguridad.
+     *
+     * @test
+     */
+    public function respuestas_incluyen_headers_de_seguridad()
+    {
+        $response = $this->get('/carta-voluntariado');
+
+        $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+        $response->assertHeader('X-Content-Type-Options', 'nosniff');
+        $response->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+        $response->assertHeader('Content-Security-Policy');
+    }
 }
