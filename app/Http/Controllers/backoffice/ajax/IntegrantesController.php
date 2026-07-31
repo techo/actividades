@@ -20,16 +20,13 @@ class IntegrantesController extends Controller
 {
     public function index(Request $request, $idEquipo, $estado)
     {
-        $filtros = [];
-        if($request->has('integrante')){
-            $filtros['integrante'] = $request->integrante;
-        }
-        
-        if($estado)
-            $filtros['estado'] = true;
+        // Traducción request → filtros (búsqueda libre + condiciones avanzadas del
+        // constructor de filtros) + metadata filtrable, igual que inscripciones.
+        // 'integrante' (búsqueda libre) y 'estado' se preservan como filtros base.
+        $filtros = (new \App\Services\Listados\ListadoQuery())
+            ->filtrosDesdeRequest($request, 'integrantes', $idEquipo, $estado ? ['estado' => true] : []);
 
-        $filtros['idEquipo'] = $idEquipo;
-        
+        $sort = 'created_at desc';
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
                 $sort = join(" ",explode("|", $request->sort));
