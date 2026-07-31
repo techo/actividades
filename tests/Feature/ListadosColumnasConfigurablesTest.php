@@ -596,9 +596,19 @@ class ListadosColumnasConfigurablesTest extends TestCase
 
         // config: grupos + campos filtrables/agrupables propios de suscriptos.
         $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
-        $this->assertTrue(collect($config['grupos'])->keyBy('key')->has('datos_generales'));
+        $datosGenerales = collect($config['grupos'])->firstWhere('key', 'datos_generales');
+        $this->assertNotNull($datosGenerales);
+        // Guarda contra colisión de clave en datatables.php: los campos deben venir
+        // poblados (si otra sección 'suscriptos'/'campana_suscriptos' pisara la
+        // config, esto quedaría vacío y defaultFields haría array_merge(null)).
+        $this->assertNotEmpty($datosGenerales['campos']);
         $this->assertTrue(collect($config['filtrables'])->pluck('key')->contains('canal_contacto'));
         $this->assertTrue(collect($config['agrupables'])->pluck('key')->contains('convertido'));
+
+        // defaultFields (camino del blade CampanasController@suscriptos) no debe romper.
+        $fields = (new \App\Services\Listados\SuscriptosCatalogo)->defaultFields($campaign->id);
+        $this->assertNotEmpty($fields);
+        $this->assertContains('mail', collect($fields)->pluck('key')->filter()->all());
 
         // count total + preview de convertido = 1.
         $this->actingAs($admin)->getJson($url . '/count')->assertStatus(200)->assertJson(['total' => 3]);
