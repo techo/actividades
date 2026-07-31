@@ -2,6 +2,7 @@
 
 return [
 
+    'loading' => 'Carregando',
     'contact_channel' => 'Canal de contato',
     'occupation' => 'Ocupação',
     'previous_experience' => 'Experiência prévia',
@@ -17,7 +18,7 @@ return [
     'no_filters' => 'Sem filtros',
     'active_filters' => 'filtros ativos',
     'save_view' => 'Salvar vista',
-    'group_by' => 'Agrupar por',
+    'group_by' => 'Contar por',
     'no_grouping' => 'Sem agrupamento',
     'count_by_group' => 'Contagem por grupo',
     'build_condition' => 'Construir condição',

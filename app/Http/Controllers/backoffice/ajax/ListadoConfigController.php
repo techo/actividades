@@ -48,6 +48,9 @@ class ListadoConfigController extends Controller
     {
         $labels = $this->mapaLabels($cfg);
         $grupos = $this->mapaGrupos($cfg);
+        // Los campos agrupables tienen dominio finito → su valor se elige por
+        // <select> (opciones traídas on-demand del endpoint /opciones).
+        $agrupables = $catalogo->groupableFields($contextId);
 
         $filtrables = [];
         foreach ($catalogo->filterableFields($contextId) as $key => $desc) {
@@ -58,6 +61,8 @@ class ListadoConfigController extends Controller
                 'type' => $desc['type'],
                 'operadores' => Operadores::permitidos($desc['type']),
                 'opciones' => $desc['opciones'] ?? null,
+                // Sin opciones fijas pero con dominio finito → select dinámico.
+                'opciones_remotas' => empty($desc['opciones']) && in_array($key, $agrupables, true),
                 // Grupo del catálogo (misma categorización que el panel de columnas).
                 'grupo' => $grupo['key'],
                 'grupo_label' => $grupo['label'],
@@ -254,6 +259,28 @@ class ListadoConfigController extends Controller
         $this->vistaPropia($listKey, $contextId, $vistaId)->delete();
 
         return response()->json(['ok' => true]);
+    }
+
+    /**
+     * Valores posibles de un campo filtrable (para el <select> del filtro).
+     * On-demand: se pide solo cuando el usuario elige ese campo, no al cargar.
+     *   ?campo=<fieldKey> → { opciones: [...] }
+     */
+    public function opciones(Request $request, $listKey, $contextId)
+    {
+        $this->resolver($listKey, $contextId);
+
+        $campo = $request->input('campo');
+        if (!$campo) {
+            return response()->json(['opciones' => []]);
+        }
+
+        $lq = new ListadoQuery();
+        $filtros = $lq->filtrosDesdeRequest($request, $listKey, $contextId);
+
+        return response()->json([
+            'opciones' => (new \App\Services\Listados\Facetador())->valoresPosibles($listKey, $filtros, $campo),
+        ]);
     }
 
     public function guardarPreferencias(Request $request, $listKey, $contextId)

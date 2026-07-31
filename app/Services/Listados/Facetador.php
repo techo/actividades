@@ -70,6 +70,47 @@ class Facetador
     }
 
     /**
+     * Valores distintos presentes para un campo dentro del contexto (para poblar
+     * el <select> del filtro on-demand). Reutiliza la misma expresión/join que
+     * los facets; ordena alfabéticamente y acota el resultado.
+     *
+     * @return string[]
+     */
+    public function valoresPosibles(string $listKey, array $filtros, string $campo, int $limite = 300): array
+    {
+        $meta = $filtros['__filterable'] ?? [];
+        $descriptor = $meta[$campo] ?? null;
+        if (!$descriptor) {
+            return [];
+        }
+
+        $ctx = $meta['__ctx'] ?? [];
+        $query = (new ListadoQuery())->builder($listKey, $filtros)->getQuery();
+        $query->columns = null;
+        $query->orders = null;
+
+        $expr = $this->expresionAgrupacion($query, $descriptor['sql'], $ctx);
+        if ($expr === null) {
+            return [];
+        }
+
+        return $query
+            ->selectRaw($expr . ' as valor')
+            ->groupBy(DB::raw($expr))
+            ->orderBy(DB::raw($expr))
+            ->limit($limite)
+            ->pluck('valor')
+            ->filter(function ($v) {
+                return $v !== null && $v !== '';
+            })
+            ->map(function ($v) {
+                return (string) $v;
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
      * Devuelve la expresión SQL por la que agrupar (y aplica los joins que haga
      * falta para los campos custom/pregunta). null si el campo no es agrupable.
      */

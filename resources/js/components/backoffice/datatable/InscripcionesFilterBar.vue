@@ -38,7 +38,7 @@
         <br>
         <div class="row">
             <div class="col-md-12">
-                <inscripciones-toolbar></inscripciones-toolbar>
+                <inscripciones-toolbar :confirmacion="confirmacion" :pago="pago"></inscripciones-toolbar>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
     import InscripcionesInscribirModal from '../actividades/inscripciones-inscribir-modal.vue';
 
     export default {
-        props: ['placeholderText', 'idActividad'],
+        props: ['placeholderText', 'idActividad', 'confirmacion', 'pago'],
         components: { 'inscripciones-inscribir-modal': InscripcionesInscribirModal },
         data() {
             return {

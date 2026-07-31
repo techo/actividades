@@ -470,6 +470,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/config', 'backoffice\ajax\ListadoConfigController@config');
         Route::get('/count', 'backoffice\ajax\ListadoConfigController@count');
         Route::get('/facets', 'backoffice\ajax\ListadoConfigController@facets');
+        Route::get('/opciones', 'backoffice\ajax\ListadoConfigController@opciones');
         Route::get('/vistas', 'backoffice\ajax\ListadoConfigController@vistas');
         Route::post('/vistas', 'backoffice\ajax\ListadoConfigController@guardarVista');
         Route::put('/vistas/{vistaId}', 'backoffice\ajax\ListadoConfigController@actualizarVista');

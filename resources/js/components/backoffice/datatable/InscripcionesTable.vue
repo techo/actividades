@@ -2,7 +2,7 @@
   <div>
 
     <simple-alert ref="loading"></simple-alert>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText" :idActividad="actividad" ></filter-bar>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText" :idActividad="actividad" :confirmacion="confirmacion" :pago="pago" ></filter-bar>
     <div class="table-responsive">
       <vuetable
               class="vuetable"
@@ -73,7 +73,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad', 'confirmacion', 'pago'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
     data () {
     return {
         listadoKey: 'inscripciones',
