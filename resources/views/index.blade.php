@@ -31,7 +31,7 @@
      
         <div class="row">
             <div class="col-md-12">
-                <index ref="contenedor" :categorias="[1,2,3,5]"/>
+                <index ref="contenedor" categorias="{{ $categorias }}"/>
             </div>
         </div>
         <div class="row" style="display: none;">

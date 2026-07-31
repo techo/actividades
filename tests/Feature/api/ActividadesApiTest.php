@@ -115,4 +115,31 @@ class ActividadesApiTest extends TestCase
         $this->getJson('/api/actividades/categoria/no-existe')
             ->assertStatus(404);
     }
+
+    /**
+     * A diferencia del home web (que agrupa por categoría), el listado general
+     * de la app mobile NO filtra por categoría: debe traer actividades de todas.
+     * Ancla anti-regresión de que la mobile muestra el catálogo completo.
+     * @test
+     */
+    public function actividades_general_incluye_actividades_de_distintas_categorias()
+    {
+        $this->seed('PermisosSeeder');
+
+        $categoriaA = factory('App\CategoriaActividad')->create();
+        $categoriaB = factory('App\CategoriaActividad')->create();
+        $tipoA = factory('App\Tipo')->create(['idCategoria' => $categoriaA->id]);
+        $tipoB = factory('App\Tipo')->create(['idCategoria' => $categoriaB->id]);
+
+        $actividadA = app(ActividadFactory::class)
+            ->deTipo($tipoA->idTipo)->agregarPuntoConInscriptos(0)->create();
+        $actividadB = app(ActividadFactory::class)
+            ->deTipo($tipoB->idTipo)->agregarPuntoConInscriptos(0)->create();
+
+        $this->getJson('/api/actividadesGeneral')
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment(['idActividad' => $actividadA->idActividad])
+            ->assertJsonFragment(['idActividad' => $actividadB->idActividad]);
+    }
 }

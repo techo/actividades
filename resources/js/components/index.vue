@@ -26,20 +26,11 @@
                 :title="$t('frontend.home_for_new_volunteers')"
             />
             <carousel-de-tarjetas
-                v-show="actividadesPorCategoria[1] && actividadesPorCategoria[1].length > 0"
-                :actividades="actividadesPorCategoria[1] || []"
-                :title="$t('frontend.home_community')"
-            />
-            <carousel-de-tarjetas
-                v-show="actividadesPorCategoria[2] && actividadesPorCategoria[2].length > 0"
-                :actividades="actividadesPorCategoria[2] || []"
-                :title="$t('frontend.home_formation')"
-            />
-            
-            <carousel-de-tarjetas
-                v-show="actividadesPorCategoria[5] && actividadesPorCategoria[5].length > 0"
-                :actividades="actividadesPorCategoria[5] || []"
-                :title="$t('frontend.home_campaign')"
+                v-for="categoria in listaCategorias"
+                :key="'categoria_' + categoria.id"
+                v-show="actividadesPorCategoria[categoria.id] && actividadesPorCategoria[categoria.id].length > 0"
+                :actividades="actividadesPorCategoria[categoria.id] || []"
+                :title="tituloCategoria(categoria)"
             />
             <carousel-de-tarjetas
                 v-show="actividadesHitoAnual && actividadesHitoAnual.length > 0"
@@ -85,16 +76,22 @@
                 totalTarjetas: 0,
                 vacio: false,
                 filtros: {},
+                // Se completa en created() parseando el prop `categorias` (JSON).
+                listaCategorias: [],
             }
         },
         props: {
+            // JSON de las categorías (CategoriaActividad::all()) inyectado por el
+            // Blade como `categorias="{{ $categorias }}"`, igual que <filtro>.
             categorias: {
-                type: Array
+                type: String,
+                default: '[]',
             }
         },
         components: { Suscribe, tarjeta: Tarjeta, CarouselDeTarjetas},
 
         created () {
+            this.listaCategorias = JSON.parse(this.categorias);
             this.inicializarActividadesPorCategoria();
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible();
@@ -114,9 +111,21 @@
                 return bottomOfPage || pageHeight < visible;
             },
             inicializarActividadesPorCategoria() {
-                this.categorias.forEach(categoria => {
-                    this.$set(this.actividadesPorCategoria, categoria, []);
+                this.listaCategorias.forEach(categoria => {
+                    this.$set(this.actividadesPorCategoria, categoria.id, []);
                 });
+            },
+            // Títulos curados por i18n para las categorías conocidas; el resto
+            // (incluyendo categorías nuevas) cae al nombre de la categoría en la DB.
+            tituloCategoria(categoria) {
+                const claves = {
+                    1: 'frontend.home_community',
+                    2: 'frontend.home_formation',
+                    5: 'frontend.home_campaign',
+                };
+                return claves[categoria.id]
+                    ? this.$t(claves[categoria.id])
+                    : categoria.nombre;
             },
             scrollLeft() {
                 const container = this.$el.querySelector('.scroll-container');
@@ -179,8 +188,8 @@
             },
             async cargarTarjetas() {
                 this.loading = true;
-                for (let categoria of this.categorias) {
-                    await this.agregarTarjetas(this.url, this.filtros, true, categoria);
+                for (let categoria of this.listaCategorias) {
+                    await this.agregarTarjetas(this.url, this.filtros, true, categoria.id);
                 }
                 this.loading = false;
                 this.vacio = !Object.values(this.actividadesPorCategoria).some(actividades => actividades.length > 0);
