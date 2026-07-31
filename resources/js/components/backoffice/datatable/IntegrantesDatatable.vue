@@ -125,8 +125,13 @@ export default {
           return '<b>' + value + '</b>';
       },
     refrescarTabla() {
-        this.moreParams = {}; 
+        this.moreParams = {};
         this.$refs.vuetable.refresh();
+      },
+    aplicarFiltros(condiciones) {
+        this.$set(this.moreParams, 'condiciones', Array.isArray(condiciones) ? condiciones : []);
+        this.$refs.vuetable.resetData();
+        Vue.nextTick( () => this.$refs.vuetable.refresh() );
       },
     translateField(title) {
         if (!title) return title;
@@ -153,16 +158,23 @@ export default {
       });
 
       this.dataFields = fields;
+
+      // Filtros genéricos (<filtros-listado>): reemplaza el set de condiciones
+      // sin pisar la búsqueda libre (integrante). Mismo patrón que inscripciones.
+      Event.$on('filtros:cambio:integrantes', this.aplicarFiltros);
+  },
+  beforeDestroy() {
+      Event.$off('filtros:cambio:integrantes', this.aplicarFiltros);
   },
   events: {
     'filter-set' (filterText) {
-      this.moreParams = {
-        integrante: filterText
-      };
+      this.$set(this.moreParams, 'integrante', filterText);
+      this.$refs.vuetable.resetData();
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     },
     'filter-reset' () {
-      this.moreParams = {};
+      this.$set(this.moreParams, 'integrante', '');
+      this.$refs.vuetable.resetData();
       Vue.nextTick( () => this.$refs.vuetable.refresh() )
     }
   },

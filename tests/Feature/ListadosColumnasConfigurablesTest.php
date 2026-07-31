@@ -733,6 +733,46 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function el_modulo_generico_funciona_para_integrantes()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        $equipo = factory('App\Equipo')->create();
+        $i1 = factory('App\Integrante')->create(['idEquipo' => $equipo->idEquipo, 'rol' => 'Coordinador']);
+        factory('App\Integrante')->create(['idEquipo' => $equipo->idEquipo, 'rol' => 'Voluntario']);
+        factory('App\Integrante')->create(); // otro equipo: no debe contar en este contexto
+
+        $url = '/admin/ajax/listados/integrantes/' . $equipo->idEquipo;
+
+        // config: grupos + campos filtrables/agrupables propios de integrantes.
+        $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
+        $this->assertTrue(collect($config['grupos'])->keyBy('key')->has('seguimiento'));
+        $this->assertTrue(collect($config['filtrables'])->pluck('key')->contains('rol'));
+        $this->assertTrue(collect($config['agrupables'])->pluck('key')->contains('rol'));
+
+        // count acotado al equipo (2, no el de otro equipo).
+        $this->actingAs($admin)->getJson($url . '/count')->assertStatus(200)->assertJson(['total' => 2]);
+
+        // filtro genérico por un campo base del integrante.
+        $this->actingAs($admin);
+        $filtros = array_merge(
+            ['idEquipo' => $equipo->idEquipo, 'rol' => ['condicion' => '=', 'valor' => 'Coordinador']],
+            ['__filterable' => (new ListadoQuery())->metaFiltrable('integrantes', $equipo->idEquipo)]
+        );
+        $filas = \App\Search\IntegrantesSearch::query($filtros)->get();
+        $this->assertCount(1, $filas);
+        $this->assertEquals($i1->idIntegrante, $filas->first()->idIntegrante);
+
+        // opciones on-demand del select + vista predefinida.
+        $opciones = $this->actingAs($admin)->getJson($url . '/opciones?campo=rol')->assertStatus(200)->json('opciones');
+        $this->assertEquals(['Coordinador', 'Voluntario'], collect($opciones)->sort()->values()->all());
+        $vistas = $this->actingAs($admin)->getJson($url . '/vistas')->assertStatus(200)->json();
+        $this->assertNotEmpty($vistas['predefinidas']);
+    }
+
+    /** @test */
     public function el_index_de_inscripciones_aplica_los_filtros_avanzados()
     {
         $this->withoutExceptionHandling();
