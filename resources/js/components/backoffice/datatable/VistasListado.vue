@@ -37,6 +37,7 @@
                 <ul class="vista-resumen text-muted">
                     <li>{{ resumenFiltros }}</li>
                     <li>{{ resumenGrupo }}</li>
+                    <li>{{ resumenColumnas }}</li>
                 </ul>
 
                 <div class="text-right" style="margin-top: 12px;">
@@ -72,6 +73,7 @@
                 colores: ['#1f6feb', '#2ea043', '#f0b429', '#e5484d', '#8250df', '#0b7285'],
                 filtrosActuales: [],
                 groupByActual: null,
+                columnasActuales: [],
             };
         },
         computed: {
@@ -90,15 +92,21 @@
                     ? `${this.$t('backend.group_by')}: ${this.groupByActual}`
                     : this.$t('backend.no_grouping');
             },
+            resumenColumnas() {
+                const n = this.columnasActuales.length;
+                return `${this.$t('backend.columns')}: ${n}`;
+            },
         },
         created() {
             this.cargar();
             Event.$on(`filtros:cambio:${this.listKey}`, this.onFiltros = (c) => { this.filtrosActuales = Array.isArray(c) ? c : []; });
             Event.$on(`agrupar:cambio:${this.listKey}`, this.onAgrupar = (g) => { this.groupByActual = g || null; });
+            Event.$on(`columnas:cambio:${this.listKey}`, this.onColumnas = (cols) => { this.columnasActuales = Array.isArray(cols) ? cols : []; });
         },
         beforeDestroy() {
             Event.$off(`filtros:cambio:${this.listKey}`, this.onFiltros);
             Event.$off(`agrupar:cambio:${this.listKey}`, this.onAgrupar);
+            Event.$off(`columnas:cambio:${this.listKey}`, this.onColumnas);
         },
         methods: {
             cargar() {
@@ -124,7 +132,11 @@
                 axios.post(`${this.baseUrl}/vistas`, {
                     nombre: this.nombre,
                     color: this.color,
-                    config: { filtros: this.filtrosActuales, group_by: this.groupByActual },
+                    config: {
+                        filtros: this.filtrosActuales,
+                        group_by: this.groupByActual,
+                        columnas: this.columnasActuales,
+                    },
                 }).then(() => {
                     this.modal = false;
                     this.cargar();
