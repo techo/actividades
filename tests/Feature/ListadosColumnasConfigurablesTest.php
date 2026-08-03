@@ -530,6 +530,32 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function una_vista_guarda_y_devuelve_las_columnas_visibles()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
+
+        // Guarda una vista incluyendo el set de columnas visibles.
+        $this->actingAs($admin)->postJson($url, [
+            'nombre' => 'Con columnas',
+            'config' => [
+                'filtros' => [],
+                'group_by' => null,
+                'columnas' => ['dni', 'whatsapp', 'nivel'],
+            ],
+        ])->assertStatus(200);
+
+        $data = $this->actingAs($admin)->getJson($url)->assertStatus(200)->json();
+
+        // Las columnas se persisten y vuelven en el config de la vista.
+        $this->assertEquals(['dni', 'whatsapp', 'nivel'], $data['propias'][0]['config']['columnas']);
+    }
+
+    /** @test */
     public function una_vista_no_puede_referenciar_un_campo_no_consultable()
     {
         $this->seed('PermisosSeeder');

@@ -112,6 +112,9 @@
 
       <div v-if="imagenActual" style="margin-bottom: 12px;">
         <img :src="imagenActual" style="max-width: 100%; max-height: 300px; display: block; border: 1px solid #ddd; border-radius: 4px;">
+        <button type="button" class="btn btn-default btn-sm" style="margin-top: 8px;" @click="borrarImagen" :disabled="subiendo || borrando">
+          <i class="fa fa-trash"></i> {{ $t('backend.remove_image') }}
+        </button>
       </div>
       <div v-else class="text-muted" style="margin-bottom: 12px;">
         {{ $t('backend.no_image') }}
@@ -174,6 +177,7 @@ export default {
       guardando:    false,
       guardadoOk:   false,
       subiendo:     false,
+      borrando:     false,
     }
   },
   mounted() {
@@ -234,6 +238,21 @@ export default {
         .finally(() => {
           this.subiendo = false
           event.target.value = ''
+        })
+    },
+    borrarImagen() {
+      if (!confirm(this.$t('backend.confirm_remove_image'))) return
+
+      this.borrando = true
+      axios.delete(`/admin/ajax/campanas/${this.campanaId}/imagen`)
+        .then(() => {
+          this.imagenActual = null
+        })
+        .catch(() => {
+          alert(this.$t('backend.error_guardando'))
+        })
+        .finally(() => {
+          this.borrando = false
         })
     },
   },

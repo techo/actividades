@@ -81,9 +81,12 @@ export default {
         })
         this._cerrarHandler = () => { this.abierto = false }
         document.addEventListener('click', this._cerrarHandler)
+        // Una vista guardada puede traer su propio set de columnas visibles.
+        Event.$on(`vista:aplicar:${this.listKey}`, this._onVistaAplicar = (config) => this.aplicarVista(config))
     },
     beforeDestroy() {
         document.removeEventListener('click', this._cerrarHandler)
+        Event.$off(`vista:aplicar:${this.listKey}`, this._onVistaAplicar)
     },
     methods: {
         toggle() {
@@ -117,6 +120,18 @@ export default {
                 fijas: this.fijas,
                 camposVisibles,
             })
+            // Estado actual de columnas visibles, para que las vistas puedan guardarlo.
+            Event.$emit(`columnas:cambio:${this.listKey}`, this.visibles.slice())
+        },
+        // Aplica el set de columnas de una vista guardada (si la vista lo trae).
+        // No persiste: la vista es un snapshot transitorio, igual que sus filtros.
+        aplicarVista(config) {
+            if (!this.cargado || !config) return
+            const cols = config.columnas
+            if (!Array.isArray(cols) || cols.length === 0) return // vista sin columnas: no tocar
+            const conocidas = this.keysDelCatalogo()
+            this.visibles = cols.filter(key => conocidas.includes(key))
+            this.aplicar()
         },
         persistir() {
             clearTimeout(this._persistTimer)

@@ -15,6 +15,7 @@ use App\Services\Listados\ListadoQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
 class CampanasController extends Controller
@@ -113,11 +114,44 @@ class CampanasController extends Controller
             'imagen' => 'required|file|image|max:4096',
         ]);
 
+        // Borra la imagen anterior para no dejar archivos huérfanos en disco
+        $this->borrarArchivoImagen($campana->imagen);
+
         $path = ImageUploadService::store($request->file('imagen'), 'public/campanas');
         $campana->imagen = str_replace('public', 'storage', '/' . $path);
         $campana->save();
 
         return response()->json(['imagen' => $campana->imagen]);
+    }
+
+    public function destroyImagen($id)
+    {
+        $campana = Campaign::findOrFail($id);
+        $this->authorize('update', $campana);
+
+        $this->borrarArchivoImagen($campana->imagen);
+
+        $campana->imagen = null;
+        $campana->save();
+
+        return response()->json(['imagen' => null]);
+    }
+
+    /**
+     * Borra del disco el archivo apuntado por una ruta pública (/storage/...).
+     * La imagen se guarda como "/storage/campanas/xxx.jpg"; el archivo real
+     * vive en "public/campanas/xxx.jpg".
+     */
+    private function borrarArchivoImagen($imagen)
+    {
+        if (empty($imagen)) {
+            return;
+        }
+
+        $oldPath = ltrim(str_replace('storage', 'public', $imagen), '/');
+        if (Storage::exists($oldPath)) {
+            Storage::delete($oldPath);
+        }
     }
 
     public function suscriptos(Request $request, $id)
