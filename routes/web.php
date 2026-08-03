@@ -256,6 +256,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{id}/suscriptos', 'backoffice\ajax\CampanasController@suscriptos');
         Route::post('/{id}/convertir', 'backoffice\ajax\CampanasController@convertir');
         Route::post('/{id}/imagen', 'backoffice\ajax\CampanasController@storeImagen');
+        Route::delete('/{id}/imagen', 'backoffice\ajax\CampanasController@destroyImagen');
         // preguntas
         Route::get('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@index');
         Route::post('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@store');

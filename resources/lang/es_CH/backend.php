@@ -740,6 +740,8 @@ return [
     'no_image'                   => 'Sin imagen',
     'upload_image'               => 'Subir imagen',
     'uploading'                  => 'Subiendo...',
+    'remove_image'               => 'Quitar imagen',
+    'confirm_remove_image'       => '¿Seguro que quieres quitar la imagen?',
     'select'                     => 'Seleccionar',
     'campaign_tipo_options'      => [
         'colecta'   => 'Colecta',

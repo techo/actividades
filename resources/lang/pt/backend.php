@@ -740,6 +740,8 @@ return [
     'no_image'                   => 'Sem imagem',
     'upload_image'               => 'Enviar imagem',
     'uploading'                  => 'Enviando...',
+    'remove_image'               => 'Remover imagem',
+    'confirm_remove_image'       => 'Deseja remover a imagem?',
     'select'                     => 'Selecionar',
     'campaign_tipo_options'      => [
         'colecta'   => 'Coleta',
