@@ -51,4 +51,48 @@ class IntegrantesCatalogo implements CatalogoListado
 
         return array_merge(config('datatables.integrantes.fijas'), $defaults);
     }
+
+    /**
+     * Campos filtrables: columnas reales de la tabla Integrantes + columnas de
+     * seguimiento. `comunidad`/`participacion` se omiten (accessors/relaciones,
+     * no columnas SQL directas).
+     */
+    public function filterableFields($contextId): array
+    {
+        Equipo::findOrFail($contextId);
+
+        $base = [
+            'despliegue'  => ['type' => 'text', 'sql' => 'Integrantes.despliegue'],
+            'rol'         => ['type' => 'text', 'sql' => 'Integrantes.rol'],
+            'cargo'       => ['type' => 'text', 'sql' => 'Integrantes.cargo'],
+            'relacion'    => ['type' => 'text', 'sql' => 'Integrantes.relacion'],
+            'estado'      => ['type' => 'text', 'sql' => 'Integrantes.estado'],
+            'fechaInicio' => ['type' => 'date', 'sql' => 'Integrantes.fechaInicio'],
+            'fechaFin'    => ['type' => 'date', 'sql' => 'Integrantes.fechaFin'],
+        ];
+
+        return array_merge(
+            $base,
+            $this->camposSeguimientoFiltrables(static::LIST_KEY, $contextId)
+        );
+    }
+
+    public function groupableFields($contextId): array
+    {
+        return array_merge(
+            ['despliegue', 'rol', 'cargo', 'relacion', 'estado'],
+            $this->camposSeguimientoAgrupables(static::LIST_KEY, $contextId)
+        );
+    }
+
+    public function defaultViews($contextId): array
+    {
+        return [
+            [
+                'nombre' => 'backend.vista_todos',
+                'color' => '#1f6feb',
+                'config' => ['filtros' => [], 'group_by' => null],
+            ],
+        ];
+    }
 }

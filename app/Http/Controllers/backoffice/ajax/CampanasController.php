@@ -10,6 +10,8 @@ use App\Suscribe;
 use App\Http\Resources\SuscriptosResource;
 use App\Search\SuscriptosSearch;
 use App\Services\ImageUploadService;
+use App\Services\Listados\EnriquecedorFilas;
+use App\Services\Listados\ListadoQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -120,7 +122,10 @@ class CampanasController extends Controller
 
     public function suscriptos(Request $request, $id)
     {
-        $filtros = ['campaign_id' => $id];
+        // Filtros del módulo genérico (búsqueda libre + condiciones avanzadas +
+        // metadata filtrable). sort/per_page van por separado a apply().
+        $filtros = (new ListadoQuery())->filtrosDesdeRequest($request, 'suscriptos', $id);
+        unset($filtros['sort'], $filtros['per_page']);
 
         if ($request->filled('usuario')) {
             $filtros['usuario'] = $request->usuario;
@@ -137,6 +142,9 @@ class CampanasController extends Controller
 
         $result = SuscriptosSearch::apply($filtros, $sort, $per_page);
         $result->getCollection()->load('respuestas.pregunta');
+
+        // Inyecta valores de columnas de seguimiento (custom_{id}) sobre la página.
+        (new EnriquecedorFilas)->enriquecer($result->getCollection(), 'suscriptos', $id, null, 'id');
 
         // REQ 1 — Detectar si el email del Subscribe ya corresponde a un usuario (Persona)
         $emails   = $result->getCollection()->pluck('mail')->filter()->values()->toArray();

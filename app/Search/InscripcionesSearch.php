@@ -6,6 +6,7 @@ namespace App\Search;
 use App\Persona;
 use App\Search\filters\inscripciones\CantidadActividades;
 use App\Search\filters\inscripciones\IdActividad;
+use App\Services\Listados\Filtros\FiltroGenerico;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +19,21 @@ class InscripcionesSearch
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
     {
+        // Metadata de campos filtrables (filterableFields + __ctx). La inyecta
+        // ListadoQuery; no es un filtro en sí, se saca del loop.
+        $meta = $filters['__filterable'] ?? [];
+        unset($filters['__filterable']);
+
         foreach ($filters as $filterName => $value) {
+            // Condición avanzada sobre un campo filtrable registrado que NO tiene
+            // clase hardcodeada propia → filtro genérico (custom_/pregunta_/base).
+            if (FiltroGenerico::esCondicion($value)
+                && FiltroGenerico::soporta($filterName, $meta)
+                && !static::isValidDecorator(static::createFilterDecorator($filterName))) {
+                $query = FiltroGenerico::apply($query, $filterName, $value, $meta);
+                continue;
+            }
+
             $decorator = static::createFilterDecorator($filterName);
 
             if (static::isValidDecorator($decorator)) {

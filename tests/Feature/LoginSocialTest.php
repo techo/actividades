@@ -90,14 +90,22 @@ class loginSocialTest extends TestCase
 
     /** @test */
     public function usuario_existente_confirma_vinculacion_con_google() {
-        
+
         $persona = factory('App\Persona')->create([
             'mail' => 'aaaa@aaaa.com'
         ]);
 
+        // El callback OAuth deja en sesión los datos verificados por el proveedor.
+        // linkear usa ESTOS valores, no los del request.
+        $this->withSession(['link_social' => [
+            'email'     => 'aaaa@aaaa.com',
+            'provider'  => 'google',
+            'social_id' => '1234567890',
+        ]]);
+
         $this->put('/ajax/usuario/linkear', [
-            'email' => 'aaaa@aaaa.com', 
-            'media' => 'google', 
+            'email' => 'aaaa@aaaa.com',
+            'media' => 'google',
             'id' => '1234567890'
         ])->assertStatus(200);
 
@@ -107,19 +115,78 @@ class loginSocialTest extends TestCase
 
     /** @test */
     public function usuario_existente_confirma_vinculacion_con_facebook() {
-        
+
         $persona = factory('App\Persona')->create([
             'mail' => 'aaaa@aaaa.com'
         ]);
 
+        $this->withSession(['link_social' => [
+            'email'     => 'aaaa@aaaa.com',
+            'provider'  => 'facebook',
+            'social_id' => '1234567890',
+        ]]);
+
         $this->put('/ajax/usuario/linkear', [
-                'email' => 'aaaa@aaaa.com', 
-                'media' => 'facebook', 
+                'email' => 'aaaa@aaaa.com',
+                'media' => 'facebook',
                 'id' => '1234567890'
         ])->assertStatus(200);
 
         $this->assertAuthenticatedAs($persona);
         $this->assertDatabaseHas('Persona', [ 'facebook_id' => '1234567890']);
+    }
+
+    /**
+     * Regresión C-1: sin datos verificados en sesión (que solo setea el callback OAuth),
+     * un atacante NO puede loguearse ni linkear una cuenta enviando un email arbitrario.
+     *
+     * @test
+     */
+    public function linkear_sin_sesion_verificada_no_autentica_ni_linkea() {
+
+        $victima = factory('App\Persona')->create([
+            'mail' => 'victima@techo.org'
+        ]);
+
+        $response = $this->put('/ajax/usuario/linkear', [
+            'email' => 'victima@techo.org',
+            'media' => 'google',
+            'id' => 'id-del-atacante'
+        ])->assertStatus(200);
+
+        $this->assertGuest();
+        $this->assertFalse($response->json('success'));
+        $this->assertDatabaseMissing('Persona', ['google_id' => 'id-del-atacante']);
+    }
+
+    /**
+     * Regresión C-1: el email del request se ignora; se usa el de la sesión verificada.
+     * Aunque el body apunte a la víctima, solo se opera sobre el email verificado por OAuth.
+     *
+     * @test
+     */
+    public function linkear_ignora_el_email_del_request() {
+
+        $victima = factory('App\Persona')->create([
+            'mail' => 'victima@techo.org'
+        ]);
+
+        // Sesión verificada de un email SIN persona asociada.
+        $this->withSession(['link_social' => [
+            'email'     => 'atacante@evil.com',
+            'provider'  => 'google',
+            'social_id' => 'x',
+        ]]);
+
+        $response = $this->put('/ajax/usuario/linkear', [
+            'email' => 'victima@techo.org',   // el atacante intenta apuntar a la víctima
+            'media' => 'google',
+            'id' => 'x'
+        ])->assertStatus(200);
+
+        $this->assertGuest();
+        $this->assertFalse($response->json('success'));
+        $this->assertDatabaseMissing('Persona', ['google_id' => 'x']);
     }
 
 }

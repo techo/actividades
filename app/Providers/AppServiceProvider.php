@@ -23,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        // En producción, generar siempre URLs https y asegurar el esquema seguro
+        // (complementa SESSION_SECURE_COOKIE y el proxy/HSTS).
+        if ($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Alias estables para las relaciones polimórficas de condiciones de
         // preguntas. Desacopla la BD de los namespaces PHP.
         Relation::morphMap([

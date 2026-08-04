@@ -33,7 +33,7 @@ class TiposActividadSearch
     }
     private static function getResults(Builder $query, $sort, $per_page)
     {
-        $query->orderByRaw($sort);
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'idTipo desc'));
         return $query->paginate($per_page);
     }
 

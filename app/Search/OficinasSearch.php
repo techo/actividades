@@ -33,7 +33,7 @@ class OficinasSearch
     }
     private static function getResults(Builder $query, $sort, $per_page)
     {
-        $query->orderByRaw($sort);
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'idOficina desc'));
         return $query->paginate($per_page);
     }
 

@@ -34,7 +34,7 @@ class UsuariosSearch
     private static function getResults(Builder $query, $sort, $per_page)
     {
         // return $query->get();
-        $query->orderByRaw($sort);
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'idPersona desc'));
         return $query->paginate($per_page);
     }
 

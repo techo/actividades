@@ -46,23 +46,11 @@ class InscripcionesController extends BaseController
      */
     public function index($id, Request $request)
     {
-        $filtros = array_merge($request->all(), ['idActividad' => $id]);
-        if($request->has('filter')){
-            $filtros['HotFilter'] = $request->filter;
-            unset($filtros['filter']);
-        }
-        if($request->has('condiciones'))
-        {
-            foreach ($request->condiciones as $condicion)
-            {
-                $condicion = json_decode($condicion, true);
-                $filtros[$condicion['campo']] = [
-                    'condicion' => $condicion['condicion'],
-                    'valor' => $condicion['valor']
-                ];
-            }
-            unset($filtros['condiciones']);
-        }
+        // Traducción request → filtros (búsqueda libre + condiciones avanzadas)
+        // + metadata de campos filtrables, compartida con recuento/facets.
+        $filtros = (new \App\Services\Listados\ListadoQuery())
+            ->filtrosDesdeRequest($request, 'inscripciones', $id);
+
         $result = InscripcionesSearch::query($filtros)->paginate(10);
 
         // Inyecta respuestas a preguntas (pregunta_{id}) y valores de columnas

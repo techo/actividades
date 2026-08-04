@@ -836,6 +836,54 @@ return [
         ]
     ],
 
+    // Listado con columnas configurables de Suscriptos de una campaña.
+    // context_id = campaign_id. Datos desde el modelo Suscribe (tabla Suscripciones).
+    'suscriptos' => [
+        'fijas' => [
+            [
+                'name' => '__checkbox',
+                'titleClass' => 'center aligned',
+                'dataClass' => 'center aligned',
+            ],
+            [
+                'name' => 'id',
+                'sortField' => 'id',
+                'visible' => false,
+            ],
+            [
+                'name' => 'nombre',
+                'sortField' => 'nombre',
+                'title' => 'backend.name',
+            ],
+            [
+                'name' => 'apellido',
+                'sortField' => 'apellido',
+                'title' => 'backend.last_name',
+            ],
+        ],
+        'catalogo' => [
+            'datos_generales' => [
+                ['key' => 'mail', 'name' => 'mail', 'sortField' => 'mail', 'title' => 'backend.email'],
+                ['key' => 'telefono', 'name' => 'telefono', 'title' => 'backend.mobile'],
+                ['key' => 'dni', 'name' => 'dni', 'sortField' => 'dni', 'title' => 'backend.dni'],
+                ['key' => 'instagram', 'name' => 'instagram', 'title' => 'Instagram'],
+                ['key' => 'canal_contacto', 'name' => 'canal_contacto', 'sortField' => 'canal_contacto', 'title' => 'backend.contact_channel'],
+                ['key' => 'genero', 'name' => 'genero', 'sortField' => 'genero', 'title' => 'backend.gender'],
+                ['key' => 'ocupacion_actual', 'name' => 'ocupacion_actual', 'title' => 'backend.occupation'],
+                ['key' => 'experiencia_previa', 'name' => 'experiencia_previa', 'title' => 'backend.previous_experience'],
+                [
+                    'key' => 'fecha_suscripcion', 'name' => 'created_at', 'sortField' => 'created_at',
+                    'title' => 'backend.subscription_date', 'callback' => 'formatDate|DD/MM/YYYY HH:mm',
+                ],
+                ['key' => 'convertido', 'name' => '__component:celda-convertido', 'sortField' => 'convertido', 'title' => 'backend.converted'],
+            ],
+        ],
+        'defaults' => ['mail', 'telefono', 'canal_contacto', 'fecha_suscripcion', 'convertido'],
+        'sortOrder' => [
+            ['field' => 'created_at', 'sortField' => 'created_at', 'direction' => 'desc'],
+        ],
+    ],
+
     'comunidades' => [
         'fields' => [
             [

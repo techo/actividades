@@ -121,7 +121,7 @@ class UsuariosController extends Controller
                 'rol',
                 'presente',
             ])
-            ->orderByRaw($sort)
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort, 'fechaInscripcion desc'))
             ->paginate();
     }
 
@@ -149,7 +149,7 @@ class UsuariosController extends Controller
                 DB::raw("count(comentario) comentario"),
             ])
             ->groupBy('Actividad.nombreActividad', 'Tipo.nombre', 'Actividad.fechaInicio')
-            ->orderByRaw($sort)
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort, 'Actividad.fechaInicio desc'))
             ->paginate();
     }
 
@@ -165,7 +165,7 @@ class UsuariosController extends Controller
         }
 
         return \App\Estudios::where('idPersona', '=', $persona)
-            ->orderByRaw($sort)
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort, 'estudios.disciplina_academica desc'))
             ->paginate();
     }
 }

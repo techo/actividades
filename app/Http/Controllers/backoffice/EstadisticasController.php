@@ -124,7 +124,7 @@ class EstadisticasController extends Controller
             ->select(DB::raw('Actividad.idActividad as id, nombreActividad, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
             ->whereYear('created_at', $año)
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad')
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
@@ -153,7 +153,7 @@ class EstadisticasController extends Controller
             ->select(DB::raw('Actividad.idActividad as id, nombreActividad, avg(puntaje) as puntaje, count(puntaje) as cantidad'))
             ->whereYear('created_at', $año) 
             ->groupBy('Actividad.idActividad', 'Actividad.nombreActividad') 
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
@@ -183,7 +183,7 @@ class EstadisticasController extends Controller
             ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes'))
             ->whereYear('Inscripcion.created_at', $año) 
             ->groupBy(['Actividad.idCoordinador', 'nombres', 'apellidoPaterno']) 
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
@@ -219,12 +219,12 @@ class EstadisticasController extends Controller
             ->select(DB::raw('Persona.idPersona as id, nombres, apellidoPaterno, count(*) as inscripciones, sum(if(presente=1,1,0)) as presentes, oficina.nombre as oficina'))
             ->where('Actividad.idPais', auth()->user()->idPaisPermitido)
             ->groupBy(['Persona.idPersona', 'nombres', 'apellidoPaterno']) 
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($fecha_desde && $fecha_hasta)
             $consulta->whereBetween('Inscripcion.created_at', [$fecha_desde, $fecha_hasta]);
         if($edad_hasta)
-            $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ".$edad_desde." AND ". $edad_hasta);
+            $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ? AND ?", [(int) $edad_desde, (int) $edad_hasta]);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
         
         $estadisticas = $consulta->paginate($per_page);
@@ -468,7 +468,7 @@ class EstadisticasController extends Controller
             ->whereYear('EvaluacionPersona.created_at', $año) 
             ->whereNotNull('EvaluacionPersona.puntajeSocial')
             ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
@@ -499,7 +499,7 @@ class EstadisticasController extends Controller
             ->whereYear('EvaluacionPersona.created_at', $año) 
             ->whereNotNull('EvaluacionPersona.puntajeSocial')
             ->groupBy('Persona.idPersona', 'Persona.nombres', 'Persona.apellidoPaterno') 
-            ->orderByRaw($sort);
+            ->orderByRaw(\App\Search\SortSanitizer::sanitize($sort ?? null, 'id desc'));
 
         if($pais) $consulta->where('Actividad.idPais', $pais);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);

@@ -164,7 +164,9 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', false),
+    // En producción la cookie viaja solo por HTTPS por defecto; en dev (HTTP) queda
+    // deshabilitada para no romper el login local. Se puede forzar con SESSION_SECURE_COOKIE.
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -192,6 +194,8 @@ return [
     |
     */
 
-    'same_site' => null,
+    // 'lax': la cookie no se envía en requests cross-site (defensa en profundidad
+    // frente a CSRF), pero sí en navegación normal de nivel superior.
+    'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
 ];

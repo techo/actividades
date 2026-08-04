@@ -7,6 +7,7 @@
         <a :href="exportUrl" class="btn btn-success pull-right">
           <i class="fa fa-download"></i> {{ $t('backend.export') }}
         </a>
+        <column-selector-panel list-key="suscriptos" :context-id="campanaId" class="pull-right" style="margin-right: 8px;"></column-selector-panel>
       </div>
     </div>
 
@@ -26,39 +27,7 @@
       @vuetable:loading="mostrarLoadingAlert"
       @vuetable:loaded="ocultarLoadingAlert"
       @vuetable:cell-clicked="onCellClicked"
-    >
-      <template slot="convertido" slot-scope="props">
-        <!-- Email ya pertenece a un usuario existente -->
-        <span v-if="props.rowData.persona_id">
-          <span class="label label-info" style="font-size:0.85em;">
-            <i class="fa fa-user"></i> {{ $t('backend.user_exists') }}
-          </span>
-          &nbsp;
-          <a
-            :href="'/admin/usuarios/' + props.rowData.persona_id"
-            target="_blank"
-            class="btn btn-xs btn-default"
-            @click.stop
-          >
-            <i class="fa fa-external-link"></i> {{ $t('backend.view_person') }}
-            <span v-if="props.rowData.persona_nombre"> — {{ props.rowData.persona_nombre }}</span>
-          </a>
-        </span>
-        <!-- Convertido via botón -->
-        <span v-else-if="props.rowData.convertido" class="text-success">
-          <i class="fa fa-check"></i> {{ $t('backend.yes') }}
-        </span>
-        <!-- Sin usuario aún -->
-        <button
-          v-else
-          class="btn btn-xs btn-warning"
-          @click.stop="convertir(props.rowData)"
-          :disabled="convirtiendo === props.rowData.id"
-        >
-          <i class="fa fa-user-plus"></i> {{ $t('backend.convert_to_user') }}
-        </button>
-      </template>
-    </vuetable>
+    ></vuetable>
 
     <div class="vuetable-pagination">
       <vuetable-pagination-info
@@ -77,37 +46,35 @@
 </template>
 
 <script>
-import Vuetable from 'vuetable-2/src/components/Vuetable'
+import Vuetable from '../datatable/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 import Vue from 'vue'
 import VueEvents from 'vue-events'
 import Simplert from 'vue2-simplert'
 import CampanaSuscriptosDetailRow from './CampanaSuscriptosDetailRow'
+import columnasConfigurables from '../../../mixins/columnasConfigurables'
 
 Vue.use(VueEvents)
 Vue.component('campana-suscriptos-detail-row', CampanaSuscriptosDetailRow)
 
 export default {
   components: { Simplert, Vuetable, VuetablePagination, VuetablePaginationInfo },
+  mixins: [columnasConfigurables],
   props: {
     apiUrl:    { type: String, required: true },
     exportUrl: { type: String, required: true },
     campanaId: { type: String, required: true },
+    fields:    { type: String, required: true },
+    sortOrder: { type: String, default: '[]' },
   },
   data() {
     return {
+      listadoKey: 'suscriptos',
       convirtiendo: null,
-      moreParams:   {},
+      moreParams:   { condiciones: [] },
       dataSortOrder: [{ field: 'created_at', sortField: 'created_at', direction: 'desc' }],
-      dataFields: [
-        { name: 'nombre',     sortField: 'nombre',     title: this.$t('backend.name') },
-        { name: 'apellido',   sortField: 'apellido',   title: this.$t('backend.last_name') },
-        { name: 'mail',       sortField: 'mail',       title: this.$t('backend.email') },
-        { name: 'telefono',   sortField: 'telefono',   title: this.$t('backend.phone') },
-        { name: '__slot:convertido',                   title: this.$t('backend.converted') },
-        { name: 'created_at', sortField: 'created_at', title: this.$t('backend.created_at'), callback: 'formatDate|DD-MM-YYYY' },
-      ],
+      dataFields: [],
       css: {
         table: {
           tableClass: 'table table-hover table-condensed',
@@ -125,7 +92,31 @@ export default {
       },
     }
   },
+  created() {
+    // Fields dinámicos (fijas + defaults) provistos por el catálogo.
+    this.dataFields = JSON.parse(this.fields).map((f) => {
+      const field = { ...f }
+      if (field.title) field.title = this.translateField(field.title)
+      return field
+    })
+    const so = JSON.parse(this.sortOrder)
+    if (so && so.length) this.dataSortOrder = so
+
+    // Filtros genéricos (<filtros-listado>) → reemplaza el set de condiciones.
+    Event.$on('filtros:cambio:suscriptos', this.aplicarFiltros)
+    // Conversión a usuario disparada desde la celda.
+    Event.$on('suscriptos:convertir', this.convertir)
+  },
+  beforeDestroy() {
+    Event.$off('filtros:cambio:suscriptos', this.aplicarFiltros)
+    Event.$off('suscriptos:convertir', this.convertir)
+  },
   methods: {
+    aplicarFiltros(condiciones) {
+      this.moreParams.condiciones = Array.isArray(condiciones) ? condiciones : []
+      this.$refs.vuetable.resetData()
+      Vue.nextTick(() => this.$refs.vuetable.refresh())
+    },
     onPaginationData(paginationData) {
       this.$refs.pagination.setPaginationData(paginationData)
       this.$refs.paginationInfo.setPaginationData(paginationData)

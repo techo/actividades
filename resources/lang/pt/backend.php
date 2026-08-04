@@ -2,6 +2,31 @@
 
 return [
 
+    'contact_channel' => 'Canal de contato',
+    'occupation' => 'Ocupação',
+    'previous_experience' => 'Experiência prévia',
+    'subscription_date' => 'Data de inscrição',
+    'converted' => 'Convertido',
+    'vista_convertidos' => 'Convertidos',
+    'save_as_view' => 'Salvar como vista',
+    'save_view_help' => 'A vista salva sua configuração atual como uma aba reutilizável.',
+    'view_name' => 'Nome da vista',
+    'view_name_placeholder' => 'Ex: Equipe potencial, Falta pagamento...',
+    'color' => 'Cor',
+    'what_is_saved' => 'O que se salva',
+    'no_filters' => 'Sem filtros',
+    'active_filters' => 'filtros ativos',
+    'save_view' => 'Salvar vista',
+    'group_by' => 'Agrupar por',
+    'no_grouping' => 'Sem agrupamento',
+    'count_by_group' => 'Contagem por grupo',
+    'build_condition' => 'Construir condição',
+    'matches_for_condition' => 'Correspondências para esta condição',
+    'clear_all' => 'Limpar tudo',
+    'records' => 'registros',
+    'choose' => 'Escolher',
+    'vista_todos' => 'Todos',
+    'vista_confirmados' => 'Confirmados',
 	/*
 	|--------------------------------------------------------------------------
 	| Backend Language Lines

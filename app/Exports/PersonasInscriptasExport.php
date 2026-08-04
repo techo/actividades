@@ -57,7 +57,7 @@ class PersonasInscriptasExport implements FromCollection, WithHeadings, WithColu
         if($fecha_desde && $fecha_hasta)
             $consulta->whereBetween('Inscripcion.created_at', [$fecha_desde, $fecha_hasta]);
         if($edad_hasta)
-            $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ".$edad_desde." AND ". $edad_hasta);
+            $consulta->whereRaw("TIMESTAMPDIFF(YEAR, Persona.fechaNacimiento, CURDATE()) BETWEEN ? AND ?", [(int) $edad_desde, (int) $edad_hasta]);
         if($oficina) $consulta->where('Actividad.idOficina', $oficina);
         
         // Aquí obtenemos la consulta SQL sin bindings

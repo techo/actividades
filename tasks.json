@@ -11,7 +11,8 @@
       "in_progress",
       "done",
       "blocked"
-    ]
+    ],
+    "orden_seguridad_vs_upgrade": "El hardening de seguridad (grupo seguridad-hardening + B-1 34/35) va ANTES del upgrade (código en idiomas 5.7 + suma tests de regresión al baseline). El upgrade (upgrade-fase1..6) re-verifica esos tests en cada fase; upgrade-3a-factories migrará los tests de seguridad a Model::factory(). La arquitectura objetivo (grupo seguridad-arquitectura) va DESPUÉS del upgrade. Fases 0/1 y la mayor parte de la Fase 2 del audit ya están done en la rama de seguridad."
   },
   "tasks": [
     {
@@ -569,7 +570,7 @@
       "group": "seguridad-critica",
       "name": "segurizar_descarga_template",
       "title": "TODO segurizar: descarga de template de importación sin permisos",
-      "description": "routes/web.php:493 — GET /inscripciones/importar/template marcado '//TODO: segurizar' por el propio equipo. Master plan §8: resolver ahora, sin esperar etapa. Verificar qué middleware/permiso corresponde en el grupo backoffice.",
+      "description": "routes/web.php:493 — GET /inscripciones/importar/template marcado '//TODO: segurizar' por el propio equipo. Master plan §8: resolver ahora, sin esperar etapa. Verificar qué middleware/permiso corresponde en el grupo backoffice. [Audit B-1: docs/security-audit-2026.md; hacer ANTES del upgrade, con role:admin.]",
       "acceptance": [
         "Ruta protegida con el permiso adecuado",
         "Test de que un usuario sin permiso recibe 403"
@@ -582,10 +583,128 @@
       "group": "seguridad-critica",
       "name": "segurizar_endpoint_logs",
       "title": "TODO segurizar: endpoint de logs de procesos sin permisos",
-      "description": "routes/web.php:512 — GET /logs/{proceso} marcado '//TODO: segurizar' por el propio equipo. Expone logs internos. Master plan §8: resolver ahora, sin esperar etapa.",
+      "description": "routes/web.php:512 — GET /logs/{proceso} marcado '//TODO: segurizar' por el propio equipo. Expone logs internos. Master plan §8: resolver ahora, sin esperar etapa. [Audit B-1: docs/security-audit-2026.md; hacer ANTES del upgrade, con role:admin.]",
       "acceptance": [
         "Ruta protegida con el permiso adecuado",
         "Test de que un usuario sin permiso recibe 403"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 36,
+      "group": "seguridad-hardening",
+      "name": "audit_sanitizar_richtext",
+      "title": "A-7/M-14: sanitizar rich-text (XSS almacenado)",
+      "description": "docs/security-audit-2026.md A-7/M-14. Sanitizar con allow-list (HTMLPurifier) Actividad.descripcion/descripcionPago (Blade {!! !!}) y Campaign.confirmation_message (v-html + API). ANTES del upgrade.",
+      "acceptance": [
+        "Payload <script> en descripcion/confirmation_message no ejecuta",
+        "Feature/Vue test de escape"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 37,
+      "group": "seguridad-hardening",
+      "name": "audit_pii_disco_privado",
+      "title": "M-6: documentos de ficha médica/identidad a disco privado",
+      "description": "docs/security-audit-2026.md M-6. Mover uploads de FichaMedicaController (certificados + documento_frente/dorso) a disco privado con endpoint de descarga autenticado (patrón PreguntaArchivoController) + migración de archivos existentes. El riesgo RCE/XSS ya está cerrado por el backstop de ImageUploadService (C-4); esto es confidencialidad de PII.",
+      "acceptance": [
+        "Documentos no accesibles por URL pública sin auth",
+        "Descarga autorizada por dueño/backoffice"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 38,
+      "group": "seguridad-hardening",
+      "name": "audit_lows_b2_b6",
+      "title": "B-2/B-3/B-6: política de password, anti-enumeración y login de inactivos",
+      "description": "docs/security-audit-2026.md. B-2: min:8 en CrearPersona (register API). B-3: respuesta genérica en reset (SendsPasswordResetEmails) para no enumerar cuentas. B-6: bloquear login de Personas con estadoPersona inactivo. ANTES del upgrade.",
+      "acceptance": [
+        "register exige password fuerte",
+        "reset responde igual para email conocido/desconocido",
+        "Persona suspendida/desvinculada no puede loguear"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 39,
+      "group": "seguridad-hardening",
+      "name": "audit_lows_b4_b5_b7",
+      "title": "B-4/B-5/B-7: CSRF gate, sort whitelist y endurecer sesión/tokens",
+      "description": "docs/security-audit-2026.md. B-4: VerifyCsrfToken no debe deshabilitarse por APP_ENV=testing (gatear por framework de test). B-5: whitelist de sort en filters/mis_actividades/Sort.php. B-7: session.encrypt=true, throttle en /oauth/token, throttle de auth más estricto. ANTES del upgrade.",
+      "acceptance": [
+        "CSRF activo aunque APP_ENV=testing en runtime",
+        "sort de mis_actividades whitelisteado",
+        "/oauth/token con throttle"
+      ],
+      "risk": "low",
+      "status": "pending"
+    },
+    {
+      "id": 40,
+      "group": "seguridad-arquitectura",
+      "name": "audit_belongs_to_country",
+      "title": "Fase 3: tenant país como Global Scope (BelongsToCountry)",
+      "description": "docs/security-audit-2026.md Fase 3. Trait BelongsToCountry + Global Scope por idPaisPermitido en modelos país-scopeados, con bypass superadmin. DESPUÉS del upgrade (más limpio en L8+). Reemplaza los checks de país dispersos de Fase 1/2.",
+      "acceptance": [
+        "Modelos tenant filtran por país automáticamente",
+        "Test de aislamiento por modelo"
+      ],
+      "risk": "high",
+      "status": "pending"
+    },
+    {
+      "id": 41,
+      "group": "seguridad-arquitectura",
+      "name": "audit_api_resources",
+      "title": "Fase 3: API Resources en todos los endpoints",
+      "description": "docs/security-audit-2026.md Fase 3. Migrar endpoints que devuelven modelos Eloquent crudos a API Resources (elimina fuga de campos). DESPUÉS del upgrade.",
+      "acceptance": [
+        "Ningún endpoint devuelve modelos crudos"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 42,
+      "group": "seguridad-arquitectura",
+      "name": "audit_policies_ci_matrix",
+      "title": "Fase 3: Policies obligatorias + authorization-matrix en CI",
+      "description": "docs/security-audit-2026.md Fase 3. Toda ruta mutadora pasa por Policy; test de matriz rol×ruta×país como gate de CI para que rutas nuevas sin authz fallen el build. DESPUÉS del upgrade.",
+      "acceptance": [
+        "Suite authorization-matrix en CI",
+        "Ruta nueva sin authz falla el build"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 43,
+      "group": "seguridad-arquitectura",
+      "name": "audit_csp_nonce",
+      "title": "Fase 3: CSP estricta basada en nonces (follow-up de M-8)",
+      "description": "docs/security-audit-2026.md M-8. Migrar scripts inline a nonce y endurecer la CSP (hoy es mínima no-disruptiva). DESPUÉS del upgrade / retiro de Vue 2.",
+      "acceptance": [
+        "CSP sin unsafe-inline en script-src",
+        "App funciona con nonces"
+      ],
+      "risk": "medium",
+      "status": "pending"
+    },
+    {
+      "id": 44,
+      "group": "seguridad-arquitectura",
+      "name": "audit_dependency_scanning",
+      "title": "D-1: composer audit / npm audit en CI",
+      "description": "docs/security-audit-2026.md D-1. Integrar escaneo de dependencias vulnerables en CI. Disponible tras el upgrade (composer 2.4+). Complementa el upgrade de Laravel/Vue (upgrade-fase1..6).",
+      "acceptance": [
+        "CI corre composer audit y npm audit",
+        "Build alerta ante CVEs"
       ],
       "risk": "low",
       "status": "pending"

@@ -21,21 +21,18 @@
                     <h3 class="box-title">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse">
                             <i class="fa fa-plus"></i>
-                        </button> 
+                        </button>
                         {{  __('backend.advanced_search') }}
                     </h3>
                 </div>
 
                 <div class="box-body">
-                    <filtros-inscripciones
-                            campos="{{ $camposInscripciones }}"
-                            condiciones="{{ $condiciones }}"
-                            ref="filtro"
-                    ></filtros-inscripciones>
-                </div>
-
-                <div class="box-footer">
-                    <condiciones-seleccionadas></condiciones-seleccionadas>
+                    {{-- Constructor de filtros genérico (campo · operador · valor) con
+                         preview de coincidencias y chips. Reutilizable por listado. --}}
+                    <filtros-listado
+                            list-key="inscripciones"
+                            context-id="{{ $actividad->idActividad }}"
+                    ></filtros-listado>
                 </div>
 
             </div>
@@ -44,6 +41,16 @@
 
                 <div class="box-body  with-border">
                     <inscripciones-mensajes></inscripciones-mensajes>
+                    {{-- Pestañas de vistas guardadas (predefinidas + propias). --}}
+                    <vistas-listado
+                            list-key="inscripciones"
+                            context-id="{{ $actividad->idActividad }}"
+                    ></vistas-listado>
+                    {{-- Selector "Agrupar por" + fila de recuento por grupo (facets). --}}
+                    <agrupar-listado
+                            list-key="inscripciones"
+                            context-id="{{ $actividad->idActividad }}"
+                    ></agrupar-listado>
                     <inscripciones-table
                             ref="inscripcionestable"
                             api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"

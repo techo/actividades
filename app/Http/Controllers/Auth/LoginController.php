@@ -126,15 +126,23 @@ class LoginController extends Controller
         $url = $request->session()->get('login_callback','');
         $personaData = new \stdClass();
         if($provider == 'google') {
-            $user = Socialite::driver($provider)->stateless()->user();
-            $personaData->nombre = $user->user['given_name'] ?? '';
-            $personaData->apellido = $user->user['family_name'] ?? '';
+            // Sin stateless(): Socialite valida el parámetro OAuth `state` guardado en
+            // sesión por redirectToProvider (protección CSRF del callback de login).
+            $user = Socialite::driver($provider)->user();
+            // Google solo devuelve el email primario verificado; si explícitamente
+            // viene sin verificar, no lo confiamos.
+            $emailVerificado = $user->user['email_verified'] ?? $user->user['verified_email'] ?? true;
+            if ($emailVerificado === false || $emailVerificado === 'false') {
+                return view('registro')->with('persona', null)->with('mensaje', "El email de la cuenta de Google no está verificado.");
+            }
+            $personaData->nombre = $user->user['given_name'];
+            $personaData->apellido = $user->user['family_name'];
             $personaData->email = $user->email;
             $personaData->google_id = $user->user['id'] ?? '';
             $personaData->facebook_id = '';
             $personaData->genero = '';
         } else {
-           $user = Socialite::driver($provider)->stateless()->fields([
+           $user = Socialite::driver($provider)->fields([
                    'first_name', 'last_name', 'email', 'gender'
            ])->user();
             $personaData->nombre = $user->user['first_name'];
@@ -154,6 +162,14 @@ class LoginController extends Controller
         if(!$persona) {
             if($personaData->email == null)
                 return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");
+            // Guardamos en sesión el email + id social verificados por el proveedor OAuth.
+            // El registro (UsuarioController::create) usa SOLO estos valores para marcar
+            // el email como verificado y asociar el id social; nunca los del request.
+            $request->session()->put('registro_social', [
+                'email'     => $personaData->email,
+                'provider'  => $provider,
+                'social_id' => $provider == 'google' ? $personaData->google_id : $personaData->facebook_id,
+            ]);
             return view('registro')->with('persona', $personaData);
         } else {
             if($provider == 'google') {
@@ -161,6 +177,14 @@ class LoginController extends Controller
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
+                    // Guardamos en sesión los datos verificados por el proveedor OAuth.
+                    // El endpoint `linkear` usa SOLO estos valores, nunca los del request,
+                    // para evitar el linkeo/login a partir de un email arbitrario.
+                    $request->session()->put('link_social', [
+                        'email'     => $personaData->email,
+                        'provider'  => 'google',
+                        'social_id' => $personaData->google_id,
+                    ]);
                     return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }
@@ -169,6 +193,11 @@ class LoginController extends Controller
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
+                    $request->session()->put('link_social', [
+                        'email'     => $personaData->email,
+                        'provider'  => 'facebook',
+                        'social_id' => $personaData->facebook_id,
+                    ]);
                     return view('registro')->with('persona', $personaData)->with('linkear',true);
                 }
             }

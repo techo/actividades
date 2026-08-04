@@ -126,8 +126,8 @@ class IntegrantesController extends Controller
     public function uploadArchivos(Request $request, $idEquipo, $idIntegrante)
     {
         $this->validate($request, array(
-            'archivo_carta_compromiso' => 'nullable',
-            'archivo_plan_de_trabajo' => 'nullable',
+            'archivo_carta_compromiso' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
+            'archivo_plan_de_trabajo' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
         ));
 
         $integrante = Integrante::findOrFail($idIntegrante);

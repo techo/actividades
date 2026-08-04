@@ -25,7 +25,7 @@ class GruposActividadesController extends BaseController
         $result = $this->paginate($collection, 10);
         return $result;
     }
-    public function update($id, Request $request)
+    public function update(Actividad $id, Request $request)
     {
         $grupoArray = [];
         $personaArray = [];
@@ -42,13 +42,13 @@ class GruposActividadesController extends BaseController
 
             if (count($grupoArray) > 0) {
                 $grupos = Grupo::whereIn('idGrupo', $grupoArray)
-                    ->where('idActividad', '=', (int)$id)
+                    ->where('idActividad', '=', $id->idActividad)
                     ->update(['idPadre' => (int)$request->idGrupoDestino]);
             }
 
             if (count($personaArray) > 0) {
                 $personas = GrupoRolPersona::whereIn('idPersona', $personaArray)
-                    ->where('idActividad', '=', (int)$id)
+                    ->where('idActividad', '=', $id->idActividad)
                     ->update(['idGrupo' => (int)$request->idGrupoDestino]);
             }
 
@@ -58,7 +58,7 @@ class GruposActividadesController extends BaseController
 
         return response('ok');
     }
-    public function updateRol($id, Request $request)
+    public function updateRol(Actividad $id, Request $request)
     {
         $personaArray = [];
         try {
@@ -70,7 +70,7 @@ class GruposActividadesController extends BaseController
 
             if (count($personaArray) > 0) {
                 $personas = Inscripcion::whereIn('idPersona', $personaArray)
-                    ->where('idActividad', '=', (int)$id)
+                    ->where('idActividad', '=', $id->idActividad)
                     ->update(['rol' => $request->rol]);
             }
 
@@ -81,7 +81,7 @@ class GruposActividadesController extends BaseController
         return response('ok');
     }
 
-    public function updateLink($id, Request $request)
+    public function updateLink(Actividad $id, Request $request)
     {
         // Definir las reglas de validación en una variable
         $rules = [
@@ -108,7 +108,7 @@ class GruposActividadesController extends BaseController
                     $validatedData['linkSeleccionado'] = rtrim(strstr($validatedData['linkSeleccionado'], '/viewform', true), '/') . '/';
                 }
                 Grupo::whereIn('idGrupo', $grupoArray)
-                    ->where('idActividad', '=', (int)$id)
+                    ->where('idActividad', '=', $id->idActividad)
                     ->update(['linkEvaluacion' => $validatedData['linkSeleccionado']]);
             }
 
@@ -119,7 +119,7 @@ class GruposActividadesController extends BaseController
         return response('ok');
     }
 
-    public function delete($id, Request $request)
+    public function delete(Actividad $id, Request $request)
     {
         $idsGrupo = [];
         $idsPersona = [];
@@ -138,7 +138,7 @@ class GruposActividadesController extends BaseController
             $strResult = $this->buscarRecursivo($grupos);
             $arrayResult = array_merge(explode('|', $strResult), $idsGrupo);
             $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
-            $grupoRaiz = Grupo::where([['idActividad','=', $id],['idPadre','=', 0]])->first();
+            $grupoRaiz = Grupo::where([['idActividad','=', $id->idActividad],['idPadre','=', 0]])->first();
             GrupoRolPersona::whereIn('idGrupo', $arrayResult)
                 ->update(['idGrupo' => $grupoRaiz->idGrupo]);
         }

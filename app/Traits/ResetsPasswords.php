@@ -109,6 +109,11 @@ trait ResetsPasswords
 
         $user->save();
 
+        // Revoca los tokens de API activos: un token robado deja de valer tras el reset.
+        if (method_exists($user, 'tokens')) {
+            $user->tokens()->update(['revoked' => true]);
+        }
+
         event(new PasswordReset($user));
 
         $this->guard()->login($user);

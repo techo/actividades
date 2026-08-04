@@ -14,7 +14,11 @@ import Vue from 'vue';
 import VueTable from './components/backoffice/datatable/MyVuetable'
 import InscripcionesTable from './components/backoffice/datatable/InscripcionesTable'
 import ColumnSelectorPanel from './components/backoffice/datatable/columnas/ColumnSelectorPanel'
+import FiltrosListado from './components/backoffice/datatable/FiltrosListado'
+import AgruparListado from './components/backoffice/datatable/AgruparListado'
+import VistasListado from './components/backoffice/datatable/VistasListado'
 import CeldaSeguimiento from './components/backoffice/datatable/columnas/CeldaSeguimiento'
+import CeldaConvertido from './components/backoffice/datatable/columnas/CeldaConvertido'
 import CeldaVoucher from './components/backoffice/datatable/columnas/CeldaVoucher'
 import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
 import CeldaWhatsapp from './components/backoffice/datatable/columnas/CeldaWhatsapp'
@@ -197,7 +201,11 @@ Vue.component('inscripciones-table', InscripcionesTable);
 // Listados con columnas configurables: el panel se usa desde varias tablas y
 // la celda se resuelve por nombre desde los fields (__component:celda-seguimiento).
 Vue.component('column-selector-panel', ColumnSelectorPanel);
+Vue.component('filtros-listado', FiltrosListado);
+Vue.component('agrupar-listado', AgruparListado);
+Vue.component('vistas-listado', VistasListado);
 Vue.component('celda-seguimiento', CeldaSeguimiento);
+Vue.component('celda-convertido', CeldaConvertido);
 // Celdas de solo lectura para columnas de inscripciones (voucher / beca-exención),
 // resueltas por nombre desde los fields (__component:celda-voucher / celda-beca).
 Vue.component('celda-voucher', CeldaVoucher);
