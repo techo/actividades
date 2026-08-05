@@ -327,7 +327,10 @@ return [
                     'title' => 'backend.present',
                     'titleClass' => 'text-center',
                     'sortField' => 'presente',
-                    'dataClass' => 'text-center'
+                    'dataClass' => 'text-center',
+                    // Se fija a la derecha para verse siempre en scroll horizontal.
+                    'pinnedRight' => true,
+                    'width' => '110px',
                 ],
                 [
                     'key' => 'participaciones',
@@ -838,7 +841,12 @@ return [
 
     // Listado con columnas configurables de Suscriptos de una campaña.
     // context_id = campaign_id. Datos desde el modelo Suscribe (tabla Suscripciones).
-    'suscriptos' => [
+    // OJO: la clave es 'suscriptos_configurable' (no 'suscriptos' ni
+    // 'campana_suscriptos') porque ambas ya existen como secciones legacy
+    // (listado global de suscriptos y datatable viejo de campaña). PHP se queda
+    // con la última clave repetida, así que un nombre propio evita que las
+    // legacy pisen esta config.
+    'suscriptos_configurable' => [
         'fijas' => [
             [
                 'name' => '__checkbox',

@@ -2,6 +2,7 @@
 
 return [
 
+    'loading' => 'Loading',
     'contact_channel' => 'Contact channel',
     'occupation' => 'Occupation',
     'previous_experience' => 'Previous experience',
@@ -17,7 +18,7 @@ return [
     'no_filters' => 'No filters',
     'active_filters' => 'active filters',
     'save_view' => 'Save view',
-    'group_by' => 'Group by',
+    'group_by' => 'Count by',
     'no_grouping' => 'No grouping',
     'count_by_group' => 'Count by group',
     'build_condition' => 'Build condition',
@@ -740,6 +741,8 @@ return [
     'no_image'                   => 'No image',
     'upload_image'               => 'Upload image',
     'uploading'                  => 'Uploading...',
+    'remove_image'               => 'Remove image',
+    'confirm_remove_image'       => 'Remove the image?',
     'select'                     => 'Select',
     'campaign_tipo_options'      => [
         'colecta'   => 'Fundraising',

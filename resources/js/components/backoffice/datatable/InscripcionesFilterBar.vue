@@ -20,14 +20,10 @@
                 </form>
             </div>
 
-            <inscripciones-importar-modal ></inscripciones-importar-modal>
             <inscripciones-inscribir-modal :idActividad="idActividad" ></inscripciones-inscribir-modal>
             <div class="col-md-6" style="text-align: right">
                 <button class="btn btn-primary" @click.prevent="mostrarModalInscribir">
                     <i class="fa fa-plus"></i> {{ $t('backend.register') }}
-                </button>
-                <button class="btn btn-default" @click.prevent="mostrarModalImportar">
-                    <i class="glyphicon glyphicon-upload"></i> {{ $t('backend.import_from_excel') }}
                 </button>
                 <button class="btn btn-default" @click.prevent="exportar">
                     <i class="glyphicon glyphicon-save-file"></i> {{ $t('backend.export_to_excel') }}
@@ -38,7 +34,7 @@
         <br>
         <div class="row">
             <div class="col-md-12">
-                <inscripciones-toolbar></inscripciones-toolbar>
+                <inscripciones-toolbar :confirmacion="confirmacion" :pago="pago"></inscripciones-toolbar>
             </div>
         </div>
     </div>
@@ -48,7 +44,7 @@
     import InscripcionesInscribirModal from '../actividades/inscripciones-inscribir-modal.vue';
 
     export default {
-        props: ['placeholderText', 'idActividad'],
+        props: ['placeholderText', 'idActividad', 'confirmacion', 'pago'],
         components: { 'inscripciones-inscribir-modal': InscripcionesInscribirModal },
         data() {
             return {
@@ -67,9 +63,6 @@
             exportar() {
                 let filter = this.$parent.moreParams.filter !== undefined ? 'filter=' + this.$parent.moreParams.filter + '&' : '';
                 location.href = 'inscripciones/exportar?' + filter + 'condiciones=' + JSON.stringify(this.$parent.moreParams.condiciones)
-            },
-            mostrarModalImportar() {
-                Event.$emit('inscripciones:importar-button-clicked');
             },
             mostrarModalInscribir() {
                 Event.$emit('inscripciones:inscribir-button-clicked');

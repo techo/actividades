@@ -21,12 +21,12 @@ class SuscriptosCatalogo implements CatalogoListado
         Campaign::findOrFail($contextId);
 
         return [
-            'fijas' => config('datatables.suscriptos.fijas'),
+            'fijas' => config('datatables.suscriptos_configurable.fijas'),
             'grupos' => [
                 [
                     'key' => 'datos_generales',
                     'titulo' => 'backend.general_data',
-                    'campos' => config('datatables.suscriptos.catalogo.datos_generales'),
+                    'campos' => config('datatables.suscriptos_configurable.catalogo.datos_generales'),
                 ],
                 [
                     'key' => 'seguimiento',
@@ -34,15 +34,15 @@ class SuscriptosCatalogo implements CatalogoListado
                     'campos' => $this->camposSeguimiento(static::LIST_KEY, $contextId),
                 ],
             ],
-            'defaults' => config('datatables.suscriptos.defaults'),
+            'defaults' => config('datatables.suscriptos_configurable.defaults'),
         ];
     }
 
     public function defaultFields($contextId): array
     {
-        $porKey = collect(config('datatables.suscriptos.catalogo.datos_generales'))->keyBy('key');
+        $porKey = collect(config('datatables.suscriptos_configurable.catalogo.datos_generales'))->keyBy('key');
 
-        $defaults = collect(config('datatables.suscriptos.defaults'))
+        $defaults = collect(config('datatables.suscriptos_configurable.defaults'))
             ->map(function ($key) use ($porKey) {
                 return $porKey->get($key);
             })
@@ -50,7 +50,7 @@ class SuscriptosCatalogo implements CatalogoListado
             ->values()
             ->all();
 
-        return array_merge(config('datatables.suscriptos.fijas'), $defaults);
+        return array_merge(config('datatables.suscriptos_configurable.fijas'), $defaults);
     }
 
     public function filterableFields($contextId): array

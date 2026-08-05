@@ -256,6 +256,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/{id}/suscriptos', 'backoffice\ajax\CampanasController@suscriptos');
         Route::post('/{id}/convertir', 'backoffice\ajax\CampanasController@convertir');
         Route::post('/{id}/imagen', 'backoffice\ajax\CampanasController@storeImagen');
+        Route::delete('/{id}/imagen', 'backoffice\ajax\CampanasController@destroyImagen');
         // preguntas
         Route::get('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@index');
         Route::post('/{campana}/preguntas', 'backoffice\ajax\CampaignPreguntasController@store');
@@ -470,6 +471,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/config', 'backoffice\ajax\ListadoConfigController@config');
         Route::get('/count', 'backoffice\ajax\ListadoConfigController@count');
         Route::get('/facets', 'backoffice\ajax\ListadoConfigController@facets');
+        Route::get('/opciones', 'backoffice\ajax\ListadoConfigController@opciones');
         Route::get('/vistas', 'backoffice\ajax\ListadoConfigController@vistas');
         Route::post('/vistas', 'backoffice\ajax\ListadoConfigController@guardarVista');
         Route::put('/vistas/{vistaId}', 'backoffice\ajax\ListadoConfigController@actualizarVista');
@@ -533,8 +535,6 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}/eliminar', 'backoffice\ajax\InscripcionesController@destroy')->middleware('can:verInscripciones,App\Inscripcion,id');
     
 
-    Route::post('/ajax/actividades/{id}/inscripciones/procesar/archivo', 'backoffice\ajax\InscripcionesController@procesarArchivo')->middleware('can:verInscripciones,App\Inscripcion,id');
-    Route::get('/inscripciones/importar/template', 'backoffice\InscripcionesController@descargarTemplate'); //TODO: segurizar
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');

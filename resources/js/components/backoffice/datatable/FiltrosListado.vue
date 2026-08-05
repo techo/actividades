@@ -19,9 +19,12 @@
                             <option v-for="op in campo.operadores" :key="op" :value="op">{{ opLabel(op) }}</option>
                         </select>
 
-                        <select class="form-control" v-if="campo && campo.opciones" v-model="valor" style="min-width: 10em;">
+                        <select class="form-control" v-if="opcionesDelCampo" v-model="valor" style="min-width: 10em;">
                             <option value="">{{ $t('backend.choose') }}...</option>
-                            <option v-for="o in campo.opciones" :key="o" :value="o">{{ o }}</option>
+                            <option v-for="o in opcionesDelCampo" :key="o" :value="o">{{ o }}</option>
+                        </select>
+                        <select class="form-control" v-else-if="campo && campo.opciones_remotas" disabled style="min-width: 10em;">
+                            <option>{{ $t('backend.loading') }}...</option>
                         </select>
                         <select class="form-control" v-else-if="campo && campo.type === 'bool'" v-model="valor" style="min-width: 8em;">
                             <option value="1">{{ $t('backend.yes') }}</option>
@@ -88,6 +91,7 @@
                 valor: '',
                 preview: null,
                 total: null,
+                opcionesCache: {},
                 _seq: 0,
                 _previewTimer: null,
             };
@@ -117,12 +121,21 @@
             puedeAgregar() {
                 return this.campo && this.operador !== '' && this.valor !== '';
             },
+            // Opciones del <select> de valor: estáticas del campo (estado/etiquetas/
+            // desplegable) o las traídas on-demand para campos de dominio finito.
+            opcionesDelCampo() {
+                if (!this.campo) return null;
+                if (this.campo.opciones && this.campo.opciones.length) return this.campo.opciones;
+                if (this.campo.opciones_remotas) return this.opcionesCache[this.campo.key] || null;
+                return null;
+            },
         },
         watch: {
             campoKey() {
                 this.operador = this.campo && this.campo.operadores.length ? this.campo.operadores[0] : '';
                 this.valor = '';
                 this.preview = null;
+                this.cargarOpcionesRemotas();
             },
             operador() { this.recalcularPreview(); },
             valor() { this.recalcularPreview(); },
@@ -143,6 +156,17 @@
             labelDeCampo(key) {
                 const f = this.filtrables.find(x => x.key === key);
                 return f ? this.label(f) : key;
+            },
+            // Trae las opciones del campo elegido solo si tiene dominio finito y no
+            // están cacheadas (lazy: no se cargan todas al abrir la página).
+            cargarOpcionesRemotas() {
+                const campo = this.campo;
+                if (!campo || !campo.opciones_remotas) return;
+                if (this.opcionesCache[campo.key]) return;
+                axios.get(`${this.baseUrl}/opciones`, { params: { campo: campo.key } })
+                    .then(({ data }) => {
+                        this.$set(this.opcionesCache, campo.key, data.opciones || []);
+                    });
             },
             opLabel(op) {
                 const labels = {

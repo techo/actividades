@@ -2,7 +2,7 @@
   <div>
 
     <simple-alert ref="loading"></simple-alert>
-    <filter-bar v-bind:placeholder-text="dataPlaceholderText" :idActividad="actividad" ></filter-bar>
+    <filter-bar v-bind:placeholder-text="dataPlaceholderText" :idActividad="actividad" :confirmacion="confirmacion" :pago="pago" ></filter-bar>
     <div class="table-responsive">
       <vuetable
               class="vuetable"
@@ -73,7 +73,7 @@ export default {
     VuetablePagination,
     VuetablePaginationInfo,
   },
-    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
+    props: ['apiUrl', 'fields', 'sortOrder', 'placeholder-text', 'detailUrl', 'actividad', 'confirmacion', 'pago'], //TODO: Se puede quitar la prop actividad, y tomar el id de la actividad desde la ruta
     data () {
     return {
         listadoKey: 'inscripciones',
@@ -290,28 +290,6 @@ export default {
               },
               params);
       },
-      procesarArchivo: function (archivo) {
-          let url = this.apiUrl + 'procesar/archivo';
-          let formData = new FormData();
-          this.mostrarLoadingAlert();
-          formData.append('archivo', archivo);
-          axios.post(url, formData, {headers: {'Content-Type': 'multipart/form-data'}})
-              .then(function (data, self) {
-                      // loading(false);
-                      Event.$emit('inscripciones-actualizar-tabla');
-                      if(data.data.errores > 0) {
-                          Event.$emit('mensaje-warning', data.data);
-                      } else {
-                          Event.$emit('mensaje-success', data.data);
-                      }
-                      Event.$emit('vuetable-actualizarTabla');
-                      Event.$emit('ocultar-Loading-alert');
-              })
-              .catch(function (data, self) {
-                  Event.$emit('mensaje-error', data);
-                  Event.$emit('ocultar-Loading-alert');
-              });
-      },
       actualizarInscripcionesTable: function () {
           Vue.nextTick( () => {
             this.$refs.inscripcionesVuetable.refresh();
@@ -372,7 +350,6 @@ export default {
       Event.$on('cambiar-confirmacion', this.cambiarConfirmacion);
       Event.$on('cambiar-asistencia', this.cambiarAsistencia);
       Event.$on('desinscripto', this.desinscribir);
-      Event.$on('inscripciones:archivo-seleccionado', this.procesarArchivo);
       Event.$on('inscripciones-actualizar-tabla', this.actualizarInscripcionesTable);
       Event.$on('ocultar-Loading-alert', this.ocultarLoadingAlert);
 

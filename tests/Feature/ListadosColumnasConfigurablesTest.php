@@ -530,6 +530,32 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function una_vista_guarda_y_devuelve_las_columnas_visibles()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
+
+        // Guarda una vista incluyendo el set de columnas visibles.
+        $this->actingAs($admin)->postJson($url, [
+            'nombre' => 'Con columnas',
+            'config' => [
+                'filtros' => [],
+                'group_by' => null,
+                'columnas' => ['dni', 'whatsapp', 'nivel'],
+            ],
+        ])->assertStatus(200);
+
+        $data = $this->actingAs($admin)->getJson($url)->assertStatus(200)->json();
+
+        // Las columnas se persisten y vuelven en el config de la vista.
+        $this->assertEquals(['dni', 'whatsapp', 'nivel'], $data['propias'][0]['config']['columnas']);
+    }
+
+    /** @test */
     public function una_vista_no_puede_referenciar_un_campo_no_consultable()
     {
         $this->seed('PermisosSeeder');
@@ -596,9 +622,19 @@ class ListadosColumnasConfigurablesTest extends TestCase
 
         // config: grupos + campos filtrables/agrupables propios de suscriptos.
         $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
-        $this->assertTrue(collect($config['grupos'])->keyBy('key')->has('datos_generales'));
+        $datosGenerales = collect($config['grupos'])->firstWhere('key', 'datos_generales');
+        $this->assertNotNull($datosGenerales);
+        // Guarda contra colisión de clave en datatables.php: los campos deben venir
+        // poblados (si otra sección 'suscriptos'/'campana_suscriptos' pisara la
+        // config, esto quedaría vacío y defaultFields haría array_merge(null)).
+        $this->assertNotEmpty($datosGenerales['campos']);
         $this->assertTrue(collect($config['filtrables'])->pluck('key')->contains('canal_contacto'));
         $this->assertTrue(collect($config['agrupables'])->pluck('key')->contains('convertido'));
+
+        // defaultFields (camino del blade CampanasController@suscriptos) no debe romper.
+        $fields = (new \App\Services\Listados\SuscriptosCatalogo)->defaultFields($campaign->id);
+        $this->assertNotEmpty($fields);
+        $this->assertContains('mail', collect($fields)->pluck('key')->filter()->all());
 
         // count total + preview de convertido = 1.
         $this->actingAs($admin)->getJson($url . '/count')->assertStatus(200)->assertJson(['total' => 3]);
@@ -672,6 +708,94 @@ class ListadosColumnasConfigurablesTest extends TestCase
         $this->assertEquals('datos_generales', $porKey['dni']['grupo']);
         $this->assertTrue($porKey->has('grupo_sanguinieo'), 'Ficha médica debe ser filtrable');
         $this->assertEquals('ficha_medica', $porKey['grupo_sanguinieo']['grupo']);
+    }
+
+    /** @test */
+    public function los_filtrables_de_columnas_custom_traen_sus_opciones_para_el_select()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+
+        $columna = ListadoColumna::create([
+            'list_key' => 'inscripciones', 'context_id' => $actividad->idActividad,
+            'nombre' => 'Canal', 'tipo' => 'estado',
+            'opciones' => ['WhatsApp', 'Email'], 'orden' => 1, 'created_by' => $admin->idPersona,
+        ]);
+
+        $data = $this->actingAs($admin)
+            ->getJson('/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/config')
+            ->assertStatus(200)->json();
+
+        $filtrable = collect($data['filtrables'])->firstWhere('key', 'custom_' . $columna->id);
+        $this->assertNotNull($filtrable, 'La columna custom debe ser filtrable');
+        // Trae sus opciones → el front la resuelve como <select>, no input de texto.
+        $this->assertEquals(['WhatsApp', 'Email'], $filtrable['opciones']);
+        $this->assertEquals('enum', $filtrable['type']);
+    }
+
+    /** @test */
+    public function los_campos_agrupables_traen_opciones_remotas_y_el_endpoint_las_devuelve()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M', 'F', 'F']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad;
+
+        // /config marca los campos de dominio finito como opciones_remotas (select).
+        $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
+        $genero = collect($config['filtrables'])->firstWhere('key', 'genero');
+        $this->assertTrue($genero['opciones_remotas'], 'genero debe resolverse como select dinámico');
+        $dni = collect($config['filtrables'])->firstWhere('key', 'dni');
+        $this->assertFalse($dni['opciones_remotas'], 'dni es texto libre, no select');
+
+        // El endpoint devuelve los valores distintos presentes en el contexto.
+        $data = $this->actingAs($admin)->getJson($url . '/opciones?campo=genero')->assertStatus(200)->json();
+        $this->assertEquals(['F', 'M'], collect($data['opciones'])->sort()->values()->all());
+    }
+
+    /** @test */
+    public function el_modulo_generico_funciona_para_integrantes()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        $equipo = factory('App\Equipo')->create();
+        $i1 = factory('App\Integrante')->create(['idEquipo' => $equipo->idEquipo, 'rol' => 'Coordinador']);
+        factory('App\Integrante')->create(['idEquipo' => $equipo->idEquipo, 'rol' => 'Voluntario']);
+        factory('App\Integrante')->create(); // otro equipo: no debe contar en este contexto
+
+        $url = '/admin/ajax/listados/integrantes/' . $equipo->idEquipo;
+
+        // config: grupos + campos filtrables/agrupables propios de integrantes.
+        $config = $this->actingAs($admin)->getJson($url . '/config')->assertStatus(200)->json();
+        $this->assertTrue(collect($config['grupos'])->keyBy('key')->has('seguimiento'));
+        $this->assertTrue(collect($config['filtrables'])->pluck('key')->contains('rol'));
+        $this->assertTrue(collect($config['agrupables'])->pluck('key')->contains('rol'));
+
+        // count acotado al equipo (2, no el de otro equipo).
+        $this->actingAs($admin)->getJson($url . '/count')->assertStatus(200)->assertJson(['total' => 2]);
+
+        // filtro genérico por un campo base del integrante.
+        $this->actingAs($admin);
+        $filtros = array_merge(
+            ['idEquipo' => $equipo->idEquipo, 'rol' => ['condicion' => '=', 'valor' => 'Coordinador']],
+            ['__filterable' => (new ListadoQuery())->metaFiltrable('integrantes', $equipo->idEquipo)]
+        );
+        $filas = \App\Search\IntegrantesSearch::query($filtros)->get();
+        $this->assertCount(1, $filas);
+        $this->assertEquals($i1->idIntegrante, $filas->first()->idIntegrante);
+
+        // opciones on-demand del select + vista predefinida.
+        $opciones = $this->actingAs($admin)->getJson($url . '/opciones?campo=rol')->assertStatus(200)->json('opciones');
+        $this->assertEquals(['Coordinador', 'Voluntario'], collect($opciones)->sort()->values()->all());
+        $vistas = $this->actingAs($admin)->getJson($url . '/vistas')->assertStatus(200)->json();
+        $this->assertNotEmpty($vistas['predefinidas']);
     }
 
     /** @test */

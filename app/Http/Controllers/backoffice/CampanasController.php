@@ -48,7 +48,7 @@ class CampanasController extends Controller
 
         // Fields para el listado configurable (mismo patrón que inscripciones/integrantes).
         $fields = json_encode((new \App\Services\Listados\SuscriptosCatalogo)->defaultFields($id));
-        $sortOrder = json_encode(config('datatables.suscriptos.sortOrder'));
+        $sortOrder = json_encode(config('datatables.suscriptos_configurable.sortOrder'));
 
         return view('backoffice.campanas.suscriptos', compact('campana', 'fields', 'sortOrder'));
     }

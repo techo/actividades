@@ -58,6 +58,8 @@
                             sort-order="{{ $sortOrder }}"
                             placeholder-text="Buscar por DNI/Pasaporte, Nombre o Apellido"
                             actividad="{{$actividad->idActividad}}"
+                            confirmacion="{{ $actividad->confirmacion }}"
+                            pago="{{ $actividad->pago }}"
                     ></inscripciones-table>
                 </div>
 
