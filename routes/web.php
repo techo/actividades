@@ -560,6 +560,11 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/estadisticas/personas', function () { return view('backoffice.estadisticas.personas'); });
     Route::get('/estadisticas/coordinadores', function () { return view('backoffice.estadisticas.coordinadores'); });
 
+    // Indicadores (Plan vs. Real) — prototipo. Solo admin ve y edita; coordinador no accede.
+    Route::get('/estadisticas/indicadores', function () { return view('backoffice.estadisticas.indicadores'); })->middleware('role:admin');
+    Route::get('/ajax/estadisticas/indicadores', 'backoffice\ajax\PlanIndicadorController@index')->middleware('role:admin');
+    Route::post('/ajax/estadisticas/indicadores', 'backoffice\ajax\PlanIndicadorController@store')->middleware('role:admin');
+
     Route::get('/ajax/paises', 'ajax\PaisesController@paises');
     Route::get('/ajax/estadisticas/grafico-inscripciones', 'backoffice\EstadisticasController@grafico_inscripciones');
     Route::get('/ajax/estadisticas/grafico-actividades', 'backoffice\EstadisticasController@grafico_actividades');

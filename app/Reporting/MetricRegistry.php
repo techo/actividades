@@ -93,6 +93,17 @@ class MetricRegistry
         return array_key_exists($key, self::defs());
     }
 
+    /**
+     * ¿La métrica se acota por anio/mes? false = indicador "stock" (ej. equipo
+     * permanente TOTAL): su "Real" es un snapshot al día de hoy y NO depende del
+     * período elegido, así que comparar contra un Plan por mes puede confundir.
+     */
+    public static function esPorPeriodo(string $key): bool
+    {
+        $defs = self::defs();
+        return isset($defs[$key]) && !empty($defs[$key]['periodo']);
+    }
+
     /** Calcula una métrica con los filtros del request. Devuelve array para JSON. */
     public static function resolver(string $key, Request $request)
     {

@@ -147,6 +147,11 @@
               </span>
                 </a>
                 <ul class="treeview-menu">
+                    @if (Auth::user()->hasRole('admin'))
+                    <li class="{{request()->is('admin/estadisticas/indicadores') ? 'active' : ''}}">
+                        <a href="/admin/estadisticas/indicadores">{{ __('backend.global_indicators') }}</a>
+                    </li>
+                    @endif
                     <li class="{{request()->is('admin/estadisticas') ? 'active' : ''}}">
                         <a href="/admin/estadisticas">{{ __('backend.generals') }}</a>
                     </li>
