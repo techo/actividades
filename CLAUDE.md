@@ -32,6 +32,44 @@ El mismo backend cumple tres roles simultáneamente:
 
 ---
 
+## Levantar en local (Docker)
+
+La forma recomendada de arrancar el entorno de desarrollo es el script `dev.sh` de la raíz. El propio script está comentado y sirve de documentación viva del setup; esta sección es el resumen.
+
+```bash
+./dev.sh up
+```
+
+Ese comando (idempotente) levanta los contenedores, instala dependencias, prepara la base con datos de prueba y compila los assets. Cuando termina, la app queda en **http://localhost:8000**.
+
+Servicios (definidos en `docker-compose.yml`):
+
+| Servicio | Rol | Notas |
+|----------|-----|-------|
+| `app` | PHP 7.2-fpm + Composer | contenedor `laravel_app` |
+| `nginx` | sirve `public/` | http://localhost:8000 |
+| `mysql` | MySQL 5.7, base `laravel` | expuesto en el host en `:3307` |
+| `node` | build de assets (Vue 2 + Laravel Mix) | imagen `node:10` a propósito |
+
+> **Los assets se compilan SIEMPRE dentro del contenedor `node:10`, nunca con el Node del host.** El build (laravel-mix + node-sass 4) no compila con Node moderno (falla con `ERR_OSSL_EVP_UNSUPPORTED` / `Node Sass does not support your current environment`). Por eso `dev.sh` delega el build al contenedor.
+
+Comandos del script:
+
+| Comando | Qué hace |
+|---------|----------|
+| `./dev.sh up` | Arranca todo (primera vez o normal; idempotente). |
+| `./dev.sh fresh` | Recrea la base desde cero (`migrate:fresh --seed`). ⚠ Borra datos locales. |
+| `./dev.sh assets` | Recompila los assets JS/CSS una vez. |
+| `./dev.sh watch` | Compila assets en vivo (escucha cambios). |
+| `./dev.sh artisan …` / `./dev.sh composer …` | Corre artisan/composer dentro del contenedor. |
+| `./dev.sh sh` / `./dev.sh logs` / `./dev.sh down` | Shell en PHP / logs / apagar. |
+
+Usuarios sembrados por el seeder (`DatabaseSeeder`): admin `administrador@administrador.com` / `administrador`, coordinador `coordinador@coordinador.com` / `coordinador`.
+
+> Si editás archivos `.vue`/JS, corré `./dev.sh watch` (o `./dev.sh assets` para un build puntual) para ver los cambios; el navegador solo sirve el bundle ya compilado en `public/js/`.
+
+---
+
 ## Autenticación — TRAMPA IMPORTANTE
 
 **El modelo de autenticación es `App\Persona`, NO `App\User`.**
