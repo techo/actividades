@@ -1,7 +1,36 @@
 <template>
     <div class="filtros-listado">
-        <div class="row filtros-builder" v-show="abierto">
-            <div class="col-md-12">
+        <!-- Barra compacta pegada a la tabla: botón para desplegar el
+             constructor + chips de las condiciones activas + total. -->
+        <div class="filtros-barra">
+            <button type="button"
+                    class="btn btn-default btn-filtros"
+                    :class="{ 'btn-filtros--activo': builderAbierto || condiciones.length }"
+                    @click.prevent="toggleBuilder">
+                <i class="fa fa-sliders"></i>
+                {{ $t('backend.advanced_search') }}
+                <span v-if="condiciones.length" class="filtros-contador">{{ condiciones.length }}</span>
+                <i class="fa" :class="builderAbierto ? 'fa-angle-up' : 'fa-angle-down'"></i>
+            </button>
+
+            <template v-if="condiciones.length">
+                <chip v-for="(c, index) in condiciones"
+                      :key="c.id"
+                      :index="index"
+                      :valor="c.campoLabel + ' ' + opLabel(c.condicion) + ' ' + valorLabel(c)">
+                </chip>
+                <a href="#" class="limpiar-todo" @click.prevent="limpiarTodo">
+                    {{ $t('backend.clear_all') }}
+                </a>
+            </template>
+
+            <span class="pull-right text-info total-coincidencias" v-if="total !== null">
+                <strong>{{ total }}</strong> {{ $t('backend.records') }}
+            </span>
+        </div>
+
+        <transition name="filtros-desplegar">
+            <div class="filtros-builder" v-show="builderAbierto">
                 <div class="panel panel-default" style="padding: 12px; margin-bottom: 10px;">
                     <p class="text-muted" style="margin-bottom: 8px;">
                         {{ $t('backend.build_condition') }}
@@ -44,23 +73,7 @@
                     </p>
                 </div>
             </div>
-        </div>
-
-        <div class="row" v-if="condiciones.length || total !== null">
-            <div class="col-md-12 filtros-chips">
-                <chip v-for="(c, index) in condiciones"
-                      :key="c.id"
-                      :index="index"
-                      :valor="c.campoLabel + ' ' + opLabel(c.condicion) + ' ' + valorLabel(c)">
-                </chip>
-                <a v-if="condiciones.length" href="#" class="limpiar-todo" @click.prevent="limpiarTodo">
-                    {{ $t('backend.clear_all') }}
-                </a>
-                <span class="pull-right text-info total-coincidencias" v-if="total !== null">
-                    <strong>{{ total }}</strong> {{ $t('backend.records') }}
-                </span>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -80,10 +93,11 @@
         props: {
             listKey: { type: String, required: true },
             contextId: { required: true },
-            abierto: { type: Boolean, default: true },
+            abierto: { type: Boolean, default: false },
         },
         data() {
             return {
+                builderAbierto: this.abierto,
                 filtrables: [],
                 condiciones: [],
                 campoKey: '',
@@ -147,6 +161,9 @@
             this.recalcularTotal();
         },
         methods: {
+            toggleBuilder() {
+                this.builderAbierto = !this.builderAbierto;
+            },
             label(f) {
                 return f.label && f.label.includes('.') ? this.$t(f.label) : f.label;
             },
@@ -253,16 +270,62 @@
 </script>
 
 <style scoped>
-    .filtros-chips {
+    .filtros-listado {
+        margin-bottom: 8px;
+    }
+
+    /* Barra compacta pegada a la tabla: botón + chips + total en una línea. */
+    .filtros-barra {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        gap: 6px;
     }
+
+    .btn-filtros {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-filtros--activo {
+        border-color: #3c8dbc;
+        color: #3c8dbc;
+    }
+
+    /* Contador de condiciones activas dentro del botón. */
+    .filtros-contador {
+        display: inline-block;
+        min-width: 18px;
+        padding: 0 5px;
+        line-height: 18px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        background: #3c8dbc;
+        border-radius: 10px;
+    }
+
     .limpiar-todo {
-        margin-left: 8px;
         font-size: 13px;
+        white-space: nowrap;
     }
     .total-coincidencias {
         margin-left: auto;
+        white-space: nowrap;
+    }
+
+    /* El panel constructor abre/cierra con una transición suave. */
+    .filtros-builder {
+        margin-top: 8px;
+    }
+    .filtros-desplegar-enter-active,
+    .filtros-desplegar-leave-active {
+        transition: opacity .2s ease, transform .2s ease;
+    }
+    .filtros-desplegar-enter,
+    .filtros-desplegar-leave-to {
+        opacity: 0;
+        transform: translateY(-6px);
     }
 </style>

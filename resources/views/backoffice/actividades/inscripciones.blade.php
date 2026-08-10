@@ -15,28 +15,6 @@
                             persona="{{ $persona }}"
                     ></confirmar-presente>
             @endif
-            <div class="box box-primary collapsed-box">
-
-                <div class="box-header with-border bg-success">
-                    <h3 class="box-title">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                        {{  __('backend.advanced_search') }}
-                    </h3>
-                </div>
-
-                <div class="box-body">
-                    {{-- Constructor de filtros genérico (campo · operador · valor) con
-                         preview de coincidencias y chips. Reutilizable por listado. --}}
-                    <filtros-listado
-                            list-key="inscripciones"
-                            context-id="{{ $actividad->idActividad }}"
-                    ></filtros-listado>
-                </div>
-
-            </div>
-
             <div class="box">
 
                 <div class="box-body  with-border">
@@ -51,6 +29,12 @@
                             list-key="inscripciones"
                             context-id="{{ $actividad->idActividad }}"
                     ></agrupar-listado>
+                    {{-- Filtros avanzados (campo · operador · valor) con chips, pegados
+                         a la tabla: el botón despliega el constructor bajo demanda. --}}
+                    <filtros-listado
+                            list-key="inscripciones"
+                            context-id="{{ $actividad->idActividad }}"
+                    ></filtros-listado>
                     <inscripciones-table
                             ref="inscripcionestable"
                             api-url="{{ '/admin/ajax/actividades/' .$actividad->idActividad. '/inscripciones/'}}"

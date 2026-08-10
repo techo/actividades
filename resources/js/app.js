@@ -1,5 +1,8 @@
 require('./bootstrap.js');
 
+// Estilos de la paginación de los listados (centralizado, aplica a todos los datatables).
+import '../css/datatable-pagination.css';
+
 import VueInternationalization from 'vue-i18n';
 import Locale from './vue-i18n-locales.generated';
 Vue.use(VueInternationalization);

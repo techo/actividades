@@ -1,0 +1,52 @@
+/*
+ * Estilos de la paginación de los listados (vuetable-2).
+ *
+ * vuetable renderiza los botones de página como <a> sueltos dentro de
+ * .pagination (no como <li>), por lo que Bootstrap/AdminLTE no los estilan.
+ * Sin estas reglas los números quedan pegados ("2223242526"). Centralizado
+ * acá e importado una sola vez desde resources/js/app.js para que aplique a
+ * TODOS los listados (inscriptos, suscriptos, miembros, campañas) y no se
+ * pierda al crear un datatable nuevo.
+ */
+.pagination {
+  margin: 0;
+  float: right;
+}
+
+.pagination a.page {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+  cursor: pointer;
+}
+
+.pagination a.page.active {
+  color: white;
+  background-color: #337ab7;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 10px;
+  margin-right: 2px;
+}
+
+.pagination a.btn-nav {
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+  cursor: pointer;
+}
+
+.pagination a.btn-nav.disabled {
+  color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin-right: 2px;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  float: left;
+}
