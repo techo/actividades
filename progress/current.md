@@ -7,43 +7,42 @@
 
 ## Estado
 
-- **Tarea en progreso:** Task 31 — Backup/restore (`etapa1-estabilizacion`, risk: medium). Código listo; falta merge a la feature.
+- **Tarea en progreso:** Task 40 — Global Scope `BelongsToCountry` (`seguridad-arquitectura`, risk: **high**). Se hace SOLA.
 - **Inicio:** 2026-08-11
 - **Agente / desarrollador:** Claude (Opus 4.8) — protocolo Líder/Implementador/Revisor.
-- **Base de esta branch:** `claude/task-31-backup-restore` desde el tip de `feature/indicadores-plan-vs-real` (`5220265b`, ya incluye task-32 y task-35).
-- **Orden de la sesión:** 32 ✅ → 34 ✅(obsoleta) → 35 ✅ → **31 (cerrando)** → **AVISO cierre Etapa 1** (salvo branch protection, del dueño) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas.
+- **Base de esta branch:** `claude/task-40-belongs-to-country` desde el tip de `feature/indicadores-plan-vs-real` (`ade144a1`).
+- **Etapa 1:** cerrada y **deployada a sandbox** (push + `./deploy.sh feature/indicadores-plan-vs-real` OK; `/health` 200 en `br.sandbox.actividades.techo.org`). Pendientes de ops del dueño: branch protection (29), uptime monitor (32), cron backup (31).
 
-## Task 31 — Backup/restore (alcance: entregable repo + demo local, elegido por el dueño)
+## Plan revisado (mejor momento con el sistema de hoy)
 
-- `scripts/backup-db.sh`: mysqldump --single-transaction + gzip, password por --defaults-extra-file, valida el dump, retención (RETENTION_DAYS default 14).
-- `deploy.sh`: backup ANTES de `migrate --force`; aborta el deploy si falla.
-- `docs/backup-restore.md`: doc + cron (a instalar en prod = acción del dueño) + restore probado.
-- Restore **ejecutado de verdad** contra laravel_test (98 tablas + canario): backup → DROP DATABASE → restore → 98 tablas y canario 3/3. ✅
+Decisión de secuencia (el audit la ubica post-upgrade; se hace pre-upgrade en fases de bajo riesgo, con defensa en profundidad):
+1. **Actividad** (piloto, columna `idPais` directa) + **fix del bug de `Actividad::boot()`** (auth sin guard, rompía en CLI/jobs). ✅ hecho.
+2. **Inscripcion** (`whereHas('actividad')`, sin columna directa) — siguiente.
+3. **Persona** = modelo de auth (riesgo recursión/login). **Se define cuando se llegue** (decisión del dueño), con spike del UserProvider. Probable diferir a post-upgrade.
+
+**Regla dura:** NO se retira ningún check `can:`/`permission:`/`idPaisPermitido` existente (los ~40 dispersos mapeados). El scope es defensa en profundidad que convive con ellos.
+
+## Diseño
+
+- `App\Scopes\BelongsToCountryScope` (implements Scope): bypass si `!auth()->check()` (CLI/jobs/login) o `empty(idPaisPermitido)` (admin global 0/null); si no, `applyCountryScope($builder, $pais)`.
+- `App\Concerns\BelongsToCountry` (trait): `bootBelongsToCountry()` agrega el scope; `getCountryColumn()` (default `idPais`); `applyCountryScope()` (override para modelos sin columna); `scopeTodosLosPaises()` escape hatch.
+- Actividad: `use BelongsToCountry` (idPais). boot() con guard `auth()->check()`.
 
 ## Progreso
 
-- [x] `scripts/backup-db.sh` + `storage/backups/` gitignored.
-- [x] `deploy.sh` hace backup antes de migrar (aborta si falla).
-- [x] `docs/backup-restore.md` con procedimiento + transcript del restore probado.
-- [x] Restore end-to-end ejecutado y verificado (tablas + datos).
-- [x] Task 31 marcada `done` en tasks.json.
-- [x] **Suite completa 265/265 verde.**
-- [x] Commit + merge (ff) a `feature/indicadores-plan-vs-real` (`b1f3b8b4`).
+- [x] Infra `BelongsToCountryScope` + trait `BelongsToCountry`.
+- [x] Actividad scope-ada + fix del bug de `boot()`.
+- [x] `tests/Feature/BelongsToCountryScopeTest.php` (5): aislamiento, admin global, **sin-auth-no-filtra (criterio clave)**, escape hatch, regresión boot(). Filtrado: OK 5/5.
+- [ ] Suite completa verde (corriendo) — verifica que el scope de Actividad no rompa nada existente.
+- [ ] Inscripcion.
+- [ ] Persona (definir cuando se llegue).
+- [ ] Merge a la feature con suite 100% verde.
 
-## Cierre de Etapa 1
+## Contexto / riesgos
 
-Todas las tareas de Etapa 1 asignadas están DONE y mergeadas a `feature/indicadores-plan-vs-real` (local, sin push): 32 (health), 34 (obsoleta), 35 (logs), 31 (backup/restore). Único pendiente de Etapa 1: **branch protection (task 29) — acción del dueño**.
-
-**Siguiente:** Task 40 (Global Scope BelongsToCountry) — la más riesgosa, se hace SOLA y con **plan a aprobar por el dueño ANTES de implementar**. Esperando OK para presentar el plan.
-
-Acciones de ops pendientes (del dueño, no ejecutables desde el repo): branch protection (29), monitor de uptime → /health (32), cron de backup en prod (31).
-
-## Contexto relevante (entorno de test)
-
-- Suite en el worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`. ~3.7 min.
-- `mix-manifest.json` debe incluir `/css/app.css` o toda vista Blade da 500.
-- Ruido inofensivo en stderr del worktree: `fatal: not a git repository ...` (no afecta resultados).
-- Merge target `feature/indicadores-plan-vs-real` está checked-out en el checkout principal; el merge se hace ahí cuando su working tree esté limpio.
+- El scope es **inerte para el usuario por defecto** de tests (PersonaFactory no setea idPaisPermitido → default 0 = global). Bajo riesgo de romper la suite.
+- 🔴 Persona es el modelo autenticado: aplicarle scope arriesga recursión en la resolución de `auth()->user()`. Requiere que el UserProvider bypasee el scope. No tocar sin el spike.
+- Suite worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`.
 
 ## Bloqueos
 

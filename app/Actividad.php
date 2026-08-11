@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Concerns\BelongsToCountry;
 use App\Http\Resources\MiembroResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class Actividad extends Model
 {
     use SoftDeletes;
+    use BelongsToCountry; // scope automático por país (columna idPais)
     protected $table = "Actividad";
     protected $primaryKey = "idActividad";
     protected $guarded = ['idActividad'];
@@ -258,9 +260,13 @@ class Actividad extends Model
 
         static::deleting(function ($actividad) {});
 
-        static::updating(function ($actividad) { 
-            $actividad->idPersonaModificacion = auth()->user()->idPersona;
-            Auditoria::crear($actividad); 
+        static::updating(function ($actividad) {
+            // Guard: en comandos Artisan/jobs/colas/seeders no hay usuario autenticado.
+            // Sin este check, auth()->user()->idPersona tira "property of non-object".
+            if (auth()->check()) {
+                $actividad->idPersonaModificacion = auth()->user()->idPersona;
+            }
+            Auditoria::crear($actividad);
         });
     }
 }

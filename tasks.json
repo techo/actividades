@@ -664,7 +664,8 @@
         "Test de aislamiento por modelo"
       ],
       "risk": "high",
-      "status": "pending"
+      "status": "in_progress",
+      "agent_notes": "En curso 2026-08-11. Decisión de secuencia: se hace pre-upgrade en fases de bajo riesgo. Piloto Actividad primero (columna idPais directa) + fix del bug de Actividad::boot() (auth()->user() sin guard, rompía en CLI/jobs). Infra: App\\Scopes\\BelongsToCountryScope + trait App\\Concerns\\BelongsToCountry (bypass: guest/CLI y admin global idPaisPermitido 0/null; escape hatch ->todosLosPaises()). Defensa en profundidad: NO se retira ningún check existente. Inscripcion (whereHas actividad) sigue. Persona (modelo de auth, riesgo recursión/login) se define cuando se llegue, con spike del UserProvider — probable diferir a post-upgrade."
     },
     {
       "id": 41,
