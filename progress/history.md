@@ -207,3 +207,14 @@ Suite corrida en Docker (`laravel_app`) contra **MySQL** (`laravel_test`), PHP 7
 **Task 31 — backup/restore: DONE.**
 - `scripts/backup-db.sh` (mysqldump --single-transaction + gzip + validación + retención, password por --defaults-extra-file). `deploy.sh` hace backup ANTES de `migrate --force` y aborta si falla. Restore **probado end-to-end** 2026-08-11 contra laravel_test (98 tablas + canario br_demo): backup → DROP DATABASE → restore → 98 tablas y canario 3/3 OK. Doc: `docs/backup-restore.md`. Dumps gitignored (`storage/backups/`).
 - Pendiente (ops del dueño): instalar el cron de backup en prod (línea + instrucciones en el doc). Follow-up recomendado: offsite (S3/rsync).
+
+**Etapa 1 — push + deploy a sandbox (2026-08-11).**
+- Push de `feature/indicadores-plan-vs-real` a origin (con tracking). `techo/actividades` == `techo/voluntariado-eventual` (mismo repo renombrado).
+- Deploy con `./deploy.sh feature/indicadores-plan-vs-real` al sandbox `sigp` (`br.sandbox.actividades.techo.org`), exit 0. Verificado: backup pre-migrate corrió (464M), migración `reporting_plan_indicador` aplicada, `/health` → 200 `{"database":"ok"}`, `role:admin` en `/admin/logs` registrado. SSH key `techo_actividades_ed25519` (alias `techo-actividades`); `deploy.sh` usa `ssh techo@actividades.techo.org` directo, así que hay que `ssh-add` la key (o usar el alias).
+
+**Task 40 — BelongsToCountry global scope (Actividad + Inscripcion): DONE.**
+- Infra: `App\Scopes\BelongsToCountryScope` + trait `App\Concerns\BelongsToCountry`. Bypass: sin usuario autenticado (CLI/jobs/colas/seeders/login) e idPaisPermitido 0/null (admin global). Escape hatch `->todosLosPaises()`.
+- Actividad (columna `idPais`) + **fix del bug de `Actividad::boot()`** (auth sin guard). Inscripcion (`whereHas('actividad')`).
+- Decisión de secuencia: se hizo **pre-upgrade** en fases de bajo riesgo (el audit lo ubicaba post-upgrade), como defensa en profundidad sin retirar checks. El scope es inerte para el usuario por defecto de tests (idPaisPermitido=0), de ahí el bajo riesgo de regresión.
+- `tests/Feature/BelongsToCountryScopeTest.php` (7). Suite 272/272 verde.
+- **Persona DIFERIDA a post-upgrade** (modelo de auth → recursión al resolver auth()->user(); requiere UserProvider custom con withoutGlobalScope). Aislamiento actual cubierto por checks + `SecurityFase2Test`. Documentado en `docs/security-audit-2026.md`.

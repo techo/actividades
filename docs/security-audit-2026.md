@@ -409,6 +409,8 @@ Objetivo: cerrar lo explotable por bajo/nulo privilegio con mínimo riesgo funci
 - [ ] Migrar endpoints restantes a **API Resources**.
 - [ ] Hacer **Policies obligatorias** en todas las rutas de mutación; test que detecte rutas sin autorización.
 - [ ] Extender Global Scope país a todos los modelos tenant.
+  - **Estado 2026-08-11 (task 40):** `BelongsToCountry` (trait `App\Concerns\BelongsToCountry` + `App\Scopes\BelongsToCountryScope`) introducido **pre-upgrade** en **Actividad** (columna `idPais`) e **Inscripcion** (`whereHas('actividad')`), como defensa en profundidad, sin retirar los checks dispersos. Bypass: sin usuario autenticado (CLI/jobs/colas/seeders/login) e idPaisPermitido 0/null (admin global). En el mismo cambio se arregló el bug de `Actividad::boot()` (acceso a `auth()->user()` sin guard, rompía en CLI/jobs).
+  - **DIFERIDO — Persona (post-upgrade):** NO se le aplicó el scope. Persona es el modelo autenticado; un global scope se dispara al resolver `auth()->user()` (`EloquentUserProvider::retrieveById` usa `newQuery()` con scopes) → **recursión / login roto**. Requiere un **UserProvider custom** que resuelva el usuario con `withoutGlobalScope(BelongsToCountryScope::class)`. Conviene hacerlo sobre Passport moderno (post-upgrade). Mientras tanto, el aislamiento de Persona por país lo garantizan los checks de controller (`SecurityFase2Test::no_se_puede_leer_persona_de_otro_pais`, verde).
 - [ ] **B-1..B-7** (logs admin, política de contraseña, anti-enumeración, CSRF gate, dirección de sort, estado en login, misceláneos).
 - [ ] **D-1** plan de upgrade de Laravel/Vue; `composer/npm audit` en CI; pipeline de security scanning (SAST).
 - **Tests:** suite de *authorization matrix* (rol × ruta × país), integrada a CI.

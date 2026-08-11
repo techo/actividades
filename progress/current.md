@@ -35,8 +35,9 @@ Decisión de secuencia (el audit la ubica post-upgrade; se hace pre-upgrade en f
 - [x] `tests/Feature/BelongsToCountryScopeTest.php` (7): aislamiento Actividad+Inscripcion, admin global, **sin-auth-no-filtra (criterio clave)**, escape hatch, regresión boot().
 - [x] Actividad scope-ada + fix boot(). Suite **270/270** verde.
 - [x] Inscripcion scope-ada (`whereHas('actividad')`). Suite **272/272** verde.
-- [ ] **Persona — PUNTO DE DECISIÓN** (modelo de auth). Esperando definición del dueño (probable diferir a post-upgrade).
-- [ ] Merge a la feature con suite 100% verde.
+- [x] **Persona — DIFERIDA a post-upgrade** (decisión del dueño). Riesgo de recursión en auth; requiere UserProvider custom. Aislamiento hoy cubierto por checks + SecurityFase2Test. Documentado en docs/security-audit-2026.md.
+- [x] Task 40 marcada `done` (Actividad+Inscripcion).
+- [ ] Suite final + merge a la feature.
 
 ## Contexto / riesgos
 
