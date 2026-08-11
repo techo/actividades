@@ -578,7 +578,9 @@
         "Test de que un usuario sin permiso recibe 403"
       ],
       "risk": "low",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-08-11",
+      "agent_notes": "OBSOLETA: la ruta de descarga de template (y toda la feature de importar-Excel) se eliminó en el commit 0f15c8de. Verificado 2026-08-11: no queda ninguna ruta importar/template en routes/, ni el .xlsx de template ni el controller ajax. La vulnerabilidad (descarga sin permisos) se resolvió por remoción, sin cambio de código. El único '//TODO: segurizar' que quedaba era el de logs (task 35)."
     },
     {
       "id": 35,
@@ -591,7 +593,9 @@
         "Test de que un usuario sin permiso recibe 403"
       ],
       "risk": "low",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-08-11",
+      "agent_notes": "GET /admin/logs/{proceso} protegida con ->middleware('role:admin') (routes/web.php). Estaba dentro del grupo /admin (verified+auth+can:accesoBackoffice) pero sin gate de rol: un coordinador (tiene ver_backoffice) podía descargar logs. Se AÑADIÓ role:admin (no se retiró ningún check). El controller ya scope-aba por idPersona del usuario. Impacto: coordinador ahora recibe 403 (alineado al audit; el import que generaba esos logs se eliminó en task 34). Tests: tests/Feature/LogsSegurizadosTest.php (coordinador→403, admin→200, invitado→302). Suite completa 265/265 verde."
     },
     {
       "id": 36,

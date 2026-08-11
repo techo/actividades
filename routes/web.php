@@ -553,7 +553,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::post('/ajax/grupos', 'backoffice\ajax\GruposController@store');
     Route::post('/ajax/grupos/{idGrupo}/inscriptos', 'backoffice\ajax\GruposController@incluirInscripto');
     Route::get('/ajax/personas/{id}', 'ajax\PersonasController@show')->middleware('permission:ver_usuarios');
-    Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->name('logs'); //TODO: segurizar
+    Route::get('/logs/{proceso}', 'backoffice\LogsController@show')->middleware('role:admin')->name('logs');
 
     Route::get('/estadisticas', 'backoffice\EstadisticasController@index');
     Route::get('/estadisticas/actividades', function () { return view('backoffice.estadisticas.actividades'); });

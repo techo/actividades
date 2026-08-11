@@ -7,56 +7,32 @@
 
 ## Estado
 
-- **Tarea en progreso:** Task 32 — Endpoint de health-check (`etapa1-estabilizacion`, risk: low).
-- **Inicio:** 2026-08-10
+- **Tarea en progreso:** Task 35 — Segurizar GET /admin/logs/{proceso} (`seguridad-crítica`, risk: low).
+- **Inicio:** 2026-08-11
 - **Agente / desarrollador:** Claude (Opus 4.8) — protocolo Líder/Implementador/Revisor.
-- **Base:** worktree = `develop` (0/0). PRs van contra `develop`. Branch propia por tarea, PR abierto (no mergear).
-- **Orden de la sesión:** 32 → 34 → 35 → 31 → (aviso cierre Etapa 1) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas (no existen en tasks.json). Task 29 (branch protection) NO se toca — la activa el dueño.
+- **Base de esta branch:** `claude/task-35-segurizar-logs` desde el tip de `feature/indicadores-plan-vs-real` (`2fa73f5e`, ya incluye task-32). Al terminar: 1 merge a la feature.
+- **Orden de la sesión:** 32 ✅done+merged → 34 ✅done(obsoleta) → **35 (en curso)** → 31 → (aviso cierre Etapa 1) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas.
 
-## Plan (Líder) — Task 32
+## Plan (Líder) — Task 35
 
-**Objetivo:** `GET /health` sin auth, 200 cuando app+BD ok, apto para uptime monitoring.
+**Hallazgo:** `/admin/logs/{proceso}` (LogsController@show) está dentro del grupo `/admin` (`verified`,`auth`,`can:accesoBackoffice`) pero SIN gate de rol. El controller ya scope-a por `auth()->user()->idPersona`, pero cualquier usuario de backoffice con `ver_backoffice` (incluye `coordinador`) podía descargar logs. Audit B-1 pide `role:admin`.
 
-**Enfoque:**
-1. `app/Http/Controllers/HealthController.php` — método `check()`: verifica conexión a BD con try/catch; 200 `{status:ok, database:ok, ...}` si conecta, 503 `{status:error, database:error}` si no. El propio endpoint nunca debe tirar 500 (sería mal señal): todo dentro de try/catch.
-2. Registrar la ruta **fuera** de los grupos `web`/`api` para que sea liviana: no session, no CSRF, no `SeleccionarPais` (que pega a BD/сesión), no locale. Se agrega `mapHealthRoutes()` en `RouteServiceProvider` llamado primero en `map()`, con la ruta apuntando a `HealthController@check`. Solo corre el middleware global (maintenance mode, trim) — aceptable.
-3. Devolver `Cache-Control: no-store` para que monitores no cacheen.
-4. Test `tests/Feature/HealthCheckTest.php`: GET /health → 200 con `database: ok` y estructura JSON esperada.
-
-**Archivos a tocar:**
-- `app/Http/Controllers/HealthController.php` (nuevo)
-- `app/Providers/RouteServiceProvider.php` (agregar `mapHealthRoutes()`)
-- `tests/Feature/HealthCheckTest.php` (nuevo)
-
-**Backward compat:** ruta nueva, no toca nada existente. Riesgo mínimo. Único cuidado: no chocar con rutas existentes (no hay `/health` ni `/up` — verificado).
-
-**Acceptance (tasks.json):**
-- [x criterio] GET /health devuelve 200 con estado de BD → cubierto por controller + test.
-- [ ] Integrado a algún monitor de uptime → **acción de ops del dueño** (fuera del código); dejo documentado el endpoint y recomendación.
-
-**Verificación:** suite completa en Docker 100% verde antes de dar por terminado.
+**Cambio:** agregar `->middleware('role:admin')` a la ruta y quitar `//TODO: segurizar`. Es un check AÑADIDO (no se retira ninguno). Impacto: un coordinador que antes podía, ahora recibe 403 — alineado al audit, y el import que generaba esos logs ya no existe (task 34).
 
 ## Progreso
 
-- [x] HealthController + ruta (`mapHealthRoutes()` fuera de web/api).
-- [x] Test `HealthCheckTest` (3 tests).
-- [x] **Suite completa 262/262 verde en Docker** (worktree self-contained).
-- [x] Task 32 marcada `done` en tasks.json.
-- [ ] Merge a `feature/indicadores-plan-vs-real` + re-verificación sobre el merge.
+- [x] Ruta `/logs/{proceso}` con `role:admin` (routes/web.php), TODO removido.
+- [x] `tests/Feature/LogsSegurizadosTest.php` (3): coordinador→403, admin→200, invitado→302.
+- [x] **Suite completa 265/265 verde en el worktree.**
+- [x] Task 35 marcada `done` en tasks.json.
+- [ ] Commit + merge a `feature/indicadores-plan-vs-real`.
 
-### Nota de entorno importante (para todas las tareas de la sesión)
+## Contexto relevante (entorno de test)
 
-- `laravel_app` monta el **checkout principal** (`/Users/agus/Projects/actividades`) en `/var/www/html`; el worktree queda en `/var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123`. El comando `cd /var/www/html && phpunit` prueba **develop**, NO el worktree.
-- Para probar el worktree se lo hizo **self-contained** (todo gitignored, reusable): `vendor` copiado (41382 archivos) + `composer dump-autoload`, `public/mix-manifest.json`, claves Passport, `.env`.
-- ⚠️ El `mix-manifest.json` debe incluir `/css/app.css` o **toda vista Blade da 500** (mix() tira excepción). Copiar el de main **completo** (4 entradas). Un manifest viejo de 3 entradas causó 49 falsos-fallos.
-- Comando de la suite en el worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`. Corrida ~3.4 min.
-- Ruido inofensivo en stderr: `fatal: not a git repository ...` (git call durante tests). No afecta resultados.
-
-## Contexto relevante
-
-- Middleware `web` (Kernel): EncryptCookies, StartSession, CSRF, Localization, **SeleccionarPais (DB find de Pais)**, SecurityHeaders. Por eso el health va fuera del grupo.
-- Global middleware (siempre corre): CheckForMaintenanceMode → si `artisan down`, /health da 503. Aceptable como señal.
-- Correr la suite: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`.
+- Suite en el worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`. ~3.7 min.
+- `mix-manifest.json` debe incluir `/css/app.css` o toda vista Blade da 500.
+- Ruido inofensivo en stderr del worktree: `fatal: not a git repository ...` (no afecta resultados).
+- Merge target `feature/indicadores-plan-vs-real` está checked-out en el checkout principal; el merge se hace ahí cuando su working tree esté limpio.
 
 ## Bloqueos
 

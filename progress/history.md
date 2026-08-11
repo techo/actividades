@@ -183,3 +183,20 @@ Suite corrida en Docker (`laravel_app`) contra **MySQL** (`laravel_test`), PHP 7
 - Mockeo de Stripe en tests: el SDK v8 enruta por `\Stripe\ApiRequestor::setHttpClient()`. `FakeStripeHttpClient` devuelve `[json, code, headers]`; code >= 400 con clave `error` → el SDK lanza `ApiErrorException`. `StripePaymentService` (donaciones) se mockea por container (ver `DonationsApiTest`). Resetear el client en tearDown (el trait ya lo hace).
 - Tests web que renderizan vistas necesitan `$this->seed('PermisosSeeder')`: el header consulta el permiso `ver_backoffice`.
 - Correr la suite: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`. Si Docker no corre: `colima start` && `docker start laravel_app`.
+
+---
+
+## 2026-08-11 — Etapa 1: tasks 32 (health-check) y 34 (obsoleta)
+
+**Task 32 — Endpoint de health-check: DONE + mergeada.**
+- `HealthController@check` (200/503, nunca 500, Cache-Control: no-store) + ruta `/health` registrada FUERA de web/api en `RouteServiceProvider::mapHealthRoutes()` (sin sesión/CSRF/SeleccionarPais/locale). `tests/Feature/HealthCheckTest.php` (3).
+- Suite **262/262 verde**. Mergeada a `feature/indicadores-plan-vs-real` (merge `2fa73f5e`, sin conflictos), re-verificada 262/262 sobre el merge. Local, sin push.
+- Pendiente (ops del dueño, como branch protection): apuntar un monitor de uptime a GET /health.
+
+**Task 34 — segurizar descarga de template: DONE por obsolescencia.**
+- La ruta `/inscripciones/importar/template` (y toda la feature de importar-Excel) se había eliminado en `0f15c8de`. Verificado: cero rutas importar/template, sin .xlsx ni controller ajax. Vulnerabilidad resuelta por remoción; sin cambio de código.
+
+**Descubrimiento de entorno (crítico para el gate "100% verde"):**
+- `laravel_app` monta el **checkout principal** en `/var/www/html`; el worktree queda en `/var/www/html/.claude/worktrees/<hash>/`. El comando `cd /var/www/html && phpunit` prueba lo que esté checked-out en el principal, NO necesariamente el worktree.
+- Worktree self-contained para testear (todo gitignored, reusable): copiar `vendor` (41382 archivos, ~lento sobre Colima) + `composer dump-autoload`, `public/mix-manifest.json` **completo** (con `/css/app.css`, si no toda vista Blade da 500), claves Passport, `.env`.
+- Un `mix-manifest.json` incompleto (3 entradas sin css) produjo 49 falsos-fallos que parecían regresión de develop. Root cause: `ErrorException: Unable to locate Mix file: /css/app.css`.
