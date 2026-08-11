@@ -32,10 +32,10 @@ Decisión de secuencia (el audit la ubica post-upgrade; se hace pre-upgrade en f
 
 - [x] Infra `BelongsToCountryScope` + trait `BelongsToCountry`.
 - [x] Actividad scope-ada + fix del bug de `boot()`.
-- [x] `tests/Feature/BelongsToCountryScopeTest.php` (5): aislamiento, admin global, **sin-auth-no-filtra (criterio clave)**, escape hatch, regresión boot(). Filtrado: OK 5/5.
-- [ ] Suite completa verde (corriendo) — verifica que el scope de Actividad no rompa nada existente.
-- [ ] Inscripcion.
-- [ ] Persona (definir cuando se llegue).
+- [x] `tests/Feature/BelongsToCountryScopeTest.php` (7): aislamiento Actividad+Inscripcion, admin global, **sin-auth-no-filtra (criterio clave)**, escape hatch, regresión boot().
+- [x] Actividad scope-ada + fix boot(). Suite **270/270** verde.
+- [x] Inscripcion scope-ada (`whereHas('actividad')`). Suite **272/272** verde.
+- [ ] **Persona — PUNTO DE DECISIÓN** (modelo de auth). Esperando definición del dueño (probable diferir a post-upgrade).
 - [ ] Merge a la feature con suite 100% verde.
 
 ## Contexto / riesgos

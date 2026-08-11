@@ -22,6 +22,12 @@ class BelongsToCountryScopeTest extends TestCase
         return factory('App\Actividad')->create(['idPais' => $paisId]);
     }
 
+    private function inscripcionEnPais($paisId)
+    {
+        $act = $this->actividadEnPais($paisId);
+        return factory('App\Inscripcion')->create(['idActividad' => $act->idActividad]);
+    }
+
     /** @test */
     public function usuario_de_un_pais_solo_ve_actividades_de_su_pais()
     {
@@ -100,5 +106,33 @@ class BelongsToCountryScopeTest extends TestCase
             'idActividad'     => $act->idActividad,
             'nombreActividad' => 'actualizado sin auth',
         ]);
+    }
+
+    // --- Inscripcion: país derivado de su actividad (whereHas) ---
+
+    /** @test */
+    public function inscripcion_se_aisla_por_pais_de_su_actividad()
+    {
+        $paisA = factory('App\Pais')->create();
+        $paisB = factory('App\Pais')->create();
+        $insA = $this->inscripcionEnPais($paisA->id);
+        $insB = $this->inscripcionEnPais($paisB->id);
+
+        $user = factory('App\Persona')->create(['idPaisPermitido' => $paisA->id]);
+        $this->actingAs($user);
+
+        $ids = \App\Inscripcion::pluck('idInscripcion');
+        $this->assertTrue($ids->contains($insA->idInscripcion), 'Ve la de actividad de su país');
+        $this->assertFalse($ids->contains($insB->idInscripcion), 'No ve la de otro país');
+    }
+
+    /** @test */
+    public function inscripcion_sin_auth_no_filtra()
+    {
+        $this->inscripcionEnPais(factory('App\Pais')->create()->id);
+        $this->inscripcionEnPais(factory('App\Pais')->create()->id);
+
+        // Guest (CLI/jobs): no filtra.
+        $this->assertSame(2, \App\Inscripcion::count());
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Concerns\BelongsToCountry;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Inscripcion extends Model
 {
     use SoftDeletes;
+    use BelongsToCountry; // scope por país vía la actividad (no tiene columna idPais propia)
 
     protected $table = 'Inscripcion';
     protected $primaryKey = 'idInscripcion';
@@ -18,6 +21,18 @@ class Inscripcion extends Model
         'roles_aplicados' => 'array',
         'inscripciones_aplicadas' => 'array',
     ];
+
+    /**
+     * Inscripcion no tiene columna de país: el país vive en su Actividad.
+     * (Nota de performance: es un EXISTS correlacionado; si un listado grande lo
+     * necesita más rápido, migrar a un join explícito a Actividad.)
+     */
+    public function applyCountryScope(Builder $builder, int $pais): void
+    {
+        $builder->whereHas('actividad', function ($q) use ($pais) {
+            $q->where('Actividad.idPais', $pais);
+        });
+    }
 
     public function actividad()
     {
