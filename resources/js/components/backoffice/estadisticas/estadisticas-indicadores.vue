@@ -10,14 +10,17 @@
 						<option v-for="p in paises" :value="p.id" :key="p.id">{{ p.nombre }}</option>
 					</select>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<label>{{ $t('backend.year') }}</label>
 					<input type="number" class="form-control" v-model.number="anio" @change="cargar()">
 				</div>
 				<div class="col-md-3">
-					<label>{{ $t('backend.month') }}</label>
-					<select class="form-control" v-model.number="mes" @change="cargar()">
-						<option v-for="(nombreMes, i) in meses" :value="i + 1" :key="i">{{ nombreMes }}</option>
+					<label>{{ $t('backend.granularity') }}</label>
+					<select class="form-control" v-model="granularidad" @change="cargar()">
+						<option value="mensual">{{ $t('backend.granularity_monthly') }}</option>
+						<option value="trimestral">{{ $t('backend.granularity_quarterly') }}</option>
+						<option value="semestral">{{ $t('backend.granularity_biannual') }}</option>
+						<option value="anual">{{ $t('backend.granularity_annual') }}</option>
 					</select>
 				</div>
 			</div>
@@ -28,40 +31,45 @@
 				{{ $t('backend.select_country_first') }}
 			</p>
 
-			<table class="table table-striped" v-if="idPais">
-				<thead>
-					<tr>
-						<th>{{ $t('backend.indicator') }}</th>
-						<th style="width: 150px">{{ $t('backend.planned') }}</th>
-						<th style="width: 100px">{{ $t('backend.real') }}</th>
-						<th style="width: 120px">{{ $t('backend.performance') }}</th>
-						<th style="width: 90px"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="row in indicadores" :key="row.key">
-						<td>
-							{{ row.nombre }}
-							<i v-if="row.nota" class="fa fa-info-circle text-yellow" :title="row.nota"></i>
-						</td>
-						<td>
-							<input type="number" min="0" class="form-control input-sm" v-model.number="edicion[row.key]">
-						</td>
-						<td>{{ row.real !== null ? row.real : '—' }}</td>
-						<td>
-							<span v-if="row.desempeno !== null" :class="claseDesempeno(row.desempeno)">
-								{{ row.desempeno }}%
-							</span>
-							<span v-else class="text-muted">{{ $t('backend.no_plan_defined') }}</span>
-						</td>
-						<td>
-							<button class="btn btn-xs btn-primary" @click="guardar(row)">
-								{{ $t('backend.save') }}
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div v-if="idPais" class="table-responsive">
+				<table class="table table-bordered table-condensed">
+					<thead>
+						<tr>
+							<th style="min-width: 240px">{{ $t('backend.indicator') }}</th>
+							<th v-for="col in periodos" :key='"h" + (col.periodo === null ? "A" : col.periodo)'
+								class="text-center" style="min-width: 92px">
+								{{ col.etiqueta }}
+								<i v-if="!col.editable" class="fa fa-lock text-muted"
+									:title="$t('backend.period_closed')"></i>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="row in indicadores" :key="row.key">
+							<td>
+								{{ row.nombre }}
+								<i v-if="row.nota" class="fa fa-info-circle text-yellow" :title="row.nota"></i>
+							</td>
+							<td v-for="cell in row.celdas" :key='row.key + "|" + (cell.periodo === null ? "A" : cell.periodo)'
+								class="text-center">
+								<input v-if="cell.editable" type="number" min="0"
+									class="form-control input-sm text-center"
+									v-model.number="edicion[celda(row.key, cell.periodo)]"
+									@change="guardar(row, cell)">
+								<span v-else>{{ cell.plan !== null ? cell.plan : '—' }}</span>
+
+								<div class="small">
+									<span class="text-muted">{{ $t('backend.real') }}:</span>
+									{{ cell.real !== null ? cell.real : '—' }}
+									<span v-if="cell.desempeno !== null" :class="claseDesempeno(cell.desempeno)">
+										{{ cell.desempeno }}%
+									</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </template>
@@ -70,14 +78,15 @@
 import Alert from '../../plugins/Alert';
 
 /**
- * Prototipo de la pantalla de Indicadores (Plan vs. Real). Consume:
- *  - GET  /admin/ajax/estadisticas/indicadores  -> Real (MetricRegistry, sin
- *    tocar) + Plan (nuevo, PlanIndicador) por país/año/mes.
- *  - POST /admin/ajax/estadisticas/indicadores  -> guarda una nueva versión
- *    del Plan para un indicador puntual.
+ * Pantalla de Indicadores (Plan vs. Real) como matriz del año.
  *
- * Acceso ya restringido a role:admin en la ruta — este componente no agrega
- * ninguna lógica de permisos propia a propósito (ver plan de trabajo, Fase 0).
+ * El selector de granularidad (mensual / trimestral / semestral / anual) cambia
+ * las columnas: cada columna es un período del año. El "Plan" se edita solo en
+ * los períodos que todavía no cerraron (los cerrados van bloqueados); el "Real"
+ * se agrega para coincidir con la granularidad (lo resuelve el backend con la
+ * misma capa que la API de Power BI). Guardado por celda, versionado server-side.
+ *
+ * Acceso restringido a role:admin en la ruta — sin lógica de permisos propia acá.
  */
 export default {
 	components: { 'alert': Alert },
@@ -87,8 +96,8 @@ export default {
 			paises: [],
 			idPais: null,
 			anio: moment().format('YYYY') * 1,
-			mes: moment().format('M') * 1,
-			meses: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			granularidad: 'trimestral',
+			periodos: [],
 			indicadores: [],
 			edicion: {},
 		};
@@ -100,9 +109,12 @@ export default {
 		});
 	},
 	methods: {
+		celda(key, periodo) {
+			return key + '|' + (periodo === null ? 'A' : periodo);
+		},
 		cargar() {
 			this.loading = true;
-			const params = { anio: this.anio, mes: this.mes };
+			const params = { anio: this.anio, granularidad: this.granularidad };
 			if (this.idPais) params.idPais = this.idPais;
 
 			axios.get('/admin/ajax/estadisticas/indicadores', { params })
@@ -110,17 +122,22 @@ export default {
 					if (!this.idPais && data.data.idPais) {
 						this.idPais = data.data.idPais;
 					}
+					this.periodos = data.data.periodos;
 					this.indicadores = data.data.indicadores;
-					this.edicion = {};
+
+					const edicion = {};
 					this.indicadores.forEach((row) => {
-						this.edicion[row.key] = row.plan;
+						row.celdas.forEach((cell) => {
+							edicion[this.celda(row.key, cell.periodo)] = cell.plan;
+						});
 					});
+					this.edicion = edicion;
 					this.loading = false;
 				})
 				.catch(() => { this.loading = false; });
 		},
-		guardar(row) {
-			const valor = this.edicion[row.key];
+		guardar(row, cell) {
+			const valor = this.edicion[this.celda(row.key, cell.periodo)];
 			if (valor === null || valor === undefined || valor === '') return;
 
 			this.loading = true;
@@ -128,10 +145,15 @@ export default {
 				metric_key: row.key,
 				idPais: this.idPais,
 				anio: this.anio,
-				mes: this.mes,
+				granularidad: this.granularidad,
+				periodo: cell.periodo,
 				valor_planificado: valor,
-			}).then(() => {
-				this.cargar();
+			}).then((resp) => {
+				cell.plan = parseFloat(resp.data.valor_planificado);
+				cell.desempeno = (cell.plan > 0 && cell.real !== null)
+					? Math.round(cell.real * 100 / cell.plan)
+					: null;
+				this.loading = false;
 			}).catch(() => { this.loading = false; });
 		},
 		claseDesempeno(valor) {
