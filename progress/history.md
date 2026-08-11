@@ -200,3 +200,10 @@ Suite corrida en Docker (`laravel_app`) contra **MySQL** (`laravel_test`), PHP 7
 - `laravel_app` monta el **checkout principal** en `/var/www/html`; el worktree queda en `/var/www/html/.claude/worktrees/<hash>/`. El comando `cd /var/www/html && phpunit` prueba lo que esté checked-out en el principal, NO necesariamente el worktree.
 - Worktree self-contained para testear (todo gitignored, reusable): copiar `vendor` (41382 archivos, ~lento sobre Colima) + `composer dump-autoload`, `public/mix-manifest.json` **completo** (con `/css/app.css`, si no toda vista Blade da 500), claves Passport, `.env`.
 - Un `mix-manifest.json` incompleto (3 entradas sin css) produjo 49 falsos-fallos que parecían regresión de develop. Root cause: `ErrorException: Unable to locate Mix file: /css/app.css`.
+
+**Task 35 — segurizar GET /admin/logs/{proceso}: DONE + mergeada.**
+- `->middleware('role:admin')` agregado a la ruta (check AÑADIDO, no se retiró ninguno). Estaba en el grupo /admin (verified+auth+can:accesoBackoffice) pero sin gate de rol → un coordinador (tiene ver_backoffice) podía descargar logs. `tests/Feature/LogsSegurizadosTest.php` (coordinador→403, admin→200, invitado→302). Suite 265/265 verde. Merge fast-forward a `feature/indicadores-plan-vs-real` (`5220265b`).
+
+**Task 31 — backup/restore: DONE.**
+- `scripts/backup-db.sh` (mysqldump --single-transaction + gzip + validación + retención, password por --defaults-extra-file). `deploy.sh` hace backup ANTES de `migrate --force` y aborta si falla. Restore **probado end-to-end** 2026-08-11 contra laravel_test (98 tablas + canario br_demo): backup → DROP DATABASE → restore → 98 tablas y canario 3/3 OK. Doc: `docs/backup-restore.md`. Dumps gitignored (`storage/backups/`).
+- Pendiente (ops del dueño): instalar el cron de backup en prod (línea + instrucciones en el doc). Follow-up recomendado: offsite (S3/rsync).

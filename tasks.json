@@ -537,7 +537,9 @@
         "deploy.sh hace backup antes de migrar"
       ],
       "risk": "medium",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-08-11",
+      "agent_notes": "scripts/backup-db.sh: mysqldump --single-transaction + gzip, password vía --defaults-extra-file (no en ps), valida el dump (gzip -t) y aplica retención (RETENTION_DAYS, default 14) — ataca el disco de prod que se llenaba de dumps viejos. deploy.sh: corre el backup ANTES de 'migrate --force' y aborta el deploy si falla (set -e + trap deja el sitio arriba). Restore PROBADO end-to-end 2026-08-11 contra laravel_test (98 tablas + canario): backup → DROP DATABASE → restore → 98 tablas y canario 3/3 filas OK. Doc: docs/backup-restore.md. Dumps gitignored (storage/backups/). PENDIENTE (acción de ops del dueño, no ejecutable desde el repo): instalar el cron de backup en el server de prod — línea + instrucciones en docs/backup-restore.md. Recomendado follow-up: replicar dumps offsite (S3/rsync)."
     },
     {
       "id": 32,

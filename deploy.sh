@@ -76,6 +76,12 @@ if ssh "$HOST" bash -s <<EOF
   # Sin --no-dev: sandbox necesita phpunit/mockery para poder correr tests acá.
   composer install --no-interaction --prefer-dist --optimize-autoloader
 
+  echo "→ Backup de BD ANTES de migrar (aborta el deploy si falla)..."
+  # scripts/backup-db.sh lee credenciales del .env, hace mysqldump+gzip, valida el
+  # dump y aplica retención. Si falla, 'set -e' corta acá (el trap deja el sitio arriba)
+  # y NO se corre migrate --force sobre una BD sin backup.
+  bash scripts/backup-db.sh
+
   echo "→ Running database migrations..."
   php artisan migrate --force
 

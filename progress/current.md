@@ -7,24 +7,27 @@
 
 ## Estado
 
-- **Tarea en progreso:** Task 35 — Segurizar GET /admin/logs/{proceso} (`seguridad-crítica`, risk: low).
+- **Tarea en progreso:** Task 31 — Backup/restore (`etapa1-estabilizacion`, risk: medium). Código listo; falta merge a la feature.
 - **Inicio:** 2026-08-11
 - **Agente / desarrollador:** Claude (Opus 4.8) — protocolo Líder/Implementador/Revisor.
-- **Base de esta branch:** `claude/task-35-segurizar-logs` desde el tip de `feature/indicadores-plan-vs-real` (`2fa73f5e`, ya incluye task-32). Al terminar: 1 merge a la feature.
-- **Orden de la sesión:** 32 ✅done+merged → 34 ✅done(obsoleta) → **35 (en curso)** → 31 → (aviso cierre Etapa 1) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas.
+- **Base de esta branch:** `claude/task-31-backup-restore` desde el tip de `feature/indicadores-plan-vs-real` (`5220265b`, ya incluye task-32 y task-35).
+- **Orden de la sesión:** 32 ✅ → 34 ✅(obsoleta) → 35 ✅ → **31 (cerrando)** → **AVISO cierre Etapa 1** (salvo branch protection, del dueño) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas.
 
-## Plan (Líder) — Task 35
+## Task 31 — Backup/restore (alcance: entregable repo + demo local, elegido por el dueño)
 
-**Hallazgo:** `/admin/logs/{proceso}` (LogsController@show) está dentro del grupo `/admin` (`verified`,`auth`,`can:accesoBackoffice`) pero SIN gate de rol. El controller ya scope-a por `auth()->user()->idPersona`, pero cualquier usuario de backoffice con `ver_backoffice` (incluye `coordinador`) podía descargar logs. Audit B-1 pide `role:admin`.
-
-**Cambio:** agregar `->middleware('role:admin')` a la ruta y quitar `//TODO: segurizar`. Es un check AÑADIDO (no se retira ninguno). Impacto: un coordinador que antes podía, ahora recibe 403 — alineado al audit, y el import que generaba esos logs ya no existe (task 34).
+- `scripts/backup-db.sh`: mysqldump --single-transaction + gzip, password por --defaults-extra-file, valida el dump, retención (RETENTION_DAYS default 14).
+- `deploy.sh`: backup ANTES de `migrate --force`; aborta el deploy si falla.
+- `docs/backup-restore.md`: doc + cron (a instalar en prod = acción del dueño) + restore probado.
+- Restore **ejecutado de verdad** contra laravel_test (98 tablas + canario): backup → DROP DATABASE → restore → 98 tablas y canario 3/3. ✅
 
 ## Progreso
 
-- [x] Ruta `/logs/{proceso}` con `role:admin` (routes/web.php), TODO removido.
-- [x] `tests/Feature/LogsSegurizadosTest.php` (3): coordinador→403, admin→200, invitado→302.
-- [x] **Suite completa 265/265 verde en el worktree.**
-- [x] Task 35 marcada `done` en tasks.json.
+- [x] `scripts/backup-db.sh` + `storage/backups/` gitignored.
+- [x] `deploy.sh` hace backup antes de migrar (aborta si falla).
+- [x] `docs/backup-restore.md` con procedimiento + transcript del restore probado.
+- [x] Restore end-to-end ejecutado y verificado (tablas + datos).
+- [x] Task 31 marcada `done` en tasks.json.
+- [ ] Suite completa verde (corriendo).
 - [ ] Commit + merge a `feature/indicadores-plan-vs-real`.
 
 ## Contexto relevante (entorno de test)
