@@ -161,3 +161,25 @@ Suite corrida en Docker (`laravel_app`) contra **MySQL** (`laravel_test`), PHP 7
 
 - Decidir, por categoría, fix de datos de test vs. fix de código vs. reportar bug real (categorías 3 y 4 huelen a bug real, no a test).
 - Tras suite verde: agregar cobertura faltante (API mobile, webhook Stripe, campañas, dispositivos/push, donations) — tareas 10-18 y los gaps de `docs/upgrade-review.md`.
+
+---
+
+## 2026-07-15 — Etapa 1: cobertura de flujos de dinero Stripe (task 30)
+
+**Estado:** Task 30 cerrada (done). Suite 182/182 verde en MySQL. Quedan de Etapa 1: 31 (backup/restore), 32 (health-check), 34/35 (TODOs segurizar) y branch protection (acción de admin del repo, task 29).
+
+**Progreso:**
+- CI verde en GitHub (run 29582487888); atrapó 2 bugs reales en su primer run (case de `ActualizacionActividad`, `libpng-dev` faltante).
+- Tests de Vue arreglados (`$t is not a function` → mocks). 10/10.
+- tasks.json reconciliado + backlog Etapa 1 (tasks 29-35).
+- **Task 30 — cobertura Stripe (15 tests nuevos):**
+  - `tests/Feature/StripeCheckoutWebTest.php` (5): creación de Checkout Session web, ownership 403, ya-pagada, país sin Stripe 404, requiere auth.
+  - `tests/Feature/api/InscripcionStripeApiTest.php` (7): creación de PaymentIntent mobile, reutilización de PI pendiente, error de Stripe → 502, ya-pagada 422, país sin Stripe 422, no pagar inscripción ajena 404, requiere auth.
+  - `tests/Feature/StripeWebhookWebTest.php` (+3): `payment_intent.succeeded` marca pagada (metodo_pago `stripe_api`) + confirma Donation; idempotencia; `payment_intent.payment_failed` marca Donation failed sin marcar pagada.
+  - Infra reutilizable: `tests/Support/FakeStripeHttpClient.php` + trait `tests/Concerns/FakesStripe.php` (sin red).
+- Pendiente (no de código): branch protection exigiendo los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` — requiere admin del repo.
+
+**Contexto reutilizable:**
+- Mockeo de Stripe en tests: el SDK v8 enruta por `\Stripe\ApiRequestor::setHttpClient()`. `FakeStripeHttpClient` devuelve `[json, code, headers]`; code >= 400 con clave `error` → el SDK lanza `ApiErrorException`. `StripePaymentService` (donaciones) se mockea por container (ver `DonationsApiTest`). Resetear el client en tearDown (el trait ya lo hace).
+- Tests web que renderizan vistas necesitan `$this->seed('PermisosSeeder')`: el header consulta el permiso `ver_backoffice`.
+- Correr la suite: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`. Si Docker no corre: `colima start` && `docker start laravel_app`.

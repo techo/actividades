@@ -35,11 +35,29 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapHealthRoutes();
+
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
 
         //
+    }
+
+    /**
+     * Ruta de health-check, deliberadamente fuera de los grupos web/api.
+     *
+     * Sin sesión, CSRF, SeleccionarPais ni locale: solo el middleware global. Así el
+     * endpoint es liviano y su resultado depende únicamente de app + BD, no del stack web.
+     *
+     * @return void
+     */
+    protected function mapHealthRoutes()
+    {
+        Route::namespace($this->namespace)
+             ->group(function () {
+                 Route::get('/health', 'HealthController@check')->name('health');
+             });
     }
 
     /**

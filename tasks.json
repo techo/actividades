@@ -550,7 +550,9 @@
         "Integrado a algún monitor de uptime"
       ],
       "risk": "low",
-      "status": "pending"
+      "status": "done",
+      "completed_at": "2026-08-11",
+      "agent_notes": "GET /health: HealthController@check (app/Http/Controllers/HealthController.php) + ruta registrada FUERA de los grupos web/api en RouteServiceProvider::mapHealthRoutes() (sin sesión/CSRF/SeleccionarPais/locale). 200 {status,app,database} si conecta a BD, 503 si no; nunca 500 (todo en try/catch). Cache-Control: no-store. Tests: tests/Feature/HealthCheckTest.php (3, pasan). Suite completa 262/262 verde en Docker. PENDIENTE (acción de ops del dueño, como branch protection): apuntar un monitor de uptime -UptimeRobot/Pingdom/healthchecks- a GET /health."
     },
     {
       "id": 33,

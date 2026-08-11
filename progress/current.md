@@ -7,36 +7,56 @@
 
 ## Estado
 
-- **Tarea en progreso:** Etapa 1 — task 30 (cobertura Stripe) recién cerrada. Quedan tasks 31, 32, 34, 35 + branch protection.
-- **Inicio:** 2026-07-15
-- **Agente / desarrollador:** Claude (Fable 5 / Opus 4.8)
+- **Tarea en progreso:** Task 32 — Endpoint de health-check (`etapa1-estabilizacion`, risk: low).
+- **Inicio:** 2026-08-10
+- **Agente / desarrollador:** Claude (Opus 4.8) — protocolo Líder/Implementador/Revisor.
+- **Base:** worktree = `develop` (0/0). PRs van contra `develop`. Branch propia por tarea, PR abierto (no mergear).
+- **Orden de la sesión:** 32 → 34 → 35 → 31 → (aviso cierre Etapa 1) → 40 (plan a aprobar antes de implementar). 45/46/47 salteadas (no existen en tasks.json). Task 29 (branch protection) NO se toca — la activa el dueño.
 
-## Plan
+## Plan (Líder) — Task 32
 
-Etapa 1 (estabilización). Estado de ítems:
-1. ~~CI en GitHub Actions (task 29)~~ — verde. Falta solo branch protection (acción de admin del repo).
-2. ~~Reconciliación de tasks.json (task 33)~~ — hecha.
-3. ~~Cobertura flujos de dinero Stripe (task 30)~~ — hecha (ver Progreso).
-4. Pendientes: backup/restore (31), health-check (32), TODOs segurizar (34, 35).
+**Objetivo:** `GET /health` sin auth, 200 cuando app+BD ok, apto para uptime monitoring.
+
+**Enfoque:**
+1. `app/Http/Controllers/HealthController.php` — método `check()`: verifica conexión a BD con try/catch; 200 `{status:ok, database:ok, ...}` si conecta, 503 `{status:error, database:error}` si no. El propio endpoint nunca debe tirar 500 (sería mal señal): todo dentro de try/catch.
+2. Registrar la ruta **fuera** de los grupos `web`/`api` para que sea liviana: no session, no CSRF, no `SeleccionarPais` (que pega a BD/сesión), no locale. Se agrega `mapHealthRoutes()` en `RouteServiceProvider` llamado primero en `map()`, con la ruta apuntando a `HealthController@check`. Solo corre el middleware global (maintenance mode, trim) — aceptable.
+3. Devolver `Cache-Control: no-store` para que monitores no cacheen.
+4. Test `tests/Feature/HealthCheckTest.php`: GET /health → 200 con `database: ok` y estructura JSON esperada.
+
+**Archivos a tocar:**
+- `app/Http/Controllers/HealthController.php` (nuevo)
+- `app/Providers/RouteServiceProvider.php` (agregar `mapHealthRoutes()`)
+- `tests/Feature/HealthCheckTest.php` (nuevo)
+
+**Backward compat:** ruta nueva, no toca nada existente. Riesgo mínimo. Único cuidado: no chocar con rutas existentes (no hay `/health` ni `/up` — verificado).
+
+**Acceptance (tasks.json):**
+- [x criterio] GET /health devuelve 200 con estado de BD → cubierto por controller + test.
+- [ ] Integrado a algún monitor de uptime → **acción de ops del dueño** (fuera del código); dejo documentado el endpoint y recomendación.
+
+**Verificación:** suite completa en Docker 100% verde antes de dar por terminado.
 
 ## Progreso
 
-- [x] CI verde en GitHub (run 29582487888); atrapó 2 bugs reales en su primer run (case de `ActualizacionActividad`, `libpng-dev` faltante).
-- [x] Tests de Vue arreglados (`$t is not a function` → mocks). 10/10.
-- [x] tasks.json reconciliado + backlog Etapa 1 (tasks 29-35).
-- [x] **Task 30 — cobertura Stripe (15 tests nuevos)**:
-  - `tests/Feature/StripeCheckoutWebTest.php` (5): creación de Checkout Session web, ownership 403, ya-pagada, país sin Stripe 404, requiere auth.
-  - `tests/Feature/api/InscripcionStripeApiTest.php` (7): creación de PaymentIntent mobile, reutilización de PI pendiente, error de Stripe → 502, ya-pagada 422, país sin Stripe 422, no pagar inscripción ajena 404, requiere auth.
-  - `tests/Feature/StripeWebhookWebTest.php` (+3): `payment_intent.succeeded` marca pagada (metodo_pago `stripe_api`) + confirma Donation; idempotencia; `payment_intent.payment_failed` marca Donation failed sin marcar pagada (= pago rechazado).
-  - Infra reutilizable: `tests/Support/FakeStripeHttpClient.php` (implementa `Stripe\HttpClient\ClientInterface`, cola FIFO de respuestas) + trait `tests/Concerns/FakesStripe.php` (instala/resetea vía `ApiRequestor::setHttpClient`). Ningún test toca la red.
-- [ ] Branch protection exigiendo los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` — **requiere admin del repo** (Settings → Branches).
+- [x] HealthController + ruta (`mapHealthRoutes()` fuera de web/api).
+- [x] Test `HealthCheckTest` (3 tests).
+- [x] **Suite completa 262/262 verde en Docker** (worktree self-contained).
+- [x] Task 32 marcada `done` en tasks.json.
+- [ ] Merge a `feature/indicadores-plan-vs-real` + re-verificación sobre el merge.
+
+### Nota de entorno importante (para todas las tareas de la sesión)
+
+- `laravel_app` monta el **checkout principal** (`/Users/agus/Projects/actividades`) en `/var/www/html`; el worktree queda en `/var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123`. El comando `cd /var/www/html && phpunit` prueba **develop**, NO el worktree.
+- Para probar el worktree se lo hizo **self-contained** (todo gitignored, reusable): `vendor` copiado (41382 archivos) + `composer dump-autoload`, `public/mix-manifest.json`, claves Passport, `.env`.
+- ⚠️ El `mix-manifest.json` debe incluir `/css/app.css` o **toda vista Blade da 500** (mix() tira excepción). Copiar el de main **completo** (4 entradas). Un manifest viejo de 3 entradas causó 49 falsos-fallos.
+- Comando de la suite en el worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`. Corrida ~3.4 min.
+- Ruido inofensivo en stderr: `fatal: not a git repository ...` (git call durante tests). No afecta resultados.
 
 ## Contexto relevante
 
-- **Cómo mockear Stripe en tests**: el SDK v8 enruta todo por `\Stripe\ApiRequestor::setHttpClient()`. `FakeStripeHttpClient` devuelve `[json, code, headers]`; code >= 400 con clave `error` → el SDK lanza `ApiErrorException`. El `StripePaymentService` (donaciones) es aparte: se mockea por container (ver `DonationsApiTest`). Resetear el client en tearDown (trait ya lo hace).
-- Tests web que renderizan vistas necesitan `$this->seed('PermisosSeeder')`: el header consulta el permiso `ver_backoffice`.
-- `PHPUnit 7` con varios paths solo corre el primero; para validar todo, correr la suite completa.
-- Cómo correr la suite: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`. Si Docker no corre: `colima start` y `docker start laravel_app`. Estado al 2026-07-15: 182/182 en verde.
+- Middleware `web` (Kernel): EncryptCookies, StartSession, CSRF, Localization, **SeleccionarPais (DB find de Pais)**, SecurityHeaders. Por eso el health va fuera del grupo.
+- Global middleware (siempre corre): CheckForMaintenanceMode → si `artisan down`, /health da 503. Aceptable como señal.
+- Correr la suite: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html && php -d memory_limit=512M vendor/bin/phpunit"`.
 
 ## Bloqueos
 
