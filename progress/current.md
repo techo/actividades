@@ -27,8 +27,16 @@
 - [x] `docs/backup-restore.md` con procedimiento + transcript del restore probado.
 - [x] Restore end-to-end ejecutado y verificado (tablas + datos).
 - [x] Task 31 marcada `done` en tasks.json.
-- [ ] Suite completa verde (corriendo).
-- [ ] Commit + merge a `feature/indicadores-plan-vs-real`.
+- [x] **Suite completa 265/265 verde.**
+- [x] Commit + merge (ff) a `feature/indicadores-plan-vs-real` (`b1f3b8b4`).
+
+## Cierre de Etapa 1
+
+Todas las tareas de Etapa 1 asignadas están DONE y mergeadas a `feature/indicadores-plan-vs-real` (local, sin push): 32 (health), 34 (obsoleta), 35 (logs), 31 (backup/restore). Único pendiente de Etapa 1: **branch protection (task 29) — acción del dueño**.
+
+**Siguiente:** Task 40 (Global Scope BelongsToCountry) — la más riesgosa, se hace SOLA y con **plan a aprobar por el dueño ANTES de implementar**. Esperando OK para presentar el plan.
+
+Acciones de ops pendientes (del dueño, no ejecutables desde el repo): branch protection (29), monitor de uptime → /health (32), cron de backup en prod (31).
 
 ## Contexto relevante (entorno de test)
 
