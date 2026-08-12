@@ -2,10 +2,16 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CrearPersona extends FormRequest
 {
+    /**
+     * Edad mínima requerida para registrarse.
+     */
+    const EDAD_MINIMA = 13;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -30,7 +36,7 @@ class CrearPersona extends FormRequest
             'password' => 'required|confirmed',
             'nombres' => 'required',
             'apellidoPaterno' => 'required',
-            'fechaNacimiento' => 'required|date',
+            'fechaNacimiento' => 'required|date|before_or_equal:' . Carbon::now()->subYears(self::EDAD_MINIMA)->format('Y-m-d'),
             'telefono' => 'required|integer',
             'telefonoMovil' => 'required|integer',
             'dni' => 'required|integer',
@@ -40,6 +46,21 @@ class CrearPersona extends FormRequest
             'idProvincia' => 'required|integer',
             'idLocalidad' => 'required|integer',
             'idUnidadOrganizacional' => 'required|integer',
+        ];
+    }
+
+    /**
+     * Mensajes de validación personalizados.
+     *
+     * El mensaje por defecto de `before_or_equal` habla de fechas, no de edad;
+     * acá lo traducimos a un texto entendible para quien se registra.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'fechaNacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => self::EDAD_MINIMA]),
         ];
     }
 }

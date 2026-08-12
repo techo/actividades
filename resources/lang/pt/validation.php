@@ -124,6 +124,9 @@ return [
     */
 
     'custom' => [
+        'fechaNacimiento' => [
+            'edad_minima' => 'Você deve ter pelo menos :edad anos para se cadastrar.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],

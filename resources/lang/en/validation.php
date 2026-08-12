@@ -100,6 +100,9 @@ return [
     */
 
     'custom' => [
+        'fechaNacimiento' => [
+            'edad_minima' => 'You must be at least :edad years old to register.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],

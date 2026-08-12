@@ -96,6 +96,9 @@ return [
 	*/
 
 	'custom' => [
+		'fechaNacimiento' => [
+			'edad_minima' => 'Debes tener al menos :edad años para registrarte.',
+		],
 		'attribute-name' => [
 			'rule-name'  => 'custom-message',
 		],

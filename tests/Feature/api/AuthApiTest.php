@@ -86,6 +86,31 @@ class AuthApiTest extends TestCase
     }
 
     /** @test */
+    public function register_con_menor_de_13_falla_validacion()
+    {
+        $pais = factory('App\Pais')->create();
+        $menor = \Carbon\Carbon::now()->subYears(12)->format('Y-m-d');
+
+        $this->postJson('/api/register', $this->payloadRegistro($pais->id, [ 'fechaNacimiento' => $menor ]))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('fechaNacimiento');
+
+        $this->assertDatabaseMissing('Persona', [ 'mail' => 'nuevo@techo.org' ]);
+    }
+
+    /** @test */
+    public function register_con_exactamente_13_es_valido()
+    {
+        Notification::fake();
+        $pais = factory('App\Pais')->create();
+        $cumple13 = \Carbon\Carbon::now()->subYears(13)->format('Y-m-d');
+
+        $this->postJson('/api/register', $this->payloadRegistro($pais->id, [ 'fechaNacimiento' => $cumple13 ]))
+            ->assertStatus(201)
+            ->assertJson([ 'success' => true ]);
+    }
+
+    /** @test */
     public function provider_login_sin_provider_o_token_falla_validacion()
     {
         $this->postJson('/api/providerLogin', [])
@@ -101,9 +126,9 @@ class AuthApiTest extends TestCase
             ->assertJson([ 'success' => false ]);
     }
 
-    private function payloadRegistro($idPais): array
+    private function payloadRegistro($idPais, array $overrides = []): array
     {
-        return [
+        return array_merge([
             'mail'                   => 'nuevo@techo.org',
             'password'               => 'secret123',
             'password_confirmation'  => 'secret123',
@@ -119,6 +144,6 @@ class AuthApiTest extends TestCase
             'idProvincia'            => 1,
             'idLocalidad'            => 1,
             'idUnidadOrganizacional' => 0,
-        ];
+        ], $overrides);
     }
 }
