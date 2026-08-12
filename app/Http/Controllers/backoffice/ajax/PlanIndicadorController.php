@@ -38,26 +38,44 @@ class PlanIndicadorController extends Controller
         $hoyAnio = (int) now()->format('Y');
         $hoyMes  = (int) now()->format('n');
 
-        // Columnas de la matriz: un período por índice de la granularidad, con su
-        // etiqueta y si todavía es editable (período no cerrado).
-        $periodos = [];
-        foreach (GranularidadPlan::periodos($granularidad) as $p) {
-            $periodos[] = [
-                'periodo'  => $p,
-                'etiqueta' => GranularidadPlan::etiqueta($granularidad, $p, $anio),
-                'editable' => GranularidadPlan::editable($granularidad, $p, $anio, $hoyAnio, $hoyMes),
-            ];
+        // Columnas de la matriz. Cada columna es un (año, período):
+        //  - anual: una columna por año de una ventana (años anteriores + actual +
+        //    el próximo para planificar), período null.
+        //  - resto: mismo año, una columna por índice de período de la granularidad.
+        $columnas = [];
+        if ($granularidad === 'anual') {
+            for ($y = $anio - 4; $y <= $anio + 1; $y++) {
+                $columnas[] = [
+                    'anio'     => $y,
+                    'periodo'  => null,
+                    'etiqueta' => (string) $y,
+                    'editable' => GranularidadPlan::editable('anual', null, $y, $hoyAnio, $hoyMes),
+                ];
+            }
+        } else {
+            foreach (GranularidadPlan::periodos($granularidad) as $p) {
+                $columnas[] = [
+                    'anio'     => $anio,
+                    'periodo'  => $p,
+                    'etiqueta' => GranularidadPlan::etiqueta($granularidad, $p, $anio),
+                    'editable' => GranularidadPlan::editable($granularidad, $p, $anio, $hoyAnio, $hoyMes),
+                ];
+            }
         }
 
-        // Real: mismo resolver que la API, acotado por país/año.
-        $paramsReal = ['anio' => $anio];
-        if ($idPais) {
-            $paramsReal['idPais'] = $idPais;
-        }
-        $realRequest = Request::create('', 'GET', $paramsReal);
+        $anios = array_values(array_unique(array_map(function ($c) { return $c['anio']; }, $columnas)));
 
-        // Planes vigentes de todo el país/año/granularidad en una sola query.
-        $planes = $idPais ? PlanIndicador::vigentesIndexados($idPais, $anio, $granularidad) : [];
+        // Request base para el Real (mismo resolver que la API), acotado por país.
+        $mkReq = function ($a) use ($idPais) {
+            $params = ['anio' => $a];
+            if ($idPais) {
+                $params['idPais'] = $idPais;
+            }
+            return Request::create('', 'GET', $params);
+        };
+
+        // Planes vigentes de todos los años/granularidad en una sola query.
+        $planes = $idPais ? PlanIndicador::vigentesIndexados($idPais, $anios, $granularidad) : [];
 
         $indicadores = [];
         foreach (MetricRegistry::catalogo() as $item) {
@@ -66,10 +84,16 @@ class PlanIndicadorController extends Controller
             $acumulable = in_array($tipo, ['anio', 'fecha'], true);
             $esStock    = ($tipo === null || $tipo === 'ultimos_6m');
 
-            // Real: serie mensual (acumulable, se suma por período) o valor único
-            // (stock = snapshot; no divisible = solo tiene sentido a nivel anual).
-            $serie      = $acumulable ? (MetricRegistry::serieMensual($key, $realRequest) ?? []) : [];
-            $valorUnico = ($esStock || !$acumulable) ? (MetricRegistry::resolver($key, $realRequest)['value'] ?? null) : null;
+            // Real por año: serie mes×año (acumulable, se suma por período); snapshot
+            // único (stock); o valor anual por año (no divisible: solo a nivel anual).
+            $serie    = $acumulable ? (MetricRegistry::serieMensualPorAnios($key, $mkReq($anio), $anios) ?? []) : [];
+            $snapshot = $esStock ? (MetricRegistry::resolver($key, $mkReq($anio))['value'] ?? null) : null;
+            $anualNoDiv = [];
+            if (!$acumulable && !$esStock && $granularidad === 'anual') {
+                foreach ($anios as $a) {
+                    $anualNoDiv[$a] = MetricRegistry::resolver($key, $mkReq($a))['value'] ?? null;
+                }
+            }
 
             $nota = $item['nota'];
             if ($esStock) {
@@ -81,23 +105,26 @@ class PlanIndicadorController extends Controller
             }
 
             $celdas = [];
-            foreach ($periodos as $col) {
+            foreach ($columnas as $col) {
+                $a = $col['anio'];
                 $p = $col['periodo'];
 
                 if ($acumulable) {
-                    $real = 0;
-                    foreach (GranularidadPlan::meses($granularidad, $p) as $m) {
-                        $real += $serie[$m] ?? 0;
+                    $meses = ($granularidad === 'anual') ? range(1, 12) : GranularidadPlan::meses($granularidad, $p);
+                    $real  = 0;
+                    foreach ($meses as $m) {
+                        $real += $serie[$a][$m] ?? 0;
                     }
                 } elseif ($esStock) {
-                    $real = $valorUnico;
+                    $real = $snapshot;
                 } else { // no divisible: solo anual
-                    $real = ($granularidad === 'anual') ? $valorUnico : null;
+                    $real = ($granularidad === 'anual') ? ($anualNoDiv[$a] ?? null) : null;
                 }
 
-                $plan = $planes[$key . '|' . ($p ?? 'A')] ?? null;
+                $plan = $planes[$key . '|' . $a . '|' . ($p ?? 'A')] ?? null;
 
                 $celdas[] = [
+                    'anio'      => $a,
                     'periodo'   => $p,
                     'plan'      => $plan,
                     'real'      => $real,
@@ -121,7 +148,7 @@ class PlanIndicadorController extends Controller
             'anio'         => $anio,
             'granularidad' => $granularidad,
             'idPais'       => $idPais,
-            'periodos'     => $periodos,
+            'periodos'     => $columnas,
             'indicadores'  => $indicadores,
         ]);
     }

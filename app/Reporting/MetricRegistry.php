@@ -190,6 +190,60 @@ class MetricRegistry
         return $serie;
     }
 
+    /**
+     * Serie mes × año (una sola query) para una ventana de años: devuelve
+     * [anio => [mes => valor]]. Solo aplica a métricas acumulables por mes
+     * ('anio' y 'fecha'); null para el resto. Usada por la matriz para armar
+     * cualquier granularidad (incluida la anual con varios años) sin N+1.
+     */
+    public static function serieMensualPorAnios(string $key, Request $request, array $anios): ?array
+    {
+        $defs = self::defs();
+        if (!isset($defs[$key]) || empty($anios)) {
+            return null;
+        }
+        $tipo = self::tipoPeriodo($key);
+        if (!in_array($tipo, ['anio', 'fecha'], true)) {
+            return null;
+        }
+
+        $def      = $defs[$key];
+        $columnas = self::columnas($def['vista']);
+        $anios    = array_map('intval', $anios);
+        $lista    = implode(',', $anios);
+
+        $q = self::baseQuery($def, $columnas, $request);
+
+        if ($tipo === 'anio') {
+            if (!in_array('mes', $columnas) || !in_array('anio', $columnas)) {
+                return null;
+            }
+            $q->whereRaw('anio IN (' . $lista . ')');
+            $anioExpr = 'anio';
+            $mesExpr  = 'mes';
+        } else { // 'fecha'
+            $col = $def['periodo'][1];
+            $q->whereRaw('YEAR(`' . $col . '`) IN (' . $lista . ')');
+            $anioExpr = 'YEAR(`' . $col . '`)';
+            $mesExpr  = 'MONTH(`' . $col . '`)';
+        }
+
+        [$selectExpr] = self::medidaExpr($def['medida']);
+
+        $rows = $q->selectRaw($anioExpr . ' as anio, ' . $mesExpr . ' as mes, ' . $selectExpr . ' as value')
+            ->groupBy(DB::raw($anioExpr), DB::raw($mesExpr))
+            ->get();
+
+        $out = [];
+        foreach ($rows as $r) {
+            if ($r->anio === null || $r->mes === null) {
+                continue;
+            }
+            $out[(int) $r->anio][(int) $r->mes] = (int) $r->value;
+        }
+        return $out;
+    }
+
     /** Query base con filtros fijos + where_raw + geo (sin período). */
     private static function baseQuery(array $def, array $columnas, Request $request)
     {

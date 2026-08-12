@@ -23,6 +23,14 @@
 						<option value="anual">{{ $t('backend.granularity_annual') }}</option>
 					</select>
 				</div>
+				<div class="col-md-4">
+					<label>{{ $t('backend.search') }}</label>
+					<div class="input-group">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+						<input type="text" class="form-control" v-model="busqueda"
+							:placeholder="$t('backend.search_indicator')">
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -36,7 +44,7 @@
 					<thead>
 						<tr>
 							<th style="min-width: 240px">{{ $t('backend.indicator') }}</th>
-							<th v-for="col in periodos" :key='"h" + (col.periodo === null ? "A" : col.periodo)'
+							<th v-for="col in periodos" :key='"h" + col.anio + "-" + (col.periodo === null ? "A" : col.periodo)'
 								class="text-center" style="min-width: 92px">
 								{{ col.etiqueta }}
 								<i v-if="!col.editable" class="fa fa-lock text-muted"
@@ -45,16 +53,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="row in indicadores" :key="row.key">
+						<tr v-for="row in indicadoresFiltrados" :key="row.key">
 							<td>
 								{{ row.nombre }}
 								<i v-if="row.nota" class="fa fa-info-circle text-yellow" :title="row.nota"></i>
 							</td>
-							<td v-for="cell in row.celdas" :key='row.key + "|" + (cell.periodo === null ? "A" : cell.periodo)'
+							<td v-for="cell in row.celdas" :key='row.key + "|" + cell.anio + "|" + (cell.periodo === null ? "A" : cell.periodo)'
 								class="text-center">
 								<input v-if="cell.editable" type="number" min="0"
 									class="form-control input-sm text-center"
-									v-model.number="edicion[celda(row.key, cell.periodo)]"
+									v-model.number="edicion[celda(row.key, cell.anio, cell.periodo)]"
 									@change="guardar(row, cell)">
 								<span v-else>{{ cell.plan !== null ? cell.plan : '—' }}</span>
 
@@ -65,6 +73,11 @@
 										{{ cell.desempeno }}%
 									</span>
 								</div>
+							</td>
+						</tr>
+						<tr v-if="indicadoresFiltrados.length === 0">
+							<td :colspan="periodos.length + 1" class="text-muted text-center">
+								{{ $t('backend.no_results') }}
 							</td>
 						</tr>
 					</tbody>
@@ -81,10 +94,11 @@ import Alert from '../../plugins/Alert';
  * Pantalla de Indicadores (Plan vs. Real) como matriz del año.
  *
  * El selector de granularidad (mensual / trimestral / semestral / anual) cambia
- * las columnas: cada columna es un período del año. El "Plan" se edita solo en
- * los períodos que todavía no cerraron (los cerrados van bloqueados); el "Real"
- * se agrega para coincidir con la granularidad (lo resuelve el backend con la
- * misma capa que la API de Power BI). Guardado por celda, versionado server-side.
+ * las columnas: cada columna es un período. En la vista anual las columnas son
+ * varios años (anteriores + actual + próximo). El "Plan" se edita solo en los
+ * períodos que todavía no cerraron; el "Real" lo agrega el backend con la misma
+ * capa que la API de Power BI. El buscador filtra las filas por nombre en vivo.
+ * Guardado por celda, versionado server-side.
  *
  * Acceso restringido a role:admin en la ruta — sin lógica de permisos propia acá.
  */
@@ -97,10 +111,18 @@ export default {
 			idPais: null,
 			anio: moment().format('YYYY') * 1,
 			granularidad: 'trimestral',
+			busqueda: '',
 			periodos: [],
 			indicadores: [],
 			edicion: {},
 		};
+	},
+	computed: {
+		indicadoresFiltrados() {
+			const q = this.busqueda.trim().toLowerCase();
+			if (!q) return this.indicadores;
+			return this.indicadores.filter((row) => row.nombre.toLowerCase().indexOf(q) !== -1);
+		},
 	},
 	mounted() {
 		axios.get('/admin/ajax/paises').then((data) => {
@@ -109,8 +131,8 @@ export default {
 		});
 	},
 	methods: {
-		celda(key, periodo) {
-			return key + '|' + (periodo === null ? 'A' : periodo);
+		celda(key, anio, periodo) {
+			return key + '|' + anio + '|' + (periodo === null ? 'A' : periodo);
 		},
 		cargar() {
 			this.loading = true;
@@ -128,7 +150,7 @@ export default {
 					const edicion = {};
 					this.indicadores.forEach((row) => {
 						row.celdas.forEach((cell) => {
-							edicion[this.celda(row.key, cell.periodo)] = cell.plan;
+							edicion[this.celda(row.key, cell.anio, cell.periodo)] = cell.plan;
 						});
 					});
 					this.edicion = edicion;
@@ -137,14 +159,14 @@ export default {
 				.catch(() => { this.loading = false; });
 		},
 		guardar(row, cell) {
-			const valor = this.edicion[this.celda(row.key, cell.periodo)];
+			const valor = this.edicion[this.celda(row.key, cell.anio, cell.periodo)];
 			if (valor === null || valor === undefined || valor === '') return;
 
 			this.loading = true;
 			axios.post('/admin/ajax/estadisticas/indicadores', {
 				metric_key: row.key,
 				idPais: this.idPais,
-				anio: this.anio,
+				anio: cell.anio,
 				granularidad: this.granularidad,
 				periodo: cell.periodo,
 				valor_planificado: valor,

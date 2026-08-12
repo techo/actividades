@@ -494,6 +494,8 @@ return [
     'granularity_biannual' => 'Biannual',
     'granularity_annual' => 'Annual',
     'period_closed' => 'Closed period: not editable',
+    'search_indicator' => 'Search indicator...',
+    'no_results' => 'No matching indicators.',
     'indicator' => 'Indicator',
     'planned' => 'Plan',
     'real' => 'Real',

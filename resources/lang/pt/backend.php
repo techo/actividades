@@ -495,6 +495,8 @@ return [
     'granularity_biannual' => 'Semestral',
     'granularity_annual' => 'Anual',
     'period_closed' => 'Período encerrado: não editável',
+    'search_indicator' => 'Buscar indicador...',
+    'no_results' => 'Nenhum indicador corresponde.',
     'indicator' => 'Indicador',
     'planned' => 'Plano',
     'real' => 'Real',

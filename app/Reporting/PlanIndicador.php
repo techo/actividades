@@ -60,10 +60,14 @@ class PlanIndicador extends Model
      * "metric_key|periodo" (periodo null -> 'A'). Una sola query para armar la
      * matriz completa sin N+1.
      */
-    public static function vigentesIndexados(int $idPais, int $anio, string $granularidad): array
+    public static function vigentesIndexados(int $idPais, array $anios, string $granularidad): array
     {
+        if (empty($anios)) {
+            return [];
+        }
+
         $filas = static::where('idPais', $idPais)
-            ->where('anio', $anio)
+            ->whereIn('anio', $anios)
             ->where('granularidad', $granularidad)
             ->where('vigente', true)
             ->orderByDesc('version')
@@ -71,7 +75,7 @@ class PlanIndicador extends Model
 
         $index = [];
         foreach ($filas as $fila) {
-            $clave = $fila->metric_key . '|' . ($fila->periodo ?? 'A');
+            $clave = $fila->metric_key . '|' . $fila->anio . '|' . ($fila->periodo ?? 'A');
             if (!isset($index[$clave])) { // la primera es la de mayor version
                 $index[$clave] = (float) $fila->valor_planificado;
             }
