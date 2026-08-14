@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reporting\GuardarPlanIndicador;
+use App\Reporting\GranularidadPlan;
 use App\Reporting\MetricRegistry;
 use App\Reporting\PlanIndicador;
 use Illuminate\Http\Request;
@@ -27,50 +28,128 @@ class PlanIndicadorController extends Controller
     public function index(Request $request)
     {
         $anio = $request->filled('anio') ? (int) $request->input('anio') : (int) now()->format('Y');
-        $mes  = $request->filled('mes') ? (int) $request->input('mes') : (int) now()->format('n');
 
-        $idPais = $this->resolverIdPais($request);
-
-        $paramsReal = ['anio' => $anio, 'mes' => $mes];
-        if ($idPais) {
-            $paramsReal['idPais'] = $idPais;
+        $granularidad = (string) $request->input('granularidad', 'trimestral');
+        if (!GranularidadPlan::valida($granularidad)) {
+            $granularidad = 'trimestral';
         }
-        $realRequest = Request::create('', 'GET', $paramsReal);
+
+        $idPais  = $this->resolverIdPais($request);
+        $hoyAnio = (int) now()->format('Y');
+        $hoyMes  = (int) now()->format('n');
+
+        // Columnas de la matriz. Cada columna es un (año, período):
+        //  - anual: una columna por año de una ventana (años anteriores + actual +
+        //    el próximo para planificar), período null.
+        //  - resto: mismo año, una columna por índice de período de la granularidad.
+        $columnas = [];
+        if ($granularidad === 'anual') {
+            for ($y = $anio - 4; $y <= $anio + 1; $y++) {
+                $columnas[] = [
+                    'anio'     => $y,
+                    'periodo'  => null,
+                    'etiqueta' => (string) $y,
+                    'editable' => GranularidadPlan::editable('anual', null, $y, $hoyAnio, $hoyMes),
+                ];
+            }
+        } else {
+            foreach (GranularidadPlan::periodos($granularidad) as $p) {
+                $columnas[] = [
+                    'anio'     => $anio,
+                    'periodo'  => $p,
+                    'etiqueta' => GranularidadPlan::etiqueta($granularidad, $p, $anio),
+                    'editable' => GranularidadPlan::editable($granularidad, $p, $anio, $hoyAnio, $hoyMes),
+                ];
+            }
+        }
+
+        $anios = array_values(array_unique(array_map(function ($c) { return $c['anio']; }, $columnas)));
+
+        // Request base para el Real (mismo resolver que la API), acotado por país.
+        $mkReq = function ($a) use ($idPais) {
+            $params = ['anio' => $a];
+            if ($idPais) {
+                $params['idPais'] = $idPais;
+            }
+            return Request::create('', 'GET', $params);
+        };
+
+        // Planes vigentes de todos los años/granularidad en una sola query.
+        $planes = $idPais ? PlanIndicador::vigentesIndexados($idPais, $anios, $granularidad) : [];
 
         $indicadores = [];
         foreach (MetricRegistry::catalogo() as $item) {
-            $real = MetricRegistry::resolver($item['key'], $realRequest);
-            $plan = $idPais ? PlanIndicador::vigentePara($item['key'], $idPais, $anio, $mes) : null;
+            $key        = $item['key'];
+            $tipo       = MetricRegistry::tipoPeriodo($key);
+            $acumulable = in_array($tipo, ['anio', 'fecha'], true);
+            $esStock    = ($tipo === null || $tipo === 'ultimos_6m');
 
-            $valorReal = $real['value'] ?? null;
-            $valorPlan = $plan ? (float) $plan->valor_planificado : null;
+            // Real por año: serie mes×año (acumulable, se suma por período); snapshot
+            // único (stock); o valor anual por año (no divisible: solo a nivel anual).
+            $serie    = $acumulable ? (MetricRegistry::serieMensualPorAnios($key, $mkReq($anio), $anios) ?? []) : [];
+            $snapshot = $esStock ? (MetricRegistry::resolver($key, $mkReq($anio))['value'] ?? null) : null;
+            $anualNoDiv = [];
+            if (!$acumulable && !$esStock && $granularidad === 'anual') {
+                foreach ($anios as $a) {
+                    $anualNoDiv[$a] = MetricRegistry::resolver($key, $mkReq($a))['value'] ?? null;
+                }
+            }
 
-            // Para indicadores "stock" (sin período) el Real es un snapshot al día
-            // de hoy y no varía con el mes: lo aclaramos en la nota que la UI ya
-            // muestra como tooltip, para que el Plan-vs-Real no se malinterprete.
             $nota = $item['nota'];
-            if (!MetricRegistry::esPorPeriodo($item['key'])) {
-                $aviso = 'Valor actual (indicador de stock): no depende del mes seleccionado.';
-                $nota = $nota ? ($nota . ' ' . $aviso) : $aviso;
+            if ($esStock) {
+                $aviso = 'Valor actual (indicador de stock): no depende del período seleccionado.';
+                $nota  = $nota ? ($nota . ' ' . $aviso) : $aviso;
+            } elseif (!$acumulable) {
+                $aviso = 'Real disponible solo a nivel anual (no se desglosa por período).';
+                $nota  = $nota ? ($nota . ' ' . $aviso) : $aviso;
+            }
+
+            $celdas = [];
+            foreach ($columnas as $col) {
+                $a = $col['anio'];
+                $p = $col['periodo'];
+
+                if ($acumulable) {
+                    $meses = ($granularidad === 'anual') ? range(1, 12) : GranularidadPlan::meses($granularidad, $p);
+                    $real  = 0;
+                    foreach ($meses as $m) {
+                        $real += $serie[$a][$m] ?? 0;
+                    }
+                } elseif ($esStock) {
+                    $real = $snapshot;
+                } else { // no divisible: solo anual
+                    $real = ($granularidad === 'anual') ? ($anualNoDiv[$a] ?? null) : null;
+                }
+
+                $plan = $planes[$key . '|' . $a . '|' . ($p ?? 'A')] ?? null;
+
+                $celdas[] = [
+                    'anio'      => $a,
+                    'periodo'   => $p,
+                    'plan'      => $plan,
+                    'real'      => $real,
+                    'editable'  => $col['editable'],
+                    'desempeno' => ($plan !== null && $plan > 0 && $real !== null)
+                        ? round($real * 100 / $plan)
+                        : null,
+                ];
             }
 
             $indicadores[] = [
-                'key'       => $item['key'],
-                'nombre'    => $item['nombre'],
-                'nota'      => $nota,
-                'plan'      => $valorPlan,
-                'real'      => $valorReal,
-                'desempeno' => ($valorPlan !== null && $valorPlan > 0 && $valorReal !== null)
-                    ? round($valorReal * 100 / $valorPlan)
-                    : null,
+                'key'      => $key,
+                'nombre'   => $item['nombre'],
+                'nota'     => $nota,
+                'es_stock' => $esStock,
+                'celdas'   => $celdas,
             ];
         }
 
         return response()->json([
-            'anio'        => $anio,
-            'mes'         => $mes,
-            'idPais'      => $idPais,
-            'indicadores' => $indicadores,
+            'anio'         => $anio,
+            'granularidad' => $granularidad,
+            'idPais'       => $idPais,
+            'periodos'     => $columnas,
+            'indicadores'  => $indicadores,
         ]);
     }
 
@@ -78,11 +157,26 @@ class PlanIndicadorController extends Controller
     {
         $datos = $request->validated();
 
+        $granularidad = $datos['granularidad'];
+        $periodo = (isset($datos['periodo']) && $datos['periodo'] !== null && $datos['periodo'] !== '')
+            ? (int) $datos['periodo']
+            : null;
+        $anio = (int) $datos['anio'];
+
+        // Defensa server-side: no permitir modificar un período ya cerrado, aunque
+        // el front deshabilite el input.
+        $hoyAnio = (int) now()->format('Y');
+        $hoyMes  = (int) now()->format('n');
+        if (!GranularidadPlan::editable($granularidad, $periodo, $anio, $hoyAnio, $hoyMes)) {
+            return response()->json(['error' => 'El período ya cerró: no se puede modificar el plan.'], 422);
+        }
+
         $plan = PlanIndicador::guardarPlan(
             $datos['metric_key'],
             (int) $datos['idPais'],
-            (int) $datos['anio'],
-            isset($datos['mes']) ? (int) $datos['mes'] : null,
+            $anio,
+            $granularidad,
+            $periodo,
             (float) $datos['valor_planificado'],
             auth()->id()
         );

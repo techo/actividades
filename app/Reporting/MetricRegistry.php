@@ -23,6 +23,17 @@ use Illuminate\Support\Facades\Schema;
  */
 class MetricRegistry
 {
+    /** Cache por request de columnas de cada vista (evita N introspecciones). */
+    private static $columnasCache = [];
+
+    private static function columnas(string $vista): array
+    {
+        if (!isset(self::$columnasCache[$vista])) {
+            self::$columnasCache[$vista] = Schema::getColumnListing($vista);
+        }
+        return self::$columnasCache[$vista];
+    }
+
     private static function defs(): array
     {
         $part = 'reporting_fact_participacion';
@@ -104,6 +115,155 @@ class MetricRegistry
         return isset($defs[$key]) && !empty($defs[$key]['periodo']);
     }
 
+    /**
+     * Tipo de manejo de período de la métrica: 'anio' | 'fecha' | 'overlap' |
+     * 'anio_col' | 'ultimos_6m' | null (stock). Sirve para saber si el Real se
+     * puede desglosar por mes (solo 'anio' y 'fecha' se acumulan mes a mes).
+     */
+    public static function tipoPeriodo(string $key): ?string
+    {
+        $defs = self::defs();
+        if (!isset($defs[$key])) {
+            return null;
+        }
+        $p = $defs[$key]['periodo'] ?? null;
+        if ($p === null) {
+            return null;
+        }
+        return is_string($p) ? $p : $p[0];
+    }
+
+    /**
+     * Serie mensual (una sola query) del Real de una métrica para un año: devuelve
+     * [mes => valor]. Solo aplica a métricas acumulables por mes ('anio' y 'fecha');
+     * para el resto devuelve null (no se pueden partir en meses de forma limpia).
+     *
+     * Con esto la matriz Plan-vs-Real arma cada trimestre/semestre sumando los
+     * meses del período, sin pegarle a la BD una vez por celda.
+     */
+    public static function serieMensual(string $key, Request $request): ?array
+    {
+        $defs = self::defs();
+        if (!isset($defs[$key])) {
+            return null;
+        }
+        $tipo = self::tipoPeriodo($key);
+        if (!in_array($tipo, ['anio', 'fecha'], true)) {
+            return null;
+        }
+
+        $def      = $defs[$key];
+        $columnas = self::columnas($def['vista']);
+        $anio     = $request->filled('anio') ? (int) $request->input('anio') : null;
+
+        $q = self::baseQuery($def, $columnas, $request);
+
+        if ($tipo === 'anio') {
+            if (!in_array('mes', $columnas)) {
+                return null;
+            }
+            if ($anio !== null && in_array('anio', $columnas)) {
+                $q->where('anio', $anio);
+            }
+            $mesExpr = 'mes';
+        } else { // 'fecha'
+            $col = $def['periodo'][1];
+            if ($anio !== null) {
+                $q->whereRaw('YEAR(`' . $col . '`) = ?', [$anio]);
+            }
+            $mesExpr = 'MONTH(`' . $col . '`)';
+        }
+
+        [$selectExpr] = self::medidaExpr($def['medida']);
+
+        $rows = $q->selectRaw($mesExpr . ' as mes, ' . $selectExpr . ' as value')
+            ->groupBy(DB::raw($mesExpr))
+            ->get();
+
+        $serie = [];
+        foreach ($rows as $r) {
+            if ($r->mes === null) {
+                continue;
+            }
+            $serie[(int) $r->mes] = (int) $r->value;
+        }
+        return $serie;
+    }
+
+    /**
+     * Serie mes × año (una sola query) para una ventana de años: devuelve
+     * [anio => [mes => valor]]. Solo aplica a métricas acumulables por mes
+     * ('anio' y 'fecha'); null para el resto. Usada por la matriz para armar
+     * cualquier granularidad (incluida la anual con varios años) sin N+1.
+     */
+    public static function serieMensualPorAnios(string $key, Request $request, array $anios): ?array
+    {
+        $defs = self::defs();
+        if (!isset($defs[$key]) || empty($anios)) {
+            return null;
+        }
+        $tipo = self::tipoPeriodo($key);
+        if (!in_array($tipo, ['anio', 'fecha'], true)) {
+            return null;
+        }
+
+        $def      = $defs[$key];
+        $columnas = self::columnas($def['vista']);
+        $anios    = array_map('intval', $anios);
+        $lista    = implode(',', $anios);
+
+        $q = self::baseQuery($def, $columnas, $request);
+
+        if ($tipo === 'anio') {
+            if (!in_array('mes', $columnas) || !in_array('anio', $columnas)) {
+                return null;
+            }
+            $q->whereRaw('anio IN (' . $lista . ')');
+            $anioExpr = 'anio';
+            $mesExpr  = 'mes';
+        } else { // 'fecha'
+            $col = $def['periodo'][1];
+            $q->whereRaw('YEAR(`' . $col . '`) IN (' . $lista . ')');
+            $anioExpr = 'YEAR(`' . $col . '`)';
+            $mesExpr  = 'MONTH(`' . $col . '`)';
+        }
+
+        [$selectExpr] = self::medidaExpr($def['medida']);
+
+        $rows = $q->selectRaw($anioExpr . ' as anio, ' . $mesExpr . ' as mes, ' . $selectExpr . ' as value')
+            ->groupBy(DB::raw($anioExpr), DB::raw($mesExpr))
+            ->get();
+
+        $out = [];
+        foreach ($rows as $r) {
+            if ($r->anio === null || $r->mes === null) {
+                continue;
+            }
+            $out[(int) $r->anio][(int) $r->mes] = (int) $r->value;
+        }
+        return $out;
+    }
+
+    /** Query base con filtros fijos + where_raw + geo (sin período). */
+    private static function baseQuery(array $def, array $columnas, Request $request)
+    {
+        $q = DB::table($def['vista']);
+
+        foreach (($def['filtros'] ?? []) as $col => $val) {
+            $q->where($col, $val);
+        }
+        if (!empty($def['where_raw'])) {
+            $q->whereRaw($def['where_raw']);
+        }
+        foreach (['idPais', 'idOficina'] as $g) {
+            if ($request->filled($g) && in_array($g, $columnas)) {
+                $q->where($g, $request->input($g));
+            }
+        }
+
+        return $q;
+    }
+
     /** Calcula una métrica con los filtros del request. Devuelve array para JSON. */
     public static function resolver(string $key, Request $request)
     {
@@ -113,28 +273,13 @@ class MetricRegistry
         }
         $def      = $defs[$key];
         $vista    = $def['vista'];
-        $columnas = Schema::getColumnListing($vista);
+        $columnas = self::columnas($vista);
 
         $anio = $request->filled('anio') ? (int) $request->input('anio') : null;
         $mes  = $request->filled('mes') ? (int) $request->input('mes') : null;
 
-        $base = function () use ($vista, $def, $columnas, $request, $anio, $mes) {
-            $q = DB::table($vista);
-
-            // Filtros fijos de la métrica.
-            foreach (($def['filtros'] ?? []) as $col => $val) {
-                $q->where($col, $val);
-            }
-            if (!empty($def['where_raw'])) {
-                $q->whereRaw($def['where_raw']);
-            }
-
-            // Geo (opcional, si la columna existe).
-            foreach (['idPais', 'idOficina'] as $g) {
-                if ($request->filled($g) && in_array($g, $columnas)) {
-                    $q->where($g, $request->input($g));
-                }
-            }
+        $base = function () use ($def, $columnas, $request, $anio, $mes) {
+            $q = self::baseQuery($def, $columnas, $request);
 
             // Período.
             self::aplicarPeriodo($q, $def['periodo'] ?? null, $columnas, $anio, $mes);
