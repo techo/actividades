@@ -70,9 +70,14 @@ class UsuarioController extends BaseController
    */
   private function socialVerificado(Request $request)
   {
-      $sesion = $request->session()->get('registro_social');
-      if (is_array($sesion) && !empty($sesion['social_id']) && !empty($sesion['email'])) {
-          return $sesion;
+      // En rutas API (stateless, sin middleware de sesión) $request->session()
+      // lanza "Session store not set on request". Solo la consultamos si existe;
+      // el registro web sí tiene sesión (flujo OAuth en LoginController).
+      if ($request->hasSession()) {
+          $sesion = $request->session()->get('registro_social');
+          if (is_array($sesion) && !empty($sesion['social_id']) && !empty($sesion['email'])) {
+              return $sesion;
+          }
       }
 
       if ($request->filled('provider') && $request->filled('token')) {
