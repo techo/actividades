@@ -135,8 +135,11 @@ class LoginController extends Controller
             if ($emailVerificado === false || $emailVerificado === 'false') {
                 return view('registro')->with('persona', null)->with('mensaje', "El email de la cuenta de Google no está verificado.");
             }
-            $personaData->nombre = $user->user['given_name'];
-            $personaData->apellido = $user->user['family_name'];
+            // Google (OpenID) devuelve given_name/family_name como OPCIONALES: cuentas sin
+            // apellido (mononombre, cuentas de organización) los omiten. Coalescemos para no
+            // romper el registro con "Undefined index"; el usuario completa lo que falte en el form.
+            $personaData->nombre = $user->user['given_name'] ?? $user->name ?? '';
+            $personaData->apellido = $user->user['family_name'] ?? '';
             $personaData->email = $user->email;
             $personaData->google_id = $user->user['id'] ?? '';
             $personaData->facebook_id = '';
