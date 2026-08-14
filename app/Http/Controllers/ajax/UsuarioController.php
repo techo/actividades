@@ -119,9 +119,22 @@ class UsuarioController extends BaseController
       }
   }
 
-  public function create(Request $request) {
-      $url = $request->session()->get('login_callback','');
-      $this->validar($request,'create');
+  /**
+   * Núcleo ÚNICO de alta de una persona nueva (registro).
+   *
+   * Fuente de verdad compartida por el registro web (create) y el de la API
+   * (apiCreate): validación, carga de datos, verificación social, password,
+   * persistencia y notificación. Antes esto estaba duplicado en ambos métodos
+   * y la divergencia causó el 500 de /api/create ("Session store not set") y
+   * mails de la API sin locale. Todo lo común vive acá; los endpoints solo
+   * agregan su transporte (web: sesión/login; API: token/JSON).
+   *
+   * @return array{persona: Persona, social: bool}
+   */
+  private function registrarPersona(Request $request)
+  {
+      $this->validar($request, 'create');
+
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
 
@@ -135,8 +148,20 @@ class UsuarioController extends BaseController
       $persona->save();
 
       if (!$social) {
-        $persona->sendRegistroUsuarioNotification();
+          // Notificación de registro localizada (idéntica para web y API).
+          $persona->sendRegistroUsuarioNotification();
       }
+
+      return ['persona' => $persona, 'social' => (bool) $social];
+  }
+
+  public function create(Request $request) {
+      $url = $request->session()->get('login_callback','');
+
+      $resultado = $this->registrarPersona($request);
+      $persona = $resultado['persona'];
+      $social  = $resultado['social'];
+
       $request->session()->forget('registro_social');
 
       $pais = Pais::find($persona->idPais);
@@ -144,41 +169,26 @@ class UsuarioController extends BaseController
       Auth::login($persona, true);
       $request->session()->flash('mensaje', __('messages.account_created'));
 
-      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => (bool) $social];
+      return ['login_callback' =>  $url, 'user' => null, 'abreviacionPais' => $pais->abreviacion, 'loginSocial' => $social];
   }
 
   public function apiCreate(Request $request) {
-        $this->validar($request, 'create');
+      $resultado = $this->registrarPersona($request);
+      $persona = $resultado['persona'];
+      $social  = $resultado['social'];
 
-        $persona = new Persona();
-        $this->cargar_cambios($request, $persona);
+      // En API devolvemos un token en lugar de iniciar sesión (Auth::login).
+      $token = $persona->createToken('Token Name')->accessToken;
+      $pais  = Pais::find($persona->idPais);
 
-        $social = $this->socialVerificado($request);
-        $this->aplicarSocialVerificado($persona, $social);
-
-        $persona->password = $social ? Hash::make(str_random(30)) : Hash::make($request->pass);
-        $persona->idUnidadOrganizacional = 0;
-        $persona->recibirMails = 1;
-        $persona->unsubscribe_token = Uuid::generate()->string;
-        $persona->save();
-
-        if (!$social) {
-            $persona->notify(new \App\Notifications\RegistroUsuario);
-        }
-
-        // 🔑 En API devolvés un token en lugar de usar Auth::login()
-        $token = $persona->createToken('Token Name')->accessToken;
-
-        $pais = Pais::find($persona->idPais);
-
-        return response()->json([
-            'mensaje' => __('messages.account_created'),
-            'token' => $token,
-            'persona' => $persona,
-            'abreviacionPais' => $pais->abreviacion,
-            'loginSocial' => (bool) $social,
-        ]);
-    }
+      return response()->json([
+          'mensaje'         => __('messages.account_created'),
+          'token'           => $token,
+          'persona'         => $persona,
+          'abreviacionPais' => $pais->abreviacion,
+          'loginSocial'     => $social,
+      ]);
+  }
 
   public function update(Request $request) {
       $this->validar($request,'update');
