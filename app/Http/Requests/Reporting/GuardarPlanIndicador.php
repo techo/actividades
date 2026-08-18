@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Reporting;
 
+use App\Reporting\GranularidadPlan;
 use App\Reporting\MetricRegistry;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -32,8 +33,10 @@ class GuardarPlanIndicador extends FormRequest
         return [
             'metric_key'        => 'required|string',
             'idPais'            => 'required|integer',
+            'idOficina'         => 'nullable|integer',
             'anio'              => 'required|integer|min:2000|max:2100',
-            'mes'               => 'nullable|integer|min:1|max:12',
+            'granularidad'      => 'required|in:mensual,trimestral,semestral,anual',
+            'periodo'           => 'nullable|integer|min:1|max:12',
             'valor_planificado' => 'required|numeric|min:0',
         ];
     }
@@ -43,6 +46,14 @@ class GuardarPlanIndicador extends FormRequest
         $validator->after(function ($validator) {
             if ($this->filled('metric_key') && !MetricRegistry::existe($this->input('metric_key'))) {
                 $validator->errors()->add('metric_key', 'Métrica no encontrada en MetricRegistry.');
+            }
+
+            if ($this->filled('granularidad')) {
+                $periodo = $this->input('periodo');
+                $periodo = ($periodo === null || $periodo === '') ? null : (int) $periodo;
+                if (!GranularidadPlan::periodoValido($this->input('granularidad'), $periodo)) {
+                    $validator->errors()->add('periodo', 'Período inválido para la granularidad elegida.');
+                }
             }
         });
     }
