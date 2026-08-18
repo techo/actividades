@@ -33,6 +33,7 @@ class GuardarPlanIndicador extends FormRequest
         return [
             'metric_key'        => 'required|string',
             'idPais'            => 'required|integer',
+            'idOficina'         => 'nullable|integer',
             'anio'              => 'required|integer|min:2000|max:2100',
             'granularidad'      => 'required|in:mensual,trimestral,semestral,anual',
             'periodo'           => 'nullable|integer|min:1|max:12',

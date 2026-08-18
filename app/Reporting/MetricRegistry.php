@@ -84,7 +84,7 @@ class MetricRegistry
         ];
     }
 
-    /** Catálogo: lista de métricas disponibles (key + nombre + nota). */
+    /** Catálogo: lista de métricas disponibles (key + nombre + nota + grupo). */
     public static function catalogo(): array
     {
         $items = [];
@@ -93,10 +93,36 @@ class MetricRegistry
                 'key'    => $key,
                 'nombre' => $def['nombre'],
                 'nota'   => $def['nota'] ?? null,
+                'grupo'  => self::grupo($key),
                 'url'    => url('/api/reporting/metrics/' . $key),
             ];
         }
         return $items;
+    }
+
+    /**
+     * Grupo temático del indicador ("tipo de indicador"), para filtrar y dividir
+     * la pantalla en secciones. Sigue la agrupación de defs() de arriba.
+     */
+    public static function grupo(string $key): string
+    {
+        static $map = null;
+        if ($map === null) {
+            $grupos = [
+                'Movilización' => ['movilizados_territorio', 'movilizados_colecta', 'movilizados_construcciones', 'movilizados_otras', 'movilizados_total'],
+                'Equipo permanente' => ['equipo_permanente_total', 'permanentes_areas', 'permanentes_comunidades', 'coordinaciones_comunidad'],
+                'Campañas y encuentros' => ['campanas_captacion_nacional', 'encuentros'],
+                'Comunidades y mesas' => ['comunidades_activas', 'comunidades_ficha_finalizada', 'comunidades_inicio_trabajo', 'comunidades_tenencia_regularizada', 'comunidades_fin_trabajo', 'mesas_activas', 'mesas_implementadas', 'vecinos_mesa'],
+                'Impacto y soluciones' => ['viviendas_emergencia', 'viviendas_transitorias', 'viviendas_permanentes', 'familias_agua', 'familias_saneamiento', 'familias_energia', 'infraestructura_comunitaria', 'soluciones_agua_comunitaria', 'soluciones_energia_comunitaria', 'soluciones_saneamiento_comunitaria', 'sedes_comunitarias'],
+            ];
+            $map = [];
+            foreach ($grupos as $g => $keys) {
+                foreach ($keys as $k) {
+                    $map[$k] = $g;
+                }
+            }
+        }
+        return $map[$key] ?? 'Otros';
     }
 
     public static function existe(string $key): bool

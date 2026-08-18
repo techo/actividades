@@ -34,9 +34,10 @@ class PlanIndicadorController extends Controller
             $granularidad = 'trimestral';
         }
 
-        $idPais  = $this->resolverIdPais($request);
-        $hoyAnio = (int) now()->format('Y');
-        $hoyMes  = (int) now()->format('n');
+        $idPais    = $this->resolverIdPais($request);
+        $idOficina = $request->filled('idOficina') ? (int) $request->input('idOficina') : null;
+        $hoyAnio   = (int) now()->format('Y');
+        $hoyMes    = (int) now()->format('n');
 
         // Columnas de la matriz. Cada columna es un (año, período):
         //  - anual: una columna por año de una ventana (años anteriores + actual +
@@ -65,17 +66,20 @@ class PlanIndicadorController extends Controller
 
         $anios = array_values(array_unique(array_map(function ($c) { return $c['anio']; }, $columnas)));
 
-        // Request base para el Real (mismo resolver que la API), acotado por país.
-        $mkReq = function ($a) use ($idPais) {
+        // Request base para el Real (mismo resolver que la API), acotado por país/oficina.
+        $mkReq = function ($a) use ($idPais, $idOficina) {
             $params = ['anio' => $a];
             if ($idPais) {
                 $params['idPais'] = $idPais;
+            }
+            if ($idOficina) {
+                $params['idOficina'] = $idOficina;
             }
             return Request::create('', 'GET', $params);
         };
 
         // Planes vigentes de todos los años/granularidad en una sola query.
-        $planes = $idPais ? PlanIndicador::vigentesIndexados($idPais, $anios, $granularidad) : [];
+        $planes = $idPais ? PlanIndicador::vigentesIndexados($idPais, $idOficina, $anios, $granularidad) : [];
 
         $indicadores = [];
         foreach (MetricRegistry::catalogo() as $item) {
@@ -139,6 +143,7 @@ class PlanIndicadorController extends Controller
                 'key'      => $key,
                 'nombre'   => $item['nombre'],
                 'nota'     => $nota,
+                'grupo'    => $item['grupo'],
                 'es_stock' => $esStock,
                 'celdas'   => $celdas,
             ];
@@ -148,6 +153,8 @@ class PlanIndicadorController extends Controller
             'anio'         => $anio,
             'granularidad' => $granularidad,
             'idPais'       => $idPais,
+            'paisNombre'   => $idPais ? optional(\App\Pais::find($idPais))->nombre : null,
+            'idOficina'    => $idOficina,
             'periodos'     => $columnas,
             'indicadores'  => $indicadores,
         ]);
@@ -161,7 +168,10 @@ class PlanIndicadorController extends Controller
         $periodo = (isset($datos['periodo']) && $datos['periodo'] !== null && $datos['periodo'] !== '')
             ? (int) $datos['periodo']
             : null;
-        $anio = (int) $datos['anio'];
+        $anio      = (int) $datos['anio'];
+        $idOficina = (isset($datos['idOficina']) && $datos['idOficina'] !== null && $datos['idOficina'] !== '')
+            ? (int) $datos['idOficina']
+            : null;
 
         // Defensa server-side: no permitir modificar un período ya cerrado, aunque
         // el front deshabilite el input.
@@ -174,6 +184,7 @@ class PlanIndicadorController extends Controller
         $plan = PlanIndicador::guardarPlan(
             $datos['metric_key'],
             (int) $datos['idPais'],
+            $idOficina,
             $anio,
             $granularidad,
             $periodo,
