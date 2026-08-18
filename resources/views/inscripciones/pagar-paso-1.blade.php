@@ -11,12 +11,29 @@
 @section('main_content')
 
 @php
-    $stripeConfig     = json_decode($actividad->pais->config_pago);
-    $stripeHabilitado = !empty($stripeConfig->stripe_secret) && $inscripcion->pago != 1;
-    $tieneLink        = !empty($actividad->linkPago);
+    $stripeConfig = json_decode($actividad->pais->config_pago);
 
-    // Tab seleccionado por defecto: card > link > transfer según disponibilidad
-    $tabDefault = $stripeHabilitado ? 'card' : ($tieneLink ? 'link' : 'transfer');
+    // Métodos que habilitó el coordinador (Actividad.metodos_pago, cast array).
+    // Puede ser null en actividades previas al rediseño (migración 2026_07_02).
+    $metodos      = $actividad->metodos_pago;
+    $tieneMetodos = is_array($metodos);
+
+    // Tarjeta (Stripe): ESTRICTO — solo si el coordinador habilitó 'tarjeta' y el país
+    // tiene Stripe. metodos_pago null => tarjeta oculta (no basta con que Stripe exista).
+    $tarjetaHabilitada = $tieneMetodos && !empty($metodos['tarjeta']);
+    $stripeHabilitado  = !empty($stripeConfig->stripe_secret) && $inscripcion->pago != 1 && $tarjetaHabilitada;
+
+    // Transferencia y link: se respeta metodos_pago cuando está definido; si es null
+    // (legacy) se conserva el comportamiento previo para no dejar sin forma de pago a
+    // las actividades viejas (transferencia siempre; link si hay linkPago).
+    $transferenciaHabilitada = $tieneMetodos ? !empty($metodos['transferencia']) : true;
+    $linkHabilitado          = $tieneMetodos ? !empty($metodos['link_pix'])      : true;
+    $tieneLink               = !empty($actividad->linkPago) && $linkHabilitado;
+
+    $algunMetodo = $stripeHabilitado || $transferenciaHabilitada || $tieneLink;
+
+    // Tab por defecto: primer método disponible (card > link > transfer).
+    $tabDefault = $stripeHabilitado ? 'card' : ($tieneLink ? 'link' : ($transferenciaHabilitada ? 'transfer' : ''));
 @endphp
 
 @php
@@ -139,6 +156,7 @@
                 </div>
                 @endif
 
+                @if($transferenciaHabilitada)
                 <div class="col-md-4 mb-2">
                     <button type="button"
                         class="pago-metodo-btn w-100 p-3 border rounded d-flex flex-column align-items-center justify-content-center"
@@ -150,6 +168,7 @@
                         </span>
                     </button>
                 </div>
+                @endif
 
                 @if($tieneLink)
                 <div class="col-md-4 mb-2">
@@ -166,6 +185,12 @@
                 @endif
 
             </div>
+
+            @unless($algunMetodo)
+            <div class="alert alert-warning" role="alert">
+                {{ __('frontend.payment_no_method_available') }}
+            </div>
+            @endunless
 
             {{-- ── Panel: Tarjeta / Stripe ─────────────────────────── --}}
             @if($stripeHabilitado)
@@ -188,6 +213,7 @@
             @endif
 
             {{-- ── Panel: Efectivo / Transferencia ─────────────────── --}}
+            @if($transferenciaHabilitada)
             <div id="pago-content-transfer" class="pago-panel" style="display:none;">
                 <div class="row">
 
@@ -217,6 +243,7 @@
 
                 </div>
             </div>
+            @endif
 
             {{-- ── Panel: Link de Pago ──────────────────────────────── --}}
             @if($tieneLink)

@@ -432,6 +432,7 @@ return [
 	'payment_required_message'       => 'To participate in this activity, a donation is required.',
 	'payment_select_method'          => 'Please select the method by which you wish to make your contribution. We will send you confirmation of your participation by email once your payment has been processed.',
 	'payment_method_card'            => 'Credit/Debit Card',
+	'payment_no_method_available'    => 'This activity currently has no payment method enabled. Please contact the coordinator.',
 	'payment_method_transfer'        => 'Cash / Bank Transfer',
 	'payment_method_link'            => 'Payment Link',
 	'bank_details_title'             => 'Account details',
