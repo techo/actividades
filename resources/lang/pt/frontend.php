@@ -438,6 +438,7 @@ return [
 	'payment_required_message'       => 'Para participar desta atividade, é necessária uma doação.',
 	'payment_select_method'          => 'Por favor, selecione o método pelo qual deseja realizar sua contribuição. Enviaremos a confirmação da sua participação por e-mail assim que o pagamento for processado.',
 	'payment_method_card'            => 'Cartão de Crédito/Débito',
+	'payment_no_method_available'    => 'Esta atividade não tem nenhum método de pagamento habilitado no momento. Por favor, entre em contato com o coordenador.',
 	'payment_method_transfer'        => 'Dinheiro / Transferência',
 	'payment_method_link'            => 'Link de Pagamento',
 	'bank_details_title'             => 'Detalhes da conta',
