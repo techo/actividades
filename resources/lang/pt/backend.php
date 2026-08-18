@@ -499,6 +499,8 @@ return [
     'no_plan_defined' => 'Sem plano definido',
     'select_country_first' => 'Escolha um país para ver e editar o plano.',
     'settings' => 'Configurações',
+    'communications' => 'Comunicações',
+    'invitaciones_actividad' => 'Convidar para atividade',
     'offices' => 'Escritórios',
     'activity_types' => 'Tipos de Atividades',
     'geographical_divisions' => 'Divisões Geográficas',

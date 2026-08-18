@@ -101,8 +101,23 @@
             </li>
 
 
+            @can('enviar_comunicaciones')
+            <li class="treeview {{ request()->is('admin/comunicaciones*') ? 'active menu-open' : ''}}">
+                <a href="#"><i class="fa fa-paper-plane"></i> <span>{{ __('backend.communications') }}</span>
+                    <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{request()->is('admin/comunicaciones/invitaciones') ? 'active' : ''}}">
+                        <a href="/admin/comunicaciones/invitaciones">{{ __('backend.invitaciones_actividad') }}</a>
+                    </li>
+                </ul>
+            </li>
+            @endcan
+
             @if (Auth::user()->hasRole('admin'))
-            
+
             <li class="treeview {{ request()->is('admin/campanas*') ? 'active menu-open' : ''}}">
                 <a href="#"><i class="fa fa-bullhorn"></i> <span>{{ __('backend.campaigns') }}</span>
                     <span class="pull-right-container">

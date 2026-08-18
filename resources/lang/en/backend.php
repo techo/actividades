@@ -498,6 +498,8 @@ return [
     'no_plan_defined' => 'No plan defined',
     'select_country_first' => 'Choose a country to view and edit the plan.',
     'settings' => 'Settings',
+    'communications' => 'Communications',
+    'invitaciones_actividad' => 'Invite to activity',
     'offices' => 'Offices',
     'activity_types' => 'Activity Types',
     'geographical_divisions' => 'Geographical Divisions',

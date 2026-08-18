@@ -595,6 +595,15 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/ajax/estadisticas/evaluaciones/exportar-personas',   'backoffice\ReportController@exportarEvaluacionesPersonasGeneral')->middleware('role:admin');
     Route::get('/ajax/estadisticas/evaluaciones/exportar-impacto',    'backoffice\ReportController@exportarEvaluacionesImpactoGeneral')->middleware('role:admin');
 
+    // Comunicaciones — invitación a actividad por push (segmentada por país/segmento).
+    // Gateada por permiso dedicado (no por rol ni por idPaisPermitido): ver migración
+    // 2026_08_18_120000_add_permiso_enviar_comunicaciones.
+    Route::get('/comunicaciones/invitaciones', 'backoffice\InvitacionesController@index')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/invitaciones/paises', 'backoffice\ajax\InvitacionesController@paises')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/invitaciones/actividades', 'backoffice\ajax\InvitacionesController@actividades')->middleware('permission:enviar_comunicaciones');
+    Route::post('/ajax/comunicaciones/invitaciones/preview', 'backoffice\ajax\InvitacionesController@preview')->middleware('permission:enviar_comunicaciones');
+    Route::post('/ajax/comunicaciones/invitaciones/enviar', 'backoffice\ajax\InvitacionesController@enviar')->middleware('permission:enviar_comunicaciones');
+
     Route::get('/configuracion/oficinas', 'backoffice\OficinasController@index')->middleware('role:admin');
     Route::get('/configuracion/oficinas/registrar', 'backoffice\OficinasController@create')->middleware('role:admin');
     Route::post('/configuracion/oficinas/registrar', 'backoffice\ajax\OficinasController@store')->middleware('role:admin');
