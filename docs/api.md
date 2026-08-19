@@ -792,7 +792,8 @@ Authorization: Bearer <token>
   "currency": "mxn",
   "presets_major": { "bajo": 34, "medio": 85, "alto": 170 },
   "minor_unit_exponent": 2,
-  "pix_enabled": false
+  "pix_enabled": false,
+  "publishable_key": "pk_live_..."
 }
 ```
 
@@ -802,6 +803,7 @@ Authorization: Bearer <token>
 - Si el país del usuario no tiene montos configurados, se devuelve el **default
   global**: `currency: "usd"`, `presets_major: { bajo: 5, medio: 10, alto: 20 }`.
 - `pix_enabled` indica si el país ofrece PIX (hoy solo Brasil).
+- `publishable_key` es la pk_ de la cuenta Stripe de donaciones (`STRIPE_DONATIONS_PUBLIC`). La app la usa para inicializar el SDK; no la hardcodea.
 - `country_code` sale del `iso2` del país; puede ser `null` si no está cargado.
 
 ---
@@ -893,9 +895,9 @@ Authorization: Bearer <token>
 ```
 1. POST /api/inscripciones/{idInscripcion}/stripe/payment-intent
    body: {} (monto y moneda vienen de la actividad)
-   ← { client_secret, intent_id, amount, currency }
+   ← { client_secret, intent_id, amount, currency, publishable_key }
 
-2. SDK Stripe — confirmar el pago
+2. SDK Stripe — confirmar el pago (inicializar con publishable_key)
    stripe.confirmPayment(client_secret, { type: 'Card', ... })
 
 3. Resultado del SDK:
@@ -1225,7 +1227,8 @@ Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la cl
   "client_secret": "pi_xxx_secret_yyy",
   "intent_id": "pi_xxx",
   "amount": 150000,
-  "currency": "ars"
+  "currency": "ars",
+  "publishable_key": "pk_live_..."
 }
 ```
 

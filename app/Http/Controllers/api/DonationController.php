@@ -80,6 +80,7 @@ class DonationController extends Controller
             'presets_major'       => $presets,
             'minor_unit_exponent' => $exponent,
             'pix_enabled'         => $pix,
+            'publishable_key'     => config('services.stripe_donations.public'),
         ]);
     }
 

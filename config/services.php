@@ -40,6 +40,9 @@ return [
     'stripe_donations' => [
         'secret'         => env('STRIPE_DONATIONS_SECRET'),
         'webhook_secret' => env('STRIPE_DONATIONS_WEBHOOK_SECRET'),
+        // Publishable key (pk_) entregada a la app para inicializar el SDK.
+        // Es pública por diseño; el server no la consume, solo la relaya.
+        'public'         => env('STRIPE_DONATIONS_PUBLIC'),
     ],
     'facebook' => [
         'client_id'     => env('FACEBOOK_CLIENT_ID'),

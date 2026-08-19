@@ -96,10 +96,11 @@ class InscripcionStripeController extends Controller
             try {
                 $intent = \Stripe\PaymentIntent::retrieve($existing->stripe_payment_intent_id);
                 return response()->json([
-                    'client_secret' => $intent->client_secret,
-                    'intent_id'     => $intent->id,
-                    'amount'        => $montoCentavos,
-                    'currency'      => $currency,
+                    'client_secret'   => $intent->client_secret,
+                    'intent_id'       => $intent->id,
+                    'amount'          => $montoCentavos,
+                    'currency'        => $currency,
+                    'publishable_key' => $config->stripe_public ?? null,
                 ]);
             } catch (\Exception $e) {
                 // PI not found or expired — fall through to create a new one
@@ -153,10 +154,11 @@ class InscripcionStripeController extends Controller
         $inscripcion->save();
 
         return response()->json([
-            'client_secret' => $intent->client_secret,
-            'intent_id'     => $intent->id,
-            'amount'        => $montoCentavos,
-            'currency'      => $currency,
+            'client_secret'   => $intent->client_secret,
+            'intent_id'       => $intent->id,
+            'amount'          => $montoCentavos,
+            'currency'        => $currency,
+            'publishable_key' => $config->stripe_public ?? null,
         ]);
     }
 
