@@ -15,7 +15,10 @@ class RolePermissionsSeeder extends Seeder
     {
         $admin = Role::findByName('admin');
 
-        $permissions = Permission::all();
+        // `enviar_comunicaciones` NO va al rol admin: es un permiso acotado a
+        // usuarios puntuales (cuentas @admin.org, una por país). Ver la migración
+        // 2026_08_19_120000_restringe_enviar_comunicaciones_a_admin_org.
+        $permissions = Permission::where('name', '!=', 'enviar_comunicaciones')->get();
 
         $admin->givePermissionTo($permissions);
 
