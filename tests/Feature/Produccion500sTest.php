@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\CoordinadorEquipo;
 use App\Persona;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -80,5 +81,37 @@ class Produccion500sTest extends TestCase
     {
         $this->get('/inscripciones/actividad/999999')
             ->assertStatus(404);
+    }
+
+    /**
+     * #6 — Listado de equipos por oficina para un coordinador: la rama coordinador
+     * hace join con `coordinadores_equipos` (que también tiene `created_at`), así que
+     * el ORDER BY por `created_at` sin calificar reventaba con 1052 (columna ambigua).
+     * Debe devolver 200, no 500.
+     *
+     * @test
+     */
+    public function listado_de_equipos_por_oficina_para_coordinador_no_revienta()
+    {
+        // Rol coordinador con `ver_backoffice` (gate accesoBackoffice). Se arma a mano
+        // en vez de seed('PermisosSeeder') para no depender del estado global de permisos.
+        $permiso = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'ver_backoffice']);
+        $rol = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'coordinador']);
+        $rol->givePermissionTo($permiso);
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('coordinador');
+
+        // Equipo en una oficina, con el coordinador vinculado en coordinadores_equipos.
+        $equipo = factory('App\Equipo')->create();
+        CoordinadorEquipo::create([
+            'idPersona' => $coordinador->idPersona,
+            'idEquipo'  => $equipo->idEquipo,
+        ]);
+
+        $this->actingAs($coordinador)
+            ->getJson('/admin/ajax/equipos/oficina/' . $equipo->idOficina)
+            ->assertStatus(200)
+            ->assertJsonFragment(['idEquipo' => $equipo->idEquipo]);
     }
 }

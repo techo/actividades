@@ -34,8 +34,23 @@ class EquiposSearch
     private static function getResults(Builder $query, $sort, $per_page)
     {
         // return $query->get();
-        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc'));
+        // El orden por defecto se califica con la tabla base porque la consulta puede
+        // hacer join con `coordinadores_equipos` (rama coordinador), que también tiene
+        // una columna `created_at` → sin calificar, MySQL tira 1052 (columna ambigua).
+        $orden = SortSanitizer::sanitize($sort, 'Equipo.created_at desc');
+        $orden = static::calificarColumnaAmbigua($orden);
+        $query->orderByRaw($orden);
         return $query->paginate($per_page);
+    }
+
+    /**
+     * Antepone la tabla base `Equipo` a las columnas de orden que existen en más de una
+     * de las tablas del join (hoy: `created_at`). Evita el error 1052 cuando el sort
+     * llega sin calificar (default o desde el request).
+     */
+    private static function calificarColumnaAmbigua($orden)
+    {
+        return preg_replace('/^(created_at)(\s|$)/', 'Equipo.$1$2', $orden);
     }
 
     private static function newQuery($idComunidad=null, $idOficina=null, $forzarPorOficina=false){
