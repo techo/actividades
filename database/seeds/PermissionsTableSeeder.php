@@ -12,17 +12,28 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        Permission::create(['name' => 'crear_actividad']);
-        Permission::create(['name' => 'editar_actividad']);
-        Permission::create(['name' => 'borrar_actividad']);
-        Permission::create(['name' => 'tomar_asistencia']);
-        Permission::create(['name' => 'control_pagos']);
-        Permission::create(['name' => 'ver_mis_actividades']);
-        Permission::create(['name' => 'ver_backoffice']);
-        Permission::create(['name' => 'asignar_roles']);
-        Permission::create(['name' => 'administrar_imagenes']);
-        Permission::create(['name' => 'ver_usuarios']);
-        Permission::create(['name' => 'editar_usuarios']);
-        Permission::create(['name' => 'enviar_comunicaciones']);
+        // firstOrCreate (no create) para que el seeder sea idempotente: algunos permisos
+        // ya los crea una migración (ej. `enviar_comunicaciones` en
+        // 2026_08_18_120000_add_permiso_enviar_comunicaciones), y `migrate:fresh --seed`
+        // corre las migraciones antes de sembrar. Con create() eso reventaba con
+        // PermissionAlreadyExists y rompía la suite y `./dev.sh fresh`.
+        $permisos = [
+            'crear_actividad',
+            'editar_actividad',
+            'borrar_actividad',
+            'tomar_asistencia',
+            'control_pagos',
+            'ver_mis_actividades',
+            'ver_backoffice',
+            'asignar_roles',
+            'administrar_imagenes',
+            'ver_usuarios',
+            'editar_usuarios',
+            'enviar_comunicaciones',
+        ];
+
+        foreach ($permisos as $permiso) {
+            Permission::firstOrCreate(['name' => $permiso]);
+        }
     }
 }
