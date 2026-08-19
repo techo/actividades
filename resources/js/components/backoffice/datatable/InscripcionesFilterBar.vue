@@ -5,7 +5,7 @@
 
                 <form class="form-inline">
                     <div class="form-group">
-                        <label>Filtrar por:</label>
+                        <label>Buscar por:</label>
                         <input
                                 type="text"
                                 v-model="filterText"

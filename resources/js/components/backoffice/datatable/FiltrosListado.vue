@@ -34,7 +34,7 @@
                 <div class="panel panel-default" style="padding: 12px; margin-bottom: 10px;">
                     <p class="text-muted" style="margin-bottom: 8px;">
                         {{ $t('backend.build_condition') }}
-                        <small>campo · operador · valor</small>
+                        <small style="margin-left: 6px;">(campo · operador · valor)</small>
                     </p>
                     <div class="form-inline">
                         <select class="form-control" v-model="campoKey" style="min-width: 12em;">
