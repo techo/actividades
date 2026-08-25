@@ -76,9 +76,11 @@ return [
     // queda exento (fail-closed). El gate de país evita afectar otros países.
     'salesforce' => [
         'enabled'       => env('SALESFORCE_ENABLED', false),
-        // La doc menciona dos endpoints de token (login.salesforce.com vs
-        // techo.lightning.force.com). Configurable para poder ajustarlo sin deploy.
-        'token_url'     => env('SALESFORCE_TOKEN_URL', 'https://techo.lightning.force.com/services/oauth2/token'),
+        // El flujo Client Credentials DEBE pegarse al My Domain (*.my.salesforce.com):
+        // techo.lightning.force.com devuelve 302 y login.salesforce.com responde
+        // "invalid_grant: request not supported on this domain" (verificado 2026-08-25).
+        // Configurable por si el My Domain cambia.
+        'token_url'     => env('SALESFORCE_TOKEN_URL', 'https://techo.my.salesforce.com/services/oauth2/token'),
         'client_id'     => env('SALESFORCE_CLIENT_ID'),
         'client_secret' => env('SALESFORCE_CLIENT_SECRET'),
         'api_version'   => env('SALESFORCE_API_VERSION', 'v61.0'),
