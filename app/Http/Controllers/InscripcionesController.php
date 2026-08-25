@@ -124,8 +124,15 @@ class InscripcionesController extends BaseController
 
                 $this->incluirEnGrupoRaiz($actividad, $persona->idPersona);
 
-                
+
             }
+
+            // Exención de pago por socio (Argentina): si la persona es socio/
+            // donante de TECHO, la inscripción queda exenta y el flujo salta el
+            // paso de pago. Autoridad server-side; el cliente solo lo refleja.
+            // El servicio ya gatea país + feature flag + DNI y es fail-closed.
+            app(\App\Services\Salesforce\SocioExencionService::class)
+                ->aplicarSiCorresponde($inscripcion, $actividad, $persona);
 
             $jornadas = json_decode($request->input('jornadas'), true);
             if(is_array($jornadas) && count($jornadas)>0){
@@ -161,7 +168,7 @@ class InscripcionesController extends BaseController
                     ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
             }
 
-            if ($actividad->pago == 1) {
+            if ($actividad->pago == 1 && !$inscripcion->exento_pago) {
                 try {
                     $config = json_decode($actividad->pais->config_pago);
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -205,10 +212,13 @@ class InscripcionesController extends BaseController
             if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'success' => true,
-                        'message' => 'Inscripción confirmada',
+                        'message' => $inscripcion->exento_pago
+                            ? 'Por ser socio no tenés que pagar esta actividad. Inscripción confirmada.'
+                            : 'Inscripción confirmada',
                         'actividad_id' => $actividad->idActividad,
                         'inscripcion_id' => $inscripcion->idInscripcion ?? null,
                         'estado_inscripcion' => 'CONFIRMADO',
+                        'exento_pago' => (bool) $inscripcion->exento_pago,
                     ]);
                 }
             return view('inscripciones.gracias')

@@ -40,7 +40,10 @@ class EstadoInscripcion
         $requiereConfirmacion = (int) $actividad->confirmacion === 1;
         $requierePago         = (int) $actividad->pago === 1;
         $confirmo             = (bool) $inscripcion->confirma;
-        $pago                 = (bool) $inscripcion->pago;
+        // La exención por socio (verificada contra Salesforce) satisface el
+        // requisito de pago igual que un pago efectivo: la inscripción no debe
+        // quedar "esperando pago" para un socio. Ver App\Services\Salesforce.
+        $pago                 = (bool) $inscripcion->pago || (bool) $inscripcion->exento_pago;
 
         if ($requiereConfirmacion && $requierePago) {
             if ($confirmo && $pago) {

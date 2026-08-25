@@ -69,4 +69,25 @@ return [
             : env('ONESIGNAL_APP_ID_DEV', env('ONESIGNAL_APP_ID')),
         'api_key' => env('ONESIGNAL_REST_API_KEY'),
     ],
+
+    // Salesforce — verificación de socio/donante para eximir el pago de
+    // inscripciones en Argentina (país 13). OAuth 2.0 Client Credentials flow.
+    // Apagado por defecto: sin SALESFORCE_ENABLED=true todo es no-op y nadie
+    // queda exento (fail-closed). El gate de país evita afectar otros países.
+    'salesforce' => [
+        'enabled'       => env('SALESFORCE_ENABLED', false),
+        // La doc menciona dos endpoints de token (login.salesforce.com vs
+        // techo.lightning.force.com). Configurable para poder ajustarlo sin deploy.
+        'token_url'     => env('SALESFORCE_TOKEN_URL', 'https://techo.lightning.force.com/services/oauth2/token'),
+        'client_id'     => env('SALESFORCE_CLIENT_ID'),
+        'client_secret' => env('SALESFORCE_CLIENT_SECRET'),
+        'api_version'   => env('SALESFORCE_API_VERSION', 'v61.0'),
+        // Timeout HTTP en segundos: acotado para no colgar la inscripción si
+        // Salesforce tarda (crítico para el comportamiento fail-closed).
+        'timeout'       => (int) env('SALESFORCE_TIMEOUT', 5),
+        // País donde aplica la exención por socio (Argentina = 13).
+        'socio_pais_id' => (int) env('SALESFORCE_SOCIO_PAIS_ID', 13),
+        // TTL de la caché del resultado "es socio", en minutos (default 12 h).
+        'cache_ttl'     => (int) env('SALESFORCE_CACHE_TTL', 720),
+    ],
 ];

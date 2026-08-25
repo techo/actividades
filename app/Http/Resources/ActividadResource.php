@@ -20,9 +20,17 @@ class ActividadResource extends Resource
 
         $idPersona = (auth()->user()) ? auth()->user()->idPersona : null;
         $estadoInscripcion =  $idPersona ? $this->estadoInscripcion($idPersona) : null;
-        
-        if($estadoInscripcion) 
+
+        if($estadoInscripcion)
             $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
+
+        // Hint pre-inscripción para la app: en actividades pagas, si el usuario es
+        // socio/donante (Argentina), ocultar el pago y mostrar el mensaje de socio.
+        // SocioService gatea país + feature flag + DNI y memoiza por persona, así
+        // que en un listado se resuelve con un solo lookup a Salesforce por request.
+        $exentoPorSocio = ($idPersona && (int) $this->pago === 1)
+            ? app(\App\Services\Salesforce\SocioService::class)->esSocio(auth()->user())
+            : false;
 
         return [
             'idActividad'   => $this->idActividad,
@@ -48,6 +56,9 @@ class ActividadResource extends Resource
             'linkPago'         => $this->linkPago,
             'metodos_pago'     => $this->metodos_pago,
             'permite_exencion' => (bool) $this->permite_exencion,
+            // La app usa este flag para ocultar el pago y mostrar "por ser socio
+            // no tenés que pagar". Cuando ya existe inscripción, exento_pago manda.
+            'exento_por_socio' => (isset($inscripcion) && $inscripcion) ? (bool) $inscripcion->exento_pago : $exentoPorSocio,
             'montoMin'         => $this->montoMin,
             'montoMax'         => $this->montoMax,
             'linkQR'         => ($estadoInscripcion == 'confirmed') ? '/admin/actividades/'.$this->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$idPersona : '',

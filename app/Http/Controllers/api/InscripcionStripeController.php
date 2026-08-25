@@ -63,6 +63,21 @@ class InscripcionStripeController extends Controller
 
         $actividad = $inscripcion->actividad;
 
+        // ── 1b. Defensa server-side: un socio nunca debe ser cobrado ──────────
+        // Si la inscripción ya está exenta, o la persona es socio (re-evaluado en
+        // vivo por si la materialización previa se salteó), no se crea PaymentIntent.
+        $exencion = app(\App\Services\Salesforce\SocioExencionService::class);
+        if ($exencion->aplicarSiCorresponde($inscripcion, $actividad, $inscripcion->persona)) {
+            if ($inscripcion->isDirty()) {
+                $inscripcion->save();
+            }
+            return response()->json([
+                'exento'  => true,
+                'motivo'  => $inscripcion->exento_motivo,
+                'message' => 'Por ser socio no tenés que pagar esta actividad.',
+            ], 200);
+        }
+
         // ── 2. Resolve country Stripe key ─────────────────────────────────────
         $config = json_decode($actividad->pais->config_pago ?? '{}');
 
