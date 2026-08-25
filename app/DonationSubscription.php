@@ -55,6 +55,15 @@ class DonationSubscription extends Model
         return $this->belongsTo(Persona::class, 'person_id', 'idPersona');
     }
 
+    /**
+     * The ledger of individual paid invoices for this subscription.
+     * Each successful monthly charge is one DonationInvoice row.
+     */
+    public function invoices()
+    {
+        return $this->hasMany(DonationInvoice::class, 'donation_subscription_id');
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     public function isTerminal(): bool

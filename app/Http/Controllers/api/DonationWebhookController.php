@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Donation;
+use App\DonationInvoice;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
 use App\Services\StripePaymentService;
@@ -23,7 +24,8 @@ use Stripe\Exception\SignatureVerificationException;
  *   payment_intent.canceled        → mark donation canceled
  *
  * Subscription events (recurring donations):
- *   invoice.paid                    → mark subscription active, update period
+ *   invoice.paid                    → record charge in donation_invoices ledger,
+ *                                      mark subscription active, update period
  *   invoice.payment_failed          → mark subscription past_due
  *   customer.subscription.updated   → sync status and billing period
  *   customer.subscription.deleted   → mark subscription canceled
@@ -189,7 +191,17 @@ class DonationWebhookController extends Controller
 
     /**
      * invoice.paid — a subscription invoice was paid successfully.
-     * Mark the subscription active and update the billing period.
+     *
+     * Two things happen here:
+     *   1. The charge is recorded in the `donation_invoices` ledger (one row
+     *      per invoice). This is what makes lifetime totals and paid-month
+     *      streaks derivable from local data — see the migration for context.
+     *   2. The subscription row is marked active and its billing period synced.
+     *
+     * The ledger write is idempotent on `stripe_invoice_id` and runs *before*
+     * the subscription's per-event dedup guard, so a duplicate/retried delivery
+     * never double-counts, and the ledger still lands even if the subscription
+     * row was already advanced by an out-of-order event.
      */
     private function handleInvoicePaid(\Stripe\Event $event): void
     {
@@ -202,7 +214,15 @@ class DonationWebhookController extends Controller
         }
 
         $sub = $this->findSubscription($subscriptionId);
-        if (!$sub || $sub->stripe_event_id === $event->id) {
+        if (!$sub) {
+            return;
+        }
+
+        // ── 1. Record the charge in the ledger (idempotent) ───────────────────
+        $this->recordInvoicePayment($event, $invoice, $sub);
+
+        // ── 2. Advance the subscription state (deduped per event) ─────────────
+        if ($sub->stripe_event_id === $event->id) {
             return;
         }
 
@@ -217,6 +237,46 @@ class DonationWebhookController extends Controller
             'subscription_id' => $subscriptionId,
             'invoice_id'      => $invoice->id,
         ]);
+    }
+
+    /**
+     * Upsert one paid invoice into the donation_invoices ledger.
+     * Keyed on stripe_invoice_id so Stripe retries never create duplicates.
+     */
+    private function recordInvoicePayment(
+        \Stripe\Event $event,
+        \Stripe\Invoice $invoice,
+        DonationSubscription $sub
+    ): void {
+        $line = $invoice->lines->data[0] ?? null;
+
+        // Prefer Stripe's own paid-at timestamp; fall back to the event time.
+        $paidAtTs = $invoice->status_transitions->paid_at ?? $event->created;
+
+        DonationInvoice::updateOrCreate(
+            ['stripe_invoice_id' => $invoice->id],
+            [
+                'person_id'                => $sub->person_id,
+                'donation_subscription_id' => $sub->id,
+                'stripe_subscription_id'   => $invoice->subscription,
+                'stripe_payment_intent_id' => $invoice->payment_intent ?? null,
+                'stripe_charge_id'         => $invoice->charge ?? null,
+                'stripe_event_id'          => $event->id,
+                'amount_paid'              => (int) ($invoice->amount_paid ?? 0),
+                'currency'                 => $invoice->currency ?? $sub->currency,
+                'period_start'             => isset($line->period->start)
+                    ? Carbon::createFromTimestamp($line->period->start)
+                    : null,
+                'period_end'               => isset($line->period->end)
+                    ? Carbon::createFromTimestamp($line->period->end)
+                    : null,
+                'paid_at'                  => $paidAtTs
+                    ? Carbon::createFromTimestamp($paidAtTs)
+                    : null,
+                'hosted_invoice_url'       => $invoice->hosted_invoice_url ?? null,
+                'invoice_pdf'              => $invoice->invoice_pdf ?? null,
+            ]
+        );
     }
 
     /**
