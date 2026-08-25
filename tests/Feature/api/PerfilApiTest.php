@@ -103,6 +103,25 @@ class PerfilApiTest extends TestCase
         ]);
     }
 
+    /** @test */
+    public function se_puede_actualizar_el_perfil_sin_enviar_instagram()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+
+        $payload = $this->payloadEdicion($persona);
+        unset($payload['instagram']);
+
+        $this->postJson('/api/editPersona/' . $persona->idPersona, $payload)
+            ->assertStatus(200)
+            ->assertJson([ 'success' => true ]);
+
+        $this->assertDatabaseHas('Persona', [
+            'idPersona' => $persona->idPersona,
+            'instagram' => null,
+        ]);
+    }
+
     private function payloadEdicion($persona): array
     {
         return [
