@@ -68,8 +68,11 @@ CONF
 
 echo "→ backup-db: volcando '$DB_DATABASE' a $OUTFILE ..."
 # --single-transaction: consistente sin lockear (InnoDB). --routines/--triggers/--events: esquema completo.
+# --no-tablespaces: evita el volcado de tablespaces, que en MySQL 5.7.31+/8.0
+#   requiere el privilegio PROCESS. El usuario de BD del sandbox no lo tiene y sin
+#   este flag mysqldump aborta con "Access denied; you need PROCESS privilege(s)".
 if ! mysqldump --defaults-extra-file="$CNF" \
-      --single-transaction --quick --routines --triggers --events \
+      --single-transaction --quick --no-tablespaces --routines --triggers --events \
       --default-character-set=utf8mb4 \
       "$DB_DATABASE" | gzip -c > "$OUTFILE"; then
   echo "❌ backup-db: mysqldump falló." >&2
