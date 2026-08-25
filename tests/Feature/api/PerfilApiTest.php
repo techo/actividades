@@ -83,6 +83,26 @@ class PerfilApiTest extends TestCase
         $this->postJson('/api/editPersona/' . $persona->idPersona, [])->assertStatus(401);
     }
 
+    /** @test */
+    public function un_dni_con_cero_a_la_izquierda_es_aceptado()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+
+        $payload        = $this->payloadEdicion($persona);
+        $payload['dni'] = '01234567';
+
+        $this->postJson('/api/editPersona/' . $persona->idPersona, $payload)
+            ->assertStatus(200)
+            ->assertJson([ 'success' => true ]);
+
+        // El cero inicial se preserva (la columna es string, no integer).
+        $this->assertDatabaseHas('Persona', [
+            'idPersona' => $persona->idPersona,
+            'dni'       => '01234567',
+        ]);
+    }
+
     private function payloadEdicion($persona): array
     {
         return [
@@ -94,7 +114,7 @@ class PerfilApiTest extends TestCase
             'genero'                 => 'F',
             'instagram'              => '@editado',
             'telefonoMovil'          => 1145678901,
-            'dni'                    => 30111222,
+            'dni'                    => '30111222',
             'recibirMails'           => 1,
             'acepta_marketing'       => 1,
             'idPais'                 => $persona->idPais,
