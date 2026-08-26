@@ -160,11 +160,18 @@ class StripePaymentService
     /**
      * Retrieve an existing PaymentIntent by ID (with next_action expanded for PIX replays).
      *
+     * @param  string $intentId
+     * @param  array  $expand    Optional relations to expand (e.g. ['charges']).
      * @throws ApiErrorException
      */
-    public function retrievePaymentIntent(string $intentId): PaymentIntent
+    public function retrievePaymentIntent(string $intentId, array $expand = []): PaymentIntent
     {
         $this->boot();
+
+        if (!empty($expand)) {
+            return PaymentIntent::retrieve(['id' => $intentId, 'expand' => $expand]);
+        }
+
         return PaymentIntent::retrieve($intentId);
     }
 

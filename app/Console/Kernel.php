@@ -31,6 +31,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('push:reactivacion-voluntarios')->monthlyOn(1, '10:00');
         $schedule->command('reporting:sync-person-keys')->dailyAt('05:30');
         $schedule->command('reporting:snapshot-lifecycle')->monthlyOn(1, '06:00');
+        // Red de seguridad para donaciones (PIX): sincroniza pending contra Stripe
+        // por si un webhook se pierde. Idempotente; ->withoutOverlapping por las dudas.
+        $schedule->command('donations:reconcile --commit')->hourly()->withoutOverlapping();
     }
 
     /**
