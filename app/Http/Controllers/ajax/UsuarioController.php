@@ -362,10 +362,14 @@ class UsuarioController extends BaseController
 
         $persona = Persona::find(auth()->user()->idPersona);
 
-        $inscripcionesFuturas = \App\Inscripcion::whereHas('Actividad', function ($query) {
-            $query->whereDate('fechaInicio', '>=', Carbon::now())
-              ->where('idPersona', '=', auth()->user()->idPersona);
-        })->get();
+        // Solo las inscripciones DE ESTE usuario a actividades futuras. El filtro
+        // idPersona va sobre la Inscripcion (no sobre la Actividad): antes caía dentro
+        // del whereHas y filtraba por el creador de la actividad, con lo que un
+        // coordinador que borraba su cuenta soft-borraba inscripciones de terceros.
+        $inscripcionesFuturas = \App\Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->whereHas('actividad', function ($query) {
+                $query->whereDate('fechaInicio', '>=', Carbon::now());
+            })->get();
 
         foreach ($inscripcionesFuturas as $inscripcion) {
           $inscripcion->delete();

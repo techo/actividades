@@ -51,7 +51,17 @@ class InscripcionesController extends BaseController
         $tipo = $actividad->tipo;
 
         $currentDate = Carbon::now();
-        $edad = $currentDate->diffInYears(Carbon::parse(Auth::user()->fechaNacimiento));
+        // fechaNacimiento puede venir nula o con formato inválido (datos viejos):
+        // Carbon::parse tiraría y dejaría el paso 'confirmar' en 500. Fail-safe a 0.
+        $edad = 0;
+        try {
+            $nacimiento = Auth::user()->fechaNacimiento;
+            if (!empty($nacimiento)) {
+                $edad = $currentDate->diffInYears(Carbon::parse($nacimiento));
+            }
+        } catch (\Exception $e) {
+            $edad = 0;
+        }
         $jornadas = json_decode($request->input('jornadas'), true);
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
