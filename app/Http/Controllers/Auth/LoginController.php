@@ -128,7 +128,14 @@ class LoginController extends Controller
         if($provider == 'google') {
             // Sin stateless(): Socialite valida el parámetro OAuth `state` guardado en
             // sesión por redirectToProvider (protección CSRF del callback de login).
-            $user = Socialite::driver($provider)->user();
+            try {
+                $user = Socialite::driver($provider)->user();
+            } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+                // El `state` OAuth no coincide (sesión perdida, botón atrás, reintento,
+                // login abierto en otra pestaña). No es un error del sistema: en vez de
+                // tirar 500 ("Whoops"), mandamos a reintentar el login.
+                return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+            }
             // Google solo devuelve el email primario verificado; si explícitamente
             // viene sin verificar, no lo confiamos.
             $emailVerificado = $user->user['email_verified'] ?? $user->user['verified_email'] ?? true;
@@ -145,9 +152,14 @@ class LoginController extends Controller
             $personaData->facebook_id = '';
             $personaData->genero = '';
         } else {
-           $user = Socialite::driver($provider)->fields([
-                   'first_name', 'last_name', 'email', 'gender'
-           ])->user();
+           try {
+               $user = Socialite::driver($provider)->fields([
+                       'first_name', 'last_name', 'email', 'gender'
+               ])->user();
+           } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+               // Ver nota en la rama de Google: state OAuth inválido → reintentar login.
+               return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+           }
             $personaData->nombre = $user->user['first_name'];
             $personaData->apellido = $user->user['last_name'];
             $personaData->email = (array_key_exists('email', $user->user)) ? $user->user['email'] : null;

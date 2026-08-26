@@ -11,9 +11,12 @@ class Integrante implements Filter
     {
         $palabras = explode(' ', $value);
 
+        // El join a Persona va UNA sola vez: hacerlo dentro del foreach duplicaba el
+        // join por cada palabra y rompía la búsqueda por nombre completo con
+        // "Not unique table/alias: 'Persona'". Un whereRaw por palabra alcanza.
+    	$builder->join('Persona', 'Integrantes.idPersona', '=', 'Persona.idPersona');
     	foreach ($palabras as $palabra) {
-    		$builder->join('Persona', 'Integrantes.idPersona', '=', 'Persona.idPersona')
-            ->whereRaw("concat(' ', Persona.nombres,' ', Persona.apellidoPaterno,' ', Persona.dni,' ', rol, ' ', despliegue, ' ', relacion) like ?", ['%' . $palabra . '%']);
+    		$builder->whereRaw("concat(' ', Persona.nombres,' ', Persona.apellidoPaterno,' ', Persona.dni,' ', rol, ' ', despliegue, ' ', relacion) like ?", ['%' . $palabra . '%']);
 		}
 
         return $builder;

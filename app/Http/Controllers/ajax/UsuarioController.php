@@ -385,7 +385,8 @@ class UsuarioController extends BaseController
         $persona->save();
 
         if ($request->expectsJson() || $request->is('api/*')) {
-          $request->user()->token()->revoke();
+          $token = optional($request->user())->token();
+          if ($token) { $token->revoke(); }
           return response()->json(['success' => true, 'message' => 'Usuario eliminado correctamente']);
         } else {
           return app('App\Http\Controllers\Auth\LoginController')->logout($request); //Todo: Mejorar pasandolo a un servicio

@@ -157,10 +157,14 @@ class PersonasController extends Controller
     }
 
     public function logout(request $request)
-    {   
-        $user = Auth::user()->token();
-        $user->revoke();
-        
+    {
+        // token() puede ser null (p.ej. sesión sin token Passport activo o ya
+        // revocado): sin este guard, ->revoke() tira "member function revoke() on null".
+        $token = optional(Auth::user())->token();
+        if ($token) {
+            $token->revoke();
+        }
+
         return response(
                 [
                     'success' => true,
