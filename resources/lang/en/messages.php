@@ -11,6 +11,7 @@ return [
 	*/
 
 	// UsuarioController.php
-	'account_created', 'Your account have been created, and we have just send you an email to verify it!',
+	'account_created' => 'Your account has been created, and we have just sent you an email to verify it!',
+	'email_verified'  => 'Your email has been verified! You can now sign in.',
 
 ];
