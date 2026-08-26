@@ -27,5 +27,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UsuarioAdminSeeder::class);
         $this->call(UsuarioCoordinadorSeeder::class);
+
+        // Montos sugeridos de donación por país. Idempotente (updateOrInsert por
+        // id_pais). Sin esta fila el endpoint checkout-config cae al default USD.
+        $this->call(DonationPresetsSeeder::class);
     }
 }
