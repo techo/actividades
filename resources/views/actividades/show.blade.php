@@ -1,7 +1,7 @@
 @extends('main')
 
 @section('page_title')
-    {{ $actividad->tipo->nombre_localizado }}:  {{ $actividad->nombreActividad }}
+    {{ optional($actividad->tipo)->nombre_localizado }}:  {{ $actividad->nombreActividad }}
 @endsection
 
 

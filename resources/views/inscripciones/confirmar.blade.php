@@ -254,10 +254,10 @@
         </div>
         <div class="col-md-4 prev">
             <div class="card d-none d-lg-block" style="border: none">
-                <img src="{{ $actividad->imagen_tarjeta ? $actividad->imagen_tarjeta : $actividad->tipo->imagen }}" style="margin-bottom: 1em; width: 100%;">
+                <img src="{{ $actividad->imagen_tarjeta ? $actividad->imagen_tarjeta : optional($actividad->tipo)->imagen }}" style="margin-bottom: 1em; width: 100%;">
                 <div class="row">
                     <div class="col-md-12" >
-                        <h6 style="color: {{$actividad->tipo->categoria->color}}; font-weight: 700 !important;" >{{ $actividad->tipo->nombre_localizado }}</h6>
+                        <h6 style="color: {{ optional(optional($actividad->tipo)->categoria)->color }}; font-weight: 700 !important;" >{{ optional($actividad->tipo)->nombre_localizado }}</h6>
                     </div>
                 </div>
                 <div class="row">

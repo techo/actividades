@@ -190,6 +190,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
+// Red de seguridad: 'confirmar' es POST (lo postea el front). Si se llega por GET
+// —p.ej. el redirect post-login de un invitado— no debe tirar 405/"Whoops":
+// devolvemos al inicio del flujo para que continúe ya logueado.
+Route::get('/inscripciones/actividad/{id}/confirmar', function ($id) {
+    return redirect('/inscripciones/actividad/' . $id);
+});
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 

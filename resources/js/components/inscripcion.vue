@@ -558,6 +558,16 @@
                 return true;
             },
             checkSubmit: function() {
+                // No disparar el POST de confirmar si el usuario no está logueado.
+                // checkSubmit lo llaman los watchers apenas carga la actividad (cuando
+                // no hay pasos intermedios), así que un invitado postearía a una ruta
+                // que exige auth; tras el login el navegador volvería por GET a
+                // /confirmar (ruta POST-only) → 405 "Whoops" y queda trabado.
+                // Igual que validateForm(): mostramos el login y frenamos acá.
+                if (!this.$parent.$refs.login.authenticated) {
+                    this.mostrarLogin();
+                    return;
+                }
                 // When there is exactly one active meeting point, skip the selection
                 // screen and navigate directly to the confirmar step by submitting a
                 // hidden form (full-page POST). Using a real form submit rather than
