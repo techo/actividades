@@ -194,6 +194,9 @@ class PersonasController extends Controller
             'idLocalidad' => $fields['idLocalidad'],
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
             'unsubscribe_token' => (string) Uuid::generate(),
+            // Alta desde la app móvil (ruta /api/register): la verificación de email
+            // reabrirá la app por deep link tras verificar desde el navegador.
+            'registro_origen' => 'app',
         ]);
 
         $persona->sendEmailVerificationNotification();

@@ -68,16 +68,23 @@ class VerificationController extends Controller
             return redirect($this->redirectPath())->with('verified', true);
         }
 
-        // Caso típico: el link se abrió en el navegador y el registro venía de la app
-        // móvil. Mostramos una página de éxito que intenta reabrir MiTECHO por deep
-        // link para que la app refresque el estado a "verificado".
+        // Solo si el registro vino de la APP mostramos la página que reabre MiTECHO
+        // por deep link (para que refresque el estado a "verificado"). Un registro
+        // web no debe intentar abrir la app.
         //
         // NOTA (app móvil, OTRO repo): la app debe manejar este deep link y, al
         // recibirlo, re-consultar su persona (el back ya dejó email_verified_at seteado)
         // para actualizar la UI. Ajustar el esquema/host si la app espera otro.
-        return response()->view('auth.email-verified', [
-            'appDeepLink' => 'mitecho://email-verificado?persona=' . $persona->getKey(),
-        ]);
+        if ($persona->registro_origen === 'app') {
+            return response()->view('auth.email-verified', [
+                'appDeepLink' => 'mitecho://email-verificado?persona=' . $persona->getKey(),
+            ]);
+        }
+
+        // Registro web (o desconocido, p.ej. personas previas a esta columna): éxito web.
+        return redirect('/')
+            ->with('verified', true)
+            ->with('status', __('messages.email_verified'));
     }
 
     protected function redirectTo()

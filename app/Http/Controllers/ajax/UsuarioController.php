@@ -131,7 +131,7 @@ class UsuarioController extends BaseController
    *
    * @return array{persona: Persona, social: bool}
    */
-  private function registrarPersona(Request $request)
+  private function registrarPersona(Request $request, $origen = 'web')
   {
       $this->validar($request, 'create');
 
@@ -145,6 +145,9 @@ class UsuarioController extends BaseController
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
       $persona->unsubscribe_token = Uuid::generate()->string;
+      // Origen del registro ('app'|'web'): lo usa la verificación de email para
+      // decidir si reabrir la app por deep link tras verificar desde el navegador.
+      $persona->registro_origen = $origen;
       $persona->save();
 
       if (!$social) {
@@ -173,7 +176,8 @@ class UsuarioController extends BaseController
   }
 
   public function apiCreate(Request $request) {
-      $resultado = $this->registrarPersona($request);
+      // Alta desde la app móvil (ruta /api/create).
+      $resultado = $this->registrarPersona($request, 'app');
       $persona = $resultado['persona'];
       $social  = $resultado['social'];
 
