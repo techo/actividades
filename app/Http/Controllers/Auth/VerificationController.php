@@ -76,8 +76,12 @@ class VerificationController extends Controller
         // recibirlo, re-consultar su persona (el back ya dejó email_verified_at seteado)
         // para actualizar la UI. Ajustar el esquema/host si la app espera otro.
         if ($persona->registro_origen === 'app') {
+            // Base del esquema desde el env (APP_DEEP_LINK_URL, p.ej. "mitecho://"),
+            // el mismo que usa el app-banner para abrir la app. No hardcodear el
+            // esquema: si cambia el nombre/URL de la app, sale de un solo lugar.
+            $base = config('app.app_deep_link_url') ?: 'mitecho://';
             return response()->view('auth.email-verified', [
-                'appDeepLink' => 'mitecho://email-verificado?persona=' . $persona->getKey(),
+                'appDeepLink' => $base . 'email-verificado?persona=' . $persona->getKey(),
             ]);
         }
 
