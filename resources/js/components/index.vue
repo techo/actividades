@@ -62,6 +62,12 @@
         data () {
             return {
                 actividadesPorCategoria: {},
+                // Estado de paginación independiente por categoría:
+                // { [categoriaId]: { nextPage, to, total } }. Antes había una sola
+                // terna global (next_page/ultimaTarjeta/totalTarjetas) que el loop de
+                // categorías pisaba en cada vuelta, así que solo la última categoría
+                // podía paginar y el scroll infinito apuntaba a la categoría equivocada.
+                paginacionPorCategoria: {},
                 actividadesNuevosVoluntarios: [],
                 actividadesHitoAnual: [],
                 actividadesUltimosCupos:[],
@@ -69,11 +75,11 @@
                 actividadesNuevas: [],
                 actividadesDestacadas: [],
                 loading: false,
-                next_page: '',
+                // Evita disparar múltiples cargas de "página siguiente" en simultáneo
+                // mientras el usuario sigue en el fondo de la página.
+                cargandoMas: false,
                 bottom: false,
                 url: '/ajax/actividades',
-                ultimaTarjeta: 0,
-                totalTarjetas: 0,
                 vacio: false,
                 filtros: {},
                 // Se completa en created() parseando el prop `categorias` (JSON).
@@ -113,7 +119,54 @@
             inicializarActividadesPorCategoria() {
                 this.listaCategorias.forEach(categoria => {
                     this.$set(this.actividadesPorCategoria, categoria.id, []);
+                    this.$set(this.paginacionPorCategoria, categoria.id, {
+                        nextPage: null,
+                        to: 0,
+                        total: 0,
+                    });
                 });
+            },
+            // Vacía todas las colecciones antes de una carga completa (ej. al aplicar
+            // filtros nuevos). Sin esto, las secciones curadas (Destacadas, Nuevas,
+            // Equipos, etc.) acumulaban tarjetas duplicadas en cada re-filtrado.
+            reiniciarColecciones() {
+                this.actividadesNuevosVoluntarios = [];
+                this.actividadesHitoAnual = [];
+                this.actividadesUltimosCupos = [];
+                this.actividadesEquipos = [];
+                this.actividadesNuevas = [];
+                this.actividadesDestacadas = [];
+                this.inicializarActividadesPorCategoria();
+            },
+            // Reparte una actividad en las secciones curadas (por tags, imagen
+            // destacada y antigüedad). Es acumulativa: se llama tanto en la carga
+            // inicial como al traer páginas siguientes.
+            clasificarActividad(actividad) {
+                if (actividad.actividades_tags) {
+                    actividad.actividades_tags.forEach(item => {
+                        if (item.text === "Equipos") {
+                            this.actividadesEquipos.push(actividad);
+                        } else if (item.text === "Nuevos Voluntarios") {
+                            this.actividadesNuevosVoluntarios.push(actividad);
+                        } else if (item.text === "Hito Anual") {
+                            this.actividadesHitoAnual.push(actividad);
+                        } else if (item.text === "Últimos Cupos") {
+                            this.actividadesUltimosCupos.push(actividad);
+                        }
+                    });
+                }
+                if (actividad.imagen_destacada) {
+                    this.actividadesDestacadas.push(actividad);
+                }
+                if (actividad.fechaCreacion) {
+                    const hoy = new Date();
+                    const hace14Dias = new Date();
+                    hace14Dias.setDate(hoy.getDate() - 14);
+                    const [day, month, year] = actividad.fechaCreacion.split('-');
+                    if (new Date(`${year}-${month}-${day}`) >= hace14Dias) {
+                        this.actividadesNuevas.push(actividad);
+                    }
+                }
             },
             // Títulos curados por i18n para las categorías conocidas; el resto
             // (incluyendo categorías nuevas) cae al nombre de la categoría en la DB.
@@ -135,73 +188,82 @@
                 const container = this.$el.querySelector('.scroll-container');
                 container.scrollBy({ left: 200, behavior: 'smooth' });
             },
-            async agregarTarjetas(url, filtros, refresh, categoria) {
-                this.vacio = false;
-                filtros.categoria = categoria;
+            // Trae una página de una categoría y la agrega a su carrusel.
+            // - Sin `url`: primera página → usa this.url + filtros (con la categoría).
+            // - Con `url`: paginación → el next_page_url ya trae los filtros embebidos,
+            //   así que se pide tal cual (no se re-agregan params para no duplicarlos).
+            async traerPaginaCategoria(categoriaId, url = null) {
+                const esInicial = !url;
+                const requestUrl = url || this.url;
+                const config = esInicial
+                    ? { params: { ...this.filtros, categoria: categoriaId } }
+                    : {};
 
                 try {
-                    const response = await axios.get(url, { params: filtros });
+                    const response = await axios.get(requestUrl, config);
+                    const paginador = response.data || {};
+                    const actividades = Array.isArray(paginador.data) ? paginador.data : [];
 
-                    if (refresh) {
-                        this.actividadesPorCategoria[categoria] = [];
+                    actividades.forEach(actividad => this.clasificarActividad(actividad));
+
+                    if (this.actividadesPorCategoria[categoriaId]) {
+                        this.actividadesPorCategoria[categoriaId].push(...actividades);
                     }
-                    if (response.data) {
-                        response.data.data.forEach(actividad => {
-                            if(actividad.actividades_tags){
-                                actividad.actividades_tags.forEach(item => {
-                                    if (item.text === "Equipos") {
-                                        // Aquí puedes hacer lo que necesites si es "Equipos"
-                                        this.actividadesEquipos.push(actividad);
-                                    } else if (item.text === "Nuevos Voluntarios")  {
-                                        console.log(`Este es ${item.text}`);
-                                        this.actividadesNuevosVoluntarios.push(actividad);
-                                    } else if (item.text === "Hito Anual")  {
-                                        console.log(`Este es ${item.text}`);
-                                        this.actividadesHitoAnual.push(actividad);
-                                    } else if (item.text === "Últimos Cupos")  {
-                                        console.log(`Este es ${item.text}`);
-                                        this.actividadesUltimosCupos.push(actividad);
-                                    }
-                                });
-                            }
-                            if(actividad.imagen_destacada){
-                                this.actividadesDestacadas.push(actividad);
-                            }
-                            const hoy = new Date();
-                            const hace14Dias = new Date();
-                            hace14Dias.setDate(hoy.getDate() - 14);
-                            const [day, month, year] = actividad.fechaCreacion.split('-');
-                            if(new Date(`${year}-${month}-${day}`) >= hace14Dias){
-                                this.actividadesNuevas.push(actividad);
-                            }
 
-                        });
-                    }
-                    this.actividadesPorCategoria[categoria].push(...response.data.data);
-
-                    this.next_page = response.data.next_page_url;
-                    this.ultimaTarjeta = response.data.to;
-                    this.totalTarjetas = response.data.total;
+                    this.$set(this.paginacionPorCategoria, categoriaId, {
+                        nextPage: paginador.next_page_url || null,
+                        to: paginador.to || 0,
+                        total: paginador.total || 0,
+                    });
                 } catch (error) {
                     console.error('Error en contenedor de tarjetas', error);
                 }
             },
             async cargarTarjetas() {
                 this.loading = true;
-                for (let categoria of this.listaCategorias) {
-                    await this.agregarTarjetas(this.url, this.filtros, true, categoria.id);
+                this.vacio = false;
+                this.reiniciarColecciones();
+
+                for (const categoria of this.listaCategorias) {
+                    await this.traerPaginaCategoria(categoria.id);
                 }
+
                 this.loading = false;
-                this.vacio = !Object.values(this.actividadesPorCategoria).some(actividades => actividades.length > 0);
+                this.vacio = !Object.values(this.actividadesPorCategoria)
+                    .some(actividades => actividades.length > 0);
+            },
+            // Scroll infinito: por cada categoría que aún tenga páginas pendientes,
+            // trae la siguiente y la agrega a su propio carrusel.
+            async cargarMas() {
+                if (this.cargandoMas) {
+                    return;
+                }
+
+                const pendientes = this.listaCategorias.filter(categoria => {
+                    const pag = this.paginacionPorCategoria[categoria.id];
+                    return pag && pag.nextPage;
+                });
+
+                if (!pendientes.length) {
+                    return;
+                }
+
+                this.cargandoMas = true;
+                try {
+                    for (const categoria of pendientes) {
+                        const pag = this.paginacionPorCategoria[categoria.id];
+                        await this.traerPaginaCategoria(categoria.id, pag.nextPage);
+                    }
+                } finally {
+                    this.cargandoMas = false;
+                }
             }
         },
 
         watch: {
             bottom(bottom) {
-                if (bottom && this.ultimaTarjeta && this.totalTarjetas) {
-                    if (this.ultimaTarjeta < this.totalTarjetas) {
-                        this.agregarTarjetas(this.next_page, this.filtros, false);
-                    }
+                if (bottom) {
+                    this.cargarMas();
                 }
             }
         },

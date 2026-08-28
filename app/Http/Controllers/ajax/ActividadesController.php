@@ -27,15 +27,18 @@ class actividadesController extends BaseController
     {
         $actividades = $this->filtrar($request);
 
-        if ($actividades->count() > 0) {
-            foreach ($actividades as $actividad) {
-                $actividad->descripcion = clean_string($actividad->descripcion);
-                $resourceCollection[] = new ActividadResource($actividad);
-            }
-            return $this->paginate($resourceCollection, $items, $request->query());
+        // Importante: devolver SIEMPRE el mismo envoltorio de paginador
+        // ({data, total, to, next_page_url}), incluso sin resultados. Si no,
+        // con cero actividades se devolvía la Collection cruda (JSON "[]") y
+        // los consumidores que leen response.data.data reventaban con
+        // "Cannot read properties of undefined (reading 'forEach')".
+        $resourceCollection = [];
+        foreach ($actividades as $actividad) {
+            $actividad->descripcion = clean_string($actividad->descripcion);
+            $resourceCollection[] = new ActividadResource($actividad);
         }
-        
-        return $actividades;
+
+        return $this->paginate($resourceCollection, $items, $request->query());
     }
 
     /**
