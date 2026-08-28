@@ -57,30 +57,19 @@
             @endif
 		</div>
 		<hr>
-        @if ($inscripcionConfirmada)
-            <div class="row align-items-center">
-                <div class="col">
-                    <button class="btn btn-white mb-2 d-flex align-items-center justify-content-between w-100 p-0" type="button" data-toggle="collapse" data-target="#collapseActividad" aria-expanded="false" aria-controls="collapseActividad">
-                        <span class="h5 m-0">{{ __('frontend.description') }}</span> 
-                        <i class="fas fa-chevron-down" id="iconoDescripcion"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="collapse" id="collapseActividad">
-                <div class="row">
-                    <div class="col-md-12 px-4">
-                        {!! $actividad->descripcion !!}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="descripcion-box" id="descripcionBox">
+                        <div class="descripcion-texto" id="descripcionTexto">
+                            {!! $actividad->descripcion !!}
+                        </div>
+                        <div class="descripcion-fade" id="descripcionFade"></div>
+                    </div>
+                    <div class="text-center mt-2" id="descripcionVerMasWrap" style="display:none;">
+                        <button type="button" class="btn btn-link" id="descripcionVerMas">{{ __('frontend.read_more') }}</button>
                     </div>
                 </div>
             </div>
-        @else
-            <div class="row">
-                <div class="col-md-12">
-                    {!! $actividad->descripcion !!}
-                </div>
-            </div>
-        @endif
 
 		<hr>
 		<div class="row">
@@ -235,13 +224,43 @@
 
 <script>
     $(document).ready(function () {
-        $('#collapseActividad').on('show.bs.collapse', function () {
-            $('#iconoDescripcion').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-        });
+        var box  = document.getElementById('descripcionBox');
+        var txt  = document.getElementById('descripcionTexto');
+        var wrap = document.getElementById('descripcionVerMasWrap');
+        var btn  = document.getElementById('descripcionVerMas');
+        var fade = document.getElementById('descripcionFade');
+        if (!box || !txt) return;
 
-        $('#collapseActividad').on('hide.bs.collapse', function () {
-            $('#iconoDescripcion').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        // Si el texto no supera el alto colapsado, se muestra completo (sin fade ni botón).
+        function evaluar() {
+            if (txt.scrollHeight <= txt.clientHeight + 5) {
+                box.classList.add('expandida');
+                if (fade) fade.style.display = 'none';
+                if (wrap) wrap.style.display = 'none';
+            } else if (wrap) {
+                wrap.style.display = 'block';
+            }
+        }
+        // Tras el render de Vue y con las imágenes de la descripción ya cargadas.
+        setTimeout(evaluar, 350);
+        $(window).on('load', evaluar);
+
+        if (btn) btn.addEventListener('click', function () {
+            var abierta = box.classList.toggle('expandida');
+            btn.textContent = abierta ? @json(__('frontend.read_less')) : @json(__('frontend.read_more'));
         });
     });
 </script>
+@endpush
+
+@push('additional_styles')
+    <style>
+        .descripcion-box { position: relative; }
+        .descripcion-texto { max-height: 180px; overflow: hidden; transition: max-height .4s ease; }
+        .descripcion-box.expandida .descripcion-texto { max-height: 4000px; }
+        .descripcion-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+            pointer-events: none; transition: opacity .3s; }
+        .descripcion-box.expandida .descripcion-fade { opacity: 0; }
+    </style>
 @endpush

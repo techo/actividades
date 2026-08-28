@@ -16,19 +16,17 @@
 
             @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
 
-            @if(!empty($exentoPorSocio))
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="alert alert-success d-flex align-items-start mb-4" style="border-radius:10px;">
-                            <i class="fa fa-heart fa-2x mr-3 mt-1 text-success flex-shrink-0"></i>
-                            <div>
-                                <strong>{{ __('frontend.socio_exento_titulo') }}</strong>
-                                <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.socio_exento_texto') }}</p>
-                            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="alert alert-warning d-flex align-items-start mb-4" style="border-radius:10px;">
+                        <i class="fa fa-hourglass-half fa-2x mr-3 mt-1 text-warning flex-shrink-0"></i>
+                        <div>
+                            <strong>{{ __('frontend.waitlist_title') }}</strong>
+                            <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.will_be_in_touch') }}</p>
                         </div>
                     </div>
                 </div>
-            @endif
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -38,15 +36,6 @@
                             {{ $actividad->nombreActividad }}
                         </a>
                     </h3>
-                    <br>
-                    <p>
-                        <h4>
-                        {{ __('frontend.last_step_waiting_for_confirmation') }}
-                        </h4>
-                    </p>
-                    <p>
-                        {{ __('frontend.will_be_in_touch') }}
-                    </p>
                     <p>
                         <h5>{{ __('frontend.coordinator') }}</h5>
                         <ul style="list-style-type:none;">

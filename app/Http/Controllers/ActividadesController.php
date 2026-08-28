@@ -138,8 +138,9 @@ class actividadesController extends Controller
 
                 case 'CONFIRMADO':
                     $mensaje = __('frontend.confirmed');
-                    $clase = 'btn-success disabled';
-                    $habilitado = false;
+                    $clase = 'btn-success';
+                    $accion = '/inscripciones/actividad/' . $actividad->idActividad . '/estado';
+                    $habilitado = true;
                     $inscripcionConfirmada = true;
                     $persona = Persona::find(auth()->user()->idPersona);
                     $inscripcion = $persona->inscripcionActividad($id);
