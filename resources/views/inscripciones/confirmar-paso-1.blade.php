@@ -16,6 +16,20 @@
 
             @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
 
+            @if(!empty($exentoPorSocio))
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="alert alert-success d-flex align-items-start mb-4" style="border-radius:10px;">
+                            <i class="fa fa-heart fa-2x mr-3 mt-1 text-success flex-shrink-0"></i>
+                            <div>
+                                <strong>{{ __('frontend.socio_exento_titulo') }}</strong>
+                                <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.socio_exento_texto') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-md-12">
                     <br>

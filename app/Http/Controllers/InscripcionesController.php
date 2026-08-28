@@ -175,6 +175,7 @@ class InscripcionesController extends BaseController
                 }
                 return view('inscripciones.confirmar-paso-1')
                     ->with('actividad', $actividad)
+                    ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
                     ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
             }
 
