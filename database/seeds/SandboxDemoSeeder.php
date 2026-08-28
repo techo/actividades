@@ -48,9 +48,12 @@ class SandboxDemoSeeder extends Seeder
         $socio    = $this->prepararPersonaAr(0, self::DNI_SOCIO,    'socio.demo');
         $noSocio  = $this->prepararPersonaAr(1, self::DNI_NO_SOCIO, 'nosocio.demo');
 
-        // El socio demo es además admin global (idPaisPermitido 0) para poder
-        // entrar al backoffice y ver la data de prueba desde ahí.
-        $socio->idPaisPermitido = 0;
+        // El socio demo es además admin de Argentina para entrar al backoffice.
+        // idPaisPermitido = 13 (NO 0): aunque el scope de Actividad trata 0 como
+        // "global", muchas secciones (Usuarios, Coordinadores, Oficinas, Provincias,
+        // Campañas…) filtran directo por idPaisPermitido y con 0 quedan vacías, y
+        // CampanaPolicy::create exige idPaisPermitido > 0.
+        $socio->idPaisPermitido = self::PAIS_AR;
         $socio->save();
         $socio->assignRole('admin');
         $extrasAr = Persona::where('idPais', self::PAIS_AR)
