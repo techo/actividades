@@ -571,4 +571,9 @@ return [
     'archivo_error'          => 'The file could not be uploaded. Please try again.',
     'archivo_requerido'      => 'This file is required.',
 
+    // Activity cards (home / listings)
+    'card_more' => 'See more',
+    'card_free' => 'Free',
+    'card_paid' => 'Paid',
+
 ];

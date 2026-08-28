@@ -586,4 +586,9 @@ return [
     'archivo_error'          => 'No se pudo subir el archivo. Intentá nuevamente.',
     'archivo_requerido'      => 'Este archivo es obligatorio.',
 
+    // Tarjetas de actividad (home / listados)
+    'card_more' => 'Ver más',
+    'card_free' => 'Gratis',
+    'card_paid' => 'Con costo',
+
 ];

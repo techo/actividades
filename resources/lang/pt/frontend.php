@@ -578,4 +578,9 @@ return [
     'archivo_error'          => 'Não foi possível enviar o arquivo. Tente novamente.',
     'archivo_requerido'      => 'Este arquivo é obrigatório.',
 
+    // Tarjetas de actividad (home / listados)
+    'card_more' => 'Ver mais',
+    'card_free' => 'Grátis',
+    'card_paid' => 'Pago',
+
 ];

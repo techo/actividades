@@ -7,12 +7,13 @@
         <strong>{{ $t('frontend.enrollment_empty') }}</strong>
       </div>
         <div class="row">
-            <tarjeta
+            <div
+                class="col-12 col-sm-6 col-md-4 mb-3"
                 v-for="inscripcion in inscripciones"
-                v-bind:inscripcion="inscripcion"
                 v-bind:key="inscripcion.idInscripcion"
             >
-            </tarjeta>
+                <tarjeta v-bind:inscripcion="inscripcion"></tarjeta>
+            </div>
             <button
                 v-if="actividadPasada && periodoDeEvaluacionYaComenzo && inscripcionPresente"
                 class="btn btn-sm btn-info"

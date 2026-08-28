@@ -11,12 +11,13 @@
             </TarjetaHori>
         </div>
         <div class="row py-2" v-else>
-            <tarjeta 
+            <div
+                class="col-12 col-sm-6 col-md-4 mb-3"
                 v-for="act in actividades"
-                v-bind:actividad="act"
                 v-bind:key="Math.random() + '_' + act.idActividad"
             >
-            </tarjeta>
+                <tarjeta v-bind:actividad="act"></tarjeta>
+            </div>
         </div>
 
         <div v-show="loading" class="loading" style="text-align: center">
