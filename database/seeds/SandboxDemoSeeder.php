@@ -95,9 +95,10 @@ class SandboxDemoSeeder extends Seeder
         ]);
 
         // ── Inscripciones (flujo real: aplica exención vía Salesforce) ─────────
-        // Socio AR → exento en las pagas de AR; en Brasil paga igual (fuera de scope).
-        $this->inscribir($constPagaAr, $socio);        // → exento_pago=1 (CONFIRMADO, cartel)
-        $this->inscribir($colectaPagaConfAr, $socio);  // → exento pero WAITING_CONFIRMATION
+        // OJO: NO inscribimos al socio en $constPagaAr a propósito: queda libre para
+        // que uno pueda entrar como socio y probar EN VIVO el flujo → cartel en gracias.
+        // (Si el socio ya está inscripto, no se puede rehacer el flujo y no se ve el cartel.)
+        $this->inscribir($colectaPagaConfAr, $socio);  // → exento pero WAITING_CONFIRMATION (ejemplo backoffice)
         $this->inscribir($constPagaBr, $socio);        // → NO exento (actividad de Brasil)
 
         // No socio AR → paga normal / gratis confirmado.
