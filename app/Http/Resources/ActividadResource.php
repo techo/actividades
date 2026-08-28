@@ -64,7 +64,11 @@ class ActividadResource extends Resource
             'linkQR'         => ($estadoInscripcion == 'confirmed') ? '/admin/actividades/'.$this->idActividad.'/inscripcion/'.$inscripcion->idInscripcion.'/persona/'.$idPersona : '',
             'lugar'         => $this->lugar,
             'moneda'        => $this->moneda,
-            'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro),
+            // Solo exponer a la app los puntos de encuentro abiertos (estado=1). Si
+            // no se filtra, la app lista sedes cerradas y al elegir una el flujo de
+            // confirmación devuelve "Punto de Encuentro cerrado" (InscripcionesController).
+            // Mismo criterio que el listado web (ActividadesSearch: PuntoEncuentro.estado=1).
+            'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro->where('estado', 1)->values()),
             'preguntas'     => $this->preguntas,
             'ubicacion'     => $this->provincia->provincia,
             'idInscripcion'   => ($estadoInscripcion) ? $inscripcion->idInscripcion : null,
@@ -119,7 +123,9 @@ class ActividadResource extends Resource
             'acuerdo_menores_url' =>  $this->acuerdo_menores_url,
             'show_dates' =>  $this->show_dates,
             'show_location' =>  $this->show_location,
-            'jornadas'           => $this->jornadas,
+            // Igual que con los puntos de encuentro: la app solo debe ofrecer jornadas
+            // activas. Las inactivas (activo=0) quedan fuera del selector de inscripción.
+            'jornadas'           => $this->jornadas->where('activo', 1)->values(),
             'imagen_tarjeta'           => $this->imagen_tarjeta,
             'imagen_destacada'           => $this->imagen_destacada,
             'inscriptos'           => ($estadoInscripcion == 'confirmed') ? $this->comunidad() : [],
