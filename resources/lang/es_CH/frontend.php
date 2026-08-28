@@ -354,7 +354,7 @@ return [
 	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 
 	'show_on_arrival' => 'Muéstralo al llegar a la actividad.',
 	'access_qr' => 'Ingresa a este link para obtenerlo.',
-    'meeting_points' => 'Puntos de encuentro / URL de Conexión',
+    'meeting_points' => 'Puntos de encuentro',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
     'group_chat' => 'Chat Grupal',

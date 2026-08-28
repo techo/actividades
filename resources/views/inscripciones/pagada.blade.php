@@ -6,59 +6,53 @@
 
 
 @section('main_image')
-    <div class="techo-hero actividades">
-        <h2></h2>
-    </div>
 @endsection
 
 @section('main_content')
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="card-subtitle">{{ __('frontend.inscription_confirmed') }}</h1>
-        </div>
-        <hr>
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <h3 class="card-title">
-                {{ __('frontend.with_this_donation') }}
-                <a href="/actividades/{{$actividad->idActividad}}">
-                    {{ $actividad->nombreActividad }}
-                </a>
-            </h3>
-        </div>
-    </div>
-    <div class="row justify-content-start">
-        <div class="col-md-8">
-            <p>
-                {{ __('frontend.important_remainder') }}
-            </p>
-            <p>
-                <strong>{{ __('frontend.meeting_points') }}</strong><br>
-                {{ $inscripcion->punto_encuentro->punto }}, {{ \Carbon\Carbon::parse($inscripcion->punto_encuentro->horario)->format('H:i') }} hs
-            </p>
-            <p>{{ __('frontend.coordinator') }} {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
-                (<a href="mailto:{{$inscripcion->punto_encuentro->responsable->mail}}">
-                    {{$inscripcion->punto_encuentro->responsable->mail}}</a>), {{ __('frontend.any_doubt_contact') }}
-            </p>
-            <p>{{ __('frontend.activity_takes_place') }} 
-                {{ $actividad->localidad->localidad }},
-                {{ $actividad->provincia->provincia }},
-                {{ $actividad->pais->nombre }}
-            </p>
-            <p>{{ __('frontend.activity_starts_at') }} {{ $actividad->fechaInicio->format('d/m/Y H:i') }}</p>
-            <p>{{ __('frontend.activity_ends_at') }} {{ $actividad->fechaFin->format('d/m/Y H:i') }}</p>
-        
-        </div>
-    </div>
-    <div class="row justify-content-start">
-        <div class="col-md-2">
-            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#compartirModal">
-                <i class="fas fa-share-alt"></i>  {{ __('frontend.share') }}
-            </button>
-        </div>
-        <div class="col-md-2">
-            <a href="/" class="btn btn-link">{{ __('frontend.go_back') }}</a>
+    <div class="container-fluid card">
+        <div class="card-body">
+            <div class="text-center py-3">
+                <i class="fa fa-check-circle text-success mb-3" style="font-size:3.5rem;"></i>
+                <h2 class="card-subtitle mb-1">{{ __('frontend.inscription_confirmed') }}</h2>
+                <p class="text-muted mb-2">{{ __('frontend.with_this_donation') }}</p>
+                <h3 class="card-title font-weight-bold mb-3">
+                    <a href="/actividades/{{$actividad->idActividad}}" class="link">{{ $actividad->nombreActividad }}</a>
+                </h3>
+                <div class="d-flex flex-wrap justify-content-center text-muted mb-2">
+                    <span class="mx-2 my-1"><i class="far fa-calendar mr-1"></i> {{ $actividad->fechaInicio->format('d/m/Y') }}</span>
+                    <span class="mx-2 my-1"><i class="far fa-clock mr-1"></i> {{ $actividad->fechaInicio->format('H:i') }}hs</span>
+                    <span class="mx-2 my-1">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        {{ optional($actividad->localidad)->localidad }}, {{ optional($actividad->provincia)->provincia }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <p class="text-muted text-center">{{ __('frontend.important_remainder') }}</p>
+                    <div class="border p-3 mb-3" style="border-radius:10px;">
+                        <p class="mb-1">
+                            <strong>{{ __('frontend.meeting_points') }}:</strong>
+                            {{ $inscripcion->punto_encuentro->punto }}, {{ \Carbon\Carbon::parse($inscripcion->punto_encuentro->horario)->format('H:i') }} hs
+                        </p>
+                        @if(optional($inscripcion->punto_encuentro)->responsable)
+                            <p class="mb-0">
+                                <strong>{{ __('frontend.coordinator') }}</strong>
+                                {{ $inscripcion->punto_encuentro->responsable->nombreCompleto }}
+                                (<a href="mailto:{{$inscripcion->punto_encuentro->responsable->mail}}">{{$inscripcion->punto_encuentro->responsable->mail}}</a>)
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center flex-wrap mt-3">
+                <button type="button" class="btn btn-primary rounded-pill px-4 mx-2 my-1" data-toggle="modal" data-target="#compartirModal">
+                    <i class="fas fa-share-alt mr-1"></i> {{ __('frontend.share') }}
+                </button>
+                <a href="/actividades/{{ $actividad->idActividad }}" class="btn btn-link mx-2 my-1">{{ __('frontend.go_back') }}</a>
+            </div>
         </div>
     </div>
 @endsection

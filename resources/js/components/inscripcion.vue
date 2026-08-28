@@ -58,16 +58,19 @@
 
                         <input type="hidden" name="respuestas" v-bind:value="convertToJSONRespuestas()">
 
-                    <div class="row" v-for="(item, index) in puntosActivos">
-                        <div class="col-md-12">
-                            <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
-                        {{item.punto}}, 
-                        <template v-if="item.localidad">{{ item.localidad.localidad }}, </template> 
-                        {{ item.provincia.provincia }} - {{item.horario | format_time}}hs
-
-                        
-                            
-                        </div>
+                    <div class="mb-2" v-for="(item, index) in puntosActivos" :key="item.idPuntoEncuentro">
+                        <label class="d-flex align-items-start p-3 mb-0"
+                               style="border:1px solid #e6e6e6; border-radius:10px; cursor:pointer; font-weight:400; transition:border-color .2s, background-color .2s;"
+                               :style="{ borderColor: puntoSeleccionado == item.idPuntoEncuentro ? '#3a7bd5' : '#e6e6e6', backgroundColor: puntoSeleccionado == item.idPuntoEncuentro ? '#f6f9ff' : '#fff' }">
+                            <input type="radio" name="punto_encuentro" :value="item.idPuntoEncuentro" v-model="puntoSeleccionado"
+                                   class="mt-1 mr-3" style="flex-shrink:0; width:18px; height:18px;">
+                            <span>
+                                <strong>{{ item.punto }}</strong><br>
+                                <span class="text-muted" style="font-size:.9rem;">
+                                    <template v-if="item.localidad">{{ item.localidad.localidad }}, </template>{{ item.provincia.provincia }} · {{ item.horario | format_time }}hs
+                                </span>
+                            </span>
+                        </label>
                     </div>
                     <hr>
                     <div class="row text-center justify-content-center">
@@ -367,6 +370,7 @@
         components: { VueTagsInput },
         data: function(){
           return {
+            puntoSeleccionado: null,
             actividad: {
                 idActividad: '',
                 nombreActividad: '',
@@ -444,6 +448,8 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
+            if (self.puntosActivos.length > 0)
+                self.puntoSeleccionado = self.puntosActivos[0].idPuntoEncuentro;
             if(self.actividad.requiere_ficha_medica)
                 self.mostrarFichaMedica = true;
             if(self.actividad.roles_tags == null || self.actividad.roles_tags.length == 0)

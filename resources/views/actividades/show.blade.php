@@ -106,42 +106,42 @@
             <hr class="mx-auto" style="width: 80%;">
         @endif
         @if ($actividad->show_location)
-            <div  class="row">
+            <div class="row">
                 <div class="col-md-12">
                     <h5>{{ __('frontend.meeting_points') }}</h5>
                 </div>
             </div>
-        
-            @foreach($actividad->puntosEncuentro as $puntoEncuentro)
-                @if($puntoEncuentro->estado)
-                    <div class="row">
-                        <div class="col-md-4">
-                            {{$puntoEncuentro->punto}}
-                        </div>
-                        <div class="col-md-4">
-                            @php
-                                echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
-                                echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . '': '';                    @endphp
 
-                        </div>
-                        <div class="col-md-4">
-                            <strong>{{ __('frontend.referring') }}:</strong>
-                                @if ($puntoEncuentro->responsable)
-                                    @if ($puntoEncuentro->responsable->photo)
-                                        <img class="imagen-perfil-mini" src="{{ '/'.$puntoEncuentro->responsable->photo }}" alt="Foto">
+            <div class="row">
+                @foreach($actividad->puntosEncuentro as $puntoEncuentro)
+                    @if($puntoEncuentro->estado)
+                        <div class="col-md-6 mb-3">
+                            <div class="border p-3 h-100" style="border-radius:10px;">
+                                <strong><i class="fas fa-map-marker-alt mr-1 text-primary"></i>{{ $puntoEncuentro->punto }}</strong>
+                                <div class="text-muted" style="font-size:.9rem;">
+                                    @php
+                                        echo isset($puntoEncuentro->localidad->localidad) ? e($puntoEncuentro->localidad->localidad) . ', ' : '';
+                                        echo isset($puntoEncuentro->provincia->provincia) ? e($puntoEncuentro->provincia->provincia) : '';
+                                    @endphp
+                                </div>
+                                <div class="mt-2" style="font-size:.9rem;">
+                                    <strong>{{ __('frontend.referring') }}:</strong>
+                                    @if ($puntoEncuentro->responsable)
+                                        @if ($puntoEncuentro->responsable->photo)
+                                            <img class="imagen-perfil-mini" src="{{ '/'.$puntoEncuentro->responsable->photo }}" alt="Foto">
+                                        @else
+                                            <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image">
+                                        @endif
+                                        {{ $puntoEncuentro->responsable->nombreCompleto }}
                                     @else
-                                        <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
+                                        {{ __('frontend.not_defined') }}
                                     @endif
-                                    {{ $puntoEncuentro->responsable->nombreCompleto }}
-                                @else
-                                    {{  __('frontend.not_defined') }}
-                                @endif
-
-                            </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         @endif
 
         @if ($inscripcionConfirmada && $inscriptos != '')
