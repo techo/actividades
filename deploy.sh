@@ -58,6 +58,31 @@ notify_n8n() {
   # Sin URL configurada => no notificamos (el deploy no depende de esto).
   [ -z "$N8N_WEBHOOK_URL" ] && return 0
 
+  # Etiqueta de ambiente legible: que la notificación NO diga siempre "producción"
+  # cuando en realidad es un deploy a sandbox.
+  local env_label
+  case "$ENVIRONMENT" in
+    prod)    env_label="Producción" ;;
+    sandbox) env_label="Sandbox" ;;
+    *)       env_label="$ENVIRONMENT" ;;
+  esac
+
+  # Estado legible + emoji para el mensaje.
+  local status_text status_icon
+  if [ "$status" = "success" ]; then
+    status_text="finalizó con éxito"; status_icon="✅"
+  else
+    status_text="falló"; status_icon="❌"
+  fi
+
+  # Mensaje listo-para-mostrar: qué ambiente, qué rama y QUÉ commits se subieron.
+  # (commits ya viene escapado y con \n entre líneas). n8n puede usar este campo
+  # tal cual, sin re-armar el texto ni asumir el ambiente.
+  local branch_label="${BRANCH:-branch actual del server}"
+  local commits_text="$commits"
+  [ -z "$commits_text" ] && commits_text="(sin nuevos commits)"
+  local message="$status_icon Deploy a $env_label — voluntariado-eventual (rama $branch_label) $status_text.\\nCommits subidos:\\n$commits_text"
+
   # Un fallo del curl no debe tumbar el script (el deploy ya terminó).
   curl -fsS -m 10 -X POST "$N8N_WEBHOOK_URL" \
     -H "Content-Type: application/json" \
@@ -66,7 +91,9 @@ notify_n8n() {
 {
   "project": "voluntariado-eventual",
   "environment": "$ENVIRONMENT",
+  "environment_label": "$env_label",
   "status": "$status",
+  "message": "$message",
   "branch": "${BRANCH:-branch-actual-del-server}",
   "host": "$HOST",
   "commits": "$commits",
