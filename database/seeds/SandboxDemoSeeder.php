@@ -3,6 +3,7 @@
 use App\Actividad;
 use App\Inscripcion;
 use App\Persona;
+use App\PuntoEncuentro;
 use App\Services\Salesforce\SocioExencionService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -118,6 +119,7 @@ class SandboxDemoSeeder extends Seeder
         $demos = Actividad::withTrashed()->where('nombreActividad', 'like', self::PREFIJO . '%')->get();
         foreach ($demos as $act) {
             Inscripcion::withTrashed()->where('idActividad', $act->idActividad)->forceDelete();
+            PuntoEncuentro::where('idActividad', $act->idActividad)->delete();
             $act->forceDelete();
         }
     }
@@ -154,7 +156,7 @@ class SandboxDemoSeeder extends Seeder
 
     private function crearActividad(array $o)
     {
-        return Actividad::create([
+        $act = Actividad::create([
             'idTipo'                   => $this->tipoActivo($o['idTipo']),
             'nombreActividad'          => self::PREFIJO . ' ' . $o['nombre'],
             'descripcion'              => 'Actividad de prueba generada por SandboxDemoSeeder.',
@@ -179,6 +181,19 @@ class SandboxDemoSeeder extends Seeder
             'requiere_estudios'        => 0,
             'ficha_medica_campos'      => [],
         ]);
+
+        // Sin un PuntoEncuentro con estado=1 la actividad no aparece en el listado
+        // público (ActividadesSearch lo exige) ni se puede completar la inscripción.
+        PuntoEncuentro::create([
+            'punto'       => 'Punto de encuentro demo',
+            'horario'     => '09:00:00',
+            'idActividad' => $act->idActividad,
+            'idPais'      => $o['idPais'],
+            'idProvincia' => $o['idProvincia'],
+            'estado'      => 1,
+        ]);
+
+        return $act;
     }
 
     private function inscribir(Actividad $actividad, Persona $persona, array $overrides = [])
