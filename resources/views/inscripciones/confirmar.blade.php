@@ -169,11 +169,6 @@
                 @endif
 
                 <hr>
-                <style>
-                    .acepta-item { border:1px solid #e6e6e6; border-radius:10px; cursor:pointer; font-weight:400; transition:border-color .2s, background-color .2s; }
-                    .acepta-item:hover { border-color:#3a7bd5; background-color:#f6f9ff; }
-                    .acepta-item input[type=checkbox] { flex-shrink:0; width:18px; height:18px; }
-                </style>
                 <div class="row">
                     <div class="col-md-12">
                         <h5 class="card-subtitle mb-3">{{ __('frontend.terms_section_title') }}</h5>
@@ -281,3 +276,11 @@
 @section('footer')
     @include('partials.footer')
 @endsection
+
+@push('additional_styles')
+    <style>
+        .acepta-item { border:1px solid #e6e6e6; border-radius:10px; cursor:pointer; font-weight:400; transition:border-color .2s, background-color .2s; }
+        .acepta-item:hover { border-color:#3a7bd5; background-color:#f6f9ff; }
+        .acepta-item input[type=checkbox] { flex-shrink:0; width:18px; height:18px; }
+    </style>
+@endpush
