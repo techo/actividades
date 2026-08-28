@@ -233,6 +233,7 @@ class InscripcionesController extends BaseController
                 }
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad)
+                ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
                 ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
         }
         if ($request->expectsJson() || $request->is('api/*')) {

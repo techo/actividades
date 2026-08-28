@@ -488,6 +488,8 @@ return [
 	//gracias.blade.php
     'activity_detail' => 'Detalle de Actividad',
     'inscription_confirmed' => '¡Inscripción confirmada!',
+    'socio_exento_titulo' => 'Tienes el beneficio de socio',
+    'socio_exento_texto' => 'Por ser socio de TECHO no tienes que pagar esta actividad.',
     'already_inscripted' => 'Ya estás inscrito a ',
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscrito y modificarlas ingresa a ',
 
