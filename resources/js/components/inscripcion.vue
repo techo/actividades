@@ -19,6 +19,13 @@
         <div class="col-md-8" v-if="cargaFinalizada">
             <div v-if="!mostrarFichaMedica">
                 <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado && preguntasAplicado">
+                    <!-- Con un único punto de encuentro el paso se auto-selecciona y se
+                         avanza solo (checkSubmit). Mostramos un loader en vez de la lista
+                         para que este paso no "pestañee" antes de redirigir. -->
+                    <div v-if="puntosActivos.length === 1" class="text-center" style="padding:4rem 0;">
+                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                    </div>
+                    <template v-else>
                     <div class="row">
                         <div class="col-md-12">
                             <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -74,6 +81,7 @@
                         <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary" v-if="validateForm()"></div>
                     </div>
                     </form>
+                    </template>
                 </div>
                 <div v-else-if="!rolAplicado">
 

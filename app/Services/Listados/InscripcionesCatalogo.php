@@ -77,9 +77,14 @@ class InscripcionesCatalogo implements CatalogoListado
     {
         $campos = config('datatables.inscripciones.catalogo.datos_generales');
 
-        // Confirmación y pago solo existen como columna si la actividad los usa.
+        // confirma/pago/asistencia son switches pinnedRight. Vuetable manda las
+        // columnas pinnedRight al final PRESERVANDO su orden relativo en la lista,
+        // así que el orden visible = el orden en que aparecen acá. Los insertamos
+        // JUSTO ANTES de 'asistencia' (presente) para que queden: confirma, pago,
+        // presente — el mismo orden que tiene la inscripción.
+        $switches = [];
         if ($actividad->confirmacion == 1) {
-            $campos[] = [
+            $switches[] = [
                 'key' => 'confirma',
                 'name' => '__component:confirma',
                 'title' => 'Confirma',
@@ -90,7 +95,7 @@ class InscripcionesCatalogo implements CatalogoListado
             ];
         }
         if ($actividad->pago == 1) {
-            $campos[] = [
+            $switches[] = [
                 'key' => 'pago',
                 'name' => '__component:pago',
                 'title' => 'Pago',
@@ -99,6 +104,16 @@ class InscripcionesCatalogo implements CatalogoListado
                 'pinnedRight' => true,
                 'width' => '110px',
             ];
+        }
+        if ($switches) {
+            $pos = count($campos);
+            foreach ($campos as $i => $c) {
+                if (($c['key'] ?? null) === 'asistencia') { $pos = $i; break; }
+            }
+            array_splice($campos, $pos, 0, $switches);
+        }
+
+        if ($actividad->pago == 1) {
             // Comprobante de pago: solo tiene sentido si la actividad cobra.
             $campos[] = [
                 'key' => 'voucher',
