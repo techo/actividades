@@ -1,8 +1,8 @@
 <template>
   <article class="techo-card" @click="ir_a_actividad">
-    <!-- Portada: foto propia de la actividad si existe; si no, portada
-         generada con el color de la categoría + un pictograma. Ya NO se usa
-         tipo.imagen (4 fotos genéricas para 45 tipos: no diferenciaban nada). -->
+    <!-- Portada: foto propia de la actividad si existe; si no, la imagen del
+         tipo; y si tampoco hay, portada generada con el color de la categoría
+         + un pictograma. -->
     <div class="tc-cover" :class="{ 'tc-cover--photo': tieneFoto }" :style="coverStyle">
       <i v-if="!tieneFoto" class="tc-ico" :class="iconoCategoria" :style="{ color: textoSobreCat }"></i>
 
@@ -50,8 +50,15 @@
         name: 'tarjeta',
         props: ['actividad'],
         computed: {
+          // Prioridad de la portada: foto propia de la actividad, luego la
+          // imagen del tipo, y si no hay ninguna se cae a la portada generada.
+          fotoUrl() {
+            return this.actividad.imagen_tarjeta
+              || (this.actividad.tipo && this.actividad.tipo.imagen)
+              || null;
+          },
           tieneFoto() {
-            return !!this.actividad.imagen_tarjeta;
+            return !!this.fotoUrl;
           },
           colorCategoria() {
             // El color viene de la categoría (TipoResource: categoria->color).
@@ -83,7 +90,7 @@
           },
           coverStyle() {
             if (this.tieneFoto) {
-              return { backgroundImage: `url('${this.actividad.imagen_tarjeta}')` };
+              return { backgroundImage: `url('${this.fotoUrl}')` };
             }
             return { backgroundColor: this.colorCategoria };
           },
