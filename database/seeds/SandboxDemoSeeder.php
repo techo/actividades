@@ -46,6 +46,12 @@ class SandboxDemoSeeder extends Seeder
         // ── Personas existentes ────────────────────────────────────────────────
         $socio    = $this->prepararPersonaAr(0, self::DNI_SOCIO,    'socio.demo');
         $noSocio  = $this->prepararPersonaAr(1, self::DNI_NO_SOCIO, 'nosocio.demo');
+
+        // El socio demo es además admin global (idPaisPermitido 0) para poder
+        // entrar al backoffice y ver la data de prueba desde ahí.
+        $socio->idPaisPermitido = 0;
+        $socio->save();
+        $socio->assignRole('admin');
         $extrasAr = Persona::where('idPais', self::PAIS_AR)
             ->whereNotNull('mail')->where('mail', 'like', '%@%')
             ->orderBy('idPersona')->skip(2)->take(4)->get();
