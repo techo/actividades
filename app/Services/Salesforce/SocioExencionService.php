@@ -46,6 +46,14 @@ class SocioExencionService
             return false; // Actividad no paga: no hay nada que eximir.
         }
 
+        // La exención solo aplica a actividades del país configurado (Argentina).
+        // Los socios de Salesforce son de Argentina; un socio argentino que se
+        // anota a una actividad de otro país (ej. Brasil) SÍ debe pagar.
+        $paisSocio = (int) config('services.salesforce.socio_pais_id', 13);
+        if ((int) $actividad->idPais !== $paisSocio) {
+            return false;
+        }
+
         if (!$this->socioService->esSocio($persona)) {
             return false;
         }
