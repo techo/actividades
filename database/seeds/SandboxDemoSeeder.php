@@ -132,9 +132,11 @@ class SandboxDemoSeeder extends Seeder
             ->whereNotNull('mail')->where('mail', 'like', '%@%')
             ->orderBy('idPersona')->skip($offset)->first();
 
-        $persona->dni      = $dni;
-        $persona->mail     = $mailLocal . '+' . $persona->idPersona . '@techo.org';
-        $persona->password = Hash::make(self::PASSWORD_DEMO);
+        $persona->dni               = $dni;
+        $persona->mail              = $mailLocal . '+' . $persona->idPersona . '@techo.org';
+        $persona->password          = Hash::make(self::PASSWORD_DEMO);
+        // Email validado: sin esto MustVerifyEmail bloquea el login.
+        $persona->email_verified_at = Carbon::now();
         $persona->save();
 
         return $persona;
