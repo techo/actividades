@@ -197,6 +197,9 @@ Route::get('/inscripciones/actividad/{id}/confirmar', function ($id) {
     return redirect('/inscripciones/actividad/' . $id);
 });
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
+// Pantalla de estado de la inscripción (gracias / esperá confirmación), para que
+// el CTA del detalle ("ESPERAR CONFIRMACIÓN") pueda volver a mostrarla.
+Route::get('/inscripciones/actividad/{id}/estado', 'InscripcionesController@estado')->middleware('requiere.auth');
 Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
 
 //Fin Flujo de inscripciones

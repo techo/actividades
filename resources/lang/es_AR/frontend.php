@@ -500,6 +500,7 @@ return [
     'inscription_confirmed' => '¡Inscripción confirmada!',
     'socio_exento_titulo' => 'Tenés el beneficio de socio',
     'socio_exento_texto' => 'Por ser socio de TECHO no tenés que pagar esta actividad.',
+    'terms_section_title' => 'Para finalizar, aceptá los términos',
     'already_inscripted' => 'Ya estás inscripto a ',
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscripto y modificarlas ingresá a ',
 

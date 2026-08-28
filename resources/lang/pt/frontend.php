@@ -495,6 +495,7 @@ return [
 	'inscription_confirmed' => 'Inscrição confirmada!',
 	'socio_exento_titulo' => 'Você tem o benefício de doador',
 	'socio_exento_texto' => 'Por ser doador(a) do TECHO você não precisa pagar esta atividade.',
+	'terms_section_title' => 'Para finalizar, aceite os termos',
 	'already_inscripted' => 'Você já está registrado em ',
 	'mail_message' => 'Enviamos um e-mail com mais informações sobre esta atividade. Para ver as atividades nas quais você está registrado e modificá-las, acesse à ',
 

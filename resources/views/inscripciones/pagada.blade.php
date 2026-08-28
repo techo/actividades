@@ -21,7 +21,6 @@
     <div class="row">
         <div class="col-md-8">
             <h3 class="card-title">
-                <br>
                 {{ __('frontend.with_this_donation') }}
                 <a href="/actividades/{{$actividad->idActividad}}">
                     {{ $actividad->nombreActividad }}

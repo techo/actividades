@@ -131,8 +131,9 @@ class actividadesController extends Controller
 
                 case 'ESPERAR CONFIRMACIÓN':
                     $mensaje = __('frontend.waiting_for_confirmation');
-                    $clase = 'btn-warning disabled';
-                    $habilitado = false;
+                    $clase = 'btn-warning';
+                    $accion = '/inscripciones/actividad/' . $actividad->idActividad . '/estado';
+                    $habilitado = true;
                     break;
 
                 case 'CONFIRMADO':

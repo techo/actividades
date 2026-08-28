@@ -32,7 +32,6 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <br>
                     <h3 class="card-subtitle">
                         {{ __('frontend.you_are_pre_registered') }}
                         <a href="/actividades/{{$actividad->idActividad}}">

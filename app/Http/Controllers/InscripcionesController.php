@@ -276,6 +276,36 @@ class InscripcionesController extends BaseController
     }
 
     /**
+     * Pantalla de estado de la inscripción del usuario en una actividad.
+     * Confirmada -> vista 'gracias'; esperando confirmación -> 'confirmar-paso-1'.
+     * Si falta pagar o no hay inscripción, vuelve al flujo normal.
+     */
+    public function estado($id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $persona = Auth::user();
+        $inscripcion = $persona->inscripcionActividad($id);
+
+        if (!$inscripcion) {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
+        $estado = $actividad->estadoInscripcion($persona->idPersona); // vocabulario inglés
+
+        // Falta pago (no exento) -> al flujo de pago.
+        if ($estado === 'confirm_by_paying') {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
+        $vista = $estado === 'confirmed' ? 'inscripciones.gracias' : 'inscripciones.confirmar-paso-1';
+
+        return view($vista)
+            ->with('actividad', $actividad)
+            ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
+    }
+
+    /**
      * Retorna la vista para elegir el punto de encuentro de una actividad dada
      * @param $id Actividad
      * @return $this

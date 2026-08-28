@@ -489,6 +489,7 @@ return [
     'inscription_confirmed' => 'Inscription confirmed!',
     'socio_exento_titulo' => 'You have the member benefit',
     'socio_exento_texto' => 'As a TECHO member you don\'t have to pay for this activity.',
+    'terms_section_title' => 'To finish, accept the terms',
     'already_inscripted' => 'Already inscrited to ',
 	'mail_message' => "We have send you an email with the information about this activity. For watching the activities you are enrolled follow this link ",
 

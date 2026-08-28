@@ -39,7 +39,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <h3 class="card-title">
-                        <br>
                         {{ __('frontend.already_inscripted') }}
                         <a href="/actividades/{{$actividad->idActividad}}" class="link">
                             {{ $actividad->nombreActividad }}

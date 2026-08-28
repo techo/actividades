@@ -35,7 +35,7 @@
         <!-- Begin page content -->
         @yield('main_image')
         <div id="main-background" style="background-image: url(''); background-size: contain;">
-            <div class="container pt-4 pb-5 mb-5">
+            <div class="container pt-4 pb-3">
                 @if (isset($requiere_auth))
                     <autenticar></autenticar>
                 @endif
