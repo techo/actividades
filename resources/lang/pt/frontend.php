@@ -582,5 +582,7 @@ return [
     'card_more' => 'Ver mais',
     'card_free' => 'Grátis',
     'card_paid' => 'Pago',
+    'present' => 'Presente',
+    'no_past_activities' => 'Você ainda não participou de nenhuma atividade.',
 
 ];

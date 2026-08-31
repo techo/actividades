@@ -1,27 +1,20 @@
 <template>
     <div>
-      <div class="alert alert-warning" v-show='borro'>
+      <div class="alert alert-warning" v-show="borro">
         <strong>{{ $t('frontend.unenroll_ok') }}</strong>
       </div>
-      <div class="alert alert-warning" v-show='!inscripciones.length'>
-        <strong>{{ $t('frontend.enrollment_empty') }}</strong>
+      <div class="alert alert-light text-muted" v-show="cargado && !inscripciones.length">
+        {{ mensajeVacio }}
       </div>
-        <div class="row">
-            <div
-                class="col-12 col-sm-6 col-md-4 mb-3"
-                v-for="inscripcion in inscripciones"
-                v-bind:key="inscripcion.idInscripcion"
-            >
-                <tarjeta v-bind:inscripcion="inscripcion"></tarjeta>
-            </div>
-            <button
-                v-if="actividadPasada && periodoDeEvaluacionYaComenzo && inscripcionPresente"
-                class="btn btn-sm btn-info"
-                @click="ir_a_evaluar"
+      <div class="row">
+        <div
+          class="col-12 col-sm-6 col-md-4 mb-3"
+          v-for="inscripcion in inscripciones"
+          v-bind:key="inscripcion.idInscripcion || inscripcion.idActividad"
         >
-            {{ __('frontend.view_evaluations') }}
-        </button>
+          <tarjeta v-bind:inscripcion="inscripcion"></tarjeta>
         </div>
+      </div>
     </div>
 </template>
 
@@ -31,30 +24,42 @@
 
     export default {
         name: "mis-inscripciones",
-
+        props: {
+            // '' = próximas (default). 'pasadas' = históricas.
+            date: {
+                type: String,
+                default: '',
+            },
+        },
         data () {
             return {
-                act: '',
                 inscripciones: [],
-                borro: false
+                borro: false,
+                cargado: false,
             }
         },
-        components: {tarjeta: Tarjeta},
+        components: { tarjeta: Tarjeta },
+        computed: {
+            mensajeVacio() {
+                return this.date === 'pasadas'
+                    ? this.$t('frontend.no_past_activities')
+                    : this.$t('frontend.enrollment_empty');
+            },
+        },
         mounted: function() {
             this.traer_inscripciones()
         },
         methods: {
             traer_inscripciones: function() {
-                axios.get('/ajax/usuario/inscripciones?date=')
+                axios.get('/ajax/usuario/inscripciones?date=' + this.date)
                     .then(response => {
-                    this.inscripciones = response.data.data
-                })
+                        this.inscripciones = response.data.data
+                        this.cargado = true
+                    })
             }
         }
-
     }
 </script>
 
-<style>
-
+<style scoped>
 </style>

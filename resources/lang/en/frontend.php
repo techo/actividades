@@ -575,5 +575,7 @@ return [
     'card_more' => 'See more',
     'card_free' => 'Free',
     'card_paid' => 'Paid',
+    'present' => 'Present',
+    'no_past_activities' => "You haven't joined any activities yet.",
 
 ];

@@ -578,6 +578,8 @@ return [
     'card_more' => 'Ver más',
     'card_free' => 'Gratis',
     'card_paid' => 'Con costo',
+    'present' => 'Presente',
+    'no_past_activities' => 'Todavía no participaste de ninguna actividad.',
 
 ];
 
