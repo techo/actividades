@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backoffice;
 
+use App\Actividad;
 use App\Http\Controllers\Controller;
 use App\InscripcionRespuesta;
 use App\SuscribeRespuesta;
@@ -19,14 +20,22 @@ use Illuminate\Support\Facades\Storage;
  */
 class ArchivoRespuestaController extends Controller
 {
-    /** Descarga del archivo de una respuesta de inscripción a actividad. */
-    public function inscripcion($idActividad, $respuestaId)
+    /**
+     * Descarga del archivo de una respuesta de inscripción a actividad.
+     *
+     * `$id` se type-hintea como Actividad (no como escalar) a propósito: el
+     * middleware `can:ver,App\Actividad,id` necesita que el parámetro `{id}` se
+     * resuelva vía route-model binding a una instancia de Actividad; si no, el
+     * Gate le pasa el string crudo a ActividadesPolicy::ver() y explota con
+     * "Argument 2 ... must be an instance of App\Actividad, string given".
+     */
+    public function inscripcion(Actividad $id, $respuesta)
     {
-        $respuesta = InscripcionRespuesta::with(['inscripcion', 'pregunta'])->findOrFail($respuestaId);
+        $respuesta = InscripcionRespuesta::with(['inscripcion', 'pregunta'])->findOrFail($respuesta);
 
         // La respuesta debe pertenecer a la actividad de la ruta.
         abort_unless(
-            $respuesta->inscripcion && (int) $respuesta->inscripcion->idActividad === (int) $idActividad,
+            $respuesta->inscripcion && (int) $respuesta->inscripcion->idActividad === (int) $id->idActividad,
             404
         );
 
