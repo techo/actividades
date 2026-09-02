@@ -60,11 +60,11 @@ class EnviarInvitacionActividad implements ShouldQueue
     const ROLES_JEFATURA = ['liderazgo_cuadrilla', 'liderazgo_escuela', 'liderazgo_trabajo'];
 
     /**
-     * Segmentos cuyo país relevante es el de la ACTIVIDAD (donde se ejerció el rol), no el
-     * de residencia de la persona. Quien lideró una cuadrilla en un país cuenta para ese
-     * país aunque resida en otro.
+     * Segmentos derivados de la participación, cuyo país relevante es el de la ACTIVIDAD
+     * (donde la persona se inscribió / asistió / ejerció el rol), no el de residencia.
+     * Quien participó en un país cuenta para ese país aunque resida en otro.
      */
-    const SEGMENTOS_PAIS_ACTIVIDAD = ['jefes_cuadrilla', 'jefaturas'];
+    const SEGMENTOS_PAIS_ACTIVIDAD = ['activos', 'frecuentes', 'jefes_cuadrilla', 'jefaturas'];
 
     /** Identificadores de segmento válidos (fuente única, la usa también el validator). */
     const SEGMENTOS = [
@@ -166,18 +166,20 @@ class EnviarInvitacionActividad implements ShouldQueue
                 });
                 break;
 
-            // Se inscribió a alguna actividad en la ventana reciente (engagement).
+            // Se inscribió a una actividad (de los países elegidos) en la ventana reciente.
             case 'activos':
-                $query->whereHas('inscripciones', function ($q) {
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
                     $q->where('fechaInscripcion', '>=', now()->subDays(self::DIAS_ACTIVIDAD_RECIENTE));
+                    self::inscripcionEnPaises($q, $idsPaises);
                 });
                 break;
 
-            // Asistió de verdad (presente=1) al menos MIN_PARTICIPACIONES veces.
-            // SoftDeletes de Inscripcion excluye borradas automáticamente.
+            // Asistió de verdad (presente=1) al menos MIN_PARTICIPACIONES veces a actividades
+            // de los países elegidos. SoftDeletes de Inscripcion excluye borradas.
             case 'frecuentes':
-                $query->whereHas('inscripciones', function ($q) {
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
                     $q->where('presente', 1);
+                    self::inscripcionEnPaises($q, $idsPaises);
                 }, '>=', self::MIN_PARTICIPACIONES);
                 break;
 
@@ -185,7 +187,8 @@ class EnviarInvitacionActividad implements ShouldQueue
             // de los países elegidos. El país se toma de la ACTIVIDAD, no de la residencia.
             case 'jefes_cuadrilla':
                 $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
-                    self::filtrarInscripcionJefatura($q, [self::ROL_JEFE_CUADRILLA], $idsPaises);
+                    $q->whereIn('rol', [self::ROL_JEFE_CUADRILLA]);
+                    self::inscripcionEnPaises($q, $idsPaises);
                 });
                 break;
 
@@ -193,7 +196,8 @@ class EnviarInvitacionActividad implements ShouldQueue
             // de los países elegidos. Superset del anterior; país tomado de la actividad.
             case 'jefaturas':
                 $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
-                    self::filtrarInscripcionJefatura($q, self::ROLES_JEFATURA, $idsPaises);
+                    $q->whereIn('rol', self::ROLES_JEFATURA);
+                    self::inscripcionEnPaises($q, $idsPaises);
                 });
                 break;
 
@@ -207,18 +211,17 @@ class EnviarInvitacionActividad implements ShouldQueue
     }
 
     /**
-     * Restringe una subquery de inscripciones a las que tienen un rol de jefatura dado y
-     * cuya ACTIVIDAD pertenece a los países elegidos. Ignora el scope de país ambiente
+     * Restringe una subquery de inscripciones a las que pertenecen a una ACTIVIDAD de los
+     * países elegidos (el país relevante para los segmentos de participación es el de la
+     * actividad, no la residencia de la persona). Ignora el scope de país ambiente
      * (BelongsToCountryScope) para que el criterio sea idéntico en el preview (con admin
      * autenticado en /admin) y en el job (sin auth): el país lo fija `idsPaises`.
      *
-     * @param  string[] $roles      roles de inscripción que califican como jefatura
-     * @param  int[]    $idsPaises  países (de la actividad) a los que se acota
+     * @param  int[] $idsPaises  países (de la actividad) a los que se acota
      */
-    private static function filtrarInscripcionJefatura(Builder $q, array $roles, array $idsPaises): void
+    private static function inscripcionEnPaises(Builder $q, array $idsPaises): void
     {
         $q->withoutGlobalScope(BelongsToCountryScope::class)
-            ->whereIn('rol', $roles)
             ->whereHas('actividad', function ($a) use ($idsPaises) {
                 $a->withoutGlobalScope(BelongsToCountryScope::class)
                     ->whereIn('idPais', $idsPaises);
