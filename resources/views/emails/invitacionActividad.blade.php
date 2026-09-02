@@ -6,8 +6,8 @@
         @lang('frontend.hello') {{ $persona->nombres }},
     </p>
 
-    {{-- Mensaje de texto libre del admin. pre-line respeta los saltos de línea. --}}
-    <p style="white-space: pre-line;">{{ $mensaje }}</p>
+    {{-- Cuerpo HTML compuesto por el admin en el editor enriquecido (TinyMCE). --}}
+    <div>{!! $mensaje !!}</div>
 
     <p>
         <strong>{{ $actividad->nombreActividad }}</strong> - TECHO - {{ $actividad->pais->nombre }}

@@ -23,22 +23,31 @@
             </div>
             <div class="box-body">
 
-                <!-- Canal de envío -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Canal</label>
-                            <div>
-                                <label class="radio-inline">
-                                    <input type="radio" value="push" v-model="canal" @change="onCanalChange"> Push (app)
-                                </label>
-                                <label class="radio-inline">
-                                    <input type="radio" value="email" v-model="canal" @change="onCanalChange"> Email
-                                </label>
-                                <label class="radio-inline text-muted">
-                                    <input type="radio" disabled> WhatsApp <small>(próximamente)</small>
-                                </label>
-                            </div>
+                <!-- Canal de envío (selección visual) -->
+                <div class="form-group">
+                    <label>Canal</label>
+                    <div class="canal-cards">
+                        <div class="canal-card"
+                             :class="{ 'is-selected': canal === 'push' }"
+                             @click="seleccionarCanal('push')">
+                            <i class="fa fa-bell canal-card__icon"></i>
+                            <div class="canal-card__titulo">Push</div>
+                            <div class="canal-card__desc">Notificación en la app</div>
+                        </div>
+
+                        <div class="canal-card"
+                             :class="{ 'is-selected': canal === 'email' }"
+                             @click="seleccionarCanal('email')">
+                            <i class="fa fa-envelope canal-card__icon"></i>
+                            <div class="canal-card__titulo">Email</div>
+                            <div class="canal-card__desc">Correo con formato e imágenes</div>
+                        </div>
+
+                        <div class="canal-card is-disabled">
+                            <span class="canal-card__badge">Próximamente</span>
+                            <i class="fa fa-whatsapp canal-card__icon"></i>
+                            <div class="canal-card__titulo">WhatsApp</div>
+                            <div class="canal-card__desc">Mensaje directo</div>
                         </div>
                     </div>
                 </div>
@@ -58,18 +67,18 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Países destino</label>
+                            <label>{{ multiPais ? 'Países destino' : 'País destino' }}</label>
                             <v-select
                                     multiple
                                     :options="paises"
                                     label="nombre"
-                                    placeholder="Seleccioná uno o más países"
+                                    :placeholder="multiPais ? 'Seleccioná uno o más países' : 'Seleccioná el país'"
                                     v-model="paisesSeleccionados"
                                     @input="onPaisesChange"
                             >
                                 <span slot="no-options"></span>
                             </v-select>
-                            <p class="help-block">Podés elegir varios (ej. Venezuela y Colombia).</p>
+                            <p class="help-block">{{ ayudaPaises }}</p>
                         </div>
                     </div>
 
@@ -129,13 +138,35 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Mensaje</label>
-                            <textarea class="form-control"
-                                      :rows="canal === 'email' ? 6 : 3"
-                                      :maxlength="maxMensaje"
-                                      v-model="mensaje"
-                                      @input="resetPreview"
-                                      placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
-                            <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }}</p>
+
+                            <!-- Push: texto plano y corto (límite de plataforma). -->
+                            <template v-if="canal === 'push'">
+                                <textarea class="form-control"
+                                          rows="3"
+                                          :maxlength="maxMensaje"
+                                          v-model="mensaje"
+                                          @input="resetPreview"
+                                          placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
+                                <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }} · Texto corto, sin formato (es una notificación).</p>
+                            </template>
+
+                            <!-- Email: texto enriquecido con formato e imágenes. -->
+                            <template v-else>
+                                <tinymce-editor
+                                        v-model="mensaje"
+                                        :init="{
+                                            menubar: false,
+                                            file_picker_callback: tiny_mce_filemanager_callback,
+                                            relative_urls: false,
+                                            resize: true,
+                                            height: 320,
+                                            branding: false,
+                                        }"
+                                        toolbar="undo redo | styleselect | bold italic | forecolor | alignleft aligncenter alignright | bullist numlist | link image | removeformat"
+                                        plugins="paste autoresize image preview link lists"
+                                ></tinymce-editor>
+                                <p class="help-block">Podés dar formato, agregar enlaces e imágenes. El correo se envía con el logo de TECHO y un botón a la actividad.</p>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -171,8 +202,19 @@
 </template>
 
 <script>
+    import editor from '@tinymce/tinymce-vue'
+    import 'tinymce/tinymce'
+    import 'tinymce/themes/silver/theme'
+    import 'tinymce/plugins/paste'
+    import 'tinymce/plugins/autoresize'
+    import 'tinymce/plugins/image'
+    import 'tinymce/plugins/preview'
+    import 'tinymce/plugins/link'
+    import 'tinymce/plugins/lists'
+
     export default {
         name: "invitacion-actividad-form",
+        components: { 'tinymce-editor': editor },
         data() {
             return {
                 paises: [],
@@ -191,6 +233,13 @@
         },
         created() {
             this.getPaises();
+        },
+        watch: {
+            // El editor de email (TinyMCE) actualiza `mensaje` por v-model, sin @input:
+            // cualquier cambio del mensaje invalida el preview previo.
+            mensaje() {
+                this.resetPreview();
+            },
         },
         computed: {
             tieneErrores() {
@@ -211,12 +260,26 @@
             idsPaises() {
                 return this.paisesSeleccionados.map(p => p.id);
             },
+            // El usuario puede alcanzar más de un país (admin multi-país / global).
+            // Si su alcance es un solo país, la pantalla se comporta en modo mono-país.
+            multiPais() {
+                return this.paises.length > 1;
+            },
+            ayudaPaises() {
+                if (this.paises.length === 0) return '';
+                if (this.paises.length === 1) {
+                    return 'Tu alcance es ' + this.paises[0].nombre + '. Solo podés enviar a ese país.';
+                }
+                return 'Podés elegir uno o varios países (tu alcance permite más de uno).';
+            },
             // Límites por canal: push es corto por la plataforma; email admite más.
             maxTitulo() {
                 return this.canal === 'email' ? 150 : 65;
             },
             maxMensaje() {
-                return this.canal === 'email' ? 2000 : 240;
+                // Email usa editor HTML (sin maxlength en el textarea); este tope solo
+                // aplica al textarea de push. Se mantiene alineado con el validador server.
+                return this.canal === 'email' ? 20000 : 240;
             },
             puedePrevisualizar() {
                 return this.idsPaises.length > 0 && this.segmento;
@@ -231,7 +294,14 @@
         methods: {
             getPaises() {
                 axios.get('/admin/ajax/comunicaciones/invitaciones/paises')
-                    .then((r) => { this.paises = r.data; })
+                    .then((r) => {
+                        this.paises = r.data;
+                        // Alcance de un solo país: se preselecciona (no hay nada que elegir).
+                        if (this.paises.length === 1) {
+                            this.paisesSeleccionados = [this.paises[0]];
+                            this.onPaisesChange();
+                        }
+                    })
                     .catch(() => {});
             },
             onPaisesChange() {
@@ -250,9 +320,33 @@
                 this.destinatarios = null;
                 this.enviado = false;
             },
-            onCanalChange() {
-                // El conteo depende del canal (distinto opt-in), así que se re-previsualiza.
+            seleccionarCanal(canal) {
+                if (this.canal === canal) return;
+                this.canal = canal;
+                // El conteo depende del canal (distinto opt-in) y el formato del mensaje
+                // cambia (push texto plano ↔ email HTML), así que se limpia el preview.
                 this.resetPreview();
+            },
+            tiny_mce_filemanager_callback(callback, value, meta) {
+                // Reusa el laravel-filemanager del backoffice (mismo patrón que actividad.vue):
+                // las imágenes quedan hosteadas y se referencian por URL en el email.
+                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+                let cmsURL = '/laravel-filemanager?editor=tinymce5&field_name=' + value;
+                if (meta.filetype == 'image') { cmsURL = cmsURL + "&type=Images"; }
+                else { cmsURL = cmsURL + "&type=Files"; }
+
+                tinyMCE.activeEditor.windowManager.openUrl({
+                    url: cmsURL,
+                    title: 'Administrador de archivos',
+                    width: x * 0.8,
+                    height: y * 0.8,
+                    resizable: "yes",
+                    close_previous: "no",
+                    onMessage: (api, message) => {
+                        callback(message.content);
+                    }
+                });
             },
             mostrarLoading() {
                 this.$refs.loading.openSimplert({
@@ -324,5 +418,63 @@
     }
     .fade-enter, .fade-leave-to {
         opacity: 0;
+    }
+
+    /* Selector de canal como cubos */
+    .canal-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .canal-card {
+        position: relative;
+        width: 150px;
+        padding: 16px 12px;
+        text-align: center;
+        border: 2px solid #d2d6de;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color .15s, box-shadow .15s, transform .05s;
+    }
+    .canal-card:hover:not(.is-disabled) {
+        border-color: #0092dd;
+    }
+    .canal-card.is-selected {
+        border-color: #0092dd;
+        box-shadow: 0 0 0 3px rgba(0, 146, 221, .15);
+    }
+    .canal-card.is-disabled {
+        cursor: not-allowed;
+        opacity: .55;
+        background: #f7f7f7;
+    }
+    .canal-card__icon {
+        font-size: 26px;
+        color: #0092dd;
+    }
+    .canal-card.is-disabled .canal-card__icon {
+        color: #999;
+    }
+    .canal-card__titulo {
+        margin-top: 8px;
+        font-weight: 700;
+    }
+    .canal-card__desc {
+        font-size: 12px;
+        color: #777;
+        margin-top: 2px;
+    }
+    .canal-card__badge {
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        background: #999;
+        color: #fff;
+        font-size: 10px;
+        line-height: 1;
+        padding: 3px 6px;
+        border-radius: 10px;
+        white-space: nowrap;
     }
 </style>

@@ -127,10 +127,12 @@ class InvitacionesController extends Controller
 
         if ($requiereActividad) {
             // Los límites de longitud dependen del canal: push es corto por la plataforma
-            // (65/240); email admite asunto y cuerpo más largos.
+            // (65/240); email admite asunto largo y cuerpo HTML enriquecido. El tope de
+            // 20000 deja margen holgado y entra en la columna `text` (65535 bytes) aun con
+            // UTF-8 multibyte; las imágenes van por URL (filemanager), no embebidas.
             $esEmail    = $request->input('canal') === EnviarInvitacionActividad::CANAL_EMAIL;
             $maxTitulo  = $esEmail ? 150 : 65;
-            $maxMensaje = $esEmail ? 2000 : 240;
+            $maxMensaje = $esEmail ? 20000 : 240;
 
             $reglas['idActividad'] = 'required|integer';
             $reglas['titulo']      = 'required|string|max:' . $maxTitulo;
