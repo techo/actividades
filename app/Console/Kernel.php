@@ -34,6 +34,14 @@ class Kernel extends ConsoleKernel
         // Red de seguridad para donaciones (PIX): sincroniza pending contra Stripe
         // por si un webhook se pierde. Idempotente; ->withoutOverlapping por las dudas.
         $schedule->command('donations:reconcile --commit')->hourly()->withoutOverlapping();
+
+        // Recicla el worker de colas cada 30 min. El worker de larga vida reusa una
+        // única conexión SMTP a Gmail que Google cierra tras un rato, y el próximo
+        // envío falla con "fwrite(): SSL operation failed" (~175 mails/día a dead-letter,
+        // sep-2026). queue:restart hace que el worker termine el job actual y salga;
+        // Supervisor (autorestart=true) lo relanza con una conexión SMTP fresca.
+        // No necesita cron/sudo aparte: viaja con este scheduler ya instalado en prod.
+        $schedule->command('queue:restart')->everyThirtyMinutes();
     }
 
     /**
