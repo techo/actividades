@@ -70,7 +70,9 @@ class InvitacionesController extends Controller
     {
         $data = $this->validar($request, false);
 
-        $destinatarios = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'])->count();
+        $destinatarios = EnviarInvitacionActividad::segmento(
+            $data['idsPaises'], $data['segmento'], $data['canal']
+        )->count();
 
         return response()->json(['destinatarios' => $destinatarios]);
     }
@@ -89,7 +91,9 @@ class InvitacionesController extends Controller
             abort(404);
         }
 
-        $destinatarios = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'])->count();
+        $destinatarios = EnviarInvitacionActividad::segmento(
+            $data['idsPaises'], $data['segmento'], $data['canal']
+        )->count();
 
         EnviarInvitacionActividad::dispatch(
             (int) $data['idActividad'],
@@ -97,7 +101,8 @@ class InvitacionesController extends Controller
             $data['segmento'],
             $data['titulo'],
             $data['mensaje'],
-            auth()->user()->idPersona
+            auth()->user()->idPersona,
+            $data['canal']
         );
 
         return response()->json([
@@ -116,13 +121,20 @@ class InvitacionesController extends Controller
         $reglas = [
             'idsPaises'   => 'required|array|min:1',
             'idsPaises.*' => 'integer',
+            'canal'       => 'required|in:' . implode(',', EnviarInvitacionActividad::CANALES),
             'segmento'    => 'required|in:' . implode(',', EnviarInvitacionActividad::SEGMENTOS),
         ];
 
         if ($requiereActividad) {
+            // Los límites de longitud dependen del canal: push es corto por la plataforma
+            // (65/240); email admite asunto y cuerpo más largos.
+            $esEmail    = $request->input('canal') === EnviarInvitacionActividad::CANAL_EMAIL;
+            $maxTitulo  = $esEmail ? 150 : 65;
+            $maxMensaje = $esEmail ? 2000 : 240;
+
             $reglas['idActividad'] = 'required|integer';
-            $reglas['titulo']      = 'required|string|max:65';
-            $reglas['mensaje']     = 'required|string|max:240';
+            $reglas['titulo']      = 'required|string|max:' . $maxTitulo;
+            $reglas['mensaje']     = 'required|string|max:' . $maxMensaje;
         }
 
         $data = $request->validate($reglas);

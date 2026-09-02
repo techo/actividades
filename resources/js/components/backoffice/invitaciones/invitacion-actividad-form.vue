@@ -6,7 +6,7 @@
         <div v-show="enviado" class="callout callout-success">
             <h4>Invitación enviada</h4>
             <p>Se despachó la invitación a {{ enviadoA }} persona(s). La entrega respeta
-               a quienes desactivaron las notificaciones push.</p>
+               a quienes se dieron de baja de este canal.</p>
         </div>
 
         <!-- Errores de validación -->
@@ -23,11 +23,35 @@
             </div>
             <div class="box-body">
 
+                <!-- Canal de envío -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Canal</label>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" value="push" v-model="canal" @change="onCanalChange"> Push (app)
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="email" v-model="canal" @change="onCanalChange"> Email
+                                </label>
+                                <label class="radio-inline text-muted">
+                                    <input type="radio" disabled> WhatsApp <small>(próximamente)</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Aviso de privacidad -->
                 <div class="callout callout-info">
-                    <p style="margin-bottom:0">
+                    <p style="margin-bottom:0" v-if="canal === 'push'">
                         Esta invitación se envía <strong>dentro de la app</strong> (push) a quienes
                         aceptaron recibir notificaciones. No exporta ni comparte datos de contacto.
+                    </p>
+                    <p style="margin-bottom:0" v-else>
+                        Esta invitación se envía por <strong>email</strong> a quienes aceptaron recibir
+                        correos. No exporta ni comparte datos de contacto.
                     </p>
                 </div>
 
@@ -57,6 +81,8 @@
                                 <option value="coordinadores_gestion">Coordinadores de actividad / equipo / comunidad</option>
                                 <option value="activos">Voluntarios activos (últimos 90 días)</option>
                                 <option value="frecuentes">Voluntarios frecuentes (3+ participaciones)</option>
+                                <option value="jefes_cuadrilla">Jefes de cuadrilla</option>
+                                <option value="jefaturas">Jefaturas / liderazgos</option>
                                 <option value="todos">Todos los voluntarios</option>
                             </select>
                             <p class="help-block">{{ ayudaSegmento }}</p>
@@ -87,14 +113,14 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Título</label>
+                            <label>{{ canal === 'email' ? 'Asunto' : 'Título' }}</label>
                             <input type="text"
                                    class="form-control"
-                                   maxlength="65"
+                                   :maxlength="maxTitulo"
                                    v-model="titulo"
                                    @input="resetPreview"
                                    placeholder="Ej.: Sumate a la respuesta a la emergencia">
-                            <p class="help-block">{{ titulo.length }}/65</p>
+                            <p class="help-block">{{ titulo.length }}/{{ maxTitulo }}</p>
                         </div>
                     </div>
                 </div>
@@ -104,12 +130,12 @@
                         <div class="form-group">
                             <label>Mensaje</label>
                             <textarea class="form-control"
-                                      rows="3"
-                                      maxlength="240"
+                                      :rows="canal === 'email' ? 6 : 3"
+                                      :maxlength="maxMensaje"
                                       v-model="mensaje"
                                       @input="resetPreview"
                                       placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
-                            <p class="help-block">{{ mensaje.length }}/240</p>
+                            <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }}</p>
                         </div>
                     </div>
                 </div>
@@ -135,7 +161,7 @@
                         </template>
                         <template v-else>
                             <h4>No hay destinatarios con este criterio</h4>
-                            <p>Nadie en los países/segmento elegidos tiene push activadas. Ajustá la selección.</p>
+                            <p>Nadie en los países/segmento elegidos puede recibir por este canal. Ajustá la selección.</p>
                         </template>
                     </div>
                 </transition>
@@ -154,6 +180,7 @@
                 paisesSeleccionados: [],
                 actividadSeleccionada: null,
                 segmento: 'coordinadores',
+                canal: 'push',
                 titulo: '',
                 mensaje: '',
                 destinatarios: null,   // null = todavía no previsualizó
@@ -175,12 +202,21 @@
                     coordinadores_gestion: 'Quienes coordinan al menos una actividad, equipo o comunidad (membresía real, distinta del rol global).',
                     activos: 'Voluntarios que se inscribieron a alguna actividad en los últimos 90 días.',
                     frecuentes: 'Voluntarios con 3 o más participaciones con asistencia confirmada.',
+                    jefes_cuadrilla: 'Voluntarios que tuvieron el rol de jefe de cuadrilla en alguna actividad.',
+                    jefaturas: 'Voluntarios que tuvieron alguna jefatura o liderazgo (cuadrilla, escuela o trabajo) en alguna actividad.',
                     todos: 'Todos los voluntarios de los países elegidos.',
                 };
                 return ayudas[this.segmento] || '';
             },
             idsPaises() {
                 return this.paisesSeleccionados.map(p => p.id);
+            },
+            // Límites por canal: push es corto por la plataforma; email admite más.
+            maxTitulo() {
+                return this.canal === 'email' ? 150 : 65;
+            },
+            maxMensaje() {
+                return this.canal === 'email' ? 2000 : 240;
             },
             puedePrevisualizar() {
                 return this.idsPaises.length > 0 && this.segmento;
@@ -214,6 +250,10 @@
                 this.destinatarios = null;
                 this.enviado = false;
             },
+            onCanalChange() {
+                // El conteo depende del canal (distinto opt-in), así que se re-previsualiza.
+                this.resetPreview();
+            },
             mostrarLoading() {
                 this.$refs.loading.openSimplert({
                     title: 'Espera...',
@@ -234,6 +274,7 @@
                 axios.post('/admin/ajax/comunicaciones/invitaciones/preview', {
                     idsPaises: this.idsPaises,
                     segmento: this.segmento,
+                    canal: this.canal,
                 })
                     .then((r) => {
                         this.destinatarios = r.data.destinatarios;
@@ -253,6 +294,7 @@
                     idActividad: this.actividadSeleccionada.idActividad,
                     idsPaises: this.idsPaises,
                     segmento: this.segmento,
+                    canal: this.canal,
                     titulo: this.titulo,
                     mensaje: this.mensaje,
                 })
