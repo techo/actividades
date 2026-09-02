@@ -610,6 +610,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/comunicaciones/invitaciones', 'backoffice\InvitacionesController@index')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/paises', 'backoffice\ajax\InvitacionesController@paises')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/actividades', 'backoffice\ajax\InvitacionesController@actividades')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/invitaciones/campanas', 'backoffice\ajax\InvitacionesController@campanas')->middleware('permission:enviar_comunicaciones');
     Route::post('/ajax/comunicaciones/invitaciones/preview', 'backoffice\ajax\InvitacionesController@preview')->middleware('permission:enviar_comunicaciones');
     Route::post('/ajax/comunicaciones/invitaciones/enviar', 'backoffice\ajax\InvitacionesController@enviar')->middleware('permission:enviar_comunicaciones');
 

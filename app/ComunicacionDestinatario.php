@@ -15,6 +15,7 @@ class ComunicacionDestinatario extends Model
     protected $fillable = [
         'comunicacion_id',
         'idPersona',
+        'suscripcion_id',
         'estado',
     ];
 
@@ -26,8 +27,15 @@ class ComunicacionDestinatario extends Model
         return $this->belongsTo(Comunicacion::class, 'comunicacion_id');
     }
 
+    /** Destinatario voluntario (con cuenta). Null si es un suscripto/lead de campaña. */
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
+
+    /** Destinatario suscripto/lead de campaña (sin cuenta). Null si es una Persona. */
+    public function suscripcion()
+    {
+        return $this->belongsTo(Suscribe::class, 'suscripcion_id');
     }
 }

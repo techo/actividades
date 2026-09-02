@@ -30,6 +30,13 @@
                 </tr>
             </table>
         </td>
-        <td width="25%"><a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}">@lang('email.unsuscribe')</a></td>
+        <td width="25%">
+            {{-- El link de baja depende de una Persona con token. Algunos envíos (p.ej.
+                 comunicaciones a leads de campaña sin cuenta) no tienen Persona; en ese
+                 caso no se muestra el link en vez de romper el render del mail. --}}
+            @if(!empty($persona) && !empty($persona->unsubscribe_token))
+                <a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}">@lang('email.unsuscribe')</a>
+            @endif
+        </td>
     </tr>
 </table>
