@@ -4,6 +4,7 @@ namespace App\Search;
 
 
 use App\Persona;
+use App\Scopes\BelongsToCountryScope;
 use App\Search\filters\inscripciones\CantidadActividades;
 use App\Search\filters\inscripciones\IdActividad;
 use App\Services\Listados\Filtros\FiltroGenerico;
@@ -67,7 +68,14 @@ class InscripcionesSearch
 
     private static function newQuery(){
 
-        $query = (new Persona)->newQuery();
+        // Este listado siempre está acotado a UNA actividad (filtro IdActividad) y la
+        // actividad ya está gateada por país en la ruta (policy verInscripciones). Por
+        // eso NO debe volver a filtrar por el `idPaisPermitido` del que mira aplicado a
+        // cada Persona: eso ocultaba a inscriptos cuya Persona tiene un idPais distinto
+        // (p. ej. registrados bajo otro contexto de país), haciéndolos "desaparecer" del
+        // listado aunque estén realmente inscriptos. Se quita solo el scope de país; el
+        // de SoftDeletes de Persona se mantiene.
+        $query = Persona::withoutGlobalScope(BelongsToCountryScope::class);
         $query->join('Inscripcion', 'Persona.idPersona', '=', 'Inscripcion.idPersona')
             ->leftJoin('Persona as PersonaModificacion', 'PersonaModificacion.idPersona', '=', 'Inscripcion.idPersonaModificacion')
             ->join('Actividad', 'Inscripcion.idActividad', '=', 'Actividad.idActividad')

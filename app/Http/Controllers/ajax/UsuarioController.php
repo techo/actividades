@@ -342,9 +342,25 @@ class UsuarioController extends BaseController
 
     public function getPersonas(Request $request)
     {
+        $termino = trim($request->q ?? '');
+
+        // Escape hatch por email exacto: si el coordinador escribe un mail completo,
+        // conoce a la persona puntual y necesita poder inscribirla aunque su `idPais`
+        // no coincida con el suyo (voluntarios registrados bajo otro contexto de país
+        // por la costura multi-país). Solo el match por email exacto ignora el país;
+        // las búsquedas por nombre mantienen el aislamiento por país.
+        if (filter_var($termino, FILTER_VALIDATE_EMAIL)) {
+            $personas = Persona::withoutGlobalScope(\App\Scopes\BelongsToCountryScope::class)
+                ->where('mail', $termino)
+                ->take(25)
+                ->get();
+
+            return CoordinadorResource::collection($personas);
+        }
+
         $query = (new Persona)->newQuery();
 
-        $palabras = explode(' ', $request->q);
+        $palabras = explode(' ', $termino);
 
         foreach ($palabras as $palabra) {
           // Parámetro bindeado (?): no concatenar input en SQL.
