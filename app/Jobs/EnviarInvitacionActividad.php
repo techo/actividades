@@ -124,23 +124,28 @@ class EnviarInvitacionActividad implements ShouldQueue
      * @param  int[]  $idsPaises
      * @param  string $segmento  'coordinadores' | 'todos'
      * @param  string $canal     'push' (opt-in recibir_push + dispositivo) | 'email' (recibirMails + mail)
+     * @param  bool   $conOptIn  true = solo alcanzables por el canal; false = tamaño total del
+     *                           segmento (ignora el opt-in). Lo usa el preview para mostrar
+     *                           "llega a N de M" y cuántos no pueden recibir por el canal.
      */
-    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH): Builder
+    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH, bool $conOptIn = true): Builder
     {
         $query = Persona::query();
 
-        // Opt-in por canal (siempre):
+        // Opt-in por canal (se puede omitir para contar el segmento completo):
         //  - push: recibir_push + al menos un dispositivo activo.
         //  - email: recibirMails + tiene mail cargado.
-        if ($canal === self::CANAL_EMAIL) {
-            $query->where('recibirMails', true)
-                ->whereNotNull('mail')
-                ->where('mail', '<>', '');
-        } else {
-            $query->where('recibir_push', true)
-                ->whereHas('dispositivos', function ($q) {
-                    $q->where('activo', true);
-                });
+        if ($conOptIn) {
+            if ($canal === self::CANAL_EMAIL) {
+                $query->where('recibirMails', true)
+                    ->whereNotNull('mail')
+                    ->where('mail', '<>', '');
+            } else {
+                $query->where('recibir_push', true)
+                    ->whereHas('dispositivos', function ($q) {
+                        $q->where('activo', true);
+                    });
+            }
         }
 
         // País por RESIDENCIA para la mayoría de los segmentos. Los de jefatura son la

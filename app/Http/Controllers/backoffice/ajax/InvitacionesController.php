@@ -70,11 +70,21 @@ class InvitacionesController extends Controller
     {
         $data = $this->validar($request, false);
 
-        $destinatarios = EnviarInvitacionActividad::segmento(
+        // Alcanzables por el canal (respetan el opt-in) y tamaño total del segmento
+        // (ignora el opt-in). La diferencia son quienes no pueden recibir por este canal.
+        $alcanzables = EnviarInvitacionActividad::segmento(
             $data['idsPaises'], $data['segmento'], $data['canal']
         )->count();
 
-        return response()->json(['destinatarios' => $destinatarios]);
+        $total = EnviarInvitacionActividad::segmento(
+            $data['idsPaises'], $data['segmento'], $data['canal'], false
+        )->count();
+
+        return response()->json([
+            'destinatarios' => $alcanzables,          // alcanzables por el canal (compat)
+            'total'         => $total,                // tamaño del segmento
+            'sin_canal'     => max(0, $total - $alcanzables),
+        ]);
     }
 
     /**

@@ -184,15 +184,27 @@
                          :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
                          style="margin-top:15px">
                         <template v-if="destinatarios > 0">
-                            <h4>Esta invitación va a llegar a {{ destinatarios }} persona(s)</h4>
-                            <p>Revisá el título y el mensaje. Al confirmar, se despacha el envío.</p>
+                            <h4>Llega a {{ destinatarios }} de {{ totalSegmento }} persona(s) del segmento</h4>
+                            <p v-if="sinCanal > 0">
+                                {{ sinCanal }} {{ sinCanal === 1 ? 'persona no puede' : 'personas no pueden' }}
+                                recibir por {{ canalLabel }}
+                                ({{ canal === 'push'
+                                    ? 'tienen las notificaciones apagadas o no registraron un dispositivo'
+                                    : 'no tienen email o se dieron de baja de los correos' }}).
+                                <template v-if="canal === 'push'"> Con <strong>Email</strong> quizás llegues a más.</template>
+                            </p>
+                            <p>Revisá el {{ canal === 'email' ? 'asunto' : 'título' }} y el mensaje. Al confirmar, se despacha el envío.</p>
                             <button class="btn btn-primary" @click="enviar">
                                 <i class="fa fa-paper-plane"></i> Confirmar y enviar
                             </button>
                         </template>
                         <template v-else>
-                            <h4>No hay destinatarios con este criterio</h4>
-                            <p>Nadie en los países/segmento elegidos puede recibir por este canal. Ajustá la selección.</p>
+                            <h4>Nadie puede recibir por {{ canalLabel }} con este criterio</h4>
+                            <p v-if="totalSegmento > 0">
+                                Hay {{ totalSegmento }} persona(s) en el segmento, pero ninguna puede recibir por {{ canalLabel }}.
+                                <template v-if="canal === 'push'"> Probá con <strong>Email</strong>.</template>
+                            </p>
+                            <p v-else>No hay personas en los países/segmento elegidos. Ajustá la selección.</p>
                         </template>
                     </div>
                 </transition>
@@ -225,7 +237,9 @@
                 canal: 'push',
                 titulo: '',
                 mensaje: '',
-                destinatarios: null,   // null = todavía no previsualizó
+                destinatarios: null,   // null = todavía no previsualizó (alcanzables por el canal)
+                totalSegmento: null,   // tamaño total del segmento (ignora el opt-in)
+                sinCanal: 0,           // cuántos no pueden recibir por el canal elegido
                 enviado: false,
                 enviadoA: 0,
                 validationErrors: {},
@@ -271,6 +285,9 @@
                     return 'Tu alcance es ' + this.paises[0].nombre + '. Solo podés enviar a ese país.';
                 }
                 return 'Podés elegir uno o varios países (tu alcance permite más de uno).';
+            },
+            canalLabel() {
+                return this.canal === 'email' ? 'email' : 'push';
             },
             // Límites por canal: push es corto por la plataforma; email admite más.
             maxTitulo() {
@@ -318,6 +335,8 @@
             },
             resetPreview() {
                 this.destinatarios = null;
+                this.totalSegmento = null;
+                this.sinCanal = 0;
                 this.enviado = false;
             },
             seleccionarCanal(canal) {
@@ -372,6 +391,8 @@
                 })
                     .then((r) => {
                         this.destinatarios = r.data.destinatarios;
+                        this.totalSegmento = r.data.total;
+                        this.sinCanal = r.data.sin_canal;
                         this.ocultarLoading();
                     })
                     .catch((error) => this.manejarError(error));
