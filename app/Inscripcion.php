@@ -62,6 +62,13 @@ class Inscripcion extends Model
         });
 
         static::deleting(function ($inscripcion) {
+            // Trazabilidad de la baja: el soft-delete NO dispara `saving`, así que
+            // `idPersonaModificacion` queda con el último que EDITÓ la fila, no con
+            // quien la dio de baja. Registramos la baja en auditoría con el usuario
+            // autenticado actual (coordinador o el propio voluntario) para que una
+            // desinscripción sea siempre rastreable.
+            Auditoria::crear($inscripcion);
+
             //borrar registros de grupos
             GrupoRolPersona::where('idPersona', '=', $inscripcion->persona->idPersona)
                 ->where('idActividad', '=', $inscripcion->actividad->idActividad)

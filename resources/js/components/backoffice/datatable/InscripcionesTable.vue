@@ -132,6 +132,16 @@ export default {
     onPaginationData (paginationData) {
       this.$refs.pagination.setPaginationData(paginationData);
       this.$refs.paginationInfo.setPaginationData(paginationData);
+      // La selección (selectedTo de vuetable-2) persiste entre páginas, filtros y
+      // acciones masivas. Si no se limpia al recargar datos, se ACUMULA y una
+      // desinscripción posterior arrastra inscripciones que el usuario ya no ve
+      // (causa raíz del bug de desinscripción "aleatoria"). onPaginationData se
+      // dispara en cada recarga (carga inicial, cambio de página, filtro y el
+      // refresh() que hace cada acción masiva), así que reseteamos acá la selección.
+      var vt = this.$refs.inscripcionesVuetable;
+      if (vt) { vt.selectedTo = []; }
+      // Mantener sincronizado el contador de la toolbar / modal de desinscribir.
+      Event.$emit('checkbox-toggled', { status: false, count: 0 });
     },
     onChangePage (page) {
       this.$refs.inscripcionesVuetable.changePage(page)

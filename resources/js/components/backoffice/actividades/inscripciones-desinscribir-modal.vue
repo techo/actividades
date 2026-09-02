@@ -8,6 +8,9 @@
                     <h4 class="modal-title">{{ $t('backend.unsubscribe') }}</h4>
                 </div>
                 <div class="modal-body">
+                    <p v-if="count > 0" class="text-danger">
+                        <strong>{{ count }}</strong>
+                    </p>
                     <p>{{ $t('backend.selected_registrations_will_be_deleted_from_this_activity_are_you_sure') }}</p>
                 </div>
                 <div class="modal-footer">
@@ -26,15 +29,22 @@
         name: "inscripciones-desinscribir-modal",
         data(){
             return {
-                confirmacion: 0
+                confirmacion: 0,
+                count: 0
             }
         },
         created(){
             Event.$on('show-desinscribir-modal', this.mostrarModal);
+            // Contador de seleccionados (mismo evento que alimenta la toolbar), para
+            // no confirmar la baja a ciegas.
+            Event.$on('checkbox-toggled', this.actualizarConteo);
         },
         methods: {
             mostrarModal: function () {
                 $('#desinscribir-modal').modal('show');
+            },
+            actualizarConteo: function (info) {
+                this.count = (info && typeof info.count === 'number') ? info.count : 0;
             },
             confirmar: function () {
                 $('#desinscribir-modal').modal('hide');

@@ -145,15 +145,34 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al eliminar la inscripción', 500);
     }
 
-    public function desinscribir(CrearInscripcion $request)
+    public function desinscribir(CrearInscripcion $request, $id)
     {
-        foreach ($request->inscripciones as $idInscripcion)
-        {
-            Inscripcion::findOrFail($idInscripcion)->delete();
+        $ids = collect($request->inscripciones)
+            ->map(function ($v) { return (int) $v; })
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Solo se borran inscripciones que REALMENTE pertenecen a esta actividad.
+        // El front (selectedTo de vuetable-2) arrastra selección entre páginas,
+        // filtros y otras acciones masivas; sin este cerco, un id colado borraba
+        // la inscripción de un tercero de otra actividad (bug de desinscripción
+        // "aleatoria"). Además, el hook `deleting` de Inscripcion audita cada baja.
+        $inscripciones = Inscripcion::where('idActividad', $id)
+            ->whereIn('idInscripcion', $ids)
+            ->get();
+
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->delete();
         }
 
-        return response()
-            ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
+        $descartadas = $ids->count() - $inscripciones->count();
+        $msg = $inscripciones->count() . " inscripciones eliminadas.";
+        if ($descartadas > 0) {
+            $msg .= " ({$descartadas} ignoradas por no pertenecer a la actividad)";
+        }
+
+        return response()->json($msg, 200);
     }
 
     public function asignarRol(CrearInscripcion $request)
