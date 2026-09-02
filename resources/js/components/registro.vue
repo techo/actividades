@@ -442,6 +442,12 @@
             invalido: false
           }
         }
+        // Precargar el país del contexto (de dónde viene el usuario: config('app.pais')
+        // resuelto por SeleccionarPais). Queda como default del selector; el usuario
+        // puede cambiarlo. El watcher de user.pais dispara la carga de provincias.
+        if(this.paisActual) {
+          data.user.pais = Number(this.paisActual);
+        }
         if(data.user.facebook_id || data.user.google_id) {
           data.paso_actual = 'personales'
           data.volver = false
@@ -451,9 +457,14 @@
       	}
         return data
       },
-      props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear'],
+      props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear','paisActual'],
       mounted: function(){
         this.traer_paises();
+        // Si el país viene precargado del contexto, cargar sus provincias: el watcher
+        // de user.pais no dispara para el valor inicial (no es immediate).
+        if(this.user.pais) {
+          this.traer_provincias();
+        }
         this.removeUndefinedText();
       },
       watch: {
