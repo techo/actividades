@@ -709,6 +709,9 @@ Route::get('/autotest', 'PerfilController@quiz_techero');
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
     Route::get('/suscribe', 'SuscribeController@get');
     Route::post('/suscribe', 'SuscribeController@create');
+    // Submit de una campaña: el campaign_id viaja en la URL y lo fija el servidor,
+    // para que una captación nunca quede sin campaña (campaign_id NULL).
+    Route::post('/campania/{id}/suscribe', 'SuscribeController@create');
     // Upload de archivo de una respuesta a pregunta tipo 'archivo' (campaña).
     // Público, igual que el submit de suscripción anónima; con throttle porque
     // no exige autenticación.

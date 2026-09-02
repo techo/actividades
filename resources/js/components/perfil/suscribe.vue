@@ -10,6 +10,12 @@
                 {{ $t('suscribe.already_registered') }}
             </div>
 
+            <!-- Error de envío: ya no se traga en silencio -->
+            <div v-if="errorEnvio" class="alert alert-danger text-center mt-4 p-4">
+                <i class="fa fa-exclamation-triangle"></i>
+                {{ errorMensaje || ($te('suscribe.submit_error') ? $t('suscribe.submit_error') : 'Ocurrió un error al enviar. Por favor, intentá de nuevo.') }}
+            </div>
+
             <!-- REQ 5 — Formulario + mensaje de agradecimiento -->
             <div v-if="!guardado && !yaInscripto">
 
@@ -385,6 +391,8 @@ export default {
             telefonoPaisIso:   null,
             guardado:          false,
             yaInscripto:       false,
+            errorEnvio:        false,
+            errorMensaje:      '',
             emailExiste:       false,
             enviando:          false,
             errores:           {},
@@ -566,17 +574,32 @@ export default {
                 respuestas: respuestasArray,
             });
 
-            const postUrl = this.pais ? ('/' + this.pais.abreviacion + '/suscribe') : '/suscribe';
+            // Si es una campaña, el submit va por la ruta que lleva el id en la URL:
+            // así el campaign_id lo fija el servidor y no puede perderse (evita filas
+            // de captación con campaign_id NULL). El /suscribe genérico queda para la
+            // suscripción legacy sin campaña.
+            const base = this.pais ? ('/' + this.pais.abreviacion) : '';
+            const postUrl = this.campaign
+                ? (base + '/campania/' + this.campaign.id + '/suscribe')
+                : (base + '/suscribe');
+
+            this.errorEnvio = false;
 
             axios.post(postUrl, payload)
                 .then(function() {
                     this.guardado = true;
                 }.bind(this))
                 .catch(function(error) {
+                    var resp = error.response;
                     // REQ 4 — Manejar duplicado
-                    if (error.response && error.response.status === 422
-                        && error.response.data && error.response.data.already_registered) {
+                    if (resp && resp.status === 422 && resp.data && resp.data.already_registered) {
                         this.yaInscripto = true;
+                    } else {
+                        // Cualquier otro error (validación, red, 5xx) ya NO se traga en
+                        // silencio: el usuario ve que el envío falló y puede reintentar.
+                        this.errorEnvio = true;
+                        this.errorMensaje = (resp && resp.data && resp.data.message)
+                            ? resp.data.message : '';
                     }
                 }.bind(this))
                 .finally(function() {

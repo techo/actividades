@@ -59,6 +59,7 @@ return [
     'additional_questions'  => 'Perguntas adicionais',
     'select_option'         => 'Selecione uma opção',
     'already_registered'    => 'Você já está inscrito/a nesta campanha.',
+    'submit_error'         => 'Ocorreu um erro ao enviar. Por favor, tente novamente.',
     'missing_required'      => 'Por favor responda todas as perguntas obrigatórias.',
     'user_exists_warning'   => 'Este e-mail já pertence a um usuário registrado. Você pode fazer login para se inscrever mais facilmente.',
     'logged_in_as'          => 'Inscrevendo-se como',
