@@ -219,44 +219,73 @@ class InvitacionesController extends Controller
     {
         $data = $this->validar($request, false);
 
-        // Alcanzables por el canal/audiencia y tamaño total (ignorando el opt-in). La
-        // diferencia son quienes no pueden recibir por este canal.
-        list($alcanzables, $total) = $this->contar($data);
+        // total = tamaño de la audiencia (ignora opt-in); por_canal = alcanzables por cada
+        // canal elegido. destinatarios = suma de envíos (una persona alcanzable por 2 canales
+        // recibe 2). Así el cálculo queda discriminado por canal.
+        list($total, $porCanal) = $this->contar($data);
+        $resumen = $this->porCanalResumen($total, $porCanal);
 
         return response()->json([
-            'destinatarios' => $alcanzables,          // alcanzables (compat)
-            'total'         => $total,                // tamaño total de la audiencia
-            'sin_canal'     => max(0, $total - $alcanzables),
+            'total'         => $total,
+            'por_canal'     => $resumen,
+            'destinatarios' => array_sum(array_values($porCanal)),
         ]);
     }
 
     /**
-     * Cuenta [alcanzables, total] según el objetivo y la audiencia elegidos.
-     *  - actividad: segmento de voluntarios por el canal (push/email).
-     *  - campaña + audiencia 'segmento': segmento de voluntarios por email.
-     *  - campaña + audiencia 'suscriptos': leads de la campaña con mail (alcanzables) vs todos.
+     * Cuenta [total, alcanzablesPorCanal] según el objetivo y la audiencia elegidos.
+     * `total` es el tamaño de la audiencia ignorando el opt-in (único, no depende del canal);
+     * `alcanzablesPorCanal` es un mapa canal => cuántos pueden recibir por ese canal.
+     *  - actividad: por cada canal elegido (push/email), distinto opt-in.
+     *  - campaña + segmento: voluntarios del segmento por email.
+     *  - campaña + suscriptos: leads de la campaña con mail vs todos.
      */
     private function contar(array $data): array
     {
         if ($data['objetivo'] === 'campania') {
+            $canal = EnviarInvitacionActividad::CANAL_EMAIL;
+
             if ($data['audiencia'] === EnviarComunicacionCampania::AUDIENCIA_SEGMENTO) {
-                $canal       = EnviarInvitacionActividad::CANAL_EMAIL;
-                $alcanzables = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal)->count();
-                $total       = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, false)->count();
-                return [$alcanzables, $total];
+                $total = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, false)->count();
+                $alc   = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal)->count();
+                return [$total, [$canal => $alc]];
             }
 
             // Suscriptos de la campaña: alcanzables = con mail; total = todos los suscriptos.
-            $idCampania  = (int) $data['idCampania'];
-            $alcanzables = EnviarComunicacionCampania::suscriptosAlcanzables($idCampania)->count();
-            $total       = Suscribe::where('campaign_id', $idCampania)->count();
-            return [$alcanzables, $total];
+            $idCampania = (int) $data['idCampania'];
+            $total = Suscribe::where('campaign_id', $idCampania)->count();
+            $alc   = EnviarComunicacionCampania::suscriptosAlcanzables($idCampania)->count();
+            return [$total, [$canal => $alc]];
         }
 
-        // Objetivo actividad: segmento por el canal elegido.
-        $alcanzables = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $data['canal'])->count();
-        $total       = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $data['canal'], false)->count();
-        return [$alcanzables, $total];
+        // Actividad: el total (ignora opt-in) es único; alcanzables por cada canal elegido.
+        $total = EnviarInvitacionActividad::segmento(
+            $data['idsPaises'], $data['segmento'], EnviarInvitacionActividad::CANAL_EMAIL, false
+        )->count();
+
+        $porCanal = [];
+        foreach ($data['canales'] as $canal) {
+            $porCanal[$canal] = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal)->count();
+        }
+
+        return [$total, $porCanal];
+    }
+
+    /** Convierte el mapa canal=>alcanzables a la lista para el front, con sin_canal. */
+    private function porCanalResumen(int $total, array $porCanal): array
+    {
+        $out = [];
+        foreach ($porCanal as $canal => $alc) {
+            $out[] = ['canal' => $canal, 'alcanzables' => $alc, 'sin_canal' => max(0, $total - $alc)];
+        }
+        return $out;
+    }
+
+    /** Versión de texto plano de un mensaje (posible HTML) para push, recortada. */
+    private function aTextoPlano(string $mensaje, int $max): string
+    {
+        $plano = trim(preg_replace('/\s+/', ' ', strip_tags($mensaje)));
+        return mb_substr($plano, 0, $max);
     }
 
     /**
@@ -266,7 +295,9 @@ class InvitacionesController extends Controller
     {
         $data = $this->validar($request, true);
 
-        list($destinatarios) = $this->contar($data);
+        list($total, $porCanal) = $this->contar($data);
+        $resumen = $this->porCanalResumen($total, $porCanal);
+        $destinatarios = array_sum(array_values($porCanal));
 
         if ($data['objetivo'] === 'campania') {
             // La campaña debe existir y pertenecer a un país autorizado.
@@ -285,7 +316,7 @@ class InvitacionesController extends Controller
                 auth()->user()->idPersona
             );
 
-            return response()->json(['ok' => true, 'destinatarios' => $destinatarios]);
+            return response()->json(['ok' => true, 'destinatarios' => $destinatarios, 'por_canal' => $resumen]);
         }
 
         // Objetivo actividad: la actividad debe existir y ser visible para el admin (el
@@ -295,17 +326,25 @@ class InvitacionesController extends Controller
             abort(404);
         }
 
-        EnviarInvitacionActividad::dispatch(
-            (int) $data['idActividad'],
-            $data['idsPaises'],
-            $data['segmento'],
-            $data['titulo'],
-            $data['mensaje'],
-            auth()->user()->idPersona,
-            $data['canal']
-        );
+        // Un envío por canal elegido. El push toma una versión de texto plano recortada del
+        // mensaje (que para email puede ser HTML) y un título acotado a 65.
+        foreach ($data['canales'] as $canal) {
+            $esPush       = $canal === EnviarInvitacionActividad::CANAL_PUSH;
+            $tituloCanal  = $esPush ? mb_substr($data['titulo'], 0, 65) : $data['titulo'];
+            $mensajeCanal = $esPush ? $this->aTextoPlano($data['mensaje'], 240) : $data['mensaje'];
 
-        return response()->json(['ok' => true, 'destinatarios' => $destinatarios]);
+            EnviarInvitacionActividad::dispatch(
+                (int) $data['idActividad'],
+                $data['idsPaises'],
+                $data['segmento'],
+                $tituloCanal,
+                $mensajeCanal,
+                auth()->user()->idPersona,
+                $canal
+            );
+        }
+
+        return response()->json(['ok' => true, 'destinatarios' => $destinatarios, 'por_canal' => $resumen]);
     }
 
     /**
@@ -336,25 +375,31 @@ class InvitacionesController extends Controller
                 $reglas['mensaje'] = 'required|string|max:20000';
             }
         } else {
-            $reglas['canal']    = 'required|in:' . implode(',', EnviarInvitacionActividad::CANALES);
-            $reglas['segmento'] = 'required|in:' . implode(',', EnviarInvitacionActividad::SEGMENTOS);
+            // Actividad: uno o más canales (push/email).
+            $reglas['canales']   = 'required|array|min:1';
+            $reglas['canales.*'] = 'in:' . implode(',', EnviarInvitacionActividad::CANALES);
+            $reglas['segmento']  = 'required|in:' . implode(',', EnviarInvitacionActividad::SEGMENTOS);
             if ($requiereContenido) {
-                // Límites por canal: push es corto por la plataforma (65/240); email admite
-                // asunto largo y cuerpo HTML (20000 entra en la columna `text` aun multibyte;
-                // las imágenes van por URL del filemanager, no embebidas).
-                $esEmail = $request->input('canal') === EnviarInvitacionActividad::CANAL_EMAIL;
+                // Límites según los canales: si va push, el título es corto (65) por la
+                // plataforma; si va email, el cuerpo admite HTML largo (20000). Con ambos,
+                // el push usa una versión de texto plano recortada del mismo mensaje.
+                $canales      = (array) $request->input('canales', []);
+                $incluyePush  = in_array(EnviarInvitacionActividad::CANAL_PUSH, $canales, true);
+                $incluyeEmail = in_array(EnviarInvitacionActividad::CANAL_EMAIL, $canales, true);
                 $reglas['idActividad'] = 'required|integer';
-                $reglas['titulo']      = 'required|string|max:' . ($esEmail ? 150 : 65);
-                $reglas['mensaje']     = 'required|string|max:' . ($esEmail ? 20000 : 240);
+                $reglas['titulo']      = 'required|string|max:' . ($incluyePush ? 65 : 150);
+                $reglas['mensaje']     = 'required|string|max:' . ($incluyeEmail ? 20000 : 240);
             }
         }
 
         $data = $request->validate($reglas);
         $data['objetivo'] = $objetivo;
 
-        // El canal para campaña se fija en el servidor (email), no se confía en el cliente.
+        // Canales efectivos: campaña se fija en email server-side (no se confía en el cliente).
         if ($objetivo === 'campania') {
-            $data['canal'] = EnviarInvitacionActividad::CANAL_EMAIL;
+            $data['canales'] = [EnviarInvitacionActividad::CANAL_EMAIL];
+        } else {
+            $data['canales'] = array_values(array_unique((array) ($data['canales'] ?? [])));
         }
 
         $data['idsPaises'] = $this->paisesAutorizados($data['idsPaises']);

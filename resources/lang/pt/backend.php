@@ -511,7 +511,7 @@ return [
     'select_country_first' => 'Escolha um país para ver e editar o plano.',
     'settings' => 'Configurações',
     'communications' => 'Comunicações',
-    'invitaciones_actividad' => 'Convidar para atividade',
+    'invitaciones_actividad' => 'Nova comunicação',
     'comunicaciones_enviadas' => 'Comunicações enviadas',
     'offices' => 'Escritórios',
     'activity_types' => 'Tipos de Atividades',

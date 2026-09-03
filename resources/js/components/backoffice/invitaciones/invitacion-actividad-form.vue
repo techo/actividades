@@ -4,9 +4,14 @@
 
         <!-- Confirmación de envío exitoso -->
         <div v-show="enviado" class="callout callout-success">
-            <h4>Invitación enviada</h4>
-            <p>Se despachó la invitación a {{ enviadoA }} persona(s). La entrega respeta
-               a quienes se dieron de baja de este canal.</p>
+            <h4>Comunicación enviada</h4>
+            <p>Se despacharon {{ enviadoA }} envío(s) en total:</p>
+            <ul>
+                <li v-for="pc in enviadoPorCanal" :key="pc.canal">
+                    <i :class="iconoCanal(pc.canal)"></i> {{ nombreCanal(pc.canal) }}: {{ pc.alcanzables }} persona(s)
+                </li>
+            </ul>
+            <p style="margin-bottom:0">La entrega respeta a quienes se dieron de baja del canal.</p>
         </div>
 
         <!-- Errores de validación -->
@@ -45,21 +50,25 @@
                     </div>
                 </div>
 
-                <!-- Canal de envío (solo para actividad; campaña va por email) -->
-                <div class="form-group" v-if="objetivo === 'actividad'">
-                    <label>Canal</label>
+                <!-- Canal(es) de envío. Multi-selección: podés elegir más de uno. En campaña
+                     solo aplica email (push a campañas queda para cuando la app lo soporte). -->
+                <div class="form-group">
+                    <label>Canales</label>
                     <div class="canal-cards">
                         <div class="canal-card"
-                             :class="{ 'is-selected': canal === 'push' }"
-                             @click="seleccionarCanal('push')">
+                             :class="{ 'is-selected': incluyePush, 'is-disabled': objetivo === 'campania' }"
+                             @click="toggleCanal('push')">
+                            <span v-if="objetivo === 'campania'" class="canal-card__badge">No disponible</span>
+                            <span v-else-if="incluyePush" class="canal-card__check"><i class="fa fa-check"></i></span>
                             <i class="fa fa-bell canal-card__icon"></i>
                             <div class="canal-card__titulo">Push</div>
                             <div class="canal-card__desc">Notificación en la app</div>
                         </div>
 
                         <div class="canal-card"
-                             :class="{ 'is-selected': canal === 'email' }"
-                             @click="seleccionarCanal('email')">
+                             :class="{ 'is-selected': incluyeEmail }"
+                             @click="toggleCanal('email')">
+                            <span v-if="incluyeEmail" class="canal-card__check"><i class="fa fa-check"></i></span>
                             <i class="fa fa-envelope canal-card__icon"></i>
                             <div class="canal-card__titulo">Email</div>
                             <div class="canal-card__desc">Correo con formato e imágenes</div>
@@ -72,6 +81,15 @@
                             <div class="canal-card__desc">Mensaje directo</div>
                         </div>
                     </div>
+                    <p class="help-block" v-if="objetivo === 'campania'">
+                        Las campañas se envían por email. El push a campañas quedará disponible
+                        cuando la app pueda abrirlas.
+                    </p>
+                    <p class="help-block" v-else-if="incluyePush && incluyeEmail">
+                        Se envía por ambos canales. El push usa una versión de texto plano
+                        (recortada) del mensaje; el email va con el formato completo.
+                    </p>
+                    <p class="help-block" v-else>Podés elegir más de un canal.</p>
                 </div>
 
                 <!-- Aviso de privacidad -->
@@ -182,7 +200,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>{{ canal === 'email' ? 'Asunto' : 'Título' }}</label>
+                            <label>{{ tituloLabel }}</label>
                             <input type="text"
                                    class="form-control"
                                    :maxlength="maxTitulo"
@@ -199,8 +217,8 @@
                         <div class="form-group">
                             <label>Mensaje</label>
 
-                            <!-- Push: texto plano y corto (límite de plataforma). -->
-                            <template v-if="canal === 'push'">
+                            <!-- Solo push: texto plano y corto (límite de plataforma). -->
+                            <template v-if="!incluyeEmail">
                                 <textarea class="form-control"
                                           rows="3"
                                           :maxlength="maxMensaje"
@@ -210,7 +228,7 @@
                                 <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }} · Texto corto, sin formato (es una notificación).</p>
                             </template>
 
-                            <!-- Email: texto enriquecido con formato e imágenes. -->
+                            <!-- Email (con o sin push): texto enriquecido con formato e imágenes. -->
                             <template v-else>
                                 <tinymce-editor
                                         v-model="mensaje"
@@ -243,25 +261,30 @@
                     <div v-if="destinatarios !== null" class="callout"
                          :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
                          style="margin-top:15px">
-                        <template v-if="destinatarios > 0">
-                            <h4>Llega a {{ destinatarios }} de {{ totalSegmento }} persona(s)</h4>
-                            <p v-if="sinCanal > 0">
-                                {{ sinCanal }} {{ sinCanal === 1 ? 'persona no puede' : 'personas no pueden' }}
-                                recibir ({{ motivoSinCanal }}).
-                                <template v-if="canal === 'push' && objetivo === 'actividad'"> Con <strong>Email</strong> quizás llegues a más.</template>
+                        <template v-if="totalSegmento > 0">
+                            <h4>Audiencia: {{ totalSegmento }} persona(s)</h4>
+                            <div v-for="pc in porCanal" :key="pc.canal" style="margin:3px 0">
+                                <i :class="iconoCanal(pc.canal)"></i>
+                                <strong>{{ nombreCanal(pc.canal) }}:</strong>
+                                llega a {{ pc.alcanzables }} de {{ totalSegmento }}
+                                <small class="text-muted" v-if="pc.sin_canal > 0">· {{ pc.sin_canal }} no alcanzable(s)</small>
+                            </div>
+                            <template v-if="destinatarios > 0">
+                                <p style="margin-top:8px">
+                                    Revisá {{ incluyeEmail ? 'el asunto' : 'el título' }} y el mensaje.
+                                    Al confirmar, se despacha el envío{{ porCanal.length > 1 ? ' por cada canal' : '' }}.
+                                </p>
+                                <button class="btn btn-primary" @click="enviar">
+                                    <i class="fa fa-paper-plane"></i> Confirmar y enviar
+                                </button>
+                            </template>
+                            <p v-else style="margin-top:8px">
+                                Ninguno de los canales elegidos alcanza a esta audiencia. Ajustá la selección.
                             </p>
-                            <p>Revisá el {{ canal === 'email' ? 'asunto' : 'título' }} y el mensaje. Al confirmar, se despacha el envío.</p>
-                            <button class="btn btn-primary" @click="enviar">
-                                <i class="fa fa-paper-plane"></i> Confirmar y enviar
-                            </button>
                         </template>
                         <template v-else>
-                            <h4>Nadie puede recibir con este criterio</h4>
-                            <p v-if="totalSegmento > 0">
-                                Hay {{ totalSegmento }} persona(s), pero ninguna puede recibir ({{ motivoSinCanal }}).
-                                <template v-if="canal === 'push' && objetivo === 'actividad'"> Probá con <strong>Email</strong>.</template>
-                            </p>
-                            <p v-else>No hay personas para el criterio elegido. Ajustá la selección.</p>
+                            <h4>No hay personas para el criterio elegido</h4>
+                            <p>Ajustá país, {{ objetivo === 'campania' ? 'campaña/audiencia' : 'segmento' }} o canales.</p>
                         </template>
                     </div>
                 </transition>
@@ -295,14 +318,15 @@
                 objetivo: 'actividad',   // 'actividad' | 'campania'
                 audiencia: 'suscriptos', // solo campaña: 'suscriptos' | 'segmento'
                 segmento: 'coordinadores',
-                canal: 'push',
+                canales: ['email'],    // uno o más: 'push' | 'email' (campaña = solo email)
                 titulo: '',
                 mensaje: '',
-                destinatarios: null,   // null = todavía no previsualizó (alcanzables por el canal)
-                totalSegmento: null,   // tamaño total del segmento (ignora el opt-in)
-                sinCanal: 0,           // cuántos no pueden recibir por el canal elegido
+                destinatarios: null,   // null = todavía no previsualizó; luego = total de envíos (suma por canal)
+                totalSegmento: null,   // tamaño total de la audiencia (ignora el opt-in)
+                porCanal: [],          // [{canal, alcanzables, sin_canal}]
                 enviado: false,
                 enviadoA: 0,
+                enviadoPorCanal: [],   // desglose del envío por canal
                 validationErrors: {},
             }
         },
@@ -347,8 +371,15 @@
                 }
                 return 'Podés elegir uno o varios países (tu alcance permite más de uno).';
             },
-            canalLabel() {
-                return this.canal === 'email' ? 'email' : 'push';
+            incluyePush() {
+                return this.canales.indexOf('push') >= 0;
+            },
+            incluyeEmail() {
+                return this.canales.indexOf('email') >= 0;
+            },
+            tituloLabel() {
+                // Con email (sin push) es "Asunto"; si va push, "Título" (límite corto).
+                return (this.incluyeEmail && !this.incluyePush) ? 'Asunto' : 'Título';
             },
             // El segmento de voluntarios aplica para actividad, y para campaña solo si la
             // audiencia elegida es "segmento" (no cuando son los suscriptos de la campaña).
@@ -361,23 +392,14 @@
                     ? 'Los leads que se anotaron en la campaña (por email).'
                     : 'Voluntarios del segmento elegido, con un enlace a la campaña.';
             },
-            // Motivo por el que parte de la audiencia no es alcanzable (para el preview).
-            motivoSinCanal() {
-                if (this.objetivo === 'campania' && this.audiencia === 'suscriptos') {
-                    return 'no tienen email cargado';
-                }
-                return this.canal === 'push'
-                    ? 'tienen las notificaciones apagadas o no registraron un dispositivo'
-                    : 'no tienen email o se dieron de baja de los correos';
-            },
-            // Límites por canal: push es corto por la plataforma; email admite más.
+            // Límites según los canales: si va push, el título es corto (65); si va email,
+            // el cuerpo admite HTML largo (20000). Alineado con el validador del servidor.
             maxTitulo() {
-                return this.canal === 'email' ? 150 : 65;
+                return this.incluyePush ? 65 : 150;
             },
             maxMensaje() {
-                // Email usa editor HTML (sin maxlength en el textarea); este tope solo
-                // aplica al textarea de push. Se mantiene alineado con el validador server.
-                return this.canal === 'email' ? 20000 : 240;
+                // Solo aplica al textarea de "solo push"; con email el editor no usa maxlength.
+                return this.incluyeEmail ? 20000 : 240;
             },
             puedePrevisualizar() {
                 if (this.idsPaises.length === 0) return false;
@@ -441,7 +463,7 @@
                 this.objetivo = objetivo;
                 // Campaña va solo por email (leads sin dispositivo + app sin deep link).
                 if (objetivo === 'campania') {
-                    this.canal = 'email';
+                    this.canales = ['email'];
                 }
                 this.resetPreview();
             },
@@ -451,15 +473,26 @@
             resetPreview() {
                 this.destinatarios = null;
                 this.totalSegmento = null;
-                this.sinCanal = 0;
+                this.porCanal = [];
                 this.enviado = false;
             },
-            seleccionarCanal(canal) {
-                if (this.canal === canal) return;
-                this.canal = canal;
-                // El conteo depende del canal (distinto opt-in) y el formato del mensaje
-                // cambia (push texto plano ↔ email HTML), así que se limpia el preview.
+            toggleCanal(canal) {
+                if (canal === 'push' && this.objetivo === 'campania') return; // campaña no soporta push
+                const i = this.canales.indexOf(canal);
+                if (i >= 0) {
+                    if (this.canales.length === 1) return; // dejar siempre al menos un canal
+                    this.canales.splice(i, 1);
+                } else {
+                    this.canales.push(canal);
+                }
+                // Cambia el opt-in (conteo) y el formato del mensaje; se limpia el preview.
                 this.resetPreview();
+            },
+            iconoCanal(canal) {
+                return canal === 'email' ? 'fa fa-envelope' : 'fa fa-bell';
+            },
+            nombreCanal(canal) {
+                return canal === 'email' ? 'Email' : 'Push';
             },
             tiny_mce_filemanager_callback(callback, value, meta) {
                 // Reusa el laravel-filemanager del backoffice (mismo patrón que actividad.vue):
@@ -503,7 +536,7 @@
                     d.audiencia = this.audiencia;
                     if (this.audiencia === 'segmento') d.segmento = this.segmento;
                 } else {
-                    d.canal = this.canal;
+                    d.canales = this.canales;
                     d.segmento = this.segmento;
                 }
                 return d;
@@ -516,7 +549,7 @@
                     .then((r) => {
                         this.destinatarios = r.data.destinatarios;
                         this.totalSegmento = r.data.total;
-                        this.sinCanal = r.data.sin_canal;
+                        this.porCanal = r.data.por_canal || [];
                         this.ocultarLoading();
                     })
                     .catch((error) => this.manejarError(error));
@@ -541,6 +574,7 @@
                         this.ocultarLoading();
                         this.enviado = true;
                         this.enviadoA = r.data.destinatarios;
+                        this.enviadoPorCanal = r.data.por_canal || [];
                         this.destinatarios = null;
                     })
                     .catch((error) => this.manejarError(error));
@@ -621,5 +655,18 @@
         padding: 3px 6px;
         border-radius: 10px;
         white-space: nowrap;
+    }
+    .canal-card__check {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #0092dd;
+        color: #fff;
+        font-size: 11px;
+        line-height: 22px;
+        text-align: center;
     }
 </style>

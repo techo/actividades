@@ -510,7 +510,7 @@ return [
     'select_country_first' => 'Elegí un país para ver y editar el plan.',
     'settings' => 'Configuración',
     'communications' => 'Comunicaciones',
-    'invitaciones_actividad' => 'Invitar a actividad',
+    'invitaciones_actividad' => 'Nueva comunicación',
     'comunicaciones_enviadas' => 'Comunicaciones enviadas',
     'offices' => 'Oficinas',
     'activity_types' => 'Tipos de Actividades',
