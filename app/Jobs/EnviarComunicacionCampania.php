@@ -7,6 +7,7 @@ use App\Comunicacion;
 use App\ComunicacionDestinatario;
 use App\Mail\InvitacionCampaniaMail;
 use App\Pais;
+use App\Services\MailThrottle;
 use App\Suscribe;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -125,7 +126,8 @@ class EnviarComunicacionCampania implements ShouldQueue
                 ->chunk(100, function ($personas) use ($campaign, $pais, $comunicacion, $ahora, &$enviados) {
                     $filas = [];
                     foreach ($personas as $persona) {
-                        Mail::to($persona->mail)->queue(
+                        Mail::to($persona->mail)->later(
+                            MailThrottle::siguienteSlot(),
                             new InvitacionCampaniaMail($persona->nombres, $campaign, $pais ?: $persona->pais, $this->titulo, $this->mensaje, $persona)
                         );
                         $filas[] = [
@@ -148,7 +150,8 @@ class EnviarComunicacionCampania implements ShouldQueue
                 ->chunk(100, function ($suscriptos) use ($campaign, $pais, $comunicacion, $ahora, &$enviados) {
                     $filas = [];
                     foreach ($suscriptos as $s) {
-                        Mail::to($s->mail)->queue(
+                        Mail::to($s->mail)->later(
+                            MailThrottle::siguienteSlot(),
                             new InvitacionCampaniaMail((string) $s->nombre, $campaign, $pais, $this->titulo, $this->mensaje)
                         );
                         $filas[] = [

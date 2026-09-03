@@ -10,6 +10,7 @@ use App\CoordinadorEquipo;
 use App\Mail\InvitacionActividadMail;
 use App\Persona;
 use App\Scopes\BelongsToCountryScope;
+use App\Services\MailThrottle;
 use App\Services\Push\PushNotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -282,7 +283,11 @@ class EnviarInvitacionActividad implements ShouldQueue
                     // El opt-in del canal ya se garantizó en la segmentación; el envío no
                     // lo reimplementa (para push, enviar() igual lo re-verifica internamente).
                     if ($this->canal === self::CANAL_EMAIL) {
-                        Mail::to($persona->mail)->queue(
+                        // ->later con slot del throttle: reparte el envío masivo en el
+                        // tiempo para no reventar el límite diario de Gmail ni ahogar la
+                        // cola de transaccionales. El push no se throttlea.
+                        Mail::to($persona->mail)->later(
+                            MailThrottle::siguienteSlot(),
                             new InvitacionActividadMail($persona, $actividad, $this->titulo, $this->mensaje)
                         );
                     } else {

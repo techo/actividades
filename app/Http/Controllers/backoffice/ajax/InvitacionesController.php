@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\EnviarComunicacionCampania;
 use App\Jobs\EnviarInvitacionActividad;
 use App\Pais;
+use App\Services\MailThrottle;
 use App\Suscribe;
 use Illuminate\Http\Request;
 
@@ -225,10 +226,16 @@ class InvitacionesController extends Controller
         list($total, $porCanal) = $this->contar($data);
         $resumen = $this->porCanalResumen($total, $porCanal);
 
+        $emailDest = (int) ($porCanal[EnviarInvitacionActividad::CANAL_EMAIL] ?? 0);
+
         return response()->json([
-            'total'         => $total,
-            'por_canal'     => $resumen,
-            'destinatarios' => array_sum(array_values($porCanal)),
+            'total'                => $total,
+            'por_canal'            => $resumen,
+            'destinatarios'        => array_sum(array_values($porCanal)),
+            // Preflight: a qué ritmo diario sale el email y en cuántos días se completa,
+            // para que el admin sepa antes de disparar (Gmail tiene tope diario bajo).
+            'email_por_dia'        => (int) config('mailing.hub_por_dia'),
+            'email_dias_estimados' => MailThrottle::diasEstimados($emailDest),
         ]);
     }
 
@@ -299,6 +306,21 @@ class InvitacionesController extends Controller
         $resumen = $this->porCanalResumen($total, $porCanal);
         $destinatarios = array_sum(array_values($porCanal));
 
+        // Freno de mano: tope duro de destinatarios por email por envío (si está activado
+        // por config). Corta ANTES de encolar nada para evitar un "todos" gigante accidental.
+        $emailDest = (int) ($porCanal[EnviarInvitacionActividad::CANAL_EMAIL] ?? 0);
+        $maxPorEnvio = (int) config('mailing.hub_max_por_envio');
+        if ($maxPorEnvio > 0 && $emailDest > $maxPorEnvio) {
+            abort(response()->json([
+                'message' => 'Envío demasiado grande',
+                'errors'  => ['destinatarios' => [
+                    "El envío por email alcanza a {$emailDest} personas y supera el tope por envío ({$maxPorEnvio}). Segmentá o dividí el envío.",
+                ]],
+            ], 422));
+        }
+
+        $diasEstimados = MailThrottle::diasEstimados($emailDest);
+
         if ($data['objetivo'] === 'campania') {
             // La campaña debe existir y pertenecer a un país autorizado.
             $campaign = Campaign::find($data['idCampania']);
@@ -316,7 +338,7 @@ class InvitacionesController extends Controller
                 auth()->user()->idPersona
             );
 
-            return response()->json(['ok' => true, 'destinatarios' => $destinatarios, 'por_canal' => $resumen]);
+            return response()->json(['ok' => true, 'destinatarios' => $destinatarios, 'por_canal' => $resumen, 'email_dias_estimados' => $diasEstimados]);
         }
 
         // Objetivo actividad: la actividad debe existir y ser visible para el admin (el
