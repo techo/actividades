@@ -608,6 +608,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // Gateada por permiso dedicado (no por rol ni por idPaisPermitido): ver migración
     // 2026_08_18_120000_add_permiso_enviar_comunicaciones.
     Route::get('/comunicaciones/invitaciones', 'backoffice\InvitacionesController@index')->middleware('permission:enviar_comunicaciones');
+    Route::get('/comunicaciones/enviadas', 'backoffice\InvitacionesController@enviadas')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/enviadas', 'backoffice\ajax\InvitacionesController@enviadas')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/paises', 'backoffice\ajax\InvitacionesController@paises')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/actividades', 'backoffice\ajax\InvitacionesController@actividades')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/campanas', 'backoffice\ajax\InvitacionesController@campanas')->middleware('permission:enviar_comunicaciones');

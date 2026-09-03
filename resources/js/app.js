@@ -132,6 +132,7 @@ import OficinasFilterBar from './components/backoffice/datatable/OficinasFilterB
 import OficinasForm from './components/backoffice/oficinas/oficina-form';
 
 import InvitacionActividadForm from './components/backoffice/invitaciones/invitacion-actividad-form';
+import ComunicacionesEnviadas from './components/backoffice/invitaciones/comunicaciones-enviadas';
 
 import ProvinciasDatatable from './components/backoffice/datatable/configuracion/ProvinciasDatatable';
 import ProvinciaForm from './components/backoffice/configuracion/provincias/provincia-form';
@@ -260,6 +261,7 @@ Vue.component('oficinas-datatable', OficinasDatatable);
 Vue.component('oficinas-filter-bar', OficinasFilterBar);
 Vue.component('oficina-form', OficinasForm);
 Vue.component('invitacion-actividad-form', InvitacionActividadForm);
+Vue.component('comunicaciones-enviadas', ComunicacionesEnviadas);
 
 
 

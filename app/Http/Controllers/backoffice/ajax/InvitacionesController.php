@@ -4,6 +4,8 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Actividad;
 use App\Campaign;
+use App\Comunicacion;
+use App\ComunicacionDestinatario;
 use App\Http\Controllers\Controller;
 use App\Jobs\EnviarComunicacionCampania;
 use App\Jobs\EnviarInvitacionActividad;
@@ -82,6 +84,130 @@ class InvitacionesController extends Controller
         return response()->json(
             $query->limit(300)->get(['id', 'nombre', 'pais_id', 'tipo', 'estado'])
         );
+    }
+
+    /**
+     * Historial de comunicaciones enviadas + conversión. País-scope: admin global ve
+     * todo; admin de país ve las que apuntaron a su país. Solo devuelve conteos y nombres,
+     * nunca PII de destinatarios.
+     */
+    public function enviadas(Request $request)
+    {
+        $query = Comunicacion::with('admin')->orderBy('created_at', 'desc');
+
+        $paisScope = auth()->user()->idPaisPermitido;
+        if (!empty($paisScope)) {
+            $query->whereRaw('JSON_CONTAINS(paises, ?)', [(string) (int) $paisScope]);
+        }
+
+        $page = $query->paginate(20);
+
+        return response()->json([
+            'data'         => collect($page->items())->map([$this, 'presentarComunicacion']),
+            'current_page' => $page->currentPage(),
+            'last_page'    => $page->lastPage(),
+            'total'        => $page->total(),
+        ]);
+    }
+
+    /** Arma la fila del historial para una comunicación (metadatos + conversión + %). */
+    public function presentarComunicacion(Comunicacion $c): array
+    {
+        list($conversion, $conversionLabel, $conversionAplica) = $this->conversion($c);
+
+        $destinatarios = (int) $c->destinatarios_count;
+        $pct = ($conversionAplica && $destinatarios > 0) ? (int) round($conversion * 100 / $destinatarios) : null;
+
+        return [
+            'id'               => $c->id,
+            'fecha'            => optional($c->created_at)->format('d/m/Y H:i'),
+            'canal'            => $c->canal,
+            'objetivo_tipo'    => $c->objetivo_tipo,
+            'objetivo_nombre'  => $this->nombreObjetivo($c),
+            'audiencia'        => $this->audienciaLabel($c),
+            'paises'           => $this->nombresPaises($c->paises),
+            'destinatarios'    => $destinatarios,
+            'estado'           => $c->estado,
+            'conversion'       => $conversionAplica ? $conversion : null,
+            'conversion_pct'   => $pct,
+            'conversion_label' => $conversionLabel,
+            'admin'            => $c->admin ? trim($c->admin->nombres . ' ' . $c->admin->apellidoPaterno) : null,
+        ];
+    }
+
+    /**
+     * Conversión atribuida a la comunicación: [conteo, label, aplica].
+     *  - actividad: destinatarios (Personas) inscriptos a la actividad objetivo DESPUÉS
+     *    de la comunicación (no cuenta a quienes ya estaban inscriptos antes).
+     *  - campaña + suscriptos: leads marcados como convertidos (Suscripciones.convertido).
+     *    Aproximado: `convertido` no tiene fecha, así que es "convertidos a hoy".
+     *  - campaña + segmento: no hay atribución directa a la campaña todavía.
+     */
+    private function conversion(Comunicacion $c): array
+    {
+        if ($c->objetivo_tipo === Comunicacion::OBJETIVO_ACTIVIDAD) {
+            $count = ComunicacionDestinatario::where('comunicacion_id', $c->id)
+                ->whereNotNull('idPersona')
+                ->whereIn('idPersona', function ($q) use ($c) {
+                    $q->select('idPersona')->from('Inscripcion')
+                        ->where('idActividad', $c->objetivo_id)
+                        ->where('fechaInscripcion', '>=', $c->created_at)
+                        ->whereNull('deleted_at');
+                })->count();
+
+            return [$count, 'se inscribieron', true];
+        }
+
+        if ($c->objetivo_tipo === Comunicacion::OBJETIVO_CAMPANA && $c->segmento === EnviarComunicacionCampania::AUDIENCIA_SUSCRIPTOS) {
+            $count = ComunicacionDestinatario::where('comunicacion_id', $c->id)
+                ->whereNotNull('suscripcion_id')
+                ->whereIn('suscripcion_id', function ($q) {
+                    $q->select('id')->from('Suscripciones')->where('convertido', 1);
+                })->count();
+
+            return [$count, 'se convirtieron', true];
+        }
+
+        return [0, null, false];
+    }
+
+    private function nombreObjetivo(Comunicacion $c)
+    {
+        if ($c->objetivo_tipo === Comunicacion::OBJETIVO_CAMPANA) {
+            $camp = Campaign::find($c->objetivo_id);
+            return $camp ? $camp->nombre : ('Campaña #' . $c->objetivo_id);
+        }
+
+        $act = Actividad::todosLosPaises()->find($c->objetivo_id);
+        return $act ? $act->nombreActividad : ('Actividad #' . $c->objetivo_id);
+    }
+
+    private function audienciaLabel(Comunicacion $c): string
+    {
+        if ($c->objetivo_tipo === Comunicacion::OBJETIVO_CAMPANA && $c->segmento === EnviarComunicacionCampania::AUDIENCIA_SUSCRIPTOS) {
+            return 'Suscriptos';
+        }
+
+        $labels = [
+            'coordinadores'          => 'Coordinadores',
+            'coordinadores_gestion'  => 'Coord. de gestión',
+            'activos'                => 'Activos',
+            'frecuentes'             => 'Frecuentes',
+            'jefes_cuadrilla'        => 'Jefes de cuadrilla',
+            'jefaturas'              => 'Jefaturas',
+            'todos'                  => 'Todos',
+        ];
+
+        return $labels[$c->segmento] ?? (string) $c->segmento;
+    }
+
+    private function nombresPaises($ids): string
+    {
+        if (empty($ids)) {
+            return '';
+        }
+
+        return Pais::whereIn('id', (array) $ids)->pluck('nombre')->implode(', ');
     }
 
     /**

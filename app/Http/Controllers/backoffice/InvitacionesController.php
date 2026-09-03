@@ -17,4 +17,14 @@ class InvitacionesController extends Controller
     {
         return view('backoffice.invitaciones.index');
     }
+
+    /**
+     * Historial de comunicaciones enviadas + conversión (cuántos destinatarios se
+     * inscribieron / se convirtieron después de recibirla). Solo renderiza la vista;
+     * el listado con la atribución lo arma backoffice\ajax\InvitacionesController@enviadas.
+     */
+    public function enviadas()
+    {
+        return view('backoffice.invitaciones.enviadas');
+    }
 }

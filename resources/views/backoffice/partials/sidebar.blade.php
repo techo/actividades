@@ -112,6 +112,9 @@
                     <li class="{{request()->is('admin/comunicaciones/invitaciones') ? 'active' : ''}}">
                         <a href="/admin/comunicaciones/invitaciones">{{ __('backend.invitaciones_actividad') }}</a>
                     </li>
+                    <li class="{{request()->is('admin/comunicaciones/enviadas') ? 'active' : ''}}">
+                        <a href="/admin/comunicaciones/enviadas">{{ __('backend.comunicaciones_enviadas') }}</a>
+                    </li>
                 </ul>
             </li>
             @endcan

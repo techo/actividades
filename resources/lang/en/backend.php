@@ -511,6 +511,7 @@ return [
     'settings' => 'Settings',
     'communications' => 'Communications',
     'invitaciones_actividad' => 'Invite to activity',
+    'comunicaciones_enviadas' => 'Sent communications',
     'offices' => 'Offices',
     'activity_types' => 'Activity Types',
     'geographical_divisions' => 'Geographical Divisions',
