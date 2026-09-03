@@ -99,13 +99,9 @@
                         {{ audiencia === 'suscriptos' ? 'a los suscriptos de la campaña' : 'a los voluntarios del segmento' }},
                         con un enlace a la campaña. No exporta ni comparte datos de contacto.
                     </p>
-                    <p style="margin-bottom:0" v-else-if="canal === 'push'">
-                        Esta invitación se envía <strong>dentro de la app</strong> (push) a quienes
-                        aceptaron recibir notificaciones. No exporta ni comparte datos de contacto.
-                    </p>
                     <p style="margin-bottom:0" v-else>
-                        Esta invitación se envía por <strong>email</strong> a quienes aceptaron recibir
-                        correos. No exporta ni comparte datos de contacto.
+                        Se envía por <strong>{{ canalesTexto }}</strong> a quienes aceptaron recibir por ese canal.
+                        No exporta ni comparte datos de contacto.
                     </p>
                 </div>
 
@@ -140,6 +136,26 @@
                                 <option value="todos">Todos los voluntarios</option>
                             </select>
                             <p class="help-block">{{ ayudaSegmento }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtro por año(es): acota los segmentos de participación por el año de
+                     la actividad (ej. "jefes de cuadrilla en 2026"). No aplica a todos. -->
+                <div class="row" v-if="segmentoUsaAnios">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Años de participación</label>
+                            <div class="anio-tags">
+                                <span v-for="a in aniosDisponibles" :key="a"
+                                      class="anio-tag" :class="{ 'is-selected': anios.indexOf(a) >= 0 }"
+                                      @click="toggleAnio(a)">
+                                    <i v-if="anios.indexOf(a) >= 0" class="fa fa-check"></i> {{ a }}
+                                </span>
+                            </div>
+                            <p class="help-block">
+                                Filtra el segmento por el año de la actividad. Podés sumar varios; sin ninguno, no filtra por año.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -197,6 +213,39 @@
                     </div>
                 </div>
 
+                <!-- Calcular a cuántos llega (no bloquea la pantalla). -->
+                <div class="form-group">
+                    <button class="btn btn-default"
+                            :disabled="!puedePrevisualizar || calculando"
+                            @click="previsualizar">
+                        <i class="fa" :class="calculando ? 'fa-spinner fa-spin' : 'fa-users'"></i>
+                        {{ calculando ? 'Calculando…' : 'Ver a cuántos llega' }}
+                    </button>
+
+                    <transition name="fade">
+                        <div v-if="destinatarios !== null" class="callout"
+                             :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
+                             style="margin-top:12px">
+                            <template v-if="totalSegmento > 0">
+                                <h4 style="margin-top:0">Audiencia: {{ totalSegmento }} persona(s)</h4>
+                                <div v-for="pc in porCanal" :key="pc.canal" style="margin:3px 0">
+                                    <i :class="iconoCanal(pc.canal)"></i>
+                                    <strong>{{ nombreCanal(pc.canal) }}:</strong>
+                                    llega a {{ pc.alcanzables }} de {{ totalSegmento }}
+                                    <small class="text-muted" v-if="pc.sin_canal > 0">· {{ pc.sin_canal }} no alcanzable(s)</small>
+                                </div>
+                                <p v-if="destinatarios === 0" style="margin:8px 0 0">
+                                    Ninguno de los canales elegidos alcanza a esta audiencia.
+                                </p>
+                            </template>
+                            <template v-else>
+                                <h4 style="margin-top:0">No hay personas para el criterio elegido</h4>
+                                <p style="margin-bottom:0">Ajustá país, {{ objetivo === 'campania' ? 'campaña/audiencia' : 'segmento' }} o canales.</p>
+                            </template>
+                        </div>
+                    </transition>
+                </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -205,7 +254,6 @@
                                    class="form-control"
                                    :maxlength="maxTitulo"
                                    v-model="titulo"
-                                   @input="resetPreview"
                                    placeholder="Ej.: Sumate a la respuesta a la emergencia">
                             <p class="help-block">{{ titulo.length }}/{{ maxTitulo }}</p>
                         </div>
@@ -223,7 +271,6 @@
                                           rows="3"
                                           :maxlength="maxMensaje"
                                           v-model="mensaje"
-                                          @input="resetPreview"
                                           placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
                                 <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }} · Texto corto, sin formato (es una notificación).</p>
                             </template>
@@ -251,43 +298,20 @@
             </div>
 
             <div class="box-footer">
-                <button class="btn btn-default"
-                        :disabled="!puedePrevisualizar"
-                        @click="previsualizar">
-                    <i class="fa fa-users"></i> Ver a cuántos llega
+                <button class="btn btn-primary"
+                        :disabled="!puedeEnviar"
+                        @click="enviar">
+                    <i class="fa fa-paper-plane"></i> Confirmar y enviar
                 </button>
-
-                <transition name="fade">
-                    <div v-if="destinatarios !== null" class="callout"
-                         :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
-                         style="margin-top:15px">
-                        <template v-if="totalSegmento > 0">
-                            <h4>Audiencia: {{ totalSegmento }} persona(s)</h4>
-                            <div v-for="pc in porCanal" :key="pc.canal" style="margin:3px 0">
-                                <i :class="iconoCanal(pc.canal)"></i>
-                                <strong>{{ nombreCanal(pc.canal) }}:</strong>
-                                llega a {{ pc.alcanzables }} de {{ totalSegmento }}
-                                <small class="text-muted" v-if="pc.sin_canal > 0">· {{ pc.sin_canal }} no alcanzable(s)</small>
-                            </div>
-                            <template v-if="destinatarios > 0">
-                                <p style="margin-top:8px">
-                                    Revisá {{ incluyeEmail ? 'el asunto' : 'el título' }} y el mensaje.
-                                    Al confirmar, se despacha el envío{{ porCanal.length > 1 ? ' por cada canal' : '' }}.
-                                </p>
-                                <button class="btn btn-primary" @click="enviar">
-                                    <i class="fa fa-paper-plane"></i> Confirmar y enviar
-                                </button>
-                            </template>
-                            <p v-else style="margin-top:8px">
-                                Ninguno de los canales elegidos alcanza a esta audiencia. Ajustá la selección.
-                            </p>
-                        </template>
-                        <template v-else>
-                            <h4>No hay personas para el criterio elegido</h4>
-                            <p>Ajustá país, {{ objetivo === 'campania' ? 'campaña/audiencia' : 'segmento' }} o canales.</p>
-                        </template>
-                    </div>
-                </transition>
+                <span class="text-muted" style="margin-left:10px" v-if="destinatarios === null">
+                    Primero calculá a cuántos llega.
+                </span>
+                <span class="text-muted" style="margin-left:10px" v-else-if="destinatarios > 0 && !listoParaEnviar">
+                    Completá {{ tituloLabel.toLowerCase() }} y mensaje.
+                </span>
+                <span class="text-muted" style="margin-left:10px" v-else-if="destinatarios === 0">
+                    Nadie alcanzable con este criterio.
+                </span>
             </div>
         </div>
     </div>
@@ -319,8 +343,11 @@
                 audiencia: 'suscriptos', // solo campaña: 'suscriptos' | 'segmento'
                 segmento: 'coordinadores',
                 canales: ['email'],    // uno o más: 'push' | 'email' (campaña = solo email)
+                anios: [],             // años (de la actividad) para acotar segmentos de participación
+                aniosDisponibles: [],  // opciones de año (se arman en created)
                 titulo: '',
                 mensaje: '',
+                calculando: false,     // preview en curso (spinner inline, no bloquea la pantalla)
                 destinatarios: null,   // null = todavía no previsualizó; luego = total de envíos (suma por canal)
                 totalSegmento: null,   // tamaño total de la audiencia (ignora el opt-in)
                 porCanal: [],          // [{canal, alcanzables, sin_canal}]
@@ -331,14 +358,11 @@
             }
         },
         created() {
+            // Años disponibles: el actual y los 3 anteriores. Por defecto, el año actual.
+            const y = new Date().getFullYear();
+            this.aniosDisponibles = [y, y - 1, y - 2, y - 3];
+            this.anios = [y];
             this.getPaises();
-        },
-        watch: {
-            // El editor de email (TinyMCE) actualiza `mensaje` por v-model, sin @input:
-            // cualquier cambio del mensaje invalida el preview previo.
-            mensaje() {
-                this.resetPreview();
-            },
         },
         computed: {
             tieneErrores() {
@@ -381,6 +405,16 @@
                 // Con email (sin push) es "Asunto"; si va push, "Título" (límite corto).
                 return (this.incluyeEmail && !this.incluyePush) ? 'Asunto' : 'Título';
             },
+            canalesTexto() {
+                if (this.incluyePush && this.incluyeEmail) return 'push y email';
+                return this.incluyeEmail ? 'email' : 'push';
+            },
+            // El filtro de años solo aplica a los segmentos de participación (los derivados
+            // de inscripciones a actividades). No a coordinadores/todos ni a suscriptos.
+            segmentoUsaAnios() {
+                return this.mostrarSegmento
+                    && ['activos', 'frecuentes', 'jefes_cuadrilla', 'jefaturas'].indexOf(this.segmento) >= 0;
+            },
             // El segmento de voluntarios aplica para actividad, y para campaña solo si la
             // audiencia elegida es "segmento" (no cuando son los suscriptos de la campaña).
             mostrarSegmento() {
@@ -418,6 +452,11 @@
                         && (this.audiencia === 'suscriptos' || !!this.segmento);
                 }
                 return !!this.actividadSeleccionada;
+            },
+            // Habilita "Confirmar y enviar": hay que haber calculado (con alcanzables > 0)
+            // y tener el contenido completo. El público no cambia al escribir el mensaje.
+            puedeEnviar() {
+                return this.destinatarios !== null && this.destinatarios > 0 && this.listoParaEnviar;
             },
         },
         methods: {
@@ -539,20 +578,37 @@
                     d.canales = this.canales;
                     d.segmento = this.segmento;
                 }
+                d.anios = this.segmentoUsaAnios ? this.anios : [];
                 return d;
             },
+            toggleAnio(anio) {
+                const i = this.anios.indexOf(anio);
+                if (i >= 0) this.anios.splice(i, 1);
+                else this.anios.push(anio);
+                // El año cambia el público (segmento), así que se limpia el preview.
+                this.resetPreview();
+            },
+            // Preview no bloqueante: spinner inline en el botón; el resto del formulario
+            // sigue editable (podés ir completando el asunto/mensaje mientras calcula).
             previsualizar() {
                 this.validationErrors = [];
-                this.mostrarLoading();
+                this.calculando = true;
 
                 axios.post('/admin/ajax/comunicaciones/invitaciones/preview', this.datosObjetivo())
                     .then((r) => {
                         this.destinatarios = r.data.destinatarios;
                         this.totalSegmento = r.data.total;
                         this.porCanal = r.data.por_canal || [];
-                        this.ocultarLoading();
+                        this.calculando = false;
                     })
-                    .catch((error) => this.manejarError(error));
+                    .catch((error) => {
+                        this.calculando = false;
+                        if (error.response && error.response.status === 422) {
+                            this.validationErrors = Object.values(error.response.data.errors);
+                        } else {
+                            this.validationErrors = [['Ocurrió un error al calcular. Intentá de nuevo.']];
+                        }
+                    });
             },
             enviar() {
                 if (!this.listoParaEnviar) {
@@ -668,5 +724,31 @@
         font-size: 11px;
         line-height: 22px;
         text-align: center;
+    }
+
+    /* Tags de año */
+    .anio-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .anio-tag {
+        display: inline-block;
+        padding: 5px 14px;
+        border: 1px solid #d2d6de;
+        border-radius: 16px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        user-select: none;
+        transition: border-color .15s, background .15s;
+    }
+    .anio-tag:hover {
+        border-color: #0092dd;
+    }
+    .anio-tag.is-selected {
+        background: #0092dd;
+        border-color: #0092dd;
+        color: #fff;
     }
 </style>

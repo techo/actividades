@@ -99,6 +99,9 @@ class EnviarInvitacionActividad implements ShouldQueue
     /** @var int|null idPersona del admin que dispara el envío (trazabilidad). */
     protected $idAdmin;
 
+    /** @var int[] años (de la actividad) para acotar segmentos de participación. */
+    protected $anios;
+
     public function __construct(
         int $idActividad,
         array $idsPaises,
@@ -106,7 +109,8 @@ class EnviarInvitacionActividad implements ShouldQueue
         string $titulo,
         string $mensaje,
         $idAdmin = null,
-        string $canal = self::CANAL_PUSH
+        string $canal = self::CANAL_PUSH,
+        array $anios = []
     ) {
         $this->idActividad = $idActividad;
         $this->idsPaises   = array_values(array_unique(array_map('intval', $idsPaises)));
@@ -115,6 +119,7 @@ class EnviarInvitacionActividad implements ShouldQueue
         $this->mensaje     = $mensaje;
         $this->idAdmin     = $idAdmin;
         $this->canal       = in_array($canal, self::CANALES, true) ? $canal : self::CANAL_PUSH;
+        $this->anios       = array_values(array_filter(array_map('intval', $anios)));
     }
 
     /**
@@ -128,8 +133,12 @@ class EnviarInvitacionActividad implements ShouldQueue
      * @param  bool   $conOptIn  true = solo alcanzables por el canal; false = tamaño total del
      *                           segmento (ignora el opt-in). Lo usa el preview para mostrar
      *                           "llega a N de M" y cuántos no pueden recibir por el canal.
+     * @param  int[]  $anios     años (de la ACTIVIDAD) para acotar los segmentos de
+     *                           participación (activos/frecuentes/jefes_cuadrilla/jefaturas):
+     *                           p.ej. "jefes de cuadrilla en 2026". No aplica a coordinadores,
+     *                           coordinadores_gestion ni todos.
      */
-    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH, bool $conOptIn = true): Builder
+    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH, bool $conOptIn = true, array $anios = []): Builder
     {
         $query = Persona::query();
 
@@ -172,38 +181,41 @@ class EnviarInvitacionActividad implements ShouldQueue
                 });
                 break;
 
-            // Se inscribió a una actividad (de los países elegidos) en la ventana reciente.
+            // Se inscribió a una actividad (de los países elegidos). Sin años: ventana
+            // reciente (DIAS_ACTIVIDAD_RECIENTE). Con años: a una actividad de esos años.
             case 'activos':
-                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
-                    $q->where('fechaInscripcion', '>=', now()->subDays(self::DIAS_ACTIVIDAD_RECIENTE));
-                    self::inscripcionEnPaises($q, $idsPaises);
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises, $anios) {
+                    if (empty($anios)) {
+                        $q->where('fechaInscripcion', '>=', now()->subDays(self::DIAS_ACTIVIDAD_RECIENTE));
+                    }
+                    self::inscripcionEnPaises($q, $idsPaises, $anios);
                 });
                 break;
 
             // Asistió de verdad (presente=1) al menos MIN_PARTICIPACIONES veces a actividades
-            // de los países elegidos. SoftDeletes de Inscripcion excluye borradas.
+            // de los países (y años) elegidos. SoftDeletes de Inscripcion excluye borradas.
             case 'frecuentes':
-                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises, $anios) {
                     $q->where('presente', 1);
-                    self::inscripcionEnPaises($q, $idsPaises);
+                    self::inscripcionEnPaises($q, $idsPaises, $anios);
                 }, '>=', self::MIN_PARTICIPACIONES);
                 break;
 
-            // Ejerció de jefe de cuadrilla (liderazgo_cuadrilla) en una actividad de alguno
-            // de los países elegidos. El país se toma de la ACTIVIDAD, no de la residencia.
+            // Ejerció de jefe de cuadrilla (liderazgo_cuadrilla) en una actividad de los
+            // países (y años) elegidos. El país/año se toma de la ACTIVIDAD, no de la residencia.
             case 'jefes_cuadrilla':
-                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises, $anios) {
                     $q->whereIn('rol', [self::ROL_JEFE_CUADRILLA]);
-                    self::inscripcionEnPaises($q, $idsPaises);
+                    self::inscripcionEnPaises($q, $idsPaises, $anios);
                 });
                 break;
 
             // Ejerció alguna jefatura/liderazgo (cuadrilla, escuela o trabajo) en una actividad
-            // de los países elegidos. Superset del anterior; país tomado de la actividad.
+            // de los países (y años) elegidos. Superset del anterior.
             case 'jefaturas':
-                $query->whereHas('inscripciones', function ($q) use ($idsPaises) {
+                $query->whereHas('inscripciones', function ($q) use ($idsPaises, $anios) {
                     $q->whereIn('rol', self::ROLES_JEFATURA);
-                    self::inscripcionEnPaises($q, $idsPaises);
+                    self::inscripcionEnPaises($q, $idsPaises, $anios);
                 });
                 break;
 
@@ -224,13 +236,17 @@ class EnviarInvitacionActividad implements ShouldQueue
      * autenticado en /admin) y en el job (sin auth): el país lo fija `idsPaises`.
      *
      * @param  int[] $idsPaises  países (de la actividad) a los que se acota
+     * @param  int[] $anios      años de inicio de la actividad (opcional)
      */
-    private static function inscripcionEnPaises(Builder $q, array $idsPaises): void
+    private static function inscripcionEnPaises(Builder $q, array $idsPaises, array $anios = []): void
     {
         $q->withoutGlobalScope(BelongsToCountryScope::class)
-            ->whereHas('actividad', function ($a) use ($idsPaises) {
+            ->whereHas('actividad', function ($a) use ($idsPaises, $anios) {
                 $a->withoutGlobalScope(BelongsToCountryScope::class)
                     ->whereIn('idPais', $idsPaises);
+                if (!empty($anios)) {
+                    $a->whereIn(\DB::raw('YEAR(fechaInicio)'), $anios);
+                }
             });
     }
 
@@ -275,7 +291,7 @@ class EnviarInvitacionActividad implements ShouldQueue
         $enviados = 0;
         $ahora    = now();
 
-        self::segmento($this->idsPaises, $this->segmento, $this->canal)
+        self::segmento($this->idsPaises, $this->segmento, $this->canal, true, $this->anios)
             ->with('pais')
             ->chunk(100, function ($personas) use ($pushService, $actividad, $datos, $comunicacion, $ahora, &$enviados) {
                 $filas = [];

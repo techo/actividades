@@ -59,6 +59,9 @@ class EnviarComunicacionCampania implements ShouldQueue
     /** @var int|null idPersona del admin que dispara el envío. */
     protected $idAdmin;
 
+    /** @var int[] años (de la actividad) para acotar el segmento de voluntarios. */
+    protected $anios;
+
     public function __construct(
         int $idCampania,
         array $idsPaises,
@@ -66,7 +69,8 @@ class EnviarComunicacionCampania implements ShouldQueue
         $segmento,
         string $titulo,
         string $mensaje,
-        $idAdmin = null
+        $idAdmin = null,
+        array $anios = []
     ) {
         $this->idCampania = $idCampania;
         $this->idsPaises  = array_values(array_unique(array_map('intval', $idsPaises)));
@@ -75,6 +79,7 @@ class EnviarComunicacionCampania implements ShouldQueue
         $this->titulo     = $titulo;
         $this->mensaje    = $mensaje;
         $this->idAdmin    = $idAdmin;
+        $this->anios      = array_values(array_filter(array_map('intval', $anios)));
     }
 
     /**
@@ -121,7 +126,7 @@ class EnviarComunicacionCampania implements ShouldQueue
 
         if ($this->audiencia === self::AUDIENCIA_SEGMENTO) {
             // Voluntarios (Personas) del segmento, por email, con el mensaje hacia la campaña.
-            EnviarInvitacionActividad::segmento($this->idsPaises, $this->segmento, EnviarInvitacionActividad::CANAL_EMAIL)
+            EnviarInvitacionActividad::segmento($this->idsPaises, $this->segmento, EnviarInvitacionActividad::CANAL_EMAIL, true, $this->anios)
                 ->with('pais')
                 ->chunk(100, function ($personas) use ($campaign, $pais, $comunicacion, $ahora, &$enviados) {
                     $filas = [];

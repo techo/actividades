@@ -249,12 +249,14 @@ class InvitacionesController extends Controller
      */
     private function contar(array $data): array
     {
+        $anios = $data['anios'] ?? [];
+
         if ($data['objetivo'] === 'campania') {
             $canal = EnviarInvitacionActividad::CANAL_EMAIL;
 
             if ($data['audiencia'] === EnviarComunicacionCampania::AUDIENCIA_SEGMENTO) {
-                $total = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, false)->count();
-                $alc   = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal)->count();
+                $total = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, false, $anios)->count();
+                $alc   = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios)->count();
                 return [$total, [$canal => $alc]];
             }
 
@@ -267,12 +269,12 @@ class InvitacionesController extends Controller
 
         // Actividad: el total (ignora opt-in) es único; alcanzables por cada canal elegido.
         $total = EnviarInvitacionActividad::segmento(
-            $data['idsPaises'], $data['segmento'], EnviarInvitacionActividad::CANAL_EMAIL, false
+            $data['idsPaises'], $data['segmento'], EnviarInvitacionActividad::CANAL_EMAIL, false, $anios
         )->count();
 
         $porCanal = [];
         foreach ($data['canales'] as $canal) {
-            $porCanal[$canal] = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal)->count();
+            $porCanal[$canal] = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios)->count();
         }
 
         return [$total, $porCanal];
@@ -335,7 +337,8 @@ class InvitacionesController extends Controller
                 $data['audiencia'] === EnviarComunicacionCampania::AUDIENCIA_SEGMENTO ? $data['segmento'] : null,
                 $data['titulo'],
                 $data['mensaje'],
-                auth()->user()->idPersona
+                auth()->user()->idPersona,
+                $data['anios']
             );
 
             return response()->json(['ok' => true, 'destinatarios' => $destinatarios, 'por_canal' => $resumen, 'email_dias_estimados' => $diasEstimados]);
@@ -362,7 +365,8 @@ class InvitacionesController extends Controller
                 $tituloCanal,
                 $mensajeCanal,
                 auth()->user()->idPersona,
-                $canal
+                $canal,
+                $data['anios']
             );
         }
 
@@ -382,6 +386,8 @@ class InvitacionesController extends Controller
             'objetivo'    => 'required|in:actividad,campania',
             'idsPaises'   => 'required|array|min:1',
             'idsPaises.*' => 'integer',
+            'anios'       => 'sometimes|array',
+            'anios.*'     => 'integer',
         ];
 
         if ($objetivo === 'campania') {
@@ -416,6 +422,7 @@ class InvitacionesController extends Controller
 
         $data = $request->validate($reglas);
         $data['objetivo'] = $objetivo;
+        $data['anios'] = array_values(array_filter(array_map('intval', (array) ($data['anios'] ?? []))));
 
         // Canales efectivos: campaña se fija en email server-side (no se confía en el cliente).
         if ($objetivo === 'campania') {
