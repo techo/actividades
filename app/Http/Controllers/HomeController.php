@@ -30,12 +30,18 @@ class HomeController extends Controller
         $categorias = CategoriaActividad::all();
         $homeHeader = HomeHeader::where('idPais', \Session::get('pais', env('APP_PAIS_DEFAULT')))->first();
 
+        // Al caer en /login (p.ej. redirección de auth para invitados) se abre el modal
+        // de login automáticamente. El header (@guest) lee $showLogin y el componente
+        // login.vue dispara la apertura en mounted().
+        $showLogin = $request->path() === 'login';
+
         return view('index')
             ->with(
                 [
                     'categoriaSeleccionada' => $categoriaSeleccionada,
                     'categorias' => $categorias,
                     'homeHeader' => $homeHeader,
+                    'showLogin' => $showLogin,
                 ]
             );
     }
