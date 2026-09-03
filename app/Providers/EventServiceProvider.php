@@ -19,6 +19,11 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NuevaInscripcion' => [
             'App\Listeners\NotificacionNuevaInscripcion',
         ],
+        // Red de seguridad sandbox: redirige TODO el mail saliente si MAIL_REDIRECT_TO
+        // está seteada. Corre ANTES del envío. Ver RedirigirMailSandbox.
+        'Illuminate\Mail\Events\MessageSending' => [
+            'App\Listeners\RedirigirMailSandbox',
+        ],
         // Cuenta los mails enviados (denominador de la tasa de rechazos). Ver LogMailEnviado.
         'Illuminate\Mail\Events\MessageSent' => [
             'App\Listeners\LogMailEnviado',

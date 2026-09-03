@@ -34,4 +34,18 @@ return [
     // accidente; si se supera, el envío se rechaza con 422 antes de encolar nada.
     'hub_max_por_envio' => (int) env('MAIL_HUB_MAX_POR_ENVIO', 0),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Red de seguridad: redirección de TODO el mail saliente (sandbox)
+    |--------------------------------------------------------------------------
+    |
+    | Si está seteada, TODO mail saliente (masivo y transaccional) se redirige a
+    | esta casilla en vez de al destinatario real — que queda marcado en el asunto.
+    | Pensada para SANDBOX (cuya base tiene emails reales de voluntarios): permite
+    | probar envíos masivos con mails reales sin escribirle a nadie real.
+    | En PRODUCCIÓN debe quedar VACÍA. Ver App\Listeners\RedirigirMailSandbox.
+    |
+    */
+    'redirect_to' => env('MAIL_REDIRECT_TO'),
+
 ];
