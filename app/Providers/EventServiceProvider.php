@@ -19,6 +19,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NuevaInscripcion' => [
             'App\Listeners\NotificacionNuevaInscripcion',
         ],
+        // Cuenta los mails enviados (denominador de la tasa de rechazos). Ver LogMailEnviado.
+        'Illuminate\Mail\Events\MessageSent' => [
+            'App\Listeners\LogMailEnviado',
+        ],
     ];
 
     /**

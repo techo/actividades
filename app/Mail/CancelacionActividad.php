@@ -6,9 +6,15 @@ use App\Mail\Concerns\HasMailLocale;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CancelacionActividad extends Mailable implements ShouldQueue
+// OJO: NO implementar ShouldQueue acá. Este mailable se envía SIEMPRE con ->send()
+// desde dentro de EnviarMailsCancelacionActividad (que ya es un job encolado), y ese
+// job construye persona/actividad/pais con ::make() → instancias sin persistir (id nulo).
+// Si el mailable fuera ShouldQueue, Mail::send() lo re-encolaría y SerializesModels
+// re-buscaría esos modelos con firstOrFail(id=null) → ModelNotFoundException, haciendo
+// fallar TODOS los mails de cancelación. Enviándolo sincrónico se usan los modelos en
+// memoria y no hay re-serialización.
+class CancelacionActividad extends Mailable
 {
     use Queueable, SerializesModels, HasMailLocale;
 
