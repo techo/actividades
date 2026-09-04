@@ -138,7 +138,7 @@ class EnviarInvitacionActividad implements ShouldQueue
      *                           p.ej. "jefes de cuadrilla en 2026". No aplica a coordinadores,
      *                           coordinadores_gestion ni todos.
      */
-    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH, bool $conOptIn = true, array $anios = []): Builder
+    public static function segmento(array $idsPaises, string $segmento, string $canal = self::CANAL_PUSH, bool $conOptIn = true, array $anios = [], $excluirInscriptosActividad = null): Builder
     {
         $query = Persona::query();
 
@@ -225,6 +225,17 @@ class EnviarInvitacionActividad implements ShouldQueue
                 break;
         }
 
+        // Excluir a quienes YA están inscriptos en la actividad objetivo: invitarlos no
+        // tiene sentido. SoftDeletes de Inscripcion hace que una inscripción borrada no
+        // cuente (esa persona sí puede volver a ser invitada). Se ignora el scope de país
+        // ambiente para que el criterio sea idéntico en preview (con auth) y job (sin auth).
+        if ($excluirInscriptosActividad) {
+            $query->whereDoesntHave('inscripciones', function ($q) use ($excluirInscriptosActividad) {
+                $q->withoutGlobalScope(BelongsToCountryScope::class)
+                    ->where('idActividad', $excluirInscriptosActividad);
+            });
+        }
+
         return $query;
     }
 
@@ -291,7 +302,7 @@ class EnviarInvitacionActividad implements ShouldQueue
         $enviados = 0;
         $ahora    = now();
 
-        self::segmento($this->idsPaises, $this->segmento, $this->canal, true, $this->anios)
+        self::segmento($this->idsPaises, $this->segmento, $this->canal, true, $this->anios, $this->idActividad)
             ->with('pais')
             ->chunk(100, function ($personas) use ($pushService, $actividad, $datos, $comunicacion, $ahora, &$enviados) {
                 $filas = [];

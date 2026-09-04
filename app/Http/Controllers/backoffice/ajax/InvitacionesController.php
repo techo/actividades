@@ -226,12 +226,15 @@ class InvitacionesController extends Controller
         list($total, $porCanal) = $this->contar($data);
         $resumen = $this->porCanalResumen($total, $porCanal);
 
-        $emailDest = (int) ($porCanal[EnviarInvitacionActividad::CANAL_EMAIL] ?? 0);
+        $email     = $porCanal[EnviarInvitacionActividad::CANAL_EMAIL] ?? ['enviables' => 0, 'ya_inscriptos' => 0];
+        $emailDest = (int) $email['enviables'];
 
         return response()->json([
             'total'                => $total,
             'por_canal'            => $resumen,
-            'destinatarios'        => array_sum(array_values($porCanal)),
+            'destinatarios'        => $this->totalEnviables($porCanal),
+            // Cuántos del alcance quedaron afuera por estar ya inscriptos en la actividad.
+            'ya_inscriptos'        => (int) $email['ya_inscriptos'],
             // Preflight: a qué ritmo diario sale el email y en cuántos días se completa,
             // para que el admin sepa antes de disparar (Gmail tiene tope diario bajo).
             'email_por_dia'        => (int) config('mailing.hub_por_dia'),
@@ -257,35 +260,68 @@ class InvitacionesController extends Controller
             if ($data['audiencia'] === EnviarComunicacionCampania::AUDIENCIA_SEGMENTO) {
                 $total = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, false, $anios)->count();
                 $alc   = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios)->count();
-                return [$total, [$canal => $alc]];
+                return [$total, [$canal => $this->entradaCanal($alc, $alc)]];
             }
 
             // Suscriptos de la campaña: alcanzables = con mail; total = todos los suscriptos.
             $idCampania = (int) $data['idCampania'];
             $total = Suscribe::where('campaign_id', $idCampania)->count();
             $alc   = EnviarComunicacionCampania::suscriptosAlcanzables($idCampania)->count();
-            return [$total, [$canal => $alc]];
+            return [$total, [$canal => $this->entradaCanal($alc, $alc)]];
         }
 
-        // Actividad: el total (ignora opt-in) es único; alcanzables por cada canal elegido.
+        // Actividad: el total (ignora opt-in) es único; por cada canal se calcula el
+        // alcance con opt-in (reachable) y, si ya se eligió la actividad, cuántos de esos
+        // quedan como destinatarios reales al excluir a los YA inscriptos (enviables).
+        $idActividad = isset($data['idActividad']) ? (int) $data['idActividad'] : null;
+
         $total = EnviarInvitacionActividad::segmento(
             $data['idsPaises'], $data['segmento'], EnviarInvitacionActividad::CANAL_EMAIL, false, $anios
         )->count();
 
         $porCanal = [];
         foreach ($data['canales'] as $canal) {
-            $porCanal[$canal] = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios)->count();
+            $reachable = EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios)->count();
+            $enviables = $idActividad
+                ? EnviarInvitacionActividad::segmento($data['idsPaises'], $data['segmento'], $canal, true, $anios, $idActividad)->count()
+                : $reachable;
+            $porCanal[$canal] = $this->entradaCanal($reachable, $enviables);
         }
 
         return [$total, $porCanal];
     }
 
-    /** Convierte el mapa canal=>alcanzables a la lista para el front, con sin_canal. */
+    /**
+     * Entrada por canal para el conteo: `enviables` = destinatarios reales (con opt-in y
+     * excluyendo a los ya inscriptos en la actividad); `reachable` = con opt-in incluyendo
+     * inscriptos; `ya_inscriptos` = cuántos del alcance quedan afuera por estar inscriptos.
+     */
+    private function entradaCanal(int $reachable, int $enviables): array
+    {
+        return [
+            'reachable'     => $reachable,
+            'enviables'     => $enviables,
+            'ya_inscriptos' => max(0, $reachable - $enviables),
+        ];
+    }
+
+    /** Suma de destinatarios reales (enviables) a través de los canales. */
+    private function totalEnviables(array $porCanal): int
+    {
+        return (int) array_sum(array_map(function ($e) { return $e['enviables']; }, $porCanal));
+    }
+
+    /** Convierte el mapa de conteo a la lista para el front (alcanzables, sin_canal, ya_inscriptos). */
     private function porCanalResumen(int $total, array $porCanal): array
     {
         $out = [];
-        foreach ($porCanal as $canal => $alc) {
-            $out[] = ['canal' => $canal, 'alcanzables' => $alc, 'sin_canal' => max(0, $total - $alc)];
+        foreach ($porCanal as $canal => $e) {
+            $out[] = [
+                'canal'         => $canal,
+                'alcanzables'   => $e['enviables'],
+                'sin_canal'     => max(0, $total - $e['reachable']),
+                'ya_inscriptos' => $e['ya_inscriptos'],
+            ];
         }
         return $out;
     }
@@ -306,11 +342,11 @@ class InvitacionesController extends Controller
 
         list($total, $porCanal) = $this->contar($data);
         $resumen = $this->porCanalResumen($total, $porCanal);
-        $destinatarios = array_sum(array_values($porCanal));
+        $destinatarios = $this->totalEnviables($porCanal);
 
         // Freno de mano: tope duro de destinatarios por email por envío (si está activado
         // por config). Corta ANTES de encolar nada para evitar un "todos" gigante accidental.
-        $emailDest = (int) ($porCanal[EnviarInvitacionActividad::CANAL_EMAIL] ?? 0);
+        $emailDest = (int) ($porCanal[EnviarInvitacionActividad::CANAL_EMAIL]['enviables'] ?? 0);
         $maxPorEnvio = (int) config('mailing.hub_max_por_envio');
         if ($maxPorEnvio > 0 && $emailDest > $maxPorEnvio) {
             abort(response()->json([
@@ -417,6 +453,9 @@ class InvitacionesController extends Controller
             $reglas['canales']   = 'required|array|min:1|max:1';
             $reglas['canales.*'] = 'in:' . implode(',', EnviarInvitacionActividad::CANALES);
             $reglas['segmento']  = 'required|in:' . implode(',', EnviarInvitacionActividad::SEGMENTOS);
+            // idActividad: opcional en el preview (para excluir a los ya inscriptos si ya se
+            // eligió la actividad); en el envío se exige (bloque requiereContenido de abajo).
+            $reglas['idActividad'] = 'sometimes|integer';
             if ($requiereContenido) {
                 // Límites según los canales: si va push, el título es corto (65) por la
                 // plataforma; si va email, el cuerpo admite HTML largo (20000). Con ambos,

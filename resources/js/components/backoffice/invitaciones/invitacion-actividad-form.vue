@@ -162,6 +162,7 @@
                                     placeholder="Elegí la actividad"
                                     v-model="actividadSeleccionada"
                                     :disabled="paisesSeleccionados.length === 0"
+                                    @input="resetPreview"
                             >
                                 <span slot="no-options">
                                     {{ paisesSeleccionados.length === 0
@@ -227,6 +228,11 @@
                                 </div>
                                 <p v-if="destinatarios === 0" style="margin:8px 0 0">
                                     Ninguno de los canales elegidos alcanza a esta audiencia.
+                                </p>
+                                <p v-if="yaInscriptos > 0" style="margin:8px 0 0">
+                                    <i class="fa fa-check-circle"></i>
+                                    {{ yaInscriptos }} del alcance ya están inscriptas en la actividad
+                                    y <strong>se excluyen</strong> del envío.
                                 </p>
                                 <p v-if="incluyeEmail && diasEstimados > 1"
                                    style="margin:8px 0 0; color:#8a6d3b">
@@ -351,6 +357,7 @@
                 porCanal: [],          // [{canal, alcanzables, sin_canal}]
                 diasEstimados: null,   // días estimados para completar el envío email (throttle)
                 emailPorDia: null,     // tope diario de email configurado (para el mensaje)
+                yaInscriptos: null,    // del alcance, cuántos quedan afuera por estar ya inscriptos
                 enviado: false,
                 enviadoA: 0,
                 enviadoPorCanal: [],   // desglose del envío por canal
@@ -515,6 +522,7 @@
                 this.porCanal = [];
                 this.diasEstimados = null;
                 this.emailPorDia = null;
+                this.yaInscriptos = null;
                 this.enviado = false;
             },
             // Canal único: elegir uno reemplaza al anterior (push y email no se combinan;
@@ -575,6 +583,9 @@
                 } else {
                     d.canales = this.canales;
                     d.segmento = this.segmento;
+                    // Si ya se eligió la actividad, se manda para excluir del conteo/envío
+                    // a quienes ya están inscriptos en ella.
+                    if (this.actividadSeleccionada) d.idActividad = this.actividadSeleccionada.idActividad;
                 }
                 d.anios = this.segmentoUsaAnios ? this.anios : [];
                 return d;
@@ -599,6 +610,7 @@
                         this.porCanal = r.data.por_canal || [];
                         this.diasEstimados = r.data.email_dias_estimados;
                         this.emailPorDia = r.data.email_por_dia;
+                        this.yaInscriptos = r.data.ya_inscriptos;
                         this.calculando = false;
                     })
                     .catch((error) => {
