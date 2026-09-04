@@ -35,7 +35,7 @@ class MailDocumentoRechazado extends Mailable implements ShouldQueue
     {
         return $this
             ->subject(__('email.documento_rechazado_subject') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from('noreply@techo.org', 'TECHO')
+            ->from('noreplyactividades@techo.org', __('email.remitente'))
             ->view('emails.documentoRechazado');
     }
 }
