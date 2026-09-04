@@ -32,6 +32,12 @@ class EnviarRecordatorioActividad extends Command
                                 ->whereDay('fechaInicio', $manana->day)
                                 ->get();
 
+        // Escalonado del batch: se despacha ~batch_por_minuto mails/min repartidos por un
+        // delay incremental, para no disparar cientos de mails de golpe y saturar el relay
+        // (Google corta la conexión bajo ráfaga). $i es global a todas las actividades.
+        $porSegundo = max(1, intdiv((int) config('mailing.batch_por_minuto', 120), 60));
+        $i = 0;
+
         foreach ($actividades as $actividad) {
             $hora = $actividad->fechaInicio ? $actividad->fechaInicio->format('H:i') : '';
             $inscripciones = $actividad->inscripciones()
@@ -44,8 +50,9 @@ class EnviarRecordatorioActividad extends Command
                 ->get();
 
             foreach ($inscripciones as $inscripcion) {
-                $job = (new EnviarMailsRecordatorioActividad($inscripcion))->delay(5);
+                $job = (new EnviarMailsRecordatorioActividad($inscripcion))->delay(5 + intdiv($i, $porSegundo));
                 dispatch($job);
+                $i++;
 
                 $this->pushService->enviarLocalizado(
                     $inscripcion->persona,

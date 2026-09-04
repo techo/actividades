@@ -34,6 +34,12 @@ return [
     // accidente; si se supera, el envío se rechaza con 422 antes de encolar nada.
     'hub_max_por_envio' => (int) env('MAIL_HUB_MAX_POR_ENVIO', 0),
 
+    // Ritmo (mails/min) para ESCALONAR batches transaccionales que se disparan de golpe
+    // —hoy el cron de recordatorios (08:00), que encola un job por inscripción de todas
+    // las actividades de mañana—. Sin escalonar, la ráfaga satura el relay (Google corta
+    // la conexión → "empty response"). No es un tope diario: solo evita la ráfaga.
+    'batch_por_minuto' => (int) env('MAIL_BATCH_POR_MINUTO', 120),
+
     /*
     |--------------------------------------------------------------------------
     | Red de seguridad: redirección de TODO el mail saliente (sandbox)
