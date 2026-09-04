@@ -382,6 +382,16 @@ class InvitacionesController extends Controller
     {
         $objetivo = $request->input('objetivo', 'actividad');
 
+        // Campañas deshabilitadas temporalmente (la UI las muestra sombreadas). Guard
+        // server-side para que tampoco se puedan disparar por API. Quitar este bloque
+        // para reactivarlas.
+        if ($objetivo === 'campania') {
+            abort(response()->json([
+                'message' => 'No disponible',
+                'errors'  => ['objetivo' => ['El envío a campañas está deshabilitado temporalmente.']],
+            ], 422));
+        }
+
         $reglas = [
             'objetivo'    => 'required|in:actividad,campania',
             'idsPaises'   => 'required|array|min:1',
@@ -403,8 +413,8 @@ class InvitacionesController extends Controller
                 $reglas['mensaje'] = 'required|string|max:20000';
             }
         } else {
-            // Actividad: uno o más canales (push/email).
-            $reglas['canales']   = 'required|array|min:1';
+            // Actividad: un solo canal por envío (push o email, no combinados).
+            $reglas['canales']   = 'required|array|min:1|max:1';
             $reglas['canales.*'] = 'in:' . implode(',', EnviarInvitacionActividad::CANALES);
             $reglas['segmento']  = 'required|in:' . implode(',', EnviarInvitacionActividad::SEGMENTOS);
             if ($requiereContenido) {

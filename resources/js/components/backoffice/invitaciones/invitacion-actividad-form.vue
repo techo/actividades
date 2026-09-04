@@ -40,9 +40,9 @@
                             <div class="canal-card__desc">Invitar a una actividad</div>
                         </div>
 
-                        <div class="canal-card"
-                             :class="{ 'is-selected': objetivo === 'campania' }"
-                             @click="seleccionarObjetivo('campania')">
+                        <!-- Campañas deshabilitadas temporalmente: card sombreada y no clickeable. -->
+                        <div class="canal-card is-disabled">
+                            <span class="canal-card__badge">Próximamente</span>
                             <i class="fa fa-bullhorn canal-card__icon"></i>
                             <div class="canal-card__titulo">Campaña</div>
                             <div class="canal-card__desc">Difundir o captar una campaña</div>
@@ -50,16 +50,15 @@
                     </div>
                 </div>
 
-                <!-- Canal(es) de envío. Multi-selección: podés elegir más de uno. En campaña
-                     solo aplica email (push a campañas queda para cuando la app lo soporte). -->
+                <!-- Canal de envío: UNO por vez (push o email). No se combinan, para que el
+                     mensaje quede bien formateado según el canal. -->
                 <div class="form-group">
-                    <label>Canales</label>
+                    <label>Canal</label>
                     <div class="canal-cards">
                         <div class="canal-card"
-                             :class="{ 'is-selected': incluyePush, 'is-disabled': objetivo === 'campania' }"
-                             @click="toggleCanal('push')">
-                            <span v-if="objetivo === 'campania'" class="canal-card__badge">No disponible</span>
-                            <span v-else-if="incluyePush" class="canal-card__check"><i class="fa fa-check"></i></span>
+                             :class="{ 'is-selected': incluyePush }"
+                             @click="seleccionarCanal('push')">
+                            <span v-if="incluyePush" class="canal-card__check"><i class="fa fa-check"></i></span>
                             <i class="fa fa-bell canal-card__icon"></i>
                             <div class="canal-card__titulo">Push</div>
                             <div class="canal-card__desc">Notificación en la app</div>
@@ -67,7 +66,7 @@
 
                         <div class="canal-card"
                              :class="{ 'is-selected': incluyeEmail }"
-                             @click="toggleCanal('email')">
+                             @click="seleccionarCanal('email')">
                             <span v-if="incluyeEmail" class="canal-card__check"><i class="fa fa-check"></i></span>
                             <i class="fa fa-envelope canal-card__icon"></i>
                             <div class="canal-card__titulo">Email</div>
@@ -81,15 +80,7 @@
                             <div class="canal-card__desc">Mensaje directo</div>
                         </div>
                     </div>
-                    <p class="help-block" v-if="objetivo === 'campania'">
-                        Las campañas se envían por email. El push a campañas quedará disponible
-                        cuando la app pueda abrirlas.
-                    </p>
-                    <p class="help-block" v-else-if="incluyePush && incluyeEmail">
-                        Se envía por ambos canales. El push usa una versión de texto plano
-                        (recortada) del mensaje; el email va con el formato completo.
-                    </p>
-                    <p class="help-block" v-else>Podés elegir más de un canal.</p>
+                    <p class="help-block">Elegí un canal: push o email (uno por vez).</p>
                 </div>
 
                 <!-- Aviso de privacidad -->
@@ -342,7 +333,7 @@
                 objetivo: 'actividad',   // 'actividad' | 'campania'
                 audiencia: 'suscriptos', // solo campaña: 'suscriptos' | 'segmento'
                 segmento: 'coordinadores',
-                canales: ['email'],    // uno o más: 'push' | 'email' (campaña = solo email)
+                canales: ['email'],    // canal único (array por compat con el backend): 'push' | 'email'
                 anios: [],             // años (de la actividad) para acotar segmentos de participación
                 aniosDisponibles: [],  // opciones de año (se arman en created)
                 titulo: '',
@@ -515,15 +506,11 @@
                 this.porCanal = [];
                 this.enviado = false;
             },
-            toggleCanal(canal) {
-                if (canal === 'push' && this.objetivo === 'campania') return; // campaña no soporta push
-                const i = this.canales.indexOf(canal);
-                if (i >= 0) {
-                    if (this.canales.length === 1) return; // dejar siempre al menos un canal
-                    this.canales.splice(i, 1);
-                } else {
-                    this.canales.push(canal);
-                }
+            // Canal único: elegir uno reemplaza al anterior (push y email no se combinan;
+            // se envía de a uno para que el mensaje quede bien formateado por canal).
+            seleccionarCanal(canal) {
+                if (this.canales.length === 1 && this.canales[0] === canal) return; // ya elegido
+                this.canales = [canal];
                 // Cambia el opt-in (conteo) y el formato del mensaje; se limpia el preview.
                 this.resetPreview();
             },
