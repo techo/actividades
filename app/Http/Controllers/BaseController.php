@@ -36,4 +36,26 @@ class BaseController extends Controller
 
         \Log::info('Mail a: ' . $persona->mail . ' no enviado por no aceptar notificaciones.');
     }
+
+    /**
+     * Igual que intentaEnviar pero ESCALONADO: para loops que mandan a muchos
+     * destinatarios (evaluación, actualización), reparte el envío en el tiempo
+     * (~mailing.batch_por_minuto mails/min según el índice del loop) para no
+     * disparar una ráfaga que sature el relay. Los mails sueltos (confirmaciones)
+     * deben seguir usando intentaEnviar (inmediato).
+     *
+     * @param int $indice posición dentro del loop (0,1,2,…) para calcular el delay.
+     */
+    public function intentaEnviarEscalonado(Mailable $mailable, Persona $persona, int $indice = 0)
+    {
+        if (!$persona->recibirMails) {
+            \Log::info('Mail a: ' . $persona->mail . ' no enviado por no aceptar notificaciones.');
+            return;
+        }
+
+        $porSegundo = max(1, intdiv((int) config('mailing.batch_por_minuto', 120), 60));
+        $delay = 5 + intdiv($indice, $porSegundo);
+
+        return Mail::to($persona->mail)->later(now()->addSeconds($delay), $mailable);
+    }
 }

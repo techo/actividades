@@ -215,11 +215,13 @@ class InscripcionesController extends BaseController
 
     public function asignarPunto($idActividad, CrearInscripcion $request)
     {
+        $idx = 0;
         foreach ($request->inscripciones as $idInscripcion) {
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            $this->intentaEnviar(new ActualizacionActividad($inscripcion), $inscripcion->persona);
+            // Escalonado: puede notificar a muchos inscriptos de una.
+            $this->intentaEnviarEscalonado(new ActualizacionActividad($inscripcion), $inscripcion->persona, $idx++);
             $this->pushService->enviarLocalizado(
                 $inscripcion->persona,
                 'push.cambio_actividad_titulo',
