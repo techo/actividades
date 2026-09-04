@@ -39,9 +39,10 @@ class InvitacionesController extends Controller
     {
         $query = Pais::orderBy('nombre');
 
-        $permitido = auth()->user()->idPaisPermitido;
-        if (!empty($permitido)) {
-            $query->where('id', $permitido);
+        $user = auth()->user();
+        if (!$user->esGlobalPais()) {
+            // Multi-país: solo los países habilitados para el usuario (pivote o el único).
+            $query->whereIn('id', $user->paisesPermitidosIds() ?: [-1]);
         }
 
         return response()->json($query->get(['id', 'nombre']));
@@ -96,9 +97,15 @@ class InvitacionesController extends Controller
     {
         $query = Comunicacion::with('admin')->orderBy('created_at', 'desc');
 
-        $paisScope = auth()->user()->idPaisPermitido;
-        if (!empty($paisScope)) {
-            $query->whereRaw('JSON_CONTAINS(paises, ?)', [(string) (int) $paisScope]);
+        $user = auth()->user();
+        if (!$user->esGlobalPais()) {
+            // Ve las comunicaciones que apuntaron a alguno de sus países habilitados.
+            $permitidos = $user->paisesPermitidosIds();
+            $query->where(function ($q) use ($permitidos) {
+                foreach ($permitidos as $p) {
+                    $q->orWhereRaw('JSON_CONTAINS(paises, ?)', [(string) $p]);
+                }
+            });
         }
 
         $page = $query->paginate(20);
@@ -503,11 +510,11 @@ class InvitacionesController extends Controller
     {
         $ids = array_values(array_unique(array_map('intval', $ids)));
 
-        $permitido = auth()->user()->idPaisPermitido;
-        if (empty($permitido)) {
+        $user = auth()->user();
+        if ($user->esGlobalPais()) {
             return $ids; // admin global
         }
 
-        return array_values(array_intersect($ids, [(int) $permitido]));
+        return array_values(array_intersect($ids, $user->paisesPermitidosIds()));
     }
 }

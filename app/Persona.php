@@ -190,6 +190,47 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Pais::class, 'id', 'idPais');
     }
 
+    /**
+     * Multi-país (chokepoint): ids de país que el usuario puede administrar/alcanzar.
+     * Prioriza el pivote `persona_paises_permitidos`; si no tiene filas, cae al
+     * `idPaisPermitido` único (retrocompatible). Devuelve [] cuando no hay restricción
+     * explícita (usar junto con esGlobalPais() para saber si eso significa "todos").
+     *
+     * @return int[]
+     */
+    public function paisesPermitidosIds(): array
+    {
+        $pivote = \DB::table('persona_paises_permitidos')
+            ->where('idPersona', $this->idPersona)
+            ->pluck('idPais')
+            ->map(function ($v) { return (int) $v; })
+            ->all();
+
+        if (!empty($pivote)) {
+            return array_values(array_unique($pivote));
+        }
+
+        $unico = (int) $this->idPaisPermitido;
+
+        return $unico > 0 ? [$unico] : [];
+    }
+
+    /**
+     * True si el usuario alcanza TODOS los países (admin global): no tiene países
+     * explícitos en el pivote y su idPaisPermitido es 0/null. Tener pivote lo acota
+     * a esos países (no global), aunque idPaisPermitido esté vacío.
+     */
+    public function esGlobalPais(): bool
+    {
+        if (!empty($this->idPaisPermitido)) {
+            return false;
+        }
+
+        return !\DB::table('persona_paises_permitidos')
+            ->where('idPersona', $this->idPersona)
+            ->exists();
+    }
+
     public function provincia()
     {
         return $this->hasOne(Provincia::class, 'id', 'idProvincia');
