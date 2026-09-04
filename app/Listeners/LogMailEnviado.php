@@ -22,11 +22,19 @@ class LogMailEnviado
 {
     public function handle(MessageSent $event)
     {
-        $to = array_keys((array) $event->message->getTo());
+        // El logueo de métricas es best-effort y NUNCA debe romper el envío: el mail
+        // YA se envió cuando dispara MessageSent, así que si el archivo de log no se
+        // puede escribir (permisos, disco), se traga el error. Si no, el job fallaría
+        // y se reintentaría → reenviando el mail (duplicados).
+        try {
+            $to = array_keys((array) $event->message->getTo());
 
-        Log::channel('mailstats')->info('SENT', [
-            'to'      => $to[0] ?? null,
-            'subject' => $event->message->getSubject(),
-        ]);
+            Log::channel('mailstats')->info('SENT', [
+                'to'      => $to[0] ?? null,
+                'subject' => $event->message->getSubject(),
+            ]);
+        } catch (\Throwable $e) {
+            // no-op
+        }
     }
 }
