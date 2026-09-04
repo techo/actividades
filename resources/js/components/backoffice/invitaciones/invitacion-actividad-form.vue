@@ -228,6 +228,13 @@
                                 <p v-if="destinatarios === 0" style="margin:8px 0 0">
                                     Ninguno de los canales elegidos alcanza a esta audiencia.
                                 </p>
+                                <p v-if="incluyeEmail && diasEstimados > 1"
+                                   style="margin:8px 0 0; color:#8a6d3b">
+                                    <i class="fa fa-clock-o"></i>
+                                    Por el límite diario (~{{ emailPorDia }}/día), el email se envía
+                                    <strong>escalonado</strong> y se completará en
+                                    <strong>~{{ diasEstimados }} día(s)</strong>.
+                                </p>
                             </template>
                             <template v-else>
                                 <h4 style="margin-top:0">No hay personas para el criterio elegido</h4>
@@ -342,6 +349,8 @@
                 destinatarios: null,   // null = todavía no previsualizó; luego = total de envíos (suma por canal)
                 totalSegmento: null,   // tamaño total de la audiencia (ignora el opt-in)
                 porCanal: [],          // [{canal, alcanzables, sin_canal}]
+                diasEstimados: null,   // días estimados para completar el envío email (throttle)
+                emailPorDia: null,     // tope diario de email configurado (para el mensaje)
                 enviado: false,
                 enviadoA: 0,
                 enviadoPorCanal: [],   // desglose del envío por canal
@@ -504,6 +513,8 @@
                 this.destinatarios = null;
                 this.totalSegmento = null;
                 this.porCanal = [];
+                this.diasEstimados = null;
+                this.emailPorDia = null;
                 this.enviado = false;
             },
             // Canal único: elegir uno reemplaza al anterior (push y email no se combinan;
@@ -586,6 +597,8 @@
                         this.destinatarios = r.data.destinatarios;
                         this.totalSegmento = r.data.total;
                         this.porCanal = r.data.por_canal || [];
+                        this.diasEstimados = r.data.email_dias_estimados;
+                        this.emailPorDia = r.data.email_por_dia;
                         this.calculando = false;
                     })
                     .catch((error) => {
