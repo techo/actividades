@@ -39,7 +39,7 @@ class InvitacionEvaluacion extends Mailable implements ShouldQueue
     {
         return $this
             ->subject(__('email.evaluation_title') . ' ' . $this->actividad->nombreActividad)
-            ->from('noreplyactividades@techo.org')
+            ->from('noreply@techo.org', 'TECHO')
             ->view('emails.invitacionEvaluacion');
     }
 }

@@ -37,7 +37,7 @@ class MailInscripcionPagoFueraDeFecha extends Mailable implements ShouldQueue
     {
         return $this
             ->subject(__('email.pre_enroll_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from('noreplyactividades@techo.org')
+            ->from('noreply@techo.org', 'TECHO')
             ->view('emails.inscripcionPagoFueraDeFecha');
     }
 }

@@ -36,7 +36,7 @@ class ForgotPassword extends Mailable
     {
         return $this
             ->subject(__('email.forgot_password_title'))
-            ->from('noreplyactividades@techo.org')
+            ->from('noreply@techo.org', 'TECHO')
             ->view('emails.forgot-password');
     }
 }

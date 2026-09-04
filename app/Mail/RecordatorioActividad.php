@@ -36,7 +36,7 @@ class RecordatorioActividad extends Mailable
     {
         return $this
             ->subject('TECHO: ' . $this->inscripcion->actividad->nombreActividad . ' está por comenzar')
-            ->from('noreplyactividades@techo.org')
+            ->from('noreply@techo.org', 'TECHO')
             ->view('emails.recordatorioActividad');
     }
 }

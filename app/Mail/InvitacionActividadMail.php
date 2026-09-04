@@ -38,7 +38,7 @@ class InvitacionActividadMail extends Mailable
     {
         return $this
             ->subject($this->titulo)
-            ->from('noreplyactividades@techo.org')
+            ->from('noreply@techo.org', 'TECHO')
             ->view('emails.invitacionActividad');
     }
 }
