@@ -63,7 +63,7 @@
             </strong>
         </p>
         <p>
-            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}
+            {{ \Illuminate\Support\Str::limit($inscripcion->punto_encuentro->horario, 5, '')}}
         </p>
 
         @if($inscripcion->punto_encuentro->responsable)

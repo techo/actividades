@@ -28,7 +28,7 @@ class MisActividadesSearch
 
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\mis_actividades\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\mis_actividades\\' . \Illuminate\Support\Str::studly($name);
     }
 
     private static function isValidDecorator($decorator)

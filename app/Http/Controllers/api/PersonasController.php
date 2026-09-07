@@ -9,7 +9,6 @@ use App\Persona;
 use App\Inscripcion;
 use App\Pais;
 use Illuminate\Support\Facades\Auth;
-use Webpatser\Uuid\Uuid;
 use App\Services\SocialAuth\SocialProviderFactory;
 use Illuminate\Support\Facades\Log;
 
@@ -193,7 +192,7 @@ class PersonasController extends Controller
             'idProvincia' => $fields['idProvincia'],
             'idLocalidad' => $fields['idLocalidad'],
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
-            'unsubscribe_token' => (string) Uuid::generate(),
+            'unsubscribe_token' => (string) \Illuminate\Support\Str::uuid(),
             // Alta desde la app móvil (ruta /api/register): la verificación de email
             // reabrirá la app por deep link tras verificar desde el navegador.
             'registro_origen' => 'app',

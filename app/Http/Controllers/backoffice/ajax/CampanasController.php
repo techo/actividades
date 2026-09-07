@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Webpatser\Uuid\Uuid;
 
 class CampanasController extends Controller
 {
@@ -224,10 +223,10 @@ class CampanasController extends Controller
             $persona->idLocalidad      = $suscripcion->idLocalidad;
             $persona->canal_contacto   = $suscripcion->canal_contacto;
             $persona->instagram        = $suscripcion->instagram;
-            $persona->password         = Hash::make(str_random(30));
+            $persona->password         = Hash::make(\Illuminate\Support\Str::random(30));
             $persona->idUnidadOrganizacional = 0;
             $persona->recibirMails     = 1;
-            $persona->unsubscribe_token = Uuid::generate()->string;
+            $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
             $persona->idPaisPermitido  = 0;
             $persona->estadoPersona    = 'activo';
             $persona->save();

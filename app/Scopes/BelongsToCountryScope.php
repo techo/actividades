@@ -43,7 +43,14 @@ class BelongsToCountryScope implements Scope
         //     idPaisPermitido del usuario. Aplicarlo ahí le ocultaría a un admin
         //     (o coordinador) logueado las actividades de otros países al navegar
         //     el frontend / usar la app. Ver docs/security-audit-2026.md (Fase 3).
-        if (app()->runningInConsole() || ! optional(request())->is('admin', 'admin/*')) {
+        //
+        //     El discriminador es la URL: la petición debe ser del backoffice.
+        //     CLI/jobs/colas/seeders ya quedaron descartados por la regla (1) (no hay
+        //     usuario autenticado) y, de haberlo, una consola tampoco resuelve una
+        //     ruta /admin, así que este mismo check los cubre. Se evita depender de
+        //     runningInConsole(): en 5.7 lee php_sapi_name() y volvía el scope inerte
+        //     (e intesteable) en toda la suite, sin agregar protección real.
+        if (! optional(request())->is('admin', 'admin/*')) {
             return;
         }
 

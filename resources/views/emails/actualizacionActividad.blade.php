@@ -54,7 +54,7 @@
             {{$inscripcion->punto_encuentro->provincia->provincia}},
             {{$inscripcion->punto_encuentro->pais->nombre}} 
             - 
-            {{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
+            {{ \Illuminate\Support\Str::limit($inscripcion->punto_encuentro->horario, 5, '')}}hs 
 
         @if($inscripcion->punto_encuentro->responsable)
             (@lang('frontend.referring'): 

@@ -50,7 +50,7 @@ class InscripcionesSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\inscripciones\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\inscripciones\\' . \Illuminate\Support\Str::studly($name);
     }
     private static function isValidDecorator($decorator)
     {

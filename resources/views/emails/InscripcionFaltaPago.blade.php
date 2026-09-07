@@ -77,7 +77,7 @@
           <strong>
               @lang('frontend.meeting_points')
           </strong>
-            {{$inscripcion->punto_encuentro->punto}} ({{ str_limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
+            {{$inscripcion->punto_encuentro->punto}} ({{ \Illuminate\Support\Str::limit($inscripcion->punto_encuentro->horario, 5, '')}}hs)
             @if($inscripcion->punto_encuentro->idLocalidad)
                 {{$inscripcion->punto_encuentro->localidad->localidad}},
             @endif

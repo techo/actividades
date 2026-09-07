@@ -1,9 +1,34 @@
 # Plan de upgrade: Laravel 5.7 → 11.x
 
-> Fecha de análisis: 2026-06-11  
+> Fecha de análisis: 2026-06-11 · Correcciones aplicadas: 2026-09-02  
 > Estado actual: Laravel 5.7, PHP 7.2, Passport 7.5.1  
 > Objetivo: Laravel 11.x, PHP 8.2+, dependencias modernas  
 > Condición de éxito en cada fase: **todos los tests pasan en verde**
+
+---
+
+## ⚠️ Correcciones tras la revisión crítica (leer antes de arrancar Fase 1)
+
+Este plan fue auditado en [`docs/upgrade-review.md`](upgrade-review.md) (versiones verificadas contra Packagist). Veredicto: **REQUIERE AJUSTES**. Las correcciones ya reflejadas en este doc:
+
+**Estado de ejecución (2026-09-02):**
+- ✅ **Fase 0 completa** — baseline documentado + tests de la API mobile escritos (`tests/Feature/api/`: Auth, Actividades, Inscripciones, Stripe, Donaciones/webhooks, Perfil, Registro, Dispositivos, SocioExención). Tasks 9, 14–18 `done`.
+- ✅ **Limpieza pre-Fase 1 (parcial) hecha** — reemplazados los helpers globales `str_*`/`studly_case` por `\Illuminate\Support\Str::` en código propio (20 Search objects, controllers, `UserService`, 4 vistas de email) y eliminado `webpatser/laravel-uuid` (→ `Str::uuid()`, sacado de `composer.json`). El código sigue verde en 5.7 y ya no revienta en L6 por esos helpers. ⚠ `composer.lock` quedó desalineado a propósito (se resuelve en el `composer update` de Fase 1).
+- ⏳ **Fases 1–6 pendientes** (tasks 19–25). No arrancan hasta cerrar CI con gate de merge (task 29) e incorporar la §1.2 de la revisión al composer.json de cada fase.
+
+**Tres afirmaciones del plan original eran FALSAS (corregidas abajo):**
+1. Los helpers `str_*`/`array_*` **no** están "deprecados" en L6 — fueron **eliminados**. Sin el reemplazo previo, Fase 1 explota con `Call to undefined function`. → Ya reemplazados (ver arriba).
+2. `php artisan passport:install` por fase **crearía clientes/claves nuevos**. Lo correcto es `php artisan migrate` (agrega columnas/tablas) y **no tocar** claves ni clientes existentes.
+3. `php artisan queue:flush` **borra los failed jobs**, no la cola pendiente. Para deployar: drenar la cola con los workers viejos, deployar, `php artisan queue:restart`.
+
+**Breaking changes con impacto en producción que el plan original omitía** (detallados en sus fases):
+- **Fase 2 (L7):** serialización de fechas JSON pasa a ISO-8601 → rompe el contrato de la app MiTECHO. Necesita `serializeDate()` legacy + tests de contrato.
+- **Fase 1 (L6):** verificación de email rota por el campo `mail` vs `email` de `Persona`.
+- **Fase 4 (Passport 11):** `Passport::routes()` desaparece (`AuthServiceProvider:38`).
+
+**Mapa de dependencias incompleto:** el plan cubría 8 de 25 paquetes. La tabla de dependencias que hacen fallar `composer update` está en §1.2 de la revisión — **adoptarla en el composer.json de cada fase**. Correcciones clave: `laravel/socialite ^5` (no ^4, revienta en F3), `sentry/sentry-laravel ^4`, `laravel/telescope`, `laravel/tinker`, `rap2hpoutre/fast-excel`, `fzaninotto/faker` → `fakerphp/faker`. Y **`unisharp/laravel-filemanager` NO es código muerto** (la revisión se equivocó): lo usan los editores TinyMCE como image-picker (`/laravel-filemanager?editor=tinymce5` en `actividad.vue`, `invitacion-actividad-form.vue`, `reunion-modal.vue`). Hay que **actualizarlo** a `^2.x`, no eliminarlo.
+
+**Regla operativa agregada:** correr `composer update --dry-run` con el composer.json target de la fase **antes** de tocar código (paso 2.a del protocolo).
 
 ---
 
@@ -118,10 +143,11 @@ Usar `Passport::actingAs($persona)` para autenticación en tests de API.
 **Riesgo:** BAJO — misma era PHP, pocos breaking changes.
 
 ### Breaking changes conocidos
-1. **String helpers deprecados** — `str_*()` y `array_*()` globales reemplazados por `Str::` y `Arr::`. En L6 aún funcionan pero emiten deprecation. Buscar y reemplazar.
+1. **String helpers ELIMINADOS (no deprecados)** — `str_*()` y `array_*()` globales fueron **removidos** del framework en L6.0; sin reemplazo, revienta con `Call to undefined function`. ✅ **Ya reemplazados** por `\Illuminate\Support\Str::` en código propio (ver bloque de correcciones arriba). Verificar que no reaparezcan en código nuevo antes de subir.
 2. **Autorización de gates** — `Gate::before()` ahora intercepta todas las verificaciones incluyendo super-admin.
 3. **Carbon 2.x** — L6 usa Carbon 2. Revisar uso de `Carbon::now()` vs `now()`.
-4. **Passport 8.x** — requiere ejecutar `php artisan passport:install` de nuevo. Las claves existentes en producción siguen siendo válidas.
+4. **Passport 8.x** — correr `php artisan migrate` (las versiones nuevas agregan columnas/tablas a `oauth_*`). **NO** correr `passport:install` (crearía clientes y claves nuevos). Las claves (`storage/oauth-*.pem`) y los tokens existentes siguen válidos mientras no se toquen.
+5. **Verificación de email rota por el campo `mail`** — `Persona` usa la columna `mail`, no `email`. Desde L6, `VerifiesEmails::verify()` valida `{hash}` = `sha1($user->getEmailForVerification())`, que devuelve `$this->email` = **null**. Todos los links de verificación fallan. Acción: (a) override `getEmailForVerification(): string { return $this->mail; }` en `Persona`, (b) agregar `{hash}` a la ruta (`routes/web.php:183`) y a `verificationUrl()` (`app/Notifications/VerifyEmail.php`), (c) test de verificación como bloqueante de esta fase.
 
 ### Cambios en composer.json
 ```json
@@ -146,11 +172,13 @@ Usar `Passport::actingAs($persona)` para autenticación en tests de API.
 **Riesgo:** BAJO — cambios principalmente en middleware y mail.
 
 ### Breaking changes conocidos
+0. **🔴 Serialización de fechas JSON → ISO-8601 (impacto directo en la app MiTECHO)** — desde L7 los modelos serializan fechas como `2026-06-11T15:00:00.000000Z` en vez de `2026-06-11 15:00:00`. Cambia **todas** las respuestas JSON de la API mobile y los endpoints ajax que devuelven modelos con timestamps. Si la app parsea el formato viejo, rompe en producción y no se le puede "avisar" a los clientes instalados. Acción: override `serializeDate(DateTimeInterface $date)` con el formato legacy en un base model/trait (Actividad, Inscripcion, Persona…) + **tests de contrato que fijen el formato de fecha antes de esta fase**.
 1. **Symfony 5 / HttpKernel** — los middleware reciben `Request $request` tipado más estrictamente.
 2. **Mail** — `MailMessage` cambió algunas firmas de métodos.
 3. **`assertExactJson`** — el orden de keys en JSON ahora importa en tests. Revisar assertions.
 4. **Flysystem 1.x → 1.x** (sin cambio aún, pero prepararse).
 5. **`Route::prefix()`** — pequeños cambios en cómo se concatenan prefijos.
+6. **`laravel/socialite ^5`** (no ^4) — 4.x llega solo hasta L7 y hace fallar `composer update` en Fase 3. Subir a ^5.0 ya desde Fase 1 cubre todo el plan de una.
 
 ### Cambios en composer.json
 ```json
@@ -170,9 +198,18 @@ Usar `Passport::actingAs($persona)` para autenticación en tests de API.
 **Branch:** `upgrade/laravel-8x`  
 **Riesgo:** ALTO — factory migration es obligatoria y extensa.
 
+> ### 🔧 Secuenciación corregida (la Fase 3a original era infeasible)
+> El plan original pedía migrar factories a clases **estando en L7**. Imposible: `Illuminate\Database\Eloquent\Factories\Factory` y `Model::factory()` **no existen en L7**. Orden correcto (cada paso deja la suite verde y es reversible):
+> 1. **(En L7, verde)** Renombrar `App\ActividadFactory` → `App\ActividadBuilder` (builder propio usado por casi todos los Feature tests vía `app(ActividadFactory::class)`) para evitar colisión con `Database\Factories\ActividadFactory`. **Eliminar** `database/factories/UserFactory.php` (es de `App\User`, código muerto).
+> 2. **Subir a L8 + PHP 8.0 con `laravel/legacy-factories`** — las factories de closures siguen funcionando tal cual. Tests verdes → mergear.
+> 3. **Migrar factories a clases en tandas** (tests verdes entre tandas). En paralelo: `seed('PermisosSeeder')` (string, ×13+ en tests) → `Database\Seeders\PermisosSeeder::class`; seeders ganan namespace `Database\Seeders`; `autoload.classmap` de `composer.json` → PSR-4 (`Database\`).
+> 4. **Eliminar `laravel/legacy-factories`.** Tests verdes → done.
+>
+> No requiere cambios en `CreatesApplication.php` ni `TestCase.php`. `fzaninotto/faker` (abandonado) → `fakerphp/faker` (fork drop-in, default de L8).
+
 ### Breaking changes conocidos
 
-#### 3.1 Factory migration (CRÍTICO)
+#### 3.1 Factory migration (CRÍTICO — ver secuenciación corregida arriba)
 L8 reemplaza las factories basadas en closures por clases. Todos los archivos en `database/factories/` deben reescribirse.
 
 Antes (actual):
@@ -248,7 +285,8 @@ Verificar: `grep -r "lcobucci\jwt" app/`
 - [ ] Todos los Feature tests actualizados con `Model::factory()`
 - [ ] Seeders con namespace correcto
 - [ ] `phpunit` 100% verde
-- [ ] `php artisan passport:install` completa sin errores
+- [ ] `php artisan migrate` aplica las migraciones nuevas de Passport (NO `passport:install`)
+- [ ] Smoke test en staging: un token emitido **antes** del upgrade sigue autenticando (salto sensible lcobucci/jwt 3→4 + league/oauth2-server nuevo)
 
 ---
 
@@ -257,6 +295,9 @@ Verificar: `grep -r "lcobucci\jwt" app/`
 **Riesgo:** MEDIO — Flysystem y Doctrine DBAL.
 
 ### Breaking changes conocidos
+
+#### 4.0 `Passport::routes()` eliminado (CRÍTICO — la app no bootea sin este fix)
+`app/Providers/AuthServiceProvider.php:38` llama a `Passport::routes()`. En Passport 11 ese método **fue eliminado** (las rutas se registran automáticamente). Quitar esa línea o la app no arranca en esta fase. La API **no usa password grant** (usa `createToken()`), así que el cambio de Passport 12 que deshabilita el password grant por defecto no afecta.
 
 #### 4.1 Flysystem 3.x
 `Storage::url()`, `Storage::path()` cambian ligeramente. Si el proyecto usa `Storage::` directamente, revisar.
@@ -382,4 +423,5 @@ Verificar manualmente:
 - **Staging first**: deployar cada fase a `sandbox.actividades.techo.org` antes de producción.
 - **Passport keys**: las claves OAuth en `storage/` no necesitan regenerarse durante el upgrade. Solo si se cambia el algoritmo de firma.
 - **Stripe webhooks**: no se ven afectados por el upgrade de Laravel. La URL del webhook no cambia.
-- **Cola de jobs**: vaciar la cola antes de deployar una fase nueva (`php artisan queue:flush`) para evitar jobs serializados con clases del framework viejo.
+- **Cola de jobs**: `queue:flush` borra los **failed jobs**, NO la cola pendiente. Para deployar una fase sin jobs serializados con clases del framework viejo: drenar la cola (esperar que la tabla `jobs` quede vacía con los workers viejos corriendo), deployar, y `php artisan queue:restart`. `queue:clear` recién existe desde L8.
+- **`composer update --dry-run`**: correrlo con el composer.json target de la fase **antes** de tocar código (detecta en seco los conflictos de dependencias de §1.2 de la revisión).

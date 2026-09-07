@@ -56,7 +56,11 @@ class MailingTest extends TestCase
 
         // enviarNotificaciones() pasa la actividad como array (toArray) a propósito,
         // para sobrevivir a la serialización del job cuando el modelo ya fue borrado.
-        Mail::assertQueued(CancelacionActividad::class, function ($mail) use ($actividad) {
+        // El envío async lo da el job EnviarMailsCancelacionActividad (ShouldQueue); el
+        // mailable CancelacionActividad NO es ShouldQueue (se manda con ->send() para no
+        // re-serializar el modelo ya borrado), así que acá se afirma como enviado (no
+        // encolado). Con QUEUE=sync el job corre y el mail se despacha en el request.
+        Mail::assertSent(CancelacionActividad::class, function ($mail) use ($actividad) {
             return $mail->actividad['nombreActividad'] === $actividad->nombreActividad;
         });
     }

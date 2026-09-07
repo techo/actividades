@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Webpatser\Uuid\Uuid;
 
 class UsuarioController extends BaseController
 {
@@ -141,10 +140,10 @@ class UsuarioController extends BaseController
       $social = $this->socialVerificado($request);
       $this->aplicarSocialVerificado($persona, $social);
 
-      $persona->password = $social ? Hash::make(str_random(30)) : Hash::make($request->pass);
+      $persona->password = $social ? Hash::make(\Illuminate\Support\Str::random(30)) : Hash::make($request->pass);
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
-      $persona->unsubscribe_token = Uuid::generate()->string;
+      $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
       // Origen del registro ('app'|'web'): lo usa la verificación de email para
       // decidir si reabrir la app por deep link tras verificar desde el navegador.
       $persona->registro_origen = $origen;
@@ -398,10 +397,10 @@ class UsuarioController extends BaseController
         // ofuscar en tabla persona
         $persona->nombres = 'Usuario eliminado';
         $persona->apellidoPaterno = '';
-        $persona->telefono = str_random(30);
-        $persona->telefonoMovil = str_random(30);
-        $persona->dni = str_random(8);
-        $persona->mail = str_random(40);
+        $persona->telefono = \Illuminate\Support\Str::random(30);
+        $persona->telefonoMovil = \Illuminate\Support\Str::random(30);
+        $persona->dni = \Illuminate\Support\Str::random(8);
+        $persona->mail = \Illuminate\Support\Str::random(40);
         $persona->recibirMails = 0;
         $persona->acepta_marketing = 0;
 

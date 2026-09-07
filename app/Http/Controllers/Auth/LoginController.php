@@ -172,7 +172,7 @@ class LoginController extends Controller
                 $personaData->genero = '';
             }
         }
-//        $personaData->password = bcrypt(str_random(30));
+//        $personaData->password = bcrypt(\Illuminate\Support\Str::random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
         if(!$persona) {
             if($personaData->email == null)
