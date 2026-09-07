@@ -2,6 +2,28 @@
 
 ---
 
+## 2026-09-07 — Fase 0 del upgrade COMPLETA: limpieza pre-Fase 1, correcciones del plan y suite 300/300
+
+**Agente:** Claude (Opus 4.8) · **Branch:** `develop` · **Commit:** `56f8af6b` · **Deploy:** sandbox
+
+Cierre de la **Fase 0** del upgrade Laravel 5.7→11 (`docs/upgrade-laravel.md`).
+
+1. **Correcciones del plan** (incorporadas de `docs/upgrade-review.md` a `docs/upgrade-laravel.md` + `tasks.json`): 3 afirmaciones falsas corregidas (helpers `str_*` eliminados no deprecados en L6; `migrate` no `passport:install`; drenar cola no `queue:flush`), breaking changes omitidos agregados (fechas ISO-8601 en L7, `Passport::routes()` en P11, verificación de email por campo `mail` en L6), mapa de deps §1.2, Fase 3 re-secuenciada con `legacy-factories`. Hallazgo: `unisharp/laravel-filemanager` **NO** es código muerto (lo usan los editores TinyMCE como image-picker) — hay que actualizarlo, no eliminarlo.
+
+2. **Limpieza pre-Fase 1** (segura en 5.7, elimina lo que rompe en L6): helpers globales `str_*`/`studly_case` → `\Illuminate\Support\Str::` (20 Search objects, controllers, `UserService`, 4 vistas de email); `webpatser/laravel-uuid` eliminado (→ `Str::uuid()`) de código, `composer.json` y `composer.lock` (sincronizado quirúrgicamente, sin bumpear otros paquetes).
+
+3. **Reparación de 6 fallas pre-existentes** (verificadas contra baseline limpio; ninguna era regresión de la limpieza; sin cambios de comportamiento de producción):
+   - `BelongsToCountryScope` ×3: el `runningInConsole()` de la regla (2) dejaba el scope inerte e intesteable en toda la suite (en 5.7 lee `php_sapi_name()`). Se quitó (redundante: CLI/jobs ya cubiertos por la regla sin-auth + el path no-`/admin`); prod idéntica. Los tests fijan el contexto `/admin`.
+   - `AuthApiTest::register` ×2: el payload mandaba `dni` como entero; la regla `CrearPersona` lo exige `string` (preserva ceros a la izquierda). Fix en el test.
+   - `SocioExencionApiTest` ×1: el país del test no coincidía con `services.salesforce.socio_pais_id`, así que la exención no aplicaba y caía al cobro real (502). Fix en el test.
+   - `MailingTest::administrador_elimina_actividad` ×1 (surgió al reparar): `CancelacionActividad` dejó de ser `ShouldQueue` (refactor de mailing ya en develop) → el mail se **envía**, no se encola. `assertQueued` → `assertSent`. El envío async lo sigue dando el job `EnviarMailsCancelacionActividad`.
+
+4. **Tests nuevos** (cierran Fase 0, agregados por la revisión): `ContratoFechasApiTest` (formato de fecha JSON por defecto, ancla anti-ISO8601 de L7) y `VerificacionEmailWebTest` (verify por link firmado, sin sesión).
+
+Suite completa: **300/300 verde (922 aserciones)**. `init.sh` pasa. Tareas 45/46 → `done`. Commiteado a `develop` (`56f8af6b`), pusheado, y deployado a sandbox (`Nothing to migrate`, health-check 200). **Próximo:** cerrar CI con gate de merge (task 29, `in_progress`) y luego arrancar Fase 1 aplicando la §1.2 al composer.json.
+
+---
+
 ## 2026-07-15 — Etapa 0 completa: verificación post-merge + IDOR show/update (tareas 27 y 28)
 
 **Agente:** Claude (Fable 5) · **Branch:** `upgradee`

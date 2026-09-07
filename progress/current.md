@@ -7,43 +7,26 @@
 
 ## Estado
 
-- **Tarea en progreso:** Task 40 — Global Scope `BelongsToCountry` (`seguridad-arquitectura`, risk: **high**). Se hace SOLA.
-- **Inicio:** 2026-08-11
-- **Agente / desarrollador:** Claude (Opus 4.8) — protocolo Líder/Implementador/Revisor.
-- **Base de esta branch:** `claude/task-40-belongs-to-country` desde el tip de `feature/indicadores-plan-vs-real` (`ade144a1`).
-- **Etapa 1:** cerrada y **deployada a sandbox** (push + `./deploy.sh feature/indicadores-plan-vs-real` OK; `/health` 200 en `br.sandbox.actividades.techo.org`). Pendientes de ops del dueño: branch protection (29), uptime monitor (32), cron backup (31).
+- **Última sesión cerrada:** 2026-09-07 — **Fase 0 del upgrade COMPLETA** (ver `history.md`). Commit `56f8af6b` en `develop`, deployado a sandbox, suite **300/300 verde**.
+- **Sin tarea en progreso.** Listo para arrancar el próximo ítem.
 
-## Plan revisado (mejor momento con el sistema de hoy)
+## Dónde estamos en el upgrade (docs/upgrade-laravel.md)
 
-Decisión de secuencia (el audit la ubica post-upgrade; se hace pre-upgrade en fases de bajo riesgo, con defensa en profundidad):
-1. **Actividad** (piloto, columna `idPais` directa) + **fix del bug de `Actividad::boot()`** (auth sin guard, rompía en CLI/jobs). ✅ hecho.
-2. **Inscripcion** (`whereHas('actividad')`, sin columna directa) — siguiente.
-3. **Persona** = modelo de auth (riesgo recursión/login). **Se define cuando se llegue** (decisión del dueño), con spike del UserProvider. Probable diferir a post-upgrade.
+- ✅ **Fase 0** (tasks 9, 14–18, 45, 46) — baseline + cobertura API mobile + tests de contrato + limpieza pre-Fase 1 (helpers `Str::`, `webpatser` fuera). Plan corregido con `docs/upgrade-review.md`.
+- ⏳ **Fases 1–6** (tasks 19–25) — pendientes.
 
-**Regla dura:** NO se retira ningún check `can:`/`permission:`/`idPaisPermitido` existente (los ~40 dispersos mapeados). El scope es defensa en profundidad que convive con ellos.
+## Próximos pasos (en orden)
 
-## Diseño
+1. **Task 29 — CI real con gate de merge** (`in_progress`). Bloqueante de Fase 1: sin CI verde, la regla "no se mergea sin tests verdes" de cada fase es manual y frágil. *(El dueño dijo que lo hace él.)*
+2. **Prep de Fase 1**: incorporar la §1.2 de `docs/upgrade-review.md` al `composer.json` target de Fase 1 (deps que hacen fallar `composer update`: `socialite ^5`, `sentry ^4`, `telescope`, `tinker`, `fast-excel`, `faker`→`fakerphp`, `filemanager ^2.x`). Correr `composer update --dry-run` ANTES de tocar código.
+3. **Fase 1** (task 19): Laravel 5.7 → 6.x + PHP 7.4. Bloqueante ya resuelto: verificación de email por campo `mail` (test `VerificacionEmailWebTest` ancla el flujo actual).
 
-- `App\Scopes\BelongsToCountryScope` (implements Scope): bypass si `!auth()->check()` (CLI/jobs/login) o `empty(idPaisPermitido)` (admin global 0/null); si no, `applyCountryScope($builder, $pais)`.
-- `App\Concerns\BelongsToCountry` (trait): `bootBelongsToCountry()` agrega el scope; `getCountryColumn()` (default `idPais`); `applyCountryScope()` (override para modelos sin columna); `scopeTodosLosPaises()` escape hatch.
-- Actividad: `use BelongsToCountry` (idPais). boot() con guard `auth()->check()`.
+## Deuda / notas para no perder
 
-## Progreso
-
-- [x] Infra `BelongsToCountryScope` + trait `BelongsToCountry`.
-- [x] Actividad scope-ada + fix del bug de `boot()`.
-- [x] `tests/Feature/BelongsToCountryScopeTest.php` (7): aislamiento Actividad+Inscripcion, admin global, **sin-auth-no-filtra (criterio clave)**, escape hatch, regresión boot().
-- [x] Actividad scope-ada + fix boot(). Suite **270/270** verde.
-- [x] Inscripcion scope-ada (`whereHas('actividad')`). Suite **272/272** verde.
-- [x] **Persona — DIFERIDA a post-upgrade** (decisión del dueño). Riesgo de recursión en auth; requiere UserProvider custom. Aislamiento hoy cubierto por checks + SecurityFase2Test. Documentado en docs/security-audit-2026.md.
-- [x] Task 40 marcada `done` (Actividad+Inscripcion).
-- [ ] Suite final + merge a la feature.
-
-## Contexto / riesgos
-
-- El scope es **inerte para el usuario por defecto** de tests (PersonaFactory no setea idPaisPermitido → default 0 = global). Bajo riesgo de romper la suite.
-- 🔴 Persona es el modelo autenticado: aplicarle scope arriesga recursión en la resolución de `auth()->user()`. Requiere que el UserProvider bypasee el scope. No tocar sin el spike.
-- Suite worktree: `docker exec -e APP_ENV=testing laravel_app bash -c "cd /var/www/html/.claude/worktrees/etapa-1-tareas-techo-f0f123 && php -d memory_limit=512M vendor/bin/phpunit"`.
+- Las 6 fallas reparadas esta sesión eran **pre-existentes** en `develop` (no regresiones). Detalle en `history.md` 2026-09-07.
+- `MailingTest` ahora usa `assertSent` para `CancelacionActividad` (el mailable ya no es `ShouldQueue`; el async lo da el job). Si se vuelve a tocar el flujo de cancelación, respetar eso.
+- El scope `BelongsToCountry` ahora se activa por path `/admin` (sin `runningInConsole`). Persona-scope sigue **diferida a post-upgrade** (riesgo de recursión en auth, requiere UserProvider custom).
+- Untracked que NO se commiteó (no eran de esta tarea): `estrategia_mantenimiento.docx`, `progress/analisis-3-reportes-produccion.md`, `progress/prompt-claudecode-test-donations-api.md`.
 
 ## Bloqueos
 
