@@ -133,7 +133,7 @@ class EnviarComunicacionCampania implements ShouldQueue
                     foreach ($personas as $persona) {
                         Mail::to($persona->mail)->later(
                             MailThrottle::siguienteSlot(),
-                            new InvitacionCampaniaMail($persona->nombres, $campaign, $pais ?: $persona->pais, $this->titulo, $this->mensaje, $persona)
+                            new InvitacionCampaniaMail($persona->nombres, $campaign, $pais ?: $persona->pais, $this->titulo, $this->mensaje, $persona, $comunicacion->id)
                         );
                         $filas[] = [
                             'comunicacion_id' => $comunicacion->id,
@@ -157,7 +157,7 @@ class EnviarComunicacionCampania implements ShouldQueue
                     foreach ($suscriptos as $s) {
                         Mail::to($s->mail)->later(
                             MailThrottle::siguienteSlot(),
-                            new InvitacionCampaniaMail((string) $s->nombre, $campaign, $pais, $this->titulo, $this->mensaje)
+                            new InvitacionCampaniaMail((string) $s->nombre, $campaign, $pais, $this->titulo, $this->mensaje, null, $comunicacion->id)
                         );
                         $filas[] = [
                             'comunicacion_id' => $comunicacion->id,

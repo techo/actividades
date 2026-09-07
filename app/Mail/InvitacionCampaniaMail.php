@@ -28,15 +28,19 @@ class InvitacionCampaniaMail extends Mailable
      *  null cuando el destinatario es un suscripto/lead de campaña sin cuenta. */
     public $persona;
 
-    public function __construct($nombre, $campaign, $pais, string $titulo, string $mensaje, $persona = null)
+    /** id de la Comunicacion, para instrumentar enviados_ok/error en el historial. */
+    public $comunicacionId;
+
+    public function __construct($nombre, $campaign, $pais, string $titulo, string $mensaje, $persona = null, $comunicacionId = null)
     {
-        $this->nombre     = $nombre;
-        $this->campaign   = $campaign;
-        $this->pais       = $pais;
-        $this->titulo     = $titulo;
-        $this->mensaje    = $mensaje;
-        $this->persona    = $persona;
-        $this->mailLocale = optional($pais)->locale ?? config('app.locale');
+        $this->nombre         = $nombre;
+        $this->campaign       = $campaign;
+        $this->pais           = $pais;
+        $this->titulo         = $titulo;
+        $this->mensaje        = $mensaje;
+        $this->persona        = $persona;
+        $this->comunicacionId = $comunicacionId;
+        $this->mailLocale     = optional($pais)->locale ?? config('app.locale');
     }
 
     public function build()
@@ -44,6 +48,11 @@ class InvitacionCampaniaMail extends Mailable
         return $this
             ->subject($this->titulo)
             ->from('noreplyactividades@techo.org', __('email.remitente'))
+            ->withSwiftMessage(function ($message) {
+                if ($this->comunicacionId) {
+                    $message->getHeaders()->addTextHeader('X-Comunicacion-Id', (string) $this->comunicacionId);
+                }
+            })
             ->view('emails.invitacionCampania');
     }
 }

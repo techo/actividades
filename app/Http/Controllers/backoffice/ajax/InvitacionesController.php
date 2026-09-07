@@ -126,6 +126,11 @@ class InvitacionesController extends Controller
         $destinatarios = (int) $c->destinatarios_count;
         $pct = ($conversionAplica && $destinatarios > 0) ? (int) round($conversion * 100 / $destinatarios) : null;
 
+        // Resultado real del envío (solo email; el push no pasa por MessageSent/jobs de mail).
+        $enviadosOk    = (int) $c->enviados_ok;
+        $enviadosError = (int) $c->enviados_error;
+        $pendientes    = max(0, $destinatarios - $enviadosOk - $enviadosError);
+
         return [
             'id'               => $c->id,
             'fecha'            => optional($c->created_at)->format('d/m/Y H:i'),
@@ -135,6 +140,9 @@ class InvitacionesController extends Controller
             'audiencia'        => $this->audienciaLabel($c),
             'paises'           => $this->nombresPaises($c->paises),
             'destinatarios'    => $destinatarios,
+            'enviados_ok'      => $enviadosOk,
+            'enviados_error'   => $enviadosError,
+            'pendientes'       => $pendientes,
             'estado'           => $c->estado,
             'conversion'       => $conversionAplica ? $conversion : null,
             'conversion_pct'   => $pct,

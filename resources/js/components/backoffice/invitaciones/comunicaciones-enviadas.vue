@@ -33,6 +33,9 @@
                                 <th>Audiencia</th>
                                 <th>Países</th>
                                 <th class="text-right">Destinatarios</th>
+                                <th class="text-right" title="Solo email — OK enviados · Error · Pendientes (en cola / throttle)">
+                                    Envíos <small class="text-muted">(ok·err·pend)</small>
+                                </th>
                                 <th class="text-right">Conversión</th>
                                 <th>Envió</th>
                             </tr>
@@ -54,6 +57,16 @@
                                 <td>{{ c.audiencia }}</td>
                                 <td>{{ c.paises }}</td>
                                 <td class="text-right">{{ c.destinatarios }}</td>
+                                <td class="text-right" style="white-space:nowrap">
+                                    <template v-if="c.canal === 'email'">
+                                        <span class="text-success" title="Enviados OK">{{ c.enviados_ok }}</span>
+                                        <span class="text-muted">·</span>
+                                        <span :class="c.enviados_error ? 'text-danger' : 'text-muted'" title="Con error">{{ c.enviados_error }}</span>
+                                        <span class="text-muted">·</span>
+                                        <span class="text-muted" title="Pendientes (en cola / throttle)">{{ c.pendientes }}</span>
+                                    </template>
+                                    <span v-else class="text-muted" title="Push: no se instrumenta acá">—</span>
+                                </td>
                                 <td class="text-right">
                                     <template v-if="c.conversion !== null">
                                         <strong>{{ c.conversion }}</strong>

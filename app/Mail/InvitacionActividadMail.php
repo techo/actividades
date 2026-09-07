@@ -25,13 +25,17 @@ class InvitacionActividadMail extends Mailable
     public $titulo;
     public $mensaje;
 
-    public function __construct($persona, $actividad, string $titulo, string $mensaje)
+    /** id de la Comunicacion, para instrumentar enviados_ok/error en el historial. */
+    public $comunicacionId;
+
+    public function __construct($persona, $actividad, string $titulo, string $mensaje, $comunicacionId = null)
     {
-        $this->persona    = $persona;
-        $this->actividad  = $actividad;
-        $this->titulo     = $titulo;
-        $this->mensaje    = $mensaje;
-        $this->mailLocale = optional($persona->pais)->locale ?? config('app.locale');
+        $this->persona        = $persona;
+        $this->actividad      = $actividad;
+        $this->titulo         = $titulo;
+        $this->mensaje        = $mensaje;
+        $this->comunicacionId = $comunicacionId;
+        $this->mailLocale     = optional($persona->pais)->locale ?? config('app.locale');
     }
 
     public function build()
@@ -39,6 +43,11 @@ class InvitacionActividadMail extends Mailable
         return $this
             ->subject($this->titulo)
             ->from('noreplyactividades@techo.org', __('email.remitente'))
+            ->withSwiftMessage(function ($message) {
+                if ($this->comunicacionId) {
+                    $message->getHeaders()->addTextHeader('X-Comunicacion-Id', (string) $this->comunicacionId);
+                }
+            })
             ->view('emails.invitacionActividad');
     }
 }

@@ -315,7 +315,7 @@ class EnviarInvitacionActividad implements ShouldQueue
                         // cola de transaccionales. El push no se throttlea.
                         Mail::to($persona->mail)->later(
                             MailThrottle::siguienteSlot(),
-                            new InvitacionActividadMail($persona, $actividad, $this->titulo, $this->mensaje)
+                            new InvitacionActividadMail($persona, $actividad, $this->titulo, $this->mensaje, $comunicacion->id)
                         );
                     } else {
                         $pushService->enviar($persona, $this->titulo, $this->mensaje, $datos);

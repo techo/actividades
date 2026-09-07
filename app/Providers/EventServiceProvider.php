@@ -28,6 +28,10 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Mail\Events\MessageSent' => [
             'App\Listeners\LogMailEnviado',
         ],
+        // Cuenta los mails del hub que fallan → comunicaciones.enviados_error.
+        'Illuminate\Queue\Events\JobFailed' => [
+            'App\Listeners\ContarMailFallido',
+        ],
     ];
 
     /**

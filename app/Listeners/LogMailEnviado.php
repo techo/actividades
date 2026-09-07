@@ -33,6 +33,15 @@ class LogMailEnviado
                 'to'      => $to[0] ?? null,
                 'subject' => $event->message->getSubject(),
             ]);
+
+            // Si el mail lleva el header de una comunicación del hub, suma a enviados_ok.
+            $idHeader = $event->message->getHeaders()->get('X-Comunicacion-Id');
+            if ($idHeader) {
+                $comId = (int) $idHeader->getFieldBody();
+                if ($comId > 0) {
+                    \App\Comunicacion::where('id', $comId)->increment('enviados_ok');
+                }
+            }
         } catch (\Throwable $e) {
             // no-op
         }

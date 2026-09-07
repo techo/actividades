@@ -24,6 +24,8 @@ class Comunicacion extends Model
         'titulo',
         'mensaje',
         'destinatarios_count',
+        'enviados_ok',
+        'enviados_error',
         'idAdmin',
         'estado',
     ];
@@ -31,6 +33,8 @@ class Comunicacion extends Model
     protected $casts = [
         'paises'              => 'array',
         'destinatarios_count' => 'integer',
+        'enviados_ok'         => 'integer',
+        'enviados_error'      => 'integer',
     ];
 
     const CANAL_PUSH     = 'push';
