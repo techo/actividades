@@ -388,6 +388,10 @@ class UsuarioController extends BaseController
         $persona->mail = str_random(40);
         $persona->recibirMails = 0;
         $persona->acepta_marketing = 0;
+        // La cuenta se anonimiza pero NO se soft-borra a propósito: hay que
+        // conservar sus inscripciones e historial para reporting. Se marca
+        // Desvinculado para que quede fuera de los flujos de voluntario activo.
+        $persona->estadoPersona = 'Desvinculado';
 
         // grabar
         $persona->save();

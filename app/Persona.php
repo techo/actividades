@@ -31,9 +31,38 @@ class Persona extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * ¿El `mail` es una dirección válida y enviable?
+     *
+     * En la base conviven personas cuyo `mail` NO es un email: altas legacy con
+     * el campo vacío o con un nombre/slug sin `@`, y cuentas anonimizadas por la
+     * baja de cuenta (ver UsuarioController::delete), que pisan `mail` con un
+     * token `str_random(40)`. Enviarles correo tira `Swift_RfcComplianceException`
+     * y rompe el job. Esta es la fuente única de "¿se le puede mandar mail?".
+     */
+    public function tieneMailValido()
+    {
+        return filter_var($this->mail, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Personas a las que SÍ se les puede enviar mail: aceptan notificaciones y
+     * tienen una dirección con forma de email. El chequeo fino (RFC) lo hace
+     * tieneMailValido() por fila; en SQL aproximamos con `LIKE '%@%'` para poder
+     * filtrar en queries de envío masivo sin traer filas de más.
+     */
+    public function scopeMailable($query)
+    {
+        return $query->where('recibirMails', 1)
+                     ->whereNotNull('mail')
+                     ->where('mail', 'like', '%@%');
+    }
+
     public function routeNotificationForMail($notification)
     {
-        return $this->mail;
+        // Devolver null hace que Notifiable saltee el canal mail (no intenta
+        // enviar) en vez de explotar con una dirección inválida.
+        return $this->tieneMailValido() ? $this->mail : null;
     }
 
     public function sendEmailVerificationNotification()
