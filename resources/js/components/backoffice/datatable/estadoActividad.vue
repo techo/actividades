@@ -1,6 +1,6 @@
 <template>
     <span>
-        <span v-if="estadoInscripcion && (rowData.estadoConstruccion == $t('backend.open'))" class="label label-info" role="alert" >
+        <span v-if="estadoInscripcion && (rowData.estadoConstruccion == 'Abierta')" class="label label-info" role="alert" >
             {{ $t('backend.open_registrations') }}
         </span>
         <span v-else class="label label-default" role="label" >
