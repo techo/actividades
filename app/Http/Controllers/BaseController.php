@@ -29,6 +29,11 @@ class BaseController extends Controller
     {
         $mail = Mail::to($persona->mail);
 
+        if(!$persona->tieneMailValido()){
+          \Log::info('Mail a persona ' . $persona->idPersona . ' no enviado: dirección inválida (legacy/anonimizada).');
+          return;
+        }
+
         if($persona->recibirMails){
           \Log::info('Mail en cola para '. $persona->mail .' con.');
           return $mail->queue($mailable);
