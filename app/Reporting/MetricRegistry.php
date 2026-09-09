@@ -46,8 +46,12 @@ class MetricRegistry
             'movilizados_territorio' => ['nombre' => 'Nº Voluntarios/as movilizados/as a actividades en territorio', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'filtros' => ['tipo_indicador' => 'territorio'], 'periodo' => 'anio'],
             'movilizados_colecta' => ['nombre' => 'Nº Voluntarios/as movilizados/as en Colecta', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'filtros' => ['tipo_indicador' => 'colecta'], 'periodo' => 'anio'],
             'movilizados_construcciones' => ['nombre' => 'Nº Voluntarios/as movilizados/as en construcciones', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'filtros' => ['tipo_indicador' => 'construccion_de_viviendas'], 'periodo' => 'anio'],
-            'movilizados_otras' => ['nombre' => 'Nº Voluntarios/as movilizados/as en otras actividades', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'where_raw' => "(tipo_indicador IS NULL OR tipo_indicador NOT IN ('territorio','colecta','construccion_de_viviendas'))", 'periodo' => 'anio'],
-            'movilizados_total' => ['nombre' => 'Voluntarios/as movilizados/as en actividades (TOTAL)', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'periodo' => 'anio', 'group_by' => ['tipo_indicador']],
+            'movilizados_otras' => ['nombre' => 'Nº Voluntarios/as movilizados/as en otras actividades', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'filtros' => ['tipo_indicador' => 'otras_actividades'], 'periodo' => 'anio'],
+            // TOTAL = suma de los 4 indicadores de movilización (territorio, colecta,
+            // construcciones, otras_actividades). Excluye tipos de otras familias
+            // (captacion, encuentros, gestion, insercion, renovacion) y los sin etiquetar
+            // (tipo_indicador NULL): esos NO suman a los indicadores de movilización.
+            'movilizados_total' => ['nombre' => 'Voluntarios/as movilizados/as en actividades (TOTAL)', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'where_raw' => "tipo_indicador IN ('territorio','colecta','construccion_de_viviendas','otras_actividades')", 'periodo' => 'anio', 'group_by' => ['tipo_indicador']],
 
             // ── Equipo permanente (personas únicas vigentes sobre fact_membresia) ──
             'equipo_permanente_total' => ['nombre' => 'Voluntarios/as en equipo permanente (TOTAL)', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['vigente' => 1], 'periodo' => null, 'group_by' => ['area', 'rol']],
