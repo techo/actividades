@@ -493,8 +493,8 @@ return [
 	//gracias.blade.php
 	'activity_detail' => 'Detalhe da Actividade',
 	'inscription_confirmed' => 'Inscrição confirmada!',
-	'socio_exento_titulo' => 'Você tem o benefício de doador',
-	'socio_exento_texto' => 'Por ser doador(a) do TECHO você não precisa pagar esta atividade.',
+	'socio_exento_titulo' => 'Obrigado por ser doador(a) do TECHO!',
+	'socio_exento_texto' => 'Por fazer parte da nossa Comunidade de Doadores(as), você não precisa pagar esta atividade.',
 	'terms_section_title' => 'Para finalizar, aceite os termos',
 	'read_more' => 'Ver mais',
 	'read_less' => 'Ver menos',

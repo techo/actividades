@@ -487,8 +487,8 @@ return [
 	//gracias.blade.php
     'activity_detail' => 'Details of the activity',
     'inscription_confirmed' => 'Inscription confirmed!',
-    'socio_exento_titulo' => 'You have the member benefit',
-    'socio_exento_texto' => 'As a TECHO member you don\'t have to pay for this activity.',
+    'socio_exento_titulo' => 'Thank you for being a TECHO donor!',
+    'socio_exento_texto' => 'As part of our Members Community, you don\'t need to pay for this activity.',
     'terms_section_title' => 'To finish, accept the terms',
     'read_more' => 'Read more',
     'read_less' => 'Read less',

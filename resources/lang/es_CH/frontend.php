@@ -488,8 +488,8 @@ return [
 	//gracias.blade.php
     'activity_detail' => 'Detalle de Actividad',
     'inscription_confirmed' => '¡Inscripción confirmada!',
-    'socio_exento_titulo' => 'Tienes el beneficio de socio',
-    'socio_exento_texto' => 'Por ser socio de TECHO no tienes que pagar esta actividad.',
+    'socio_exento_titulo' => '¡Gracias por ser donante de TECHO!',
+    'socio_exento_texto' => 'Por ser parte de nuestra Comunidad de Socixs, no hace falta que pagues esta actividad.',
     'terms_section_title' => 'Para finalizar, acepta los términos',
     'read_more' => 'Ver más',
     'read_less' => 'Ver menos',
