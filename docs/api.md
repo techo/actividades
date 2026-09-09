@@ -1220,6 +1220,7 @@ Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llam
 - Todos los montos van en la **moneda local del donante**; no hay conversión a USD. La moneda se resuelve en este orden: suscripción vigente → donación única más reciente → preset del país → fallback global (`usd`).
 - El total de impacto suma pagos únicos `succeeded` + cobros recurrentes del ledger, **excluyendo** donaciones ligadas a una inscripción (`inscripcion_id != null`, que son pagos de actividades).
 - Costos de referencia por moneda, split logístico y promedios de impacto de la organización viven en `config/donaciones_impacto.php` (hoy valores placeholder pendientes de validación por datos/finanzas).
+- Los textos (`titulo`, `intro`, `texto`, `mensaje`) vienen en el **idioma del donante** (`persona->pais->locale`, con fallback a `app.locale`). Traducciones en `resources/lang/{locale}/impacto.php` (`es_AR`, `es`, `es_CH`, `pt`, `en`).
 
 **Response `200`**
 ```json
@@ -1240,9 +1241,9 @@ Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llam
   },
   "impacto_m2": {
     "metros_cuadrados": 0.3,
-    "meta_m2": 36,
+    "meta_m2": 18,
     "viviendas_financiadas": 0,
-    "porcentaje_barra": 0.8,
+    "porcentaje_barra": 1.7,
     "costo_m2": 284000,
     "currency": "ars",
     "mensaje": null
@@ -1270,7 +1271,7 @@ Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llam
 | | `intro` | Narrativa colectiva; cambia si `meses_activos` es `0`. |
 | `impacto_m2` | `metros_cuadrados` | `total_major / costo_m2` de la moneda, redondeado a 1 decimal. |
 | | `viviendas_financiadas` | Viviendas completas financiadas (hito). Si ≥ 1, `mensaje` felicita y la barra mide el progreso hacia la siguiente. |
-| | `porcentaje_barra` | Progreso hacia 1 vivienda (`meta_m2` = 36 m², 6x6), acotado 0–100. |
+| | `porcentaje_barra` | Progreso hacia 1 vivienda (`meta_m2` = 18 m², 6x3), acotado 0–100. |
 | `logistica` | `categoria` | Rota por mes calendario: `fletes` / `voluntariado` / `herramientas`. |
 | | `monto_mensual` | Monto de la suscripción vigente en moneda local, o `null` si no tiene una activa. |
 | | `monto_categoria` | Porción de ese aporte mensual asignada a la categoría del mes (`monto_mensual × porcentaje`). |

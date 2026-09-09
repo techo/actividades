@@ -8,7 +8,6 @@ use App\DonationPreset;
 use App\DonationSubscription;
 use App\Persona;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Arma el payload del dashboard de impacto de un donante (tres tarjetas).
@@ -44,6 +43,7 @@ class DonationImpactService
         $personId = $persona->idPersona;
 
         $moneda      = $this->resolverMoneda($persona, $personId);
+        $locale      = $this->resolverLocale($persona);
         $exponente   = $this->exponente($moneda);
         $totalMenor  = $this->totalAportadoMenor($personId, $moneda);
         $totalMayor  = $totalMenor / (10 ** $exponente);
@@ -56,9 +56,9 @@ class DonationImpactService
                 'major'    => round($totalMayor, 2),
                 'currency' => $moneda,
             ],
-            'reloj_impacto' => $this->tarjetaReloj($mesesActivos),
-            'impacto_m2'    => $this->tarjetaImpactoM2($totalMayor, $moneda),
-            'logistica'     => $this->tarjetaLogistica($personId, $moneda, $exponente),
+            'reloj_impacto' => $this->tarjetaReloj($mesesActivos, $locale),
+            'impacto_m2'    => $this->tarjetaImpactoM2($totalMayor, $moneda, $locale),
+            'logistica'     => $this->tarjetaLogistica($personId, $moneda, $exponente, $locale),
         ];
     }
 
@@ -66,32 +66,23 @@ class DonationImpactService
     // Tarjeta A — Reloj de impacto global
     // =========================================================================
 
-    private function tarjetaReloj(int $meses): array
+    private function tarjetaReloj(int $meses, string $locale): array
     {
         $prom = $this->cfg['promedios_org'];
 
-        $viviendas   = $meses * $prom['viviendas'];
-        $voluntarios = $meses * $prom['voluntarios'];
-        $mesas       = $meses * $prom['mesas'];
-
         // Framing colectivo (no "vos lograste"): la red de TECHO logró X en el
-        // tiempo que el donante lleva activo.
-        if ($meses <= 0) {
-            $intro = 'Sumate como socio: cada mes, la red de TECHO transforma '
-                . 'territorios en toda Latinoamérica.';
-        } else {
-            $intro = 'El impacto masivo no se logra solo. En los ' . $meses
-                . ' meses que llevás como socio activo, la red de TECHO ha '
-                . 'logrado en toda Latinoamérica:';
-        }
+        // tiempo que el donante lleva activo. Textos en el idioma del donante.
+        $intro = $meses <= 0
+            ? trans('impacto.reloj_intro_cero', [], $locale)
+            : trans_choice('impacto.reloj_intro', $meses, ['meses' => $meses], $locale);
 
         return [
             'meses_activos' => $meses,
-            'titulo'        => 'Desde que llegaste...',
+            'titulo'        => trans('impacto.reloj_titulo', [], $locale),
             'intro'         => $intro,
-            'viviendas'     => $viviendas,
-            'voluntarios'   => $voluntarios,
-            'mesas'         => $mesas,
+            'viviendas'     => $meses * $prom['viviendas'],
+            'voluntarios'   => $meses * $prom['voluntarios'],
+            'mesas'         => $meses * $prom['mesas'],
         ];
     }
 
@@ -99,7 +90,7 @@ class DonationImpactService
     // Tarjeta B — Impacto en metros cuadrados
     // =========================================================================
 
-    private function tarjetaImpactoM2(float $totalMayor, string $moneda): array
+    private function tarjetaImpactoM2(float $totalMayor, string $moneda, string $locale): array
     {
         $costos  = $this->costos($moneda);
         $metaM2  = (float) $this->cfg['meta_m2_vivienda'];
@@ -115,9 +106,12 @@ class DonationImpactService
             $aporteRestante = $totalMayor - ($viviendasFinanciadas * $costoViv);
             $metrosRestantes = $costoM2 > 0 ? $aporteRestante / $costoM2 : 0.0;
             $porcentajeBarra = $metaM2 > 0 ? ($metrosRestantes / $metaM2) * 100 : 0.0;
-            $mensaje = '¡Felicidades! Financiaste el equivalente a '
-                . $viviendasFinanciadas . ' vivienda' . ($viviendasFinanciadas > 1 ? 's' : '')
-                . '. ¡Vamos por más!';
+            $mensaje = trans_choice(
+                'impacto.impacto_hito',
+                $viviendasFinanciadas,
+                ['count' => $viviendasFinanciadas],
+                $locale
+            );
         } else {
             $porcentajeBarra = $metaM2 > 0 ? (round($metros, 1) / $metaM2) * 100 : 0.0;
             $mensaje = null;
@@ -138,7 +132,7 @@ class DonationImpactService
     // Tarjeta C — Logística cíclica
     // =========================================================================
 
-    private function tarjetaLogistica(int $personId, string $moneda, int $exponente): array
+    private function tarjetaLogistica(int $personId, string $moneda, int $exponente, string $locale): array
     {
         $split = $this->cfg['logistica_split'];
 
@@ -149,33 +143,24 @@ class DonationImpactService
             : null;
 
         // Rotación por mes calendario para que el contenido no aburra.
-        // Igual que el algoritmo cíclico del documento (mes % 3).
-        $categorias = [
-            0 => [
-                'key'    => 'herramientas',
-                'icono'  => '🛠️',
-                'titulo' => 'Equipás a la comunidad',
-                'texto'  => 'Tu aporte de este mes ayuda a financiar kits de trabajo '
-                    . '(palas, cascos, guantes, clavos) para la construcción.',
-            ],
-            1 => [
-                'key'    => 'fletes',
-                'icono'  => '🚚',
-                'titulo' => 'Movés los materiales',
-                'texto'  => 'Tu aporte de este mes ayuda a cubrir los fletes que llevan '
-                    . 'la madera y los paneles al asentamiento.',
-            ],
-            2 => [
-                'key'    => 'voluntariado',
-                'icono'  => '🤝',
-                'titulo' => 'Movés a los voluntarios',
-                'texto'  => 'Tu aporte de este mes ayuda a cubrir el transporte, la '
-                    . 'alimentación y los seguros de los voluntarios en territorio.',
-            ],
+        // Igual que el algoritmo cíclico del documento (mes % 3). Los textos
+        // salen de resources/lang/{locale}/impacto.php según la categoría.
+        $iconos = [
+            'herramientas' => '🛠️',
+            'fletes'       => '🚚',
+            'voluntariado' => '🤝',
         ];
+        $rotacion = [0 => 'herramientas', 1 => 'fletes', 2 => 'voluntariado'];
 
-        $cat = $categorias[Carbon::now()->month % 3];
-        $porcentaje = $split[$cat['key']] ?? 0.0;
+        $categoria  = $rotacion[Carbon::now()->month % 3];
+        $porcentaje = $split[$categoria] ?? 0.0;
+
+        $cat = [
+            'key'    => $categoria,
+            'icono'  => $iconos[$categoria],
+            'titulo' => trans("impacto.logistica_{$categoria}_titulo", [], $locale),
+            'texto'  => trans("impacto.logistica_{$categoria}_texto", [], $locale),
+        ];
 
         // Parte del aporte mensual asignada a esta categoría (en moneda local).
         $montoCategoriaMayor = $montoMensualMayor !== null
@@ -233,6 +218,15 @@ class DonationImpactService
         }
 
         return $this->cfg['moneda_fallback'];
+    }
+
+    /**
+     * Idioma del donante para los textos del dashboard. Mismo patrón que push
+     * y los mails: locale del país de la persona, con fallback a app.locale.
+     */
+    private function resolverLocale(Persona $persona): string
+    {
+        return optional($persona->pais)->locale ?? config('app.locale');
     }
 
     /**
