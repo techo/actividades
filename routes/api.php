@@ -172,6 +172,10 @@ Route::middleware('auth:api')->group(function () {
         // Unified donation + subscription history
         Route::get('history', 'api\DonationController@history')
              ->name('api.donations.history');
+
+        // Dashboard de impacto (tres tarjetas) del donante autenticado
+        Route::get('impact', 'api\DonationController@impact')
+             ->name('api.donations.impact');
     });
 
     // ── Inscripcion Stripe (mobile payment for activity enrollment) ───────────
