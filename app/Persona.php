@@ -328,4 +328,33 @@ class Persona extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Dispositivo::class, 'idPersona', 'idPersona');
     }
+
+    /**
+     * ¿Podemos NO mandarle el mail porque le va a llegar el push? Sirve para no
+     * duplicar el mismo aviso en dos canales y bajar el volumen de envíos de mail
+     * (ver migración a SES: el relay de Gmail se satura con las ráfagas).
+     *
+     * Requiere las tres cosas juntas:
+     *  - push activado (recibir_push),
+     *  - al menos un dispositivo activo (mismo criterio que PushNotificationService::enviar),
+     *  - acceso reciente a la app: sin esto suprimiríamos el mail de quien desinstaló
+     *    sin desloguear (el device sigue 'activo' pero el push nunca llega).
+     *
+     * Es fail-safe: ante la duda (push off, sin device, o sin acceso reciente) devuelve
+     * false y el mail se manda igual. Nadie se queda sin el aviso.
+     *
+     * @param int $diasRecencia ventana de "acceso reciente"; más chico = más conservador.
+     */
+    public function tienePushConfiable(int $diasRecencia = 60): bool
+    {
+        if (!$this->recibir_push) {
+            return false;
+        }
+
+        if (!$this->ultimo_acceso_app || $this->ultimo_acceso_app->lt(now()->subDays($diasRecencia))) {
+            return false;
+        }
+
+        return $this->dispositivos()->where('activo', true)->exists();
+    }
 }

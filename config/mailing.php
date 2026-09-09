@@ -42,6 +42,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Dedup mail/push (no duplicar el mismo aviso en dos canales)
+    |--------------------------------------------------------------------------
+    |
+    | Cuando un mismo evento manda push Y mail, si a la persona le llega el push
+    | de forma confiable (app instalada + push activado + acceso reciente) NO le
+    | mandamos también el mail. Baja el volumen de envíos y evita el doble aviso.
+    | La "recencia" evita suprimir el mail de un device 'activo' pero muerto
+    | (desinstalado sin logout). Ver App\Persona::tienePushConfiable().
+    | Más chico = más conservador (suprime menos, manda más mail).
+    |
+    */
+
+    // Recordatorio de actividad (cron 08:00): es el batch más grande, ventana amplia.
+    'dedup_recencia_dias' => (int) env('MAIL_DEDUP_RECENCIA_DIAS', 60),
+
+    // Avisos críticos de inscripción (confirmación, falta de pago): más importantes,
+    // ventana más corta → solo se suprime el mail a usuarios de app muy activos.
+    'dedup_recencia_dias_critico' => (int) env('MAIL_DEDUP_RECENCIA_DIAS_CRITICO', 30),
+
+    /*
+    |--------------------------------------------------------------------------
     | Red de seguridad: redirección de TODO el mail saliente (sandbox)
     |--------------------------------------------------------------------------
     |
