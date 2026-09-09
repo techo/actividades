@@ -4,13 +4,14 @@ namespace App\Search;
 
 
 use App\Persona;
+use App\Scopes\BelongsToCountryScope;
 use Illuminate\Database\Eloquent\Builder;
 
 class UsuariosSearch
 {
-    public static function apply($filters, $sort = 'idPersona desc', $per_page = 25)
+    public static function apply($filters, $sort = 'idPersona desc', $per_page = 25, $crossPais = false)
     {
-        $query = static::applyDecoratorsFromRequest($filters, UsuariosSearch::newQuery());
+        $query = static::applyDecoratorsFromRequest($filters, UsuariosSearch::newQuery($crossPais));
         return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
@@ -38,7 +39,15 @@ class UsuariosSearch
         return $query->paginate($per_page);
     }
 
-    private static function newQuery(){
+    private static function newQuery($crossPais = false){
+        // Rescate por email exacto: se busca en TODA la base ignorando el scope de país,
+        // para poder encontrar a quienes se registraron en otro país (típicamente el
+        // país por defecto). El permiso para VER/EDITAR el perfil se decide después con
+        // Persona::gestionableCrossPais(); acá solo se relaja el hallazgo.
+        if ($crossPais) {
+            return Persona::withoutGlobalScope(BelongsToCountryScope::class);
+        }
+
         $query = (new Persona())->newQuery();
         $query->where('idPais', '=', auth()->user()->idPaisPermitido);
         return $query;

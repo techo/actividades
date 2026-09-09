@@ -191,6 +191,41 @@ class Persona extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * ¿El usuario autenticado puede gestionar a ESTA persona, aunque sea de otro país?
+     *
+     * Política híbrida para rescatar registros "varados" (los que agarraron el país
+     * por defecto y quedan fuera del alcance de su coordinación). Puede gestionarla si:
+     *  - es admin global (alcanza todos los países), o
+     *  - esta persona es de alguno de sus países permitidos, o
+     *  - la persona quedó "sin dueño": su país es el genérico por defecto
+     *    (config('app.pais_default')) o un país sin coordinación (no habilitado).
+     * Si pertenece a otro país habilitado (otra coordinación real), NO puede: la
+     * gestiona esa coordinación o un admin global. Se usa en /admin/usuarios para el
+     * rescate por email exacto (ver UsuariosSearch y backoffice\UsuariosController).
+     */
+    public function gestionableCrossPais(): bool
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return false;
+        }
+
+        if ($auth->esGlobalPais()) {
+            return true;
+        }
+
+        if (in_array((int) $this->idPais, $auth->paisesPermitidosIds(), true)) {
+            return true;
+        }
+
+        if ((int) $this->idPais === (int) config('app.pais_default')) {
+            return true;
+        }
+
+        return empty(optional($this->pais)->habilitado);
+    }
+
+    /**
      * Multi-país (chokepoint): ids de país que el usuario puede administrar/alcanzar.
      * Prioriza el pivote `persona_paises_permitidos`; si no tiene filas, cae al
      * `idPaisPermitido` único (retrocompatible). Devuelve [] cuando no hay restricción

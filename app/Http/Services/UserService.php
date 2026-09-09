@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Persona;
+use App\Scopes\BelongsToCountryScope;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -121,7 +122,9 @@ class UserService
 
     public function  editarUsuario(Request $request)
     {
-        $persona = Persona::findOrFail($request->idUsuario);
+        // Sin el scope de país: permite guardar la corrección de una persona rescatada
+        // de otro país (el controller ya validó el permiso con gestionableCrossPais()).
+        $persona = Persona::withoutGlobalScope(BelongsToCountryScope::class)->findOrFail($request->idUsuario);
 
         $persona = $this->cargar_cambios($request, $persona);
 
