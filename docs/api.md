@@ -1240,9 +1240,9 @@ Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llam
   },
   "impacto_m2": {
     "metros_cuadrados": 0.3,
-    "meta_m2": 16.5,
+    "meta_m2": 36,
     "viviendas_financiadas": 0,
-    "porcentaje_barra": 1.8,
+    "porcentaje_barra": 0.8,
     "costo_m2": 284000,
     "currency": "ars",
     "mensaje": null
@@ -1270,7 +1270,7 @@ Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llam
 | | `intro` | Narrativa colectiva; cambia si `meses_activos` es `0`. |
 | `impacto_m2` | `metros_cuadrados` | `total_major / costo_m2` de la moneda, redondeado a 1 decimal. |
 | | `viviendas_financiadas` | Viviendas completas financiadas (hito). Si ≥ 1, `mensaje` felicita y la barra mide el progreso hacia la siguiente. |
-| | `porcentaje_barra` | Progreso hacia 1 vivienda (`meta_m2` = 16.5 m²), acotado 0–100. |
+| | `porcentaje_barra` | Progreso hacia 1 vivienda (`meta_m2` = 36 m², 6x6), acotado 0–100. |
 | `logistica` | `categoria` | Rota por mes calendario: `fletes` / `voluntariado` / `herramientas`. |
 | | `monto_mensual` | Monto de la suscripción vigente en moneda local, o `null` si no tiene una activa. |
 | | `monto_categoria` | Porción de ese aporte mensual asignada a la categoría del mes (`monto_mensual × porcentaje`). |
