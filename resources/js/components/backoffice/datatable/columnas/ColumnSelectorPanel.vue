@@ -60,6 +60,7 @@ export default {
             fijas: [],
             grupos: [],
             visibles: [], // keys visibles, en el orden del catálogo
+            ocultas: [],  // keys de seguimiento (custom_*) que este usuario ocultó
             cargado: false,
         }
     },
@@ -72,10 +73,15 @@ export default {
         axios.get(`${this.baseUrl}/config`).then(({ data }) => {
             this.fijas = data.fijas
             this.grupos = data.grupos
+            this.ocultas = Array.isArray(data.ocultas) ? data.ocultas : []
             const conocidas = this.keysDelCatalogo()
             // preferencias del usuario, o defaults; se descartan keys que ya no existen
             const preferidas = data.preferencias !== null ? data.preferencias : data.defaults
-            this.visibles = preferidas.filter(key => conocidas.includes(key))
+            const base = preferidas.filter(key => conocidas.includes(key))
+            // Columnas de seguimiento (compartidas por el equipo): visibles por
+            // defecto para todos, salvo las que este usuario ocultó para sí.
+            const seguimiento = this.keysSeguimiento().filter(key => !this.ocultas.includes(key))
+            this.visibles = base.concat(seguimiento.filter(key => !base.includes(key)))
             this.cargado = true
             this.aplicar()
         })
@@ -99,14 +105,27 @@ export default {
         keysDelCatalogo() {
             return this.grupos.reduce((keys, grupo) => keys.concat(grupo.campos.map(c => c.key)), [])
         },
+        keysSeguimiento() {
+            const grupo = this.grupos.find(g => g.key === 'seguimiento')
+            return grupo ? grupo.campos.map(c => c.key) : []
+        },
         esVisible(key) {
             return this.visibles.includes(key)
+        },
+        esSeguimiento(key) {
+            return this.keysSeguimiento().includes(key)
         },
         toggleCampo(key) {
             if (this.esVisible(key)) {
                 this.visibles = this.visibles.filter(k => k !== key)
+                // Ocultar una columna de seguimiento se recuerda por usuario, porque
+                // por defecto están encendidas para todo el equipo.
+                if (this.esSeguimiento(key) && !this.ocultas.includes(key)) {
+                    this.ocultas = this.ocultas.concat(key)
+                }
             } else {
                 this.visibles = this.visibles.concat(key)
+                this.ocultas = this.ocultas.filter(k => k !== key)
             }
             this.aplicar()
             this.persistir()
@@ -138,7 +157,7 @@ export default {
             this._persistTimer = setTimeout(() => {
                 axios.defaults.headers.common['X-CSRF-TOKEN'] =
                     document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                axios.put(`${this.baseUrl}/preferencias`, { columnas: this.visibles })
+                axios.put(`${this.baseUrl}/preferencias`, { columnas: this.visibles, ocultas: this.ocultas })
                     .catch(() => Event.$emit('error'))
             }, 400)
         },
@@ -160,6 +179,7 @@ export default {
                 },
             }
             seguimiento.campos.push(campo)
+            this.ocultas = this.ocultas.filter(k => k !== campo.key)
             this.visibles = this.visibles.concat(campo.key)
             this.aplicar()
             this.persistir()
@@ -173,6 +193,7 @@ export default {
                     const seguimiento = this.grupos.find(g => g.key === 'seguimiento')
                     seguimiento.campos = seguimiento.campos.filter(c => c.key !== campo.key)
                     this.visibles = this.visibles.filter(k => k !== campo.key)
+                    this.ocultas = this.ocultas.filter(k => k !== campo.key)
                     this.aplicar()
                     this.persistir()
                 })

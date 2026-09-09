@@ -168,6 +168,37 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
+    public function una_columna_de_seguimiento_es_visible_para_otros_usuarios_y_cada_uno_puede_ocultarla()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        $otro = $this->admin();
+        $actividad = $this->actividadConInscripto($admin);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad;
+
+        // El primer usuario crea una columna de seguimiento.
+        $columna = $this->actingAs($admin)->postJson($url . '/columnas', [
+            'nombre' => 'Estado de contacto', 'tipo' => 'estado', 'opciones' => ['Contactado', 'En espera'],
+        ])->assertStatus(200)->json('columna');
+        $key = 'custom_' . $columna['id'];
+
+        // Otro usuario ve la columna compartida en el catálogo, sin haberla ocultado.
+        $config = $this->actingAs($otro)->getJson($url . '/config')->assertStatus(200)->json();
+        $this->assertTrue(collect($config['columnas_custom'])->pluck('id')->contains($columna['id']));
+        $this->assertEmpty($config['ocultas']);
+
+        // Ese usuario la oculta para sí; se persiste sin tocar al resto.
+        $this->actingAs($otro)->putJson($url . '/preferencias', [
+            'columnas' => ['dni'], 'ocultas' => [$key],
+        ])->assertStatus(200);
+
+        $this->assertEquals([$key], $this->actingAs($otro)->getJson($url . '/config')->json('ocultas'));
+        $this->assertEmpty($this->actingAs($admin)->getJson($url . '/config')->json('ocultas'));
+    }
+
+    /** @test */
     public function un_valor_incoherente_con_el_tipo_se_rechaza()
     {
         $this->seed('PermisosSeeder');
@@ -501,7 +532,7 @@ class ListadosColumnasConfigurablesTest extends TestCase
     // ── Fase 4: vistas guardadas ───────────────────────────────────────────
 
     /** @test */
-    public function las_vistas_combinan_predefinidas_y_propias()
+    public function las_vistas_combinan_predefinidas_y_guardadas()
     {
         $this->withoutExceptionHandling();
         $this->seed('PermisosSeeder');
@@ -510,7 +541,7 @@ class ListadosColumnasConfigurablesTest extends TestCase
         [$actividad] = $this->actividadConGeneros($admin, ['M']);
         $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
 
-        // Una vista propia.
+        // Una vista guardada.
         $this->actingAs($admin)->postJson($url, [
             'nombre' => 'Mujeres',
             'color' => '#e91e63',
@@ -522,11 +553,34 @@ class ListadosColumnasConfigurablesTest extends TestCase
         // Predefinida "Todos" presente y read-only.
         $this->assertNotEmpty($data['predefinidas']);
         $this->assertTrue($data['predefinidas'][0]['es_predefinida']);
-        // Propia guardada.
-        $this->assertCount(1, $data['propias']);
-        $this->assertEquals('Mujeres', $data['propias'][0]['nombre']);
-        $this->assertEquals('genero', $data['propias'][0]['config']['filtros'][0]['campo']);
-        $this->assertEquals('oficina', $data['propias'][0]['config']['group_by']);
+        $this->assertFalse($data['predefinidas'][0]['puede_editar']);
+        // Vista guardada, editable por su creador.
+        $this->assertCount(1, $data['guardadas']);
+        $this->assertEquals('Mujeres', $data['guardadas'][0]['nombre']);
+        $this->assertTrue($data['guardadas'][0]['puede_editar']);
+        $this->assertEquals('genero', $data['guardadas'][0]['config']['filtros'][0]['campo']);
+        $this->assertEquals('oficina', $data['guardadas'][0]['config']['group_by']);
+    }
+
+    /** @test */
+    public function las_vistas_guardadas_se_comparten_entre_usuarios_del_contexto()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        $otroAdmin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
+
+        $this->actingAs($admin)->postJson($url, [
+            'nombre' => 'Compartida', 'config' => ['filtros' => [], 'group_by' => null],
+        ])->assertStatus(200);
+
+        // Otro usuario del contexto ve la vista creada por el primero.
+        $data = $this->actingAs($otroAdmin)->getJson($url)->assertStatus(200)->json();
+        $this->assertCount(1, $data['guardadas']);
+        $this->assertEquals('Compartida', $data['guardadas'][0]['nombre']);
     }
 
     /** @test */
@@ -552,7 +606,7 @@ class ListadosColumnasConfigurablesTest extends TestCase
         $data = $this->actingAs($admin)->getJson($url)->assertStatus(200)->json();
 
         // Las columnas se persisten y vuelven en el config de la vista.
-        $this->assertEquals(['dni', 'whatsapp', 'nivel'], $data['propias'][0]['config']['columnas']);
+        $this->assertEquals(['dni', 'whatsapp', 'nivel'], $data['guardadas'][0]['config']['columnas']);
     }
 
     /** @test */
@@ -578,21 +632,48 @@ class ListadosColumnasConfigurablesTest extends TestCase
     }
 
     /** @test */
-    public function no_se_puede_eliminar_una_vista_de_otro_usuario()
+    public function un_admin_puede_eliminar_la_vista_de_otro_usuario()
     {
         $this->seed('PermisosSeeder');
 
         $admin = $this->admin();
-        $otro = $this->admin();
+        $otroAdmin = $this->admin();
         [$actividad] = $this->actividadConGeneros($admin, ['M']);
         $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
 
         $vista = $this->actingAs($admin)->postJson($url, [
-            'nombre' => 'Mía', 'config' => ['filtros' => [], 'group_by' => null],
+            'nombre' => 'De admin', 'config' => ['filtros' => [], 'group_by' => null],
         ])->json('vista');
 
-        $this->actingAs($otro)->deleteJson($url . '/' . $vista['id'])->assertStatus(404);
-        $this->assertDatabaseHas('listado_vistas', ['id' => $vista['id']]);
+        // Un admin puede administrar cualquier vista compartida del contexto.
+        $this->actingAs($otroAdmin)->deleteJson($url . '/' . $vista['id'])->assertStatus(200);
+        $this->assertSoftDeleted('listado_vistas', ['id' => $vista['id']]);
+    }
+
+    /** @test */
+    public function un_coordinador_no_creador_no_puede_eliminar_una_vista_ajena()
+    {
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        [$actividad] = $this->actividadConGeneros($admin, ['M']);
+        $url = '/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/vistas';
+
+        // Coordinador con acceso a la actividad, pero no creador de la vista.
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('coordinador');
+        \App\Coordinador::create(['idPersona' => $coordinador->idPersona, 'idActividad' => $actividad->idActividad]);
+
+        $vista = $this->actingAs($admin)->postJson($url, [
+            'nombre' => 'Del admin', 'config' => ['filtros' => [], 'group_by' => null],
+        ])->json('vista');
+
+        // La ve (compartida) pero no puede editarla ni borrarla.
+        $data = $this->actingAs($coordinador)->getJson($url)->assertStatus(200)->json();
+        $this->assertFalse($data['guardadas'][0]['puede_editar']);
+
+        $this->actingAs($coordinador)->deleteJson($url . '/' . $vista['id'])->assertStatus(403);
+        $this->assertDatabaseHas('listado_vistas', ['id' => $vista['id'], 'deleted_at' => null]);
     }
 
     // ── Fase 5: Suscriptos sobre el mismo módulo genérico ──────────────────
