@@ -1211,6 +1211,74 @@ Historial unificado de pagos únicos y suscripciones, ordenado por fecha descend
 
 ---
 
+### `GET /donations/impact` 🔒
+
+Dashboard de impacto del donante autenticado: las tres tarjetas en una sola llamada. Lee **solo de la base local** (`donations` + `donation_invoices` + `donation_subscriptions`) — no llama a Stripe.
+
+**Reglas**
+
+- Todos los montos van en la **moneda local del donante**; no hay conversión a USD. La moneda se resuelve en este orden: suscripción vigente → donación única más reciente → preset del país → fallback global (`usd`).
+- El total de impacto suma pagos únicos `succeeded` + cobros recurrentes del ledger, **excluyendo** donaciones ligadas a una inscripción (`inscripcion_id != null`, que son pagos de actividades).
+- Costos de referencia por moneda, split logístico y promedios de impacto de la organización viven en `config/donaciones_impacto.php` (hoy valores placeholder pendientes de validación por datos/finanzas).
+
+**Response `200`**
+```json
+{
+  "currency": "ars",
+  "total_aportado": {
+    "minor": 8400000,
+    "major": 84000,
+    "currency": "ars"
+  },
+  "reloj_impacto": {
+    "meses_activos": 12,
+    "titulo": "Desde que llegaste...",
+    "intro": "El impacto masivo no se logra solo. En los 12 meses que llevás como socio activo, la red de TECHO ha logrado en toda Latinoamérica:",
+    "viviendas": 3780,
+    "voluntarios": 114672,
+    "mesas": 480
+  },
+  "impacto_m2": {
+    "metros_cuadrados": 0.3,
+    "meta_m2": 16.5,
+    "viviendas_financiadas": 0,
+    "porcentaje_barra": 1.8,
+    "costo_m2": 284000,
+    "currency": "ars",
+    "mensaje": null
+  },
+  "logistica": {
+    "categoria": "herramientas",
+    "icono": "🛠️",
+    "titulo": "Equipás a la comunidad",
+    "texto": "Tu aporte de este mes ayuda a financiar kits de trabajo (palas, cascos, guantes, clavos) para la construcción.",
+    "porcentaje": 20,
+    "monto_mensual": 7000,
+    "monto_categoria": 1400,
+    "currency": "ars"
+  }
+}
+```
+
+**Campos**
+
+| Bloque | Campo | Descripción |
+|---|---|---|
+| `total_aportado` | `minor` / `major` | Total histórico de impacto en unidad menor y mayor de la moneda local. |
+| `reloj_impacto` | `meses_activos` | Meses consecutivos con cobro exitoso, contando hacia atrás desde el último cobro (reconstruido del ledger). Un donante solo de única vez da `0`. |
+| | `viviendas` / `voluntarios` / `mesas` | `meses_activos` × promedio mensual de la organización. |
+| | `intro` | Narrativa colectiva; cambia si `meses_activos` es `0`. |
+| `impacto_m2` | `metros_cuadrados` | `total_major / costo_m2` de la moneda, redondeado a 1 decimal. |
+| | `viviendas_financiadas` | Viviendas completas financiadas (hito). Si ≥ 1, `mensaje` felicita y la barra mide el progreso hacia la siguiente. |
+| | `porcentaje_barra` | Progreso hacia 1 vivienda (`meta_m2` = 16.5 m²), acotado 0–100. |
+| `logistica` | `categoria` | Rota por mes calendario: `fletes` / `voluntariado` / `herramientas`. |
+| | `monto_mensual` | Monto de la suscripción vigente en moneda local, o `null` si no tiene una activa. |
+| | `monto_categoria` | Porción de ese aporte mensual asignada a la categoría del mes (`monto_mensual × porcentaje`). |
+
+> Las cifras del ejemplo salen de las constantes placeholder actuales. Al reemplazar los valores de `config/donaciones_impacto.php` cambian sin tocar código.
+
+---
+
 ### `POST /inscripciones/{idInscripcion}/stripe/payment-intent` 🔒
 
 Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la clave Stripe del país de la actividad. El monto y moneda se toman de la actividad — no se pasan en el body.
