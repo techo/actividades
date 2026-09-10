@@ -25,6 +25,12 @@ class EnviarRecordatorioActividad extends Command
 
     public function handle()
     {
+        if (config('mailing.bulk_pausado')) {
+            $this->warn('Envío masivo PAUSADO (mailing.bulk_pausado) — recordatorios no enviados.');
+            \Log::warning('recordatorio: salteado por mailing.bulk_pausado');
+            return;
+        }
+
         $manana = Carbon::tomorrow();
 
         $actividades = Actividad::whereYear('fechaInicio', $manana->year)

@@ -19,6 +19,13 @@ return [
     |
     */
 
+    // Pausa de emergencia de TODO el envío masivo (recordatorios, invitaciones de
+    // actividad, comunicaciones de campaña, invitaciones a evaluación). Cuando está
+    // en true, esos envíos se SALTEAN (no se encolan) — el transaccional sigue normal.
+    // Sirve para cortar un runaway o proteger el cupo del proveedor. Ver los guards
+    // en los comandos/jobs de bulk.
+    'bulk_pausado' => filter_var(env('MAIL_BULK_PAUSADO', false), FILTER_VALIDATE_BOOLEAN),
+
     // Tope de mails masivos por día. Debe quedar por DEBAJO del límite del proveedor,
     // dejando lugar para el transaccional (confirmaciones, recordatorios), que también
     // consume el cupo del proveedor pero NO se throttlea acá.

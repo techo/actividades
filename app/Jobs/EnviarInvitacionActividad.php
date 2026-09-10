@@ -263,6 +263,14 @@ class EnviarInvitacionActividad implements ShouldQueue
 
     public function handle(PushNotificationService $pushService): void
     {
+        // Pausa de emergencia del envío masivo por email (no toca push).
+        if ($this->canal === self::CANAL_EMAIL && config('mailing.bulk_pausado')) {
+            Log::warning('EnviarInvitacionActividad: email PAUSADO por mailing.bulk_pausado', [
+                'idActividad' => $this->idActividad,
+            ]);
+            return;
+        }
+
         // todosLosPaises(): en modo sync (dev) el job corre dentro del request con
         // usuario autenticado, y el global scope de país filtraría la actividad si
         // fuese de otro país que el permitido del admin. El país ya se validó arriba.

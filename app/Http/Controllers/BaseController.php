@@ -53,6 +53,10 @@ class BaseController extends Controller
      */
     public function intentaEnviarEscalonado(Mailable $mailable, Persona $persona, int $indice = 0)
     {
+        if (config('mailing.bulk_pausado')) {
+            return; // envío masivo pausado (mailing.bulk_pausado)
+        }
+
         if (!$persona->recibirMails) {
             \Log::info('Mail a: ' . $persona->mail . ' no enviado por no aceptar notificaciones.');
             return;
