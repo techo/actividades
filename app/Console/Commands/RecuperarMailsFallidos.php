@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Notifications\VerifyEmail;
+use App\Services\EstadoInscripcion;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -145,21 +146,27 @@ class RecuperarMailsFallidos extends Command
             return ['saltear', 'sin_mailable'];
         }
         $insc = $mailable->inscripcion ?? null;
-        if (!$insc) {
+        if (!$insc || !$insc->actividad) {
             return ['saltear', 'inscripcion_inexistente'];
         }
 
-        $actividadPasada = optional(optional($insc->actividad)->fechaInicio)->isPast();
+        // Estado canónico (fuente de verdad): ramifica por el requisito real de
+        // la actividad; una actividad que no requiere confirmación queda CONFIRMED
+        // aunque confirma=0. Por eso NO alcanza con mirar el flag suelto.
+        $estado          = EstadoInscripcion::resolve($insc->actividad, $insc);
+        $actividadPasada = optional($insc->actividad->fechaInicio)->isPast();
 
         if ($tipo === 'confirmacion') {
-            if ((int) $insc->confirma !== 1) return ['saltear', 'no_confirmada'];
-            if ($actividadPasada)           return ['saltear', 'actividad_pasada'];
+            if ($estado !== EstadoInscripcion::CONFIRMED)            return ['saltear', 'no_confirmada'];
+            if ($actividadPasada)                                   return ['saltear', 'actividad_pasada'];
         } elseif ($tipo === 'esperar') {
-            if ((int) $insc->confirma === 1) return ['saltear', 'ya_confirmada'];
-            if ($actividadPasada)            return ['saltear', 'actividad_pasada'];
+            if ($estado !== EstadoInscripcion::WAITING_CONFIRMATION) return ['saltear', 'no_esperando_confirmacion'];
+            if ($actividadPasada)                                   return ['saltear', 'actividad_pasada'];
         } elseif ($tipo === 'pago') {
-            if ((int) $insc->pago === 1)     return ['saltear', 'ya_pago'];
-            if ($actividadPasada)            return ['saltear', 'actividad_pasada'];
+            // Solo si todavía puede pagar (plazo abierto); si ya pagó/está confirmada
+            // o venció el plazo, no corresponde.
+            if ($estado !== EstadoInscripcion::CONFIRM_BY_PAYING)   return ['saltear', 'no_requiere_pago'];
+            if ($actividadPasada)                                   return ['saltear', 'actividad_pasada'];
         }
 
         if ($commit) {
