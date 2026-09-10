@@ -219,7 +219,19 @@ class DonationWebhookController extends Controller
         }
 
         // ── 1. Record the charge in the ledger (idempotent) ───────────────────
-        $this->recordInvoicePayment($event, $invoice, $sub);
+        // Best-effort: the ledger is analytics/reporting, so a failure here must
+        // NEVER block step 2 (marking the subscription active), which is the
+        // money-critical state. If it throws, log and carry on; the hourly
+        // reconcile / a later event can backfill.
+        try {
+            $this->recordInvoicePayment($event, $invoice, $sub);
+        } catch (\Throwable $e) {
+            Log::error('DonationWebhook: failed to record invoice in ledger', [
+                'subscription_id' => $subscriptionId,
+                'invoice_id'      => $invoice->id ?? null,
+                'error'           => $e->getMessage(),
+            ]);
+        }
 
         // ── 2. Advance the subscription state (deduped per event) ─────────────
         if ($sub->stripe_event_id === $event->id) {
