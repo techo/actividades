@@ -31,7 +31,7 @@ class MailVoucherRechazado extends Mailable implements ShouldQueue
     {
         return $this
             ->subject(__('email.voucher_rechazado_subject') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from('noreplyactividades@techo.org', __('email.remitente'))
+            ->from(config('mail.from.address'), __('email.remitente'))
             ->view('emails.voucherRechazado');
     }
 }
