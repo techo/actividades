@@ -35,7 +35,9 @@ case "${1:-}" in
   production)    ENVIRONMENT="prod"; shift ;;
 esac
 
-HOST="techo@actividades.techo.org"
+# Host SSH. Overridable con DEPLOY_HOST (p. ej. un alias de ~/.ssh/config que
+# fije la IdentityFile). Default: el usuario+host de siempre.
+HOST="${DEPLOY_HOST:-techo@actividades.techo.org}"
 case "$ENVIRONMENT" in
   prod)    DIR="/var/www/html/voluntariado-eventual" ;;
   sandbox) DIR="/var/www/html/sandbox-voluntariado-eventual" ;;
