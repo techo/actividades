@@ -88,7 +88,7 @@
             <h5>{{ __('frontend.confirm_inscription_with_qr') }}</h5>
             <span>{{ __('frontend.show_on_arrival') }}</span>
             <div class="mt-4">
-                <img src="{{ $qrCode }}" alt="QR" width="200" height="200">
+                <img src="{{ $message->embedData($qrCode, 'qr.png', 'image/png') }}" alt="QR" width="200" height="200">
             </div>
         </div>
     </div>

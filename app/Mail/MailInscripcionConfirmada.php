@@ -36,9 +36,10 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
             . '/inscripcion/' . $this->inscripcion->idInscripcion
             . '/persona/' . $this->inscripcion->persona->idPersona;
 
-        $qrCode = 'data:image/png;base64,' . base64_encode(
-            QrCode::format('png')->size(200)->generate($url)
-        );
+        // PNG crudo del QR. Se embebe como adjunto inline (CID) en la vista con
+        // $message->embedData(), porque Gmail (y muchos clientes) NO renderizan
+        // imágenes data:URI en los mails (se veían rotas).
+        $qrCode = (string) QrCode::format('png')->size(200)->generate($url);
 
         return $this
             ->subject(__('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
