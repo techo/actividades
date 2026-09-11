@@ -212,6 +212,39 @@ class PersonasController extends Controller
             );
     }
 
+    /**
+     * Reenvía el mail de verificación de email a la persona autenticada.
+     *
+     * El reenvío nativo de Laravel (VerificationController@resend) vive solo en
+     * una ruta web bajo sesión de navegador, así que no le sirve a la app móvil,
+     * que autentica por token Passport. Esto expone el mismo envío para la app.
+     * El throttle vive en la ruta (api.php) para evitar spam de correos.
+     */
+    public function resendVerification(Request $request)
+    {
+        $persona = auth('api')->user();
+
+        if ($persona->hasVerifiedEmail()) {
+            return response(
+                [
+                    'success' => true,
+                    'mensaje' => "El email ya estaba verificado",
+                ],
+                200
+            );
+        }
+
+        $persona->sendEmailVerificationNotification();
+
+        return response(
+            [
+                'success' => true,
+                'mensaje' => "Mail de verificación reenviado",
+            ],
+            200
+        );
+    }
+
   
 
 

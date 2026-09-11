@@ -164,6 +164,26 @@ Registra actividad reciente de la app. Actualiza `ultimo_acceso_app` con el time
 
 ---
 
+### `POST /email/resend` 🔒
+
+Reenvía el mail de verificación de email a la persona autenticada. Equivalente móvil de la ruta web `email/resend` (que solo funciona bajo sesión de navegador y por eso no le sirve a la app).
+
+Útil cuando el registro se hizo desde la app (`POST /register` envía el mail automáticamente) y el usuario no lo recibió. El link del mail reabre MiTECHO por deep link tras verificar, igual que en el registro.
+
+> Throttle: máximo **6 solicitudes por minuto** por usuario. Si se supera, responde `429`.
+
+**Response `200`**
+```json
+{ "success": true, "mensaje": "Mail de verificación reenviado" }
+```
+
+Si el email ya estaba verificado, no reenvía:
+```json
+{ "success": true, "mensaje": "El email ya estaba verificado" }
+```
+
+---
+
 ### `GET /personas/{id}` 🔒
 
 Retorna los datos de una persona por su ID.
