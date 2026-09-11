@@ -1,39 +1,55 @@
 @extends('emails.template')
 
+@php($esBrasil = app()->getLocale() === 'pt')
+
 @section('content')
 
-    <p style="font-size: larger">
+    {{-- Saludo --}}
+    <p style="margin:0 0 16px; font-size:18px; font-weight:700; color:#2b2f36;">
         @lang('frontend.hello') {{ $persona->nombres }},
     </p>
 
     {{-- Cuerpo HTML compuesto por el admin en el editor enriquecido (TinyMCE). --}}
-    <div>{!! $mensaje !!}</div>
+    <div style="font-size:15px; line-height:1.55; color:#2b2f36;">{!! $mensaje !!}</div>
 
     {{-- Tarjeta de la actividad: nombre + lugar/fecha + botón de acción. --}}
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:22px 0;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:22px 0;">
         <tr>
-            <td style="border:1px solid #e3e3e3; border-radius:6px; padding:18px 20px;">
-                <p style="margin:0 0 4px; font-size:16px; font-weight:700; color:#333333;">
+            <td style="border:1px solid #e6e8ec; border-radius:10px; padding:20px 22px;">
+                <p style="margin:0 0 4px; font-size:18px; font-weight:700; color:#0092dd; word-break:break-word;">
                     {{ $actividad->nombreActividad }}
                 </p>
-                <p style="margin:0 0 16px; color:#777777; font-size:13px;">
-                    TECHO {{ $actividad->pais->nombre }}@if($actividad->show_dates) &middot; {{ $actividad->fechaInicio->format('d/m/Y') }}@endif
+                <p style="margin:0 0 18px; color:#8a9099; font-size:13px;">
+                    {{ $esBrasil ? 'TETO' : 'TECHO' }} {{ $actividad->pais->nombre }}@if($actividad->show_dates) &middot; {{ $actividad->fechaInicio->format('d/m/Y') }}@endif
                 </p>
-                <a href="{{ url('/actividades/' . $actividad->idActividad) }}"
-                   style="display:inline-block; background-color:#0092dd; color:#ffffff; text-decoration:none; padding:11px 24px; border-radius:4px; font-weight:700; font-family: Fredoka, Montserrat, sans-serif;">
-                    @lang('email.invitation_cta')
-                </a>
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center" bgcolor="#0092dd" style="border-radius:6px;">
+                            <a href="{{ url('/actividades/' . $actividad->idActividad) }}" target="_blank"
+                               style="display:inline-block; padding:12px 26px; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:6px; font-family: Montserrat, Arial, sans-serif;">
+                                @lang('email.invitation_cta')
+                            </a>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
 
-    <p style="color:#999999; font-size:12px; margin:0 0 22px;">
+    {{-- Fallback en texto --}}
+    <p style="margin:0 0 22px; font-size:12px; line-height:1.5; color:#8a9099;">
         @lang('email.invitation_fallback')<br>
-        <a href="{{ url('/actividades/' . $actividad->idActividad) }}" style="color:#999999;">{{ url('/actividades/' . $actividad->idActividad) }}</a>
+        <a href="{{ url('/actividades/' . $actividad->idActividad) }}" style="color:#8a9099;">{{ url('/actividades/' . $actividad->idActividad) }}</a>
     </p>
 
-    <p>
-        <strong>@lang('email.greetings')</strong>
+    <div style="border-top:1px solid #e6e8ec; height:1px; line-height:1px; margin:22px 0;">&nbsp;</div>
+
+    {{-- Cierre --}}
+    <p style="margin:0 0 2px; font-size:15px; color:#2b2f36;">
+        @lang('email.greetings')
+    </p>
+    <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{ $actividad->pais->nombre }}
     </p>
 
 @endsection

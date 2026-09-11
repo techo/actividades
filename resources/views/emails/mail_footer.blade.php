@@ -1,42 +1,31 @@
-<table border="0" cellpadding="0" cellspacing="0" style="text-align:center" bgcolor="#D9D9D9" width="100%">
+@php($esBrasil = app()->getLocale() === 'pt')
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#e9ebee" style="border-radius:6px;">
     <tr>
-        <td width="25%" align="left">
-            @php($esBrasil = app()->getLocale() === 'pt')
-            <img src="{{ asset($esBrasil ? '/img/logo_negro_154x41_pt.png' : '/img/logo_negro_154x41.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" style="padding-top: 5px;" height="30">
-        </td>
-        <td width="50%">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                    <td style="display:inline-block;padding-right:5px;padding-top:5px;line-height:0px" valign="middle">
-                        <a href="https://www.facebook.com/TECHO.org/" target="_blank">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                    </td>
-                    <td style="display:inline-block;padding-right:5px;padding-top:5px;line-height:0px" valign="middle" align="center">
-                        <a href="https://www.instagram.com/techo_org/" target="_blank">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </td>
-                    <td style="display:inline-block;padding-right:5px;padding-top:5px;line-height:0px" valign="middle">
-                        <a href="https://www.linkedin.com/company/techo-teto/" target="_blank">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                    </td>
-                    <td style="display:inline-block;padding-right:0px;padding-top:5px;line-height:0px" valign="middle">
-                        <a href="https://twitter.com/techo" target="_blank">
-                            <i class="fa-brands fa-x-twitter"></i>
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td width="25%">
-            {{-- El link de baja depende de una Persona con token. Algunos envíos (p.ej.
-                 comunicaciones a leads de campaña sin cuenta) no tienen Persona; en ese
-                 caso no se muestra el link en vez de romper el render del mail. --}}
+        <td align="center" style="padding:18px 20px;">
+
+            {{-- Logo --}}
+            <img src="{{ asset($esBrasil ? '/img/logo_negro_154x41_pt.png' : '/img/logo_negro_154x41.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" height="26" style="display:block; border:0; margin:0 auto 10px;">
+
+            {{-- Redes (links de texto: los iconos de fuente no renderizan en clientes de mail) --}}
+            <p style="margin:0 0 8px; font-size:12px; line-height:1.6; color:#6b7280;">
+                <a href="https://www.facebook.com/TECHO.org/" target="_blank" style="color:#4c4d4f; text-decoration:none;">Facebook</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://www.instagram.com/techo_org/" target="_blank" style="color:#4c4d4f; text-decoration:none;">Instagram</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://www.linkedin.com/company/techo-teto/" target="_blank" style="color:#4c4d4f; text-decoration:none;">LinkedIn</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://twitter.com/techo" target="_blank" style="color:#4c4d4f; text-decoration:none;">X</a>
+            </p>
+
+            {{-- Baja: depende de una Persona con token. Algunos envíos (p.ej. leads de
+                 campaña sin cuenta) no tienen Persona; en ese caso no se muestra el link. --}}
             @if(!empty($persona) && !empty($persona->unsubscribe_token))
-                <a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}">@lang('email.unsuscribe')</a>
+                <p style="margin:0; font-size:12px; line-height:1.5;">
+                    <a href="{{ url('/desuscribirse') }}/{{ $persona->unsubscribe_token }}" style="color:#8a9099; text-decoration:underline;">@lang('email.unsuscribe')</a>
+                </p>
             @endif
+
         </td>
     </tr>
 </table>

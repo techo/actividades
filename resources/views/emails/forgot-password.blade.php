@@ -1,16 +1,30 @@
 @extends('emails.template')
 
 @section('content')
-    <p>@lang('frontend.hello')</p>
-    <p>@lang('email.forgot_password_1')
+
+    {{-- Saludo --}}
+    <p style="margin:0 0 16px; font-size:18px; font-weight:700; color:#2b2f36;">
+        @lang('frontend.hello')
     </p>
 
-    <p>
-        <a href="{{ url('password/reset', $token) }}" style="font-family: Fredoka, Montserrat, sans-serif;text-decoration: none; display: inline-block; font-weight: 700; text-align: center; vertical-align: middle; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; border-radius: 0.25rem; color: #fff; background-color: #0092DD; border-color: #0092DD;" target="_blank" >@lang('email.forgot_password_link')</a>
+    <p style="margin:0 0 20px; font-size:15px; line-height:1.55; color:#2b2f36;">
+        @lang('email.forgot_password_1')
     </p>
 
-    <p>
+    {{-- Botón: restablecer contraseña (bulletproof) --}}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;">
+        <tr>
+            <td align="center" bgcolor="#0092dd" style="border-radius:6px;">
+                <a href="{{ url('password/reset', $token) }}" target="_blank"
+                   style="display:inline-block; padding:12px 28px; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:6px; font-family: Montserrat, Arial, sans-serif;">
+                    @lang('email.forgot_password_link')
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin:0; font-size:13px; line-height:1.55; color:#8a9099;">
         @lang('email.forgot_password_2')
     </p>
-@endsection
 
+@endsection
