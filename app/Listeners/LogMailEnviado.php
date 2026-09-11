@@ -28,9 +28,20 @@ class LogMailEnviado
         // y se reintentaría → reenviando el mail (duplicados).
         try {
             $to = array_keys((array) $event->message->getTo());
+            $from = array_keys((array) $event->message->getFrom());
+            $fromAddr = $from[0] ?? null;
+
+            // Canal: bulk sale con el remitente de bulk (SES, mailing.from_bulk);
+            // el resto es transaccional (Gmail, mail.from.address). Discrimina el
+            // reporte diario de envíos sin depender del asunto.
+            $channel = ($fromAddr && $fromAddr === config('mailing.from_bulk'))
+                ? 'bulk'
+                : 'transaccional';
 
             Log::channel('mailstats')->info('SENT', [
                 'to'      => $to[0] ?? null,
+                'from'    => $fromAddr,
+                'channel' => $channel,
                 'subject' => $event->message->getSubject(),
             ]);
 

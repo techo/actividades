@@ -20,7 +20,7 @@
                     {{ $actividad->nombreActividad }}
                 </p>
                 <p style="margin:0 0 18px; color:#8a9099; font-size:13px;">
-                    {{ $esBrasil ? 'TETO' : 'TECHO' }} {{ $actividad->pais->nombre }}@if($actividad->show_dates) &middot; {{ $actividad->fechaInicio->format('d/m/Y') }}@endif
+                    {{ $esBrasil ? 'TETO' : 'TECHO' }} {{ optional($actividad->pais)->nombre }}@if($actividad->show_dates) &middot; {{ $actividad->fechaInicio->format('d/m/Y') }}@endif
                 </p>
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                     <tr>
@@ -49,7 +49,7 @@
         @lang('email.greetings')
     </p>
     <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
-        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{ $actividad->pais->nombre }}
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{ optional($actividad->pais)->nombre }}
     </p>
 
 @endsection

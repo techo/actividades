@@ -25,7 +25,7 @@
             @endif
             @if($actividad->show_location)
                 @lang('email.begins_at')
-                <strong>{{$actividad->localidad->localidad}}, {{$actividad->provincia->provincia}}</strong>
+                <strong>{{optional($actividad->localidad)->localidad}}, {{optional($actividad->provincia)->provincia}}</strong>
             @endif
         </p>
     @endif
@@ -59,7 +59,7 @@
         @lang('email.greetings')
     </p>
     <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
-        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{$actividad->pais->nombre}}
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{optional($actividad->pais)->nombre}}
     </p>
 
 @endsection

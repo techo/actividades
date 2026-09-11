@@ -32,7 +32,7 @@
             @endif
             @if($inscripcion->actividad->show_location)
                 @lang('email.begins_at')
-                <strong>{{$inscripcion->actividad->provincia->provincia}}</strong>
+                <strong>{{optional($inscripcion->actividad->provincia)->provincia}}</strong>
             @endif
         </p>
     @endif
@@ -74,7 +74,7 @@
         </p>
         <p style="margin:0 0 18px; font-size:15px; line-height:1.5; color:#2b2f36;">
             {{$inscripcion->punto_encuentro->punto}} ({{ \Illuminate\Support\Str::limit($inscripcion->punto_encuentro->horario, 5, '') }}hs)
-            @if($inscripcion->punto_encuentro->idLocalidad){{$inscripcion->punto_encuentro->localidad->localidad}}, @endif{{$inscripcion->punto_encuentro->provincia->provincia}}, {{$inscripcion->punto_encuentro->pais->nombre}}
+            @if($inscripcion->punto_encuentro->idLocalidad){{optional($inscripcion->punto_encuentro->localidad)->localidad}}, @endif{{optional($inscripcion->punto_encuentro->provincia)->provincia}}, {{optional($inscripcion->punto_encuentro->pais)->nombre}}
         </p>
 
         @if($inscripcion->punto_encuentro->responsable)
@@ -96,7 +96,7 @@
         @lang('email.greetings')
     </p>
     <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
-        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{$inscripcion->actividad->pais->nombre}}
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{optional($inscripcion->actividad->pais)->nombre}}
     </p>
 
 @endsection

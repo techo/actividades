@@ -70,7 +70,7 @@
         @lang('email.greetings')
     </p>
     <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
-        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{ $inscripcion->actividad->pais->nombre }}
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{ optional($inscripcion->actividad->pais)->nombre }}
     </p>
 
 @endsection

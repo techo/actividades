@@ -25,7 +25,7 @@
             @endif
             @if($inscripcion->actividad->show_location)
                 @lang('email.begins_at')
-                <strong>@if($inscripcion->actividad->idLocalidad){{$inscripcion->actividad->localidad->localidad}}, @endif{{$inscripcion->actividad->provincia->provincia}}</strong>
+                <strong>@if($inscripcion->actividad->idLocalidad){{optional($inscripcion->actividad->localidad)->localidad}}, @endif{{optional($inscripcion->actividad->provincia)->provincia}}</strong>
             @endif
         </p>
     @endif
@@ -75,7 +75,7 @@
         @lang('email.greetings')
     </p>
     <p style="margin:0; font-size:15px; font-weight:700; color:#0092dd;">
-        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{$inscripcion->actividad->pais->nombre}}
+        {{ $esBrasil ? 'TETO' : 'TECHO' }} - {{optional($inscripcion->actividad->pais)->nombre}}
     </p>
 
 @endsection
