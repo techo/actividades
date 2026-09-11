@@ -535,7 +535,16 @@
             id: id,
             email: this.email
           }).then(response => {
-            if(response.data.login_callback) window.location.href = response.data.login_callback;
+            // El backend ya vinculó la cuenta social y dejó al usuario logueado.
+            // Siempre navegamos: usamos login_callback si existe, y si no (p. ej.
+            // cuando el flujo arrancó desde /registro y no se guardó callback en
+            // sesión) caemos a la home. Sin este fallback la página se quedaba
+            // congelada en el paso "linkear" aunque el linkeo hubiera funcionado.
+            if(response.data.success) {
+              window.location.href = response.data.login_callback || '/';
+            } else {
+              window.location.href = '/';
+            }
           })
         },
         paso: function (paso) {
