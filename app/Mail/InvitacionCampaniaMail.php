@@ -47,7 +47,7 @@ class InvitacionCampaniaMail extends Mailable
     {
         return $this
             ->subject($this->titulo)
-            ->from(config('mail.from.address'), __('email.remitente'))
+            ->from(config('mailing.from_bulk'), __('email.remitente'))
             ->withSwiftMessage(function ($message) {
                 if ($this->comunicacionId) {
                     $message->getHeaders()->addTextHeader('X-Comunicacion-Id', (string) $this->comunicacionId);

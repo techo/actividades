@@ -321,9 +321,12 @@ class EnviarInvitacionActividad implements ShouldQueue
                         // ->later con slot del throttle: reparte el envío masivo en el
                         // tiempo para no reventar el límite diario de Gmail ni ahogar la
                         // cola de transaccionales. El push no se throttlea.
-                        Mail::to($persona->mail)->later(
-                            MailThrottle::siguienteSlot(),
-                            new InvitacionActividadMail($persona, $actividad, $this->titulo, $this->mensaje, $comunicacion->id)
+                        // BULK → SES (mailer dedicado), con delay para el escalonado.
+                        dispatch(
+                            (new \App\Jobs\EnviarMailBulkSes(
+                                new InvitacionActividadMail($persona, $actividad, $this->titulo, $this->mensaje, $comunicacion->id),
+                                $persona->mail
+                            ))->delay(MailThrottle::siguienteSlot())
                         );
                     } else {
                         $pushService->enviar($persona, $this->titulo, $this->mensaje, $datos);

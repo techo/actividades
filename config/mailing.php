@@ -26,6 +26,11 @@ return [
     // en los comandos/jobs de bulk.
     'bulk_pausado' => filter_var(env('MAIL_BULK_PAUSADO', false), FILTER_VALIDATE_BOOLEAN),
 
+    // Remitente de los envíos BULK (que salen por SES vía App\Services\MailerSes).
+    // Debe ser una dirección de la identidad verificada en SES (actividades.techo.org),
+    // NO la de Gmail del transaccional. Ver MAIL_SES_FROM.
+    'from_bulk' => env('MAIL_SES_FROM', 'noreply@actividades.techo.org'),
+
     // Tope de mails masivos por día. Debe quedar por DEBAJO del límite del proveedor,
     // dejando lugar para el transaccional (confirmaciones, recordatorios), que también
     // consume el cupo del proveedor pero NO se throttlea acá.

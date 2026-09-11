@@ -65,6 +65,7 @@ class BaseController extends Controller
         $porSegundo = max(1, intdiv((int) config('mailing.batch_por_minuto', 120), 60));
         $delay = 5 + intdiv($indice, $porSegundo);
 
-        return Mail::to($persona->mail)->later(now()->addSeconds($delay), $mailable);
+        // BULK → SES (mailer dedicado), con delay para el escalonado.
+        return dispatch((new \App\Jobs\EnviarMailBulkSes($mailable, $persona->mail))->delay(now()->addSeconds($delay)));
     }
 }
