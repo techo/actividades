@@ -282,6 +282,14 @@ class UsuarioController extends BaseController
               if($link['provider'] == 'facebook') {
                   $persona->facebook_id = $link['social_id'];
               }
+              // El proveedor social ya verificó el email (Google exige email_verified;
+              // Facebook devuelve el email de la propia cuenta). Al vincularlo con una
+              // cuenta TECHO existente que estaba sin verificar, la damos por verificada:
+              // de lo contrario el usuario queda logueado pero la app lo manda a validar
+              // el mail, cuando el linkeo social ya es prueba de propiedad del email.
+              if(!$persona->hasVerifiedEmail()) {
+                  $persona->email_verified_at = now();
+              }
               $persona->save();
               Auth::login($persona, true);
               $request->session()->regenerate();
