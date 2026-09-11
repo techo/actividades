@@ -154,11 +154,18 @@
                         @php
                             $respuestaItem = $respuestasPorPregunta->get($pregunta->id);
                             $respuestaTexto = $respuestaItem['respuesta'] ?? null;
+                            $esArchivo = $pregunta->tipo === 'archivo';
+                            $nombreArchivo = $respuestaItem['nombre'] ?? ($respuestaTexto ? basename($respuestaTexto) : null);
                         @endphp
                         <div class="row mt-2 mb-1">
                             <div class="col-md-12">
                                 <small class="text-muted">{{ $pregunta->pregunta }}</small><br>
-                                @if ($respuestaTexto)
+                                @if ($esArchivo && $respuestaTexto)
+                                    <span class="ml-2 text-white rounded-pill py-2 px-3 techo-btn-azul d-inline-flex align-items-center">
+                                        <i class="fas fa-paperclip mr-2"></i>
+                                        <span class="text-truncate" style="max-width: 260px;">{{ $nombreArchivo ?? __('frontend.archivo_cargado') }}</span>
+                                    </span>
+                                @elseif ($respuestaTexto)
                                     <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">{{ $respuestaTexto }}</span>
                                 @else
                                     <span class="ml-2 text-muted">—</span>
