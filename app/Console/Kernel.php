@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('actividad:recordatorio')->dailyAt('08:00');
+        // Recordatorio proactivo de pago: ~2 días antes de vencer la fecha límite.
+        $schedule->command('pago:recordatorio-vencimiento')->dailyAt('09:30');
         $schedule->command('push:apertura-evaluacion')->dailyAt('09:00');
         $schedule->command('push:recordatorio-evaluacion')->dailyAt('09:00');
         $schedule->command('push:recordatorio-pago')->dailyAt('10:00');

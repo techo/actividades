@@ -2,6 +2,12 @@
 
 return [
     'remitente' => 'TECHO',
+    // --- Subjects de recordatorio / vencimiento de pago (i18n) ---
+    'activity_reminder_title' => 'TECHO Se acerca tu actividad:',
+    'payment_reminder_title' => 'TECHO Se acerca la fecha límite de pago de',
+    'payment_reminder_1' => 'Se acerca la fecha límite para confirmar tu lugar con tu aporte.',
+    'payment_reminder_2' => '¡Te queda poco tiempo para aportar y confirmar!',
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -31,7 +37,7 @@ return [
 
 
 	// actualizar Actividad
-	'activity_update_title' => 'TECHO Cambios en la actividad',
+	'activity_update_title' => 'TECHO Cambios en la actividad:',
 	'activity_update_1' => 'Hubo cambios en la actividad que te has inscrito. A continuación encontrarás la información actualizada:',
 
 	// actividad cancelada
@@ -40,7 +46,7 @@ return [
 	'activity_canceled_2' => 'Lamentamos cualquier inconveniente causado y te invitamos a entrar en el sitio de Techo para buscar otras actividades.',
 
 // Restablecer contraseña forgotpassword
-	'forgot_password_title' => "TECHO Reestablecer contraseña",
+	'forgot_password_title' => "TECHO Restablecer contraseña",
 	'forgot_password_1' => "Recibimos un pedido para restablecer tu contraseña. <br> Sólo tienes que hacer clic en el siguiente enlace para escoger una nueva:",
 	'forgot_password_2' => 'Si no solicitaste cambiar tu contraseña, puedes hacer caso omiso de este mensaje, no cambiaremos tu contraseña actual.',
 	'forgot_password_link' => 'Establecer nueva contraseña',
@@ -57,7 +63,7 @@ return [
 	'pre_enroll_3' => 'En breve nos contactaremos con vos para comunicarte si se aprueba tu inscripción. Cualquier consulta contactá al coodinador.',
 
 	// InscripcionFaltaPago
-	'missing_payment_title' => 'Te pre-inscribiste para participar:',
+	'missing_payment_title' => 'TECHO Falta tu aporte para confirmar',
 	'missing_payment_1' => '¡Estás a punto de embarcarte en una experiencia increíble! Te has preinscrito para participar en:',
 	'missing_payment_2' => 'Pero aún falta un último paso para asegurar tu participación: ¡Confirmarla con tu donación!',
 	'missing_payment_3' => '¡Tenés tiempo hasta el ',
@@ -69,7 +75,7 @@ return [
 	'missing_payment_8' => 'ponerte en contacto con el coodinador de la actividad para gestionar una BECA ',
 
 	// inscripcionPagoFueraDeFecha
-	'payment_outdated_title' => 'TECHO Pago recibido fuera fecha',
+	'payment_outdated_title' => 'TECHO Pago recibido fuera de fecha',
 	'payment_outdated_1' => 'Recibimos tu donación pero está fuera de la fecha límite para confirmar:',
 	'payment_outdated_2' => 'Es por esto que no quedaste confirmado para participar',
 	'payment_outdated_3' => 'Si te interesa recuperar esa donación, podés contactarte con el coodinador de la actividad y solicitarle que tramite la devolución.',

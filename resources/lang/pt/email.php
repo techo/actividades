@@ -2,6 +2,12 @@
 
 return [
     'remitente' => 'TETO',
+    // --- Subjects de lembrete / vencimento de pagamento (i18n) ---
+    'activity_reminder_title' => 'TECHO Sua atividade está chegando:',
+    'payment_reminder_title' => 'TECHO Está chegando o prazo de pagamento de',
+    'payment_reminder_1' => 'Está chegando o prazo para confirmar sua vaga com seu aporte.',
+    'payment_reminder_2' => 'Resta pouco tempo para aportar e confirmar!',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +35,7 @@ return [
     'hour' => 'horário',
 
     // actualizar Actividad
-    'activity_update_title' => 'TECHO Mudanças na atividade',
+    'activity_update_title' => 'TECHO Mudanças na atividade:',
     'activity_update_1' => 'Houve mudanças na atividade em que você se inscreveu. A seguir, você encontrará as informações atualizadas:',
 
     // actividad cancelada
@@ -54,7 +60,7 @@ return [
     'pre_enroll_3' => 'Em breve entraremos em contato para informar se sua inscrição foi aprovada. Qualquer dúvida, entre em contato com o coordenador.',
 
     // InscripcionFaltaPago
-    'missing_payment_title' => 'Você se pré-inscreveu para participar:',
+    'missing_payment_title' => 'TECHO Falta seu aporte para confirmar',
     'missing_payment_1' => 'Você está prestes a embarcar em uma experiência incrível! Você se pré-inscreveu para participar em:',
     'missing_payment_2' => 'Mas ainda falta um último passo para garantir sua participação: Confirmá-la com sua doação!',
     'missing_payment_3' => 'Você tem até ',
