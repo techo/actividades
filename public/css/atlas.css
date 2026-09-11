@@ -415,6 +415,13 @@ a {
     max-width: 100%;
     height: auto;
 }
+
+/* En mobile ocultamos el hero para ir directo al contenido */
+@media (max-width: 767px) {
+    .techo-hero.actividades {
+        display: none;
+    }
+}
 .techo-hero.actividades h2 {
     font-size: 3vw;
     font-family: Fredoka;

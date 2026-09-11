@@ -3,4 +3,4 @@
 
 <!-- Custom styles for this template -->
 <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
-<link href="/css/atlas.css" rel="stylesheet">
+<link href="/css/atlas.css?v={{ filemtime(public_path('css/atlas.css')) }}" rel="stylesheet">

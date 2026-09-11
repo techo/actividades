@@ -100,6 +100,13 @@ export default {
   scrollbar-width: none;      /* Ocultar barra en Firefox */
 }
 
+/* En pantallas donde entran todos, centramos la fila en vez de scrollear */
+@media (min-width: 768px) {
+  .scroll-container {
+    justify-content: center;
+  }
+}
+
 .scroll-container::-webkit-scrollbar {
   display: none;              /* Ocultar barra en Chrome, Safari y Opera */
 }

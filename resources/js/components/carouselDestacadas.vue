@@ -78,22 +78,30 @@
     border-radius: 20px; /* Bordes redondeados */
   }
   
-  /* Imagen destacada ajustada al ancho de la página */
+  /* Imagen destacada con relación de aspecto fija (tarjeta consistente) */
   .carousel-slide {
     width: 100%;
-    height: auto;
+    aspect-ratio: 21 / 9;
+    max-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
   }
-  
+
   .carousel-image {
     width: 100%;
-    height: auto;
-    object-fit: contain; /* Ajuste sin cortar la imagen */
+    height: 100%;
+    object-fit: cover; /* Llena la tarjeta */
+    object-position: center; /* Centra el recorte (más seguro para fotos) */
     border-radius: 20px; /* Bordes redondeados */
     transition: 0.5s ease all;
+  }
+
+  @media (max-width: 767px) {
+    .carousel-slide {
+      aspect-ratio: 16 / 9;
+    }
   }
   
   /* Flechas de navegación (ocultas si hay una sola actividad) */
