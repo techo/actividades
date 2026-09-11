@@ -150,6 +150,7 @@ return [
 	'search_activities' => 'BUSCAR ACTIVIDADES',
 	'link_to_rrss' => 'Confimar Link Red Social',
 	'link_rrss_techo' => 'Relacionar la cuenta de techo con tu cuenta de red social',
+	'link_rrss_help' => 'Ya existe una cuenta de TECHO con este correo. Vincula tu red social para ingresar con ella la próxima vez.',
 	'confirm' => 'Confirmar',	
 
     'how_did_you_meet_techo' => '¿CÓMO CONOCISTE A TECHO?',

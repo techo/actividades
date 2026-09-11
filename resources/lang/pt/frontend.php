@@ -142,6 +142,7 @@ return [
 	'search_activities' => 'BUSCAR ATIVIDADES',
 	'link_to_rrss' => 'Confirmar Link Rede Social',
 	'link_rrss_techo' => 'Vincule sua conta da TETO con sua conta de rede social',
+	'link_rrss_help' => 'Já existe uma conta da TETO com este e-mail. Vincule sua rede social para entrar com ela na próxima vez.',
 	'confirm' => 'Confirmar',
 
     'register_facebook' => 'Registrar com o Facebook',

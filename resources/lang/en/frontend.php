@@ -148,6 +148,7 @@ return [
 	'search_activities' => 'SEARCH ACTIVITIES',
 	'link_to_rrss' => 'Confirm link with Social Network',
 	'link_rrss_techo' => 'Do you wish to link your Social Network with us?',
+	'link_rrss_help' => 'A TECHO account already exists with this email. Link your social network to sign in with it next time.',
 	'confirm' => 'Confirm',	
 
     'how_did_you_meet_techo' => 'HOW DID YOU MEET TECHO?',

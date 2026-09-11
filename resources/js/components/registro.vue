@@ -386,21 +386,24 @@
         <div v-show="paso('linkear')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>{{ $t('frontend.register') }}</strong> > <strong>{{ $t('frontend.link_to_rrss') }} </strong>
+                    <strong>{{ $t('frontend.register') }}</strong> > <strong>{{ $t('frontend.link_to_rrss') }}</strong>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>{{ $t('frontend.link_rrss_techo') }}</h2>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">{{ $t('frontend.go_back') }}</a></div>
-                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a></div>
-                </div>
-
             </div>
             <hr>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7 text-center linkear-box">
+                    <i :class="proveedorIcono" class="linkear-icon text-primary"></i>
+                    <h2 class="linkear-titulo">{{ $t('frontend.link_rrss_techo') }}</h2>
+                    <p class="linkear-help">{{ $t('frontend.link_rrss_help') }}</p>
+                    <p v-if="email" class="linkear-email">{{ email }}</p>
+                    <div class="linkear-actions">
+                        <a class="btn btn-primary btn-lg" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a>
+                        <a href="/" class="btn btn-link linkear-volver">
+                            <i class="fas fa-long-arrow-alt-left"></i>&nbsp;{{ $t('frontend.go_back') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
   </div>
@@ -489,6 +492,15 @@
         this.traer_localidades() },
         'user.canal_contacto': function() { this.validar_data('canal_contacto')},
         'user.privacidad': function() { this.validar_data('privacidad')}
+      },
+      computed: {
+        // Icono del proveedor a vincular en el paso "linkear". Cae a un ícono de
+        // enlace genérico si no viniera ninguno.
+        proveedorIcono: function() {
+          if(this.google_id) return 'fab fa-google';
+          if(this.facebook_id) return 'fab fa-facebook-f';
+          return 'fas fa-link';
+        }
       },
       methods: {
         registro_facebook: function() {
@@ -641,5 +653,41 @@
 <style scoped>
     a.btn-primary {
         color: #ffffff;
+    }
+
+    /* Paso "linkear": vincular red social con una cuenta TECHO existente. */
+    .linkear-box {
+        padding: 1.5rem 0 1rem;
+    }
+    .linkear-icon {
+        font-size: 2.75rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .linkear-titulo {
+        font-size: 1.5rem;
+        margin-bottom: .75rem;
+    }
+    .linkear-help {
+        color: #6c757d;
+        max-width: 30rem;
+        margin: 0 auto 1rem;
+    }
+    .linkear-email {
+        font-weight: 600;
+        word-break: break-word;
+        margin-bottom: 1.5rem;
+    }
+    .linkear-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: .5rem;
+    }
+    .linkear-actions .btn-lg {
+        min-width: 14rem;
+    }
+    .linkear-volver {
+        color: #6c757d;
     }
 </style>
