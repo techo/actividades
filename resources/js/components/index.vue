@@ -168,17 +168,23 @@
                     }
                 }
             },
-            // Títulos curados por i18n para las categorías conocidas; el resto
-            // (incluyendo categorías nuevas) cae al nombre de la categoría en la DB.
+            // Títulos curados por i18n para las categorías conocidas. Para el
+            // resto, si el nombre de la categoría en la DB coincide con una clave
+            // de `frontend.*` (ej: especial_events, online_events, application),
+            // se usa esa traducción; si no, cae al nombre crudo de la DB.
             tituloCategoria(categoria) {
                 const claves = {
                     1: 'frontend.home_community',
                     2: 'frontend.home_formation',
                     5: 'frontend.home_campaign',
                 };
-                return claves[categoria.id]
-                    ? this.$t(claves[categoria.id])
-                    : categoria.nombre;
+                if (claves[categoria.id]) {
+                    return this.$t(claves[categoria.id]);
+                }
+                const clavePorNombre = 'frontend.' + categoria.nombre;
+                const traducido = this.$t(clavePorNombre);
+                // vue-i18n devuelve la propia clave cuando no existe la traducción.
+                return traducido !== clavePorNombre ? traducido : categoria.nombre;
             },
             scrollLeft() {
                 const container = this.$el.querySelector('.scroll-container');
