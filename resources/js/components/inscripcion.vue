@@ -270,12 +270,13 @@
                             </select>
                             <div v-else-if="pregunta.tipo === 'archivo'" class="mt-2">
                                 <!-- Subiendo -->
-                                <div v-if="subiendoArchivo[index]" class="archivo-dropzone">
+                                <div v-if="subiendoArchivo[index]" :key="'arch-loading-' + index" class="archivo-dropzone">
                                     <i class="fas fa-spinner fa-spin fa-lg text-muted mb-2"></i>
                                     <span class="text-muted small">{{ $t('frontend.subiendo_archivo') }}</span>
                                 </div>
                                 <!-- Archivo cargado -->
                                 <div v-else-if="respuestas[index].respuesta"
+                                     :key="'arch-loaded-' + index"
                                      class="archivo-cargado"
                                      :title="$t('frontend.voucher_click_to_browse')"
                                      @click="seleccionarArchivo(index)">
@@ -294,6 +295,7 @@
                                 </div>
                                 <!-- Vacío -->
                                 <div v-else
+                                     :key="'arch-empty-' + index"
                                      class="archivo-dropzone"
                                      :class="{ 'archivo-dropzone--hover': arrastrandoArchivo[index] }"
                                      @click="seleccionarArchivo(index)"
