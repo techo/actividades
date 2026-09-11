@@ -72,7 +72,7 @@ return [
     'open_registrations' => 'Inscripciones Abiertas',
     'closed_registrations' => 'Inscripciones Cerradas',
     'open_evaluations' => 'Evaluaciones Abiertas',
-    'payment_date_expired' => 'Fecha de Pago Vencida!!',
+    'payment_date_expired' => 'Fecha límite de pago vencida',
     'registrations_start' => 'Inscripciones empiezan',
     'description' => 'Descripción',
     'ubication' => 'Ubicación',

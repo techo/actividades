@@ -96,8 +96,11 @@ export default {
                 this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
                 );
 
-            this.estadoPago = moment().isBefore(
-                this.fechas.fechaLimitePago,
+            // "vencido" = hoy es POSTERIOR a la fecha+hora límite de pago.
+            // (Antes era isBefore(...) → el aviso "Vencida" salía cuando el pago
+            //  AÚN estaba vigente, y desaparecía una vez vencido: estaba invertido.)
+            this.estadoPago = moment().isAfter(
+                this.fechas.fechaLimitePago + ' ' + this.horas.fechaLimitePago
                 );
         }
     }

@@ -3,19 +3,21 @@
         <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
-                    <div v-if="estadoInscripcion" class="alert alert-info" role="alert" >
-                        {{ $t('backend.open_registrations') }}
-                    </div>
-                    <div v-else class="alert alert-danger" role="alert" >
-                        {{ $t('backend.closed_registrations') }}
-                    </div>
+                    <div class="estado-avisos">
+                        <span v-if="inscripcionesAbiertas" class="estado-pill estado-pill--ok" role="status">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i> {{ $t('backend.open_registrations') }}
+                        </span>
+                        <span v-else class="estado-pill estado-pill--muted" role="status">
+                            <i class="fa fa-lock" aria-hidden="true"></i> {{ $t('backend.closed_registrations') }}
+                        </span>
 
-                    <div v-if="estadoEvaluaciones" class="alert alert alert-warning" role="alert" >
-                        {{ $t('backend.open_evaluations') }}
-                    </div>
+                        <span v-if="evaluacionesAbiertas" class="estado-pill estado-pill--warn" role="status">
+                            <i class="fa fa-star" aria-hidden="true"></i> {{ $t('backend.open_evaluations') }}
+                        </span>
 
-                    <div v-if="(!estadoPago && actividad.pago)" class="alert alert alert-danger" role="alert" >
-                        {{ $t('backend.payment_date_expired') }}
+                        <span v-if="pagoVencido" class="estado-pill estado-pill--danger" role="alert">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ $t('backend.payment_date_expired') }}
+                        </span>
                     </div>
                 </div>
             <div class="box-header with-border bg-primary">
@@ -835,9 +837,6 @@
                     'vacunacion_covid' : false,
                     'enfermedades_preexistentes' : false,
                 },
-                estadoInscripcion: false,
-                estadoEvaluaciones: false,
-                estadoPago: false,
                 actividad: {
                     nombreActividad: null,
                     descripcion: '',
@@ -996,6 +995,37 @@
 
         },
         computed: {
+            // ── Avisos de estado (banda superior) ──────────────────────────
+            // Reactivos: derivan de fechas/horas + config de la actividad. Antes eran
+            // flags en data() que solo se recalculaban vía watchers de fechaInicio/Fin,
+            // por lo que cambiar fechaLimitePago (sin watcher) dejaba el aviso stale.
+
+            // Abiertas solo si la actividad está Abierta Y hoy cae dentro de la ventana
+            // de inscripción. (Antes miraba solo la ventana → una actividad Cerrada dentro
+            // de sus fechas mostraba "Inscripciones Abiertas".)
+            inscripcionesAbiertas() {
+                return this.actividad.estadoConstruccion === 'Abierta'
+                    && moment().isBetween(
+                        this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones,
+                        this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones
+                    );
+            },
+            evaluacionesAbiertas() {
+                return moment().isBetween(
+                    this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones,
+                    this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones
+                );
+            },
+            // Vencido solo si la actividad requiere pago y hoy es posterior a la fecha+hora
+            // límite. (Antes comparaba solo la fecha, sin hora → saltaba a las 00:00 del día
+            // límite, aún dentro del plazo.)
+            pagoVencido() {
+                if (!this.actividad.pago || !this.fechas.fechaLimitePago) return false;
+                return moment().isAfter(
+                    this.fechas.fechaLimitePago + ' ' + this.horas.fechaLimitePago
+                );
+            },
+
             // Deriva el modo activo a partir de los dos booleanos pago + confirmacion.
             // automatica: 0/0 · donacion: pago=1/conf=0 · manual: pago=0/conf=1 · mixto: 1/1
             modoActual() {
@@ -1202,18 +1232,6 @@
 
                 if (!this.actividad.pago)
                     this.fechas.fechaLimitePago = moment(this.fechas.fechaFin).format('YYYY-MM-DD');
-
-                this.estadoInscripcion = moment().isBetween(
-                    this.fechas.fechaInicioInscripciones + ' ' + this.horas.fechaInicioInscripciones,
-                    this.fechas.fechaFinInscripciones + ' ' + this.horas.fechaFinInscripciones
-                );
-
-                this.estadoEvaluaciones = moment().isBetween(
-                    this.fechas.fechaInicioEvaluaciones + ' ' + this.horas.fechaInicioEvaluaciones,
-                    this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones
-                );
-
-                this.estadoPago = moment().isBefore(this.fechas.fechaLimitePago);
             },
             restaurarInscripcionesAuto(){
                 this.modoManualInscripciones = false;
@@ -1530,6 +1548,31 @@
 </script>
 
 <style scoped>
+/* ── Avisos de estado (pills) ──────────────────────────── */
+.estado-avisos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 4px 0 14px;
+}
+.estado-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    border: 1px solid transparent;
+}
+.estado-pill .fa { font-size: 13px; }
+.estado-pill--ok     { background: #eafaf1; color: #1e7e46; border-color: #bfe9cf; }
+.estado-pill--muted  { background: #f2f4f6; color: #6b7785; border-color: #dfe4e8; }
+.estado-pill--warn   { background: #fef7e6; color: #9a6b06; border-color: #f6e2a8; }
+.estado-pill--danger { background: #fdecea; color: #b42318; border-color: #f5c6c0; }
+
 /* ── Dates section ─────────────────────────────────────── */
 .dates-section-header {
     margin: 20px -10px 16px;

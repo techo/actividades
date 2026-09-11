@@ -72,7 +72,7 @@ return [
     'open_registrations' => 'Open Registrations',
     'closed_registrations' => 'Closed Registrations',
     'open_evaluations' => 'Open Evaluations',
-    'payment_date_expired' => 'Payment Due Date Expired!!',
+    'payment_date_expired' => 'Payment deadline passed',
     'registrations_start' => 'Registrations start',
     'description' => 'Description',
     'ubication' => 'Location',
