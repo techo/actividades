@@ -127,8 +127,26 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <label> {{ $t('frontend.birth_date') }} *</label>
-                        <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
-                                    lang="es" format="DD-MM-YYYY"></datepicker>
+                        <div class="form-row nacimiento-selects">
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.dia" id="nacimiento_dia" :aria-label="$t('frontend.day')">
+                                    <option value="" disabled>{{ $t('frontend.day') }}</option>
+                                    <option v-for="d in diasNacimiento" :key="'d'+d" :value="d">{{ d }}</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.mes" id="nacimiento_mes" :aria-label="$t('frontend.month')">
+                                    <option value="" disabled>{{ $t('frontend.month') }}</option>
+                                    <option v-for="m in mesesNacimiento" :key="'m'+m.value" :value="m.value">{{ m.label }}</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.anio" id="nacimiento_anio" :aria-label="$t('frontend.year')">
+                                    <option value="" disabled>{{ $t('frontend.year') }}</option>
+                                    <option v-for="y in aniosNacimiento" :key="'y'+y" :value="y">{{ y }}</option>
+                                </select>
+                            </div>
+                        </div>
                         <small v-if="validacion.nacimiento.texto" class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
                     </div>
                 </div>
@@ -181,7 +199,7 @@
                         <VueTelInput v-model="phoneNumber"
                                         @country-changed="handleCountryChange"
                                         :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
-                                        placeholder="Enter phone number"
+                                        :input-options="{ placeholder: $t('frontend.phone_placeholder') }"
                                         :disabledFetchingCountry="true"
                                         ref="telInput">
                                     </VueTelInput>
@@ -429,6 +447,11 @@
           localidades: [],
             phoneNumber: '',
             previousCountry: '',
+          // Fecha de nacimiento en 3 selects (día/mes/año). Se compone en
+          // user.nacimiento como 'YYYY-MM-DD', formato que el backend valida
+          // con la regla `date` y parsea con Carbon (igual que antes, cuando
+          // vue2-datepicker mandaba un Date serializado a ISO).
+          fechaNac: { dia: '', mes: '', anio: '' },
           message: {
             danger: false,
             text: ''
@@ -491,7 +514,10 @@
             this.validar_data('provincia')  
         this.traer_localidades() },
         'user.canal_contacto': function() { this.validar_data('canal_contacto')},
-        'user.privacidad': function() { this.validar_data('privacidad')}
+        'user.privacidad': function() { this.validar_data('privacidad')},
+        // Cualquier cambio en los 3 selects recompone user.nacimiento; el watcher
+        // de 'user.nacimiento' ya existente dispara la validación.
+        'fechaNac': { deep: true, handler: function() { this.componerNacimiento() } }
       },
       computed: {
         // Icono del proveedor a vincular en el paso "linkear". Cae a un ícono de
@@ -500,6 +526,41 @@
           if(this.google_id) return 'fab fa-google';
           if(this.facebook_id) return 'fab fa-facebook-f';
           return 'fas fa-link';
+        },
+        // Años válidos para nacimiento: coinciden con la validación del backend
+        // (edad entre 13 y 85). Se listan del más reciente al más antiguo porque
+        // la mayoría de los voluntarios son jóvenes → el año buscado queda arriba.
+        aniosNacimiento: function() {
+          var actual = new Date().getFullYear();
+          var anios = [];
+          for(var y = actual - 13; y >= actual - 85; y--) anios.push(y);
+          return anios;
+        },
+        // Nombres de meses localizados según el idioma activo (Intl), sin tener
+        // que mantener 12 claves de traducción por locale.
+        mesesNacimiento: function() {
+          var locale = (this.$i18n && this.$i18n.locale ? this.$i18n.locale : 'es').replace('_', '-');
+          var meses = [];
+          for(var m = 1; m <= 12; m++) {
+            var label;
+            try {
+              label = new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2000, m - 1, 1));
+            } catch(e) {
+              label = new Intl.DateTimeFormat('es', { month: 'long' }).format(new Date(2000, m - 1, 1));
+            }
+            label = label.charAt(0).toUpperCase() + label.slice(1);
+            meses.push({ value: m, label: label });
+          }
+          return meses;
+        },
+        // Días válidos según el mes/año elegidos (respeta febrero y bisiestos).
+        diasNacimiento: function() {
+          var mes = Number(this.fechaNac.mes);
+          var anio = Number(this.fechaNac.anio);
+          var max = (mes && anio) ? new Date(anio, mes, 0).getDate() : 31;
+          var dias = [];
+          for(var d = 1; d <= max; d++) dias.push(d);
+          return dias;
         }
       },
       methods: {
@@ -521,7 +582,6 @@
                 this.loginSocial = response.data.loginSocial
                 this.abreviacionPais = response.data.abreviacionPais
                 this.login_callback = response.data.login_callback
-                console.log(response.data.login_callback)
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
@@ -561,6 +621,23 @@
         },
         paso: function (paso) {
           return paso == this.paso_actual
+        },
+        // Arma user.nacimiento a partir de los 3 selects. Si al cambiar mes/año
+        // el día quedó fuera de rango (ej. 31 → febrero), lo limpia. Mientras la
+        // fecha esté incompleta deja '' para no disparar validación prematura.
+        componerNacimiento: function() {
+          var dia = Number(this.fechaNac.dia);
+          var mes = Number(this.fechaNac.mes);
+          var anio = Number(this.fechaNac.anio);
+          if(dia && mes && anio) {
+            var maxDia = new Date(anio, mes, 0).getDate();
+            if(dia > maxDia) { this.fechaNac.dia = ''; this.user.nacimiento = ''; return; }
+            var mm = ('0' + mes).slice(-2);
+            var dd = ('0' + dia).slice(-2);
+            this.user.nacimiento = anio + '-' + mm + '-' + dd;
+          } else {
+            this.user.nacimiento = '';
+          }
         },
         validar_data: _.debounce(function(prop) {
           var data = {}
@@ -653,6 +730,17 @@
 <style scoped>
     a.btn-primary {
         color: #ffffff;
+    }
+
+    /* Nacimiento en 3 selects (día/mes/año): gutter chico para que entren
+       cómodos incluso en pantallas angostas. */
+    .nacimiento-selects {
+        margin-left: -4px;
+        margin-right: -4px;
+    }
+    .nacimiento-selects > [class^="col-"] {
+        padding-left: 4px;
+        padding-right: 4px;
     }
 
     /* Paso "linkear": vincular red social con una cuenta TECHO existente. */

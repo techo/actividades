@@ -78,13 +78,26 @@
                             </div>
 
                             <div class="col-md-4">
-                                <datepicker
-                                    v-model="suscriptor.fecha_nacimiento"
-                                    :placeholder="$t('suscribe.fecha_de_nacimiento')"
-                                    id="nacimiento"
-                                    lang="es"
-                                    format="DD-MM-YYYY"
-                                />
+                                <div class="form-row nacimiento-selects">
+                                    <div class="col-4">
+                                        <select class="form-control" v-model="fechaNac.dia" @change="onNacimientoChange" id="nacimiento_dia" :aria-label="$t('frontend.day')">
+                                            <option value="" disabled>{{ $t('frontend.day') }}</option>
+                                            <option v-for="d in diasNacimiento" :key="'d'+d" :value="d">{{ d }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-control" v-model="fechaNac.mes" @change="onNacimientoChange" id="nacimiento_mes" :aria-label="$t('frontend.month')">
+                                            <option value="" disabled>{{ $t('frontend.month') }}</option>
+                                            <option v-for="m in mesesNacimiento" :key="'m'+m.value" :value="m.value">{{ m.label }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-control" v-model="fechaNac.anio" @change="onNacimientoChange" id="nacimiento_anio" :aria-label="$t('frontend.year')">
+                                            <option value="" disabled>{{ $t('frontend.year') }}</option>
+                                            <option v-for="y in aniosNacimiento" :key="'y'+y" :value="y">{{ y }}</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -384,6 +397,9 @@ export default {
                 dni:               '',
                 campaign_id:       null,
             },
+            // Fecha de nacimiento en 3 selects (día/mes/año); se compone en
+            // suscriptor.fecha_nacimiento como 'YYYY-MM-DD'.
+            fechaNac: { dia: '', mes: '', anio: '' },
             provincias:        [],
             localidades:       [],
             phoneNumber:       '',
@@ -405,6 +421,38 @@ export default {
     computed: {
         estaLogueado() {
             return !!this.user;
+        },
+        // Años válidos para nacimiento (edad 13 a 85), del más reciente al más antiguo.
+        aniosNacimiento() {
+            var actual = new Date().getFullYear();
+            var anios = [];
+            for (var y = actual - 13; y >= actual - 85; y--) anios.push(y);
+            return anios;
+        },
+        // Nombres de meses localizados según el idioma activo (Intl).
+        mesesNacimiento() {
+            var locale = (this.$i18n && this.$i18n.locale ? this.$i18n.locale : 'es').replace('_', '-');
+            var meses = [];
+            for (var m = 1; m <= 12; m++) {
+                var label;
+                try {
+                    label = new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2000, m - 1, 1));
+                } catch (e) {
+                    label = new Intl.DateTimeFormat('es', { month: 'long' }).format(new Date(2000, m - 1, 1));
+                }
+                label = label.charAt(0).toUpperCase() + label.slice(1);
+                meses.push({ value: m, label: label });
+            }
+            return meses;
+        },
+        // Días válidos según mes/año (respeta febrero y bisiestos).
+        diasNacimiento() {
+            var mes = Number(this.fechaNac.mes);
+            var anio = Number(this.fechaNac.anio);
+            var max = (mes && anio) ? new Date(anio, mes, 0).getDate() : 31;
+            var dias = [];
+            for (var d = 1; d <= max; d++) dias.push(d);
+            return dias;
         },
         formId() {
             return 'suscribe-form-' + (this.campaign ? this.campaign.id : 'default');
@@ -652,8 +700,26 @@ export default {
             }.bind(this));
         },
 
+        // Recompone suscriptor.fecha_nacimiento ('YYYY-MM-DD') desde los 3 selects.
+        // Si el día quedó fuera de rango tras cambiar mes/año, lo limpia.
+        onNacimientoChange() {
+            const dia = Number(this.fechaNac.dia);
+            const mes = Number(this.fechaNac.mes);
+            const anio = Number(this.fechaNac.anio);
+            if (dia && mes && anio) {
+                const maxDia = new Date(anio, mes, 0).getDate();
+                if (dia > maxDia) { this.fechaNac.dia = ''; this.suscriptor.fecha_nacimiento = ''; return; }
+                const mm = ('0' + mes).slice(-2);
+                const dd = ('0' + dia).slice(-2);
+                this.suscriptor.fecha_nacimiento = anio + '-' + mm + '-' + dd;
+            } else {
+                this.suscriptor.fecha_nacimiento = '';
+            }
+        },
         formatFecha(date) {
             if (!date) return null;
+            // Desde los selects ya llega 'YYYY-MM-DD'; se pasa tal cual.
+            if (typeof date === 'string') return date;
             const yyyy = date.getFullYear();
             const mm = String(date.getMonth() + 1).padStart(2, '0');
             const dd = String(date.getDate()).padStart(2, '0');
@@ -666,5 +732,15 @@ export default {
 <style scoped>
 .is-invalid {
     border: 2px solid #dc3545 !important;
+}
+
+/* Nacimiento en 3 selects (día/mes/año): gutter chico para pantallas angostas. */
+.nacimiento-selects {
+    margin-left: -4px;
+    margin-right: -4px;
+}
+.nacimiento-selects > [class^="col-"] {
+    padding-left: 4px;
+    padding-right: 4px;
 }
 </style>
