@@ -171,7 +171,7 @@
                 <div style="text-align: right">
                     @if ($inscripcionConfirmada && $actividad->chat_grupal_whatsapp != null)
                         <a class="btn rounded-pill text-white bg-success" href="{{ $actividad->chat_grupal_whatsapp }}" target="_blank">
-                            <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
+                            <span style="font-size:1.2em;">@include('partials.icon-whatsapp')</span>
                             <span>{{ __('frontend.group_chat') }}</span>
                         </a>
                     @endif

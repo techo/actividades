@@ -66,6 +66,11 @@
             </div>
 
             <div class="d-flex justify-content-center align-items-center flex-wrap mt-3">
+                @if($actividad->chat_grupal_whatsapp)
+                    <a href="{{ $actividad->chat_grupal_whatsapp }}" target="_blank" rel="noopener" class="btn btn-success rounded-pill px-4 mx-2 my-1 text-white">
+                        <span style="font-size:1.2em;">@include('partials.icon-whatsapp')</span> {{ __('frontend.group_chat') }}
+                    </a>
+                @endif
                 <button type="button" class="btn btn-primary rounded-pill px-4 mx-2 my-1" data-toggle="modal" data-target="#compartirModal">
                     <i class="fas fa-share-alt mr-1"></i> {{ __('frontend.share') }}
                 </button>
