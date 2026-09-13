@@ -216,6 +216,8 @@ return [
     'unconfirmed' => 'Não Confirmado',
     'change_payment' => 'Alterar Pagamento',
     'paid' => 'Pago',
+    'exento_socio' => 'Isento',
+    'exento_socio_tooltip' => 'Isento de pagamento por ser doador do TECHO',
     'unpaid' => 'Não Pago',
     'change_attendance' => 'Alterar Presença',
     'present' => 'Presente',

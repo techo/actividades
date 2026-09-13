@@ -218,6 +218,8 @@ return [
     'unconfirmed' => 'Unconfirmed',
     'change_payment' => 'Change Payment',
     'paid' => 'Paid',
+    'exento_socio' => 'Exempt',
+    'exento_socio_tooltip' => 'Exempt from payment as a TECHO member',
     'unpaid' => 'Unpaid',
     'change_attendance' => 'Change Attendance',
     'present' => 'Present',

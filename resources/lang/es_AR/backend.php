@@ -218,6 +218,8 @@ return [
     'unconfirmed' => 'Sin Confirmar',
     'change_payment' => 'Cambiar Pago',
     'paid' => 'Pagado',
+    'exento_socio' => 'Exento',
+    'exento_socio_tooltip' => 'Exento de pago por ser socio de TECHO',
     'unpaid' => 'Sin Pagar',
     'change_attendance' => 'Cambiar Asistencia',
     'present' => 'Presente',

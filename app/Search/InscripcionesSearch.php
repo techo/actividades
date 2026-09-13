@@ -122,6 +122,7 @@ class InscripcionesSearch
                     'Inscripcion.idInscripcion AS id',
                     'Inscripcion.presente',
                     'Inscripcion.pago',
+                    'Inscripcion.exento_pago',
                     'Inscripcion.voucherUrl',
                     'Inscripcion.confirma',
                     'PuntoEncuentro.punto',

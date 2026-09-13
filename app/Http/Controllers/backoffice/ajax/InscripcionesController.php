@@ -85,7 +85,9 @@ class InscripcionesController extends BaseController
         if($request->has('confirma')){
 
             if($request->confirma == true) {
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) {
+                // Un socio exento (exento_pago) no debe pagar: se lo trata como
+                // "sin pago" → mail/push de CONFIRMADO, no de falta de pago.
+                if($inscripcion->actividad->confirmacion == 1 && ($inscripcion->actividad->pago == 0 || $inscripcion->exento_pago)) {
                     if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
                         $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                     }
@@ -98,7 +100,7 @@ class InscripcionesController extends BaseController
                     );
                 }
 
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1) {
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1 && !$inscripcion->exento_pago) {
                     if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
                         $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
                     }
@@ -253,7 +255,7 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
 
             if ($request->confirmacion == 1) {
-                if ($inscripcion->actividad->pago == 1) {
+                if ($inscripcion->actividad->pago == 1 && !$inscripcion->exento_pago) {
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.pago_pendiente_titulo',
