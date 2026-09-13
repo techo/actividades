@@ -64,7 +64,11 @@
         },
         created() {
         },
-        computed: {},
+        computed: {
+            esExento() {
+                return !!this.rowData.exento_pago;
+            }
+        },
         methods: {
             actualizar() {
                 this.errorIcon = false;
