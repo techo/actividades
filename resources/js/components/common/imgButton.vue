@@ -36,16 +36,16 @@ export default {
 
 <style scoped>
 .filtro-tipo-item {
-  width: 100px;
+  width: 88px;
 }
 
 .filtro-tipo-item span {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 img {
-  max-width: 56px;
-  max-height: 56px;
+  max-width: 50px;
+  max-height: 50px;
 }
 
 @media (min-width: 576px) {
