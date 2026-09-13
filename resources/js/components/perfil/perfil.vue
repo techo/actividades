@@ -154,7 +154,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label>{{ $t('frontend.passport') }}</label>
+                                        <label style="text-transform: uppercase;">{{ documentoLabel }}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -865,6 +865,13 @@ export default {
             var dias = [];
             for (var d = 1; d <= max; d++) dias.push(d);
             return dias;
+        },
+        // Label del campo documento según el país ("RUT", "CPF", ...), provisto
+        // por /ajax/paises. Cae al genérico.
+        documentoLabel: function () {
+            var self = this;
+            var p = _.find(this.paises, function (x) { return x.id == self.user.pais; });
+            return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
         }
     }
 }

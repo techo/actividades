@@ -182,43 +182,6 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label>{{ $t('frontend.passport') }} *</label>
-                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
-                        <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <span v-bind:class="{'d-none':!validacion.dni.valido}"><i
-                            class="fas fa-check text-success"></i></span>
-                    <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i
-                            class="fas fa-times text-danger"></i></span>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label>{{ $t('frontend.telephone') }} *</label>
-                        <VueTelInput v-model="phoneNumber"
-                                        @country-changed="handleCountryChange"
-                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
-                                        :input-options="{ placeholder: $t('frontend.phone_placeholder') }"
-                                        :disabledFetchingCountry="true"
-                                        ref="telInput">
-                                    </VueTelInput>
-                        <!-- <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono"> -->
-                        <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <span v-bind:class="{'d-none':!validacion.telefono.valido}"><i
-                            class="fas fa-check text-success"></i></span>
-                    <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i
-                            class="fas fa-times text-danger"></i></span>
-                </div>
-            </div>
-
-
-            <div class="row justify-content-center align-items-center">
-                <div class="col-md-5">
-                    <div class="form-group">
                         <label>{{ $t('frontend.country') }} *</label>
                         <select id="pais" v-model="user.pais" class="form-control">
                             <option v-for="pais in paises" v-bind:value="pais.id">{{pais.nombre}}</option>
@@ -280,6 +243,41 @@
                     <span v-bind:class="{'d-none':!validacion.instagram.valido}"><i
                             class="fas fa-check text-success"></i></span>
                     <span v-bind:class="{'d-none':!validacion.instagram.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label style="text-transform: uppercase;">{{ documentoLabel }} *</label>
+                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <span v-bind:class="{'d-none':!validacion.dni.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>{{ $t('frontend.telephone') }} *</label>
+                        <VueTelInput v-model="phoneNumber"
+                                        @country-changed="handleCountryChange"
+                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
+                                        :input-options="{ placeholder: $t('frontend.phone_placeholder') }"
+                                        :disabledFetchingCountry="true"
+                                        ref="telInput">
+                                    </VueTelInput>
+                        <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <span v-bind:class="{'d-none':!validacion.telefono.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
             </div>
@@ -563,6 +561,13 @@
           var dias = [];
           for(var d = 1; d <= max; d++) dias.push(d);
           return dias;
+        },
+        // Label del campo documento según el país elegido ("RUT", "CPF",
+        // "Número de DNI"...), provisto por /ajax/paises. Cae al genérico.
+        documentoLabel: function() {
+          var self = this;
+          var p = _.find(this.paises, function(x){ return x.id == self.user.pais; });
+          return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
         }
       },
       methods: {

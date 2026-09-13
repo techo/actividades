@@ -114,6 +114,28 @@ class DocumentoService
     }
 
     /**
+     * Label del campo documento para el país, con el nombre que se usa localmente
+     * (ej. "RUT" en Chile, "CPF" en Brasil, "Cédula de Identidad"...). Localizado
+     * vía documento.campo_por_pais.<abreviacion>; cae a un genérico si no hay
+     * entrada. Fuente única del label para registro/perfil/suscribe.
+     */
+    public function etiquetaCampo($idPais): string
+    {
+        return $this->etiquetaCampoPorAbreviacion($this->abreviacionDe($idPais));
+    }
+
+    public function etiquetaCampoPorAbreviacion(?string $abreviacion): string
+    {
+        if ($abreviacion !== null) {
+            $key = 'documento.campo_por_pais.' . $abreviacion;
+            if (\Illuminate\Support\Facades\Lang::has($key)) {
+                return __($key);
+            }
+        }
+        return __('documento.campo_generico');
+    }
+
+    /**
      * Tipos aceptados (en orden de prioridad) para una abreviación de país. Cae a
      * 'default' si el país no está configurado o la abreviación es null.
      *

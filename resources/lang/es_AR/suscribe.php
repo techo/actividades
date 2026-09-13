@@ -34,25 +34,6 @@ return [
     'fecha_de_nacimiento' => 'Fecha de nacimiento',
     'gender' => 'Género',
 
-    'dni_by_country' => [
-        'argentina' => 'Número de DNI',
-        'bolivia' => 'Cédula de Identidad',
-        'colombia' => 'Cédula de Ciudadanía',
-        'costarica' => 'Cédula de Identidad',
-        'republicadominicana' => 'Cédula de Identidad',
-        'ecuador' => 'Cédula de Ciudadanía',
-        'elsalvador' => 'DUI',
-        'guatemala' => 'Documento Personal de Identificación',
-        'honduras' => 'DNI',
-        'mexico' => 'INE / CURP',
-        'panama' => 'Cédula de Identidad',
-        'paraguay' => 'Cédula de Identidad',
-        'peru' => 'Documento de Identidad',
-        'uruguay' => 'Cédula de Identidad',
-        'venezuela' => 'Cédula de Identidad',
-        'latam' => 'Pasaporte',
-    ],
-
     'secundario_by_country' => [
         'argentina' => 'Secundario',
         'bolivia' => 'Bachillerato',

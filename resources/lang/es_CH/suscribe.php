@@ -35,24 +35,6 @@ return [
     'gender' => 'Género',
     
 
-    'dni_by_country' => [
-        'bolivia' => 'Cédula de Identidad',
-        'colombia' => 'Cédula de Ciudadanía',
-        'costarica' => 'Cédula de Identidad',
-        'republicadominicana' => 'Cédula de Identidad',
-        'ecuador' => 'Cédula de Ciudadanía',
-        'elsalvador' => 'DUI',
-        'guatemala' => 'Documento Personal de Identificación',
-        'honduras' => 'DNI',
-        'mexico' => 'INE / CURP',
-        'panama' => 'Cédula de Identidad',
-        'paraguay' => 'Cédula de Identidad',
-        'peru' => 'Documento de Identidad',
-        'uruguay' => 'Cédula de Identidad',
-        'venezuela' => 'Cédula de Identidad',
-        'latam' => 'Pasaporte',
-    ],
-
 
     'success_title' => '¡Gracias por inscribirte!',
     'success_message' => 'Nos pondremos en contacto con vos a la brevedad.',

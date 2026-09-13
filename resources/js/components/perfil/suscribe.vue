@@ -459,7 +459,9 @@ export default {
         },
         documentoLabel() {
             if (!this.pais || !this.pais.abreviacion) return this.$t('frontend.passport');
-            const key = 'suscribe.dni_by_country.' + this.pais.abreviacion;
+            // Fuente única del label por país: documento.campo_por_pais (compartida
+            // con registro y perfil). Reemplaza al viejo suscribe.dni_by_country.
+            const key = 'documento.campo_por_pais.' + this.pais.abreviacion;
             return this.$te(key) ? this.$t(key) : this.$t('frontend.passport');
         },
         secundarioLabel() {
