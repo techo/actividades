@@ -32,16 +32,29 @@
 
 return [
 
+    // Cubre los 19 países con habilitado=1 en producción.
     'paises' => [
-        'argentina' => ['dni_ar', 'pasaporte'],
-        'brasil'    => ['cpf', 'pasaporte'],
-        'chile'     => ['rut', 'pasaporte'],
-        'colombia'  => ['cc_co', 'pasaporte'],
-        'mexico'    => ['curp', 'pasaporte'],
-        'peru'      => ['dni_pe', 'pasaporte'],
-        'uruguay'   => ['ci_uy', 'pasaporte'],
-        'paraguay'  => ['ci_py', 'pasaporte'],
-        'bolivia'   => ['ci_bo', 'pasaporte'],
+        'argentina'           => ['dni_ar', 'pasaporte'],
+        'brasil'              => ['cpf', 'pasaporte'],
+        'chile'               => ['rut', 'pasaporte'],
+        'colombia'            => ['cc_co', 'pasaporte'],
+        'mexico'              => ['curp', 'pasaporte'],
+        'peru'                => ['dni_pe', 'pasaporte'],
+        'uruguay'             => ['ci_uy', 'pasaporte'],
+        'paraguay'            => ['ci_py', 'pasaporte'],
+        'bolivia'             => ['ci_bo', 'pasaporte'],
+        'costarica'           => ['ci_cr', 'pasaporte'],
+        'ecuador'             => ['ci_ec', 'pasaporte'],
+        'elsalvador'          => ['dui_sv', 'pasaporte'],
+        'guatemala'           => ['dpi_gt', 'pasaporte'],
+        'honduras'            => ['id_hn', 'pasaporte'],
+        'panama'              => ['ci_pa', 'pasaporte'],
+        'republicadominicana' => ['ci_do', 'pasaporte'],
+        'venezuela'           => ['ci_ve', 'pasaporte'],
+        // Sin documento nacional numérico verificable acá (o país "regional"):
+        // documento genérico o pasaporte.
+        'estadosunidos'       => ['generico', 'pasaporte'],
+        'latam'               => ['generico', 'pasaporte'],
     ],
 
     // Para cualquier país no listado arriba: permisivo pero no basura.
@@ -112,6 +125,62 @@ return [
             'label'     => 'ci',
             'normaliza' => 'alnum',
             'regex'     => '/^[A-Z0-9]{5,12}$/',
+        ],
+
+        // Costa Rica: cédula 9 dígitos (extranjeros con DIMEX hasta 12).
+        'ci_cr' => [
+            'label'     => 'ci',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{9,12}$/',
+        ],
+
+        // Ecuador: cédula 10 dígitos.
+        'ci_ec' => [
+            'label'     => 'ci',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{10}$/',
+        ],
+
+        // El Salvador: DUI 9 dígitos.
+        'dui_sv' => [
+            'label'     => 'dui',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{9}$/',
+        ],
+
+        // Guatemala: DPI/CUI 13 dígitos.
+        'dpi_gt' => [
+            'label'     => 'dpi',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{13}$/',
+        ],
+
+        // Honduras: tarjeta de identidad 13 dígitos.
+        'id_hn' => [
+            'label'     => 'identidad',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{13}$/',
+        ],
+
+        // Panamá: cédula alfanumérica (prefijos por provincia: 8-234-567, PE, E, N, ...).
+        'ci_pa' => [
+            'label'     => 'ci',
+            'normaliza' => 'alnum',
+            'regex'     => '/^[A-Z0-9]{6,14}$/',
+        ],
+
+        // República Dominicana: cédula 11 dígitos.
+        'ci_do' => [
+            'label'     => 'ci',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{11}$/',
+        ],
+
+        // Venezuela: cédula 6-9 dígitos.
+        'ci_ve' => [
+            'label'     => 'ci',
+            'normaliza' => 'digitos',
+            'regex'     => '/^\d{6,9}$/',
         ],
 
         // Genérico (países sin regla específica): documento alfanumérico razonable.

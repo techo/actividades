@@ -100,4 +100,37 @@ class DocumentoServiceTest extends TestCase
     {
         $this->assertSame('52998224725', $this->service()->validarPorAbreviacion('brasil', '529.982.247-25')['normalizado']);
     }
+
+    // -- Otros países habilitados ---------------------------------------------
+
+    public function test_ecuador_cedula_10_digitos()
+    {
+        $this->assertTrue($this->service()->validarPorAbreviacion('ecuador', '1712345678')['valido']);
+        $this->assertFalse($this->service()->validarPorAbreviacion('ecuador', '171234567')['valido']); // 9 díg.
+    }
+
+    public function test_guatemala_dpi_13_digitos()
+    {
+        $this->assertTrue($this->service()->validarPorAbreviacion('guatemala', '1234567890123')['valido']);
+        $this->assertFalse($this->service()->validarPorAbreviacion('guatemala', '123')['valido']);
+    }
+
+    public function test_costa_rica_cedula()
+    {
+        $this->assertTrue($this->service()->validarPorAbreviacion('costarica', '1-2345-6789')['valido']);
+    }
+
+    /**
+     * Integridad de la config: todo tipo referenciado por un país (o por default)
+     * tiene que existir en 'tipos'. Atrapa typos al sumar países.
+     */
+    public function test_todos_los_tipos_referenciados_existen()
+    {
+        $config = require __DIR__ . '/../../config/documentos.php';
+        $definidos = array_keys($config['tipos']);
+        $referencias = array_merge($config['default'], ...array_values($config['paises']));
+        foreach (array_unique($referencias) as $tipo) {
+            $this->assertContains($tipo, $definidos, "El tipo '$tipo' se referencia pero no está definido en 'tipos'.");
+        }
+    }
 }
