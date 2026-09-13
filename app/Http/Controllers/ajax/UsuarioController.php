@@ -11,9 +11,11 @@ use App\Http\Resources\PerfilResource;
 use App\Inscripcion;
 use App\Pais;
 use App\Persona;
+use App\Rules\DocumentoValido;
 use App\Rules\PassExiste;
 use App\Search\CoordinadoresSearch;
 use App\Search\MisActividadesSearch;
+use App\Services\Documento\DocumentoService;
 use App\Services\ImageUploadService;
 use App\VerificacionMailPersona;
 use Carbon\Carbon;
@@ -49,7 +51,11 @@ class UsuarioController extends BaseController
         if($request->has('localidad')) $rules['localidad'] = 'nullable|exists:atl_localidades,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'nullable|date|before_or_equal:' . Carbon::now()->subYears(\App\Http\Requests\CrearPersona::EDAD_MINIMA)->format('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|regex:/^\+\d{1,3}\d{7,15}$/';
-        if($request->has('dni')) $rules['dni'] = 'nullable';
+        // Documento validado según el país (formato/verificador o pasaporte).
+        // Sigue siendo 'nullable': si viene vacío no valida (la presencia no la
+        // exige este flujo). El país llega como $request->pais; en la validación
+        // por campo suelto el front lo manda junto con el dni.
+        if($request->has('dni')) $rules['dni'] = ['nullable', new DocumentoValido($request->pais)];
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
         ];
@@ -208,7 +214,9 @@ class UsuarioController extends BaseController
   public function cargar_cambios($request,$persona) {
       $fechaNacimiento = new Carbon($request->nacimiento);
       $persona->apellidoPaterno = $request->apellido;
-      $persona->dni = $request->dni;
+      // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
+      // para que matcheen Salesforce, dedup y reporting.
+      $persona->dni = (new DocumentoService())->normalizar($request->pais, $request->dni);
       $persona->mail = $request->email;
       $persona->idLocalidad = $request->localidad;
       $persona->fechaNacimiento = $fechaNacimiento;

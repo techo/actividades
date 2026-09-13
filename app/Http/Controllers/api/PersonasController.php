@@ -8,6 +8,8 @@ use App\Http\Requests\CrearPersona;
 use App\Persona;
 use App\Inscripcion;
 use App\Pais;
+use App\Rules\DocumentoValido;
+use App\Services\Documento\DocumentoService;
 use Illuminate\Support\Facades\Auth;
 use App\Services\SocialAuth\SocialProviderFactory;
 use Illuminate\Support\Facades\Log;
@@ -178,7 +180,7 @@ class PersonasController extends Controller
         $fields = $request->validated();
 
         $persona = Persona::create([
-            'dni' => $fields['dni'],
+            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
@@ -261,7 +263,7 @@ class PersonasController extends Controller
             'genero' => 'required',
             'instagram' => 'nullable',
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => 'required|string|max:50',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
@@ -271,7 +273,7 @@ class PersonasController extends Controller
         ]);
 
         $persona->update([
-            'dni' => $fields['dni'],
+            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],

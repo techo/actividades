@@ -547,6 +547,7 @@ export default {
             this.traer_provincias();
             this.user.provincia = null;
             this.validar_data('provincia')
+            this.validar_data('dni')
             this.formDirty = true;
         },
         'user.provincia': function () {
@@ -736,6 +737,10 @@ export default {
                 this.validacion[prop].invalido = false
                 if (prop == 'pass_confirmacion') {
                     data['pass'] = this.user.pass
+                }
+                // El documento se valida según el país (DNI/CPF/RUT/pasaporte).
+                if (prop == 'dni' && this.user.pais) {
+                    data.pais = this.user.pais
                 }
             } else {
                 data = this.user

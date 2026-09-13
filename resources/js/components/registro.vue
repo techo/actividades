@@ -506,9 +506,11 @@
             this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');
             this.validar_data('telefono')
         },
-        'user.pais': function() { 
-            this.validar_data('pais') 
-            this.traer_provincias() 
+        'user.pais': function() {
+            this.validar_data('pais')
+            this.traer_provincias()
+            // El documento válido depende del país: al cambiarlo, revalidamos el dni.
+            this.validar_data('dni')
         },
         'user.provincia': function() { 
             this.validar_data('provincia')  
@@ -649,6 +651,11 @@
               data.google_id = this.user.google_id
               data.facebook_id = this.user.facebook_id
 	    }
+            // El documento se valida según el país: mandamos el país junto al dni
+            // para que el server aplique la regla correcta (DNI/CPF/RUT/pasaporte).
+            if(prop == "dni" && this.user.pais) {
+              data.pais = this.user.pais
+            }
           } else {
             data = this.user
           }
