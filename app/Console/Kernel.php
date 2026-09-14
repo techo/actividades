@@ -44,6 +44,16 @@ class Kernel extends ConsoleKernel
         // Supervisor (autorestart=true) lo relanza con una conexión SMTP fresca.
         // No necesita cron/sudo aparte: viaja con este scheduler ya instalado en prod.
         $schedule->command('queue:restart')->everyThirtyMinutes();
+
+        // Poda de Telescope: retención de 48h. En sandbox (APP_ENV=local) Telescope
+        // queda ON y sin poda llegó a 5.2M filas / ~2.4G (sep-2026), más grande que
+        // toda la BD de prod. Se agenda solo en local: es el único entorno donde el
+        // TelescopeServiceProvider se registra (ver AppServiceProvider::register), así
+        // que en prod el comando 'telescope:prune' ni siquiera existe. Viaja con el
+        // scheduler ya instalado en ambos entornos; no necesita cron/sudo aparte.
+        if ($this->app->isLocal()) {
+            $schedule->command('telescope:prune --hours=48')->daily();
+        }
     }
 
     /**
