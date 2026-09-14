@@ -206,6 +206,18 @@ class UsuarioController extends BaseController
       $persona->recibirMails = (int) $request->recibirMails;
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
+          // Cambiar la clave revoca los tokens de API vigentes (mismo criterio que el
+          // reset de contraseña en App\Traits\ResetsPasswords): un token filtrado deja
+          // de valer. Clave con el TTL de 1 año (ver AuthServiceProvider). Se preserva
+          // el token de la request actual para no desloguear la sesión en curso —
+          // equivale a "cerrar sesión en los otros dispositivos". Si el update viene
+          // por sesión web (sin token Passport), token() es null y se revocan todos.
+          $tokenActualId = optional($persona->token())->id;
+          $persona->tokens()
+              ->when($tokenActualId, function ($query) use ($tokenActualId) {
+                  return $query->where('id', '!=', $tokenActualId);
+              })
+              ->update(['revoked' => true]);
       }
       $persona->save();
       return ['user' => new PerfilResource($persona)];

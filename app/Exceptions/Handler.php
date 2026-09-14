@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 class Handler extends ExceptionHandler
 {
@@ -14,7 +15,14 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        // 401 esperado, no un error de la app: la app mobile pega a la API con un
+        // token vencido/revocado y Passport (TokenGuard::authenticateViaBearerToken)
+        // reporta la OAuthServerException como ERROR. Era ~el 95% del ruido del log
+        // de prod (sep-2026). AuthenticationException ("Unauthenticated.") ya viene
+        // silenciada por el handler base de Laravel. Nota: si en el futuro se usa el
+        // grant password/authorization_code por /oauth/token, conviene un filtro más
+        // fino (solo error access_denied) para no ocultar serverError de emisión.
+        OAuthServerException::class,
     ];
 
     /**
