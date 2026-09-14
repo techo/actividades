@@ -69,8 +69,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
         Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
-    // `auth` hace el enforcement real (requiere.auth es solo un flag de vista, no bloquea).
-    Route::middleware(['auth', 'requiere.auth'])->group(function () {
+    // `auth` hace el enforcement real (login-modal-flag es solo un flag de vista, no bloquea).
+    Route::middleware(['auth', 'login-modal-flag'])->group(function () {
         Route::prefix('institucionEducativa')->group(function() {
             Route::get('', 'ajax\InstitucionEducativaController@index');
             Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
@@ -163,16 +163,16 @@ Route::get('autenticado', function () {
 //Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
 
 // Evaluaciones
-Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
+Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
 
 // Flujo de inscripciones
 
 Route::get('/actividades/{id}', 'ActividadesController@show')->middleware('pais');
 
-Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
+Route::prefix('/inscripciones/actividad/{id}')->middleware('auth', 'can:confirmar,App\Actividad,id', 'login-modal-flag')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
     
@@ -186,7 +186,7 @@ Route::middleware('auth')->group(function () {
 
     // Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
     Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
-        ->middleware('requiere.auth');
+        ->middleware('login-modal-flag');
 });
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
@@ -199,8 +199,8 @@ Route::get('/inscripciones/actividad/{id}/confirmar', function ($id) {
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
 // Pantalla de estado de la inscripción (gracias / esperá confirmación), para que
 // el CTA del detalle ("ESPERAR CONFIRMACIÓN") pueda volver a mostrarla.
-Route::get('/inscripciones/actividad/{id}/estado', 'InscripcionesController@estado')->middleware('requiere.auth');
-Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
+Route::get('/inscripciones/actividad/{id}/estado', 'InscripcionesController@estado')->middleware('auth', 'login-modal-flag');
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('auth', 'can:inscribir,App\Actividad,id', 'login-modal-flag');
 
 //Fin Flujo de inscripciones
 

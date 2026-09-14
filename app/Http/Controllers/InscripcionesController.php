@@ -285,10 +285,9 @@ class InscripcionesController extends BaseController
         $actividad = Actividad::findOrFail($id);
         $persona = Auth::user();
 
-        // El middleware requiere.auth NO bloquea invitados (es un no-op, ver auditoría
-        // A-8): un no logueado llega acá con Auth::user() null y sin este guard
-        // $persona->inscripcionActividad() tira "member function on null" (500). Lo
-        // mandamos al inicio del flujo, que resuelve el login.
+        // Defensa en profundidad: la ruta ya exige sesión con el middleware `auth`
+        // (antes dependía de `requiere.auth`, que no bloqueaba — finding A-8). Este
+        // guard evita el 500 por Auth::user() null si alguna vez se toca el middleware.
         if (!$persona) {
             return redirect('/inscripciones/actividad/' . $id);
         }

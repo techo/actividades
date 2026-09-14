@@ -103,8 +103,10 @@ class InscripcionesTest extends TestCase
             'aceptar_terminos' => 1 
         ];
         
+        // Invitado (sin sesión): ahora la ruta exige `auth`, así que redirige a login
+        // (antes daba 403 vía can:, un backstop accidental del no-op requiere.auth — A-8).
         $this->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias',$datos)
-            ->assertForbidden();
+            ->assertRedirect('/login');
 
         $this->actingAs($jose)
             ->get('/actividades/' . $actividad->idActividad)

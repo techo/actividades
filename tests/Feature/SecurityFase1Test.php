@@ -37,6 +37,12 @@ class SecurityFase1Test extends TestCase
             'voucher de pago'        => ['post', '/ajax/inscripcion/voucherPago'],
             'solicitud de beca'      => ['post', '/ajax/inscripcion/becaSolicitud'],
             'pregunta archivo'       => ['post', '/ajax/inscripcion/pregunta-archivo'],
+            // A-8: rutas que dependían solo del no-op `requiere.auth` (estado) o de un
+            // `can:` como backstop accidental; ahora exigen sesión real con `auth`.
+            'estado de inscripción'  => ['get',  '/inscripciones/actividad/1/estado'],
+            'evaluaciones (index)'   => ['get',  '/actividades/1/evaluaciones'],
+            'confirmar inscripción'  => ['post', '/inscripciones/actividad/1/confirmar'],
+            'gracias (crear insc.)'  => ['post', '/inscripciones/actividad/1/gracias'],
         ];
     }
 

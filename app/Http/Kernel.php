@@ -74,7 +74,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         //Custom middlewares para Techo
         'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        'requiere.auth' => \App\Http\Middleware\RequiereAuth::class,
+        'login-modal-flag' => \App\Http\Middleware\LoginModalFlag::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
     ];
