@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\ActividadFactory;
+use App\Jobs\EnviarMailBulkSes;
 use App\Jobs\EnviarMailsCancelacionActividad;
 use App\Mail\ActualizacionActividad;
 use App\Mail\CancelacionActividad;
@@ -70,7 +71,11 @@ class MailingTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Mail::fake();
+        // El envío BULK (actualización/evaluaciones) va por el job EnviarMailBulkSes
+        // (SES vía MailerSes, transporte SMTP crudo que NO pasa por Mail::fake). Se
+        // testea con Queue::fake: evita el SMTP real (530 en test) y permite asertar
+        // el despacho del job. El transaccional sí usa el facade (ver otros tests).
+        Queue::fake();
 
         $this->seed('PermisosSeeder');
 
@@ -99,7 +104,11 @@ class MailingTest extends TestCase
             'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro
         ]);
 
-        Mail::assertQueued(ActualizacionActividad::class, 1);
+        Queue::assertPushed(EnviarMailBulkSes::class, 1);
+        Queue::assertPushed(EnviarMailBulkSes::class, function ($job) use ($persona_que_quiere_recibir_mail) {
+            return $job->mailable instanceof ActualizacionActividad
+                && $job->to === $persona_que_quiere_recibir_mail->mail;
+        });
 
     }
 
@@ -108,7 +117,9 @@ class MailingTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Mail::fake();
+        // Bulk por SES (job EnviarMailBulkSes) → se testea con Queue::fake, igual que
+        // administrador_asigna_punto. Evita el SMTP real (530) y aserta el despacho.
+        Queue::fake();
 
         $this->seed('PermisosSeeder');
 
@@ -129,7 +140,11 @@ class MailingTest extends TestCase
             ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/enviar-evaluaciones')
             ->assertStatus(200);
 
-        Mail::assertQueued(InvitacionEvaluacion::class, 1);
+        Queue::assertPushed(EnviarMailBulkSes::class, 1);
+        Queue::assertPushed(EnviarMailBulkSes::class, function ($job) use ($maria) {
+            return $job->mailable instanceof InvitacionEvaluacion
+                && $job->to === $maria->mail;
+        });
 
     }
 }
