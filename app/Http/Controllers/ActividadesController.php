@@ -87,7 +87,13 @@ class actividadesController extends Controller
 
         $hay_cupos = ($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0;
 
-        $inscripciones_abiertas = $actividad->fechaInicioInscripciones->lte(Carbon::now()) &&  $actividad->fechaFinInscripciones->gte(Carbon::now());
+        // Una fecha de inscripción en null significa "sin restricción por ese lado"
+        // (no gatear inicio/fin). Sin este guard, ->lte()/->gte() sobre null tiran
+        // "member function on null" (500) en actividades con fechas sin cargar.
+        $ahora = Carbon::now();
+        $inicioOk = is_null($actividad->fechaInicioInscripciones) || $actividad->fechaInicioInscripciones->lte($ahora);
+        $finOk = is_null($actividad->fechaFinInscripciones) || $actividad->fechaFinInscripciones->gte($ahora);
+        $inscripciones_abiertas = $inicioOk && $finOk;
 
         $mensaje = __('frontend.error');
         $clase = 'btn-danger';
