@@ -52,10 +52,14 @@ class UsuarioController extends BaseController
         if($request->has('nacimiento')) $rules['nacimiento'] = 'nullable|date|before_or_equal:' . Carbon::now()->subYears(\App\Http\Requests\CrearPersona::EDAD_MINIMA)->format('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|regex:/^\+\d{1,3}\d{7,15}$/';
         // Documento validado según el país (formato/verificador o pasaporte).
-        // Sigue siendo 'nullable': si viene vacío no valida (la presencia no la
-        // exige este flujo). El país llega como $request->pais; en la validación
-        // por campo suelto el front lo manda junto con el dni.
-        if($request->has('dni')) $rules['dni'] = ['nullable', new DocumentoValido($request->pais)];
+        // En el PERFIL (update) es OBLIGATORIO: no permitir blanquear un DNI ya
+        // cargado. En el ALTA (create) sigue 'nullable' porque el registro mobile
+        // (apiCreate) todavía puede no mandarlo (hay ~1854 personas con dni NULL);
+        // exigirlo en el alta requiere coordinar con la app. El país: $request->pais.
+        if($request->has('dni')) {
+            $presenciaDni = ($verbo === 'update') ? 'required' : 'nullable';
+            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais)];
+        }
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
         ];
@@ -224,7 +228,10 @@ class UsuarioController extends BaseController
   }
 
   public function cargar_cambios($request,$persona) {
-      $fechaNacimiento = new Carbon($request->nacimiento);
+      // Sin fecha en el request NO fabricar "hoy": new Carbon(null) devuelve la fecha
+      // actual, lo que dejaba a quien no cargó nacimiento con fechaNacimiento=hoy
+      // (edad 0; 136 altas app + 56 web en 30d). Guardamos null; la edad la valida validar().
+      $fechaNacimiento = filled($request->nacimiento) ? new Carbon($request->nacimiento) : null;
       $persona->apellidoPaterno = $request->apellido;
       // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
       // para que matcheen Salesforce, dedup y reporting.
