@@ -258,7 +258,9 @@ class PersonasController extends Controller
             'mail' => 'required',
             'nombres' => 'required',
             'apellidoPaterno' => 'required',
-            'fechaNacimiento' => 'required|date',
+            // Misma validación de edad que el registro (EDAD_MINIMA=13) y tope 85: el
+            // update mobile solo pedía 'required|date' → dejaba fijar edades <13.
+            'fechaNacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(CrearPersona::EDAD_MINIMA)->format('Y-m-d') . '|after:' . \Carbon\Carbon::now()->subYears(85)->format('Y-m-d'),
             'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
             'genero' => 'required',
             'instagram' => 'nullable',
