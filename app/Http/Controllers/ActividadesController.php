@@ -93,7 +93,11 @@ class actividadesController extends Controller
         $ahora = Carbon::now();
         $inicioOk = is_null($actividad->fechaInicioInscripciones) || $actividad->fechaInicioInscripciones->lte($ahora);
         $finOk = is_null($actividad->fechaFinInscripciones) || $actividad->fechaFinInscripciones->gte($ahora);
-        $inscripciones_abiertas = $inicioOk && $finOk;
+        // La actividad debe estar 'Abierta' (estadoConstruccion): una Cerrada no debe
+        // ofrecer el botón de inscripción aunque las fechas estén vigentes. Mismo
+        // criterio que ActividadesPolicy::inscribir (que bloquea el POST server-side).
+        $actividadAbierta = $actividad->estadoConstruccion === 'Abierta';
+        $inscripciones_abiertas = $actividadAbierta && $inicioOk && $finOk;
 
         $mensaje = __('frontend.error');
         $clase = 'btn-danger';

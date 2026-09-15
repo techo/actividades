@@ -123,6 +123,27 @@ class InscripcionesController extends BaseController
             ->toArray();
 
         $actividad = Actividad::find($id);
+
+        // No permitir inscribirse a una actividad cerrada o fuera del período de
+        // inscripción, por NINGÚN camino. El /gracias web tiene can:inscribir, pero la
+        // ruta mobile (POST /api/inscripciones/actividad/{id}) NO tiene policy y
+        // create() no lo chequeaba → se podía inscribir a una Cerrada desde la app.
+        // Guard server-side (null-safe en fechas) para web y mobile.
+        $ahora = Carbon::now();
+        $inscripcionesAbiertas = $actividad
+            && $actividad->estadoConstruccion === 'Abierta'
+            && (is_null($actividad->fechaInicioInscripciones) || $actividad->fechaInicioInscripciones->lte($ahora))
+            && (is_null($actividad->fechaFinInscripciones) || $actividad->fechaFinInscripciones->gte($ahora));
+        if (!$inscripcionesAbiertas) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('frontend.closed_inscriptions'),
+                ], 422);
+            }
+            return redirect('/actividades/' . $id);
+        }
+
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
