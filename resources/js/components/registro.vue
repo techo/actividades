@@ -580,7 +580,20 @@
         cambiar_paso: function (mod) {
           switch(this.paso_actual) {
             case 'email':
-              if(!(this.validacion.email.valido && this.validacion.pass.valido)) return false
+              if(!(this.validacion.email.valido && this.validacion.pass.valido)) {
+                // No avanzar en silencio: mostrar QUÉ falta (email/contraseña) en vez
+                // de un botón que no reacciona. Si un campo quedó vacío o sin validar,
+                // se marca requerido para que el usuario vea el motivo.
+                if(!this.validacion.email.valido) {
+                  this.validacion.email.invalido = true
+                  if(!this.validacion.email.texto) this.validacion.email.texto = this.$t('frontend.changes_required_error')
+                }
+                if(!this.validacion.pass.valido) {
+                  this.validacion.pass.invalido = true
+                  if(!this.validacion.pass.texto) this.validacion.pass.texto = this.$t('frontend.changes_required_error')
+                }
+                return false
+              }
               this.paso_actual = 'personales'
               break
             case 'personales':
@@ -677,10 +690,18 @@
             }
           })
           .catch(error => {
-            var errors = error.response.data.errors
-            for(var prop in errors) {
-              this.validacion[prop].texto = errors[prop][0]
-              this.validacion[prop].valido = false
+            if(error.response && error.response.status === 422 && error.response.data.errors) {
+              var errors = error.response.data.errors
+              for(var p in errors) {
+                this.validacion[p].texto = errors[p][0]
+                this.validacion[p].valido = false
+                this.validacion[p].invalido = true
+              }
+            } else if(prop && this.validacion[prop]) {
+              // Error que NO es 422 (500/red): no dejar el campo mudo en valido=false
+              // sin motivo (bloqueaba "siguiente" sin explicación). Se marca inválido
+              // con un mensaje genérico para que el usuario reintente.
+              this.validacion[prop].texto = this.$t('frontend.error')
               this.validacion[prop].invalido = true
             }
           })
