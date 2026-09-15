@@ -15,8 +15,11 @@ class Usuario implements Filter
     public static function apply(Builder $builder, $value)
     {
         foreach (explode(' ', $value) as $palabra) {
+            // CONCAT_WS (no CONCAT): CONCAT con un argumento NULL devuelve NULL en
+            // MySQL → un suscripto con dni/apellido NULL quedaría invisible en la
+            // búsqueda. CONCAT_WS ignora los NULL.
             $builder->whereRaw(
-                "concat(' ', nombre, ' ', apellido, ' ', mail, ' ', dni) like ?",
+                "CONCAT_WS(' ', nombre, apellido, mail, dni) like ?",
                 ['%' . $palabra . '%']
             );
         }

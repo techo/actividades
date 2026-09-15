@@ -127,4 +127,29 @@ class RescatarUsuarioCrossPaisTest extends TestCase
             ->assertStatus(200)
             ->assertJsonMissing(['idPersona' => $ajena->idPersona]);
     }
+
+    /**
+     * Regresión: una persona con dni NULL (típico del registro por app sin DNI)
+     * quedaba INVISIBLE en toda la búsqueda del admin, incluso por email exacto,
+     * porque el filtro usaba CONCAT(...) y en MySQL CONCAT con un argumento NULL
+     * devuelve NULL → el LIKE nunca matchea. Con CONCAT_WS (ignora NULL) se la
+     * encuentra. En prod había ~1854 personas afectadas.
+     *
+     * @test
+     */
+    public function la_busqueda_por_email_encuentra_persona_con_dni_null()
+    {
+        $this->montarPaises();
+        $admin = $this->adminDelPais($this->paisAdmin);
+        $varada = factory('App\Persona')->create([
+            'idPais' => $this->paisDefault->id,
+            'dni'    => null,
+            'mail'   => 'sin-dni@ejemplo.com',
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/admin/ajax/search/usuarios?usuario=' . urlencode('sin-dni@ejemplo.com'))
+            ->assertStatus(200)
+            ->assertJsonFragment(['idPersona' => $varada->idPersona]);
+    }
 }
