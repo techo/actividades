@@ -421,4 +421,23 @@ class InscripcionesTest extends TestCase
         $this->assertTrue(count(json_decode($response->getContent())->data) == 3);
     }
 
+    /**
+     * El link directo al inicio del flujo (GET /inscripciones/actividad/{id}) no debe
+     * abrir el flujo si la actividad está Cerrada: redirige al detalle de la actividad
+     * (que muestra "inscripciones cerradas").
+     *
+     * @test
+     */
+    public function el_flujo_de_inscripcion_redirige_al_detalle_si_la_actividad_esta_cerrada()
+    {
+        $actividad = app(ActividadFactory::class)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+        $actividad->estadoConstruccion = 'Cerrada';
+        $actividad->save();
+
+        $this->get('/inscripciones/actividad/' . $actividad->idActividad)
+            ->assertRedirect('/actividades/' . $actividad->idActividad);
+    }
+
 }
