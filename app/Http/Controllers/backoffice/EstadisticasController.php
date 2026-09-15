@@ -258,7 +258,7 @@ class EstadisticasController extends Controller
         $inscriptos = $row->inscriptos ?? 0;
         $presentes  = $row->presentes  ?? 0;
 
-        $horasData = \App\Actividad::whereIn('idActividad', $actividadIds)
+        $horasData = \App\Actividad::whereIn('Actividad.idActividad', $actividadIds)
             ->whereNotNull('fechaFin')
             ->whereNotNull('fechaInicio')
             ->leftJoin('Inscripcion as ins', function ($join) {

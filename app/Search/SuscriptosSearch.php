@@ -41,7 +41,15 @@ class SuscriptosSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\usuario\\' . \Illuminate\Support\Str::studly($name);
+        $studly = \Illuminate\Support\Str::studly($name);
+        // Filtro específico de Suscriptos (tabla Suscripciones: nombre/apellido) con
+        // fallback a los genéricos de usuario (campaign_id, sort) que sí aplican acá.
+        // La búsqueda libre `usuario` DEBE usar el suscripto: el de usuario filtra por
+        // `nombres`/`apellidoPaterno` (columnas de Persona) → "Unknown column nombres".
+        $suscripto = __NAMESPACE__ . '\\filters\\suscripto\\' . $studly;
+        return class_exists($suscripto)
+            ? $suscripto
+            : __NAMESPACE__ . '\\filters\\usuario\\' . $studly;
     }
     private static function isValidDecorator($decorator)
     {

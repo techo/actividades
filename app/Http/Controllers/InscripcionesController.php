@@ -48,6 +48,14 @@ class InscripcionesController extends BaseController
         $actividad->descripcion = clean_string($actividad->descripcion);
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
+
+        // Sin punto de encuentro válido no se puede confirmar (la vista accede a
+        // $punto_encuentro->idPuntoEncuentro): volvemos al inicio del flujo en vez
+        // de tirar "property idPuntoEncuentro of non-object" (500).
+        if (!$puntoEncuentro) {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
         $tipo = $actividad->tipo;
 
         $currentDate = Carbon::now();
