@@ -41,6 +41,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            // Primero: garantiza que todo error (validación/auth/404) vuelva como JSON
+            // y no como redirect 302, así la app siempre recibe {message, errors}.
+            \App\Http\Middleware\ForceJsonResponse::class,
             'throttle:60,1',
             'bindings',
             \App\Http\Middleware\SecurityHeaders::class,
