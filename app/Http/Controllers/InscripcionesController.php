@@ -200,7 +200,7 @@ class InscripcionesController extends BaseController
                 return view('inscripciones.confirmar-paso-1')
                     ->with('actividad', $actividad)
                     ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
-                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'));
             }
 
             if ($actividad->pago == 1 && !$inscripcion->exento_pago) {
@@ -329,12 +329,17 @@ class InscripcionesController extends BaseController
             return redirect('/inscripciones/actividad/' . $id);
         }
 
-        $vista = $estado === 'confirmed' ? 'inscripciones.gracias' : 'inscripciones.confirmar-paso-1';
+        // Confirmada -> 'gracias' (paso 'finalizar' activo). Esperando confirmación ->
+        // 'confirmar-paso-1', que es la pantalla de "Falta confirmar tu cupo": todavía
+        // está en la etapa 'confirmar', así que el breadcrumb debe marcar ese paso.
+        $confirmada = $estado === 'confirmed';
+        $vista      = $confirmada ? 'inscripciones.gracias' : 'inscripciones.confirmar-paso-1';
+        $pasoActivo = $confirmada ? 'finalizar' : 'confirmar';
 
         return view($vista)
             ->with('actividad', $actividad)
             ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
-            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, $pasoActivo, 'blade'));
     }
 
     /**
