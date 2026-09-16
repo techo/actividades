@@ -43,21 +43,8 @@
 
 <div class="container py-4">
 
-    {{-- ── Banner: comprobante rechazado ─────────────────────── --}}
-    @if($voucherRechazado)
-    <div class="alert alert-danger d-flex align-items-start mb-4" style="border-radius:10px;">
-        <i class="fa fa-times-circle fa-2x mr-3 mt-1 text-danger flex-shrink-0"></i>
-        <div>
-            <strong>{{ __('frontend.voucher_rechazado_titulo') }}</strong>
-            <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.voucher_rechazado_subtitulo') }}</p>
-            @if($inscripcion->voucher_rechazo_motivo)
-                <p class="mb-0 mt-2 font-weight-bold" style="font-size:.85rem;">
-                    {{ __('frontend.voucher_rechazado_motivo') }}: {{ $inscripcion->voucher_rechazo_motivo }}
-                </p>
-            @endif
-        </div>
-    </div>
-    @endif
+    {{-- El aviso de comprobante rechazado (rojo) y el de "en validación" (amarillo) se
+         muestran más abajo, debajo del encabezado de la actividad, y son excluyentes. --}}
 
     {{-- ── Step indicator ─────────────────────────────────────── --}}
     @include('partials.inscripcion-breadcrumb', ['flowSteps' => $flowSteps ?? []])
@@ -94,14 +81,35 @@
 
     @if($actividad->pago == 1)
 
-    {{-- ── Aviso: solicitud/comprobante en validación (NO bloquea: la tarjeta de pago sigue disponible) ── --}}
+    {{-- ── Estado del pago (excluyentes): rechazado (rojo) | en validación (amarillo) ── --}}
     @php
-        $becaEnValidacion        = $inscripcion->scholarship_requested && !$inscripcion->pago && !$voucherRechazado;
-        $comprobanteEnValidacion = $inscripcion->voucherUrl && !$inscripcion->pago && !$voucherRechazado;
+        $pagoResuelto            = $inscripcion->pago || $inscripcion->exento_pago;
+        $becaEnValidacion        = $inscripcion->scholarship_requested && !$pagoResuelto && !$voucherRechazado;
+        $comprobanteEnValidacion = $inscripcion->voucherUrl && !$pagoResuelto && !$voucherRechazado;
+        $enValidacion            = $becaEnValidacion || $comprobanteEnValidacion;
         $avisoEsBeca             = $becaEnValidacion; // si hay beca, prima el mensaje de beca
     @endphp
+
+    {{-- Rechazado (rojo): solo si el comprobante fue rechazado --}}
+    @if($voucherRechazado)
+    <div id="rechazado-banner" class="alert alert-danger d-flex align-items-start mb-4" style="border-radius:10px;">
+        <i class="fa fa-times-circle fa-2x mr-3 mt-1 text-danger flex-shrink-0"></i>
+        <div>
+            <strong>{{ __('frontend.voucher_rechazado_titulo') }}</strong>
+            <p class="mb-0 mt-1" style="font-size:.9rem;">{{ __('frontend.voucher_rechazado_subtitulo') }}</p>
+            @if($inscripcion->voucher_rechazo_motivo)
+                <p class="mb-0 mt-2 font-weight-bold" style="font-size:.85rem;">
+                    {{ __('frontend.voucher_rechazado_motivo') }}: {{ $inscripcion->voucher_rechazo_motivo }}
+                </p>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    {{-- En validación (amarillo): comprobante/beca enviado y aún sin resolver. Siempre en el
+         DOM; lo muestra el server al cargar, o el JS al enviar sin recargar. Excluyente con el rojo. --}}
     <div id="validacion-banner" class="d-flex align-items-start mb-4"
-         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px; {{ ($becaEnValidacion || $comprobanteEnValidacion) ? '' : 'display:none;' }}">
+         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px; {{ $enValidacion ? '' : 'display:none;' }}">
         <i class="far fa-clock fa-lg mr-3 mt-1 flex-shrink-0" style="color:#b56b00;"></i>
         <div>
             <strong id="validacion-banner-title" style="color:#b56b00;"
@@ -117,7 +125,7 @@
         </div>
     </div>
 
-    {{-- ── Card de pago ────────────────────────────────────────── --}}
+    {{-- ── Card de pago (siempre visible: no bloquea aunque haya comprobante/beca enviado) ── --}}
     <div id="payment-card" class="card border-0 shadow-sm">
         <div class="card-body p-4">
 
@@ -221,7 +229,7 @@
                             voucher="{{ $voucherRechazado ? '' : $inscripcion->voucherUrl }}"
                             csrf_token="{{ csrf_token() }}">
                         </confirmacion-pago>
-                        @if($inscripcion->voucherUrl)
+                        @if($inscripcion->voucherUrl && !$pagoResuelto && !$voucherRechazado)
                             <p class="text-success mt-2 small">
                                 <i class="fas fa-check-circle mr-1"></i>
                                 {{ __('frontend.payment_in_process') }}
@@ -261,7 +269,7 @@
                             voucher="{{ $voucherRechazado ? '' : $inscripcion->voucherUrl }}"
                             csrf_token="{{ csrf_token() }}">
                         </confirmacion-pago>
-                        @if($inscripcion->voucherUrl)
+                        @if($inscripcion->voucherUrl && !$pagoResuelto && !$voucherRechazado)
                             <p class="text-success mt-2 small">
                                 <i class="fas fa-check-circle mr-1"></i>
                                 {{ __('frontend.payment_in_process') }}
@@ -344,7 +352,7 @@
             <button id="btn-finalizar"
                     type="button"
                     class="btn btn-primary"
-                    onclick="window.location.href='/actividades'"
+                    onclick="finalizarInscripcion()"
                     {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$voucherRechazado ? '' : 'disabled' }}>
                 {{ __('frontend.finish') }}
             </button>
@@ -414,6 +422,10 @@
         var btn = document.getElementById('btn-finalizar');
         if (btn) btn.disabled = false;
 
+        // Si acaba de re-subir tras un rechazo, ocultamos el aviso rojo (excluyente con el amarillo).
+        var rechazado = document.getElementById('rechazado-banner');
+        if (rechazado) rechazado.style.display = 'none';
+
         var banner = document.getElementById('validacion-banner');
         if (!banner) return;
 
@@ -428,6 +440,13 @@
 
         banner.style.display = '';
         banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    // "Finalizar": NO redirige al home. Confirma en la misma página mostrando el aviso
+    // "en validación" y llevando la vista hacia arriba. El usuario navega cuando quiera.
+    window.finalizarInscripcion = function () {
+        if (typeof window.notifyPagoListo === 'function') window.notifyPagoListo();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     document.addEventListener('DOMContentLoaded', function () {
