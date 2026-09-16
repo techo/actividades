@@ -121,6 +121,14 @@ return [
 	'voucher_rechazado_instruccion'  => 'Por favor, ingresa al sistema y sube un nuevo comprobante para continuar con tu inscripción.',
 	'voucher_rechazado_link'         => 'Subir nuevo comprobante',
 
+	// MailBecaRechazada
+	'beca_rechazada_subject'      => 'Solicitud de beca no aprobada —',
+	'beca_rechazada_intro'        => 'Te informamos que tu solicitud de beca fue revisada para la actividad',
+	'beca_rechazada_estado'       => 'Tu solicitud de beca no fue aprobada.',
+	'beca_rechazada_motivo_label' => 'Motivo',
+	'beca_rechazada_instruccion'  => 'Puedes ingresar al sistema para realizar tu aporte y confirmar tu lugar, o volver a solicitar la beca con más información.',
+	'beca_rechazada_link'         => 'Ir a la página de pago',
+
 
     'documento_rechazado_subject'      => 'Documento de identidad rechazado —',
     'documento_rechazado_intro'        => 'Revisamos el documento de identidad que subiste y no pudo ser aceptado para la actividad',

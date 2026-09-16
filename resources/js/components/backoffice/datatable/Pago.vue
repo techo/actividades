@@ -33,7 +33,7 @@
                title="Comprobante rechazado"></i>
             <i class="fa fa-exclamation text-warning"
                v-show="rowData.voucherUrl && !pago && !rowData.voucher_rechazado"></i>
-            <span v-if="rowData.scholarship_requested && !pago"
+            <span v-if="rowData.scholarship_requested && !pago && !rowData.scholarship_rejected && !rowData.scholarship_approved"
                   title="Solicitó beca / exención"
                   style="cursor:default;font-size:1.1em;">🎓</span>
         </template>

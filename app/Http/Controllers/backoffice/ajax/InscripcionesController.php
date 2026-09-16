@@ -16,6 +16,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\Mail\MailVoucherRechazado;
+use App\Mail\MailBecaRechazada;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Services\Listados\EnriquecedorFilas;
@@ -328,6 +329,83 @@ class InscripcionesController extends BaseController
         }
 
         return response()->json(['mensaje' => 'Comprobante rechazado y usuario notificado.'], 200);
+    }
+
+    /**
+     * Aprueba la solicitud de beca/exención: materializa la exención de pago
+     * (misma vía que el socio), confirma la inscripción y notifica al voluntario
+     * con el mail de "inscripción confirmada" (además del push).
+     */
+    public function aprobarBeca(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $recenciaCritica = (int) config('mailing.dedup_recencia_dias_critico', 30);
+
+        // La exención hace que EstadoInscripcion trate el pago como satisfecho.
+        $inscripcion->exento_pago                 = true;
+        $inscripcion->exento_motivo               = 'beca';
+        $inscripcion->exento_at                   = Carbon::now();
+        $inscripcion->scholarship_approved        = true;
+        $inscripcion->scholarship_rejected        = false;
+        $inscripcion->scholarship_rejection_reason = null;
+        $inscripcion->scholarship_resolved_at     = Carbon::now();
+        // Aprobar la beca implica la confirmación del coordinador.
+        $inscripcion->confirma                    = 1;
+        $inscripcion->save();
+
+        // Confirmada: mail (con dedup mail/push) + push.
+        if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
+            $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+        }
+        $this->pushService->enviarLocalizado(
+            $inscripcion->persona,
+            'push.inscripcion_confirmada_titulo',
+            'push.inscripcion_confirmada_cuerpo',
+            ['actividad' => $inscripcion->actividad->nombreActividad],
+            ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+        );
+
+        return response()->json(['mensaje' => 'Beca aprobada. Inscripción confirmada y usuario notificado.'], 200);
+    }
+
+    /**
+     * Rechaza la solicitud de beca/exención con un motivo y notifica al voluntario.
+     * No toca el pago: el voluntario puede volver a la página de pago y aportar
+     * o volver a solicitar la beca.
+     */
+    public function rechazarBeca(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'motivo'        => 'nullable|string|max:1000',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $motivo = $request->input('motivo');
+
+        $inscripcion->scholarship_rejected         = true;
+        $inscripcion->scholarship_approved         = false;
+        $inscripcion->scholarship_rejection_reason = $motivo;
+        $inscripcion->scholarship_resolved_at      = Carbon::now();
+        $inscripcion->save();
+
+        try {
+            Mail::to($inscripcion->persona->mail)->send(new MailBecaRechazada($inscripcion, $motivo));
+        } catch (\Exception $e) {
+            \Log::warning('No se pudo enviar mail de rechazo de beca: ' . $e->getMessage());
+        }
+
+        return response()->json(['mensaje' => 'Beca rechazada y usuario notificado.'], 200);
     }
 
     public function rechazarDocumento(Request $request, $id)

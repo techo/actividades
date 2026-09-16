@@ -122,6 +122,14 @@ return [
 	'voucher_rechazado_instruccion'  => 'Please log in and upload a new proof of payment to continue with your registration.',
 	'voucher_rechazado_link'         => 'Upload new proof of payment',
 
+	// MailBecaRechazada
+	'beca_rechazada_subject'      => 'Scholarship request not approved —',
+	'beca_rechazada_intro'        => 'We reviewed your scholarship request for the activity',
+	'beca_rechazada_estado'       => 'Your scholarship request was not approved.',
+	'beca_rechazada_motivo_label' => 'Reason',
+	'beca_rechazada_instruccion'  => 'You can log in to make your contribution and confirm your spot, or request the scholarship again with more details.',
+	'beca_rechazada_link'         => 'Go to the payment page',
+
 
     'documento_rechazado_subject'      => 'ID document rejected —',
     'documento_rechazado_intro'        => 'We reviewed the ID document you uploaded and it was not accepted for the activity',

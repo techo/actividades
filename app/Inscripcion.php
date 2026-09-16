@@ -20,6 +20,8 @@ class Inscripcion extends Model
     protected $casts = [
         'roles_aplicados' => 'array',
         'inscripciones_aplicadas' => 'array',
+        'scholarship_approved' => 'boolean',
+        'scholarship_rejected' => 'boolean',
     ];
 
     /**

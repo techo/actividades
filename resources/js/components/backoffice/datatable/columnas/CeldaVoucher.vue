@@ -7,8 +7,11 @@
             <span v-if="rowData.voucher_rechazado" class="label label-danger">
                 {{ $t('backend.rejected') }}
             </span>
-            <div v-if="puedeRechazar">
-                <button type="button" class="btn btn-xs btn-danger" @click.stop="abrirModal">
+            <div class="celda-voucher__acciones">
+                <button v-if="puedeAprobar" type="button" class="btn btn-xs btn-success" :disabled="aprobando" @click.stop="aprobar">
+                    <i class="fa fa-check"></i> {{ $t('backend.approve_voucher') }}
+                </button>
+                <button v-if="puedeRechazar" type="button" class="btn btn-xs btn-danger" @click.stop="abrirModal">
                     <i class="fa fa-times"></i> {{ $t('backend.reject_voucher') }}
                 </button>
             </div>
@@ -57,6 +60,7 @@ export default {
             showModal: false,
             motivo: '',
             rechazando: false,
+            aprobando: false,
             error: null,
         }
     },
@@ -65,8 +69,35 @@ export default {
         puedeRechazar() {
             return !this.rowData.voucher_rechazado && !this.rowData.pago
         },
+        // Se puede aprobar mientras no esté pago ni rechazado.
+        puedeAprobar() {
+            return !this.rowData.pago && !this.rowData.voucher_rechazado
+        },
     },
     methods: {
+        aprobar() {
+            if (!window.confirm(this.$t('backend.approve_voucher_confirm'))) return
+            this.aprobando = true
+            this.error = null
+            axios.defaults.headers.common['X-CSRF-TOKEN'] =
+                document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            // Aprobar comprobante = marcar pago (el endpoint update ya envía el mail de confirmación).
+            axios.post(
+                '/admin/ajax/actividades/' + this.rowData.idActividad + '/inscripciones/' + this.rowData.id,
+                { pago: 1 }
+            )
+                .then(() => {
+                    this.$set(this.rowData, 'pago', 1)
+                    this.$set(this.rowData, 'voucher_rechazado', false)
+                    this.aprobando = false
+                    Event.$emit('mensaje-success', { mensaje: this.$t('backend.voucher_approved_ok') })
+                })
+                .catch(() => {
+                    this.aprobando = false
+                    this.error = this.$t('backend.error')
+                    alert(this.$t('backend.error'))
+                })
+        },
         abrirModal() {
             this.motivo = ''
             this.error = null
@@ -109,6 +140,12 @@ export default {
 }
 .celda-voucher .btn-xs {
     margin-top: 4px;
+}
+.celda-voucher__acciones {
+    margin-top: 4px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 .voucher-modal-backdrop {
     position: fixed;

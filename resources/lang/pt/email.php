@@ -116,6 +116,14 @@ return [
     'voucher_rechazado_instruccion'  => 'Por favor, acesse o sistema e envie um novo comprovante para continuar com sua inscrição.',
     'voucher_rechazado_link'         => 'Enviar novo comprovante',
 
+    // MailBecaRechazada
+    'beca_rechazada_subject'      => 'Solicitação de bolsa não aprovada —',
+    'beca_rechazada_intro'        => 'Informamos que sua solicitação de bolsa foi revisada para a atividade',
+    'beca_rechazada_estado'       => 'Sua solicitação de bolsa não foi aprovada.',
+    'beca_rechazada_motivo_label' => 'Motivo',
+    'beca_rechazada_instruccion'  => 'Você pode acessar o sistema para realizar seu aporte e confirmar sua vaga, ou solicitar a bolsa novamente com mais informações.',
+    'beca_rechazada_link'         => 'Ir para a página de pagamento',
+
 
     'documento_rechazado_subject'      => 'Documento de identidade rejeitado —',
     'documento_rechazado_intro'        => 'Revisamos o documento de identidade que você enviou e não pôde ser aceito para a atividade',
