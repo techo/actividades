@@ -437,6 +437,11 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         pagoSelectMetodo(tabDefault);
+        // Deep-link desde el mail: /confirmar/donacion?opcion=beca abre directo la solicitud de beca
+        var _params = new URLSearchParams(window.location.search);
+        if (_params.get('opcion') === 'beca' && document.getElementById('pago-content-beca')) {
+            mostrarBeca();
+        }
     });
 
     // Hero background

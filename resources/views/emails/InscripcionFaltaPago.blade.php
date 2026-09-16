@@ -52,14 +52,7 @@
     {{-- Detalle del pago --}}
     <p style="margin:0 0 8px; font-size:15px; line-height:1.55; color:#2b2f36;">
         @lang('email.missing_payment_4')
-        <strong>@lang('email.confirm_by_donation')</strong>
     </p>
-
-    @if($actividad->descripcionPago)
-        <p style="margin:0 0 16px; font-size:15px; line-height:1.55; color:#5b616e;">
-            {!! $actividad->descripcionPago !!}
-        </p>
-    @endif
 
     {{-- Botón: aportar / confirmar pagando (bulletproof) --}}
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">
@@ -78,14 +71,13 @@
         <strong>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</strong>,
         @lang('email.missing_payment_6')
     </p>
-    <p style="margin:0 0 8px; font-size:15px; line-height:1.55; color:#2b2f36;">
-        @lang('email.missing_payment_7')
-        @if(!empty($inscripcion->actividad->beca))
-            <a href="{{ $inscripcion->actividad->beca }}" style="color:#0092dd;">@lang('frontend.ask_for_grant')</a>.
-        @else
-            @lang('email.missing_payment_8')
-        @endif
-    </p>
+    {{-- Beca / exención: solo si la actividad la tiene habilitada; el link abre directo esa opción en la página de pago --}}
+    @if(!empty($inscripcion->actividad->beca))
+        <p style="margin:0 0 8px; font-size:15px; line-height:1.55; color:#2b2f36;">
+            @lang('email.missing_payment_7')
+            <a href="{{ url('inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion') }}?opcion=beca" style="color:#0092dd; font-weight:700;">@lang('frontend.ask_for_grant')</a>.
+        </p>
+    @endif
 
     <div style="border-top:1px solid #e6e8ec; height:1px; line-height:1px; margin:22px 0;">&nbsp;</div>
 
