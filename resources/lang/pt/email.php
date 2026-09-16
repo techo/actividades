@@ -60,7 +60,7 @@ return [
     'pre_enroll_3' => 'Em breve entraremos em contato para informar se sua inscrição foi aprovada. Qualquer dúvida, entre em contato com o coordenador.',
 
     // InscripcionFaltaPago
-    'missing_payment_title' => 'TECHO Falta seu aporte para confirmar',
+    'missing_payment_title' => 'TECHO Falta seu pagamento para participar em',
     'missing_payment_1' => 'Você está prestes a embarcar em uma experiência incrível! Você se pré-inscreveu para participar em:',
     'missing_payment_2' => 'Mas ainda falta um último passo para garantir sua participação: Confirmá-la com sua doação!',
     'missing_payment_3' => 'Você tem até ',

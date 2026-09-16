@@ -5,7 +5,7 @@ return [
     // --- Subjects (faltaban en 'en': devolvían la clave cruda) ---
     'inscription_confirmed_title' => 'TECHO Confirmation to participate in ',
     'pre_enroll_title' => 'TECHO Just one step left to confirm',
-    'missing_payment_title' => 'TECHO Your contribution is pending to confirm',
+    'missing_payment_title' => 'TECHO Your payment is pending to join',
     'activity_update_title' => 'TECHO Changes in the activity:',
     'activity_cancel_title' => 'TECHO Activity canceled - ',
     'forgot_password_title' => 'TECHO Reset your password',
