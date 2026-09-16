@@ -370,8 +370,8 @@ class InscripcionesController extends BaseController
             ->where('idInscripcion', $request->idInscripcion)
             ->firstOrFail();
 
-        // Solo se puede borrar si el pago aún no fue confirmado
-        if ($inscripcion->pago) {
+        // Solo se puede borrar si el pago aún no fue confirmado ni exento
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
             return response()->json(['error' => 'Pago ya confirmado'], 403);
         }
 
@@ -398,6 +398,11 @@ class InscripcionesController extends BaseController
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
         ->where('idInscripcion', $request->idInscripcion)
         ->firstOrFail();
+
+        // No permitir subir/re-subir comprobante si el pago ya fue confirmado o está exento.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return response()->json(['error' => 'Pago ya confirmado'], 403);
+        }
 
         $archivo = $request->file('voucher');
         $path = ImageUploadService::store($archivo, 'public/voucherInscipcion/'.auth()->user()->idPersona);
@@ -452,6 +457,12 @@ class InscripcionesController extends BaseController
             ->where('idActividad', $actividad->idActividad)
             ->firstOrFail();
 
+        // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
+        // no se reabre para volver a subir/editar el comprobante.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return redirect('/actividades/' . $actividad->idActividad);
+        }
+
         try {
             $config = json_decode($actividad->pais->config_pago);
             $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -479,6 +490,10 @@ class InscripcionesController extends BaseController
             ->where('idActividad', $actividad->idActividad)
             ->firstOrFail();
 
+        // Pago ya resuelto: no permitir iniciar otro checkout.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return redirect('/actividades/' . $actividad->idActividad);
+        }
 
         try {
             $config = json_decode($actividad->pais->config_pago);
