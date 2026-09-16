@@ -94,43 +94,31 @@
 
     @if($actividad->pago == 1)
 
-    {{-- ── Sección completado (inline, sin reload) ────────────── --}}
-    <div id="completado-section" class="card border-0 shadow-sm mb-4 text-center"
-         style="{{ $voucherPendiente ? '' : 'display:none;' }}">
-        <div class="card-body py-5 px-4">
-            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
-                 style="background:#F4A345;width:72px;height:72px;">
-                <i class="fa fa-credit-card" style="font-size:28px;color:white;"></i>
-            </div>
-            <h4 class="font-weight-bold mb-3" style="color:#1A3A6B;">
-                {{ __('frontend.voucher_process_title') }}
-            </h4>
-            <p class="text-muted mb-4" style="font-size:.95rem;">
-                {{ __('frontend.voucher_process_subtitle') }}
+    {{-- ── Aviso: solicitud/comprobante en validación (NO bloquea: la tarjeta de pago sigue disponible) ── --}}
+    @php
+        $becaEnValidacion        = $inscripcion->scholarship_requested && !$inscripcion->pago && !$voucherRechazado;
+        $comprobanteEnValidacion = $inscripcion->voucherUrl && !$inscripcion->pago && !$voucherRechazado;
+        $avisoEsBeca             = $becaEnValidacion; // si hay beca, prima el mensaje de beca
+    @endphp
+    <div id="validacion-banner" class="d-flex align-items-start mb-4"
+         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px; {{ ($becaEnValidacion || $comprobanteEnValidacion) ? '' : 'display:none;' }}">
+        <i class="far fa-clock fa-lg mr-3 mt-1 flex-shrink-0" style="color:#b56b00;"></i>
+        <div>
+            <strong id="validacion-banner-title" style="color:#b56b00;"
+                    data-beca="{{ __('frontend.scholarship_pending_title') }}"
+                    data-voucher="{{ __('frontend.voucher_pending_title') }}">
+                {{ $avisoEsBeca ? __('frontend.scholarship_pending_title') : __('frontend.voucher_pending_title') }}
+            </strong>
+            <p id="validacion-banner-subtitle" class="mb-0 mt-1" style="font-size:.9rem; color:#2b2f36;"
+               data-beca="{{ __('frontend.scholarship_pending_subtitle') }}"
+               data-voucher="{{ __('frontend.voucher_pending_subtitle') }}">
+                {{ $avisoEsBeca ? __('frontend.scholarship_pending_subtitle') : __('frontend.voucher_pending_subtitle') }}
             </p>
-            <div class="text-left p-3 mb-4" style="background:#F5F5F5;border-radius:10px;">
-                <h6 class="font-weight-bold mb-3" style="color:#F4A345;">
-                    {{ __('frontend.operation_summary') }}
-                </h6>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2">
-                        <strong>{{ __('frontend.activity_label') }}:</strong>
-                        <span class="text-muted ml-1">{{ $actividad->nombreActividad }}</span>
-                    </li>
-                    <li>
-                        <strong style="color:#F4A345;">{{ __('frontend.voucher_validation_pending') }}</strong>
-                    </li>
-                </ul>
-            </div>
-            <a href="/actividades" class="btn btn-secondary btn-block" style="border-radius:8px;padding:12px;">
-                {{ __('frontend.my_activities') }}
-            </a>
         </div>
     </div>
 
     {{-- ── Card de pago ────────────────────────────────────────── --}}
-    <div id="payment-card" class="card border-0 shadow-sm"
-         style="{{ $voucherPendiente ? 'display:none;' : '' }}">
+    <div id="payment-card" class="card border-0 shadow-sm">
         <div class="card-body p-4">
 
             {{-- ── Intro ──────────────────────────────────────────── --}}
@@ -356,7 +344,7 @@
             <button id="btn-finalizar"
                     type="button"
                     class="btn btn-primary"
-                    onclick="mostrarCompletado()"
+                    onclick="window.location.href='/actividades'"
                     {{ ($inscripcion->voucherUrl || $inscripcion->scholarship_requested) && !$voucherRechazado ? '' : 'disabled' }}>
                 {{ __('frontend.finish') }}
             </button>
@@ -420,19 +408,26 @@
         pagoSelectMetodo(_becaTabAnterior);
     };
 
-    // Habilita el botón Finalizar cuando voucher o beca quedan listos
+    // Habilita el botón Finalizar y muestra el aviso "en validación" SIN ocultar la tarjeta de pago.
+    // El usuario puede seguir pagando si quiere; el aviso solo informa el estado.
     window.notifyPagoListo = function () {
         var btn = document.getElementById('btn-finalizar');
         if (btn) btn.disabled = false;
-    };
 
-    // Muestra el completado inline sin recargar la página
-    window.mostrarCompletado = function () {
-        var card = document.getElementById('payment-card');
-        var completado = document.getElementById('completado-section');
-        if (card) card.style.display = 'none';
-        if (completado) completado.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        var banner = document.getElementById('validacion-banner');
+        if (!banner) return;
+
+        // ¿Se envió una beca o un comprobante? Lo deducimos del panel visible al confirmar.
+        var becaPanel = document.getElementById('pago-content-beca');
+        var esBeca = becaPanel && becaPanel.style.display !== 'none';
+
+        var title = document.getElementById('validacion-banner-title');
+        var subtitle = document.getElementById('validacion-banner-subtitle');
+        if (title)    title.textContent    = title.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
+        if (subtitle) subtitle.textContent = subtitle.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
+
+        banner.style.display = '';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     document.addEventListener('DOMContentLoaded', function () {
