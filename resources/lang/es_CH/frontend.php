@@ -150,6 +150,7 @@ return [
 	'search_activities' => 'BUSCAR ACTIVIDADES',
 	'link_to_rrss' => 'Confimar Link Red Social',
 	'link_rrss_techo' => 'Relacionar la cuenta de techo con tu cuenta de red social',
+	'link_rrss_help' => 'Ya existe una cuenta de TECHO con este correo. Vincula tu red social para ingresar con ella la próxima vez.',
 	'confirm' => 'Confirmar',	
 
     'how_did_you_meet_techo' => '¿CÓMO CONOCISTE A TECHO?',
@@ -180,6 +181,9 @@ return [
     'name'  =>  'NOMBRE COMPLETO',
     'surname'  =>  'APELLIDO COMPLETO',
     'birth_date'  =>  'NACIMIENTO',
+    'day'  =>  'Día',
+    'month'  =>  'Mes',
+    'year'  =>  'Año',
     'gender'  =>  'GÉNERO',
     'gender_m'  =>  'Masc',
     'gender_f'  =>  'Fem',
@@ -190,6 +194,7 @@ return [
 	'state'  =>  'REGIÓN ACTUAL',
 	'municipality'  =>  'COMUNA ACTUAL',
 	'telephone'  =>  'TELEFONO',
+	'phone_placeholder'  =>  'Ingresa tu teléfono',
 	'change_password'  =>  'Cambiar contraseña',
 	'actual_password'  =>  'CONTRASEÑA ACTUAL',
 	'new_password'  =>  'NUEVA CONTRASEÑA',
@@ -354,7 +359,7 @@ return [
 	'confirm_inscription_with_qr' => 'QR para confirmar tu presente', 
 	'show_on_arrival' => 'Muéstralo al llegar a la actividad.',
 	'access_qr' => 'Ingresa a este link para obtenerlo.',
-    'meeting_points' => 'Puntos de encuentro / URL de Conexión',
+    'meeting_points' => 'Puntos de encuentro',
     'referring' => 'Referente',
     'share' => 'COMPARTIR',
     'group_chat' => 'Chat Grupal',
@@ -413,6 +418,10 @@ return [
 	'operation_summary'          => 'Resumen de la operación',
 	'activity_label'             => 'Actividad',
 	'voucher_validation_pending' => 'Comprobante en proceso de validación',
+	'scholarship_pending_title'    => 'Tu solicitud de beca fue enviada',
+	'scholarship_pending_subtitle' => 'Está en proceso de validación y te avisaremos por correo. Si preferís, todavía podés realizar tu aporte con cualquiera de los métodos disponibles.',
+	'voucher_pending_title'        => 'Tu comprobante fue enviado',
+	'voucher_pending_subtitle'     => 'Está en proceso de validación. Te avisaremos por correo cuando confirmemos tu lugar.',
 	'voucher_rechazado_titulo'           => 'Tu comprobante fue rechazado',
 	'voucher_rechazado_subtitulo'        => 'El equipo revisó tu comprobante y no fue aceptado. Por favor, sube uno nuevo.',
 	'voucher_rechazado_motivo'           => 'Motivo',
@@ -488,6 +497,12 @@ return [
 	//gracias.blade.php
     'activity_detail' => 'Detalle de Actividad',
     'inscription_confirmed' => '¡Inscripción confirmada!',
+    'socio_exento_titulo' => '¡Gracias por ser donante de TECHO!',
+    'socio_exento_texto' => 'Por ser parte de nuestra Comunidad de Socixs, no hace falta que pagues esta actividad.',
+    'terms_section_title' => 'Para finalizar, acepta los términos',
+    'read_more' => 'Ver más',
+    'read_less' => 'Ver menos',
+    'waitlist_title' => 'Falta confirmar tu cupo',
     'already_inscripted' => 'Ya estás inscrito a ',
 	'mail_message' => 'Te enviamos un mail con más información sobre esta actividad. Para ver las actividades a las que estás inscrito y modificarlas ingresa a ',
 
@@ -567,6 +582,13 @@ return [
     'archivo_muy_grande'     => 'El archivo supera el tamaño máximo de 5 MB.',
     'archivo_error'          => 'No se pudo subir el archivo. Intenta nuevamente.',
     'archivo_requerido'      => 'Este archivo es obligatorio.',
+
+    // Tarjetas de actividad (home / listados)
+    'card_more' => 'Ver más',
+    'card_free' => 'Gratis',
+    'card_paid' => 'Con costo',
+    'present' => 'Presente',
+    'no_past_activities' => 'Todavía no participaste de ninguna actividad.',
 
 ];
 

@@ -11,9 +11,11 @@ use App\Http\Resources\PerfilResource;
 use App\Inscripcion;
 use App\Pais;
 use App\Persona;
+use App\Rules\DocumentoValido;
 use App\Rules\PassExiste;
 use App\Search\CoordinadoresSearch;
 use App\Search\MisActividadesSearch;
+use App\Services\Documento\DocumentoService;
 use App\Services\ImageUploadService;
 use App\VerificacionMailPersona;
 use Carbon\Carbon;
@@ -22,7 +24,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Webpatser\Uuid\Uuid;
 
 class UsuarioController extends BaseController
 {
@@ -50,7 +51,15 @@ class UsuarioController extends BaseController
         if($request->has('localidad')) $rules['localidad'] = 'nullable|exists:atl_localidades,id';
         if($request->has('nacimiento')) $rules['nacimiento'] = 'nullable|date|before_or_equal:' . Carbon::now()->subYears(\App\Http\Requests\CrearPersona::EDAD_MINIMA)->format('Y-m-d') . '|after:' . Carbon::now()->subYears(85)->format('Y-m-d');
         if($request->has('telefono')) $rules['telefono'] = 'required|regex:/^\+\d{1,3}\d{7,15}$/';
-        if($request->has('dni')) $rules['dni'] = 'nullable';
+        // Documento validado según el país (formato/verificador o pasaporte).
+        // En el PERFIL (update) es OBLIGATORIO: no permitir blanquear un DNI ya
+        // cargado. En el ALTA (create) sigue 'nullable' porque el registro mobile
+        // (apiCreate) todavía puede no mandarlo (hay ~1854 personas con dni NULL);
+        // exigirlo en el alta requiere coordinar con la app. El país: $request->pais.
+        if($request->has('dni')) {
+            $presenciaDni = ($verbo === 'update') ? 'required' : 'nullable';
+            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais)];
+        }
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
         ];
@@ -141,10 +150,10 @@ class UsuarioController extends BaseController
       $social = $this->socialVerificado($request);
       $this->aplicarSocialVerificado($persona, $social);
 
-      $persona->password = $social ? Hash::make(str_random(30)) : Hash::make($request->pass);
+      $persona->password = $social ? Hash::make(\Illuminate\Support\Str::random(30)) : Hash::make($request->pass);
       $persona->idUnidadOrganizacional = 0;
       $persona->recibirMails = 1;
-      $persona->unsubscribe_token = Uuid::generate()->string;
+      $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
       // Origen del registro ('app'|'web'): lo usa la verificación de email para
       // decidir si reabrir la app por deep link tras verificar desde el navegador.
       $persona->registro_origen = $origen;
@@ -201,15 +210,32 @@ class UsuarioController extends BaseController
       $persona->recibirMails = (int) $request->recibirMails;
       if($request->has('pass')) {
           $persona->password = Hash::make($request->pass);
+          // Cambiar la clave revoca los tokens de API vigentes (mismo criterio que el
+          // reset de contraseña en App\Traits\ResetsPasswords): un token filtrado deja
+          // de valer. Clave con el TTL de 1 año (ver AuthServiceProvider). Se preserva
+          // el token de la request actual para no desloguear la sesión en curso —
+          // equivale a "cerrar sesión en los otros dispositivos". Si el update viene
+          // por sesión web (sin token Passport), token() es null y se revocan todos.
+          $tokenActualId = optional($persona->token())->id;
+          $persona->tokens()
+              ->when($tokenActualId, function ($query) use ($tokenActualId) {
+                  return $query->where('id', '!=', $tokenActualId);
+              })
+              ->update(['revoked' => true]);
       }
       $persona->save();
       return ['user' => new PerfilResource($persona)];
   }
 
   public function cargar_cambios($request,$persona) {
-      $fechaNacimiento = new Carbon($request->nacimiento);
+      // Sin fecha en el request NO fabricar "hoy": new Carbon(null) devuelve la fecha
+      // actual, lo que dejaba a quien no cargó nacimiento con fechaNacimiento=hoy
+      // (edad 0; 136 altas app + 56 web en 30d). Guardamos null; la edad la valida validar().
+      $fechaNacimiento = filled($request->nacimiento) ? new Carbon($request->nacimiento) : null;
       $persona->apellidoPaterno = $request->apellido;
-      $persona->dni = $request->dni;
+      // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
+      // para que matcheen Salesforce, dedup y reporting.
+      $persona->dni = (new DocumentoService())->normalizar($request->pais, $request->dni);
       $persona->mail = $request->email;
       $persona->idLocalidad = $request->localidad;
       $persona->fechaNacimiento = $fechaNacimiento;
@@ -283,6 +309,14 @@ class UsuarioController extends BaseController
               if($link['provider'] == 'facebook') {
                   $persona->facebook_id = $link['social_id'];
               }
+              // El proveedor social ya verificó el email (Google exige email_verified;
+              // Facebook devuelve el email de la propia cuenta). Al vincularlo con una
+              // cuenta TECHO existente que estaba sin verificar, la damos por verificada:
+              // de lo contrario el usuario queda logueado pero la app lo manda a validar
+              // el mail, cuando el linkeo social ya es prueba de propiedad del email.
+              if(!$persona->hasVerifiedEmail()) {
+                  $persona->email_verified_at = now();
+              }
               $persona->save();
               Auth::login($persona, true);
               $request->session()->regenerate();
@@ -342,9 +376,25 @@ class UsuarioController extends BaseController
 
     public function getPersonas(Request $request)
     {
+        $termino = trim($request->q ?? '');
+
+        // Escape hatch por email exacto: si el coordinador escribe un mail completo,
+        // conoce a la persona puntual y necesita poder inscribirla aunque su `idPais`
+        // no coincida con el suyo (voluntarios registrados bajo otro contexto de país
+        // por la costura multi-país). Solo el match por email exacto ignora el país;
+        // las búsquedas por nombre mantienen el aislamiento por país.
+        if (filter_var($termino, FILTER_VALIDATE_EMAIL)) {
+            $personas = Persona::withoutGlobalScope(\App\Scopes\BelongsToCountryScope::class)
+                ->where('mail', $termino)
+                ->take(25)
+                ->get();
+
+            return CoordinadorResource::collection($personas);
+        }
+
         $query = (new Persona)->newQuery();
 
-        $palabras = explode(' ', $request->q);
+        $palabras = explode(' ', $termino);
 
         foreach ($palabras as $palabra) {
           // Parámetro bindeado (?): no concatenar input en SQL.
@@ -382,12 +432,16 @@ class UsuarioController extends BaseController
         // ofuscar en tabla persona
         $persona->nombres = 'Usuario eliminado';
         $persona->apellidoPaterno = '';
-        $persona->telefono = str_random(30);
-        $persona->telefonoMovil = str_random(30);
-        $persona->dni = str_random(8);
-        $persona->mail = str_random(40);
+        $persona->telefono = \Illuminate\Support\Str::random(30);
+        $persona->telefonoMovil = \Illuminate\Support\Str::random(30);
+        $persona->dni = \Illuminate\Support\Str::random(8);
+        $persona->mail = \Illuminate\Support\Str::random(40);
         $persona->recibirMails = 0;
         $persona->acepta_marketing = 0;
+        // La cuenta se anonimiza pero NO se soft-borra a propósito: hay que
+        // conservar sus inscripciones e historial para reporting. Se marca
+        // Desvinculado para que quede fuera de los flujos de voluntario activo.
+        $persona->estadoPersona = 'Desvinculado';
 
         // grabar
         $persona->save();

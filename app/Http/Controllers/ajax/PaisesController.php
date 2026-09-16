@@ -6,17 +6,35 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Pais;
 use App\Provincia;
+use App\Services\Documento\DocumentoService;
 
 class PaisesController extends Controller
 {
     public function index(Request $request)
     {
-        return Pais::orderBy('nombre')->get();
+        // Nota: la ruta pública `ajax/paises` (dropdown de país en registro/perfil)
+        // resuelve a ESTE método (route:list manda; la def de `@paises` quedó
+        // shadoweada). Por eso el documento_label se agrega también acá.
+        return $this->conDocumentoLabel(Pais::orderBy('nombre')->get());
     }
 
     public function paises(Request $request)
     {
-        return Pais::has('actividades')->orderBy('nombre')->get();
+        return $this->conDocumentoLabel(Pais::has('actividades')->orderBy('nombre')->get());
+    }
+
+    /**
+     * Agrega a cada país el label del campo documento según su país ("RUT" en
+     * Chile, "CPF" en Brasil...), para que el front lo muestre sin lógica
+     * duplicada. Fuente: DocumentoService (config/documentos.php + i18n).
+     */
+    private function conDocumentoLabel($paises)
+    {
+        $doc = new DocumentoService();
+        foreach ($paises as $pais) {
+            $pais->documento_label = $doc->etiquetaCampoPorAbreviacion($pais->abreviacion);
+        }
+        return $paises;
     }
 
     public function provincias($id_pais) {

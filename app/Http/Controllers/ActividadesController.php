@@ -87,7 +87,10 @@ class actividadesController extends Controller
 
         $hay_cupos = ($limiteInscriptos - $cantInscriptos) > 0 || $limiteInscriptos == 0;
 
-        $inscripciones_abiertas = $actividad->fechaInicioInscripciones->lte(Carbon::now()) &&  $actividad->fechaFinInscripciones->gte(Carbon::now());
+        // ¿Inscripciones abiertas? estadoConstruccion 'Abierta' + dentro del período
+        // (null-safe: hay actividades legacy con fechas de inscripción nulas). Fuente
+        // única en Actividad::inscripcionesAbiertas(), compartida con el flujo y el alta.
+        $inscripciones_abiertas = $actividad->inscripcionesAbiertas();
 
         $mensaje = __('frontend.error');
         $clase = 'btn-danger';
@@ -131,14 +134,16 @@ class actividadesController extends Controller
 
                 case 'ESPERAR CONFIRMACIÓN':
                     $mensaje = __('frontend.waiting_for_confirmation');
-                    $clase = 'btn-warning disabled';
-                    $habilitado = false;
+                    $clase = 'btn-warning';
+                    $accion = '/inscripciones/actividad/' . $actividad->idActividad . '/estado';
+                    $habilitado = true;
                     break;
 
                 case 'CONFIRMADO':
                     $mensaje = __('frontend.confirmed');
-                    $clase = 'btn-success disabled';
-                    $habilitado = false;
+                    $clase = 'btn-success';
+                    $accion = '/inscripciones/actividad/' . $actividad->idActividad . '/estado';
+                    $habilitado = true;
                     $inscripcionConfirmada = true;
                     $persona = Persona::find(auth()->user()->idPersona);
                     $inscripcion = $persona->inscripcionActividad($id);

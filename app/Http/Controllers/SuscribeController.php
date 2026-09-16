@@ -30,9 +30,18 @@ class SuscribeController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $abreviacion = null, $id = null)
     {
         $data = $request->except('respuestas');
+
+        // Campaña autoritativa desde la URL: si el submit llega por la ruta de una
+        // campaña (/{abreviacion}/campania/{id}/suscribe), el servidor fija el
+        // campaign_id y no depende de que el cliente lo mande. Antes viajaba solo en
+        // el body y, si se perdía, la fila quedaba con campaign_id NULL y desaparecía
+        // de la base de la campaña (reporte de "se borran personas de la captación").
+        if (!empty($id)) {
+            $data['campaign_id'] = (int) $id;
+        }
 
         // REQ 4 — Prevenir duplicados por campaña
         if (!empty($data['campaign_id'])) {

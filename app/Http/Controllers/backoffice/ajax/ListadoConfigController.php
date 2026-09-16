@@ -35,6 +35,9 @@ class ListadoConfigController extends Controller
         return response()->json(array_merge($cfg, [
             'columnas_custom' => $this->columnasDelContexto($listKey, $contextId)->values(),
             'preferencias' => $preferencia ? $preferencia->columnas : null,
+            // Columnas de seguimiento que este usuario ocultó para sí (el resto de
+            // las custom se muestran por defecto, aunque no estén en preferencias).
+            'ocultas' => $preferencia ? ($preferencia->ocultas ?? []) : [],
             'filtrables' => $this->filtrables($catalogo, $contextId, $cfg),
             'agrupables' => $this->agrupables($catalogo, $contextId, $cfg),
         ]));
@@ -169,8 +172,10 @@ class ListadoConfigController extends Controller
     }
 
     /**
-     * Vistas del listado: predefinidas (código, read-only) + propias del usuario.
-     *   → { predefinidas: [{id,nombre,color,config,es_predefinida}], propias: [...] }
+     * Vistas del listado: predefinidas (código, read-only) + las guardadas del
+     * contexto, compartidas por todo el equipo. `puede_editar` indica si el
+     * usuario actual puede renombrar/eliminar la vista (creador o admin).
+     *   → { predefinidas: [...], guardadas: [{id,nombre,color,config,puede_editar,...}] }
      */
     public function vistas($listKey, $contextId)
     {
@@ -185,25 +190,28 @@ class ListadoConfigController extends Controller
                 'color' => $vista['color'] ?? null,
                 'config' => $vista['config'] ?? ['filtros' => [], 'group_by' => null],
                 'es_predefinida' => true,
+                'puede_editar' => false,
             ];
         }
 
-        $propias = ListadoVista::where('persona_id', auth()->id())
-            ->where('list_key', $listKey)
+        $esAdmin = auth()->user()->hasRole('admin');
+
+        $guardadas = ListadoVista::where('list_key', $listKey)
             ->where('context_id', $contextId)
             ->orderBy('orden')->orderBy('id')
             ->get()
-            ->map(function ($vista) {
+            ->map(function ($vista) use ($esAdmin) {
                 return [
                     'id' => $vista->id,
                     'nombre' => $vista->nombre,
                     'color' => $vista->color,
                     'config' => $vista->config,
                     'es_predefinida' => false,
+                    'puede_editar' => $esAdmin || $vista->persona_id === auth()->id(),
                 ];
             });
 
-        return response()->json(['predefinidas' => $predefinidas, 'propias' => $propias]);
+        return response()->json(['predefinidas' => $predefinidas, 'guardadas' => $guardadas]);
     }
 
     public function guardarVista(Request $request, $listKey, $contextId)
@@ -235,7 +243,7 @@ class ListadoConfigController extends Controller
     public function actualizarVista(Request $request, $listKey, $contextId, $vistaId)
     {
         $listado = $this->resolver($listKey, $contextId);
-        $vista = $this->vistaPropia($listKey, $contextId, $vistaId);
+        $vista = $this->vistaEditable($listKey, $contextId, $vistaId);
 
         $this->validate($request, [
             'nombre' => 'sometimes|required|string|max:100',
@@ -256,7 +264,7 @@ class ListadoConfigController extends Controller
     public function eliminarVista($listKey, $contextId, $vistaId)
     {
         $this->resolver($listKey, $contextId);
-        $this->vistaPropia($listKey, $contextId, $vistaId)->delete();
+        $this->vistaEditable($listKey, $contextId, $vistaId)->delete();
 
         return response()->json(['ok' => true]);
     }
@@ -290,7 +298,14 @@ class ListadoConfigController extends Controller
         $this->validate($request, [
             'columnas' => 'present|array',
             'columnas.*' => 'string|max:100',
+            'ocultas' => 'sometimes|array',
+            'ocultas.*' => 'string|max:100',
         ]);
+
+        $valores = ['columnas' => $request->columnas];
+        if ($request->has('ocultas')) {
+            $valores['ocultas'] = array_values($request->ocultas);
+        }
 
         ListadoPreferencia::updateOrCreate(
             [
@@ -298,7 +313,7 @@ class ListadoConfigController extends Controller
                 'list_key' => $listKey,
                 'context_id' => $contextId,
             ],
-            ['columnas' => $request->columnas]
+            $valores
         );
 
         return response()->json(['ok' => true]);
@@ -407,12 +422,23 @@ class ListadoConfigController extends Controller
         return $listado;
     }
 
-    private function vistaPropia($listKey, $contextId, $vistaId): ListadoVista
+    /**
+     * Vista del contexto que el usuario actual puede editar/eliminar: la creó él
+     * o es admin. Las vistas son compartidas para leer, pero solo el dueño (o un
+     * admin) puede modificarlas, para que nadie pise la vista de otro.
+     */
+    private function vistaEditable($listKey, $contextId, $vistaId): ListadoVista
     {
-        return ListadoVista::where('persona_id', auth()->id())
-            ->where('list_key', $listKey)
+        $vista = ListadoVista::where('list_key', $listKey)
             ->where('context_id', $contextId)
             ->findOrFail($vistaId);
+
+        abort_unless(
+            auth()->user()->hasRole('admin') || $vista->persona_id === auth()->id(),
+            403
+        );
+
+        return $vista;
     }
 
     /**

@@ -137,7 +137,9 @@ class AuthApiTest extends TestCase
             'fechaNacimiento'        => '1995-05-05',
             'telefono'               => 1145678901,
             'telefonoMovil'          => 1145678901,
-            'dni'                    => 33444555,
+            // dni es string (la regla en CrearPersona lo exige, para preservar ceros
+            // a la izquierda; ver PerfilApiTest::un_dni_con_cero_a_la_izquierda).
+            'dni'                    => '33444555',
             'recibirMails'           => 1,
             'acepta_marketing'       => 1,
             'idPais'                 => $idPais,

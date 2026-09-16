@@ -28,7 +28,7 @@
 		<div class="card-body">
 		<div class="row">
 			<div class="col-md-12">
-				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{$actividad->tipo->categoria->color}}">{{ $actividad->tipo->nombre_localizado }}</h6>
+				<h6 class="card-subtitle text-uppercase font-weight-bold" style="color:{{ optional(optional($actividad->tipo)->categoria)->color }}">{{ optional($actividad->tipo)->nombre_localizado }}</h6>
 			</div>
 		</div>
 		<div class="row">
@@ -45,42 +45,31 @@
                 <div class="col-md-8">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>
-                        @if (!isset($actividad->localidad) || $actividad->localidad->localidad == "No definida")
-                            {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
+                        @if (!isset($actividad->localidad) || optional($actividad->localidad)->localidad == "No definida")
+                            {{ optional($actividad->provincia)->provincia }}, {{ optional($actividad->pais)->nombre }}
                         @elseif (!isset($actividad->provincia))
                             {{ __('backend.unspecified') }}
                         @else
-                            {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
+                            {{ optional($actividad->localidad)->localidad }}, {{ optional($actividad->provincia)->provincia }}
                         @endif
                     </span>
                 </div>
             @endif
 		</div>
 		<hr>
-        @if ($inscripcionConfirmada)
-            <div class="row align-items-center">
-                <div class="col">
-                    <button class="btn btn-white mb-2 d-flex align-items-center justify-content-between w-100 p-0" type="button" data-toggle="collapse" data-target="#collapseActividad" aria-expanded="false" aria-controls="collapseActividad">
-                        <span class="h5 m-0">{{ __('frontend.description') }}</span> 
-                        <i class="fas fa-chevron-down" id="iconoDescripcion"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="collapse" id="collapseActividad">
-                <div class="row">
-                    <div class="col-md-12 px-4">
-                        {!! $actividad->descripcion !!}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="descripcion-box" id="descripcionBox">
+                        <div class="descripcion-texto" id="descripcionTexto">
+                            {!! $actividad->descripcion !!}
+                        </div>
+                        <div class="descripcion-fade" id="descripcionFade"></div>
+                    </div>
+                    <div class="text-center mt-2" id="descripcionVerMasWrap" style="display:none;">
+                        <button type="button" class="btn btn-link" id="descripcionVerMas">{{ __('frontend.read_more') }}</button>
                     </div>
                 </div>
             </div>
-        @else
-            <div class="row">
-                <div class="col-md-12">
-                    {!! $actividad->descripcion !!}
-                </div>
-            </div>
-        @endif
 
 		<hr>
 		<div class="row">
@@ -117,42 +106,42 @@
             <hr class="mx-auto" style="width: 80%;">
         @endif
         @if ($actividad->show_location)
-            <div  class="row">
+            <div class="row">
                 <div class="col-md-12">
                     <h5>{{ __('frontend.meeting_points') }}</h5>
                 </div>
             </div>
-        
-            @foreach($actividad->puntosEncuentro as $puntoEncuentro)
-                @if($puntoEncuentro->estado)
-                    <div class="row">
-                        <div class="col-md-4">
-                            {{$puntoEncuentro->punto}}
-                        </div>
-                        <div class="col-md-4">
-                            @php
-                                echo isset($puntoEncuentro->localidad->localidad) ? $puntoEncuentro->localidad->localidad . ', ': '';
-                                echo isset($puntoEncuentro->provincia->provincia) ? $puntoEncuentro->provincia->provincia . '': '';                    @endphp
 
-                        </div>
-                        <div class="col-md-4">
-                            <strong>{{ __('frontend.referring') }}:</strong>
-                                @if ($puntoEncuentro->responsable)
-                                    @if ($puntoEncuentro->responsable->photo)
-                                        <img class="imagen-perfil-mini" src="{{ '/'.$puntoEncuentro->responsable->photo }}" alt="Foto">
+            <div class="row">
+                @foreach($actividad->puntosEncuentro as $puntoEncuentro)
+                    @if($puntoEncuentro->estado)
+                        <div class="col-md-6 mb-3">
+                            <div class="border p-3 h-100" style="border-radius:10px;">
+                                <strong><i class="fas fa-map-marker-alt mr-1 text-primary"></i>{{ $puntoEncuentro->punto }}</strong>
+                                <div class="text-muted" style="font-size:.9rem;">
+                                    @php
+                                        echo isset($puntoEncuentro->localidad->localidad) ? e($puntoEncuentro->localidad->localidad) . ', ' : '';
+                                        echo isset($puntoEncuentro->provincia->provincia) ? e($puntoEncuentro->provincia->provincia) : '';
+                                    @endphp
+                                </div>
+                                <div class="mt-2" style="font-size:.9rem;">
+                                    <strong>{{ __('frontend.referring') }}:</strong>
+                                    @if ($puntoEncuentro->responsable)
+                                        @if ($puntoEncuentro->responsable->photo)
+                                            <img class="imagen-perfil-mini" src="{{ '/'.$puntoEncuentro->responsable->photo }}" alt="Foto">
+                                        @else
+                                            <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image">
+                                        @endif
+                                        {{ $puntoEncuentro->responsable->nombreCompleto }}
                                     @else
-                                        <img src="/bower_components/admin-lte/dist/img/user_avatar.png" class="imagen-perfil-mini" alt="User Image"> 
+                                        {{ __('frontend.not_defined') }}
                                     @endif
-                                    {{ $puntoEncuentro->responsable->nombreCompleto }}
-                                @else
-                                    {{  __('frontend.not_defined') }}
-                                @endif
-
-                            </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                @endif
-            @endforeach
+                    @endif
+                @endforeach
+            </div>
         @endif
 
         @if ($inscripcionConfirmada && $inscriptos != '')
@@ -182,7 +171,7 @@
                 <div style="text-align: right">
                     @if ($inscripcionConfirmada && $actividad->chat_grupal_whatsapp != null)
                         <a class="btn rounded-pill text-white bg-success" href="{{ $actividad->chat_grupal_whatsapp }}" target="_blank">
-                            <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
+                            <span style="font-size:1.2em;">@include('partials.icon-whatsapp')</span>
                             <span>{{ __('frontend.group_chat') }}</span>
                         </a>
                     @endif
@@ -235,13 +224,43 @@
 
 <script>
     $(document).ready(function () {
-        $('#collapseActividad').on('show.bs.collapse', function () {
-            $('#iconoDescripcion').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-        });
+        var box  = document.getElementById('descripcionBox');
+        var txt  = document.getElementById('descripcionTexto');
+        var wrap = document.getElementById('descripcionVerMasWrap');
+        var btn  = document.getElementById('descripcionVerMas');
+        var fade = document.getElementById('descripcionFade');
+        if (!box || !txt) return;
 
-        $('#collapseActividad').on('hide.bs.collapse', function () {
-            $('#iconoDescripcion').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        // Si el texto no supera el alto colapsado, se muestra completo (sin fade ni botón).
+        function evaluar() {
+            if (txt.scrollHeight <= txt.clientHeight + 5) {
+                box.classList.add('expandida');
+                if (fade) fade.style.display = 'none';
+                if (wrap) wrap.style.display = 'none';
+            } else if (wrap) {
+                wrap.style.display = 'block';
+            }
+        }
+        // Tras el render de Vue y con las imágenes de la descripción ya cargadas.
+        setTimeout(evaluar, 350);
+        $(window).on('load', evaluar);
+
+        if (btn) btn.addEventListener('click', function () {
+            var abierta = box.classList.toggle('expandida');
+            btn.textContent = abierta ? @json(__('frontend.read_less')) : @json(__('frontend.read_more'));
         });
     });
 </script>
+@endpush
+
+@push('additional_styles')
+    <style>
+        .descripcion-box { position: relative; }
+        .descripcion-texto { max-height: 180px; overflow: hidden; transition: max-height .4s ease; }
+        .descripcion-box.expandida .descripcion-texto { max-height: 4000px; }
+        .descripcion-fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+            pointer-events: none; transition: opacity .3s; }
+        .descripcion-box.expandida .descripcion-fade { opacity: 0; }
+    </style>
 @endpush

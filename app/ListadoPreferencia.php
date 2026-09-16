@@ -17,10 +17,12 @@ class ListadoPreferencia extends Model
         'list_key',
         'context_id',
         'columnas',
+        'ocultas',
     ];
 
     protected $casts = [
         'columnas' => 'array',
+        'ocultas' => 'array',
     ];
 
     public function persona()

@@ -36,6 +36,16 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
         ],
+        // Una línea por mail EFECTIVAMENTE enviado (listener LogMailEnviado sobre
+        // MessageSent). Es el denominador para medir la tasa de rechazos contra
+        // failed_jobs — Laravel no loguea los envíos OK por defecto. Archivo aparte
+        // (mailstats-YYYY-MM-DD.log) para grepearlo fácil; retención 30 días.
+        'mailstats' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/mailstats.log'),
+            'level' => 'info',
+            'days' => 30,
+        ],
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

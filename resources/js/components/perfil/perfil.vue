@@ -92,8 +92,26 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <datepicker class="w-100" placeholder="Selecciona una fecha" v-model="user.nacimiento"
-                                            id="nacimiento" lang="es" format="DD-MM-YYYY"></datepicker>
+                                        <div class="form-row nacimiento-selects">
+                                            <div class="col-4">
+                                                <select class="form-control" v-model="fechaNac.dia" @change="onNacimientoChange" id="nacimiento_dia" :aria-label="$t('frontend.day')">
+                                                    <option value="" disabled>{{ $t('frontend.day') }}</option>
+                                                    <option v-for="d in diasNacimiento" :key="'d'+d" :value="d">{{ d }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <select class="form-control" v-model="fechaNac.mes" @change="onNacimientoChange" id="nacimiento_mes" :aria-label="$t('frontend.month')">
+                                                    <option value="" disabled>{{ $t('frontend.month') }}</option>
+                                                    <option v-for="m in mesesNacimiento" :key="'m'+m.value" :value="m.value">{{ m.label }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <select class="form-control" v-model="fechaNac.anio" @change="onNacimientoChange" id="nacimiento_anio" :aria-label="$t('frontend.year')">
+                                                    <option value="" disabled>{{ $t('frontend.year') }}</option>
+                                                    <option v-for="y in aniosNacimiento" :key="'y'+y" :value="y">{{ y }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <small class="form-text text-danger">{{ validacion.nacimiento.texto
                                         }}&nbsp;<br></small>
                                     </div>
@@ -136,24 +154,6 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label>{{ $t('frontend.passport') }}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
-                                        <small class="form-text text-danger">{{ validacion.dni.texto
-                                        }}&nbsp;<br></small>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <span v-bind:class="{ 'd-none': !validacion.dni.invalido }"><i
-                                                class="fas fa-times text-danger"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-12">
                                         <label>{{ $t('frontend.country') }}</label>
                                     </div>
                                 </div>
@@ -172,8 +172,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mx-2">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -196,6 +194,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mx-2">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -214,6 +214,24 @@
                                     </div>
                                     <div class="col-md-2">
                                         <span v-bind:class="{ 'd-none': !validacion.localidad.invalido }"><i
+                                                class="fas fa-times text-danger"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label style="text-transform: uppercase;">{{ documentoLabel }}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                                        <small class="form-text text-danger">{{ validacion.dni.texto
+                                        }}&nbsp;<br></small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.dni.invalido }"><i
                                                 class="fas fa-times text-danger"></i></span>
                                     </div>
                                 </div>
@@ -444,6 +462,9 @@ export default {
             phoneNumber: '',
             previousCountry: '',
             mostrarCambioPass: false,
+            // Fecha de nacimiento en 3 selects (día/mes/año). Se parsea desde
+            // user.nacimiento en created() y se recompone a 'YYYY-MM-DD' al editar.
+            fechaNac: { dia: '', mes: '', anio: '' },
         }
         data.tabIndex = 0, 
         data.tabs = ['#datos', '#ficha', '#estudios'],
@@ -470,6 +491,12 @@ export default {
         return data
     },
     props: ['usuario'],
+    created: function () {
+        // Precarga los 3 selects a partir de la fecha guardada (viene como
+        // 'YYYY-MM-DD', o con hora; tomamos las 3 primeras partes). Es asignación
+        // programática: no dispara @change, así que no marca el form como sucio.
+        this.parseNacimiento();
+    },
     mounted: function () {
         this.traer_paises()
         this.traer_provincias()
@@ -520,6 +547,7 @@ export default {
             this.traer_provincias();
             this.user.provincia = null;
             this.validar_data('provincia')
+            this.validar_data('dni')
             this.formDirty = true;
         },
         'user.provincia': function () {
@@ -538,6 +566,37 @@ export default {
 
     },
     methods: {
+        // Descompone user.nacimiento ('YYYY-MM-DD' o con hora) en los 3 selects.
+        parseNacimiento: function () {
+            var m = String(this.user.nacimiento || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (m) {
+                this.fechaNac.anio = Number(m[1]);
+                this.fechaNac.mes = Number(m[2]);
+                this.fechaNac.dia = Number(m[3]);
+            }
+        },
+        // Recompone user.nacimiento desde los selects. Si al cambiar mes/año el día
+        // quedó fuera de rango (ej. 31 → febrero), lo limpia.
+        componerNacimiento: function () {
+            var dia = Number(this.fechaNac.dia);
+            var mes = Number(this.fechaNac.mes);
+            var anio = Number(this.fechaNac.anio);
+            if (dia && mes && anio) {
+                var maxDia = new Date(anio, mes, 0).getDate();
+                if (dia > maxDia) { this.fechaNac.dia = ''; this.user.nacimiento = ''; return; }
+                var mm = ('0' + mes).slice(-2);
+                var dd = ('0' + dia).slice(-2);
+                this.user.nacimiento = anio + '-' + mm + '-' + dd;
+            } else {
+                this.user.nacimiento = '';
+            }
+        },
+        // Interacción del usuario en cualquiera de los 3 selects: recompone la
+        // fecha y marca el form como sucio (habilita Guardar).
+        onNacimientoChange: function () {
+            this.componerNacimiento();
+            this.formDirty = true;
+        },
         validatePhoneNumber() {
             // try {
             //     const phoneNumber = parsePhoneNumberFromString(this.user.telefono);
@@ -679,6 +738,10 @@ export default {
                 if (prop == 'pass_confirmacion') {
                     data['pass'] = this.user.pass
                 }
+                // El documento se valida según el país (DNI/CPF/RUT/pasaporte).
+                if (prop == 'dni' && this.user.pais) {
+                    data.pais = this.user.pais
+                }
             } else {
                 data = this.user
                 this.limpia_validacion_pass(data)
@@ -764,6 +827,51 @@ export default {
         loginSocial: function () {
             return $.inArray(this.user.facebook_id, ['', null]) === -1 ||
                 $.inArray(this.user.google_id, ['', null]) === -1;
+        },
+        // Años válidos (edad 13 a 85, igual que la validación del backend). Si el
+        // usuario ya tiene un año cargado fuera de ese rango, se incluye para no
+        // perder ni ocultar su dato existente.
+        aniosNacimiento: function () {
+            var actual = new Date().getFullYear();
+            var max = actual - 13;
+            var min = actual - 85;
+            var y0 = Number(this.fechaNac.anio);
+            if (y0) { if (y0 > max) max = y0; if (y0 < min) min = y0; }
+            var anios = [];
+            for (var y = max; y >= min; y--) anios.push(y);
+            return anios;
+        },
+        // Nombres de meses localizados según el idioma activo (Intl).
+        mesesNacimiento: function () {
+            var locale = (this.$i18n && this.$i18n.locale ? this.$i18n.locale : 'es').replace('_', '-');
+            var meses = [];
+            for (var m = 1; m <= 12; m++) {
+                var label;
+                try {
+                    label = new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2000, m - 1, 1));
+                } catch (e) {
+                    label = new Intl.DateTimeFormat('es', { month: 'long' }).format(new Date(2000, m - 1, 1));
+                }
+                label = label.charAt(0).toUpperCase() + label.slice(1);
+                meses.push({ value: m, label: label });
+            }
+            return meses;
+        },
+        // Días válidos según mes/año (respeta febrero y bisiestos).
+        diasNacimiento: function () {
+            var mes = Number(this.fechaNac.mes);
+            var anio = Number(this.fechaNac.anio);
+            var max = (mes && anio) ? new Date(anio, mes, 0).getDate() : 31;
+            var dias = [];
+            for (var d = 1; d <= max; d++) dias.push(d);
+            return dias;
+        },
+        // Label del campo documento según el país ("RUT", "CPF", ...), provisto
+        // por /ajax/paises. Cae al genérico.
+        documentoLabel: function () {
+            var self = this;
+            var p = _.find(this.paises, function (x) { return x.id == self.user.pais; });
+            return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
         }
     }
 }
@@ -778,5 +886,15 @@ export default {
 .btn-danger {
     text-transform: uppercase !important;
     font-weight: bold !important;
+}
+
+/* Nacimiento en 3 selects (día/mes/año): gutter chico para pantallas angostas. */
+.nacimiento-selects {
+    margin-left: -4px;
+    margin-right: -4px;
+}
+.nacimiento-selects > [class^="col-"] {
+    padding-left: 4px;
+    padding-right: 4px;
 }
 </style>

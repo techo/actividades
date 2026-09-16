@@ -1,6 +1,6 @@
 <template>
   <a :href="buildImageUrl()" class="text-decoration-none filtro-tipo">
-    <div class="d-flex flex-column align-items-center p-1" style="width: 148px;">
+    <div class="d-flex flex-column align-items-center p-1 filtro-tipo-item">
       <img :src="img" :alt="text" class="img-fluid mb-2" />
       <span class="text-center text-truncate text-wrap" style="width: 100%; line-height: 1.2;">
         {{ text }}
@@ -35,9 +35,32 @@ export default {
 </script>
 
 <style scoped>
+.filtro-tipo-item {
+  width: 88px;
+}
+
+.filtro-tipo-item span {
+  font-size: 11px;
+}
+
 img {
-  max-width: 95px;
-  max-height: 95px;
+  max-width: 50px;
+  max-height: 50px;
+}
+
+@media (min-width: 576px) {
+  .filtro-tipo-item {
+    width: 116px;
+  }
+
+  .filtro-tipo-item span {
+    font-size: 14px;
+  }
+
+  img {
+    max-width: 72px;
+    max-height: 72px;
+  }
 }
 
 .filtro-tipo:hover {

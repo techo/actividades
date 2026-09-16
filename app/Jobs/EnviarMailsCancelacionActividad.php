@@ -36,7 +36,7 @@ class EnviarMailsCancelacionActividad implements ShouldQueue
      */
     public function handle()
     {
-        if($this->persona->recibirMails){
+        if($this->persona->recibirMails && $this->persona->tieneMailValido()){
             Mail::to($this->persona->mail)->send(new CancelacionActividad($this->persona, $this->actividad, $this->pais));
         }
         //sleep(3);

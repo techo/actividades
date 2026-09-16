@@ -3,12 +3,12 @@
 namespace App\Http\Services;
 
 use App\Persona;
+use App\Scopes\BelongsToCountryScope;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Webpatser\Uuid\Uuid;
 
 class UserService
 {
@@ -16,10 +16,10 @@ class UserService
     {
         $persona = new Persona();
         $persona = $this->cargar_cambios($request, $persona);
-        $persona->password = $this->setPassword(str_random(30));
+        $persona->password = $this->setPassword(\Illuminate\Support\Str::random(30));
         $persona->idUnidadOrganizacional = 0;
         $persona->recibirMails = 1;
-        $persona->unsubscribe_token = Uuid::generate()->string;
+        $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
         $persona->save();
         if (!empty($persona->idPersona) && $persona->assignRole($request->rol['rol'])) {
             return $persona;
@@ -122,7 +122,9 @@ class UserService
 
     public function  editarUsuario(Request $request)
     {
-        $persona = Persona::findOrFail($request->idUsuario);
+        // Sin el scope de país: permite guardar la corrección de una persona rescatada
+        // de otro país (el controller ya validó el permiso con gestionableCrossPais()).
+        $persona = Persona::withoutGlobalScope(BelongsToCountryScope::class)->findOrFail($request->idUsuario);
 
         $persona = $this->cargar_cambios($request, $persona);
 

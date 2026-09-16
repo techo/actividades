@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DocumentoValido;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -39,7 +40,7 @@ class CrearPersona extends FormRequest
             'fechaNacimiento' => 'required|date|before_or_equal:' . Carbon::now()->subYears(self::EDAD_MINIMA)->format('Y-m-d'),
             'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => 'required|string|max:50',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($this->idPais)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',

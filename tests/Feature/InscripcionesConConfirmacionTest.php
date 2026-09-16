@@ -194,6 +194,58 @@ class InscripcionesConConfirmacionTest extends TestCase
         Mail::assertQueued(MailInscripcionFaltaPago::class, 1);
     }
 
+    /**
+     * Un socio exento (exento_pago) confirmado en una actividad con confirmación Y
+     * pago recibe el mail de CONFIRMADO, NO el de falta de pago: al ser exento se lo
+     * trata como pago satisfecho (fix e8854c22). Antes caía en la rama de falta de
+     * pago y el confirmado solo salía por el switch Pago.
+     *
+     * @test
+     */
+    public function coordinador_confirma_socio_exento_manda_confirmada_no_falta_pago()
+    {
+        $this->withoutExceptionHandling();
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $coordinador = factory('App\Persona')->create();
+        $coordinador->assignRole('admin');
+
+        $pais_con_config_de_pago = factory('App\Pais')->create([
+            'config_pago' => '{
+                "merchant_id": "1234",
+                "account_id": "1234",
+                "api_key": "7890",
+                "payment_class": "PayU"
+            }',
+        ]);
+
+        $actividad = app(ActividadFactory::class)
+            ->creadaPor($coordinador)
+            ->conEstado('con confirmacion y pago')
+            ->conPais($pais_con_config_de_pago->id)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $jose = factory('App\Persona')->create([ 'recibirMails' => 1 ]);
+
+        // Inscripción de un socio EXENTO de pago (materializado al inscribirse).
+        $i = factory('App\Inscripcion')->create([
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $jose->idPersona,
+            'exento_pago' => 1,
+        ]);
+
+        $this->actingAs($coordinador)
+            ->post('/admin/ajax/actividades/' . $actividad->idActividad . '/inscripciones/' . $i->idInscripcion, [ 'confirma' => 1 ])
+            ->assertStatus(200);
+
+        // Exento ⇒ CONFIRMADO, nunca falta de pago.
+        Mail::assertQueued(MailInscripcionConfirmada::class, 1);
+        Mail::assertNotQueued(MailInscripcionFaltaPago::class);
+    }
+
     /** @test */
     public function coordinador_puede_preinscribir_con_confirmacion()
     {

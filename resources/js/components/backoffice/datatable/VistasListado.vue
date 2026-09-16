@@ -5,7 +5,7 @@
                 <a href="#" @click.prevent="seleccionar(v)">
                     <span class="vista-punto" v-if="v.color" :style="{ background: v.color }"></span>
                     {{ v.nombre }}
-                    <a v-if="!v.es_predefinida" href="#" class="vista-borrar" @click.prevent.stop="eliminar(v)" title="Eliminar">
+                    <a v-if="v.puede_editar" href="#" class="vista-borrar" @click.prevent.stop="eliminar(v)" title="Eliminar">
                         <i class="fa fa-times"></i>
                     </a>
                 </a>
@@ -65,7 +65,7 @@
         data() {
             return {
                 predefinidas: [],
-                propias: [],
+                guardadas: [],
                 activeId: null,
                 modal: false,
                 nombre: '',
@@ -81,7 +81,7 @@
                 return `/admin/ajax/listados/${this.listKey}/${this.contextId}`;
             },
             todas() {
-                return [...this.predefinidas, ...this.propias];
+                return [...this.predefinidas, ...this.guardadas];
             },
             resumenFiltros() {
                 const n = this.filtrosActuales.length;
@@ -112,7 +112,7 @@
             cargar() {
                 return axios.get(`${this.baseUrl}/vistas`).then(({ data }) => {
                     this.predefinidas = data.predefinidas || [];
-                    this.propias = data.propias || [];
+                    this.guardadas = data.guardadas || [];
                     if (this.activeId === null && this.predefinidas.length) {
                         this.activeId = this.predefinidas[0].id;
                     }

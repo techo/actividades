@@ -28,6 +28,20 @@ class BelongsToCountryScopeTest extends TestCase
         return factory('App\Inscripcion')->create(['idActividad' => $act->idActividad]);
     }
 
+    /**
+     * Sitúa el request en el backoffice (/admin*) para ejercitar el scope.
+     *
+     * Por diseño el scope SOLO aísla en peticiones HTTP del backoffice (ver
+     * BelongsToCountryScope, regla 2): fuera de /admin no filtra. Como estos tests
+     * consultan el modelo directamente en proceso, reproducimos ese contexto
+     * fijando la ruta. Llamar DESPUÉS de actingAs(): el guard ya tiene el usuario
+     * en memoria, reemplazar el request no lo pierde.
+     */
+    private function contextoBackoffice(): void
+    {
+        $this->app->instance('request', \Illuminate\Http\Request::create('/admin/actividades', 'GET'));
+    }
+
     /** @test */
     public function usuario_de_un_pais_solo_ve_actividades_de_su_pais()
     {
@@ -38,6 +52,7 @@ class BelongsToCountryScopeTest extends TestCase
 
         $user = factory('App\Persona')->create(['idPaisPermitido' => $paisA->id]);
         $this->actingAs($user);
+        $this->contextoBackoffice();
 
         $ids = Actividad::pluck('idActividad');
         $this->assertTrue($ids->contains($actA->idActividad), 'Debe ver la de su país');
@@ -84,6 +99,7 @@ class BelongsToCountryScopeTest extends TestCase
 
         $user = factory('App\Persona')->create(['idPaisPermitido' => $paisA->id]);
         $this->actingAs($user);
+        $this->contextoBackoffice();
 
         $this->assertSame(1, Actividad::count(), 'scope activo: solo su país');
         $this->assertSame(2, Actividad::todosLosPaises()->count(), 'escape hatch: todos');
@@ -120,6 +136,7 @@ class BelongsToCountryScopeTest extends TestCase
 
         $user = factory('App\Persona')->create(['idPaisPermitido' => $paisA->id]);
         $this->actingAs($user);
+        $this->contextoBackoffice();
 
         $ids = \App\Inscripcion::pluck('idInscripcion');
         $this->assertTrue($ids->contains($insA->idInscripcion), 'Ve la de actividad de su país');

@@ -321,20 +321,23 @@
       "group": "upgrade-fase1",
       "name": "upgrade-1-laravel6",
       "title": "Fase 1: Laravel 5.7 → 6.x + PHP 7.4",
-      "description": "Primera fase del upgrade. Ver docs/upgrade-laravel.md §Fase 1 para breaking changes y versiones target.",
+      "description": "Primera fase del upgrade. Ver docs/upgrade-laravel.md §Fase 1 (con las correcciones de upgrade-review.md ya aplicadas). Correr `composer update --dry-run` con el composer.json target ANTES de tocar código.",
       "acceptance": [
-        "composer.json: laravel/framework ^6.0, passport ^8.0, spatie/permission ^3.0, phpunit ^8.0",
+        "composer.json Fase 1: laravel/framework ^6.0, passport ^8.0, spatie/permission ^3.0, phpunit ^8.0, socialite ^5.0 (NO ^4), sentry/sentry-laravel ^4.0, laravel/tinker ^2.0, rap2hpoutre/fast-excel ^2.5, fzaninotto/faker → fakerphp/faker ^1.9, laravel/telescope ^3.5, unisharp/laravel-filemanager ^2.x (NO eliminar: lo usa TinyMCE)",
         "PHP en Docker actualizado a 7.4",
-        "str_*() y array_*() globales reemplazados por Str:: y Arr:: en código propio",
-        "phpunit 100% verde",
-        "Tests de API mobile (task 10) pasan"
+        "Helpers globales str_*/array_*/studly_case ya reemplazados por \\Illuminate\\Support\\Str::/Arr:: (HECHO pre-fase) — verificar que no reaparezcan",
+        "Verificación de email arreglada: Persona::getEmailForVerification() devuelve $this->mail, ruta+URL con {hash}, test verde (BLOQUEANTE)",
+        "Passport: correr `php artisan migrate` (NO passport:install), claves y clientes existentes intactos",
+        "phpunit 100% verde"
       ],
       "risk": "low",
       "blockedBy": [
-        18
+        18,
+        45,
+        46
       ],
       "branch": "upgrade/laravel-6x",
-      "agent_notes": "Branch: upgrade/laravel-6x. Mergear a main solo cuando todos los tests estén verdes.",
+      "agent_notes": "Branch: upgrade/laravel-6x. PASO 2.a obligatorio: `composer update --dry-run`. Mergear a main solo con todos los tests verdes. webpatser/laravel-uuid YA eliminado (Str::uuid()).",
       "status": "pending"
     },
     {
@@ -344,7 +347,9 @@
       "title": "Fase 2: Laravel 6.x → 7.x",
       "description": "Ver docs/upgrade-laravel.md §Fase 2.",
       "acceptance": [
-        "composer.json: laravel/framework ^7.0, passport ^9.0, socialite ^4.0",
+        "composer.json: laravel/framework ^7.0, passport ^9.0, socialite ^5.0 (ya subido en F1)",
+        "🔴 serializeDate() legacy overrideado (formato 'Y-m-d H:i:s') en base model/trait — la API mobile NO debe cambiar de formato de fecha",
+        "Tests de contrato JSON que fijan el formato de fecha en los endpoints top de la app: verdes",
         "phpunit 100% verde",
         "MailingTest.php pasa"
       ],
@@ -359,33 +364,35 @@
       "id": 21,
       "group": "upgrade-fase3",
       "name": "upgrade-3a-factories",
-      "title": "Fase 3a: Migrar factories a clases (Laravel 8 prep)",
-      "description": "Los 17 archivos en database/factories/ deben convertirse a clases con namespace Database\\Factories. Los tests deben actualizarse de factory('App\\Persona') a Persona::factory(). Ver docs/upgrade-laravel.md §Fase 3.1.",
+      "title": "Fase 3a: Prep factories + subir a L8 con legacy-factories",
+      "description": "SECUENCIA CORREGIDA (la original era infeasible: Model::factory() no existe en L7). Ver docs/upgrade-laravel.md §Fase 3. 1) En L7 verde: renombrar App\\ActividadFactory → App\\ActividadBuilder y ELIMINAR database/factories/UserFactory.php (App\\User muerto). 2) Subir a L8+PHP8.0 CON laravel/legacy-factories (las factories de closures siguen andando). Tests verdes → mergear.",
       "acceptance": [
-        "Los 17 factories migrados a Database\\Factories\\*Factory extends Factory",
-        "Todos los Feature tests actualizados con Model::factory()",
-        "phpunit sigue verde en Laravel 7.x (no cambiar framework aún)"
+        "App\\ActividadFactory renombrado a App\\ActividadBuilder (usos en Feature tests actualizados)",
+        "database/factories/UserFactory.php eliminado (código muerto de App\\User)",
+        "L8 + PHP 8.0 arriba con laravel/legacy-factories instalado",
+        "phpunit 100% verde con las factories de closures intactas"
       ],
       "risk": "high",
       "blockedBy": [
         20
       ],
       "branch": "upgrade/laravel-8x",
-      "agent_notes": "Este es el cambio más extenso. Hacerlo en el mismo branch que el upgrade de L8 pero como primer sub-paso. Archivos factory: PersonaFactory, ActividadFactory, InscripcionFactory, PaisFactory, PuntoEncuentroFactory, GrupoFactory, LocalidadFactory, ProvinciaFactory, OficinaFactory, TipoFactory, CoordinadorFactory, NovedadFactory, CategoriaActividadFactory, GrupoRolPersonaFactory, EvaluacionActividad, EvaluacionPersona, UserFactory.",
+      "agent_notes": "El paso más riesgoso convertido en 2 pasos reversibles. La migración factory-a-clase va en 3b. fzaninotto/faker → fakerphp/faker en esta fase.",
       "status": "pending"
     },
     {
       "id": 22,
       "group": "upgrade-fase3",
       "name": "upgrade-3b-laravel8",
-      "title": "Fase 3b: Laravel 7.x → 8.x + PHP 8.0",
-      "description": "Ver docs/upgrade-laravel.md §Fase 3. Después de migrar factories.",
+      "title": "Fase 3b: Migrar factories a clases + quitar legacy-factories",
+      "description": "Ver docs/upgrade-laravel.md §Fase 3. Ya en L8 (Fase 3a). Migrar las factories de closures a clases en tandas, con tests verdes entre tandas, y finalmente eliminar laravel/legacy-factories.",
       "acceptance": [
-        "composer.json: laravel/framework ^8.0, passport ^10.0, permission ^4.0, lcobucci/jwt ^4.0, phpunit ^9.0, stripe ^10.0",
-        "PHP en Docker actualizado a 8.0",
-        "Seeders con namespace Database\\Seeders",
-        "phpunit 100% verde",
-        "php artisan passport:install completa sin errores"
+        "Factories migradas a Database\\Factories\\*Factory extends Factory; tests usan Model::factory()",
+        "seed('PermisosSeeder') (string, ×13+ en tests) → Database\\Seeders\\PermisosSeeder::class",
+        "Seeders con namespace Database\\Seeders; autoload.classmap → PSR-4 (Database\\)",
+        "composer.json: passport ^10.0, permission ^4.0, lcobucci/jwt ^4.0, phpunit ^9.0",
+        "laravel/legacy-factories ELIMINADO",
+        "phpunit 100% verde"
       ],
       "risk": "high",
       "blockedBy": [
@@ -718,6 +725,45 @@
       ],
       "risk": "low",
       "status": "pending"
+    },
+    {
+      "id": 45,
+      "group": "upgrade-fase0",
+      "name": "tests-contrato-fechas-json",
+      "title": "Tests de contrato: formato de fechas JSON en la API mobile",
+      "description": "Antes de Fase 2 (L7 cambia fechas a ISO-8601), fijar con tests el formato de fecha actual ('Y-m-d H:i:s') en las respuestas JSON de los endpoints top de la app MiTECHO. Red de seguridad contra la regresión de contrato que rompería la app instalada. Ver upgrade-review.md §2.2.",
+      "acceptance": [
+        "tests/Feature/api/ContratoFechasApiTest.php: fija el formato legacy 'Y-m-d H:i:s' de un atributo de $dates (primer_acceso_app) en GET /api/personas/{id}, que se serializa por defecto (sin Resource)",
+        "El regex anclado rechaza el formato ISO-8601 que introduce Laravel 7 (ancla anti-regresión de Fase 2)",
+        "phpunit verde"
+      ],
+      "risk": "low",
+      "blockedBy": [
+        18
+      ],
+      "branch": "pre-upgrade/api-tests",
+      "status": "done",
+      "completed_at": "2026-09-03"
+    },
+    {
+      "id": 46,
+      "group": "upgrade-fase0",
+      "name": "test-verificacion-email",
+      "title": "Test del flujo de verificación de email (bloqueante de Fase 1)",
+      "description": "Cubrir el flujo de verificación de email de Persona (campo `mail`, no `email`) con un test, porque desde L6 se rompe si getEmailForVerification()/{hash} no están bien. Ver upgrade-review.md §2.3.",
+      "acceptance": [
+        "tests/Feature/VerificacionEmailWebTest.php: link firmado (temporarySignedRoute 'verification.verify' con id) marca el email como verificado sin sesión y despacha Verified",
+        "link sin firma válida → 403 y no verifica (middleware 'signed')",
+        "Ancla del flujo actual (verify por id, no por {hash}=sha1(mail)) como gate para L6",
+        "phpunit verde"
+      ],
+      "risk": "low",
+      "blockedBy": [
+        18
+      ],
+      "branch": "pre-upgrade/api-tests",
+      "status": "done",
+      "completed_at": "2026-09-03"
     }
   ]
 }

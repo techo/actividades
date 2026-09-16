@@ -45,6 +45,42 @@ class InscripcionesApiTest extends TestCase
         ]);
     }
 
+    /**
+     * Una actividad Cerrada (estadoConstruccion) no debe permitir inscribirse por la
+     * API mobile: esa ruta no tiene can:inscribir y create() no lo chequeaba, así que
+     * se podía inscribir a una cerrada desde la app. Ahora el guard de create() lo frena.
+     *
+     * @test
+     */
+    public function no_se_puede_inscribir_a_actividad_cerrada()
+    {
+        $this->seed('PermisosSeeder');
+        Mail::fake();
+
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+
+        $actividad = app(ActividadFactory::class)
+            ->conGrupoRaiz()
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+        $actividad->estadoConstruccion = 'Cerrada';
+        $actividad->save();
+        $punto = $actividad->puntosEncuentro[0];
+
+        $this->postJson('/api/inscripciones/actividad/' . $actividad->idActividad, [
+            'punto_encuentro'  => $punto->idPuntoEncuentro,
+            'aceptar_terminos' => 1,
+        ])
+            ->assertStatus(422)
+            ->assertJson([ 'success' => false ]);
+
+        $this->assertDatabaseMissing('Inscripcion', [
+            'idActividad' => $actividad->idActividad,
+            'idPersona'   => $persona->idPersona,
+        ]);
+    }
+
     /** @test */
     public function mis_inscripciones_lista_las_del_usuario_autenticado()
     {

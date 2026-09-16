@@ -35,8 +35,8 @@ class RecordatorioActividad extends Mailable
     public function build()
     {
         return $this
-            ->subject('TECHO: ' . $this->inscripcion->actividad->nombreActividad . ' está por comenzar')
-            ->from('noreplyactividades@techo.org')
+            ->subject(__('email.activity_reminder_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
+            ->from(config('mailing.from_bulk'), __('email.remitente'))
             ->view('emails.recordatorioActividad');
     }
 }

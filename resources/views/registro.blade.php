@@ -27,6 +27,7 @@
                 facebook_id="{{$persona->facebook_id}}"
                 google_id="{{$persona->google_id}}"
                 linkear={{isset($linkear)?$linkear:''}}
+                pais-actual="{{ config('app.pais') }}"
         ></registro>
 	@else
         @if(isset($mensaje))
@@ -34,7 +35,7 @@
                 <strong>{{$mensaje}}</strong>
             </div>
         @endif
-		<registro></registro>
+		<registro pais-actual="{{ config('app.pais') }}"></registro>
 	@endif
 @endsection
 

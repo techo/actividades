@@ -58,7 +58,7 @@ class CampanasController extends Controller
         $campana = Campaign::with('preguntas')->findOrFail($id);
         $this->authorize('view', $campana);
         $export = new CampanaSuscriptosExport($campana);
-        $filename = 'suscriptos_' . str_slug($campana->nombre) . '.xlsx';
+        $filename = 'suscriptos_' . \Illuminate\Support\Str::slug($campana->nombre) . '.xlsx';
         return Excel::download($export, $filename);
     }
 }

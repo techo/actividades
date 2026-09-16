@@ -8,8 +8,9 @@ use App\Http\Requests\CrearPersona;
 use App\Persona;
 use App\Inscripcion;
 use App\Pais;
+use App\Rules\DocumentoValido;
+use App\Services\Documento\DocumentoService;
 use Illuminate\Support\Facades\Auth;
-use Webpatser\Uuid\Uuid;
 use App\Services\SocialAuth\SocialProviderFactory;
 use Illuminate\Support\Facades\Log;
 
@@ -179,7 +180,7 @@ class PersonasController extends Controller
         $fields = $request->validated();
 
         $persona = Persona::create([
-            'dni' => $fields['dni'],
+            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
@@ -193,7 +194,7 @@ class PersonasController extends Controller
             'idProvincia' => $fields['idProvincia'],
             'idLocalidad' => $fields['idLocalidad'],
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
-            'unsubscribe_token' => (string) Uuid::generate(),
+            'unsubscribe_token' => (string) \Illuminate\Support\Str::uuid(),
             // Alta desde la app móvil (ruta /api/register): la verificación de email
             // reabrirá la app por deep link tras verificar desde el navegador.
             'registro_origen' => 'app',
@@ -213,6 +214,39 @@ class PersonasController extends Controller
             );
     }
 
+    /**
+     * Reenvía el mail de verificación de email a la persona autenticada.
+     *
+     * El reenvío nativo de Laravel (VerificationController@resend) vive solo en
+     * una ruta web bajo sesión de navegador, así que no le sirve a la app móvil,
+     * que autentica por token Passport. Esto expone el mismo envío para la app.
+     * El throttle vive en la ruta (api.php) para evitar spam de correos.
+     */
+    public function resendVerification(Request $request)
+    {
+        $persona = auth('api')->user();
+
+        if ($persona->hasVerifiedEmail()) {
+            return response(
+                [
+                    'success' => true,
+                    'mensaje' => "El email ya estaba verificado",
+                ],
+                200
+            );
+        }
+
+        $persona->sendEmailVerificationNotification();
+
+        return response(
+            [
+                'success' => true,
+                'mensaje' => "Mail de verificación reenviado",
+            ],
+            200
+        );
+    }
+
   
 
 
@@ -224,12 +258,14 @@ class PersonasController extends Controller
             'mail' => 'required',
             'nombres' => 'required',
             'apellidoPaterno' => 'required',
-            'fechaNacimiento' => 'required|date',
+            // Misma validación de edad que el registro (EDAD_MINIMA=13) y tope 85: el
+            // update mobile solo pedía 'required|date' → dejaba fijar edades <13.
+            'fechaNacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(CrearPersona::EDAD_MINIMA)->format('Y-m-d') . '|after:' . \Carbon\Carbon::now()->subYears(85)->format('Y-m-d'),
             'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
             'genero' => 'required',
             'instagram' => 'nullable',
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => 'required|string|max:50',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
@@ -239,7 +275,7 @@ class PersonasController extends Controller
         ]);
 
         $persona->update([
-            'dni' => $fields['dni'],
+            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],

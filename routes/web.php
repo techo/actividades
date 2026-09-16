@@ -69,8 +69,8 @@ Route::prefix('ajax')->group(function () {
         Route::get('/propios', 'ajax\PaisesController@paisesPropios');
         Route::get('/conInstitucionesEducativas', 'ajax\PaisesController@paisesConInstitucionesEducativas');
 	});
-    // `auth` hace el enforcement real (requiere.auth es solo un flag de vista, no bloquea).
-    Route::middleware(['auth', 'requiere.auth'])->group(function () {
+    // `auth` hace el enforcement real (login-modal-flag es solo un flag de vista, no bloquea).
+    Route::middleware(['auth', 'login-modal-flag'])->group(function () {
         Route::prefix('institucionEducativa')->group(function() {
             Route::get('', 'ajax\InstitucionEducativaController@index');
             Route::get('{idInstitucionEducativa}', 'ajax\InstitucionEducativaController@get');
@@ -163,16 +163,16 @@ Route::get('autenticado', function () {
 //Route::get('/usuario/verificar_mail/{token}', 'Auth\RegisterController@verificar_mail');
 
 // Evaluaciones
-Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
-Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('requiere.auth', 'can:evaluar,App\Actividad,id');
+Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
 
 // Flujo de inscripciones
 
 Route::get('/actividades/{id}', 'ActividadesController@show')->middleware('pais');
 
-Route::prefix('/inscripciones/actividad/{id}')->middleware('requiere.auth', 'can:confirmar,App\Actividad,id')->group(function (){
+Route::prefix('/inscripciones/actividad/{id}')->middleware('auth', 'can:confirmar,App\Actividad,id', 'login-modal-flag')->group(function (){
     Route::get('/confirmar/donacion','InscripcionesController@confirmarDonacion');
     Route::post('/confirmar/donacion/checkout','InscripcionesController@donacionCheckout');
     
@@ -186,7 +186,7 @@ Route::middleware('auth')->group(function () {
 
     // Upload de archivo de una respuesta a pregunta tipo 'archivo' (inscripción).
     Route::post('/ajax/inscripcion/pregunta-archivo', 'ajax\PreguntaArchivoController@inscripcion')
-        ->middleware('requiere.auth');
+        ->middleware('login-modal-flag');
 });
 
 Route::get('/inscripciones/actividad/{id}', 'InscripcionesController@puntoDeEncuentro');
@@ -197,7 +197,10 @@ Route::get('/inscripciones/actividad/{id}/confirmar', function ($id) {
     return redirect('/inscripciones/actividad/' . $id);
 });
 Route::get('/inscripciones/actividad/{id}/inscripto', 'InscripcionesController@inscripto'); //tendría que ser una ruta por ajax
-Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('requiere.auth', 'can:inscribir,App\Actividad,id');
+// Pantalla de estado de la inscripción (gracias / esperá confirmación), para que
+// el CTA del detalle ("ESPERAR CONFIRMACIÓN") pueda volver a mostrarla.
+Route::get('/inscripciones/actividad/{id}/estado', 'InscripcionesController@estado')->middleware('auth', 'login-modal-flag');
+Route::post('/inscripciones/actividad/{id}/gracias', 'InscripcionesController@create')->middleware('auth', 'can:inscribir,App\Actividad,id', 'login-modal-flag');
 
 //Fin Flujo de inscripciones
 
@@ -535,6 +538,8 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::post('/ajax/actividades/{id}/inscripciones/rechazar/voucher', 'backoffice\ajax\InscripcionesController@rechazarVoucher')->middleware('can:verInscripciones,App\Inscripcion,id');
     Route::post('/ajax/actividades/{id}/inscripciones/rechazar/documento', 'backoffice\ajax\InscripcionesController@rechazarDocumento')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::post('/ajax/actividades/{id}/inscripciones/aprobar/beca', 'backoffice\ajax\InscripcionesController@aprobarBeca')->middleware('can:verInscripciones,App\Inscripcion,id');
+    Route::post('/ajax/actividades/{id}/inscripciones/rechazar/beca', 'backoffice\ajax\InscripcionesController@rechazarBeca')->middleware('can:verInscripciones,App\Inscripcion,id');
 
     Route::post('/ajax/actividades/{id}/inscripciones/{inscripcion}', 'backoffice\ajax\InscripcionesController@update')->middleware('can:verInscripciones,App\Inscripcion,id');
 
@@ -605,8 +610,11 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // Gateada por permiso dedicado (no por rol ni por idPaisPermitido): ver migración
     // 2026_08_18_120000_add_permiso_enviar_comunicaciones.
     Route::get('/comunicaciones/invitaciones', 'backoffice\InvitacionesController@index')->middleware('permission:enviar_comunicaciones');
+    Route::get('/comunicaciones/enviadas', 'backoffice\InvitacionesController@enviadas')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/enviadas', 'backoffice\ajax\InvitacionesController@enviadas')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/paises', 'backoffice\ajax\InvitacionesController@paises')->middleware('permission:enviar_comunicaciones');
     Route::get('/ajax/comunicaciones/invitaciones/actividades', 'backoffice\ajax\InvitacionesController@actividades')->middleware('permission:enviar_comunicaciones');
+    Route::get('/ajax/comunicaciones/invitaciones/campanas', 'backoffice\ajax\InvitacionesController@campanas')->middleware('permission:enviar_comunicaciones');
     Route::post('/ajax/comunicaciones/invitaciones/preview', 'backoffice\ajax\InvitacionesController@preview')->middleware('permission:enviar_comunicaciones');
     Route::post('/ajax/comunicaciones/invitaciones/enviar', 'backoffice\ajax\InvitacionesController@enviar')->middleware('permission:enviar_comunicaciones');
 
@@ -706,6 +714,9 @@ Route::get('/autotest', 'PerfilController@quiz_techero');
 Route::group(['prefix' => '{abreviacion}', 'middleware' => 'UrlPais'], function ($abreviacion) {
     Route::get('/suscribe', 'SuscribeController@get');
     Route::post('/suscribe', 'SuscribeController@create');
+    // Submit de una campaña: el campaign_id viaja en la URL y lo fija el servidor,
+    // para que una captación nunca quede sin campaña (campaign_id NULL).
+    Route::post('/campania/{id}/suscribe', 'SuscribeController@create');
     // Upload de archivo de una respuesta a pregunta tipo 'archivo' (campaña).
     // Público, igual que el submit de suscripción anónima; con throttle porque
     // no exige autenticación.

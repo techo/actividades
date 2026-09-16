@@ -33,8 +33,10 @@ class EnviarMailsRecordatorioActividad implements ShouldQueue
      */
     public function handle()
     {
-        if($this->inscripcion && $this->inscripcion->persona->recibirMails) {
-            Mail::to($this->inscripcion->persona->mail)->send(new RecordatorioActividad($this->inscripcion));
+        if($this->inscripcion && $this->inscripcion->persona->recibirMails && $this->inscripcion->persona->tieneMailValido()) {
+            // BULK → SES (mailer dedicado). Este job ya está encolado, así que el
+            // envío sincrónico acá es correcto (el escalonado lo dio el delay del job).
+            \App\Services\MailerSes::enviar(new RecordatorioActividad($this->inscripcion), $this->inscripcion->persona->mail);
         }
     }
 }

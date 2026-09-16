@@ -17,14 +17,7 @@
     <div class="col-md-6">
         <h3>{{ __('frontend.past_activities') }} </h3>
     </div>
-    <datatable
-            api-url="/ajax/usuario/inscripciones?date=pasadas"
-            fields="{{ $fields }}"
-            sort-order="{{ $sortOrder }}"
-            v-bind:placeholder-text="$t('frontend.filter_placeholder')"
-            id="datatable-mis-actividades"
-            track-by="idActividad"
-    ></datatable>
+    <mis-actividades date="pasadas"></mis-actividades>
     <p>&nbsp;</p>
 @endsection
 

@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CoordinadorResource;
 use App\Http\Resources\RolResource;
 use App\Http\Resources\UsuariosResource;
+use App\Auditoria;
 use App\Http\Services\UserService;
 use App\Persona;
+use App\Scopes\BelongsToCountryScope;
 use App\Search\UsuariosSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +27,21 @@ class UsuariosController extends Controller
     public function usuariosSearch(Request $request)
     {
         $filtros = $request->all();
-        $result = UsuariosSearch::apply($filtros);
+        $result = UsuariosSearch::apply($filtros, 'idPersona desc', 25, $this->esBusquedaCrossPais($request));
         $usuarios = CoordinadorResource::collection($result); //el nombre del resource no tiene sentido acá
         return response()->json($usuarios);
+    }
+
+    /**
+     * ¿La búsqueda debe ir a toda la base ignorando el país? Solo cuando el término es
+     * un email exacto: sirve para rescatar personas registradas en otro país (típico
+     * de quienes agarraron el país por defecto). El resto de las búsquedas (por nombre)
+     * siguen acotadas al país, para no exponer PII de otros países.
+     */
+    private function esBusquedaCrossPais(Request $request): bool
+    {
+        return $request->filled('usuario')
+            && filter_var(trim($request->usuario), FILTER_VALIDATE_EMAIL) !== false;
     }
 
     public function index(Request $request)
@@ -36,7 +50,8 @@ class UsuariosController extends Controller
         if($request->has('usuario')){
             $filtros['usuario'] = $request->usuario;
         }
-        
+
+        $sort = 'idPersona desc';
         if($request->filled('sort')) {
             if(strpos($request->sort, "|"))
                 $sort = join(" ",explode("|", $request->sort));
@@ -49,7 +64,7 @@ class UsuariosController extends Controller
             $per_page = $request->per_page;
         }
 
-        $result = UsuariosSearch::apply($filtros, $sort, $per_page);
+        $result = UsuariosSearch::apply($filtros, $sort, $per_page, $this->esBusquedaCrossPais($request));
         $usuarios = UsuariosResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }
@@ -73,9 +88,25 @@ class UsuariosController extends Controller
     }
 
     public function update(Request $request) {
+        // Sin el scope de país: una persona rescatada de otro país no sería visible con
+        // el scope activo (daría 404). El permiso lo decide gestionableCrossPais().
+        $persona = Persona::withoutGlobalScope(BelongsToCountryScope::class)
+            ->findOrFail($request->idUsuario);
+
+        if (!$persona->gestionableCrossPais()) {
+            return response()->json(
+                ['No tenés permisos para editar a esta persona: pertenece a la coordinación de otro país.'],
+                403
+            );
+        }
+
         $validator = $this->userService->createValidator($request);
 
         if ($validator->passes()) {
+              // Dejar rastro cuando es un rescate cross-país (país distinto al del admin).
+              if ($this->esAccionCrossPais($persona)) {
+                  Auditoria::crear($persona);
+              }
               if ($this->userService->editarUsuario($request)) {
                   return response()->json(['Usuario editado correctamente'], 200);
               }
@@ -84,21 +115,46 @@ class UsuariosController extends Controller
         return response($validator->errors()->all(), 422);
     }
 
-    public function fusionar(Persona $persona, Request $request)
+    public function fusionar($persona, Request $request)
     {
+        // Sin scope de país en ambas cuentas: el rescate típico fusiona una cuenta
+        // varada (otro país) contra la real. El permiso se valida abajo.
+        $survivor = Persona::withoutGlobalScope(BelongsToCountryScope::class)->findOrFail($persona);
+
         $messages = [
             'idPersona.not_in' => 'No se puede fusionar una cuenta consigo misma',
         ];
-        
+
         $validado = $request->validate([
-            'idPersona' => 'required|exists:Persona|not_in:' . $persona->idPersona,
+            'idPersona' => 'required|exists:Persona|not_in:' . $survivor->idPersona,
         ], $messages);
 
-        $target = Persona::find($validado['idPersona']);
+        $target = Persona::withoutGlobalScope(BelongsToCountryScope::class)->findOrFail($validado['idPersona']);
 
-        $persona->fusionar($target);
+        if (!$survivor->gestionableCrossPais() || !$target->gestionableCrossPais()) {
+            return response()->json(
+                ['No tenés permisos para fusionar: alguna de las cuentas pertenece a la coordinación de otro país.'],
+                403
+            );
+        }
+
+        if ($this->esAccionCrossPais($survivor) || $this->esAccionCrossPais($target)) {
+            Auditoria::crear($target);
+        }
+
+        $survivor->fusionar($target);
 
         return response('ok', 200);
+    }
+
+    /**
+     * ¿La acción sobre esta persona cruza el país del admin? (para auditar rescates).
+     */
+    private function esAccionCrossPais(Persona $persona): bool
+    {
+        $auth = auth()->user();
+        return !$auth->esGlobalPais()
+            && !in_array((int) $persona->idPais, $auth->paisesPermitidosIds(), true);
     }
 
     public function inscripciones($persona, Request $request)

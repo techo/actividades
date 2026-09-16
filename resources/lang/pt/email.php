@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'remitente' => 'TETO',
+    // --- Subjects de lembrete / vencimento de pagamento (i18n) ---
+    'activity_reminder_title' => 'TECHO Sua atividade está chegando:',
+    'payment_reminder_title' => 'TECHO Está chegando o prazo de pagamento de',
+    'payment_reminder_1' => 'Está chegando o prazo para confirmar sua vaga com seu aporte.',
+    'payment_reminder_2' => 'Resta pouco tempo para aportar e confirmar!',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -14,6 +21,9 @@ return [
     'begins_on' => 'que começa em',
     'begins_at' => 'em',
     'greetings' => 'Esperamos por você!',
+    'invitation_cta' => 'Ver a atividade',
+    'invitation_cta_campaign' => 'Ver a campanha',
+    'invitation_fallback' => 'Se o botão não funcionar, acesse por este link:',
     'has_been' => 'foi',
     'cancelada' => 'CANCELADA',
     'coordinator_message' => 'Mensagem da coordenação',
@@ -25,7 +35,7 @@ return [
     'hour' => 'horário',
 
     // actualizar Actividad
-    'activity_update_title' => 'TECHO Mudanças na atividade',
+    'activity_update_title' => 'TECHO Mudanças na atividade:',
     'activity_update_1' => 'Houve mudanças na atividade em que você se inscreveu. A seguir, você encontrará as informações atualizadas:',
 
     // actividad cancelada
@@ -50,12 +60,12 @@ return [
     'pre_enroll_3' => 'Em breve entraremos em contato para informar se sua inscrição foi aprovada. Qualquer dúvida, entre em contato com o coordenador.',
 
     // InscripcionFaltaPago
-    'missing_payment_title' => 'Você se pré-inscreveu para participar:',
+    'missing_payment_title' => 'TECHO Falta seu pagamento para participar em',
     'missing_payment_1' => 'Você está prestes a embarcar em uma experiência incrível! Você se pré-inscreveu para participar em:',
     'missing_payment_2' => 'Mas ainda falta um último passo para garantir sua participação: Confirmá-la com sua doação!',
     'missing_payment_3' => 'Você tem até ',
     'missing_payment_4' => 'Para confirmar seu lugar:',
-    'confirm_by_donation' => '',
+    'confirm_by_donation' => 'CONFIRMAR MINHA VAGA',
     'missing_payment_5' => 'Lembre-se que o valor mínimo sugerido para doação é ',
     'missing_payment_6' => ', e isso contribuirá para o desenvolvimento do nosso trabalho na comunidade.',
     'missing_payment_7' => 'Caso não possa realizar a doação, não queremos que fique de fora. Pode ',
@@ -105,6 +115,14 @@ return [
     'voucher_rechazado_motivo_label' => 'Motivo',
     'voucher_rechazado_instruccion'  => 'Por favor, acesse o sistema e envie um novo comprovante para continuar com sua inscrição.',
     'voucher_rechazado_link'         => 'Enviar novo comprovante',
+
+    // MailBecaRechazada
+    'beca_rechazada_subject'      => 'Solicitação de bolsa não aprovada —',
+    'beca_rechazada_intro'        => 'Informamos que sua solicitação de bolsa foi revisada para a atividade',
+    'beca_rechazada_estado'       => 'Sua solicitação de bolsa não foi aprovada.',
+    'beca_rechazada_motivo_label' => 'Motivo',
+    'beca_rechazada_instruccion'  => 'Você pode acessar o sistema para realizar seu aporte e confirmar sua vaga, ou solicitar a bolsa novamente com mais informações.',
+    'beca_rechazada_link'         => 'Ir para a página de pagamento',
 
 
     'documento_rechazado_subject'      => 'Documento de identidade rejeitado —',

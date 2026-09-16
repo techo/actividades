@@ -586,13 +586,17 @@ class ActividadesController extends Controller
     private function enviarNotificaciones(Actividad $actividad)
     {
         try{
+            // Escalonado: reparte el batch para no saturar el relay (~batch_por_minuto/min).
+            $porSegundo = max(1, intdiv((int) config('mailing.batch_por_minuto', 120), 60));
+            $idx = 0;
             foreach ($actividad->inscripciones_validas() as $inscripcion) {
                 //visto como hacer acá https://medium.com/@DarkGhostHunter/laravel-3-ways-of-processing-a-job-for-a-deleted-model-56413a512688
                 $persona = $inscripcion->persona->toArray();
                 $actividad = $inscripcion->actividad->toArray();
                 $pais = $inscripcion->actividad->pais->toArray();
-                $job = (new EnviarMailsCancelacionActividad($persona, $actividad, $pais));
+                $job = (new EnviarMailsCancelacionActividad($persona, $actividad, $pais))->delay(5 + intdiv($idx, $porSegundo));
                 dispatch($job);
+                $idx++;
             };
         } catch (ModelNotFoundException $e){
             Log::info('Envío por cancelación actividad ' . $actividad->idActividad . '(' . $actividad->nombreActividad . '): No se encontraron inscripciones para la actividad.');

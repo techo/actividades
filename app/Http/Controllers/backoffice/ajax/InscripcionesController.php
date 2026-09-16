@@ -16,6 +16,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\Mail\MailVoucherRechazado;
+use App\Mail\MailBecaRechazada;
 use App\Persona;
 use App\PuntoEncuentro;
 use App\Services\Listados\EnriquecedorFilas;
@@ -81,7 +82,10 @@ class InscripcionesController extends BaseController
         if($request->has('confirma')){
 
             if($request->confirma == true) {
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 0) {
+                // Un socio exento (exento_pago) no debe pagar: se lo trata como
+                // "sin pago" → mail/push de CONFIRMADO, no de falta de pago.
+                if($inscripcion->actividad->confirmacion == 1 && ($inscripcion->actividad->pago == 0 || $inscripcion->exento_pago)) {
+                    // Confirmación: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable).
                     $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
@@ -92,7 +96,8 @@ class InscripcionesController extends BaseController
                     );
                 }
 
-                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1) {
+                if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1 && !$inscripcion->exento_pago) {
+                    // "Confirmado, ahora pagá": mail crítico, se envía SIEMPRE (aunque tenga push confiable).
                     $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
@@ -109,6 +114,7 @@ class InscripcionesController extends BaseController
 
         if($request->has('pago')){
             if($inscripcion->actividad->pago == 1 && $request->pago == 1) {
+                // Pago confirmado: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable).
                 $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                 $this->pushService->enviarLocalizado(
                     $inscripcion->persona,
@@ -145,15 +151,34 @@ class InscripcionesController extends BaseController
         return response('Ocurrió un error al eliminar la inscripción', 500);
     }
 
-    public function desinscribir(CrearInscripcion $request)
+    public function desinscribir(CrearInscripcion $request, $id)
     {
-        foreach ($request->inscripciones as $idInscripcion)
-        {
-            Inscripcion::findOrFail($idInscripcion)->delete();
+        $ids = collect($request->inscripciones)
+            ->map(function ($v) { return (int) $v; })
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Solo se borran inscripciones que REALMENTE pertenecen a esta actividad.
+        // El front (selectedTo de vuetable-2) arrastra selección entre páginas,
+        // filtros y otras acciones masivas; sin este cerco, un id colado borraba
+        // la inscripción de un tercero de otra actividad (bug de desinscripción
+        // "aleatoria"). Además, el hook `deleting` de Inscripcion audita cada baja.
+        $inscripciones = Inscripcion::where('idActividad', $id)
+            ->whereIn('idInscripcion', $ids)
+            ->get();
+
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->delete();
         }
 
-        return response()
-            ->json(count($request->inscripciones) . " inscripciones eliminadas.", 200);
+        $descartadas = $ids->count() - $inscripciones->count();
+        $msg = $inscripciones->count() . " inscripciones eliminadas.";
+        if ($descartadas > 0) {
+            $msg .= " ({$descartadas} ignoradas por no pertenecer a la actividad)";
+        }
+
+        return response()->json($msg, 200);
     }
 
     public function asignarRol(CrearInscripcion $request)
@@ -196,11 +221,13 @@ class InscripcionesController extends BaseController
 
     public function asignarPunto($idActividad, CrearInscripcion $request)
     {
+        $idx = 0;
         foreach ($request->inscripciones as $idInscripcion) {
             $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->idPuntoEncuentro = $request->punto;
             $inscripcion->save();
-            $this->intentaEnviar(new ActualizacionActividad($inscripcion), $inscripcion->persona);
+            // Escalonado: puede notificar a muchos inscriptos de una.
+            $this->intentaEnviarEscalonado(new ActualizacionActividad($inscripcion), $inscripcion->persona, $idx++);
             $this->pushService->enviarLocalizado(
                 $inscripcion->persona,
                 'push.cambio_actividad_titulo',
@@ -222,7 +249,7 @@ class InscripcionesController extends BaseController
             $inscripcion->save();
 
             if ($request->confirmacion == 1) {
-                if ($inscripcion->actividad->pago == 1) {
+                if ($inscripcion->actividad->pago == 1 && !$inscripcion->exento_pago) {
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.pago_pendiente_titulo',
@@ -295,6 +322,79 @@ class InscripcionesController extends BaseController
         }
 
         return response()->json(['mensaje' => 'Comprobante rechazado y usuario notificado.'], 200);
+    }
+
+    /**
+     * Aprueba la solicitud de beca/exención: materializa la exención de pago
+     * (misma vía que el socio), confirma la inscripción y notifica al voluntario
+     * con el mail de "inscripción confirmada" (además del push).
+     */
+    public function aprobarBeca(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        // La exención hace que EstadoInscripcion trate el pago como satisfecho.
+        $inscripcion->exento_pago                 = true;
+        $inscripcion->exento_motivo               = 'beca';
+        $inscripcion->exento_at                   = Carbon::now();
+        $inscripcion->scholarship_approved        = true;
+        $inscripcion->scholarship_rejected        = false;
+        $inscripcion->scholarship_rejection_reason = null;
+        $inscripcion->scholarship_resolved_at     = Carbon::now();
+        // Aprobar la beca implica la confirmación del coordinador.
+        $inscripcion->confirma                    = 1;
+        $inscripcion->save();
+
+        // Confirmación: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable) + push.
+        $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
+        $this->pushService->enviarLocalizado(
+            $inscripcion->persona,
+            'push.inscripcion_confirmada_titulo',
+            'push.inscripcion_confirmada_cuerpo',
+            ['actividad' => $inscripcion->actividad->nombreActividad],
+            ['tipo' => 'inscripcion', 'estado' => 'CONFIRMADO', 'idActividad' => $inscripcion->actividad->idActividad]
+        );
+
+        return response()->json(['mensaje' => 'Beca aprobada. Inscripción confirmada y usuario notificado.'], 200);
+    }
+
+    /**
+     * Rechaza la solicitud de beca/exención con un motivo y notifica al voluntario.
+     * No toca el pago: el voluntario puede volver a la página de pago y aportar
+     * o volver a solicitar la beca.
+     */
+    public function rechazarBeca(Request $request, $id)
+    {
+        $request->validate([
+            'idInscripcion' => 'required|integer',
+            'motivo'        => 'nullable|string|max:1000',
+        ]);
+
+        $inscripcion = Inscripcion::where('idActividad', $id)
+            ->where('idInscripcion', $request->idInscripcion)
+            ->firstOrFail();
+
+        $motivo = $request->input('motivo');
+
+        $inscripcion->scholarship_rejected         = true;
+        $inscripcion->scholarship_approved         = false;
+        $inscripcion->scholarship_rejection_reason = $motivo;
+        $inscripcion->scholarship_resolved_at      = Carbon::now();
+        $inscripcion->save();
+
+        try {
+            Mail::to($inscripcion->persona->mail)->send(new MailBecaRechazada($inscripcion, $motivo));
+        } catch (\Exception $e) {
+            \Log::warning('No se pudo enviar mail de rechazo de beca: ' . $e->getMessage());
+        }
+
+        return response()->json(['mensaje' => 'Beca rechazada y usuario notificado.'], 200);
     }
 
     public function rechazarDocumento(Request $request, $id)

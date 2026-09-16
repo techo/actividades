@@ -150,7 +150,7 @@
                         <li class="nav-item active d-block d-md-none" v-if="authenticated && this.docs">
                             <a class="nav-link text-uppercase" v-on:click="ayuda">{{ $t('frontend.help') }}</a>
                         </li>
-                        <li class="nav-item active d-block d-md-none" v-if="authenticated">
+                        <li class="nav-item active d-block d-md-none" v-if="authenticated && hayPostulaciones">
                             <a :href="postulacionesLink" class="btn bg-techo-pink-light text-white" style="border-radius: 40px; transition: background-color 0.3s;">
                                 {{ $t('frontend.find_how') }} <span class="techo-violet">{{ $t('frontend.to_be_part_of_team') }}</span>
                             </a>
@@ -169,7 +169,7 @@
                     </ul>
                 </div>
 
-                <a v-if="authenticated" :href="postulacionesLink" class="btn bg-techo-pink text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
+                <a v-if="authenticated && hayPostulaciones" :href="postulacionesLink" class="btn bg-techo-pink text-white d-none d-lg-block" style="border-radius: 40px; transition: background-color 0.3s;">
                     {{ $t('frontend.find_how') }} <span class="techo-yellow"><b>{{ $t('frontend.to_be_part_of_team') }}</b></span>
                 </a>
                 <div class="locale-changer col-md-1 d-none d-md-block" >
@@ -296,6 +296,9 @@
                 paises: [],
                 showMailLogin: false,
                 onInstagramBrowser: navigator.userAgent.includes("Instagram"),
+                // El botón "ser parte del equipo" lleva a /postulaciones (categoría 6).
+                // Solo se muestra si esa pantalla tiene actividades para mostrar.
+                hayPostulaciones: false,
             };
             
             if(this.usuario) {
@@ -326,6 +329,9 @@
                 $('#btnShowModal').trigger('click');
             }
             this.paises_habilitados();
+            if (this.authenticated) {
+                this.checkPostulaciones();
+            }
             //Eventos
             events.$on('cerrar-sesion', this.logout);
 
@@ -334,6 +340,20 @@
             ir_a_pais: function(codigo) {
                 //console.log('pais');
                 window.location.href = '/seleccionar-pais/' +  codigo;
+            },
+            // ¿Hay actividades en la pantalla de postulaciones (categoría 6, la que
+            // usa PostulacionesController)? Si no hay, no mostramos el botón "ser
+            // parte del equipo" para no mandar al usuario a una pantalla vacía.
+            checkPostulaciones: function() {
+                axios.get('/ajax/actividades', { params: { categoria: 6 } })
+                    .then(respuesta => {
+                        let data = respuesta.data || {};
+                        let total = data.total != null
+                            ? data.total
+                            : (Array.isArray(data.data) ? data.data.length : 0);
+                        this.hayPostulaciones = total > 0;
+                    })
+                    .catch(() => { this.hayPostulaciones = false; });
             },
             paises_habilitados: function() {
                 axios.get('/ajax/paises/habilitados')

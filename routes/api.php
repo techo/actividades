@@ -123,6 +123,11 @@ Route::middleware('auth:api')->group(function () {
     // personas
     Route::get('personas/{persona}', 'api\PersonasController@show');
     Route::post('editPersona/{persona}', 'api\PersonasController@update');
+    // Reenvío del mail de verificación (equivalente móvil de la ruta web
+    // 'email/resend'). Throttle bajo para no permitir spam de correos.
+    Route::post('email/resend', 'api\PersonasController@resendVerification')
+        ->middleware('throttle:6,1')
+        ->name('api.verification.resend');
     Route::post('perfil/cambiar_photo', 'ajax\UsuarioController@cambiar_photo');
 
     // ── Campañas (autenticado) ────────────────────────────────────────────────
@@ -172,6 +177,10 @@ Route::middleware('auth:api')->group(function () {
         // Unified donation + subscription history
         Route::get('history', 'api\DonationController@history')
              ->name('api.donations.history');
+
+        // Dashboard de impacto (tres tarjetas) del donante autenticado
+        Route::get('impact', 'api\DonationController@impact')
+             ->name('api.donations.impact');
     });
 
     // ── Inscripcion Stripe (mobile payment for activity enrollment) ───────────

@@ -62,6 +62,10 @@ class SocioExencionApiTest extends TestCase
         $persona = factory('App\Persona')->create();
         Passport::actingAs($persona);
         $pais        = factory('App\Pais')->create(['config_pago' => json_encode(['stripe_secret' => 'sk_test_x'])]);
+        // La exención por socio solo aplica a actividades del país de socios
+        // (SocioExencionService gatea por services.salesforce.socio_pais_id). Alineamos
+        // ese país con el de la actividad para ejercitar la rama de exención.
+        config(['services.salesforce.socio_pais_id' => $pais->id]);
         $inscripcion = $this->inscripcionImpagaPaga($persona, $pais);
 
         $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent')

@@ -170,6 +170,22 @@ class Actividad extends Model
             ->values();;
     }
 
+    /**
+     * ¿Las inscripciones están abiertas? La actividad debe estar 'Abierta'
+     * (estadoConstruccion) y dentro del período de inscripción. Una fecha nula
+     * significa "sin restricción por ese lado" (null-safe: hay ~2757 actividades
+     * legacy con fechas de inscripción nulas). Fuente única usada por la página
+     * pública (show), el inicio del flujo (puntoDeEncuentro) y el alta (create).
+     */
+    public function inscripcionesAbiertas(): bool
+    {
+        $ahora = \Carbon\Carbon::now();
+
+        return $this->estadoConstruccion === 'Abierta'
+            && (is_null($this->fechaInicioInscripciones) || $this->fechaInicioInscripciones->lte($ahora))
+            && (is_null($this->fechaFinInscripciones) || $this->fechaFinInscripciones->gte($ahora));
+    }
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idActividad')->with('responsable');

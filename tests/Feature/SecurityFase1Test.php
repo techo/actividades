@@ -37,6 +37,12 @@ class SecurityFase1Test extends TestCase
             'voucher de pago'        => ['post', '/ajax/inscripcion/voucherPago'],
             'solicitud de beca'      => ['post', '/ajax/inscripcion/becaSolicitud'],
             'pregunta archivo'       => ['post', '/ajax/inscripcion/pregunta-archivo'],
+            // A-8: rutas que dependían solo del no-op `requiere.auth` (estado) o de un
+            // `can:` como backstop accidental; ahora exigen sesión real con `auth`.
+            'estado de inscripción'  => ['get',  '/inscripciones/actividad/1/estado'],
+            'evaluaciones (index)'   => ['get',  '/actividades/1/evaluaciones'],
+            'confirmar inscripción'  => ['post', '/inscripciones/actividad/1/confirmar'],
+            'gracias (crear insc.)'  => ['post', '/inscripciones/actividad/1/gracias'],
         ];
     }
 
@@ -294,5 +300,25 @@ class SecurityFase1Test extends TestCase
     public function la_cookie_de_sesion_usa_same_site_lax()
     {
         $this->assertEquals('lax', config('session.same_site'));
+    }
+
+    /**
+     * A-1: ActividadesPolicy::ver() debe tolerar tanto una instancia de Actividad
+     * (caso normal, resuelta por SubstituteBindings) como un id crudo (borde que
+     * tiraba "Argument must be an instance of App\Actividad" -> 500).
+     *
+     * @test
+     */
+    public function la_policy_ver_acepta_instancia_o_id_crudo()
+    {
+        $this->seed('PermisosSeeder');
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+        $actividad = factory('App\Actividad')->create();
+
+        $policy = new \App\Policies\ActividadesPolicy();
+
+        $this->assertTrue($policy->ver($admin, $actividad));                    // instancia
+        $this->assertTrue($policy->ver($admin, (string) $actividad->idActividad)); // id crudo
     }
 }

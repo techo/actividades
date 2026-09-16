@@ -154,11 +154,18 @@
                         @php
                             $respuestaItem = $respuestasPorPregunta->get($pregunta->id);
                             $respuestaTexto = $respuestaItem['respuesta'] ?? null;
+                            $esArchivo = $pregunta->tipo === 'archivo';
+                            $nombreArchivo = $respuestaItem['nombre'] ?? ($respuestaTexto ? basename($respuestaTexto) : null);
                         @endphp
                         <div class="row mt-2 mb-1">
                             <div class="col-md-12">
                                 <small class="text-muted">{{ $pregunta->pregunta }}</small><br>
-                                @if ($respuestaTexto)
+                                @if ($esArchivo && $respuestaTexto)
+                                    <span class="ml-2 text-white rounded-pill py-2 px-3 techo-btn-azul d-inline-flex align-items-center">
+                                        <i class="fas fa-paperclip mr-2"></i>
+                                        <span class="text-truncate" style="max-width: 260px;">{{ $nombreArchivo ?? __('frontend.archivo_cargado') }}</span>
+                                    </span>
+                                @elseif ($respuestaTexto)
                                     <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">{{ $respuestaTexto }}</span>
                                 @else
                                     <span class="ml-2 text-muted">—</span>
@@ -171,84 +178,46 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="aceptar_terminos">
-                            <input
-                                    type="checkbox"
-                                    name="aceptar_terminos"
-                                    id="aceptar_terminos"
-                                    value="1"
-                                    required
-                            >
-                            {{ __('frontend.accept') }} 
-                            @if($actividad->idPais == 33)
-                            <a href="/carta-voluntariado-brasil?actividad={{ $actividad->idActividad }}" target="_blank">
-                            @elseif($actividad->idPais == 172)
-                                <a href="/carta-voluntariado-paraguay" target="_blank">
-                            @else
-                            <a href="/carta-voluntariado" target="_blank">
-                            @endif
-                                {{ __('frontend.terms_and_conditions') }}</a>
+                        <h5 class="card-subtitle mb-3">{{ __('frontend.terms_section_title') }}</h5>
+
+                        <label class="d-flex align-items-start p-3 mb-2 acepta-item">
+                            <input type="checkbox" name="aceptar_terminos" id="aceptar_terminos" value="1" required class="mt-1 mr-3">
+                            <span>
+                                {{ __('frontend.accept') }}
+                                @if($actividad->idPais == 33)
+                                    <a href="/carta-voluntariado-brasil?actividad={{ $actividad->idActividad }}" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
+                                @elseif($actividad->idPais == 172)
+                                    <a href="/carta-voluntariado-paraguay" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
+                                @else
+                                    <a href="/carta-voluntariado" target="_blank">{{ __('frontend.terms_and_conditions') }}</a>
+                                @endif
+                            </span>
                         </label>
+
+                        @if($actividad->acuerdo_especifico_url)
+                            <label class="d-flex align-items-start p-3 mb-2 acepta-item">
+                                <input type="checkbox" name="acuerdo_especifico_url" id="acuerdo_especifico_url" required class="mt-1 mr-3">
+                                <span>{{ __('frontend.accept') }} <a href="{{ $actividad->acuerdo_especifico_url }}" target="_blank">{{ __('frontend.acuerdo_especifico') }}</a></span>
+                            </label>
+                        @endif
+
+                        @if($actividad->acuerdo_menores_url && $edad < 18)
+                            <label class="d-flex align-items-start p-3 mb-2 acepta-item">
+                                <input type="checkbox" name="acuerdo_menores_url" id="acuerdo_menores_url" required class="mt-1 mr-3">
+                                <span>{{ __('frontend.accept') }} <a href="{{ $actividad->acuerdo_menores_url }}" target="_blank">{{ __('frontend.acuerdo_menores') }}</a> {{ __('frontend.compromiso_firma') }}</span>
+                            </label>
+                        @endif
+
                         @if($mensaje = Session::get('status'))
-                            <p class="text-danger">{{ $mensaje }}</p>
+                            <p class="text-danger mt-2">{{ $mensaje }}</p>
                         @endif
                     </div>
                 </div>
-                @if($actividad->acuerdo_especifico_url)
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="acuerdo_especifico_url">
-                                <input
-                                        type="checkbox"
-                                        name="acuerdo_especifico_url"
-                                        id="acuerdo_especifico_url"
-                                        required
-                                >
-                                {{ __('frontend.accept') }} 
-                                
-                                <a href="{{ $actividad->acuerdo_especifico_url }}" target="_blank">
-                                    {{ __('frontend.acuerdo_especifico') }}</a>
-                            </label>
-                            @if($mensaje = Session::get('status'))
-                                <p class="text-danger">{{ $mensaje }}</p>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
-                @if($actividad->acuerdo_menores_url && $edad < 18)
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="acuerdo_menores_url">
-                                <input
-                                        type="checkbox"
-                                        name="acuerdo_menores_url"
-                                        id="acuerdo_menores_url"
-                                        required
-                                >
-                                {{ __('frontend.accept') }} 
-                                
-                                <a href="{{ $actividad->acuerdo_menores_url }}" target="_blank">
-                                    {{ __('frontend.acuerdo_menores') }}
-                                </a>
-                                {{ __('frontend.compromiso_firma') }}
-
-                            </label>
-                            @if($mensaje = Session::get('status'))
-                                <p class="text-danger">{{ $mensaje }}</p>
-                            @endif
-                        </div>
-                    </div>
-                @endif
 
                 <hr>
-                <div class="row  align-middle">
-                    <div class="col-md-2 text-primary">
-                        <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link"> {{ __('frontend.go_back') }}</a>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="submit" value="{{ __('frontend.finish') }}" class="btn btn-primary">
-                    </div>
+                <div class="d-flex align-items-center">
+                    <a href="/inscripciones/actividad/{{$actividad->idActividad}}" class="btn btn-link text-primary"> {{ __('frontend.go_back') }}</a>
+                    <input type="submit" value="{{ __('frontend.finish') }}" class="btn btn-primary ml-2">
                 </div>
             </form>
         </div>
@@ -314,3 +283,11 @@
 @section('footer')
     @include('partials.footer')
 @endsection
+
+@push('additional_styles')
+    <style>
+        .acepta-item { border:1px solid #e6e6e6; border-radius:10px; cursor:pointer; font-weight:400; transition:border-color .2s, background-color .2s; }
+        .acepta-item:hover { border-color:#3a7bd5; background-color:#f6f9ff; }
+        .acepta-item input[type=checkbox] { flex-shrink:0; width:18px; height:18px; }
+    </style>
+@endpush

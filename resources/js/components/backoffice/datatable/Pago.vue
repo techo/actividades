@@ -1,25 +1,42 @@
 <template>
     <span>
-        <v-switch
-                v-model="pago"
-                theme="bootstrap"
-                color="primary"
-                id="pago"
-                name="pago"
-                type-bold="true"
-                :text-enabled="$t('backend.paid')"
-                :text-disabled="$t('backend.pending')"
-        >
-        </v-switch>
-        <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
-        <i class="fa fa-times text-danger"
-           v-show="rowData.voucher_rechazado && !pago"
-           title="Comprobante rechazado"></i>
-        <i class="fa fa-exclamation text-warning"
-           v-show="rowData.voucherUrl && !pago && !rowData.voucher_rechazado"></i>
-        <span v-if="rowData.scholarship_requested && !pago"
-              title="Solicitó beca / exención"
-              style="cursor:default;font-size:1.1em;">🎓</span>
+        <!-- Exento por socio (donante TECHO): no paga. Se muestra en verde,
+             tildado y no editable, para distinguirlo del pago normal. -->
+        <span v-if="esExento"
+              :title="$t('backend.exento_socio_tooltip')"
+              style="display:inline-block; pointer-events:none;">
+            <v-switch
+                    :value="true"
+                    theme="bootstrap"
+                    color="success"
+                    type-bold="true"
+                    :text-enabled="$t('backend.exento_socio')"
+                    :text-disabled="$t('backend.exento_socio')"
+            >
+            </v-switch>
+        </span>
+        <template v-else>
+            <v-switch
+                    v-model="pago"
+                    theme="bootstrap"
+                    color="primary"
+                    id="pago"
+                    name="pago"
+                    type-bold="true"
+                    :text-enabled="$t('backend.paid')"
+                    :text-disabled="$t('backend.pending')"
+            >
+            </v-switch>
+            <i class="fa fa-exclamation text-danger" v-show="errorIcon"></i>
+            <i class="fa fa-times text-danger"
+               v-show="rowData.voucher_rechazado && !pago"
+               title="Comprobante rechazado"></i>
+            <i class="fa fa-exclamation text-warning"
+               v-show="rowData.voucherUrl && !pago && !rowData.voucher_rechazado"></i>
+            <span v-if="rowData.scholarship_requested && !pago && !rowData.scholarship_rejected && !rowData.scholarship_approved"
+                  title="Solicitó beca / exención"
+                  style="cursor:default;font-size:1.1em;">🎓</span>
+        </template>
     </span>
 </template>
 
@@ -47,7 +64,11 @@
         },
         created() {
         },
-        computed: {},
+        computed: {
+            esExento() {
+                return !!this.rowData.exento_pago;
+            }
+        },
         methods: {
             actualizar() {
                 this.errorIcon = false;

@@ -30,7 +30,7 @@ class LocalidadesDataSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\usuario\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\usuario\\' . \Illuminate\Support\Str::studly($name);
     }
     private static function isValidDecorator($decorator)
     {

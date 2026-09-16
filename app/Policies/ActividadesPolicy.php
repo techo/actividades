@@ -78,8 +78,16 @@ class ActividadesPolicy
         return $user->idPersona == $actividad->coordinadores->contains('idPersona', $user->idPersona) && $user->hasPermissionTo('ver_mis_actividades');
     }
 
-    public function ver(Persona $user, Actividad $actividad)
-    {   
+    public function ver(Persona $user, $actividad)
+    {
+        // Robustez: el patrón `can:ver,App\Actividad,id` depende de que SubstituteBindings
+        // resuelva {id} a un modelo antes de Authorize. En un borde donde llega el id
+        // crudo (string), el type-hint Actividad tiraba TypeError 500. Normalizamos como
+        // evaluar/inscribir/confirmar (que reciben $id y hacen findOrFail).
+        if (! $actividad instanceof Actividad) {
+            $actividad = Actividad::findOrFail($actividad);
+        }
+
         return (
                     $actividad->coordinadores->contains('idPersona', $user->idPersona)
                     ||

@@ -48,6 +48,14 @@ class InscripcionesController extends BaseController
         $actividad->descripcion = clean_string($actividad->descripcion);
         $idPuntoEncuentro = $request->input('punto_encuentro');
         $puntoEncuentro = PuntoEncuentro::find($idPuntoEncuentro);
+
+        // Sin punto de encuentro válido no se puede confirmar (la vista accede a
+        // $punto_encuentro->idPuntoEncuentro): volvemos al inicio del flujo en vez
+        // de tirar "property idPuntoEncuentro of non-object" (500).
+        if (!$puntoEncuentro) {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
         $tipo = $actividad->tipo;
 
         $currentDate = Carbon::now();
@@ -115,6 +123,22 @@ class InscripcionesController extends BaseController
             ->toArray();
 
         $actividad = Actividad::find($id);
+
+        // No permitir inscribirse a una actividad cerrada o fuera del período de
+        // inscripción, por NINGÚN camino. El /gracias web tiene can:inscribir, pero la
+        // ruta mobile (POST /api/inscripciones/actividad/{id}) NO tiene policy y
+        // create() no lo chequeaba → se podía inscribir a una Cerrada desde la app.
+        // Guard server-side (null-safe en fechas) para web y mobile.
+        if (!$actividad || !$actividad->inscripcionesAbiertas()) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => __('frontend.closed_inscriptions'),
+                ], 422);
+            }
+            return redirect('/actividades/' . $id);
+        }
+
         $actividad->load('pais','provincia','localidad');
         $punto_encuentro = PuntoEncuentro::find($request->input('punto_encuentro'));
         $punto_encuentro->load('pais','provincia','localidad');
@@ -175,7 +199,8 @@ class InscripcionesController extends BaseController
                 }
                 return view('inscripciones.confirmar-paso-1')
                     ->with('actividad', $actividad)
-                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
+                    ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
+                    ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'));
             }
 
             if ($actividad->pago == 1 && !$inscripcion->exento_pago) {
@@ -233,6 +258,7 @@ class InscripcionesController extends BaseController
                 }
             return view('inscripciones.gracias')
                 ->with('actividad', $actividad)
+                ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
                 ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'finalizar', 'blade'));
         }
         if ($request->expectsJson() || $request->is('api/*')) {
@@ -274,6 +300,49 @@ class InscripcionesController extends BaseController
     }
 
     /**
+     * Pantalla de estado de la inscripción del usuario en una actividad.
+     * Confirmada -> vista 'gracias'; esperando confirmación -> 'confirmar-paso-1'.
+     * Si falta pagar o no hay inscripción, vuelve al flujo normal.
+     */
+    public function estado($id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $persona = Auth::user();
+
+        // Defensa en profundidad: la ruta ya exige sesión con el middleware `auth`
+        // (antes dependía de `requiere.auth`, que no bloqueaba — finding A-8). Este
+        // guard evita el 500 por Auth::user() null si alguna vez se toca el middleware.
+        if (!$persona) {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
+        $inscripcion = $persona->inscripcionActividad($id);
+
+        if (!$inscripcion) {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
+        $estado = $actividad->estadoInscripcion($persona->idPersona); // vocabulario inglés
+
+        // Falta pago (no exento) -> al flujo de pago.
+        if ($estado === 'confirm_by_paying') {
+            return redirect('/inscripciones/actividad/' . $id);
+        }
+
+        // Confirmada -> 'gracias' (paso 'finalizar' activo). Esperando confirmación ->
+        // 'confirmar-paso-1', que es la pantalla de "Falta confirmar tu cupo": todavía
+        // está en la etapa 'confirmar', así que el breadcrumb debe marcar ese paso.
+        $confirmada = $estado === 'confirmed';
+        $vista      = $confirmada ? 'inscripciones.gracias' : 'inscripciones.confirmar-paso-1';
+        $pasoActivo = $confirmada ? 'finalizar' : 'confirmar';
+
+        return view($vista)
+            ->with('actividad', $actividad)
+            ->with('exentoPorSocio', (bool) $inscripcion->exento_pago)
+            ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, $pasoActivo, 'blade'));
+    }
+
+    /**
      * Retorna la vista para elegir el punto de encuentro de una actividad dada
      * @param $id Actividad
      * @return $this
@@ -281,6 +350,13 @@ class InscripcionesController extends BaseController
     public function puntoDeEncuentro($id)
     {
         $actividad = Actividad::findOrFail($id);
+
+        // Link directo al inicio del flujo (GET /inscripciones/actividad/{id}): si la
+        // actividad está cerrada o fuera de período, no abrir el flujo; volver al
+        // detalle, que muestra "inscripciones cerradas". Antes esta ruta no tenía guard.
+        if (!$actividad->inscripcionesAbiertas()) {
+            return redirect('/actividades/' . $id)->with('mensaje', __('frontend.closed_inscriptions'));
+        }
 
         return view('inscripciones.seleccionar_puntos_encuentro',
              compact('actividad'));
@@ -294,8 +370,8 @@ class InscripcionesController extends BaseController
             ->where('idInscripcion', $request->idInscripcion)
             ->firstOrFail();
 
-        // Solo se puede borrar si el pago aún no fue confirmado
-        if ($inscripcion->pago) {
+        // Solo se puede borrar si el pago aún no fue confirmado ni exento
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
             return response()->json(['error' => 'Pago ya confirmado'], 403);
         }
 
@@ -322,6 +398,11 @@ class InscripcionesController extends BaseController
         $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
         ->where('idInscripcion', $request->idInscripcion)
         ->firstOrFail();
+
+        // No permitir subir/re-subir comprobante si el pago ya fue confirmado o está exento.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return response()->json(['error' => 'Pago ya confirmado'], 403);
+        }
 
         $archivo = $request->file('voucher');
         $path = ImageUploadService::store($archivo, 'public/voucherInscipcion/'.auth()->user()->idPersona);
@@ -376,6 +457,12 @@ class InscripcionesController extends BaseController
             ->where('idActividad', $actividad->idActividad)
             ->firstOrFail();
 
+        // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
+        // no se reabre para volver a subir/editar el comprobante.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return redirect('/actividades/' . $actividad->idActividad);
+        }
+
         try {
             $config = json_decode($actividad->pais->config_pago);
             $paymentClass = 'App\\Payments\\' . $config->payment_class;
@@ -403,6 +490,10 @@ class InscripcionesController extends BaseController
             ->where('idActividad', $actividad->idActividad)
             ->firstOrFail();
 
+        // Pago ya resuelto: no permitir iniciar otro checkout.
+        if ($inscripcion->pago || $inscripcion->exento_pago) {
+            return redirect('/actividades/' . $actividad->idActividad);
+        }
 
         try {
             $config = json_decode($actividad->pais->config_pago);

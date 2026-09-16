@@ -26,8 +26,10 @@ class EvaluacionesController extends BaseController
             ->with('Persona')
             ->get();
 
+        $idx = 0;
         foreach ($inscripciones as $i) {
-            $this->intentaEnviar(new InvitacionEvaluacion($i->persona, $actividad), $i->persona);
+            // Escalonado: evita la ráfaga cuando la actividad tiene muchos inscriptos.
+            $this->intentaEnviarEscalonado(new InvitacionEvaluacion($i->persona, $actividad), $i->persona, $idx++);
         }
         return $inscripciones->count();
     }

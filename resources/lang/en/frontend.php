@@ -148,6 +148,7 @@ return [
 	'search_activities' => 'SEARCH ACTIVITIES',
 	'link_to_rrss' => 'Confirm link with Social Network',
 	'link_rrss_techo' => 'Do you wish to link your Social Network with us?',
+	'link_rrss_help' => 'A TECHO account already exists with this email. Link your social network to sign in with it next time.',
 	'confirm' => 'Confirm',	
 
     'how_did_you_meet_techo' => 'HOW DID YOU MEET TECHO?',
@@ -178,6 +179,9 @@ return [
     'name'  =>  'NAME',
     'surname'  =>  'SURNAME',
     'birth_date'  =>  'BIRTH DATE',
+    'day'  =>  'Day',
+    'month'  =>  'Month',
+    'year'  =>  'Year',
     'gender'  =>  'GENDER',	
     'gender_m'  =>  'Masc',
     'gender_f'  =>  'Fem',
@@ -188,6 +192,7 @@ return [
 	'state'  =>  'STATE',
 	'municipality'  =>  'MUNICIPALITY',
 	'telephone'  =>  'TELEPHONE',
+	'phone_placeholder'  =>  'Enter phone number',
 	'change_password'  =>  'Change password',
 	'actual_password'  =>  'ACTUAL PASSWORD',
 	'new_password'  =>  'NEW PASSWORD',
@@ -410,6 +415,10 @@ return [
 	'operation_summary'          => 'Operation summary',
 	'activity_label'             => 'Activity',
 	'voucher_validation_pending' => 'Voucher validation in progress',
+	'scholarship_pending_title'    => 'Your scholarship request was sent',
+	'scholarship_pending_subtitle' => 'It is being reviewed and we will notify you by email. If you prefer, you can still make your contribution using any of the available methods.',
+	'voucher_pending_title'        => 'Your voucher was sent',
+	'voucher_pending_subtitle'     => 'It is being reviewed. We will notify you by email once your spot is confirmed.',
 	'voucher_rechazado_titulo'           => 'Your payment proof was rejected',
 	'voucher_rechazado_subtitulo'        => 'Our team reviewed your proof of payment and it was not accepted. Please upload a new one.',
 	'voucher_rechazado_motivo'           => 'Reason',
@@ -487,6 +496,12 @@ return [
 	//gracias.blade.php
     'activity_detail' => 'Details of the activity',
     'inscription_confirmed' => 'Inscription confirmed!',
+    'socio_exento_titulo' => 'Thank you for being a TECHO donor!',
+    'socio_exento_texto' => 'As part of our Members Community, you don\'t need to pay for this activity.',
+    'terms_section_title' => 'To finish, accept the terms',
+    'read_more' => 'Read more',
+    'read_less' => 'Read less',
+    'waitlist_title' => 'Your spot needs confirmation',
     'already_inscripted' => 'Already inscrited to ',
 	'mail_message' => "We have send you an email with the information about this activity. For watching the activities you are enrolled follow this link ",
 
@@ -564,5 +579,12 @@ return [
     'archivo_muy_grande'     => 'The file exceeds the 5 MB maximum size.',
     'archivo_error'          => 'The file could not be uploaded. Please try again.',
     'archivo_requerido'      => 'This file is required.',
+
+    // Activity cards (home / listings)
+    'card_more' => 'See more',
+    'card_free' => 'Free',
+    'card_paid' => 'Paid',
+    'present' => 'Present',
+    'no_past_activities' => "You haven't joined any activities yet.",
 
 ];

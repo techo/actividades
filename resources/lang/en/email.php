@@ -1,6 +1,20 @@
 <?php
 
 return [
+    'remitente' => 'TECHO',
+    // --- Subjects (faltaban en 'en': devolvían la clave cruda) ---
+    'inscription_confirmed_title' => 'TECHO Confirmation to participate in ',
+    'pre_enroll_title' => 'TECHO Just one step left to confirm',
+    'missing_payment_title' => 'TECHO Your payment is pending to join',
+    'activity_update_title' => 'TECHO Changes in the activity:',
+    'activity_cancel_title' => 'TECHO Activity canceled - ',
+    'forgot_password_title' => 'TECHO Reset your password',
+    'activity_reminder_title' => 'TECHO Your activity is coming up:',
+    'payment_outdated_title' => 'TECHO Payment received after the deadline',
+    'payment_reminder_title' => 'TECHO The payment deadline is approaching for',
+    'payment_reminder_1' => 'The deadline to confirm your spot with your contribution is approaching.',
+    'payment_reminder_2' => 'Little time left to contribute and confirm!',
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -14,6 +28,9 @@ return [
 	'begins_on' => 'that begins on',
 	'begins_at' => 'at',
 	'greetings' => 'See you soon!',
+	'invitation_cta' => 'View the activity',
+	'invitation_cta_campaign' => 'View the campaign',
+	'invitation_fallback' => "If the button doesn't work, use this link:",
 	'has_been' => 'has been',
 	'cancelada' => 'CANCELED', 
 	'coordinator_message' => 'Coordinator Message:',
@@ -74,8 +91,8 @@ return [
 
 
 	// notificacionRegistracionUsuario
-	'account_registration_subject' => 'Howdy, Welcome Abroad!',
-	'account_registration_title' => 'Welcome abroad our activities Platform!',
+	'account_registration_subject' => 'Howdy, Welcome Aboard!',
+	'account_registration_title' => 'Welcome aboard our activities Platform!',
 	'account_registration_1' => "You're already registered in our platform, now we need you to validate your email in the next link:",
 	'account_registration_2' => 'Once you validate your account you can access the platform to know and apply to our activities here ',
 	'account_registration_3' => 'At this platform you can:',
@@ -104,6 +121,14 @@ return [
 	'voucher_rechazado_motivo_label' => 'Reason',
 	'voucher_rechazado_instruccion'  => 'Please log in and upload a new proof of payment to continue with your registration.',
 	'voucher_rechazado_link'         => 'Upload new proof of payment',
+
+	// MailBecaRechazada
+	'beca_rechazada_subject'      => 'Scholarship request not approved —',
+	'beca_rechazada_intro'        => 'We reviewed your scholarship request for the activity',
+	'beca_rechazada_estado'       => 'Your scholarship request was not approved.',
+	'beca_rechazada_motivo_label' => 'Reason',
+	'beca_rechazada_instruccion'  => 'You can log in to make your contribution and confirm your spot, or request the scholarship again with more details.',
+	'beca_rechazada_link'         => 'Go to the payment page',
 
 
     'documento_rechazado_subject'      => 'ID document rejected —',

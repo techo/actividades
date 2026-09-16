@@ -32,7 +32,7 @@ class ActividadesSearch
     }
     private static function createFilterDecorator($name)
     {
-        return __NAMESPACE__ . '\\filters\\' . studly_case($name);
+        return __NAMESPACE__ . '\\filters\\' . \Illuminate\Support\Str::studly($name);
     }
     private static function isValidDecorator($decorator)
     {

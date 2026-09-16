@@ -21,6 +21,8 @@
 #   Exportá N8N_WEBHOOK_URL y N8N_WEBHOOK_TOKEN antes de correr, o dejalos
 #   en un archivo .deploy.env (gitignoreado) que se sourcea automáticamente.
 #   Si N8N_WEBHOOK_URL no está seteada, el deploy corre igual sin notificar.
+#   SOLO PROD notifica a n8n; los deploys a sandbox nunca mandan nada (el
+#   payload igual incluye environment="prod" para que n8n lo distinga).
 #
 set -euo pipefail
 
@@ -33,7 +35,9 @@ case "${1:-}" in
   production)    ENVIRONMENT="prod"; shift ;;
 esac
 
-HOST="techo@actividades.techo.org"
+# Host SSH. Overridable con DEPLOY_HOST (p. ej. un alias de ~/.ssh/config que
+# fije la IdentityFile). Default: el usuario+host de siempre.
+HOST="${DEPLOY_HOST:-techo@actividades.techo.org}"
 case "$ENVIRONMENT" in
   prod)    DIR="/var/www/html/voluntariado-eventual" ;;
   sandbox) DIR="/var/www/html/sandbox-voluntariado-eventual" ;;
@@ -55,8 +59,37 @@ notify_n8n() {
   local started_at="$2"
   local commits="$3"      # commits deployados, ya escapados para JSON (una línea, \n entre commits)
 
+  # Solo PRODUCCIÓN notifica a n8n. Sandbox (base descartable) NO manda nada:
+  # la diferenciación es automática por el ambiente elegido, no hay que tocar n8n.
+  [ "$ENVIRONMENT" != "prod" ] && return 0
+
   # Sin URL configurada => no notificamos (el deploy no depende de esto).
   [ -z "$N8N_WEBHOOK_URL" ] && return 0
+
+  # Etiqueta de ambiente legible: que la notificación NO diga siempre "producción"
+  # cuando en realidad es un deploy a sandbox.
+  local env_label
+  case "$ENVIRONMENT" in
+    prod)    env_label="Producción" ;;
+    sandbox) env_label="Sandbox" ;;
+    *)       env_label="$ENVIRONMENT" ;;
+  esac
+
+  # Estado legible + emoji para el mensaje.
+  local status_text status_icon
+  if [ "$status" = "success" ]; then
+    status_text="finalizó con éxito"; status_icon="✅"
+  else
+    status_text="falló"; status_icon="❌"
+  fi
+
+  # Mensaje listo-para-mostrar: qué ambiente, qué rama y QUÉ commits se subieron.
+  # (commits ya viene escapado y con \n entre líneas). n8n puede usar este campo
+  # tal cual, sin re-armar el texto ni asumir el ambiente.
+  local branch_label="${BRANCH:-branch actual del server}"
+  local commits_text="$commits"
+  [ -z "$commits_text" ] && commits_text="(sin nuevos commits)"
+  local message="$status_icon Deploy a $env_label — voluntariado-eventual (rama $branch_label) $status_text.\\nCommits subidos:\\n$commits_text"
 
   # Un fallo del curl no debe tumbar el script (el deploy ya terminó).
   curl -fsS -m 10 -X POST "$N8N_WEBHOOK_URL" \
@@ -66,7 +99,9 @@ notify_n8n() {
 {
   "project": "voluntariado-eventual",
   "environment": "$ENVIRONMENT",
+  "environment_label": "$env_label",
   "status": "$status",
+  "message": "$message",
   "branch": "${BRANCH:-branch-actual-del-server}",
   "host": "$HOST",
   "commits": "$commits",
@@ -89,10 +124,16 @@ if ssh "$HOST" bash -s <<EOF | tee "$DEPLOY_LOG"
   set -euo pipefail
   cd "$DIR"
 
-  echo "→ Maintenance mode ON..."
-  php artisan down || true
-  # Pase lo que pase de acá en adelante, el sitio vuelve a estar arriba al salir.
-  trap 'php artisan up || true' EXIT
+  # ============================================================================
+  # FASE 1 — con el sitio ARRIBA: todo lo lento (pull + deps + build), que NO
+  # necesita downtime. Así la ventana de mantenimiento queda reducida a la
+  # migración + limpieza de caché (segundos) en la FASE 2.
+  #
+  # Trade-off asumido (se pidió el reordenado, no releases atómicos): entre el
+  # git pull y la FASE 2 el sitio sirve con el código nuevo pero la BD todavía
+  # sin migrar. Para deploys SIN migraciones (el caso común) no hay riesgo; para
+  # deploys con cambios de esquema, correrlo en horario de bajo tráfico.
+  # ============================================================================
 
   echo "→ Pulling latest code..."
   BEFORE_HEAD=\$(git rev-parse HEAD)
@@ -118,21 +159,6 @@ if ssh "$HOST" bash -s <<EOF | tee "$DEPLOY_LOG"
   # Sin --no-dev: sandbox necesita phpunit/mockery para poder correr tests acá.
   composer install --no-interaction --prefer-dist --optimize-autoloader
 
-  # Backup de BD solo en prod: es donde el dato importa. En sandbox (base
-  # descartable) se omite a propósito para que el deploy sea más rápido.
-  if [ "$ENVIRONMENT" = "prod" ]; then
-    echo "→ [prod] Backup de BD ANTES de migrar (aborta el deploy si falla)..."
-    # scripts/backup-db.sh lee credenciales del .env, hace mysqldump+gzip, valida el
-    # dump y aplica retención. Si falla, 'set -e' corta acá (el trap deja el sitio arriba)
-    # y NO se corre migrate --force sobre una BD sin backup.
-    bash scripts/backup-db.sh
-  else
-    echo "→ [sandbox] Se omite el backup de BD (base descartable)."
-  fi
-
-  echo "→ Running database migrations..."
-  php artisan migrate --force
-
   echo "→ Generating i18n files..."
   php artisan vue-i18n:generate
 
@@ -140,13 +166,52 @@ if ssh "$HOST" bash -s <<EOF | tee "$DEPLOY_LOG"
   npm install
   npm run dev
 
-  echo "→ Clearing caches..."
-  php artisan cache:clear
-  php artisan route:clear
-  php artisan config:clear
-  php artisan view:clear
+  # Backup de BD solo en prod, lo más cerca posible de la migración pero con el
+  # sitio aún arriba (mysqldump no necesita downtime). Si falla, 'set -e' corta
+  # ACÁ, antes de bajar el sitio y de migrar → nunca se migra sin backup.
+  if [ "$ENVIRONMENT" = "prod" ]; then
+    echo "→ [prod] Backup de BD ANTES de migrar (aborta el deploy si falla)..."
+    # scripts/backup-db.sh lee credenciales del .env, hace mysqldump+gzip, valida el
+    # dump y aplica retención.
+    bash scripts/backup-db.sh
+  else
+    echo "→ [sandbox] Se omite el backup de BD (base descartable)."
+  fi
 
-  echo "✅ Code deployed. (El EXIT trap deja el sitio arriba.)"
+  # ============================================================================
+  # FASE 2 — ventana de MANTENIMIENTO corta: solo migración + limpieza de caché.
+  # El sitio está abajo únicamente durante esto (segundos). El trap sube el sitio
+  # al salir pase lo que pase.
+  # ============================================================================
+  # El web server corre como www-data y storage/ + bootstrap/cache/ son suyos.
+  # Las fases previas (composer/npm/vue-i18n) corrieron como el usuario de deploy
+  # (techo) y pueden haber creado el log del día (storage/logs/laravel-FECHA.log)
+  # u otros archivos siendo techo → luego php-fpm no puede escribirlos ("could not
+  # be opened in append mode": 500 en todo el sitio) y, además, los *:clear
+  # corridos como techo NO borran los caches de www-data (fallan silenciosos y
+  # queda config/route/view cache viejo). Por eso: normalizamos ownership y
+  # corremos artisan como www-data (mismo criterio que en prod).
+  #
+  # Requisito: el usuario de deploy debe poder usar sudo SIN password para chown
+  # y para 'sudo -u www-data' (NOPASSWD en /etc/sudoers.d). Si acá falla el sudo,
+  # 'set -e' corta el deploy ANTES de bajar el sitio → el sitio sigue arriba.
+  echo "→ Normalizando ownership de storage/ y bootstrap/cache a www-data..."
+  sudo chown -R www-data:www-data storage bootstrap/cache
+
+  echo "→ Maintenance mode ON (ventana corta: migración + cache)..."
+  sudo -u www-data php artisan down || true
+  trap 'sudo -u www-data php artisan up || true' EXIT
+
+  echo "→ Running database migrations..."
+  sudo -u www-data php artisan migrate --force
+
+  echo "→ Clearing caches..."
+  sudo -u www-data php artisan cache:clear
+  sudo -u www-data php artisan route:clear
+  sudo -u www-data php artisan config:clear
+  sudo -u www-data php artisan view:clear
+
+  echo "✅ Code deployed. (El EXIT trap sube el sitio.)"
 EOF
 then
   STATUS="success"; echo "✅ Deploy complete."

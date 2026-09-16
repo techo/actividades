@@ -172,7 +172,7 @@ class LoginController extends Controller
                 $personaData->genero = '';
             }
         }
-//        $personaData->password = bcrypt(str_random(30));
+//        $personaData->password = bcrypt(\Illuminate\Support\Str::random(30));
         $persona = Persona::where('mail',$personaData->email)->first();
         if(!$persona) {
             if($personaData->email == null)
@@ -189,6 +189,14 @@ class LoginController extends Controller
         } else {
             if($provider == 'google') {
                 if($persona->google_id == $personaData->google_id) {
+                    // El login social contra una cuenta existente prueba la propiedad
+                    // del email (el proveedor ya lo verificó). Si la cuenta estaba sin
+                    // verificar, la damos por verificada acá para no mandarla a validar
+                    // el mail. Auto-repara cuentas vinculadas antes de este fix.
+                    if(!$persona->hasVerifiedEmail()) {
+                        $persona->email_verified_at = now();
+                        $persona->save();
+                    }
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {
@@ -205,6 +213,11 @@ class LoginController extends Controller
             }
             if($provider == 'facebook') {
                 if($persona->facebook_id == $personaData->facebook_id) {
+                    // Ver nota en la rama de Google: el login social ya prueba el email.
+                    if(!$persona->hasVerifiedEmail()) {
+                        $persona->email_verified_at = now();
+                        $persona->save();
+                    }
                     Auth::login($persona, true);
                     $request->session()->regenerate();
                 } else {

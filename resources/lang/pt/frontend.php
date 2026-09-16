@@ -142,6 +142,7 @@ return [
 	'search_activities' => 'BUSCAR ATIVIDADES',
 	'link_to_rrss' => 'Confirmar Link Rede Social',
 	'link_rrss_techo' => 'Vincule sua conta da TETO con sua conta de rede social',
+	'link_rrss_help' => 'Já existe uma conta da TETO com este e-mail. Vincule sua rede social para entrar com ela na próxima vez.',
 	'confirm' => 'Confirmar',
 
     'register_facebook' => 'Registrar com o Facebook',
@@ -183,6 +184,9 @@ return [
 	'name'  =>  'NOME',
 	'surname'  =>  'SOBRENOME',
 	'birth_date'  =>  'DATA DE NASCIMENTO',
+	'day'  =>  'Dia',
+	'month'  =>  'Mês',
+	'year'  =>  'Ano',
 	'gender'  =>  'GENERO',
 	'gender_m'  =>  'Masculino',
 	'gender_f'  =>  'Feminino',
@@ -193,6 +197,7 @@ return [
 	'state'  =>  'ESTADO',
 	'municipality'  =>  'MUNICIPIO',
 	'telephone'  =>  'TELEFONE',
+	'phone_placeholder'  =>  'Digite seu telefone',
 	'change_password'  =>  'Alterar senha',
 	'actual_password'  =>  'SENHA ATUAL',
 	'new_password'  =>  'NOVA SENHA',
@@ -416,6 +421,10 @@ return [
 	'operation_summary'          => 'Resumo da operação',
 	'activity_label'             => 'Atividade',
 	'voucher_validation_pending' => 'Comprovante em processo de validação',
+	'scholarship_pending_title'    => 'Sua solicitação de bolsa foi enviada',
+	'scholarship_pending_subtitle' => 'Está em processo de validação e avisaremos por e-mail. Se preferir, você ainda pode realizar seu aporte com qualquer um dos métodos disponíveis.',
+	'voucher_pending_title'        => 'Seu comprovante foi enviado',
+	'voucher_pending_subtitle'     => 'Está em processo de validação. Avisaremos por e-mail quando confirmarmos sua vaga.',
 	'voucher_rechazado_titulo'           => 'Seu comprovante foi recusado',
 	'voucher_rechazado_subtitulo'        => 'A equipe revisou seu comprovante e não foi aceito. Por favor, envie um novo.',
 	'voucher_rechazado_motivo'           => 'Motivo',
@@ -493,6 +502,12 @@ return [
 	//gracias.blade.php
 	'activity_detail' => 'Detalhe da Actividade',
 	'inscription_confirmed' => 'Inscrição confirmada!',
+	'socio_exento_titulo' => 'Obrigado por ser doador(a) do TECHO!',
+	'socio_exento_texto' => 'Por fazer parte da nossa Comunidade de Doadores(as), você não precisa pagar esta atividade.',
+	'terms_section_title' => 'Para finalizar, aceite os termos',
+	'read_more' => 'Ver mais',
+	'read_less' => 'Ver menos',
+	'waitlist_title' => 'Falta confirmar sua vaga',
 	'already_inscripted' => 'Você já está registrado em ',
 	'mail_message' => 'Enviamos um e-mail com mais informações sobre esta atividade. Para ver as atividades nas quais você está registrado e modificá-las, acesse à ',
 
@@ -571,5 +586,12 @@ return [
     'archivo_muy_grande'     => 'O arquivo excede o tamanho máximo de 5 MB.',
     'archivo_error'          => 'Não foi possível enviar o arquivo. Tente novamente.',
     'archivo_requerido'      => 'Este arquivo é obrigatório.',
+
+    // Tarjetas de actividad (home / listados)
+    'card_more' => 'Ver mais',
+    'card_free' => 'Grátis',
+    'card_paid' => 'Pago',
+    'present' => 'Presente',
+    'no_past_activities' => 'Você ainda não participou de nenhuma atividade.',
 
 ];

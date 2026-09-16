@@ -33,10 +33,10 @@
         <td align="center">
             <table class="content" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr bgcolor="#0092dd">
-                    <td align="left">
+                    <td align="left" style="padding:18px 30px;">
                         @php($esBrasil = app()->getLocale() === 'pt')
                         <a href="{{ url('/') }}">
-                            <img src="{{ url($esBrasil ? 'img/logo_b_pt.png' : 'img/logo_b.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" width="170">
+                            <img src="{{ url($esBrasil ? 'img/logo_b_pt.png' : 'img/logo_b.png') }}" alt="{{ $esBrasil ? 'TETO' : 'TECHO' }}" width="150" style="display:block; border:0;">
                         </a>
                         {{--@yield('header')--}}
                     </td>
@@ -48,15 +48,15 @@
                         <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0">
                             <!-- Body content -->
                             <tr>
-                                <td class="content-cell">
+                                <td class="content-cell" style="padding:30px 30px 8px;">
                                     @yield('content')
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <p style="font-size: smaller; color: #4c4d4f">
+                                <td style="padding:0 30px 24px;">
+                                    <p style="margin:0; font-size:12px; line-height:1.5; color:#8a9099;">
                                         @lang('email.template_1')
-                                        <a href="{{ url('/') }}">{{ url('/') }}</a>
+                                        <a href="{{ url('/') }}" style="color:#0092dd;">{{ url('/') }}</a>
                                     </p>
 
                                 </td>

@@ -4,9 +4,14 @@
 
         <!-- Confirmación de envío exitoso -->
         <div v-show="enviado" class="callout callout-success">
-            <h4>Invitación enviada</h4>
-            <p>Se despachó la invitación a {{ enviadoA }} persona(s). La entrega respeta
-               a quienes desactivaron las notificaciones push.</p>
+            <h4>Comunicación enviada</h4>
+            <p>Se despacharon {{ enviadoA }} envío(s) en total:</p>
+            <ul>
+                <li v-for="pc in enviadoPorCanal" :key="pc.canal">
+                    <i :class="iconoCanal(pc.canal)"></i> {{ nombreCanal(pc.canal) }}: {{ pc.alcanzables }} persona(s)
+                </li>
+            </ul>
+            <p style="margin-bottom:0">La entrega respeta a quienes se dieron de baja del canal.</p>
         </div>
 
         <!-- Errores de validación -->
@@ -19,37 +24,97 @@
 
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Invitar a una actividad</h3>
+                <h3 class="box-title">Enviar una comunicación</h3>
             </div>
             <div class="box-body">
 
+                <!-- Objetivo de la comunicación (selección visual) -->
+                <div class="form-group">
+                    <label>Objetivo</label>
+                    <div class="canal-cards">
+                        <div class="canal-card"
+                             :class="{ 'is-selected': objetivo === 'actividad' }"
+                             @click="seleccionarObjetivo('actividad')">
+                            <i class="fa fa-calendar-check-o canal-card__icon"></i>
+                            <div class="canal-card__titulo">Actividad</div>
+                            <div class="canal-card__desc">Invitar a una actividad</div>
+                        </div>
+
+                        <!-- Campañas deshabilitadas temporalmente: card sombreada y no clickeable. -->
+                        <div class="canal-card is-disabled">
+                            <span class="canal-card__badge">Próximamente</span>
+                            <i class="fa fa-bullhorn canal-card__icon"></i>
+                            <div class="canal-card__titulo">Campaña</div>
+                            <div class="canal-card__desc">Difundir o captar una campaña</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canal de envío: UNO por vez (push o email). No se combinan, para que el
+                     mensaje quede bien formateado según el canal. -->
+                <div class="form-group">
+                    <label>Canal</label>
+                    <div class="canal-cards">
+                        <div class="canal-card"
+                             :class="{ 'is-selected': incluyePush }"
+                             @click="seleccionarCanal('push')">
+                            <span v-if="incluyePush" class="canal-card__check"><i class="fa fa-check"></i></span>
+                            <i class="fa fa-bell canal-card__icon"></i>
+                            <div class="canal-card__titulo">Push</div>
+                            <div class="canal-card__desc">Notificación en la app</div>
+                        </div>
+
+                        <div class="canal-card"
+                             :class="{ 'is-selected': incluyeEmail }"
+                             @click="seleccionarCanal('email')">
+                            <span v-if="incluyeEmail" class="canal-card__check"><i class="fa fa-check"></i></span>
+                            <i class="fa fa-envelope canal-card__icon"></i>
+                            <div class="canal-card__titulo">Email</div>
+                            <div class="canal-card__desc">Correo con formato e imágenes</div>
+                        </div>
+
+                        <div class="canal-card is-disabled">
+                            <span class="canal-card__badge">Próximamente</span>
+                            <i class="fa fa-whatsapp canal-card__icon"></i>
+                            <div class="canal-card__titulo">WhatsApp</div>
+                            <div class="canal-card__desc">Mensaje directo</div>
+                        </div>
+                    </div>
+                    <p class="help-block">Elegí un canal: push o email (uno por vez).</p>
+                </div>
+
                 <!-- Aviso de privacidad -->
                 <div class="callout callout-info">
-                    <p style="margin-bottom:0">
-                        Esta invitación se envía <strong>dentro de la app</strong> (push) a quienes
-                        aceptaron recibir notificaciones. No exporta ni comparte datos de contacto.
+                    <p style="margin-bottom:0" v-if="objetivo === 'campania'">
+                        La comunicación se envía por <strong>email</strong>
+                        {{ audiencia === 'suscriptos' ? 'a los suscriptos de la campaña' : 'a los voluntarios del segmento' }},
+                        con un enlace a la campaña. No exporta ni comparte datos de contacto.
+                    </p>
+                    <p style="margin-bottom:0" v-else>
+                        Se envía por <strong>{{ canalesTexto }}</strong> a quienes aceptaron recibir por ese canal.
+                        No exporta ni comparte datos de contacto.
                     </p>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Países destino</label>
+                            <label>{{ multiPais ? 'Países destino' : 'País destino' }}</label>
                             <v-select
                                     multiple
                                     :options="paises"
                                     label="nombre"
-                                    placeholder="Seleccioná uno o más países"
+                                    :placeholder="multiPais ? 'Seleccioná uno o más países' : 'Seleccioná el país'"
                                     v-model="paisesSeleccionados"
                                     @input="onPaisesChange"
                             >
                                 <span slot="no-options"></span>
                             </v-select>
-                            <p class="help-block">Podés elegir varios (ej. Venezuela y Colombia).</p>
+                            <p class="help-block">{{ ayudaPaises }}</p>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6" v-if="mostrarSegmento">
                         <div class="form-group">
                             <label>A quién</label>
                             <select class="form-control" v-model="segmento" @change="resetPreview">
@@ -57,6 +122,8 @@
                                 <option value="coordinadores_gestion">Coordinadores de actividad / equipo / comunidad</option>
                                 <option value="activos">Voluntarios activos (últimos 90 días)</option>
                                 <option value="frecuentes">Voluntarios frecuentes (3+ participaciones)</option>
+                                <option value="jefes_cuadrilla">Jefes de cuadrilla</option>
+                                <option value="jefaturas">Jefaturas / liderazgos</option>
                                 <option value="todos">Todos los voluntarios</option>
                             </select>
                             <p class="help-block">{{ ayudaSegmento }}</p>
@@ -64,7 +131,28 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <!-- Filtro por año(es): acota los segmentos de participación por el año de
+                     la actividad (ej. "jefes de cuadrilla en 2026"). No aplica a todos. -->
+                <div class="row" v-if="segmentoUsaAnios">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Años de participación</label>
+                            <div class="anio-tags">
+                                <span v-for="a in aniosDisponibles" :key="a"
+                                      class="anio-tag" :class="{ 'is-selected': anios.indexOf(a) >= 0 }"
+                                      @click="toggleAnio(a)">
+                                    <i v-if="anios.indexOf(a) >= 0" class="fa fa-check"></i> {{ a }}
+                                </span>
+                            </div>
+                            <p class="help-block">
+                                Filtra el segmento por el año de la actividad. Podés sumar varios; sin ninguno, no filtra por año.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Objetivo actividad: elegir la actividad -->
+                <div class="row" v-if="objetivo === 'actividad'">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Actividad a la que invitás</label>
@@ -74,6 +162,7 @@
                                     placeholder="Elegí la actividad"
                                     v-model="actividadSeleccionada"
                                     :disabled="paisesSeleccionados.length === 0"
+                                    @input="resetPreview"
                             >
                                 <span slot="no-options">
                                     {{ paisesSeleccionados.length === 0
@@ -84,17 +173,93 @@
                     </div>
                 </div>
 
+                <!-- Objetivo campaña: elegir la campaña y la audiencia -->
+                <div class="row" v-if="objetivo === 'campania'">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Campaña</label>
+                            <v-select
+                                    :options="campanas"
+                                    label="nombre"
+                                    placeholder="Elegí la campaña"
+                                    v-model="campaniaSeleccionada"
+                                    :disabled="paisesSeleccionados.length === 0"
+                                    @input="resetPreview"
+                            >
+                                <span slot="no-options">
+                                    {{ paisesSeleccionados.length === 0
+                                        ? 'Elegí primero un país' : 'Sin campañas en los países elegidos' }}
+                                </span>
+                            </v-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Audiencia</label>
+                            <select class="form-control" v-model="audiencia" @change="onAudienciaChange">
+                                <option value="suscriptos">Suscriptos de la campaña</option>
+                                <option value="segmento">Segmento de voluntarios</option>
+                            </select>
+                            <p class="help-block">{{ ayudaAudiencia }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calcular a cuántos llega (no bloquea la pantalla). -->
+                <div class="form-group">
+                    <button class="btn btn-default"
+                            :disabled="!puedePrevisualizar || calculando"
+                            @click="previsualizar">
+                        <i class="fa" :class="calculando ? 'fa-spinner fa-spin' : 'fa-users'"></i>
+                        {{ calculando ? 'Calculando…' : 'Ver a cuántos llega' }}
+                    </button>
+
+                    <transition name="fade">
+                        <div v-if="destinatarios !== null" class="callout"
+                             :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
+                             style="margin-top:12px">
+                            <template v-if="totalSegmento > 0">
+                                <h4 style="margin-top:0">Audiencia: {{ totalSegmento }} persona(s)</h4>
+                                <div v-for="pc in porCanal" :key="pc.canal" style="margin:3px 0">
+                                    <i :class="iconoCanal(pc.canal)"></i>
+                                    <strong>{{ nombreCanal(pc.canal) }}:</strong>
+                                    llega a {{ pc.alcanzables }} de {{ totalSegmento }}
+                                    <small class="text-muted" v-if="pc.sin_canal > 0">· {{ pc.sin_canal }} no alcanzable(s)</small>
+                                </div>
+                                <p v-if="destinatarios === 0" style="margin:8px 0 0">
+                                    Ninguno de los canales elegidos alcanza a esta audiencia.
+                                </p>
+                                <p v-if="yaInscriptos > 0" style="margin:8px 0 0">
+                                    <i class="fa fa-check-circle"></i>
+                                    {{ yaInscriptos }} del alcance ya están inscriptas en la actividad
+                                    y <strong>se excluyen</strong> del envío.
+                                </p>
+                                <p v-if="incluyeEmail && diasEstimados > 1"
+                                   style="margin:8px 0 0; color:#8a6d3b">
+                                    <i class="fa fa-clock-o"></i>
+                                    Por el límite diario (~{{ emailPorDia }}/día), el email se envía
+                                    <strong>escalonado</strong> y se completará en
+                                    <strong>~{{ diasEstimados }} día(s)</strong>.
+                                </p>
+                            </template>
+                            <template v-else>
+                                <h4 style="margin-top:0">No hay personas para el criterio elegido</h4>
+                                <p style="margin-bottom:0">Ajustá país, {{ objetivo === 'campania' ? 'campaña/audiencia' : 'segmento' }} o canales.</p>
+                            </template>
+                        </div>
+                    </transition>
+                </div>
+
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Título</label>
+                            <label>{{ tituloLabel }}</label>
                             <input type="text"
                                    class="form-control"
-                                   maxlength="65"
+                                   :maxlength="maxTitulo"
                                    v-model="titulo"
-                                   @input="resetPreview"
                                    placeholder="Ej.: Sumate a la respuesta a la emergencia">
-                            <p class="help-block">{{ titulo.length }}/65</p>
+                            <p class="help-block">{{ titulo.length }}/{{ maxTitulo }}</p>
                         </div>
                     </div>
                 </div>
@@ -103,66 +268,107 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Mensaje</label>
-                            <textarea class="form-control"
-                                      rows="3"
-                                      maxlength="240"
-                                      v-model="mensaje"
-                                      @input="resetPreview"
-                                      placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
-                            <p class="help-block">{{ mensaje.length }}/240</p>
+
+                            <!-- Solo push: texto plano y corto (límite de plataforma). -->
+                            <template v-if="!incluyeEmail">
+                                <textarea class="form-control"
+                                          rows="3"
+                                          :maxlength="maxMensaje"
+                                          v-model="mensaje"
+                                          placeholder="Contales de qué se trata y cómo pueden ayudar."></textarea>
+                                <p class="help-block">{{ mensaje.length }}/{{ maxMensaje }} · Texto corto, sin formato (es una notificación).</p>
+                            </template>
+
+                            <!-- Email (con o sin push): texto enriquecido con formato e imágenes. -->
+                            <template v-else>
+                                <tinymce-editor
+                                        v-model="mensaje"
+                                        :init="{
+                                            menubar: false,
+                                            file_picker_callback: tiny_mce_filemanager_callback,
+                                            relative_urls: false,
+                                            resize: true,
+                                            height: 320,
+                                            branding: false,
+                                        }"
+                                        toolbar="undo redo | styleselect | bold italic | forecolor | alignleft aligncenter alignright | bullist numlist | link image | removeformat"
+                                        plugins="paste autoresize image preview link lists"
+                                ></tinymce-editor>
+                                <p class="help-block">Podés dar formato, agregar enlaces e imágenes. El correo se envía con el logo de TECHO y un botón a la actividad.</p>
+                            </template>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="box-footer">
-                <button class="btn btn-default"
-                        :disabled="!puedePrevisualizar"
-                        @click="previsualizar">
-                    <i class="fa fa-users"></i> Ver a cuántos llega
+                <button class="btn btn-primary"
+                        :disabled="!puedeEnviar"
+                        @click="enviar">
+                    <i class="fa fa-paper-plane"></i> Confirmar y enviar
                 </button>
-
-                <transition name="fade">
-                    <div v-if="destinatarios !== null" class="callout"
-                         :class="destinatarios > 0 ? 'callout-warning' : 'callout-default'"
-                         style="margin-top:15px">
-                        <template v-if="destinatarios > 0">
-                            <h4>Esta invitación va a llegar a {{ destinatarios }} persona(s)</h4>
-                            <p>Revisá el título y el mensaje. Al confirmar, se despacha el envío.</p>
-                            <button class="btn btn-primary" @click="enviar">
-                                <i class="fa fa-paper-plane"></i> Confirmar y enviar
-                            </button>
-                        </template>
-                        <template v-else>
-                            <h4>No hay destinatarios con este criterio</h4>
-                            <p>Nadie en los países/segmento elegidos tiene push activadas. Ajustá la selección.</p>
-                        </template>
-                    </div>
-                </transition>
+                <span class="text-muted" style="margin-left:10px" v-if="destinatarios === null">
+                    Primero calculá a cuántos llega.
+                </span>
+                <span class="text-muted" style="margin-left:10px" v-else-if="destinatarios > 0 && !listoParaEnviar">
+                    Completá {{ tituloLabel.toLowerCase() }} y mensaje.
+                </span>
+                <span class="text-muted" style="margin-left:10px" v-else-if="destinatarios === 0">
+                    Nadie alcanzable con este criterio.
+                </span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import editor from '@tinymce/tinymce-vue'
+    import 'tinymce/tinymce'
+    import 'tinymce/themes/silver/theme'
+    import 'tinymce/plugins/paste'
+    import 'tinymce/plugins/autoresize'
+    import 'tinymce/plugins/image'
+    import 'tinymce/plugins/preview'
+    import 'tinymce/plugins/link'
+    import 'tinymce/plugins/lists'
+
     export default {
         name: "invitacion-actividad-form",
+        components: { 'tinymce-editor': editor },
         data() {
             return {
                 paises: [],
                 actividades: [],
+                campanas: [],
                 paisesSeleccionados: [],
                 actividadSeleccionada: null,
+                campaniaSeleccionada: null,
+                objetivo: 'actividad',   // 'actividad' | 'campania'
+                audiencia: 'suscriptos', // solo campaña: 'suscriptos' | 'segmento'
                 segmento: 'coordinadores',
+                canales: ['email'],    // canal único (array por compat con el backend): 'push' | 'email'
+                anios: [],             // años (de la actividad) para acotar segmentos de participación
+                aniosDisponibles: [],  // opciones de año (se arman en created)
                 titulo: '',
                 mensaje: '',
-                destinatarios: null,   // null = todavía no previsualizó
+                calculando: false,     // preview en curso (spinner inline, no bloquea la pantalla)
+                destinatarios: null,   // null = todavía no previsualizó; luego = total de envíos (suma por canal)
+                totalSegmento: null,   // tamaño total de la audiencia (ignora el opt-in)
+                porCanal: [],          // [{canal, alcanzables, sin_canal}]
+                diasEstimados: null,   // días estimados para completar el envío email (throttle)
+                emailPorDia: null,     // tope diario de email configurado (para el mensaje)
+                yaInscriptos: null,    // del alcance, cuántos quedan afuera por estar ya inscriptos
                 enviado: false,
                 enviadoA: 0,
+                enviadoPorCanal: [],   // desglose del envío por canal
                 validationErrors: {},
             }
         },
         created() {
+            // Años disponibles: el actual y los 3 anteriores. Por defecto, el año actual.
+            const y = new Date().getFullYear();
+            this.aniosDisponibles = [y, y - 1, y - 2, y - 3];
+            this.anios = [y];
             this.getPaises();
         },
         computed: {
@@ -175,6 +381,8 @@
                     coordinadores_gestion: 'Quienes coordinan al menos una actividad, equipo o comunidad (membresía real, distinta del rol global).',
                     activos: 'Voluntarios que se inscribieron a alguna actividad en los últimos 90 días.',
                     frecuentes: 'Voluntarios con 3 o más participaciones con asistencia confirmada.',
+                    jefes_cuadrilla: 'Voluntarios que tuvieron el rol de jefe de cuadrilla en alguna actividad.',
+                    jefaturas: 'Voluntarios que tuvieron alguna jefatura o liderazgo (cuadrilla, escuela o trabajo) en alguna actividad.',
                     todos: 'Todos los voluntarios de los países elegidos.',
                 };
                 return ayudas[this.segmento] || '';
@@ -182,37 +390,175 @@
             idsPaises() {
                 return this.paisesSeleccionados.map(p => p.id);
             },
+            // El usuario puede alcanzar más de un país (admin multi-país / global).
+            // Si su alcance es un solo país, la pantalla se comporta en modo mono-país.
+            multiPais() {
+                return this.paises.length > 1;
+            },
+            ayudaPaises() {
+                if (this.paises.length === 0) return '';
+                if (this.paises.length === 1) {
+                    return 'Tu alcance es ' + this.paises[0].nombre + '. Solo podés enviar a ese país.';
+                }
+                return 'Podés elegir uno o varios países (tu alcance permite más de uno).';
+            },
+            incluyePush() {
+                return this.canales.indexOf('push') >= 0;
+            },
+            incluyeEmail() {
+                return this.canales.indexOf('email') >= 0;
+            },
+            tituloLabel() {
+                // Con email (sin push) es "Asunto"; si va push, "Título" (límite corto).
+                return (this.incluyeEmail && !this.incluyePush) ? 'Asunto' : 'Título';
+            },
+            canalesTexto() {
+                if (this.incluyePush && this.incluyeEmail) return 'push y email';
+                return this.incluyeEmail ? 'email' : 'push';
+            },
+            // El filtro de años solo aplica a los segmentos de participación (los derivados
+            // de inscripciones a actividades). No a coordinadores/todos ni a suscriptos.
+            segmentoUsaAnios() {
+                return this.mostrarSegmento
+                    && ['activos', 'frecuentes', 'jefes_cuadrilla', 'jefaturas'].indexOf(this.segmento) >= 0;
+            },
+            // El segmento de voluntarios aplica para actividad, y para campaña solo si la
+            // audiencia elegida es "segmento" (no cuando son los suscriptos de la campaña).
+            mostrarSegmento() {
+                return this.objetivo === 'actividad'
+                    || (this.objetivo === 'campania' && this.audiencia === 'segmento');
+            },
+            ayudaAudiencia() {
+                return this.audiencia === 'suscriptos'
+                    ? 'Los leads que se anotaron en la campaña (por email).'
+                    : 'Voluntarios del segmento elegido, con un enlace a la campaña.';
+            },
+            // Límites según los canales: si va push, el título es corto (65); si va email,
+            // el cuerpo admite HTML largo (20000). Alineado con el validador del servidor.
+            maxTitulo() {
+                return this.incluyePush ? 65 : 150;
+            },
+            maxMensaje() {
+                // Solo aplica al textarea de "solo push"; con email el editor no usa maxlength.
+                return this.incluyeEmail ? 20000 : 240;
+            },
             puedePrevisualizar() {
-                return this.idsPaises.length > 0 && this.segmento;
+                if (this.idsPaises.length === 0) return false;
+                if (this.objetivo === 'campania') {
+                    // La campaña define el objetivo (y, si es por suscriptos, el conteo).
+                    return !!this.campaniaSeleccionada
+                        && (this.audiencia === 'suscriptos' || !!this.segmento);
+                }
+                return !!this.segmento;
             },
             listoParaEnviar() {
-                return this.idsPaises.length > 0
-                    && this.actividadSeleccionada
-                    && this.titulo.trim().length > 0
-                    && this.mensaje.trim().length > 0;
+                if (this.idsPaises.length === 0) return false;
+                if (this.titulo.trim().length === 0 || this.mensaje.trim().length === 0) return false;
+                if (this.objetivo === 'campania') {
+                    return !!this.campaniaSeleccionada
+                        && (this.audiencia === 'suscriptos' || !!this.segmento);
+                }
+                return !!this.actividadSeleccionada;
+            },
+            // Habilita "Confirmar y enviar": hay que haber calculado (con alcanzables > 0)
+            // y tener el contenido completo. El público no cambia al escribir el mensaje.
+            puedeEnviar() {
+                return this.destinatarios !== null && this.destinatarios > 0 && this.listoParaEnviar;
             },
         },
         methods: {
             getPaises() {
                 axios.get('/admin/ajax/comunicaciones/invitaciones/paises')
-                    .then((r) => { this.paises = r.data; })
+                    .then((r) => {
+                        this.paises = r.data;
+                        // Alcance de un solo país: se preselecciona (no hay nada que elegir).
+                        if (this.paises.length === 1) {
+                            this.paisesSeleccionados = [this.paises[0]];
+                            this.onPaisesChange();
+                        }
+                    })
                     .catch(() => {});
             },
             onPaisesChange() {
                 this.resetPreview();
                 this.actividadSeleccionada = null;
+                this.campaniaSeleccionada = null;
                 this.actividades = [];
+                this.campanas = [];
                 if (this.idsPaises.length === 0) return;
 
+                this.cargarActividades();
+                this.cargarCampanas();
+            },
+            cargarActividades() {
                 axios.get('/admin/ajax/comunicaciones/invitaciones/actividades', {
                     params: { idsPaises: this.idsPaises }
                 })
                     .then((r) => { this.actividades = r.data; })
                     .catch(() => {});
             },
+            cargarCampanas() {
+                axios.get('/admin/ajax/comunicaciones/invitaciones/campanas', {
+                    params: { idsPaises: this.idsPaises }
+                })
+                    .then((r) => { this.campanas = r.data; })
+                    .catch(() => {});
+            },
+            seleccionarObjetivo(objetivo) {
+                if (this.objetivo === objetivo) return;
+                this.objetivo = objetivo;
+                // Campaña va solo por email (leads sin dispositivo + app sin deep link).
+                if (objetivo === 'campania') {
+                    this.canales = ['email'];
+                }
+                this.resetPreview();
+            },
+            onAudienciaChange() {
+                this.resetPreview();
+            },
             resetPreview() {
                 this.destinatarios = null;
+                this.totalSegmento = null;
+                this.porCanal = [];
+                this.diasEstimados = null;
+                this.emailPorDia = null;
+                this.yaInscriptos = null;
                 this.enviado = false;
+            },
+            // Canal único: elegir uno reemplaza al anterior (push y email no se combinan;
+            // se envía de a uno para que el mensaje quede bien formateado por canal).
+            seleccionarCanal(canal) {
+                if (this.canales.length === 1 && this.canales[0] === canal) return; // ya elegido
+                this.canales = [canal];
+                // Cambia el opt-in (conteo) y el formato del mensaje; se limpia el preview.
+                this.resetPreview();
+            },
+            iconoCanal(canal) {
+                return canal === 'email' ? 'fa fa-envelope' : 'fa fa-bell';
+            },
+            nombreCanal(canal) {
+                return canal === 'email' ? 'Email' : 'Push';
+            },
+            tiny_mce_filemanager_callback(callback, value, meta) {
+                // Reusa el laravel-filemanager del backoffice (mismo patrón que actividad.vue):
+                // las imágenes quedan hosteadas y se referencian por URL en el email.
+                let x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+                let y = window.innerHeight || document.documentElement.clientHeight || document.getElementsByTagName('body')[0].clientHeight;
+                let cmsURL = '/laravel-filemanager?editor=tinymce5&field_name=' + value;
+                if (meta.filetype == 'image') { cmsURL = cmsURL + "&type=Images"; }
+                else { cmsURL = cmsURL + "&type=Files"; }
+
+                tinyMCE.activeEditor.windowManager.openUrl({
+                    url: cmsURL,
+                    title: 'Administrador de archivos',
+                    width: x * 0.8,
+                    height: y * 0.8,
+                    resizable: "yes",
+                    close_previous: "no",
+                    onMessage: (api, message) => {
+                        callback(message.content);
+                    }
+                });
             },
             mostrarLoading() {
                 this.$refs.loading.openSimplert({
@@ -227,39 +573,76 @@
             ocultarLoading() {
                 this.$refs.loading.justCloseSimplert();
             },
+            // Campos del objetivo comunes a preview y envío (según actividad/campaña).
+            datosObjetivo() {
+                const d = { objetivo: this.objetivo, idsPaises: this.idsPaises };
+                if (this.objetivo === 'campania') {
+                    d.idCampania = this.campaniaSeleccionada ? this.campaniaSeleccionada.id : null;
+                    d.audiencia = this.audiencia;
+                    if (this.audiencia === 'segmento') d.segmento = this.segmento;
+                } else {
+                    d.canales = this.canales;
+                    d.segmento = this.segmento;
+                    // Si ya se eligió la actividad, se manda para excluir del conteo/envío
+                    // a quienes ya están inscriptos en ella.
+                    if (this.actividadSeleccionada) d.idActividad = this.actividadSeleccionada.idActividad;
+                }
+                d.anios = this.segmentoUsaAnios ? this.anios : [];
+                return d;
+            },
+            toggleAnio(anio) {
+                const i = this.anios.indexOf(anio);
+                if (i >= 0) this.anios.splice(i, 1);
+                else this.anios.push(anio);
+                // El año cambia el público (segmento), así que se limpia el preview.
+                this.resetPreview();
+            },
+            // Preview no bloqueante: spinner inline en el botón; el resto del formulario
+            // sigue editable (podés ir completando el asunto/mensaje mientras calcula).
             previsualizar() {
                 this.validationErrors = [];
-                this.mostrarLoading();
+                this.calculando = true;
 
-                axios.post('/admin/ajax/comunicaciones/invitaciones/preview', {
-                    idsPaises: this.idsPaises,
-                    segmento: this.segmento,
-                })
+                axios.post('/admin/ajax/comunicaciones/invitaciones/preview', this.datosObjetivo())
                     .then((r) => {
                         this.destinatarios = r.data.destinatarios;
-                        this.ocultarLoading();
+                        this.totalSegmento = r.data.total;
+                        this.porCanal = r.data.por_canal || [];
+                        this.diasEstimados = r.data.email_dias_estimados;
+                        this.emailPorDia = r.data.email_por_dia;
+                        this.yaInscriptos = r.data.ya_inscriptos;
+                        this.calculando = false;
                     })
-                    .catch((error) => this.manejarError(error));
+                    .catch((error) => {
+                        this.calculando = false;
+                        if (error.response && error.response.status === 422) {
+                            this.validationErrors = Object.values(error.response.data.errors);
+                        } else {
+                            this.validationErrors = [['Ocurrió un error al calcular. Intentá de nuevo.']];
+                        }
+                    });
             },
             enviar() {
                 if (!this.listoParaEnviar) {
-                    this.validationErrors = [['Completá país, actividad, título y mensaje antes de enviar.']];
+                    this.validationErrors = [['Completá los datos requeridos (objetivo, título y mensaje) antes de enviar.']];
                     return;
                 }
                 this.validationErrors = [];
                 this.mostrarLoading();
 
-                axios.post('/admin/ajax/comunicaciones/invitaciones/enviar', {
-                    idActividad: this.actividadSeleccionada.idActividad,
-                    idsPaises: this.idsPaises,
-                    segmento: this.segmento,
-                    titulo: this.titulo,
-                    mensaje: this.mensaje,
-                })
+                const datos = this.datosObjetivo();
+                datos.titulo = this.titulo;
+                datos.mensaje = this.mensaje;
+                if (this.objetivo === 'actividad') {
+                    datos.idActividad = this.actividadSeleccionada.idActividad;
+                }
+
+                axios.post('/admin/ajax/comunicaciones/invitaciones/enviar', datos)
                     .then((r) => {
                         this.ocultarLoading();
                         this.enviado = true;
                         this.enviadoA = r.data.destinatarios;
+                        this.enviadoPorCanal = r.data.por_canal || [];
                         this.destinatarios = null;
                     })
                     .catch((error) => this.manejarError(error));
@@ -282,5 +665,102 @@
     }
     .fade-enter, .fade-leave-to {
         opacity: 0;
+    }
+
+    /* Selector de canal como cubos */
+    .canal-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .canal-card {
+        position: relative;
+        width: 150px;
+        padding: 16px 12px;
+        text-align: center;
+        border: 2px solid #d2d6de;
+        border-radius: 6px;
+        background: #fff;
+        cursor: pointer;
+        transition: border-color .15s, box-shadow .15s, transform .05s;
+    }
+    .canal-card:hover:not(.is-disabled) {
+        border-color: #0092dd;
+    }
+    .canal-card.is-selected {
+        border-color: #0092dd;
+        box-shadow: 0 0 0 3px rgba(0, 146, 221, .15);
+    }
+    .canal-card.is-disabled {
+        cursor: not-allowed;
+        opacity: .55;
+        background: #f7f7f7;
+    }
+    .canal-card__icon {
+        font-size: 26px;
+        color: #0092dd;
+    }
+    .canal-card.is-disabled .canal-card__icon {
+        color: #999;
+    }
+    .canal-card__titulo {
+        margin-top: 8px;
+        font-weight: 700;
+    }
+    .canal-card__desc {
+        font-size: 12px;
+        color: #777;
+        margin-top: 2px;
+    }
+    .canal-card__badge {
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        background: #999;
+        color: #fff;
+        font-size: 10px;
+        line-height: 1;
+        padding: 3px 6px;
+        border-radius: 10px;
+        white-space: nowrap;
+    }
+    .canal-card__check {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #0092dd;
+        color: #fff;
+        font-size: 11px;
+        line-height: 22px;
+        text-align: center;
+    }
+
+    /* Tags de año */
+    .anio-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .anio-tag {
+        display: inline-block;
+        padding: 5px 14px;
+        border: 1px solid #d2d6de;
+        border-radius: 16px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        user-select: none;
+        transition: border-color .15s, background .15s;
+    }
+    .anio-tag:hover {
+        border-color: #0092dd;
+    }
+    .anio-tag.is-selected {
+        background: #0092dd;
+        border-color: #0092dd;
+        color: #fff;
     }
 </style>

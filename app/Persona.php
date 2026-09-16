@@ -31,9 +31,38 @@ class Persona extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * ¿El `mail` es una dirección válida y enviable?
+     *
+     * En la base conviven personas cuyo `mail` NO es un email: altas legacy con
+     * el campo vacío o con un nombre/slug sin `@`, y cuentas anonimizadas por la
+     * baja de cuenta (ver UsuarioController::delete), que pisan `mail` con un
+     * token `str_random(40)`. Enviarles correo tira `Swift_RfcComplianceException`
+     * y rompe el job. Esta es la fuente única de "¿se le puede mandar mail?".
+     */
+    public function tieneMailValido()
+    {
+        return filter_var($this->mail, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    /**
+     * Personas a las que SÍ se les puede enviar mail: aceptan notificaciones y
+     * tienen una dirección con forma de email. El chequeo fino (RFC) lo hace
+     * tieneMailValido() por fila; en SQL aproximamos con `LIKE '%@%'` para poder
+     * filtrar en queries de envío masivo sin traer filas de más.
+     */
+    public function scopeMailable($query)
+    {
+        return $query->where('recibirMails', 1)
+                     ->whereNotNull('mail')
+                     ->where('mail', 'like', '%@%');
+    }
+
     public function routeNotificationForMail($notification)
     {
-        return $this->mail;
+        // Devolver null hace que Notifiable saltee el canal mail (no intenta
+        // enviar) en vez de explotar con una dirección inválida.
+        return $this->tieneMailValido() ? $this->mail : null;
     }
 
     public function sendEmailVerificationNotification()
@@ -190,6 +219,82 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Pais::class, 'id', 'idPais');
     }
 
+    /**
+     * ¿El usuario autenticado puede gestionar a ESTA persona, aunque sea de otro país?
+     *
+     * Política híbrida para rescatar registros "varados" (los que agarraron el país
+     * por defecto y quedan fuera del alcance de su coordinación). Puede gestionarla si:
+     *  - es admin global (alcanza todos los países), o
+     *  - esta persona es de alguno de sus países permitidos, o
+     *  - la persona quedó "sin dueño": su país es el genérico por defecto
+     *    (config('app.pais_default')) o un país sin coordinación (no habilitado).
+     * Si pertenece a otro país habilitado (otra coordinación real), NO puede: la
+     * gestiona esa coordinación o un admin global. Se usa en /admin/usuarios para el
+     * rescate por email exacto (ver UsuariosSearch y backoffice\UsuariosController).
+     */
+    public function gestionableCrossPais(): bool
+    {
+        $auth = auth()->user();
+        if (!$auth) {
+            return false;
+        }
+
+        if ($auth->esGlobalPais()) {
+            return true;
+        }
+
+        if (in_array((int) $this->idPais, $auth->paisesPermitidosIds(), true)) {
+            return true;
+        }
+
+        if ((int) $this->idPais === (int) config('app.pais_default')) {
+            return true;
+        }
+
+        return empty(optional($this->pais)->habilitado);
+    }
+
+    /**
+     * Multi-país (chokepoint): ids de país que el usuario puede administrar/alcanzar.
+     * Prioriza el pivote `persona_paises_permitidos`; si no tiene filas, cae al
+     * `idPaisPermitido` único (retrocompatible). Devuelve [] cuando no hay restricción
+     * explícita (usar junto con esGlobalPais() para saber si eso significa "todos").
+     *
+     * @return int[]
+     */
+    public function paisesPermitidosIds(): array
+    {
+        $pivote = \DB::table('persona_paises_permitidos')
+            ->where('idPersona', $this->idPersona)
+            ->pluck('idPais')
+            ->map(function ($v) { return (int) $v; })
+            ->all();
+
+        if (!empty($pivote)) {
+            return array_values(array_unique($pivote));
+        }
+
+        $unico = (int) $this->idPaisPermitido;
+
+        return $unico > 0 ? [$unico] : [];
+    }
+
+    /**
+     * True si el usuario alcanza TODOS los países (admin global): no tiene países
+     * explícitos en el pivote y su idPaisPermitido es 0/null. Tener pivote lo acota
+     * a esos países (no global), aunque idPaisPermitido esté vacío.
+     */
+    public function esGlobalPais(): bool
+    {
+        if (!empty($this->idPaisPermitido)) {
+            return false;
+        }
+
+        return !\DB::table('persona_paises_permitidos')
+            ->where('idPersona', $this->idPersona)
+            ->exists();
+    }
+
     public function provincia()
     {
         return $this->hasOne(Provincia::class, 'id', 'idProvincia');
@@ -251,5 +356,34 @@ class Persona extends Authenticatable implements MustVerifyEmail
     public function dispositivos()
     {
         return $this->hasMany(Dispositivo::class, 'idPersona', 'idPersona');
+    }
+
+    /**
+     * ¿Podemos NO mandarle el mail porque le va a llegar el push? Sirve para no
+     * duplicar el mismo aviso en dos canales y bajar el volumen de envíos de mail
+     * (ver migración a SES: el relay de Gmail se satura con las ráfagas).
+     *
+     * Requiere las tres cosas juntas:
+     *  - push activado (recibir_push),
+     *  - al menos un dispositivo activo (mismo criterio que PushNotificationService::enviar),
+     *  - acceso reciente a la app: sin esto suprimiríamos el mail de quien desinstaló
+     *    sin desloguear (el device sigue 'activo' pero el push nunca llega).
+     *
+     * Es fail-safe: ante la duda (push off, sin device, o sin acceso reciente) devuelve
+     * false y el mail se manda igual. Nadie se queda sin el aviso.
+     *
+     * @param int $diasRecencia ventana de "acceso reciente"; más chico = más conservador.
+     */
+    public function tienePushConfiable(int $diasRecencia = 60): bool
+    {
+        if (!$this->recibir_push) {
+            return false;
+        }
+
+        if (!$this->ultimo_acceso_app || $this->ultimo_acceso_app->lt(now()->subDays($diasRecencia))) {
+            return false;
+        }
+
+        return $this->dispositivos()->where('activo', true)->exists();
     }
 }

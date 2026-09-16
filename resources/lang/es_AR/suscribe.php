@@ -34,25 +34,6 @@ return [
     'fecha_de_nacimiento' => 'Fecha de nacimiento',
     'gender' => 'Género',
 
-    'dni_by_country' => [
-        'argentina' => 'Número de DNI',
-        'bolivia' => 'Cédula de Identidad',
-        'colombia' => 'Cédula de Ciudadanía',
-        'costarica' => 'Cédula de Identidad',
-        'republicadominicana' => 'Cédula de Identidad',
-        'ecuador' => 'Cédula de Ciudadanía',
-        'elsalvador' => 'DUI',
-        'guatemala' => 'Documento Personal de Identificación',
-        'honduras' => 'DNI',
-        'mexico' => 'INE / CURP',
-        'panama' => 'Cédula de Identidad',
-        'paraguay' => 'Cédula de Identidad',
-        'peru' => 'Documento de Identidad',
-        'uruguay' => 'Cédula de Identidad',
-        'venezuela' => 'Cédula de Identidad',
-        'latam' => 'Pasaporte',
-    ],
-
     'secundario_by_country' => [
         'argentina' => 'Secundario',
         'bolivia' => 'Bachillerato',
@@ -81,6 +62,7 @@ return [
     'additional_questions'  => 'Preguntas adicionales',
     'select_option'         => 'Seleccioná una opción',
     'already_registered'    => 'Ya estás inscripto/a en esta campaña.',
+    'submit_error'         => 'Ocurrió un error al enviar. Por favor, intentá de nuevo.',
     'missing_required'      => 'Por favor respondé todas las preguntas obligatorias.',
     'user_exists_warning'   => 'Este email ya pertenece a un usuario registrado. Podés iniciar sesión para inscribirte más fácil.',
     'logged_in_as'          => 'Inscribiéndote como',

@@ -19,6 +19,13 @@
         <div class="col-md-8" v-if="cargaFinalizada">
             <div v-if="!mostrarFichaMedica">
                 <div v-if="rolAplicado && tipoInscriptoAplicado && estudiosAplicado && jornadasAplicado && preguntasAplicado">
+                    <!-- Con un único punto de encuentro el paso se auto-selecciona y se
+                         avanza solo (checkSubmit). Mostramos un loader en vez de la lista
+                         para que este paso no "pestañee" antes de redirigir. -->
+                    <div v-if="puntosActivos.length === 1" class="text-center" style="padding:4rem 0;">
+                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                    </div>
+                    <template v-else>
                     <div class="row">
                         <div class="col-md-12">
                             <h2 class="card-title">{{ $t('frontend.select_a_meeting_point') }}</h2>
@@ -51,16 +58,19 @@
 
                         <input type="hidden" name="respuestas" v-bind:value="convertToJSONRespuestas()">
 
-                    <div class="row" v-for="(item, index) in puntosActivos">
-                        <div class="col-md-12">
-                            <input type="radio" name="punto_encuentro" v-bind:value="item.idPuntoEncuentro"  v-bind:checked="index == 0 ? 'checked' : ''" style="margin: 0px 6px;">
-                        {{item.punto}}, 
-                        <template v-if="item.localidad">{{ item.localidad.localidad }}, </template> 
-                        {{ item.provincia.provincia }} - {{item.horario | format_time}}hs
-
-                        
-                            
-                        </div>
+                    <div class="mb-2" v-for="(item, index) in puntosActivos" :key="item.idPuntoEncuentro">
+                        <label class="d-flex align-items-start p-3 mb-0"
+                               style="border:1px solid #e6e6e6; border-radius:10px; cursor:pointer; font-weight:400; transition:border-color .2s, background-color .2s;"
+                               :style="{ borderColor: puntoSeleccionado == item.idPuntoEncuentro ? '#3a7bd5' : '#e6e6e6', backgroundColor: puntoSeleccionado == item.idPuntoEncuentro ? '#f6f9ff' : '#fff' }">
+                            <input type="radio" name="punto_encuentro" :value="item.idPuntoEncuentro" v-model="puntoSeleccionado"
+                                   class="mt-1 mr-3" style="flex-shrink:0; width:18px; height:18px;">
+                            <span>
+                                <strong>{{ item.punto }}</strong><br>
+                                <span class="text-muted" style="font-size:.9rem;">
+                                    <template v-if="item.localidad">{{ item.localidad.localidad }}, </template>{{ item.provincia.provincia }} · {{ item.horario | format_time }}hs
+                                </span>
+                            </span>
+                        </label>
                     </div>
                     <hr>
                     <div class="row text-center justify-content-center">
@@ -74,6 +84,7 @@
                         <div class="col-md-3"><input type="submit" v-bind:value="$t('frontend.continue')" class="btn btn-primary" v-if="validateForm()"></div>
                     </div>
                     </form>
+                    </template>
                 </div>
                 <div v-else-if="!rolAplicado">
 
@@ -257,20 +268,51 @@
                                 <option value="">—</option>
                                 <option v-for="opcion in pregunta.opciones" :key="opcion" :value="opcion">{{ opcion }}</option>
                             </select>
-                            <div v-else-if="pregunta.tipo === 'archivo'">
-                                <input
-                                    type="file"
-                                    accept="image/jpeg,image/png,application/pdf"
-                                    class="form-control-file"
-                                    @change="subirArchivo($event, index)"
-                                >
-                                <small class="form-text text-muted">{{ $t('frontend.archivo_formatos') }}</small>
-                                <div v-if="subiendoArchivo[index]" class="text-muted small mt-1">
-                                    <i class="fa fa-spinner fa-spin"></i> {{ $t('frontend.subiendo_archivo') }}
+                            <div v-else-if="pregunta.tipo === 'archivo'" class="mt-2">
+                                <!-- Subiendo -->
+                                <div v-if="subiendoArchivo[index]" :key="'arch-loading-' + index" class="archivo-dropzone">
+                                    <i class="fas fa-spinner fa-spin fa-lg text-muted mb-2"></i>
+                                    <span class="text-muted small">{{ $t('frontend.subiendo_archivo') }}</span>
                                 </div>
-                                <div v-else-if="respuestas[index].respuesta" class="text-success small mt-1">
-                                    <i class="fa fa-check"></i> {{ nombresArchivo[index] || $t('frontend.archivo_cargado') }}
+                                <!-- Archivo cargado -->
+                                <div v-else-if="respuestas[index].respuesta"
+                                     :key="'arch-loaded-' + index"
+                                     class="archivo-cargado"
+                                     :title="$t('frontend.voucher_click_to_browse')"
+                                     @click="seleccionarArchivo(index)">
+                                    <div class="d-flex align-items-center" style="min-width:0;">
+                                        <i class="fas fa-check-circle mr-2" style="font-size:1.2rem;flex-shrink:0;"></i>
+                                        <span class="font-weight-bold small text-truncate">
+                                            {{ nombresArchivo[index] || $t('frontend.archivo_cargado') }}
+                                        </span>
+                                    </div>
+                                    <button type="button"
+                                            class="btn btn-sm ml-3 archivo-quitar"
+                                            :title="$t('frontend.delete')"
+                                            @click.stop="quitarArchivo(index)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
+                                <!-- Vacío -->
+                                <div v-else
+                                     :key="'arch-empty-' + index"
+                                     class="archivo-dropzone"
+                                     :class="{ 'archivo-dropzone--hover': arrastrandoArchivo[index] }"
+                                     @click="seleccionarArchivo(index)"
+                                     @dragover.prevent="$set(arrastrandoArchivo, index, true)"
+                                     @dragleave.prevent="$set(arrastrandoArchivo, index, false)"
+                                     @drop.prevent="soltarArchivo($event, index)">
+                                    <i class="fas fa-cloud-upload-alt fa-2x text-muted mb-2"></i>
+                                    <span class="font-weight-bold text-muted small">{{ $t('frontend.voucher_click_to_browse') }}</span>
+                                    <span class="text-muted" style="font-size:.78rem;">{{ $t('frontend.voucher_drag_drop') }}</span>
+                                    <span class="text-muted" style="font-size:.72rem;">{{ $t('frontend.archivo_formatos') }}</span>
+                                </div>
+
+                                <input type="file" hidden
+                                       accept="image/jpeg,image/png,application/pdf"
+                                       :ref="'archivoInput' + index"
+                                       @change="subirArchivo($event, index)">
+
                                 <div v-if="erroresArchivo[index]" class="text-danger small mt-1">{{ erroresArchivo[index] }}</div>
                             </div>
                         </div>
@@ -359,6 +401,7 @@
         components: { VueTagsInput },
         data: function(){
           return {
+            puntoSeleccionado: null,
             actividad: {
                 idActividad: '',
                 nombreActividad: '',
@@ -382,6 +425,7 @@
             subiendoArchivo: {},
             nombresArchivo: {},
             erroresArchivo: {},
+            arrastrandoArchivo: {},
             showCompleteEstudios: false,
             tag: "",
             tag2: "",
@@ -436,6 +480,8 @@
           });
           axios.get('/ajax/actividades/'+this.id).then(function(response){
             self.actividad = response.data.data;
+            if (self.puntosActivos.length > 0)
+                self.puntoSeleccionado = self.puntosActivos[0].idPuntoEncuentro;
             if(self.actividad.requiere_ficha_medica)
                 self.mostrarFichaMedica = true;
             if(self.actividad.roles_tags == null || self.actividad.roles_tags.length == 0)
@@ -633,23 +679,47 @@
             convertToJSONRespuestas: function() {
                 return JSON.stringify(this.respuestas);
             },
+            // Abre el selector de archivos oculto de la pregunta `index`.
+            seleccionarArchivo: function(index) {
+                var el = this.$refs['archivoInput' + index];
+                if (Array.isArray(el)) el = el[0];
+                if (!el) return;
+                el.value = '';
+                el.click();
+            },
+            // Archivo elegido desde el input oculto.
+            subirArchivo: function(event, index) {
+                var file = event.target.files && event.target.files[0];
+                event.target.value = '';
+                this.procesarArchivo(file, index);
+            },
+            // Archivo soltado en la zona de drag & drop.
+            soltarArchivo: function(event, index) {
+                this.$set(this.arrastrandoArchivo, index, false);
+                var file = event.dataTransfer.files && event.dataTransfer.files[0];
+                this.procesarArchivo(file, index);
+            },
+            // Quita el archivo cargado y vuelve a la zona vacía.
+            quitarArchivo: function(index) {
+                this.respuestas[index].respuesta = '';
+                this.$set(this.respuestas[index], 'nombre', '');
+                this.$set(this.nombresArchivo, index, '');
+                this.$set(this.erroresArchivo, index, '');
+            },
             // Sube el archivo de una pregunta tipo 'archivo' de forma asíncrona y
             // guarda el path devuelto como valor de la respuesta (enfoque A).
-            subirArchivo: function(event, index) {
+            procesarArchivo: function(file, index) {
                 var self = this;
-                var file = event.target.files && event.target.files[0];
                 this.$set(this.erroresArchivo, index, '');
                 if (!file) return;
 
                 var tiposOk = ['image/jpeg', 'image/png', 'application/pdf'];
                 if (tiposOk.indexOf(file.type) === -1) {
                     this.$set(this.erroresArchivo, index, this.$t('frontend.archivo_tipo_invalido'));
-                    event.target.value = '';
                     return;
                 }
                 if (file.size > 5 * 1024 * 1024) {
                     this.$set(this.erroresArchivo, index, this.$t('frontend.archivo_muy_grande'));
-                    event.target.value = '';
                     return;
                 }
 
@@ -660,16 +730,19 @@
                 this.$set(this.subiendoArchivo, index, true);
                 axios.post('/ajax/inscripcion/pregunta-archivo', fd)
                     .then(function(response) {
+                        // Reseteo el spinner acá (no en .finally): algunos navegadores
+                        // viejos no tienen Promise.prototype.finally y dejaban el
+                        // "Subiendo archivo..." colgado a pesar de subir OK.
+                        self.$set(self.subiendoArchivo, index, false);
                         self.respuestas[index].respuesta = response.data.path;
+                        self.$set(self.respuestas[index], 'nombre', response.data.nombre);
                         self.$set(self.nombresArchivo, index, response.data.nombre);
                     })
                     .catch(function() {
-                        self.respuestas[index].respuesta = '';
-                        self.$set(self.erroresArchivo, index, self.$t('frontend.archivo_error'));
-                        event.target.value = '';
-                    })
-                    .finally(function() {
                         self.$set(self.subiendoArchivo, index, false);
+                        self.respuestas[index].respuesta = '';
+                        self.$set(self.respuestas[index], 'nombre', '');
+                        self.$set(self.erroresArchivo, index, self.$t('frontend.archivo_error'));
                     });
             },
             // ¿La pregunta debe mostrarse según sus condiciones?
@@ -757,5 +830,46 @@
 
     .prev h6 {
         font-weight: 700 !important;
+    }
+
+    /* ── Upload de pregunta tipo archivo ── */
+    .archivo-dropzone {
+        border: 2px dashed #ced4da;
+        background: #fafafa;
+        border-radius: .5rem;
+        cursor: pointer;
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+        gap: .2rem;
+        transition: border-color .15s, background .15s;
+    }
+    .archivo-dropzone:hover,
+    .archivo-dropzone--hover {
+        border-color: #0092dd;
+        background: #f0f8ff;
+    }
+    .archivo-cargado {
+        border: 2px solid #0092dd;
+        background: #e8f4fc;
+        color: #0092dd;
+        border-radius: .5rem;
+        cursor: pointer;
+        min-height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .75rem 1rem;
+        transition: opacity .15s;
+    }
+    .archivo-cargado:hover { opacity: .88; }
+    .archivo-quitar {
+        flex-shrink: 0;
+        color: inherit;
+        opacity: .75;
     }
 </style>

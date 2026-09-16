@@ -24,11 +24,13 @@ class ActividadResource extends Resource
         if($estadoInscripcion)
             $inscripcion = $this->inscripciones()->where('idPersona', '=', $idPersona)->first();
 
-        // Hint pre-inscripción para la app: en actividades pagas, si el usuario es
-        // socio/donante (Argentina), ocultar el pago y mostrar el mensaje de socio.
-        // SocioService gatea país + feature flag + DNI y memoiza por persona, así
-        // que en un listado se resuelve con un solo lookup a Salesforce por request.
-        $exentoPorSocio = ($idPersona && (int) $this->pago === 1)
+        // Hint pre-inscripción para la app: en actividades pagas de Argentina, si el
+        // usuario es socio/donante, ocultar el pago y mostrar el mensaje de socio.
+        // El gate incluye el país de la ACTIVIDAD (no solo el de la persona): un socio
+        // argentino en una actividad de otro país paga normal. SocioService además
+        // gatea país de la persona + feature flag + DNI y memoiza por persona.
+        $paisSocio = (int) config('services.salesforce.socio_pais_id', 13);
+        $exentoPorSocio = ($idPersona && (int) $this->pago === 1 && (int) $this->idPais === $paisSocio)
             ? app(\App\Services\Salesforce\SocioService::class)->esSocio(auth()->user())
             : false;
 

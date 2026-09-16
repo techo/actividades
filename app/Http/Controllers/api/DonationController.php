@@ -7,6 +7,7 @@ use App\Donation;
 use App\DonationPreset;
 use App\DonationSubscription;
 use App\Http\Controllers\Controller;
+use App\Services\DonationImpactService;
 use App\Services\StripePaymentService;
 use App\StripeCustomer;
 use Carbon\Carbon;
@@ -801,6 +802,29 @@ class DonationController extends Controller
                 'limit' => $limit,
             ],
         ]);
+    }
+
+    // =========================================================================
+    // GET /api/donations/impact
+    // =========================================================================
+
+    /**
+     * Dashboard de impacto del donante autenticado (tres tarjetas).
+     * Lee sólo de la BD local (donations + donation_invoices +
+     * donation_subscriptions); no llama a Stripe. Todo en moneda local.
+     *
+     * Response 200:
+     *   { currency,
+     *     total_aportado: { minor, major, currency },
+     *     reloj_impacto:  { meses_activos, titulo, intro, viviendas, voluntarios, mesas },
+     *     impacto_m2:     { metros_cuadrados, meta_m2, viviendas_financiadas,
+     *                       porcentaje_barra, costo_m2, currency, mensaje },
+     *     logistica:      { categoria, icono, titulo, texto, porcentaje,
+     *                       monto_mensual, monto_categoria, currency } }
+     */
+    public function impact(DonationImpactService $impact): JsonResponse
+    {
+        return response()->json($impact->paraDonante(Auth::user()));
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

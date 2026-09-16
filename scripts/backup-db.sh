@@ -11,7 +11,10 @@
 # Se pueden pisar por variables de entorno (útil para el cron o para tests):
 #   DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD
 #   BACKUP_DIR (default: <repo>/storage/backups)
-#   RETENTION_DAYS (default: 14)
+#   RETENTION_DAYS (default: 14)  -> borra dumps más viejos que N días
+#   MAX_BACKUPS (default: 10)     -> tope DURO por cantidad: deja los N más nuevos.
+#                                   Evita que días con muchos deploys acumulen GB
+#                                   aunque estén dentro de la ventana de días.
 #
 # Uso:
 #   ./scripts/backup-db.sh
@@ -40,6 +43,7 @@ DB_PASSWORD="${DB_PASSWORD:-$(env_get DB_PASSWORD)}"
 
 BACKUP_DIR="${BACKUP_DIR:-$APP_DIR/storage/backups}"
 RETENTION_DAYS="${RETENTION_DAYS:-14}"
+MAX_BACKUPS="${MAX_BACKUPS:-10}"
 
 if [ -z "$DB_DATABASE" ] || [ -z "$DB_USERNAME" ]; then
   echo "❌ backup-db: faltan credenciales de BD (DB_DATABASE/DB_USERNAME). Revisá $ENV_FILE." >&2
@@ -90,10 +94,22 @@ fi
 SIZE="$(du -h "$OUTFILE" | cut -f1)"
 echo "✅ backup-db: OK ($SIZE) → $OUTFILE"
 
-# Retención: borrar dumps de esta base más viejos que RETENTION_DAYS.
+# Retención por antigüedad: borrar dumps de esta base más viejos que RETENTION_DAYS.
 if [ "$RETENTION_DAYS" -gt 0 ] 2>/dev/null; then
   DELETED="$(find "$BACKUP_DIR" -maxdepth 1 -type f -name "${DB_DATABASE}-*.sql.gz" -mtime +"$RETENTION_DAYS" -print -delete | wc -l | tr -d ' ')"
-  [ "$DELETED" -gt 0 ] && echo "🧹 backup-db: retención — borrados $DELETED backup(s) > ${RETENTION_DAYS} días."
+  [ "$DELETED" -gt 0 ] && echo "🧹 backup-db: retención por antigüedad — borrados $DELETED backup(s) > ${RETENTION_DAYS} días."
+fi
+
+# Retención por cantidad (tope duro): aún dentro de la ventana de días, dejar solo
+# los MAX_BACKUPS más nuevos. Sin esto, un día con varios deploys acumula un dump
+# por deploy y llena el disco pese al límite por días.
+if [ "$MAX_BACKUPS" -gt 0 ] 2>/dev/null; then
+  OLD="$(ls -1t "$BACKUP_DIR/${DB_DATABASE}-"*.sql.gz 2>/dev/null | tail -n +"$((MAX_BACKUPS + 1))" || true)"
+  if [ -n "$OLD" ]; then
+    printf '%s\n' "$OLD" | xargs -r rm -f
+    COUNT="$(printf '%s\n' "$OLD" | wc -l | tr -d ' ')"
+    echo "🧹 backup-db: retención por cantidad — borrados $COUNT backup(s), se mantienen los $MAX_BACKUPS más nuevos."
+  fi
 fi
 
 # Path del backup a stdout (para scripting).

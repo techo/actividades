@@ -127,8 +127,26 @@
                 <div class="col-md-5">
                     <div class="form-group">
                         <label> {{ $t('frontend.birth_date') }} *</label>
-                        <datepicker v-bind:placeholder="$t('frontend.date_placeholder')" v-model="user.nacimiento" id="nacimiento"
-                                    lang="es" format="DD-MM-YYYY"></datepicker>
+                        <div class="form-row nacimiento-selects">
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.dia" id="nacimiento_dia" :aria-label="$t('frontend.day')">
+                                    <option value="" disabled>{{ $t('frontend.day') }}</option>
+                                    <option v-for="d in diasNacimiento" :key="'d'+d" :value="d">{{ d }}</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.mes" id="nacimiento_mes" :aria-label="$t('frontend.month')">
+                                    <option value="" disabled>{{ $t('frontend.month') }}</option>
+                                    <option v-for="m in mesesNacimiento" :key="'m'+m.value" :value="m.value">{{ m.label }}</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" v-model="fechaNac.anio" id="nacimiento_anio" :aria-label="$t('frontend.year')">
+                                    <option value="" disabled>{{ $t('frontend.year') }}</option>
+                                    <option v-for="y in aniosNacimiento" :key="'y'+y" :value="y">{{ y }}</option>
+                                </select>
+                            </div>
+                        </div>
                         <small v-if="validacion.nacimiento.texto" class="form-text text-danger">{{validacion.nacimiento.texto}}&nbsp;<br></small>
                     </div>
                 </div>
@@ -160,43 +178,6 @@
                             class="fas fa-times text-danger"></i></span>
                 </div>
             </div>
-
-            <div class="row justify-content-center align-items-center">
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label>{{ $t('frontend.passport') }} *</label>
-                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
-                        <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <span v-bind:class="{'d-none':!validacion.dni.valido}"><i
-                            class="fas fa-check text-success"></i></span>
-                    <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i
-                            class="fas fa-times text-danger"></i></span>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label>{{ $t('frontend.telephone') }} *</label>
-                        <VueTelInput v-model="phoneNumber"
-                                        @country-changed="handleCountryChange"
-                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
-                                        placeholder="Enter phone number"
-                                        :disabledFetchingCountry="true"
-                                        ref="telInput">
-                                    </VueTelInput>
-                        <!-- <input type="text" class="form-control" name="telefono" id="telefono" v-model="user.telefono"> -->
-                        <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <span v-bind:class="{'d-none':!validacion.telefono.valido}"><i
-                            class="fas fa-check text-success"></i></span>
-                    <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i
-                            class="fas fa-times text-danger"></i></span>
-                </div>
-            </div>
-
 
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
@@ -262,6 +243,41 @@
                     <span v-bind:class="{'d-none':!validacion.instagram.valido}"><i
                             class="fas fa-check text-success"></i></span>
                     <span v-bind:class="{'d-none':!validacion.instagram.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label style="text-transform: uppercase;">{{ documentoLabel }} *</label>
+                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <span v-bind:class="{'d-none':!validacion.dni.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.dni.invalido}"><i
+                            class="fas fa-times text-danger"></i></span>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>{{ $t('frontend.telephone') }} *</label>
+                        <VueTelInput v-model="phoneNumber"
+                                        @country-changed="handleCountryChange"
+                                        :preferredCountries="['ar', 'co', 'mx', 'pe', 'py', 'ur', 'br', 'cl']"
+                                        :input-options="{ placeholder: $t('frontend.phone_placeholder') }"
+                                        :disabledFetchingCountry="true"
+                                        ref="telInput">
+                                    </VueTelInput>
+                        <small v-if="validacion.telefono.texto" class="form-text text-danger">{{validacion.telefono.texto}}&nbsp;<br></small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <span v-bind:class="{'d-none':!validacion.telefono.valido}"><i
+                            class="fas fa-check text-success"></i></span>
+                    <span v-bind:class="{'d-none':!validacion.telefono.invalido}"><i
                             class="fas fa-times text-danger"></i></span>
                 </div>
             </div>
@@ -386,21 +402,24 @@
         <div v-show="paso('linkear')">
             <div class="row">
                 <div class="col-md-12">
-                    <strong>{{ $t('frontend.register') }}</strong> > <strong>{{ $t('frontend.link_to_rrss') }} </strong>
+                    <strong>{{ $t('frontend.register') }}</strong> > <strong>{{ $t('frontend.link_to_rrss') }}</strong>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <h2>{{ $t('frontend.link_rrss_techo') }}</h2>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-3 text-primary"><i class="fas fa-long-arrow-alt-left "></i><a href="/">{{ $t('frontend.go_back') }}</a></div>
-                    <div class="col-md-3"><a class="btn btn-primary" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a></div>
-                </div>
-
             </div>
             <hr>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7 text-center linkear-box">
+                    <i :class="proveedorIcono" class="linkear-icon text-primary"></i>
+                    <h2 class="linkear-titulo">{{ $t('frontend.link_rrss_techo') }}</h2>
+                    <p class="linkear-help">{{ $t('frontend.link_rrss_help') }}</p>
+                    <p v-if="email" class="linkear-email">{{ email }}</p>
+                    <div class="linkear-actions">
+                        <a class="btn btn-primary btn-lg" @click="confirma_linkear()">{{ $t('frontend.confirm') }}</a>
+                        <a href="/" class="btn btn-link linkear-volver">
+                            <i class="fas fa-long-arrow-alt-left"></i>&nbsp;{{ $t('frontend.go_back') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
   </div>
@@ -426,6 +445,11 @@
           localidades: [],
             phoneNumber: '',
             previousCountry: '',
+          // Fecha de nacimiento en 3 selects (día/mes/año). Se compone en
+          // user.nacimiento como 'YYYY-MM-DD', formato que el backend valida
+          // con la regla `date` y parsea con Carbon (igual que antes, cuando
+          // vue2-datepicker mandaba un Date serializado a ISO).
+          fechaNac: { dia: '', mes: '', anio: '' },
           message: {
             danger: false,
             text: ''
@@ -442,6 +466,12 @@
             invalido: false
           }
         }
+        // Precargar el país del contexto (de dónde viene el usuario: config('app.pais')
+        // resuelto por SeleccionarPais). Queda como default del selector; el usuario
+        // puede cambiarlo. El watcher de user.pais dispara la carga de provincias.
+        if(this.paisActual) {
+          data.user.pais = Number(this.paisActual);
+        }
         if(data.user.facebook_id || data.user.google_id) {
           data.paso_actual = 'personales'
           data.volver = false
@@ -451,9 +481,14 @@
       	}
         return data
       },
-      props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear'],
+      props: ['nombre','apellido','email','facebook_id','google_id','genero','linkear','paisActual'],
       mounted: function(){
         this.traer_paises();
+        // Si el país viene precargado del contexto, cargar sus provincias: el watcher
+        // de user.pais no dispara para el valor inicial (no es immediate).
+        if(this.user.pais) {
+          this.traer_provincias();
+        }
         this.removeUndefinedText();
       },
       watch: {
@@ -469,15 +504,71 @@
             this.user.telefono = this.phoneNumber.replace(/[\s-]+/g, '');
             this.validar_data('telefono')
         },
-        'user.pais': function() { 
-            this.validar_data('pais') 
-            this.traer_provincias() 
+        'user.pais': function() {
+            this.validar_data('pais')
+            this.traer_provincias()
+            // El documento válido depende del país: al cambiarlo, revalidamos el dni.
+            this.validar_data('dni')
         },
         'user.provincia': function() { 
             this.validar_data('provincia')  
         this.traer_localidades() },
         'user.canal_contacto': function() { this.validar_data('canal_contacto')},
-        'user.privacidad': function() { this.validar_data('privacidad')}
+        'user.privacidad': function() { this.validar_data('privacidad')},
+        // Cualquier cambio en los 3 selects recompone user.nacimiento; el watcher
+        // de 'user.nacimiento' ya existente dispara la validación.
+        'fechaNac': { deep: true, handler: function() { this.componerNacimiento() } }
+      },
+      computed: {
+        // Icono del proveedor a vincular en el paso "linkear". Cae a un ícono de
+        // enlace genérico si no viniera ninguno.
+        proveedorIcono: function() {
+          if(this.google_id) return 'fab fa-google';
+          if(this.facebook_id) return 'fab fa-facebook-f';
+          return 'fas fa-link';
+        },
+        // Años válidos para nacimiento: coinciden con la validación del backend
+        // (edad entre 13 y 85). Se listan del más reciente al más antiguo porque
+        // la mayoría de los voluntarios son jóvenes → el año buscado queda arriba.
+        aniosNacimiento: function() {
+          var actual = new Date().getFullYear();
+          var anios = [];
+          for(var y = actual - 13; y >= actual - 85; y--) anios.push(y);
+          return anios;
+        },
+        // Nombres de meses localizados según el idioma activo (Intl), sin tener
+        // que mantener 12 claves de traducción por locale.
+        mesesNacimiento: function() {
+          var locale = (this.$i18n && this.$i18n.locale ? this.$i18n.locale : 'es').replace('_', '-');
+          var meses = [];
+          for(var m = 1; m <= 12; m++) {
+            var label;
+            try {
+              label = new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2000, m - 1, 1));
+            } catch(e) {
+              label = new Intl.DateTimeFormat('es', { month: 'long' }).format(new Date(2000, m - 1, 1));
+            }
+            label = label.charAt(0).toUpperCase() + label.slice(1);
+            meses.push({ value: m, label: label });
+          }
+          return meses;
+        },
+        // Días válidos según el mes/año elegidos (respeta febrero y bisiestos).
+        diasNacimiento: function() {
+          var mes = Number(this.fechaNac.mes);
+          var anio = Number(this.fechaNac.anio);
+          var max = (mes && anio) ? new Date(anio, mes, 0).getDate() : 31;
+          var dias = [];
+          for(var d = 1; d <= max; d++) dias.push(d);
+          return dias;
+        },
+        // Label del campo documento según el país elegido ("RUT", "CPF",
+        // "Número de DNI"...), provisto por /ajax/paises. Cae al genérico.
+        documentoLabel: function() {
+          var self = this;
+          var p = _.find(this.paises, function(x){ return x.id == self.user.pais; });
+          return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
+        }
       },
       methods: {
         registro_facebook: function() {
@@ -489,7 +580,20 @@
         cambiar_paso: function (mod) {
           switch(this.paso_actual) {
             case 'email':
-              if(!(this.validacion.email.valido && this.validacion.pass.valido)) return false
+              if(!(this.validacion.email.valido && this.validacion.pass.valido)) {
+                // No avanzar en silencio: mostrar QUÉ falta (email/contraseña) en vez
+                // de un botón que no reacciona. Si un campo quedó vacío o sin validar,
+                // se marca requerido para que el usuario vea el motivo.
+                if(!this.validacion.email.valido) {
+                  this.validacion.email.invalido = true
+                  if(!this.validacion.email.texto) this.validacion.email.texto = this.$t('frontend.changes_required_error')
+                }
+                if(!this.validacion.pass.valido) {
+                  this.validacion.pass.invalido = true
+                  if(!this.validacion.pass.texto) this.validacion.pass.texto = this.$t('frontend.changes_required_error')
+                }
+                return false
+              }
               this.paso_actual = 'personales'
               break
             case 'personales':
@@ -498,7 +602,6 @@
                 this.loginSocial = response.data.loginSocial
                 this.abreviacionPais = response.data.abreviacionPais
                 this.login_callback = response.data.login_callback
-                console.log(response.data.login_callback)
                 this.$parent.$refs.login.showValidUser(response.data.user);
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
@@ -524,11 +627,37 @@
             id: id,
             email: this.email
           }).then(response => {
-            if(response.data.login_callback) window.location.href = response.data.login_callback;
+            // El backend ya vinculó la cuenta social y dejó al usuario logueado.
+            // Siempre navegamos: usamos login_callback si existe, y si no (p. ej.
+            // cuando el flujo arrancó desde /registro y no se guardó callback en
+            // sesión) caemos a la home. Sin este fallback la página se quedaba
+            // congelada en el paso "linkear" aunque el linkeo hubiera funcionado.
+            if(response.data.success) {
+              window.location.href = response.data.login_callback || '/';
+            } else {
+              window.location.href = '/';
+            }
           })
         },
         paso: function (paso) {
           return paso == this.paso_actual
+        },
+        // Arma user.nacimiento a partir de los 3 selects. Si al cambiar mes/año
+        // el día quedó fuera de rango (ej. 31 → febrero), lo limpia. Mientras la
+        // fecha esté incompleta deja '' para no disparar validación prematura.
+        componerNacimiento: function() {
+          var dia = Number(this.fechaNac.dia);
+          var mes = Number(this.fechaNac.mes);
+          var anio = Number(this.fechaNac.anio);
+          if(dia && mes && anio) {
+            var maxDia = new Date(anio, mes, 0).getDate();
+            if(dia > maxDia) { this.fechaNac.dia = ''; this.user.nacimiento = ''; return; }
+            var mm = ('0' + mes).slice(-2);
+            var dd = ('0' + dia).slice(-2);
+            this.user.nacimiento = anio + '-' + mm + '-' + dd;
+          } else {
+            this.user.nacimiento = '';
+          }
         },
         validar_data: _.debounce(function(prop) {
           var data = {}
@@ -540,6 +669,11 @@
               data.google_id = this.user.google_id
               data.facebook_id = this.user.facebook_id
 	    }
+            // El documento se valida según el país: mandamos el país junto al dni
+            // para que el server aplique la regla correcta (DNI/CPF/RUT/pasaporte).
+            if(prop == "dni" && this.user.pais) {
+              data.pais = this.user.pais
+            }
           } else {
             data = this.user
           }
@@ -556,10 +690,18 @@
             }
           })
           .catch(error => {
-            var errors = error.response.data.errors
-            for(var prop in errors) {
-              this.validacion[prop].texto = errors[prop][0]
-              this.validacion[prop].valido = false
+            if(error.response && error.response.status === 422 && error.response.data.errors) {
+              var errors = error.response.data.errors
+              for(var p in errors) {
+                this.validacion[p].texto = errors[p][0]
+                this.validacion[p].valido = false
+                this.validacion[p].invalido = true
+              }
+            } else if(prop && this.validacion[prop]) {
+              // Error que NO es 422 (500/red): no dejar el campo mudo en valido=false
+              // sin motivo (bloqueaba "siguiente" sin explicación). Se marca inválido
+              // con un mensaje genérico para que el usuario reintente.
+              this.validacion[prop].texto = this.$t('frontend.error')
               this.validacion[prop].invalido = true
             }
           })
@@ -621,5 +763,52 @@
 <style scoped>
     a.btn-primary {
         color: #ffffff;
+    }
+
+    /* Nacimiento en 3 selects (día/mes/año): gutter chico para que entren
+       cómodos incluso en pantallas angostas. */
+    .nacimiento-selects {
+        margin-left: -4px;
+        margin-right: -4px;
+    }
+    .nacimiento-selects > [class^="col-"] {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+
+    /* Paso "linkear": vincular red social con una cuenta TECHO existente. */
+    .linkear-box {
+        padding: 1.5rem 0 1rem;
+    }
+    .linkear-icon {
+        font-size: 2.75rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .linkear-titulo {
+        font-size: 1.5rem;
+        margin-bottom: .75rem;
+    }
+    .linkear-help {
+        color: #6c757d;
+        max-width: 30rem;
+        margin: 0 auto 1rem;
+    }
+    .linkear-email {
+        font-weight: 600;
+        word-break: break-word;
+        margin-bottom: 1.5rem;
+    }
+    .linkear-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: .5rem;
+    }
+    .linkear-actions .btn-lg {
+        min-width: 14rem;
+    }
+    .linkear-volver {
+        color: #6c757d;
     }
 </style>
