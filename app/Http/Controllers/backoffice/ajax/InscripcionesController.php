@@ -89,9 +89,8 @@ class InscripcionesController extends BaseController
                 // Un socio exento (exento_pago) no debe pagar: se lo trata como
                 // "sin pago" → mail/push de CONFIRMADO, no de falta de pago.
                 if($inscripcion->actividad->confirmacion == 1 && ($inscripcion->actividad->pago == 0 || $inscripcion->exento_pago)) {
-                    if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
-                        $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
-                    }
+                    // Confirmación: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable).
+                    $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.inscripcion_confirmada_titulo',
@@ -120,9 +119,8 @@ class InscripcionesController extends BaseController
 
         if($request->has('pago')){
             if($inscripcion->actividad->pago == 1 && $request->pago == 1) {
-                if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
-                    $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
-                }
+                // Pago confirmado: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable).
+                $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
                 $this->pushService->enviarLocalizado(
                     $inscripcion->persona,
                     'push.pago_exitoso_titulo',
@@ -346,8 +344,6 @@ class InscripcionesController extends BaseController
             ->where('idInscripcion', $request->idInscripcion)
             ->firstOrFail();
 
-        $recenciaCritica = (int) config('mailing.dedup_recencia_dias_critico', 30);
-
         // La exención hace que EstadoInscripcion trate el pago como satisfecho.
         $inscripcion->exento_pago                 = true;
         $inscripcion->exento_motivo               = 'beca';
@@ -360,10 +356,8 @@ class InscripcionesController extends BaseController
         $inscripcion->confirma                    = 1;
         $inscripcion->save();
 
-        // Confirmada: mail (con dedup mail/push) + push.
-        if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
-            $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
-        }
+        // Confirmación: mail crítico, se envía SIEMPRE (aunque la persona tenga push confiable) + push.
+        $this->intentaEnviar(new MailInscripcionConfirmada($inscripcion), $inscripcion->persona);
         $this->pushService->enviarLocalizado(
             $inscripcion->persona,
             'push.inscripcion_confirmada_titulo',
