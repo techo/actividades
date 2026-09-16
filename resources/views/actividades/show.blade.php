@@ -45,12 +45,12 @@
                 <div class="col-md-8">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>
-                        @if (!isset($actividad->localidad) || $actividad->localidad->localidad == "No definida")
-                            {{ $actividad->provincia->provincia }}, {{ $actividad->pais->nombre }}
+                        @if (!isset($actividad->localidad) || optional($actividad->localidad)->localidad == "No definida")
+                            {{ optional($actividad->provincia)->provincia }}, {{ optional($actividad->pais)->nombre }}
                         @elseif (!isset($actividad->provincia))
                             {{ __('backend.unspecified') }}
                         @else
-                            {{ $actividad->localidad->localidad }}, {{ $actividad->provincia->provincia }}
+                            {{ optional($actividad->localidad)->localidad }}, {{ optional($actividad->provincia)->provincia }}
                         @endif
                     </span>
                 </div>
