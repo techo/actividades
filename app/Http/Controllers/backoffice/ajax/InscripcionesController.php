@@ -75,10 +75,6 @@ class InscripcionesController extends BaseController
     {
         $inscripcion = Inscripcion::findOrFail($inscripcion);
 
-        // Dedup mail/push: no le mandamos el mail a quien le llega el push de forma
-        // confiable. Ventana conservadora (avisos críticos): solo usuarios de app activos.
-        $recenciaCritica = (int) config('mailing.dedup_recencia_dias_critico', 30);
-
         if($request->has('presente')){
             $inscripcion->presente = $request->presente;
         }
@@ -101,9 +97,8 @@ class InscripcionesController extends BaseController
                 }
 
                 if($inscripcion->actividad->confirmacion == 1 && $inscripcion->actividad->pago == 1 && !$inscripcion->exento_pago) {
-                    if (!$inscripcion->persona->tienePushConfiable($recenciaCritica)) {
-                        $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
-                    }
+                    // "Confirmado, ahora pagá": mail crítico, se envía SIEMPRE (aunque tenga push confiable).
+                    $this->intentaEnviar(new MailInscripcionFaltaPago($inscripcion), $inscripcion->persona);
                     $this->pushService->enviarLocalizado(
                         $inscripcion->persona,
                         'push.pago_pendiente_titulo',
