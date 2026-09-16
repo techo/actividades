@@ -183,18 +183,33 @@ if ssh "$HOST" bash -s <<EOF | tee "$DEPLOY_LOG"
   # El sitio está abajo únicamente durante esto (segundos). El trap sube el sitio
   # al salir pase lo que pase.
   # ============================================================================
+  # El web server corre como www-data y storage/ + bootstrap/cache/ son suyos.
+  # Las fases previas (composer/npm/vue-i18n) corrieron como el usuario de deploy
+  # (techo) y pueden haber creado el log del día (storage/logs/laravel-FECHA.log)
+  # u otros archivos siendo techo → luego php-fpm no puede escribirlos ("could not
+  # be opened in append mode": 500 en todo el sitio) y, además, los *:clear
+  # corridos como techo NO borran los caches de www-data (fallan silenciosos y
+  # queda config/route/view cache viejo). Por eso: normalizamos ownership y
+  # corremos artisan como www-data (mismo criterio que en prod).
+  #
+  # Requisito: el usuario de deploy debe poder usar sudo SIN password para chown
+  # y para 'sudo -u www-data' (NOPASSWD en /etc/sudoers.d). Si acá falla el sudo,
+  # 'set -e' corta el deploy ANTES de bajar el sitio → el sitio sigue arriba.
+  echo "→ Normalizando ownership de storage/ y bootstrap/cache a www-data..."
+  sudo chown -R www-data:www-data storage bootstrap/cache
+
   echo "→ Maintenance mode ON (ventana corta: migración + cache)..."
-  php artisan down || true
-  trap 'php artisan up || true' EXIT
+  sudo -u www-data php artisan down || true
+  trap 'sudo -u www-data php artisan up || true' EXIT
 
   echo "→ Running database migrations..."
-  php artisan migrate --force
+  sudo -u www-data php artisan migrate --force
 
   echo "→ Clearing caches..."
-  php artisan cache:clear
-  php artisan route:clear
-  php artisan config:clear
-  php artisan view:clear
+  sudo -u www-data php artisan cache:clear
+  sudo -u www-data php artisan route:clear
+  sudo -u www-data php artisan config:clear
+  sudo -u www-data php artisan view:clear
 
   echo "✅ Code deployed. (El EXIT trap sube el sitio.)"
 EOF
