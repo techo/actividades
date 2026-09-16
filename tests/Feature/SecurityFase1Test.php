@@ -301,4 +301,24 @@ class SecurityFase1Test extends TestCase
     {
         $this->assertEquals('lax', config('session.same_site'));
     }
+
+    /**
+     * A-1: ActividadesPolicy::ver() debe tolerar tanto una instancia de Actividad
+     * (caso normal, resuelta por SubstituteBindings) como un id crudo (borde que
+     * tiraba "Argument must be an instance of App\Actividad" -> 500).
+     *
+     * @test
+     */
+    public function la_policy_ver_acepta_instancia_o_id_crudo()
+    {
+        $this->seed('PermisosSeeder');
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+        $actividad = factory('App\Actividad')->create();
+
+        $policy = new \App\Policies\ActividadesPolicy();
+
+        $this->assertTrue($policy->ver($admin, $actividad));                    // instancia
+        $this->assertTrue($policy->ver($admin, (string) $actividad->idActividad)); // id crudo
+    }
 }
