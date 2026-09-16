@@ -71,11 +71,15 @@
         <strong>{{ number_format($inscripcion->actividad->montoMin,0) }} {{$inscripcion->actividad->moneda}}</strong>,
         @lang('email.missing_payment_6')
     </p>
-    {{-- Beca / exención: solo si la actividad la tiene habilitada; el link abre directo esa opción en la página de pago --}}
-    @if(!empty($inscripcion->actividad->beca))
+    {{-- Beca / exención: solo si la actividad la habilita (flag moderno permite_exencion, o URL legacy beca) --}}
+    @if($inscripcion->actividad->permite_exencion || !empty($inscripcion->actividad->beca))
         <p style="margin:0 0 8px; font-size:15px; line-height:1.55; color:#2b2f36;">
             @lang('email.missing_payment_7')
-            <a href="{{ url('inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion') }}?opcion=beca" style="color:#0092dd; font-weight:700;">@lang('frontend.ask_for_grant')</a>.
+            @if($inscripcion->actividad->permite_exencion)
+                <a href="{{ url('inscripciones/actividad/' . $inscripcion->actividad->idActividad . '/confirmar/donacion') }}?opcion=beca" style="color:#0092dd; font-weight:700;">@lang('frontend.ask_for_grant')</a>.
+            @else
+                <a href="{{ $inscripcion->actividad->beca }}" style="color:#0092dd; font-weight:700;">@lang('frontend.ask_for_grant')</a>.
+            @endif
         </p>
     @endif
 

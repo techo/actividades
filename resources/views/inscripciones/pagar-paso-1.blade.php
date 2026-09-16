@@ -286,7 +286,7 @@
             @endif
 
             {{-- ── Panel: Beca / Exención ───────────────────────────── --}}
-            @if(!empty($actividad->beca))
+            @if($actividad->permite_exencion)
             <div id="pago-content-beca" class="pago-panel" style="display:none;">
                 <solicitud-beca
                     id="{{ $inscripcion->idInscripcion }}"
@@ -309,7 +309,7 @@
                     </p>
                 @endif
             </div>
-            @if(!empty($actividad->beca))
+            @if($actividad->permite_exencion)
                 <div class="mt-2">
                     <p class="text-muted small mb-2">
                         {{ __('frontend.payment_link_scholarship_note') }}
