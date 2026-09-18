@@ -278,6 +278,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
     Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('role:admin');
     Route::delete('/usuarios/{id}', 'backoffice\UsuariosController@delete')->middleware('permission:borrar_usuarios');
+    Route::post('/usuarios/{id}/restaurar', 'backoffice\UsuariosController@restore')->middleware('permission:borrar_usuarios');
     Route::post('/usuarios/{persona}/fusionar', 'backoffice\ajax\UsuariosController@fusionar')->middleware('role:admin');
 
 

@@ -173,7 +173,19 @@ class LoginController extends Controller
             }
         }
 //        $personaData->password = bcrypt(\Illuminate\Support\Str::random(30));
+        // Prioridad a una cuenta ACTIVA con ese mail. Si no hay activa pero existe una
+        // dada de baja (soft-delete), la restauramos: el login social prueba la propiedad
+        // del email (el proveedor OAuth ya lo verificó), así recuperamos la cuenta e
+        // historial en vez de crear un duplicado (antes, al excluir borrados, "no existía"
+        // y caía en un alta nueva).
         $persona = Persona::where('mail',$personaData->email)->first();
+        if(!$persona) {
+            $borrado = Persona::onlyTrashed()->where('mail', $personaData->email)->first();
+            if($borrado) {
+                $borrado->restore();
+                $persona = $borrado;
+            }
+        }
         if(!$persona) {
             if($personaData->email == null)
                 return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");

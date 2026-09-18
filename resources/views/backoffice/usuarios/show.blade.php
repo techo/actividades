@@ -5,6 +5,23 @@
 
 @section('content')
 
+@if(!empty($borrado))
+    <div class="callout callout-warning" style="margin-bottom:15px;">
+        <h4><i class="fa fa-user-times"></i> Esta persona está dada de baja</h4>
+        <p>La cuenta fue eliminada (borrado lógico). Su mail sigue reservado y no aparece
+           en las búsquedas normales del sistema. Podés restaurarla para reactivarla.</p>
+        @if(Auth::user()->hasPermissionTo('borrar_usuarios'))
+        <form method="POST" style="display:inline;"
+              action="{{ action('backoffice\UsuariosController@restore', ['id' => $usuario->idPersona]) }}">
+            {{ csrf_field() }}
+            <button type="submit" class="btn btn-warning">
+                <i class="fa fa-undo"></i> Restaurar persona
+            </button>
+        </form>
+        @endif
+    </div>
+@endif
+
  <form method="POST" id="formDelete"
           action="{{ action('backoffice\UsuariosController@delete', ['id' => $usuario->idPersona]) }}">
 

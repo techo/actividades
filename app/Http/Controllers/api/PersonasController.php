@@ -113,6 +113,17 @@ class PersonasController extends Controller
 
         $persona = Persona::where('mail', $data['email'])->first();
 
+        // Cuenta dada de baja (soft-delete): el login social prueba la propiedad del
+        // email (proveedor verificado) → la restauramos y seguimos, en vez de devolver
+        // 404 (que dejaba al usuario en un callejón: no podía entrar ni re-registrarse
+        // porque el mail seguía "ocupado" por la fila borrada).
+        if (!$persona) {
+            $persona = Persona::onlyTrashed()->where('mail', $data['email'])->first();
+            if ($persona) {
+                $persona->restore();
+            }
+        }
+
         if (!$persona) {
             return response(['success' => false, 'mensaje' => 'Usuario no encontrado'], 404);
         }
