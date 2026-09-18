@@ -253,6 +253,44 @@ class Actividad extends Model
 
     }
 
+    /**
+     * ¿El plazo de pago ya venció (respecto de HOY)?
+     *
+     * La fecha límite de pago es INCLUSIVA del día cargado: se puede pagar
+     * durante todo ese día y el plazo recién vence al pasar al día siguiente.
+     * Aunque `fechaLimitePago` es un dateTime, el backoffice la guarda con hora
+     * 00:00 (el input de hora del form no se persiste), así que la comparación
+     * es por DÍA, no por hora. Fuente única para tarjetas, show, EstadoInscripcion
+     * y el flujo de pago (Stripe/PayU), que antes comparaban cada uno distinto y
+     * bloqueaban el día límite adelantado (a las 00:00).
+     */
+    public function pagoFueraDeFecha(): bool
+    {
+        if (empty($this->fechaLimitePago)) {
+            return false;
+        }
+
+        return \Carbon\Carbon::now()->startOfDay()
+            ->greaterThan($this->fechaLimitePago->copy()->startOfDay());
+    }
+
+    /**
+     * ¿Un pago realizado en la fecha $fecha cae DENTRO del plazo?
+     *
+     * Mismo criterio inclusivo por día que pagoFueraDeFecha(): un pago hecho el
+     * propio día límite es válido. Se usa en el flujo PayU, donde se compara
+     * contra la fecha real de la transacción (no contra "ahora").
+     */
+    public function pagoDentroDeFecha(\Carbon\Carbon $fecha): bool
+    {
+        if (empty($this->fechaLimitePago)) {
+            return true;
+        }
+
+        return $fecha->copy()->startOfDay()
+            ->lessThanOrEqualTo($this->fechaLimitePago->copy()->startOfDay());
+    }
+
     public function estadoInscripcion($idPersona = null)
     {
         if(!$idPersona) return false;

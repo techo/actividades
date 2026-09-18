@@ -1016,14 +1016,15 @@
                     this.fechas.fechaFinEvaluaciones + ' ' + this.horas.fechaFinEvaluaciones
                 );
             },
-            // Vencido solo si la actividad requiere pago y hoy es posterior a la fecha+hora
-            // límite. (Antes comparaba solo la fecha, sin hora → saltaba a las 00:00 del día
-            // límite, aún dentro del plazo.)
+            // La fecha límite de pago es INCLUSIVA del día cargado: el pago vale
+            // durante todo ese día y recién vence al pasar al día siguiente. La hora
+            // no se persiste (el submit manda solo fechaLimitePago sin hora), así que
+            // se compara por DÍA. Mismo criterio que el server (Actividad::pagoFueraDeFecha).
+            // Antes comparaba fecha+hora contra ahora, y como la hora era 00:00 saltaba
+            // a "vencido" a la medianoche del día límite, aún dentro del plazo.
             pagoVencido() {
                 if (!this.actividad.pago || !this.fechas.fechaLimitePago) return false;
-                return moment().isAfter(
-                    this.fechas.fechaLimitePago + ' ' + this.horas.fechaLimitePago
-                );
+                return moment(this.fechas.fechaLimitePago, 'YYYY-MM-DD').isBefore(moment().startOf('day'));
             },
 
             // Deriva el modo activo a partir de los dos booleanos pago + confirmacion.
