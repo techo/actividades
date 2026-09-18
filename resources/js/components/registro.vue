@@ -597,6 +597,8 @@
               this.paso_actual = 'personales'
               break
             case 'personales':
+              this.message.danger = false
+              this.message.text = ''
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.loginSocial = response.data.loginSocial
@@ -606,7 +608,34 @@
                 window.location.href = '/';
                 if(response.data.login_callback) window.location.href = response.data.login_callback;
               }).catch((error) => {
-                this.validar_data()
+                // Antes el .catch solo llamaba a validar_data() y DESCARTABA la
+                // respuesta del backend. Si el alta fallaba por algo que no era un
+                // 422 de validación (un 500 en save() o en el envío del mail de
+                // bienvenida, que se manda sincrónico), el usuario no veía nada y el
+                // registro quedaba "colgado" sin completarse. Ahora se surfacea.
+                if(error.response && error.response.status === 422 && error.response.data.errors) {
+                  var errors = error.response.data.errors
+                  var camposPasoEmail = ['email','pass']
+                  var volverAEmail = false
+                  for(var p in errors) {
+                    // Null-safe: un error sobre un campo que no está en validacion
+                    // no debe tirar TypeError (dejaba el form mudo).
+                    if(this.validacion[p]) {
+                      this.validacion[p].texto = errors[p][0]
+                      this.validacion[p].valido = false
+                      this.validacion[p].invalido = true
+                    }
+                    if(camposPasoEmail.indexOf(p) !== -1) volverAEmail = true
+                  }
+                  // Si el campo que falló pertenece al paso anterior (email/clave),
+                  // volvemos a ese paso para que el mensaje sea visible; si no, ya se
+                  // muestra en "personales".
+                  if(volverAEmail) this.paso_actual = 'email'
+                } else {
+                  // 500 / error de red: mensaje general en vez de quedarnos mudos.
+                  this.message.danger = true
+                  this.message.text = this.$t('frontend.error')
+                }
               });
             break
           }

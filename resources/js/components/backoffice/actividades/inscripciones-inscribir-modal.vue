@@ -104,12 +104,18 @@ export default {
 		onSearch: _.debounce( function (text, loading) {
 			if(text.length > 3) {
 				loading(true);
-				axios.get('/ajax/coordinadores?coordinador=' + text)
-					.then((datos) => { 
-						this.personas = datos.data.data; 
+				// Usa /ajax/personas (no /ajax/coordinadores): este endpoint tiene el
+				// escape por email exacto, que permite encontrar e inscribir a una
+				// persona registrada bajo otro contexto de país (costura multi-país).
+				// Con /ajax/coordinadores, una persona cuyo idPais no coincide con el
+				// del coordinador NO aparecía nunca, ni escribiendo su mail completo.
+				// La búsqueda por nombre sigue acotada al país del coordinador.
+				axios.get('/ajax/personas', { params: { q: text } })
+					.then((datos) => {
+						this.personas = datos.data.data;
 						loading(false);
 					})
-					.catch((error) => { 
+					.catch((error) => {
 						console.log(error);
 						loading(false);
 					});
