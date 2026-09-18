@@ -22,15 +22,24 @@ class PagosController extends Controller
         $payment = new $paymentClass($inscripcion);
         $payment->setRequest($request);
 
+        $fecha_transaccion = null;
         if($request->filled('processingDate'))
             $fecha_transaccion = Carbon::parse($request->processingDate);
 
-        if ($payment->success() && !$inscripcion->actividad->fechaLimitePago ||
-            $payment->success() && $fecha_transaccion->lessThan($inscripcion->actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoDentroDeFecha). Antes
+        // usaba lessThan (exclusivo) contra fechaLimitePago a las 00:00, así que un
+        // pago hecho el propio día límite caía como "fuera de fecha". confirmation()
+        // ya usaba <= (inclusivo): ahora ambos comparten el mismo criterio. El corto
+        // circuito por !fechaLimitePago se mantiene para no exigir la fecha de la
+        // transacción cuando la actividad no tiene plazo.
+        if ($payment->success() && (
+                !$inscripcion->actividad->fechaLimitePago ||
+                $inscripcion->actividad->pagoDentroDeFecha($fecha_transaccion)
+            )) {
             return view('inscripciones.pagada', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);
         }
-        elseif ($payment->success() && $fecha_transaccion->greaterThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
-            return view('pagos.fuera_de_fecha', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);   
+        elseif ($payment->success()) {
+            return view('pagos.fuera_de_fecha', ['inscripcion' => $inscripcion, 'actividad' => $payment->actividad]);
         }
 
         return view('pagos.response')->with('payment', $payment);
@@ -60,8 +69,10 @@ class PagosController extends Controller
 
         $fecha_transaccion = Carbon::parse($request->transaction_date);
 
-        if(!$inscripcion->actividad->fechaLimitePago ||
-            $inscripcion->actividad->fechaLimitePago && $fecha_transaccion->lessThanOrEqualTo($inscripcion->actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoDentroDeFecha). Antes
+        // usaba lessThanOrEqualTo contra fechaLimitePago a las 00:00, con lo que un
+        // pago del propio día límite (con hora > 00:00) igual quedaba fuera de plazo.
+        if($inscripcion->actividad->pagoDentroDeFecha($fecha_transaccion)) {
             $payment->updateUserStatus();
             Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($inscripcion));
             \Log::info('Confirmación de pago recibida y aplicada', [

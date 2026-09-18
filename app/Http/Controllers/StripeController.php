@@ -226,7 +226,9 @@ class StripeController extends Controller
         $actividad = $inscripcion->actividad;
 
         // Verificar fecha límite de pago
-        if ($actividad->fechaLimitePago && Carbon::now()->greaterThan($actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoFueraDeFecha). Antes:
+        // now() > fechaLimitePago (00:00) → rechazaba pagos del propio día límite.
+        if ($actividad->pagoFueraDeFecha()) {
             Log::warning('StripeWebhook PI succeeded: pago fuera de fecha para inscripcion ' . $inscripcionId);
             try {
                 Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));
@@ -318,7 +320,9 @@ class StripeController extends Controller
         $actividad = $inscripcion->actividad;
 
         // Verificar fecha límite de pago
-        if ($actividad->fechaLimitePago && Carbon::now()->greaterThan($actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoFueraDeFecha). Antes:
+        // now() > fechaLimitePago (00:00) → rechazaba pagos del propio día límite.
+        if ($actividad->pagoFueraDeFecha()) {
             Log::warning('Stripe webhook: pago fuera de fecha para inscripcion ' . $inscripcionId);
             try {
                 Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));

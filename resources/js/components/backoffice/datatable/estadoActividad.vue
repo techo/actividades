@@ -96,12 +96,13 @@ export default {
                 this.fechas.fechaFinEvaluaciones +' '+ this.horas.fechaFinEvaluaciones
                 );
 
-            // "vencido" = hoy es POSTERIOR a la fecha+hora límite de pago.
-            // (Antes era isBefore(...) → el aviso "Vencida" salía cuando el pago
-            //  AÚN estaba vigente, y desaparecía una vez vencido: estaba invertido.)
-            this.estadoPago = moment().isAfter(
-                this.fechas.fechaLimitePago + ' ' + this.horas.fechaLimitePago
-                );
+            // "vencido" = HOY ya es un día POSTERIOR a la fecha límite de pago. La
+            // fecha límite es INCLUSIVA del día cargado: el pago vale durante todo ese
+            // día (la hora no se persiste), así que se compara por DÍA. Mismo criterio
+            // que el server (Actividad::pagoFueraDeFecha). Antes comparaba fecha+hora
+            // contra ahora y, con hora 00:00, saltaba a "vencido" a la medianoche del
+            // día límite, aún dentro del plazo.
+            this.estadoPago = moment(this.fechas.fechaLimitePago, 'YYYY-MM-DD').isBefore(moment().startOf('day'));
         }
     }
 }

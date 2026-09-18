@@ -69,9 +69,11 @@ class EstadoInscripcion
 
     private static function resolvePagoPendiente(Actividad $actividad)
     {
-        $limite = $actividad->fechaLimitePago;
-
-        if (!$limite || $limite->greaterThan(Carbon::now())) {
+        // La fecha límite es inclusiva del día cargado (ver Actividad::pagoFueraDeFecha).
+        // Antes comparaba `fechaLimitePago->greaterThan(now())`, y como la fecha se
+        // guarda con hora 00:00, el estado saltaba a "cerrado" a la medianoche del
+        // día límite, aún dentro del plazo.
+        if (!$actividad->pagoFueraDeFecha()) {
             return self::CONFIRM_BY_PAYING;
         }
 

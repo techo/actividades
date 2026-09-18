@@ -182,9 +182,10 @@ class actividadesController extends Controller
                 $habilitado = true;
             }
 
-            $fecha_hoy = Carbon::parse(Carbon::now()->format('Y-m-d'));
-
-            if($actividad->pago == 1 && $actividad->fechaLimitePago && $actividad->fechaLimitePago->lessThanOrEqualTo($fecha_hoy) ) {
+            // Fecha límite inclusiva del día (ver Actividad::pagoFueraDeFecha).
+            // Antes: fechaLimitePago->lessThanOrEqualTo(hoy a las 00:00) → deshabilitaba
+            // el botón el propio día límite, aún dentro del plazo.
+            if($actividad->pago == 1 && $actividad->pagoFueraDeFecha()) {
                 $mensaje = __('frontend.approval_needed');
                 $clase = 'btn-danger disabled';
                 $habilitado = false;
