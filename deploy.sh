@@ -59,6 +59,10 @@ notify_n8n() {
   local started_at="$2"
   local commits="$3"      # commits deployados, ya escapados para JSON (una línea, \n entre commits)
 
+  # Los fallos NO se notifican a n8n: generan ruido y no aportan (el error ya se ve
+  # en la salida del deploy). Solo se notifica el deploy exitoso.
+  [ "$status" = "failure" ] && return 0
+
   # Solo PRODUCCIÓN notifica a n8n. Sandbox (base descartable) NO manda nada:
   # la diferenciación es automática por el ambiente elegido, no hay que tocar n8n.
   [ "$ENVIRONMENT" != "prod" ] && return 0
