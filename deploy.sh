@@ -233,6 +233,11 @@ if [ -n "$DEPLOYED_COMMITS" ]; then
   echo "📦 Commits deployados:"; printf '%s\n' "$DEPLOYED_COMMITS"
 fi
 
-notify_n8n "$STATUS" "$START_TIME" "$COMMITS_JSON"
-[ "$STATUS" = "failure" ] && exit 1
+# n8n se notifica SOLO en deploy exitoso. Un fallo nunca manda nada (ya se ve en
+# la salida del deploy; la notificación de error solo era ruido).
+if [ "$STATUS" = "success" ]; then
+  notify_n8n "$STATUS" "$START_TIME" "$COMMITS_JSON"
+else
+  exit 1
+fi
 exit 0
