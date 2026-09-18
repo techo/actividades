@@ -29,7 +29,10 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    // Default subido de 120 a 600 min (10h): el flujo de inscripción es largo y el
+    // _token CSRF se hornea al renderizar; con 120 min muchos usuarios volvían con la
+    // sesión vencida y el submit tiraba 419 (contención del incidente de inscripción).
+    'lifetime' => env('SESSION_LIFETIME', 600),
 
     'expire_on_close' => false,
 

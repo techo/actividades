@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
 class Handler extends ExceptionHandler
@@ -64,7 +66,51 @@ class Handler extends ExceptionHandler
         if($exception instanceof AuthenticationException){
             return $this->unauthenticated($request, $exception);
         }
+        if($exception instanceof TokenMismatchException){
+            return $this->tokenMismatch($request, $exception);
+        }
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Token CSRF vencido (419 "Página expirada"). No es una excepción de la app,
+     * por eso Laravel no lo loguea: acá lo registramos como warning para poder
+     * medir el impacto (cuántos, en qué rutas) y servimos una vista amigable que
+     * reintenta con token fresco en vez del "Whoops" genérico.
+     */
+    protected function tokenMismatch($request, TokenMismatchException $exception)
+    {
+        Log::warning('CSRF 419 TokenMismatch', [
+            'url'     => $request->fullUrl(),
+            'method'  => $request->method(),
+            'referer' => $request->header('referer'),
+            'user'    => optional($request->user())->idPersona,
+            'ip'      => $request->ip(),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'error'   => 'Page Expired',
+                'message' => 'Tu sesión expiró. Recargá la página e intentá de nuevo.',
+            ], 419);
+        }
+
+        return response()->view('errors.419', [
+            'retryUrl' => $this->csrfRetryUrl($request),
+        ], 419);
+    }
+
+    /**
+     * URL a la que conviene volver tras un 419 para reintentar con token fresco.
+     * Para el flujo de inscripción, el inicio del flujo (GET) re-renderiza el token;
+     * si no, el referer; y como último recurso, el home.
+     */
+    protected function csrfRetryUrl($request)
+    {
+        if (preg_match('#/inscripciones/actividad/(\d+)#', $request->path(), $m)) {
+            return '/inscripciones/actividad/' . $m[1];
+        }
+        return $request->header('referer') ?: '/';
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)
