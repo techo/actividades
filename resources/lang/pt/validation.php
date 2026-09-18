@@ -127,6 +127,9 @@ return [
         'fechaNacimiento' => [
             'edad_minima' => 'Você deve ter pelo menos :edad anos para se cadastrar.',
         ],
+        'email' => [
+            'cuenta_existente' => 'Este e-mail já possui uma conta. Entre na sua conta ou, se esqueceu a senha, recupere o acesso.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],

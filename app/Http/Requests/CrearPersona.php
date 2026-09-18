@@ -62,6 +62,10 @@ class CrearPersona extends FormRequest
     {
         return [
             'fechaNacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => self::EDAD_MINIMA]),
+            // `unique:Persona,mail` ya cuenta las cuentas dadas de baja (soft-delete),
+            // así que no se crean duplicados. El mensaje guía a iniciar sesión (que
+            // restaura la cuenta borrada con la clave correcta) o a recuperar el acceso.
+            'mail.unique' => __('validation.custom.email.cuenta_existente'),
         ];
     }
 }

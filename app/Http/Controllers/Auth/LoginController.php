@@ -53,6 +53,19 @@ class LoginController extends Controller
     {
         $credentials = $request->only($this->username(), 'password');
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
+
+        // Recuperación de cuenta dada de baja: Auth::attempt excluye a los borrados
+        // (scope de SoftDeletes), así que un borrado con la clave correcta fallaba el
+        // login y quedaba encerrado. Si la credencial coincide con una cuenta borrada,
+        // la restauramos (la clave correcta prueba la propiedad) y la logueamos.
+        if(!$authSuccess) {
+            $recuperada = Persona::restaurarConCredencial($credentials[$this->username()] ?? null, $credentials['password'] ?? null);
+            if($recuperada) {
+                Auth::login($recuperada, $request->has('remember'));
+                $authSuccess = true;
+            }
+        }
+
         $afterLoginUrl = '';
         if($authSuccess) {
             $request->session()->regenerate();

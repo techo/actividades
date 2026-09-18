@@ -38,7 +38,12 @@ class UsuarioController extends BaseController
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
         break;
         case 'create':
-          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona,deleted_at,NULL|email';
+          // unique SIN el filtro deleted_at,NULL: cuenta también las cuentas dadas de
+          // baja (soft-delete). Antes las excluía → registrar con el mail de un borrado
+          // NO daba error y creaba un DUPLICADO (no hay UNIQUE en la DB). Ahora se
+          // bloquea y el mensaje (email.unique, ver más abajo) guía a iniciar sesión /
+          // recuperar la cuenta, que es lo que la restaura.
+          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
           if($request->has('privacidad')) $rules['privacidad'] = 'accepted';
         break;
@@ -62,6 +67,10 @@ class UsuarioController extends BaseController
         }
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
+          // Aviso accionable en vez de un "ya registrado" seco: iniciar sesión restaura
+          // la cuenta si estaba dada de baja (login con clave correcta) o entra si está
+          // activa; y está la opción de recuperar contraseña.
+          'email.unique' => __('validation.custom.email.cuenta_existente'),
         ];
         $validatedData = $request->validate($rules, $mensajes);
         return ['success' => true, 'params' => array_keys($rules)];

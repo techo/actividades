@@ -77,6 +77,36 @@ class Persona extends Authenticatable implements MustVerifyEmail
         $this->notify((new \App\Notifications\RegistroUsuario)->locale(app()->getLocale()));
     }
 
+    /**
+     * Recuperación de una cuenta dada de baja (soft-delete) al iniciar sesión.
+     *
+     * Si NO hay una cuenta ACTIVA con ese mail pero existe una borrada y la
+     * contraseña coincide, la restaura y la devuelve. La contraseña correcta es la
+     * prueba de propiedad del mail (mismo criterio que el login social, donde la
+     * prueba la da el proveedor). Sin coincidencia (o con cuenta activa presente),
+     * devuelve null y no toca nada. Evita que un borrado quede encerrado sin poder
+     * entrar, registrarse ni resetear. Ver [[personas-invisibles-pais-softdelete]].
+     */
+    public static function restaurarConCredencial($mail, $password)
+    {
+        if (empty($mail) || empty($password)) {
+            return null;
+        }
+
+        // Si ya hay una cuenta activa con ese mail, manda el login normal.
+        if (static::where('mail', $mail)->exists()) {
+            return null;
+        }
+
+        $borrada = static::onlyTrashed()->where('mail', $mail)->first();
+        if ($borrada && \Illuminate\Support\Facades\Hash::check($password, $borrada->password)) {
+            $borrada->restore();
+            return $borrada;
+        }
+
+        return null;
+    }
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idPersona');

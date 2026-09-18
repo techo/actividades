@@ -57,6 +57,17 @@ class PersonasController extends Controller
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
         $afterLoginUrl = '';
 
+        // Recuperación de cuenta dada de baja: Auth::attempt excluye borrados, así que
+        // un borrado con la clave correcta no podía entrar ni recuperarse. Si la
+        // credencial coincide con una cuenta borrada, la restauramos y la logueamos.
+        if (!$authSuccess) {
+            $recuperada = Persona::restaurarConCredencial($credentials['mail'] ?? null, $credentials['password'] ?? null);
+            if ($recuperada) {
+                Auth::login($recuperada, $request->has('remember'));
+                $authSuccess = true;
+            }
+        }
+
         if ($authSuccess){
             $user = Persona::where('mail', $credentials['mail'])->first();
             $token = $user->createToken('Token Name')->accessToken;

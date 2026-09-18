@@ -103,6 +103,9 @@ return [
         'fechaNacimiento' => [
             'edad_minima' => 'You must be at least :edad years old to register.',
         ],
+        'email' => [
+            'cuenta_existente' => 'This email already has an account. Log in, or reset your password if you forgot it.',
+        ],
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
