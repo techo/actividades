@@ -199,6 +199,14 @@ class LoginController extends Controller
                 $persona = $borrado;
             }
         }
+        \Log::info('[social-callback] db='.\DB::connection()->getDatabaseName()
+            .' provider='.$provider
+            .' email='.$personaData->email
+            .' persona='.optional($persona)->idPersona
+            .' google_id_persona='.optional($persona)->google_id
+            .' facebook_id_persona='.optional($persona)->facebook_id
+            .' google_id_in='.$personaData->google_id
+            .' facebook_id_in='.$personaData->facebook_id);
         if(!$persona) {
             if($personaData->email == null)
                 return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");
