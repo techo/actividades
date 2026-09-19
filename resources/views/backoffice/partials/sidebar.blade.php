@@ -217,6 +217,12 @@
             </li>
             @endif
 
+            @if (Auth::user()->can('ver_reportes'))
+            <li class="{{ request()->is('admin/reportes*') ? 'active' : '' }}">
+                <a href="/admin/reportes"><i class="fa fa-bug"></i> <span>{{ __('backend.reports_inbox') }}</span></a>
+            </li>
+            @endif
+
             @if(config('app.docs'))
 
             <li class="treeview {{ request()->is('admin/ayuda*') ? 'active menu-open' : ''}}">

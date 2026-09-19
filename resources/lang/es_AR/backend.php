@@ -511,6 +511,7 @@ return [
     'no_plan_defined' => 'Sin plan definido',
     'select_country_first' => 'Elegí un país para ver y editar el plan.',
     'settings' => 'Configuración',
+    'reports_inbox' => 'Reportes',
     'communications' => 'Comunicaciones',
     'invitaciones_actividad' => 'Nueva comunicación',
     'comunicaciones_enviadas' => 'Comunicaciones enviadas',

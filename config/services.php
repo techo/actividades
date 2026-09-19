@@ -92,4 +92,19 @@ return [
         // TTL de la caché del resultado "es socio", en minutos (default 12 h).
         'cache_ttl'     => (int) env('SALESFORCE_CACHE_TTL', 720),
     ],
+
+    // Integración con GitHub Issues para la bandeja de reportes (Fase 3): al triagear
+    // un reporte se puede abrir un issue en el repo con el contexto de reproducción.
+    'github' => [
+        // Token con scope `repo` (o `public_repo` si el repo es público). Sin token la
+        // feature queda deshabilitada (fail-closed): no se muestra el botón y el
+        // endpoint responde 422 con un mensaje claro.
+        'token'   => env('GITHUB_TOKEN'),
+        // owner/repo destino de los issues.
+        'repo'    => env('GITHUB_REPO', 'techo/actividades'),
+        // Labels a aplicar a los issues creados (coma-separado).
+        'labels'  => env('GITHUB_ISSUE_LABELS', 'reporte'),
+        // Timeout HTTP en segundos.
+        'timeout' => (int) env('GITHUB_TIMEOUT', 8),
+    ],
 ];

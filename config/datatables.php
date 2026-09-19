@@ -1250,5 +1250,23 @@ return [
                 'direction' => 'asc'
             ],
         ]
+    ],
+
+    // Bandeja de reportes de problemas / sugerencias (widget "Reportar un problema").
+    'reportes' => [
+        'fields' => [
+            ['name' => 'id', 'sortField' => 'id', 'visible' => false],
+            ['name' => 'created_at', 'sortField' => 'created_at', 'title' => 'Fecha'],
+            ['name' => '__component:reporte-tipo', 'title' => 'Tipo'],
+            ['name' => '__component:reporte-severidad', 'title' => 'Gravedad'],
+            ['name' => '__component:reporte-estado', 'title' => 'Estado'],
+            ['name' => 'area', 'sortField' => 'area', 'title' => 'Área'],
+            ['name' => 'reporter_name', 'sortField' => 'reporter_name', 'title' => 'Reportó'],
+            ['name' => 'resumen', 'title' => 'Detalle'],
+            ['name' => '__component:reporte-acciones', 'title' => ''],
+        ],
+        'sortOrder' => [
+            ['field' => 'created_at', 'sortField' => 'created_at', 'direction' => 'desc'],
+        ]
     ]
 ];

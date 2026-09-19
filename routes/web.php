@@ -273,6 +273,21 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::delete('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@destroy');
         Route::put('/{campana}/preguntas/{preguntaId}/mover', 'backoffice\ajax\CampaignPreguntasController@mover');
     });
+    // Reportes de problemas / sugerencias (widget "Reportar un problema").
+    // Intake: cualquier usuario del backoffice puede enviar un reporte.
+    Route::post('/ajax/reportes', 'backoffice\ajax\ReportesController@store');
+    Route::post('/ajax/reportes/{id}/captura', 'backoffice\ajax\ReportesController@captura');
+    // Bandeja de triage: gateada por el permiso dedicado `ver_reportes` (revocable,
+    // desacoplado del rol admin; ver migración add_permiso_ver_reportes).
+    Route::middleware('permission:ver_reportes')->group(function () {
+        Route::get('/reportes', 'backoffice\ReportesController@index');
+        Route::get('/reportes/{id}/captura', 'backoffice\ReportesController@captura');
+        Route::get('/ajax/reportes', 'backoffice\ajax\ReportesController@index');
+        Route::post('/ajax/reportes/{id}', 'backoffice\ajax\ReportesController@update');
+        // Fase 3: crear un issue de GitHub a partir del reporte.
+        Route::post('/ajax/reportes/{id}/github', 'backoffice\ajax\ReportesController@github');
+    });
+
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');

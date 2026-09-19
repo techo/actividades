@@ -512,6 +512,7 @@ return [
     'no_plan_defined' => 'Sem plano definido',
     'select_country_first' => 'Escolha um país para ver e editar o plano.',
     'settings' => 'Configurações',
+    'reports_inbox' => 'Reportes',
     'communications' => 'Comunicações',
     'invitaciones_actividad' => 'Nova comunicação',
     'comunicaciones_enviadas' => 'Comunicações enviadas',
