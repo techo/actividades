@@ -26,7 +26,7 @@
                 email="{{$persona->email}}"
                 facebook_id="{{$persona->facebook_id}}"
                 google_id="{{$persona->google_id}}"
-                linkear={{isset($linkear)?$linkear:''}}
+                linkear="{{isset($linkear)?$linkear:''}}"
                 pais-actual="{{ config('app.pais') }}"
         ></registro>
 	@else
