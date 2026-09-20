@@ -69,7 +69,50 @@ class Handler extends ExceptionHandler
         if($exception instanceof TokenMismatchException){
             return $this->tokenMismatch($request, $exception);
         }
+        if($this->deberiaRenderizar500Branded($request, $exception)){
+            return $this->render500($request, $exception);
+        }
         return parent::render($request, $exception);
+    }
+
+    /**
+     * ¿Servimos nuestra pantalla 500 con marca en vez del "Whoops" crudo de Laravel?
+     * Solo para errores de servidor reales, en respuestas HTML (no JSON/API) y con
+     * debug apagado — en dev queremos seguir viendo el trace de Whoops.
+     */
+    protected function deberiaRenderizar500Branded($request, Exception $exception)
+    {
+        if (config('app.debug') || $request->expectsJson()) {
+            return false;
+        }
+        // Error de servidor: excepción no-HTTP (bug real) o un abort(500) explícito.
+        return !$this->isHttpException($exception)
+            || (int) $exception->getStatusCode() === 500;
+    }
+
+    /**
+     * Pantalla 500 con marca. Si hay una sesión válida y el usuario es admin o
+     * coordinador, le ofrecemos reportar el problema (abre el widget de reportes
+     * prefilleado con la URL del error). Todo el chequeo de sesión/roles va en
+     * try/catch: si el 500 vino de una caída de base, resolver el usuario también
+     * fallaría y no queremos que la propia pantalla de error explote.
+     */
+    protected function render500($request, Exception $exception)
+    {
+        $puedeReportar = false;
+        $reportUrl = null;
+
+        try {
+            $user = $request->user();
+            if ($user && method_exists($user, 'hasAnyRole') && $user->hasAnyRole('admin', 'coordinador')) {
+                $puedeReportar = true;
+                $reportUrl = url('/admin') . '?reportar=1&url=' . urlencode($request->fullUrl());
+            }
+        } catch (\Throwable $e) {
+            // Sin sesión utilizable → 500 sin botón de reporte.
+        }
+
+        return response()->view('errors.500', compact('puedeReportar', 'reportUrl'), 500);
     }
 
     /**

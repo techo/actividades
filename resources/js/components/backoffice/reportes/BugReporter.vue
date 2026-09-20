@@ -170,6 +170,32 @@ export default {
             this.recolectarMeta();
             this.open = true;
         },
+        // La pantalla de error 500 manda a admins/coordinadores acá con
+        // ?reportar=1&url=<url-del-error> para que reporten el problema con un clic.
+        // Abre el panel prefilleado y limpia los params para que un refresh no reabra.
+        abrirDesdeQueryParam() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('reportar') !== '1') return;
+
+                const errUrl = params.get('url') || '';
+                this.abrir();
+                this.tipo = 'bug';
+                this.area = 'otro';
+                if (!this.descripcion) {
+                    this.descripcion = errUrl
+                        ? ('Ocurrió un error (500) en:\n' + errUrl + '\n\n¿Qué estabas haciendo cuando pasó?')
+                        : 'Ocurrió un error (500). ¿Qué estabas haciendo cuando pasó?';
+                }
+
+                params.delete('reportar');
+                params.delete('url');
+                const qs = params.toString();
+                window.history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+            } catch (e) {
+                // Si algo falla, no bloqueamos la carga del backoffice.
+            }
+        },
         cerrar() {
             this.open = false;
         },
@@ -214,7 +240,13 @@ export default {
             this.capturando = true;
             let stream = null;
             try {
-                stream = await navigator.mediaDevices.getDisplayMedia({ video: { displaySurface: 'browser' } });
+                // preferCurrentTab (Chrome) hace que la opción por defecto sea
+                // "Esta pestaña", que es lo que casi siempre se quiere reportar,
+                // en vez de tener que elegir entre pantalla completa / ventana / pestaña.
+                stream = await navigator.mediaDevices.getDisplayMedia({
+                    preferCurrentTab: true,
+                    video: { displaySurface: 'browser' },
+                });
                 const track = stream.getVideoTracks()[0];
                 const video = document.createElement('video');
                 video.srcObject = stream;
@@ -309,6 +341,7 @@ export default {
     mounted() {
         this._onPaste = this.onPaste.bind(this);
         window.addEventListener('paste', this._onPaste);
+        this.abrirDesdeQueryParam();
     },
     beforeDestroy() {
         window.removeEventListener('paste', this._onPaste);
