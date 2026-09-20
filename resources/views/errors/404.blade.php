@@ -1,15 +1,8 @@
-@extends('main')
+@extends('errors.layout')
 
-@section('main_content')
-        <div class="">
-            <div class="row d-flex justify-content-center">
-                <h1 class="text-primary">Oops! Vuelve y busca otra ruta</h1>
-            </div>
-            <div class="row d-flex justify-content-center">
-                <img src="/img/404.png" alt="404">
-            </div>
-            <div class="row d-flex justify-content-center">
-                <a href="/" class="btn btn-primary btn-lg">VOLVER AL HOME</a>
-            </div>
-        </div>
+@section('title', 'No encontramos esta página')
+@section('code', 'Error 404')
+
+@section('message')
+    La página que buscás no existe o se movió de lugar. Revisá la dirección o volvé al inicio.
 @endsection
