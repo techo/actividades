@@ -26,8 +26,9 @@ return [
                 'title' => 'backend.office'
             ],
             [
+                // Columna de componente (lista de comunidades): no es una columna
+                // de la query, ordenar por "comunidades" tiraba 500 "Unknown column".
                 'name' => '__component:comunidades',
-                'sortField' => 'comunidades',
                 'title' => 'backend.community'
             ],
             [
@@ -129,8 +130,9 @@ return [
                 'title' => 'backend.office'
             ],
             [
+                // Columna de componente (lista de comunidades): no es una columna
+                // de la query, ordenar por "comunidades" tiraba 500 "Unknown column".
                 'name' => '__component:comunidades',
-                'sortField' => 'comunidades',
                 'title' => 'backend.community'
             ],
             [
@@ -733,8 +735,10 @@ return [
                 'visible' => false
             ],
             [
+                // Sin sortField: el nombre vive en Persona y esta query es
+                // `select * from Integrantes` (no la joinea) → ordenar por
+                // "nombre" tiraba "Unknown column 'nombre' in 'order clause'".
                 'name' => 'nombre',
-                'sortField' => 'nombre',
                 'title' => 'backend.name'
             ],
         ],
