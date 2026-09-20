@@ -50,7 +50,7 @@ class IntegrantesSearch
     }
     private static function getResults(Builder $query, $sort, $per_page)
     {
-        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc'));
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc', (new Integrante())->getTable()));
         return $query->paginate($per_page);
     }
 

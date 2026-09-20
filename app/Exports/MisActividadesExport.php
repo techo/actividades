@@ -23,10 +23,26 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         $this->sort = $sort;
     }
 
+    /**
+     * Columnas por las que se permite ordenar (los alias/campos del select de abajo).
+     * El datatable puede mandar una columna de display inexistente (p.ej. "comunidades")
+     * en `sort` → sin este filtro, orderBy tira 500 "Unknown column ... in 'order clause'".
+     */
+    const SORTABLE = [
+        'id', 'nombreActividad', 'fechaInicio', 'fechaFin', 'estadoConstruccion',
+        'oficina', 'tipoActividad', 'nombreCategoria', 'pais',
+        'fechaInicioInscripciones', 'fechaFinInscripciones',
+        'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
+    ];
+
     public function collection()
     {
         $sort = explode('|', $this->sort);
-        list($sortField, $sortOrder) = $sort;
+        $sortField = $sort[0] ?? null;
+        $sortOrder = strtolower($sort[1] ?? 'asc') === 'desc' ? 'desc' : 'asc';
+        if (!in_array($sortField, self::SORTABLE, true)) {
+            $sortField = 'nombreActividad';
+        }
 
         $result = DB::table('Actividad')
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')

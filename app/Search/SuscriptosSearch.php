@@ -58,7 +58,7 @@ class SuscriptosSearch
     private static function getResults(Builder $query, $sort, $per_page)
     {
         // return $query->get();
-        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc'));
+        $query->orderByRaw(SortSanitizer::sanitize($sort, 'created_at desc', (new Suscribe())->getTable()));
         return $query->paginate($per_page);
     }
 
