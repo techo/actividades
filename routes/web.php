@@ -154,8 +154,11 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->middleware('throttle:6,1');
 
-Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
-Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
+// Solo proveedores soportados: cualquier otro {provider} (bots que escanean
+// /auth/.env, /auth/login, /auth/*, etc.) cae en 404 en vez de llegar a
+// Socialite::driver() y tirar 500 "Driver [x] not supported".
+Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', 'google|facebook');
+Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider')->where('provider', 'google|facebook');
 
 Route::get('autenticado', function () {
     return (Auth::check()) ? 'si' : 'no';
