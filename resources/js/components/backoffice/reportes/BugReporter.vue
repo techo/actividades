@@ -1,10 +1,22 @@
 <template>
     <div class="bug-reporter">
-        <!-- Botón flotante -->
-        <button v-if="!open" class="br-fab" @click="abrir" title="Reportar un problema">
-            <i class="fa fa-bug"></i>
-            <span class="br-fab-label">Reportar</span>
-        </button>
+        <!-- Launcher (con el panel cerrado) -->
+        <template v-if="!open">
+            <!-- Colapsado: solapa mínima pegada al borde derecho -->
+            <button v-if="colapsado" class="br-tab" @click="expandir" title="Mostrar «Reportar un problema»">
+                <i class="fa fa-bug"></i>
+            </button>
+            <!-- Expandido: botón flotante + botón para ocultar -->
+            <div v-else class="br-fab-wrap">
+                <button class="br-fab" @click="abrir" title="Reportar un problema">
+                    <i class="fa fa-bug"></i>
+                    <span class="br-fab-label">Reportar</span>
+                </button>
+                <button class="br-fab-collapse" @click="colapsar" title="Ocultar">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </template>
 
         <!-- Panel -->
         <div v-if="open" class="br-panel">
@@ -128,6 +140,7 @@ export default {
     data() {
         return {
             open: false,
+            colapsado: this.leerColapsado(),
             tipo: 'bug',
             descripcion: '',
             severity: null,
@@ -198,6 +211,19 @@ export default {
         },
         cerrar() {
             this.open = false;
+        },
+        // --- Colapsar / mostrar el launcher (preferencia por navegador) ---
+        leerColapsado() {
+            try { return localStorage.getItem('br_colapsado') === '1'; }
+            catch (e) { return false; }
+        },
+        colapsar() {
+            this.colapsado = true;
+            try { localStorage.setItem('br_colapsado', '1'); } catch (e) {}
+        },
+        expandir() {
+            this.colapsado = false;
+            try { localStorage.setItem('br_colapsado', '0'); } catch (e) {}
         },
         recolectarMeta() {
             const ua = navigator.userAgent;
@@ -351,11 +377,18 @@ export default {
 </script>
 
 <style scoped>
-.br-fab {
+/* Contenedor fijo del launcher, elevado para no chocar con las barras de
+   botones (Cancelar/Guardar) que suelen ir al pie de los formularios. */
+.br-fab-wrap {
     position: fixed;
-    bottom: 22px;
+    bottom: 90px;
     right: 22px;
     z-index: 1050;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.br-fab {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -371,6 +404,39 @@ export default {
 }
 .br-fab:hover { transform: translateY(-1px); box-shadow: 0 8px 26px rgba(37, 99, 235, 0.45); }
 .br-fab-label { font-size: 14px; }
+
+/* Botón chico para colapsar el launcher a la solapa. */
+.br-fab-collapse {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: #e2e8f0;
+    color: #475569;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+    transition: background 0.12s ease;
+}
+.br-fab-collapse:hover { background: #cbd5e1; }
+
+/* Solapa mínima cuando está colapsado: medio escondida en el borde derecho. */
+.br-tab {
+    position: fixed;
+    bottom: 90px;
+    right: 0;
+    z-index: 1050;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    padding: 9px 12px 9px 10px;
+    border-radius: 8px 0 0 8px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    cursor: pointer;
+    opacity: 0.55;
+    transform: translateX(6px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.br-tab:hover { opacity: 1; transform: translateX(0); }
 
 .br-panel {
     position: fixed;
