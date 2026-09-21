@@ -7,6 +7,8 @@ use App\InscripcionRespuesta;
 use App\ListadoColumna;
 use App\ListadoColumnaValor;
 use App\Persona;
+use App\Services\CalidadDatos\CalidadDatosPersona;
+use App\Services\Documento\DocumentoService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -90,6 +92,42 @@ class EnriquecedorFilas
             $fila->setAttribute('participaciones', (int) $participaciones->get($idPersona, 0));
             $promedio = $evaluaciones->get($idPersona);
             $fila->setAttribute('evaluacion_general', $promedio !== null ? round($promedio, 1) : null);
+        }
+
+        return $filas;
+    }
+
+    /**
+     * Inyecta la CONFIANZA de los datos identitarios por persona (columna
+     * opcional 'confianza_datos' del listado), calculada con
+     * CalidadDatosPersona. Una sola query para traer las personas de la página
+     * (sin N+1); DocumentoService cachea la abreviación por país, así que las
+     * filas del mismo país no repiten el lookup.
+     *
+     * El valor inyectado es el array del evaluador (nivel/puntaje/motivos), que
+     * la celda Vue 'celda-confianza-datos' renderiza como badge + tooltip.
+     */
+    public function inyectarCalidadDatos(Collection $filas, $personaKey = 'idPersona')
+    {
+        if ($filas->isEmpty()) {
+            return $filas;
+        }
+
+        $ids = $filas->pluck($personaKey)->filter()->unique();
+        if ($ids->isEmpty()) {
+            return $filas;
+        }
+
+        $personas = Persona::whereIn('idPersona', $ids)
+            ->get(['idPersona', 'nombres', 'apellidoPaterno', 'dni', 'tipo_documento', 'fechaNacimiento', 'idPais', 'datos_verificados_at'])
+            ->keyBy('idPersona');
+
+        // Una instancia compartida de DocumentoService => cache de país reutilizada.
+        $calidad = new CalidadDatosPersona(new DocumentoService());
+
+        foreach ($filas as $fila) {
+            $persona = $personas->get($fila->{$personaKey});
+            $fila->setAttribute('confianza_datos', $persona ? $calidad->evaluar($persona) : null);
         }
 
         return $filas;

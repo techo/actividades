@@ -353,6 +353,13 @@ return [
                     'titleClass' => 'text-center',
                     'dataClass' => 'text-center'
                 ],
+                [
+                    'key' => 'confianza_datos',
+                    'name' => '__component:celda-confianza-datos',
+                    'title' => 'backend.data_confidence',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ],
             ],
             'ficha_medica' => [
                 [

@@ -120,6 +120,39 @@ class DocumentoServiceTest extends TestCase
         $this->assertTrue($this->service()->validarPorAbreviacion('costarica', '1-2345-6789')['valido']);
     }
 
+    // -- Validación estricta por tipo (selector de documento) -----------------
+
+    public function test_valida_estricto_como_tipo_correcto()
+    {
+        $r = $this->service()->validarComoTipo('dni_ar', '12.345.678');
+        $this->assertTrue($r['valido']);
+        $this->assertSame('dni_ar', $r['tipo']);
+        $this->assertSame('12345678', $r['normalizado']);
+    }
+
+    public function test_tipo_estricto_no_cae_a_pasaporte()
+    {
+        // 'AB123456' pasa como pasaporte en auto-detect, pero exigiendo dni_ar
+        // (solo dígitos, 7-8) es inválido: la validación estricta NO cae a otro tipo.
+        $this->assertFalse($this->service()->validarComoTipo('dni_ar', 'AB123456')['valido']);
+        // en cambio el auto-detect sí lo acepta como pasaporte.
+        $this->assertTrue($this->service()->validarPorAbreviacion('argentina', 'AB123456')['valido']);
+    }
+
+    public function test_como_tipo_cpf_verifica_digito()
+    {
+        $this->assertTrue($this->service()->validarComoTipo('cpf', '529.982.247-25')['valido']);
+        $this->assertFalse($this->service()->validarComoTipo('cpf', '52998224724')['valido']);
+    }
+
+    public function test_como_tipo_nulo_o_desconocido_cae_a_autodetect()
+    {
+        // Sin tipo (o tipo inexistente) => comportamiento histórico. Con idPais
+        // null usa el default permisivo, sin tocar la base.
+        $this->assertTrue($this->service()->validarComoTipo(null, '12345678')['valido']);
+        $this->assertTrue($this->service()->validarComoTipo('inexistente', '12345678')['valido']);
+    }
+
     /**
      * Integridad de la config: todo tipo referenciado por un país (o por default)
      * tiene que existir en 'tipos'. Atrapa typos al sumar países.

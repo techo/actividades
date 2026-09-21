@@ -40,7 +40,10 @@ class CrearPersona extends FormRequest
             'fechaNacimiento' => 'required|date|before_or_equal:' . Carbon::now()->subYears(self::EDAD_MINIMA)->format('Y-m-d'),
             'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => ['required', 'string', 'max:50', new DocumentoValido($this->idPais)],
+            // tipo_documento es opcional (nullable) por retrocompat: si el front lo
+            // manda, DocumentoValido valida estricto contra ese tipo; si no, auto-detecta.
+            'tipo_documento' => 'nullable|string|max:30',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($this->idPais, $this->tipo_documento)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',

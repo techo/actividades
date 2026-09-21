@@ -63,7 +63,9 @@ class UsuarioController extends BaseController
         // exigirlo en el alta requiere coordinar con la app. El país: $request->pais.
         if($request->has('dni')) {
             $presenciaDni = ($verbo === 'update') ? 'required' : 'nullable';
-            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais)];
+            // Con tipo_documento elegido, validación estricta contra ese tipo.
+            $rules['tipo_documento'] = 'nullable|string|max:30';
+            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais, $request->tipo_documento)];
         }
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
@@ -244,7 +246,8 @@ class UsuarioController extends BaseController
       $persona->apellidoPaterno = $request->apellido;
       // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
       // para que matcheen Salesforce, dedup y reporting.
-      $persona->dni = (new DocumentoService())->normalizar($request->pais, $request->dni);
+      $persona->dni = (new DocumentoService())->normalizarComoTipo($request->tipo_documento, $request->dni, $request->pais);
+      $persona->tipo_documento = $request->tipo_documento;
       $persona->mail = $request->email;
       $persona->idLocalidad = $request->localidad;
       $persona->fechaNacimiento = $fechaNacimiento;
@@ -340,6 +343,32 @@ class UsuarioController extends BaseController
     $persona = Auth::user();
     $usuario = new PerfilResource($persona);
     return $usuario;
+  }
+
+  /**
+   * La persona confirma que sus datos identitarios están bien (microprompt de
+   * calidad de datos en el paso 'confirmar' de la inscripción). Registra la
+   * fecha de verificación para no volver a pedírselo dentro de la vigencia
+   * (ver App\Services\CalidadDatos\CalidadDatosPersona). No modifica los datos:
+   * la corrección va por el perfil. Idempotente.
+   */
+  public function verificarDatos(Request $request)
+  {
+    $persona = Auth::user();
+    $hoy = now();
+
+    $persona->datos_verificados_at = $hoy;
+    // Detalle por campo: hoy confirmamos los cuatro campos identitarios juntos.
+    // La estructura permite, más adelante, confirmar campos por separado.
+    $persona->datos_verificados = [
+      'nombre'          => $hoy->toDateString(),
+      'apellido'        => $hoy->toDateString(),
+      'documento'       => $hoy->toDateString(),
+      'fechaNacimiento' => $hoy->toDateString(),
+    ];
+    $persona->save();
+
+    return response()->json(['success' => true]);
   }
 
 

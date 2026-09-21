@@ -27,6 +27,7 @@ import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
 import CeldaWhatsapp from './components/backoffice/datatable/columnas/CeldaWhatsapp'
 import CeldaNivel from './components/backoffice/datatable/columnas/CeldaNivel'
 import CeldaDocumento from './components/backoffice/datatable/columnas/CeldaDocumento'
+import CeldaConfianzaDatos from './components/backoffice/datatable/columnas/CeldaConfianzaDatos'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
@@ -220,6 +221,7 @@ Vue.component('celda-beca', CeldaBeca);
 Vue.component('celda-whatsapp', CeldaWhatsapp);
 Vue.component('celda-nivel', CeldaNivel);
 Vue.component('celda-documento', CeldaDocumento);
+Vue.component('celda-confianza-datos', CeldaConfianzaDatos);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);

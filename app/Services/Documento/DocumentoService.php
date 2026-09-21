@@ -55,24 +55,127 @@ class DocumentoService
         }
 
         foreach ($this->tiposParaAbreviacion($abreviacion) as $tipoKey) {
-            $tipo = $this->config['tipos'][$tipoKey] ?? null;
-            if (!$tipo) {
-                continue;
+            $norm = $this->evaluarTipo($this->config['tipos'][$tipoKey] ?? null, $valor);
+            if ($norm !== null) {
+                return ['valido' => true, 'tipo' => $tipoKey, 'normalizado' => $norm];
             }
-            $norm = $this->aplicarNormalizador($tipo['normaliza'] ?? 'alnum', $valor);
-            if ($norm === '') {
-                continue;
-            }
-            if (!preg_match($tipo['regex'], $norm)) {
-                continue;
-            }
-            if (isset($tipo['check']) && !$this->pasaCheck($tipo['check'], $norm)) {
-                continue;
-            }
-            return ['valido' => true, 'tipo' => $tipoKey, 'normalizado' => $norm];
         }
 
         return ['valido' => false, 'tipo' => null, 'normalizado' => null];
+    }
+
+    /**
+     * Valida un documento EXIGIENDO un tipo específico (selector explícito del
+     * usuario). A diferencia de validar(), no prueba otros tipos ni cae a
+     * pasaporte: o matchea ese tipo o es inválido. Más estricto = mejor calidad
+     * y menos ambigüedad para la ficha de seguro.
+     *
+     * Si se pasa $idPais, además exige que el tipo sea uno de los aceptados por
+     * ese país (anti-manipulación del selector desde el cliente). Si $tipoKey es
+     * null o desconocido, cae al auto-detect de validar() (retrocompat con las
+     * filas/flujos que todavía no cargan tipo).
+     *
+     * @return array{valido:bool, tipo:?string, normalizado:?string}
+     */
+    public function validarComoTipo(?string $tipoKey, $valor, $idPais = null): array
+    {
+        $valor = trim((string) $valor);
+        if ($valor === '') {
+            return ['valido' => true, 'tipo' => $tipoKey, 'normalizado' => ''];
+        }
+
+        // Sin tipo (o tipo desconocido): comportamiento histórico (auto-detect).
+        if ($tipoKey === null || !isset($this->config['tipos'][$tipoKey])) {
+            return $this->validar($idPais, $valor);
+        }
+
+        // Con país conocido, el tipo tiene que ser legítimo para ese país.
+        if ($idPais !== null && !$this->tipoEsValidoParaPais($tipoKey, $idPais)) {
+            return ['valido' => false, 'tipo' => null, 'normalizado' => null];
+        }
+
+        $norm = $this->evaluarTipo($this->config['tipos'][$tipoKey], $valor);
+        if ($norm === null) {
+            return ['valido' => false, 'tipo' => null, 'normalizado' => null];
+        }
+
+        return ['valido' => true, 'tipo' => $tipoKey, 'normalizado' => $norm];
+    }
+
+    /** Atajo booleano de validarComoTipo() para la Rule. */
+    public function esValidoComoTipo(?string $tipoKey, $valor, $idPais = null): bool
+    {
+        return $this->validarComoTipo($tipoKey, $valor, $idPais)['valido'];
+    }
+
+    /**
+     * Normaliza exigiendo un tipo. Si el valor no matchea ese tipo (o no hay
+     * tipo), cae a normalizar() para no perder el dato cargado.
+     */
+    public function normalizarComoTipo(?string $tipoKey, $valor, $idPais = null): string
+    {
+        $r = $this->validarComoTipo($tipoKey, $valor, $idPais);
+        if ($r['valido'] && !empty($r['normalizado'])) {
+            return $r['normalizado'];
+        }
+        return $this->normalizar($idPais, $valor);
+    }
+
+    /** ¿El tipo es uno de los aceptados por el país? (valida el selector.) */
+    public function tipoEsValidoParaPais(?string $tipoKey, $idPais): bool
+    {
+        if ($tipoKey === null) {
+            return false;
+        }
+        return in_array($tipoKey, $this->tiposParaAbreviacion($this->abreviacionDe($idPais)), true);
+    }
+
+    /**
+     * Opciones para el selector de tipo de documento del país: key (para guardar
+     * en tipo_documento) + label localizado (para mostrar). En orden de prioridad
+     * (documento nacional primero, pasaporte al final) — la primera es el default.
+     *
+     * @return array<array{key:string, label:string}>
+     */
+    public function opcionesTipos($idPais): array
+    {
+        return $this->opcionesTiposPorAbreviacion($this->abreviacionDe($idPais));
+    }
+
+    public function opcionesTiposPorAbreviacion(?string $abreviacion): array
+    {
+        $opciones = [];
+        foreach ($this->tiposParaAbreviacion($abreviacion) as $tipoKey) {
+            $labelKey = $this->config['tipos'][$tipoKey]['label'] ?? $tipoKey;
+            $opciones[] = [
+                'key'   => $tipoKey,
+                'label' => __('documento.tipo.' . $labelKey),
+            ];
+        }
+        return $opciones;
+    }
+
+    /**
+     * Normaliza + valida (regex y, si aplica, dígito verificador) un valor contra
+     * UN tipo. Devuelve el valor canónico si matchea, o null. Fuente única del
+     * "¿este valor es de este tipo?" para validar() y validarComoTipo().
+     */
+    private function evaluarTipo(?array $tipo, string $valor): ?string
+    {
+        if (!$tipo) {
+            return null;
+        }
+        $norm = $this->aplicarNormalizador($tipo['normaliza'] ?? 'alnum', $valor);
+        if ($norm === '') {
+            return null;
+        }
+        if (!preg_match($tipo['regex'], $norm)) {
+            return null;
+        }
+        if (isset($tipo['check']) && !$this->pasaCheck($tipo['check'], $norm)) {
+            return null;
+        }
+        return $norm;
     }
 
     /**

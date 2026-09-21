@@ -17,6 +17,9 @@
 
     <div class="row">
         <div class="col-md-8">
+            @if(!empty($mostrarVerificacionDatos) && $calidadDatos)
+                @include('partials.microprompt-datos', ['calidad' => $calidadDatos])
+            @endif
             <div class="row">
                 <div class="col-md-12">
                     @if( $actividad->confirmar == 1 ||

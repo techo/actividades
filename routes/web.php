@@ -115,6 +115,9 @@ Route::prefix('ajax')->group(function () {
             Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
             Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
             Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+            // Microprompt de calidad de datos: la persona confirma que sus datos
+            // están bien (setea datos_verificados_at). Ver CalidadDatosPersona.
+            Route::post('verificar-datos', 'ajax\UsuarioController@verificarDatos');
         });
     });
     

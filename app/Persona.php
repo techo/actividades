@@ -18,8 +18,9 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];
-    protected $fillable = ['recibirMails', 'recibir_push', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'registro_origen', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app'];
-    protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app'];
+    protected $fillable = ['recibirMails', 'recibir_push', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'tipo_documento', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'registro_origen', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app', 'datos_verificados_at', 'datos_verificados'];
+    protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app', 'datos_verificados_at'];
+    protected $casts = ['datos_verificados' => 'array'];
     protected $appends = array('estado_voluntario');
 
     protected static function boot()

@@ -61,6 +61,8 @@ class InscripcionesController extends BaseController
         // Métricas por voluntario para las columnas opcionales (participaciones,
         // nivel, evaluación general).
         $enriquecedor->inyectarMetricasVoluntario($result->getCollection(), 'idPersona');
+        // Confianza de los datos identitarios (columna opcional 'confianza_datos').
+        $enriquecedor->inyectarCalidadDatos($result->getCollection(), 'idPersona');
 
         //hack para solucionar problema con vuetable con checkboxes
         // https://github.com/ratiw/vuetable-2/issues/422

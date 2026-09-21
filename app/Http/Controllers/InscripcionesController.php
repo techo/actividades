@@ -12,6 +12,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\CalidadDatos\CalidadDatosPersona;
 use App\Services\ImageUploadService;
 use App\Services\InscripcionFlow;
 use App\Services\Push\PushNotificationService;
@@ -71,9 +72,25 @@ class InscripcionesController extends BaseController
             $edad = 0;
         }
         $jornadas = json_decode($request->input('jornadas'), true);
+
+        // Microprompt de calidad de datos (opt-in por env): se muestra solo si
+        // está activado, la persona no verificó dentro de la vigencia y sus datos
+        // tienen algo para revisar. Ver App\Services\CalidadDatos\CalidadDatosPersona.
+        $mostrarVerificacionDatos = false;
+        $calidadDatos = null;
+        if (config('calidad_datos.microprompt')) {
+            $eval = (new CalidadDatosPersona())->evaluar(Auth::user());
+            if (!$eval['verificado'] && $eval['nivel'] !== 'ok') {
+                $mostrarVerificacionDatos = true;
+                $calidadDatos = $eval;
+            }
+        }
+
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
+            ->with('mostrarVerificacionDatos', $mostrarVerificacionDatos)
+            ->with('calidadDatos', $calidadDatos)
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))

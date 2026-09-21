@@ -202,7 +202,8 @@ class PersonasController extends Controller
         $fields = $request->validated();
 
         $persona = Persona::create([
-            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
+            'dni' => (new DocumentoService())->normalizarComoTipo($fields['tipo_documento'] ?? null, $fields['dni'], $fields['idPais']),
+            'tipo_documento' => $fields['tipo_documento'] ?? null,
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
@@ -287,7 +288,8 @@ class PersonasController extends Controller
             'genero' => 'required',
             'instagram' => 'nullable',
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais)],
+            'tipo_documento' => 'nullable|string|max:30',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais, $request->tipo_documento)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
@@ -297,7 +299,8 @@ class PersonasController extends Controller
         ]);
 
         $persona->update([
-            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
+            'dni' => (new DocumentoService())->normalizarComoTipo($fields['tipo_documento'] ?? null, $fields['dni'], $fields['idPais']),
+            'tipo_documento' => $fields['tipo_documento'] ?? null,
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
