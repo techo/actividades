@@ -619,8 +619,17 @@
                 this.abreviacionPais = response.data.abreviacionPais
                 this.login_callback = response.data.login_callback
                 this.$parent.$refs.login.showValidUser(response.data.user);
-                window.location.href = '/';
-                if(response.data.login_callback) window.location.href = response.data.login_callback;
+                // Post-registro: si venía de algún lado (ej. una actividad), volver ahí
+                // (login_callback = referer/after_login_url guardado en sesión por
+                // LoginController). Si no venía de ningún lado, al index del país
+                // seleccionado (/{abreviacion}), no a la home multi-país.
+                if(response.data.login_callback) {
+                  window.location.href = response.data.login_callback;
+                } else if(response.data.abreviacionPais) {
+                  window.location.href = '/' + response.data.abreviacionPais;
+                } else {
+                  window.location.href = '/';
+                }
               }).catch((error) => {
                 // Antes el .catch solo llamaba a validar_data() y DESCARTABA la
                 // respuesta del backend. Si el alta fallaba por algo que no era un
