@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 
 class ComunidadesController extends BaseController
 {
-    public function index(Request $request)
+    public function index(Request $request, $idOficina = null)
     {
         $filtros = [];
         if($request->has('comunidad')){
@@ -36,7 +36,7 @@ class ComunidadesController extends BaseController
             $per_page = $request->per_page;
         }
 
-        $result = ComunidadesSearch::apply($filtros, $sort, $per_page);
+        $result = ComunidadesSearch::apply($filtros, $sort, $per_page, $idOficina);
         $comunidades = ComunidadesResource::collection($result); // Yo se que es horrible pero no funciona sin esto
         return response()->json($result);
     }

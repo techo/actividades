@@ -46,6 +46,13 @@
                 <ul class="treeview-menu">
                     @if (Auth::user()->hasRole('admin'))
                         <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">{{ __('backend.view_all') }}</a></li>
+                        @if(isset($todasOficinasPais))
+                            @foreach ($todasOficinasPais as $oficina)
+                                <li class="{{ request()->is('admin/actividades/oficina/' . $oficina->id) ? 'active' : '' }}">
+                                    <a href="{{ url('admin/actividades/oficina/' . $oficina->id) }}">{{ $oficina->nombre }}</a>
+                                </li>
+                            @endforeach
+                        @endif
                     @endif
                     @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
                         <li class="{{request()->is('admin/actividades/usuario') ? 'active' : ''}}"><a href="/admin/actividades/usuario">{{ __('backend.my_activities') }}</a></li>
@@ -93,6 +100,13 @@
                         <li class="{{request()->is('admin/comunidades/crear') ? 'active' : ''}}">
                             <a href="/admin/comunidades/crear"><i class="fa fa-plus"></i>{{ __('backend.create_comunidad') }}</a>
                         </li>
+                    @endif
+                    @if(isset($todasOficinasPais))
+                        @foreach ($todasOficinasPais as $oficina)
+                            <li class="{{ request()->is('admin/comunidades/oficina/' . $oficina->id) ? 'active' : '' }}">
+                                <a href="{{ url('admin/comunidades/oficina/' . $oficina->id) }}">{{ $oficina->nombre }}</a>
+                            </li>
+                        @endforeach
                     @endif
                     <li class="{{request()->is('admin/comunidades') ? 'active' : ''}}">
                         <a href="/admin/comunidades">{{ __('backend.view_list') }}</a>

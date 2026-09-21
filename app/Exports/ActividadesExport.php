@@ -16,13 +16,15 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
     protected $filter;
     protected $sort;
     protected $idComunidad;
+    protected $idOficina;
 
 
-    public function __construct($filter = null, $sort = 'nombreActividad|asc', $idComunidad = null)
+    public function __construct($filter = null, $sort = 'nombreActividad|asc', $idComunidad = null, $idOficina = null)
     {
         $this->filter = $filter;
         $this->sort = $sort;
         $this->idComunidad = $idComunidad;
+        $this->idOficina = $idOficina;
     }
 
     public function collection()
@@ -65,6 +67,10 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
         if ($this->idComunidad) {
             $result->join('actividad_comunidad', 'actividad_comunidad.idActividad', '=', 'Actividad.idActividad')
                     ->where('actividad_comunidad.idComunidad', $this->idComunidad);
+        }
+
+        if ($this->idOficina) {
+            $result->where('Actividad.idOficina', $this->idOficina);
         }
 
         if ($this->filter) {

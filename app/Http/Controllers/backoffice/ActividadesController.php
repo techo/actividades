@@ -43,13 +43,17 @@ class ActividadesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $oficina = null)
     {
 
         $datatableConfig = config('datatables.actividades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.actividades.index', compact('fields', 'sortOrder'));
+        if ($oficina)
+            $apiUrl = "/admin/ajax/actividades/oficina/".$oficina;
+        else
+            $apiUrl = "/admin/ajax/actividades";
+        return view('backoffice.actividades.index', compact('fields', 'sortOrder', 'apiUrl'));
     }
 
     /**

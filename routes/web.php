@@ -307,6 +307,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::prefix('/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ComunidadesController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\ComunidadesController@index');
         Route::get('/crear', 'backoffice\ComunidadesController@create');
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
         Route::get('/{idComunidad}/integrantes', 'backoffice\ComunidadesController@showIntegrantes');
@@ -323,6 +324,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     });
     Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\ComunidadesController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\ajax\ComunidadesController@index');
         Route::put('/{idComunidad}', 'backoffice\ajax\ComunidadesController@update')->middleware('role:admin');
         Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy')->middleware('role:admin');
         Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store')->middleware('role:admin');
@@ -432,6 +434,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
+    Route::get('/actividades/oficina/{idOficina}', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
     Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,actividad');
@@ -569,6 +572,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
 
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
+    Route::get('/ajax/actividades/oficina/{idOficina}', 'backoffice\ajax\ActividadesController@index');
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@getOficinas');

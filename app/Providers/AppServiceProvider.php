@@ -40,10 +40,20 @@ class AppServiceProvider extends ServiceProvider
             if (Auth::check() && Auth::user()->hasRole('admin')) { // o el campo que uses
                 $oficinas = Oficina::with('pais')
                     ->where('id_pais', Auth::user()->idPaisPermitido)
-                    ->whereHas('equipos') 
+                    ->whereHas('equipos')
                     ->get();
-    
+
                 $view->with('oficinasPais', $oficinas);
+
+                // Todas las oficinas del país (sin exigir que tengan equipos):
+                // alimenta los selectores por oficina de Actividades y Comunidades
+                // en el sidebar, que sí pueden existir aunque la oficina no tenga equipo.
+                $todasOficinas = Oficina::with('pais')
+                    ->where('id_pais', Auth::user()->idPaisPermitido)
+                    ->orderBy('nombre')
+                    ->get();
+
+                $view->with('todasOficinasPais', $todasOficinas);
             }
         });
     }

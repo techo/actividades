@@ -22,7 +22,7 @@
         <div class="box-body with-border">
             <div class="table-responsive">
                 <datatable
-                        api-url="/admin/ajax/actividades"
+                        api-url="{{ $apiUrl }}"
                         fields="{{ $fields }}"
                         sort-order="{{ $sortOrder }}"
                         placeholder-text="{{ __('backend.search_by_name_office_or_type') }}"
