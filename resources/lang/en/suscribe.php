@@ -46,4 +46,26 @@ return [
     'user_exists_warning'   => 'This email already belongs to a registered user. You can log in to subscribe more easily.',
     'logged_in_as'          => 'Subscribing as',
     'join_whatsapp_group'   => 'Join the WhatsApp group',
+    // Name of secondary education per country. In English we use the generic
+    // term, since each country's official name is specific to its local language.
+    'secundario_by_country' => [
+        'argentina' => 'Secondary school',
+        'bolivia' => 'Secondary school',
+        'brasil' => 'Secondary school',
+        'chile' => 'Secondary school',
+        'colombia' => 'Secondary school',
+        'costarica' => 'Secondary school',
+        'republicadominicana' => 'Secondary school',
+        'ecuador' => 'Secondary school',
+        'elsalvador' => 'Secondary school',
+        'guatemala' => 'Secondary school',
+        'honduras' => 'Secondary school',
+        'mexico' => 'Secondary school',
+        'panama' => 'Secondary school',
+        'paraguay' => 'Secondary school',
+        'peru' => 'Secondary school',
+        'uruguay' => 'Secondary school',
+        'venezuela' => 'Secondary school',
+        'latam' => 'Secondary school',
+    ],
 ];

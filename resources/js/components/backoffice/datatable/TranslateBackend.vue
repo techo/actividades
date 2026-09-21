@@ -34,7 +34,11 @@ export default {
             if (value === null || value === undefined || value === '') {
                 return '';
             }
-            return this.$t(`backend.${field}_options.${value}`) || value;
+            // vue-i18n devuelve la propia clave cuando no hay traducción, así que
+            // chequeamos existencia con $te y, si no está, mostramos el valor crudo
+            // (hay roles legacy/fuera de catálogo que no tienen clave).
+            const key = `backend.${field}_options.${value}`;
+            return this.$te(key) ? this.$t(key) : value;
         }
     }
 }

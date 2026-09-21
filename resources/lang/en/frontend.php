@@ -598,4 +598,11 @@ return [
     'present' => 'Present',
     'no_past_activities' => "You haven't joined any activities yet.",
 
+    'constancia_voluntario' => 'Download Certificate',
+    'false' => 'false',
+    'gender_score' => 'Gender perspective score',
+    'gender_score_description' => 'Promoting a safe and equal environment.',
+    'group_chat' => 'Group Chat',
+    'otros_datos' => 'Other Data',
+
 ];

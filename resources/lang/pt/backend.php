@@ -592,8 +592,8 @@ return [
 
     'programa_options' => [
         'emergencia_habitacional' => 'Emergência habitacional zero',
-        'acesso_servicios' => 'Acesso a serviços públicos',
-        'infraestrutura_comunitaria' => 'Infraestrutura comunitária',
+        'acceso_servicios' => 'Acesso a serviços públicos',
+        'infraestructura_comunitaria' => 'Infraestrutura comunitária',
         'gestion_comunitaria' => 'Gestão comunitária',
         'formalizacion_tenencia' => 'Formalização da posse'
     ],

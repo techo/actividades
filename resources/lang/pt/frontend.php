@@ -605,4 +605,9 @@ return [
     'present' => 'Presente',
     'no_past_activities' => 'Você ainda não participou de nenhuma atividade.',
 
+    'constancia_voluntario' => 'Baixar Comprovante',
+    'false' => 'falso',
+    'my_score_not_active' => ' Você ainda não tem avaliações suficientes para fazer o cálculo.',
+    'otros_datos' => 'Outros Dados',
+
 ];

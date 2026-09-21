@@ -601,5 +601,20 @@ return [
     'present' => 'Presente',
     'no_past_activities' => 'Todavía no participaste de ninguna actividad.',
 
+    // Claves que faltaban en es_CH (copiadas de es_AR). Revisar si algún
+    // regionalismo necesita ajuste para Chile / resto de LatAm.
+    'acuerdo_especifico' => 'terminos y condiciones de la actividad ',
+    'acuerdo_menores' => 'terminos y condiciones para menores',
+    'ciclo_voluntariado' => 'Ciclo de voluntariado',
+    'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
+    'compromiso_firma' => ' y me comprometo a llevarla impreso y lleno el día de la actividad',
+    'continue_with_feedback' => ' Evaluacion especifica, ayudanos a ofrecer una mejor experiencia.',
+    'continue_with_group_feedback' => 'Evalua tu equipo',
+    'leave_blank' => 'Opcional',
+    'vacunacion_covid' => 'Vacuna Covid',
+    'ver_dorso' => 'Ver Dorso',
+    'ver_frente' => 'Ver Frente',
+    'yes_apply_rol' => 'Si, aplicar a rol',
+
 ];
 
