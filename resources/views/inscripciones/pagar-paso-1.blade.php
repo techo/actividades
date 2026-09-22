@@ -108,8 +108,11 @@
 
     {{-- En validación (amarillo): comprobante/beca enviado y aún sin resolver. Siempre en el
          DOM; lo muestra el server al cargar, o el JS al enviar sin recargar. Excluyente con el rojo. --}}
-    <div id="validacion-banner" class="d-flex align-items-start mb-4"
-         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px; {{ $enValidacion ? '' : 'display:none;' }}">
+    {{-- Visibilidad por clases Bootstrap (d-flex/d-none), NO por style inline:
+         .d-flex es `display:flex !important` y le ganaría a un `display:none` inline,
+         dejando el aviso siempre visible. --}}
+    <div id="validacion-banner" class="align-items-start mb-4 {{ $enValidacion ? 'd-flex' : 'd-none' }}"
+         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px;">
         <i class="far fa-clock fa-lg mr-3 mt-1 flex-shrink-0" style="color:#b56b00;"></i>
         <div>
             <strong id="validacion-banner-title" style="color:#b56b00;"
@@ -423,8 +426,9 @@
         if (btn) btn.disabled = false;
 
         // Si acaba de re-subir tras un rechazo, ocultamos el aviso rojo (excluyente con el amarillo).
+        // Se togglean clases Bootstrap: .d-flex/.alert son `!important` y un style.display inline no las vence.
         var rechazado = document.getElementById('rechazado-banner');
-        if (rechazado) rechazado.style.display = 'none';
+        if (rechazado) { rechazado.classList.remove('d-flex'); rechazado.classList.add('d-none'); }
 
         var banner = document.getElementById('validacion-banner');
         if (!banner) return;
@@ -438,7 +442,8 @@
         if (title)    title.textContent    = title.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
         if (subtitle) subtitle.textContent = subtitle.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
 
-        banner.style.display = '';
+        banner.classList.remove('d-none');
+        banner.classList.add('d-flex');
         banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
