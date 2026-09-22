@@ -250,11 +250,13 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label style="text-transform: uppercase;">{{ documentoLabel }} *</label>
-                        <select v-if="documentoTipos.length > 1" class="form-control mb-2" name="tipo_documento" id="tipo_documento" v-model="user.tipo_documento">
-                            <option v-for="t in documentoTipos" :key="t.key" :value="t.key">{{ t.label }}</option>
-                        </select>
-                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        <label style="text-transform: uppercase;">{{ $t('frontend.documento_label') }} *</label>
+                        <div class="input-group">
+                            <select v-if="documentoTipos.length > 1" class="form-control" style="flex: 0 0 40%; max-width: 40%;" name="tipo_documento" id="tipo_documento" v-model="user.tipo_documento">
+                                <option v-for="t in documentoTipos" :key="t.key" :value="t.key">{{ t.label }}</option>
+                            </select>
+                            <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        </div>
                         <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
                     </div>
                 </div>

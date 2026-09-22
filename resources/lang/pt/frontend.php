@@ -420,6 +420,7 @@ return [
 	'vd_estan_bien' => 'Estão corretos',
 	'vd_corregir' => 'Corrigir meus dados',
 	'vd_gracias' => 'Obrigado! Confirmamos seus dados.',
+	'documento_label' => 'Documento',
 	'continue' => 'PRÓXIMO',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'CANCELAR MINHA INSCRIÇÃO',

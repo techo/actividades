@@ -221,12 +221,17 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label style="text-transform: uppercase;">{{ documentoLabel }}</label>
+                                        <label style="text-transform: uppercase;">{{ $t('frontend.documento_label') }}</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                                        <div class="input-group">
+                                            <select v-if="documentoTipos.length > 1" class="form-control" style="flex: 0 0 40%; max-width: 40%;" name="tipo_documento" id="tipo_documento" v-model="user.tipo_documento">
+                                                <option v-for="t in documentoTipos" :key="t.key" :value="t.key">{{ t.label }}</option>
+                                            </select>
+                                            <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                                        </div>
                                         <small class="form-text text-danger">{{ validacion.dni.texto
                                         }}&nbsp;<br></small>
                                     </div>
@@ -547,6 +552,14 @@ export default {
             this.traer_provincias();
             this.user.provincia = null;
             this.validar_data('provincia')
+            // El tipo de documento depende del país: reajustamos el default y
+            // revalidamos el dni con la regla correcta.
+            this.sincronizarTipoDocumento()
+            this.validar_data('dni')
+            this.formDirty = true;
+        },
+        // Cambiar el tipo de documento revalida el dni con la regla estricta.
+        'user.tipo_documento': function () {
             this.validar_data('dni')
             this.formDirty = true;
         },
@@ -739,8 +752,12 @@ export default {
                     data['pass'] = this.user.pass
                 }
                 // El documento se valida según el país (DNI/CPF/RUT/pasaporte).
+                // Con tipo_documento elegido, la validación es estricta contra ese tipo.
                 if (prop == 'dni' && this.user.pais) {
                     data.pais = this.user.pais
+                    if (this.user.tipo_documento) {
+                        data.tipo_documento = this.user.tipo_documento
+                    }
                 }
             } else {
                 data = this.user
@@ -770,7 +787,22 @@ export default {
         traer_paises: function () {
             axios.get('/ajax/paises').then(response => {
                 this.paises = response.data
+                // Con los países cargados, aseguramos un tipo de documento válido
+                // para el país (respeta el ya elegido / auto-detectado del perfil).
+                this.sincronizarTipoDocumento()
             })
+        },
+        // Ajusta user.tipo_documento al tipo por defecto del país (el primero de la
+        // lista) solo cuando no hay uno o el actual no aplica al país. Respeta el
+        // tipo guardado o auto-detectado que ya trae el perfil (no lo pisa).
+        sincronizarTipoDocumento: function () {
+            var tipos = this.documentoTipos
+            if (!tipos.length) return
+            var actual = this.user.tipo_documento
+            var sigueValido = _.some(tipos, function (t) { return t.key === actual })
+            if (!sigueValido) {
+                this.$set(this.user, 'tipo_documento', tipos[0].key)
+            }
         },
         traer_provincias: function () {
             if (this.user.pais) {
@@ -872,6 +904,13 @@ export default {
             var self = this;
             var p = _.find(this.paises, function (x) { return x.id == self.user.pais; });
             return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
+        },
+        // Opciones del selector de tipo de documento del país (key + label),
+        // provistas por /ajax/paises. La primera es el tipo por defecto del país.
+        documentoTipos: function () {
+            var self = this;
+            var p = _.find(this.paises, function (x) { return x.id == self.user.pais; });
+            return (p && p.documento_tipos) ? p.documento_tipos : [];
         }
     }
 }

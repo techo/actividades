@@ -413,6 +413,7 @@ return [
 	'vd_estan_bien' => 'They are correct',
 	'vd_corregir' => 'Fix my details',
 	'vd_gracias' => 'Thanks! We confirmed your details.',
+	'documento_label' => 'Document',
 	'continue' => 'CONTINUE',
 	'cancel' => 'CANCEL',
 	'unenroll' => 'UN-ENROLL',

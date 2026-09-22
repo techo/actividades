@@ -298,9 +298,13 @@ class PersonasController extends Controller
             'idUnidadOrganizacional' => 'required|integer',
         ]);
 
+        // Preservar el tipo guardado si la app no lo manda (aún no lo envía en
+        // update): evita nulear tipo_documento desde el móvil. Si viene, usa ese.
+        $tipoDoc = $request->has('tipo_documento') ? ($fields['tipo_documento'] ?? null) : $persona->tipo_documento;
+
         $persona->update([
-            'dni' => (new DocumentoService())->normalizarComoTipo($fields['tipo_documento'] ?? null, $fields['dni'], $fields['idPais']),
-            'tipo_documento' => $fields['tipo_documento'] ?? null,
+            'dni' => (new DocumentoService())->normalizarComoTipo($tipoDoc, $fields['dni'], $fields['idPais']),
+            'tipo_documento' => $tipoDoc,
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],

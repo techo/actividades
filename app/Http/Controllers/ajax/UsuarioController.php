@@ -246,8 +246,12 @@ class UsuarioController extends BaseController
       $persona->apellidoPaterno = $request->apellido;
       // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
       // para que matcheen Salesforce, dedup y reporting.
-      $persona->dni = (new DocumentoService())->normalizarComoTipo($request->tipo_documento, $request->dni, $request->pais);
-      $persona->tipo_documento = $request->tipo_documento;
+      // Preservar el tipo guardado si el request no lo trae (ej. un cliente que
+      // todavía no manda el selector): evita nulear tipo_documento en un update
+      // que no lo incluye. Si viene, manda el elegido.
+      $tipoDoc = $request->has('tipo_documento') ? $request->tipo_documento : $persona->tipo_documento;
+      $persona->dni = (new DocumentoService())->normalizarComoTipo($tipoDoc, $request->dni, $request->pais);
+      $persona->tipo_documento = $tipoDoc;
       $persona->mail = $request->email;
       $persona->idLocalidad = $request->localidad;
       $persona->fechaNacimiento = $fechaNacimiento;
