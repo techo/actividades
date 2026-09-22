@@ -1,8 +1,8 @@
 @extends('errors.layout')
 
-@section('title', 'Estamos en mantenimiento')
-@section('code', 'Error 503')
+@section('title', __('errors.e503.title'))
+@section('code', __('errors.code', ['n' => 503]))
 
 @section('message')
-    Estamos haciendo una actualización rápida del sistema. Volvé a intentar en unos minutos.
+    {{ __('errors.e503.message') }}
 @endsection

@@ -72,7 +72,7 @@
         <p class="err-msg">@yield('message')</p>
         <div class="err-actions">
             @yield('actions')
-            <a href="/" class="err-btn err-btn-ghost">Volver al inicio</a>
+            <a href="/" class="err-btn err-btn-ghost">{{ __('errors.back_home') }}</a>
         </div>
         @yield('below')
     </div>
