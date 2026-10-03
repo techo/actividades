@@ -85,6 +85,17 @@ class Handler extends ExceptionHandler
         if (config('app.debug') || $request->expectsJson()) {
             return false;
         }
+        // Normalizamos primero como lo hace el render base: ModelNotFound → 404,
+        // AuthorizationException → 403. Sin esto, un "no encontrado" o "sin permiso"
+        // (que no son HttpException todavía) se mostraba como 500 y no se logueaba.
+        // Validation/Authentication/TokenMismatch no son HttpException ni lo serán:
+        // tienen su propio render, así que tampoco son un 500.
+        $exception = $this->prepareException($exception);
+        if ($exception instanceof \Illuminate\Validation\ValidationException
+            || $exception instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+            return false;
+        }
+
         // Error de servidor: excepción no-HTTP (bug real) o un abort(500) explícito.
         return !$this->isHttpException($exception)
             || (int) $exception->getStatusCode() === 500;

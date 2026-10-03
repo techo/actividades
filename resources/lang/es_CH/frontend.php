@@ -621,6 +621,7 @@ return [
     'ver_dorso' => 'Ver Dorso',
     'ver_frente' => 'Ver Frente',
     'yes_apply_rol' => 'Si, aplicar a rol',
+    'pago_sin_inscripcion' => 'No encontramos una inscripción a esta actividad con la cuenta :mail. Si te inscribiste con otra cuenta, cierra sesión e ingresa con esa para completar el pago.',
 
 ];
 

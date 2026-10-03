@@ -470,9 +470,13 @@ class InscripcionesController extends BaseController
     public function confirmarDonacion($id)
     {
         $actividad = Actividad::find($id);
-        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
-            ->where('idActividad', $actividad->idActividad)
-            ->firstOrFail();
+        $inscripcion = $this->inscripcionParaPago($actividad);
+
+        // Logueado con una cuenta sin inscripción (típico: entró desde el mail de
+        // pago con otra cuenta). No es un error: volvemos al show con un aviso.
+        if (!$inscripcion) {
+            return $this->redirigirSinInscripcion($actividad);
+        }
 
         // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
         // no se reabre para volver a subir/editar el comprobante.
@@ -503,9 +507,11 @@ class InscripcionesController extends BaseController
         }
 
         $actividad = Actividad::find($id);
-        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
-            ->where('idActividad', $actividad->idActividad)
-            ->firstOrFail();
+        $inscripcion = $this->inscripcionParaPago($actividad);
+
+        if (!$inscripcion) {
+            return $this->redirigirSinInscripcion($actividad);
+        }
 
         // Pago ya resuelto: no permitir iniciar otro checkout.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
@@ -525,6 +531,27 @@ class InscripcionesController extends BaseController
             ->with('actividad', $actividad)
             ->with('payment', $payment);
 
+    }
+
+    /**
+     * Inscripción del usuario logueado a la actividad, o null si no tiene.
+     */
+    private function inscripcionParaPago(Actividad $actividad)
+    {
+        return Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->first();
+    }
+
+    /**
+     * El usuario logueado no tiene inscripción a la actividad (p.ej. llegó desde el
+     * mail de pago logueado con otra cuenta): en vez de un 404, lo mandamos al show
+     * de la actividad avisándole con qué cuenta está y qué hacer.
+     */
+    private function redirigirSinInscripcion(Actividad $actividad)
+    {
+        return redirect('/actividades/' . $actividad->idActividad)
+            ->with('aviso_pago', __('frontend.pago_sin_inscripcion', ['mail' => auth()->user()->mail]));
     }
 
     /**

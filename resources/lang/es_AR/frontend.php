@@ -618,5 +618,6 @@ return [
     'card_paid' => 'Con costo',
     'present' => 'Presente',
     'no_past_activities' => 'Todavía no participaste de ninguna actividad.',
+    'pago_sin_inscripcion' => 'No encontramos una inscripción a esta actividad con la cuenta :mail. Si te anotaste con otra cuenta, cerrá sesión e ingresá con esa para completar el pago.',
 
 ];

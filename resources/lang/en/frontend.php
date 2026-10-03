@@ -610,5 +610,6 @@ return [
     'gender_score_description' => 'Promoting a safe and equal environment.',
     'group_chat' => 'Group Chat',
     'otros_datos' => 'Other Data',
+    'pago_sin_inscripcion' => 'We couldn\'t find a registration for this activity under the account :mail. If you signed up with a different account, log out and sign in with that one to complete the payment.',
 
 ];

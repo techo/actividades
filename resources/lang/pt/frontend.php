@@ -615,5 +615,6 @@ return [
     'false' => 'falso',
     'my_score_not_active' => ' Você ainda não tem avaliações suficientes para fazer o cálculo.',
     'otros_datos' => 'Outros Dados',
+    'pago_sin_inscripcion' => 'Não encontramos uma inscrição nesta atividade com a conta :mail. Se você se inscreveu com outra conta, saia e entre com ela para concluir o pagamento.',
 
 ];
