@@ -153,12 +153,21 @@ class UsuarioController extends BaseController
    */
   private function registrarPersona(Request $request, $origen = 'web')
   {
+      $social = $this->socialVerificado($request);
+      if ($social) {
+          // El mail que termina persistiéndose es el verificado por el proveedor
+          // social (ver aplicarSocialVerificado), no necesariamente el que manda el
+          // cliente. Si se validaba unicidad sobre el del request, un alta social sin
+          // ese campo (o con uno distinto) se colaba sin chequear el mail real y
+          // podía duplicar una cuenta activa existente.
+          $request->merge(['email' => $social['email']]);
+      }
+
       $this->validar($request, 'create');
 
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
 
-      $social = $this->socialVerificado($request);
       $this->aplicarSocialVerificado($persona, $social);
 
       $persona->password = $social ? Hash::make(\Illuminate\Support\Str::random(30)) : Hash::make($request->pass);

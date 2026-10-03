@@ -47,22 +47,6 @@ Login con email y contraseña.
 
 ---
 
-### `POST /socialLogin`
-
-Login con token de red social (Google / Facebook).
-
-**Body**
-
-| Campo | Tipo | Requerido | Descripción |
-|---|---|---|---|
-| `media` | string | ✅ | Red social (`google`, `facebook`) |
-| `id` | string | ✅ | ID único del usuario en esa red social |
-| `email` | string | ✅ | Email asociado a la cuenta |
-
-**Response `200`** — `{ "access_token": "...", "token_type": "Bearer" }`
-
----
-
 ### `POST /providerLogin`
 
 Login con proveedor externo (Apple, etc).

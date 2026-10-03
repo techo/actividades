@@ -197,41 +197,61 @@ class CampanasController extends Controller
 
     public function convertir(Request $request, $suscripcionId)
     {
-        $suscripcion = Suscribe::findOrFail($suscripcionId);
-
-        if ($suscripcion->convertido) {
-            return response()->json(['message' => 'Ya fue convertido en usuario.'], 422);
-        }
-
-        // Verificar que el suscripto pertenece al país del admin
-        if ($suscripcion->idPais !== auth()->user()->idPaisPermitido) {
-            return response()->json(['message' => 'Sin permisos.'], 403);
-        }
-
         DB::beginTransaction();
         try {
-            $persona = new Persona();
-            $persona->nombres          = $suscripcion->nombre;
-            $persona->apellidoPaterno  = $suscripcion->apellido;
-            $persona->mail             = $suscripcion->mail;
-            $persona->dni              = $suscripcion->dni;
-            $persona->genero           = $suscripcion->genero;
-            $persona->fechaNacimiento  = $suscripcion->fecha_nacimiento;
-            $persona->telefonoMovil    = $suscripcion->telefono;
-            $persona->idPais           = $suscripcion->idPais;
-            $persona->idProvincia      = $suscripcion->idProvincia;
-            $persona->idLocalidad      = $suscripcion->idLocalidad;
-            $persona->canal_contacto   = $suscripcion->canal_contacto;
-            $persona->instagram        = $suscripcion->instagram;
-            $persona->password         = Hash::make(\Illuminate\Support\Str::random(30));
-            $persona->idUnidadOrganizacional = 0;
-            $persona->recibirMails     = 1;
-            $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
-            $persona->idPaisPermitido  = 0;
-            $persona->estadoPersona    = 'activo';
-            $persona->save();
+            // lockForUpdate: cierra la ventana de dos conversiones simultáneas del
+            // mismo lead (dos admins/tabs) leyendo `convertido=false` a la vez.
+            $suscripcion = Suscribe::lockForUpdate()->findOrFail($suscripcionId);
 
-            $persona->assignRole('usuario_autenticado');
+            if ($suscripcion->convertido) {
+                DB::rollBack();
+                return response()->json(['message' => 'Ya fue convertido en usuario.'], 422);
+            }
+
+            // Verificar que el suscripto pertenece al país del admin
+            if ($suscripcion->idPais !== auth()->user()->idPaisPermitido) {
+                DB::rollBack();
+                return response()->json(['message' => 'Sin permisos.'], 403);
+            }
+
+            // Si ya existe una Persona (activa o dada de baja) con ese mail, vincular
+            // la captación a esa cuenta en vez de crear una duplicada: antes convertir()
+            // insertaba siempre, sin chequear nada. Cross-país + withTrashed porque la
+            // captación puede corresponder a alguien ya registrado bajo otro contexto de
+            // país o con una cuenta soft-deleteada (ver personas-invisibles-pais-softdelete).
+            $persona = Persona::withoutGlobalScope(\App\Scopes\BelongsToCountryScope::class)
+                ->withTrashed()
+                ->where('mail', $suscripcion->mail)
+                ->first();
+
+            if ($persona) {
+                if ($persona->trashed()) {
+                    $persona->restore();
+                }
+            } else {
+                $persona = new Persona();
+                $persona->nombres          = $suscripcion->nombre;
+                $persona->apellidoPaterno  = $suscripcion->apellido;
+                $persona->mail             = $suscripcion->mail;
+                $persona->dni              = $suscripcion->dni;
+                $persona->genero           = $suscripcion->genero;
+                $persona->fechaNacimiento  = $suscripcion->fecha_nacimiento;
+                $persona->telefonoMovil    = $suscripcion->telefono;
+                $persona->idPais           = $suscripcion->idPais;
+                $persona->idProvincia      = $suscripcion->idProvincia;
+                $persona->idLocalidad      = $suscripcion->idLocalidad;
+                $persona->canal_contacto   = $suscripcion->canal_contacto;
+                $persona->instagram        = $suscripcion->instagram;
+                $persona->password         = Hash::make(\Illuminate\Support\Str::random(30));
+                $persona->idUnidadOrganizacional = 0;
+                $persona->recibirMails     = 1;
+                $persona->unsubscribe_token = (string) \Illuminate\Support\Str::uuid();
+                $persona->idPaisPermitido  = 0;
+                $persona->estadoPersona    = 'activo';
+                $persona->save();
+
+                $persona->assignRole('usuario_autenticado');
+            }
 
             $suscripcion->convertido  = true;
             $suscripcion->idPersona   = $persona->idPersona;
