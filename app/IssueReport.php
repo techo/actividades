@@ -34,6 +34,10 @@ class IssueReport extends Model
     const STATUS_DESCARTADO  = 'descartado';
 
     const SEVERITIES = ['low', 'medium', 'high', 'critical'];
+
+    // Plataforma afectada (la declara quien reporta o la corrige el admin en triage)
+    const PLATFORMS       = ['web', 'app', 'ambas'];
+    const PLATFORM_LABELS = ['web' => 'Web', 'app' => 'App MiTECHO', 'ambas' => 'Web y App'];
     const STATUSES   = [
         self::STATUS_NUEVO,
         self::STATUS_TRIAGE,
@@ -43,7 +47,7 @@ class IssueReport extends Model
     ];
 
     protected $fillable = [
-        'type', 'status', 'severity', 'area', 'description',
+        'type', 'status', 'severity', 'area', 'platform', 'description',
         'idPersona', 'reporter_name', 'reporter_email', 'reporter_role', 'idPais',
         'url', 'route_name', 'os', 'browser', 'screen_resolution', 'viewport',
         'locale', 'release', 'user_agent',

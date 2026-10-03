@@ -1272,6 +1272,7 @@ return [
             ['name' => '__component:reporte-severidad', 'title' => 'Gravedad'],
             ['name' => '__component:reporte-estado', 'title' => 'Estado'],
             ['name' => 'area', 'sortField' => 'area', 'title' => 'Área'],
+            ['name' => 'platform_label', 'sortField' => 'platform', 'title' => 'Plataforma'],
             ['name' => 'reporter_name', 'sortField' => 'reporter_name', 'title' => 'Reportó'],
             ['name' => 'resumen', 'title' => 'Detalle'],
             ['name' => '__component:reporte-acciones', 'title' => ''],

@@ -46,6 +46,15 @@
                             <option v-for="a in areas" :key="a.value" :value="a.value">{{ a.label }}</option>
                         </select>
                     </div>
+                    <div class="rd-field">
+                        <label>Plataforma</label>
+                        <select class="form-control input-sm" v-model="platform" @change="guardar('platform', platform)">
+                            <option :value="null">—</option>
+                            <option value="web">Web</option>
+                            <option value="app">App MiTECHO</option>
+                            <option value="ambas">Web y App</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Cola de trabajo (GitHub) -->
@@ -121,6 +130,7 @@ export default {
             estado: null,
             severity: null,
             area: null,
+            platform: null,
             creandoIssue: false,
             issueError: null,
             areas: [
@@ -147,6 +157,7 @@ export default {
             this.estado = row.status;
             this.severity = row.severity || null;
             this.area = row.area || null;
+            this.platform = row.platform || null;
             this.issueError = null;
             this.visible = true;
         },

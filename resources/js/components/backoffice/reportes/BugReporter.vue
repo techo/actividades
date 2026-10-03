@@ -59,6 +59,18 @@
                     rows="4"
                     :placeholder="tipo === 'bug' ? 'Describe el error paso a paso…' : 'Describe tu sugerencia…'"></textarea>
 
+                <!-- Plataforma: el widget vive en la web, así que no se puede inferir;
+                     el reporte puede ser sobre la app MiTECHO. -->
+                <label class="br-label">¿Dónde pasa?</label>
+                <div class="br-plataformas">
+                    <button
+                        v-for="p in plataformas" :key="p.value"
+                        class="br-plataforma" :class="{ active: platform === p.value }"
+                        @click="platform = (platform === p.value ? null : p.value)">
+                        <i class="fa" :class="p.icon"></i> {{ p.label }}
+                    </button>
+                </div>
+
                 <!-- Clasificación (Fase 2) -->
                 <div class="br-clasif" v-if="tipo === 'bug'">
                     <div class="br-field">
@@ -145,6 +157,12 @@ export default {
             descripcion: '',
             severity: null,
             area: null,
+            platform: null,
+            plataformas: [
+                { value: 'web', label: 'Web', icon: 'fa-desktop' },
+                { value: 'app', label: 'App MiTECHO', icon: 'fa-mobile' },
+                { value: 'ambas', label: 'Ambas', icon: 'fa-clone' },
+            ],
             capturando: false,
             capturaBlob: null,
             capturaUrl: null,
@@ -334,6 +352,7 @@ export default {
                     description: this.descripcion.trim(),
                     severity: this.tipo === 'bug' ? this.severity : null,
                     area: this.tipo === 'bug' ? this.area : null,
+                    platform: this.platform,
                 });
                 const { data } = await window.axios.post('/admin/ajax/reportes', payload);
                 if (this.capturaBlob && data && data.id) {
@@ -358,6 +377,7 @@ export default {
             this.descripcion = '';
             this.severity = null;
             this.area = null;
+            this.platform = null;
             this.tipo = 'bug';
             this.enviado = false;
             this.error = null;
@@ -488,6 +508,12 @@ export default {
 .br-label { display: block; font-weight: 700; margin-bottom: 6px; }
 .br-label-sm { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 3px; }
 .br-req { color: #ef4444; }
+.br-plataformas { display: flex; gap: 6px; margin-bottom: 14px; }
+.br-plataforma {
+    flex: 1; padding: 6px 4px; font-size: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+    background: #fff; color: #475569; cursor: pointer;
+}
+.br-plataforma.active { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
 .br-textarea { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px; resize: vertical; }
 .br-textarea:focus { border-color: #2563eb; outline: none; }
 

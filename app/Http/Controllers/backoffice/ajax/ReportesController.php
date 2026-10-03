@@ -31,6 +31,7 @@ class ReportesController extends Controller
             'description'       => 'required|string|max:5000',
             'severity'          => 'nullable|in:low,medium,high,critical',
             'area'              => 'nullable|string|max:50',
+            'platform'          => 'nullable|in:' . implode(',', IssueReport::PLATFORMS),
             'url'               => 'nullable|string|max:2000',
             'route_name'        => 'nullable|string|max:255',
             'os'                => 'nullable|string|max:50',
@@ -106,8 +107,9 @@ class ReportesController extends Controller
         if ($request->filled('status'))   { $query->where('status', $request->status); }
         if ($request->filled('type'))     { $query->where('type', $request->type); }
         if ($request->filled('severity')) { $query->where('severity', $request->severity); }
+        if ($request->filled('platform')) { $query->where('platform', $request->platform); }
 
-        $sortable = ['id', 'type', 'status', 'severity', 'area', 'reporter_name', 'created_at'];
+        $sortable = ['id', 'type', 'status', 'severity', 'area', 'platform', 'reporter_name', 'created_at'];
         if ($request->filled('sort')) {
             $parts = explode('|', $request->sort);
             $field = $parts[0];
@@ -129,6 +131,8 @@ class ReportesController extends Controller
                 'status'         => $r->status,
                 'severity'       => $r->severity,
                 'area'           => $r->area,
+                'platform'       => $r->platform,
+                'platform_label' => $r->platform ? IssueReport::PLATFORM_LABELS[$r->platform] : '—',
                 'description'    => $r->description,
                 'resumen'        => Str::limit((string) $r->description, 90),
                 'reporter_name'  => $r->reporter_name,
@@ -182,6 +186,11 @@ class ReportesController extends Controller
 
         if ($request->has('area')) {
             $report->area = $request->area ?: null;
+        }
+
+        if ($request->has('platform')) {
+            $request->validate(['platform' => 'nullable|in:' . implode(',', IssueReport::PLATFORMS)]);
+            $report->platform = $request->platform ?: null;
         }
 
         if ($request->has('assigned_to')) {

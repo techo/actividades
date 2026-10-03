@@ -106,6 +106,7 @@ class GithubIssueService
         $lines[] = '| Tipo | ' . $report->type . ' |';
         if ($report->severity) { $lines[] = '| Gravedad | ' . $report->severity . ' |'; }
         if ($report->area)     { $lines[] = '| Área | ' . $report->area . ' |'; }
+        if ($report->platform) { $lines[] = '| Plataforma | ' . IssueReport::PLATFORM_LABELS[$report->platform] . ' |'; }
         $lines[] = '| Reportó | ' . $report->reporter_name . ' (' . $report->reporter_email . ') · ' . $report->reporter_role . ' |';
         if ($report->idPais)   { $lines[] = '| País | ' . $report->idPais . ' |'; }
         $lines[] = '| URL | ' . $report->url . ' |';

@@ -23,6 +23,14 @@
                     <option value="suggestion">Sugerencia</option>
                 </select>
             </div>
+            <div class="form-group">
+                <select class="form-control" v-model="filtros.platform" @change="aplicar">
+                    <option value="">Todas las plataformas</option>
+                    <option value="web">Web</option>
+                    <option value="app">App MiTECHO</option>
+                    <option value="ambas">Web y App</option>
+                </select>
+            </div>
             <button class="btn btn-primary" @click="aplicar"><i class="fa fa-search"></i> Buscar</button>
             <button class="btn btn-default" @click="limpiar">Limpiar</button>
         </div>
@@ -71,7 +79,7 @@ export default {
         return {
             dataFields: [],
             dataSortOrder: [],
-            filtros: { q: '', status: '', type: '' },
+            filtros: { q: '', status: '', type: '', platform: '' },
             moreParams: {},
             css: {
                 table: {
@@ -102,11 +110,12 @@ export default {
                 q: this.filtros.q || undefined,
                 status: this.filtros.status || undefined,
                 type: this.filtros.type || undefined,
+                platform: this.filtros.platform || undefined,
             };
             Vue.nextTick(() => this.$refs.vuetable.refresh());
         },
         limpiar() {
-            this.filtros = { q: '', status: '', type: '' };
+            this.filtros = { q: '', status: '', type: '', platform: '' };
             this.aplicar();
         },
         refrescar() {
