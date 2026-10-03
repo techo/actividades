@@ -57,6 +57,49 @@
                     </div>
                 </div>
 
+                <!-- Conversación con quien reportó -->
+                <div class="rd-section">
+                    <h5>Conversación</h5>
+
+                    <div v-if="!reporterEmail" class="rd-sin-email">
+                        <i class="fa fa-info-circle"></i>
+                        Este reporte no tiene email de contacto: podés dejar notas internas, pero no se puede avisar por mail.
+                    </div>
+
+                    <div v-if="hilo.length" class="rd-hilo">
+                        <div v-for="m in hilo" :key="m.id" class="rd-msg"
+                             :class="{ 'rd-msg-interna': m.is_internal, 'rd-msg-evento': m.tipo === 'resuelto' }">
+                            <div class="rd-msg-head">
+                                <strong>{{ m.author_name || 'Equipo' }}</strong>
+                                <span class="rd-msg-fecha">{{ m.created_at }}</span>
+                                <span v-if="m.is_internal" class="rd-badge rd-badge-interna">Nota interna</span>
+                                <span v-else-if="m.notificado" class="rd-badge rd-badge-mail">
+                                    <i class="fa fa-envelope"></i> Avisado por mail
+                                </span>
+                            </div>
+                            <p v-if="m.tipo === 'resuelto'" class="rd-msg-body rd-msg-evento-txt">
+                                Se marcó como resuelto y se avisó a quien reportó.
+                            </p>
+                            <p v-else class="rd-msg-body">{{ m.body }}</p>
+                        </div>
+                    </div>
+                    <p v-else class="rd-hilo-vacio">Todavía no hay respuestas.</p>
+
+                    <div class="rd-responder">
+                        <textarea v-model="nuevoMensaje" class="form-control" rows="3"
+                                  placeholder="Escribí una respuesta…"></textarea>
+                        <div class="rd-responder-foot">
+                            <label class="rd-visible" :class="{ 'rd-visible-off': !reporterEmail }">
+                                <input type="checkbox" v-model="visibleAlReportante" :disabled="!reporterEmail">
+                                Visible para quien reportó (avisar por mail)
+                            </label>
+                            <button class="btn btn-sm btn-primary" :disabled="enviando || !nuevoMensaje.trim()" @click="responder">
+                                {{ textoBotonResponder }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Cola de trabajo (GitHub) -->
                 <div class="rd-section">
                     <h5>Cola de trabajo</h5>
@@ -133,6 +176,12 @@ export default {
             platform: null,
             creandoIssue: false,
             issueError: null,
+            // Conversación con quien reportó
+            hilo: [],
+            reporterEmail: null,
+            nuevoMensaje: '',
+            visibleAlReportante: true,
+            enviando: false,
             areas: [
                 { value: 'inscripcion', label: 'Inscripción' },
                 { value: 'pagos', label: 'Pagos' },
@@ -150,6 +199,10 @@ export default {
             try { return JSON.stringify(this.r.console_errors, null, 2); }
             catch (e) { return ''; }
         },
+        textoBotonResponder() {
+            if (this.enviando) return 'Enviando…';
+            return (this.visibleAlReportante && this.reporterEmail) ? 'Responder y avisar' : 'Guardar nota';
+        },
     },
     methods: {
         abrir(row) {
@@ -159,9 +212,37 @@ export default {
             this.area = row.area || null;
             this.platform = row.platform || null;
             this.issueError = null;
+            this.hilo = [];
+            this.reporterEmail = null;
+            this.nuevoMensaje = '';
+            this.visibleAlReportante = true;
             this.visible = true;
+            this.cargarHilo();
         },
         cerrar() { this.visible = false; this.r = null; },
+        cargarHilo() {
+            if (!this.r) return;
+            axios.get('/admin/ajax/reportes/' + this.r.id + '/respuestas')
+                .then((resp) => {
+                    this.hilo = resp.data.respuestas || [];
+                    this.reporterEmail = resp.data.reporter_email || null;
+                    if (!this.reporterEmail) this.visibleAlReportante = false;
+                })
+                .catch(() => { /* el hilo es best-effort; si falla, se puede reintentar al reabrir */ });
+        },
+        responder() {
+            const body = this.nuevoMensaje.trim();
+            if (!body || this.enviando) return;
+            this.enviando = true;
+            const visible = this.visibleAlReportante && !!this.reporterEmail;
+            axios.post('/admin/ajax/reportes/' + this.r.id + '/responder', { body, visible })
+                .then((resp) => {
+                    this.hilo.push(resp.data.reply);
+                    this.nuevoMensaje = '';
+                })
+                .catch(() => { alert('No se pudo enviar la respuesta.'); })
+                .then(() => { this.enviando = false; });
+        },
         crearIssue() {
             if (this.creandoIssue) return;
             this.creandoIssue = true;
@@ -183,9 +264,16 @@ export default {
             const payload = {};
             payload[campo] = valor;
             axios.post('/admin/ajax/reportes/' + this.r.id, payload)
-                .then(() => {
+                .then((resp) => {
                     this.r[campo] = valor;
                     Event.$emit('reporte:refrescar');
+                    // Al resolver se genera un aviso en el hilo; lo recargamos para mostrarlo.
+                    if (campo === 'status') {
+                        this.cargarHilo();
+                        if (resp.data && resp.data.notificado) {
+                            alert('Se marcó como resuelto y se avisó por mail a quien reportó.');
+                        }
+                    }
                 })
                 .catch(() => { alert('No se pudo guardar el cambio.'); });
         },
@@ -220,4 +308,24 @@ export default {
 .rd-grid .rd-full { grid-column: 1 / -1; }
 .rd-grid span { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.04em; }
 .rd-issue-error { color: #dc2626; margin-left: 10px; font-size: 13px; }
+
+/* Conversación */
+.rd-sin-email { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; border-radius: 8px; padding: 10px 12px; font-size: 13px; margin-bottom: 12px; }
+.rd-hilo { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.rd-msg { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; background: #fff; }
+.rd-msg-interna { background: #fffbeb; border-color: #fde68a; }
+.rd-msg-evento { background: #f0fdf4; border-color: #bbf7d0; }
+.rd-msg-head { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #64748b; margin-bottom: 4px; }
+.rd-msg-head strong { color: #334155; }
+.rd-msg-fecha { color: #94a3b8; }
+.rd-badge { font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; margin-left: auto; }
+.rd-badge-interna { background: #fde68a; color: #92400e; }
+.rd-badge-mail { background: #dbeafe; color: #1e40af; }
+.rd-msg-body { margin: 0; font-size: 14px; line-height: 1.5; color: #2b2f36; white-space: pre-wrap; }
+.rd-msg-evento-txt { color: #166534; font-weight: 600; }
+.rd-hilo-vacio { color: #94a3b8; font-size: 13px; font-style: italic; margin-bottom: 14px; }
+.rd-responder textarea { resize: vertical; }
+.rd-responder-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.rd-visible { font-size: 13px; color: #475569; font-weight: 500; margin: 0; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.rd-visible-off { color: #94a3b8; cursor: not-allowed; }
 </style>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\backoffice\ajax;
 
 use App\Http\Controllers\Controller;
 use App\IssueReport;
+use App\IssueReportReply;
+use App\Jobs\EnviarMailTransaccionalSes;
+use App\Mail\MailReporteRespondido;
 use App\Services\Github\GithubIssueService;
 use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
@@ -170,13 +173,21 @@ class ReportesController extends Controller
     {
         $report = IssueReport::findOrFail($id);
 
+        // Si el reporte pasa a "resuelto" (y no lo estaba), avisamos a quien lo reportó.
+        $avisarResuelto = false;
+
         if ($request->has('status')) {
             $request->validate(['status' => 'in:' . implode(',', IssueReport::STATUSES)]);
+            $estadoPrevio  = $report->status;
             $report->status = $request->status;
             $terminales = [IssueReport::STATUS_RESUELTO, IssueReport::STATUS_DESCARTADO];
             $report->resolved_at = in_array($request->status, $terminales, true)
                 ? ($report->resolved_at ?: now())
                 : null;
+
+            $avisarResuelto = $request->status === IssueReport::STATUS_RESUELTO
+                && $estadoPrevio !== IssueReport::STATUS_RESUELTO
+                && ! empty($report->reporter_email);
         }
 
         if ($request->has('severity')) {
@@ -199,7 +210,109 @@ class ReportesController extends Controller
 
         $report->save();
 
-        return response()->json(['ok' => true]);
+        if ($avisarResuelto) {
+            $reply = IssueReportReply::create([
+                'issue_report_id' => $report->id,
+                'idPersona'       => optional(auth()->user())->idPersona,
+                'author_name'     => optional(auth()->user())->nombreCompleto,
+                'tipo'            => IssueReportReply::TIPO_RESUELTO,
+                'is_internal'     => false,
+            ]);
+            $this->notificar($report, $reply);
+        }
+
+        return response()->json(['ok' => true, 'notificado' => $avisarResuelto]);
+    }
+
+    /**
+     * Hilo de respuestas de un reporte (para el modal de la bandeja).
+     */
+    public function respuestas($id)
+    {
+        $report = IssueReport::findOrFail($id);
+
+        $hilo = $report->respuestas->map(function (IssueReportReply $r) {
+            return [
+                'id'          => $r->id,
+                'tipo'        => $r->tipo,
+                'body'        => $r->body,
+                'is_internal' => (bool) $r->is_internal,
+                'author_name' => $r->author_name,
+                'notificado'  => ! empty($r->notified_at),
+                'created_at'  => optional($r->created_at)->format('Y-m-d H:i'),
+            ];
+        });
+
+        return response()->json([
+            'reporter_email' => $report->reporter_email,
+            'respuestas'     => $hilo,
+        ]);
+    }
+
+    /**
+     * Agrega una respuesta al hilo. Si `visible` (default true), se le avisa por mail a
+     * quien reportó; si no, queda como nota interna de triage.
+     */
+    public function responder(Request $request, $id)
+    {
+        $data = $request->validate([
+            'body'    => 'required|string|max:5000',
+            'visible' => 'nullable|boolean',
+        ]);
+
+        $report  = IssueReport::findOrFail($id);
+        // Request::boolean() no existe en Laravel 5.7; default true si no viene el campo.
+        $visible = filter_var($request->input('visible', true), FILTER_VALIDATE_BOOLEAN);
+        $user    = auth()->user();
+
+        $reply = IssueReportReply::create([
+            'issue_report_id' => $report->id,
+            'idPersona'       => optional($user)->idPersona,
+            'author_name'     => optional($user)->nombreCompleto,
+            'tipo'            => IssueReportReply::TIPO_MENSAJE,
+            'body'            => $data['body'],
+            'is_internal'     => ! $visible,
+        ]);
+
+        $notificado = false;
+        if ($visible) {
+            $notificado = $this->notificar($report, $reply);
+        }
+
+        return response()->json([
+            'ok'         => true,
+            'notificado' => $notificado,
+            'reply'      => [
+                'id'          => $reply->id,
+                'tipo'        => $reply->tipo,
+                'body'        => $reply->body,
+                'is_internal' => (bool) $reply->is_internal,
+                'author_name' => $reply->author_name,
+                'notificado'  => ! empty($reply->notified_at),
+                'created_at'  => optional($reply->created_at)->format('Y-m-d H:i'),
+            ],
+        ]);
+    }
+
+    /**
+     * Dispara el aviso por mail (Amazon SES, transaccional) a quien reportó y sella
+     * `notified_at`. Si el reporte no tiene email de contacto, no hace nada.
+     */
+    private function notificar(IssueReport $report, IssueReportReply $reply)
+    {
+        if (empty($report->reporter_email)) {
+            return false;
+        }
+
+        $reply->notified_at = now();
+        $reply->save();
+
+        EnviarMailTransaccionalSes::dispatch(
+            new MailReporteRespondido($report, $reply),
+            $report->reporter_email
+        );
+
+        return true;
     }
 
     /**

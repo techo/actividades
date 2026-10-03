@@ -81,6 +81,20 @@ class IssueReport extends Model
         return $this->belongsTo(Pais::class, 'idPais', 'id');
     }
 
+    public function respuestas()
+    {
+        return $this->hasMany(IssueReportReply::class, 'issue_report_id', 'id')->orderBy('created_at');
+    }
+
+    /**
+     * Locale para notificarle a quien reportó: preferimos el del país (como el resto de los
+     * mailables), con el locale capturado en el reporte y el de la app como respaldo.
+     */
+    public function localeNotificacion()
+    {
+        return optional($this->pais)->locale ?: ($this->locale ?: config('app.locale'));
+    }
+
     public function scopeAbiertos($query)
     {
         return $query->whereNotIn('status', [self::STATUS_RESUELTO, self::STATUS_DESCARTADO]);

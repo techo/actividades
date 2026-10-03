@@ -138,4 +138,14 @@ return [
     'documento_rechazado_instruccion'  => 'Please log in and upload your ID document (front and back) again to continue.',
     'documento_rechazado_link'         => 'Upload ID document again',
 
+    // Reply to a report (triage inbox → notice to the reporter)
+    'reporte_respondido_subject' => 'An update on your report',
+    'reporte_resuelto_subject'   => 'We resolved your report',
+    'reporte_respondido_intro'   => 'We received the problem you reported and wanted to let you know how it is going:',
+    'reporte_resuelto_intro'     => 'Good news! We looked into what you reported.',
+    'reporte_tu_reporte_label'   => 'What you reported',
+    'reporte_respuesta_label'    => 'Our reply',
+    'reporte_resuelto_estado'    => "We've marked it as resolved. 🎉",
+    'reporte_cierre'             => 'Thanks for taking the time to let us know — your reports help us make TECHO better for everyone. 💙',
+
 ];

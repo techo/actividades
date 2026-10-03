@@ -132,4 +132,14 @@ return [
     'documento_rechazado_instruccion'  => 'Por favor, acesse e envie novamente seu documento (frente e verso) para continuar.',
     'documento_rechazado_link'         => 'Enviar documento novamente',
 
+    // Resposta a um relato (triagem → aviso a quem relatou)
+    'reporte_respondido_subject' => 'Novidades sobre o seu relato',
+    'reporte_resuelto_subject'   => 'Resolvemos o seu relato',
+    'reporte_respondido_intro'   => 'Recebemos o problema que você relatou e queríamos contar como estamos indo:',
+    'reporte_resuelto_intro'     => 'Boas notícias! Revisamos o que você relatou.',
+    'reporte_tu_reporte_label'   => 'O que você relatou',
+    'reporte_respuesta_label'    => 'Nossa resposta',
+    'reporte_resuelto_estado'    => 'Marcamos como resolvido. 🎉',
+    'reporte_cierre'             => 'Obrigado por reservar um tempo para nos avisar: os seus relatos nos ajudam a melhorar o TECHO para todas as pessoas. 💙',
+
 ];

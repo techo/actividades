@@ -290,6 +290,9 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::get('/reportes/{id}/captura', 'backoffice\ReportesController@captura');
         Route::get('/ajax/reportes', 'backoffice\ajax\ReportesController@index');
         Route::post('/ajax/reportes/{id}', 'backoffice\ajax\ReportesController@update');
+        // Hilo de respuestas: ver el hilo y responder (avisa por mail a quien reportó).
+        Route::get('/ajax/reportes/{id}/respuestas', 'backoffice\ajax\ReportesController@respuestas');
+        Route::post('/ajax/reportes/{id}/responder', 'backoffice\ajax\ReportesController@responder');
         // Fase 3: crear un issue de GitHub a partir del reporte.
         Route::post('/ajax/reportes/{id}/github', 'backoffice\ajax\ReportesController@github');
     });
