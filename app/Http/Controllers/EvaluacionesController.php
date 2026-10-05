@@ -30,10 +30,9 @@ class EvaluacionesController extends Controller
 
         // si no estoy en ningun grupo, estoy en la raíz
         if (is_null($miGrupo)) {
-            // El grupo raíz no existe en actividades de legacy
-            $miGrupo = Grupo::firstOrCreate(
-                ['idActividad' => $actividad->idActividad,'nombre' => $actividad->nombreActividad,'idPadre' => 0]
-            );
+            // Raíz por idPadre=0, no por nombre (renombrar/clonar creaba raíces duplicadas).
+            // En actividades legacy sin raíz, la crea.
+            $miGrupo = $actividad->obtenerGrupoRaiz();
         }
 
         $gruposSubordinados = Grupo::where('idPadre', '=', $miGrupo->idGrupo)->pluck('idGrupo');

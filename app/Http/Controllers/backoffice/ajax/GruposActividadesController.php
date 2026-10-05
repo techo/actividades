@@ -133,32 +133,48 @@ class GruposActividadesController extends BaseController
             }
         }
 
+        $grupoRaiz = $id->obtenerGrupoRaiz();
+
         if (count($idsGrupo) > 0) {
-            $grupos = Grupo::whereIn('idGrupo', $idsGrupo)->get();
-            $strResult = $this->buscarRecursivo($grupos);
-            $arrayResult = array_merge(explode('|', $strResult), $idsGrupo);
-            $gruposBorrados = Grupo::whereIn('idGrupo', $arrayResult)->delete();
-            $grupoRaiz = Grupo::where([['idActividad','=', $id->idActividad],['idPadre','=', 0]])->first();
-            GrupoRolPersona::whereIn('idGrupo', $arrayResult)
-                ->update(['idGrupo' => $grupoRaiz->idGrupo]);
+            // Solo grupos de ESTA actividad (y nunca la raíz), con todos sus descendientes.
+            $grupos = Grupo::whereIn('idGrupo', $idsGrupo)
+                ->where('idActividad', $id->idActividad)
+                ->where('idGrupo', '<>', $grupoRaiz->idGrupo)
+                ->get();
+            $idsABorrar = $this->idsConDescendientes($grupos);
+
+            if (count($idsABorrar) > 0) {
+                GrupoRolPersona::whereIn('idGrupo', $idsABorrar)
+                    ->where('idActividad', $id->idActividad)
+                    ->update(['idGrupo' => $grupoRaiz->idGrupo]);
+                Grupo::whereIn('idGrupo', $idsABorrar)
+                    ->where('idActividad', $id->idActividad)
+                    ->delete();
+            }
         }
 
         if (count($idsPersona) > 0) {
-            $personasBorradas = GrupoRolPersona::whereIn('idPersona', $idsPersona)->delete();
+            // "Borrar" una persona del árbol = devolverla a la raíz DE ESTA actividad (como dice el
+            // modal: "van a ser re-asignadas al grupo raíz"). Antes se borraba su fila de
+            // Grupo_Persona sin filtrar actividad → perdía la membresía en TODAS sus actividades y
+            // después no se la podía volver a agregar ni aparecía para evaluar (reclamos #7/#11).
+            GrupoRolPersona::whereIn('idPersona', $idsPersona)
+                ->where('idActividad', $id->idActividad)
+                ->update(['idGrupo' => $grupoRaiz->idGrupo]);
         }
         return response('ok');
     }
 
-    private function buscarRecursivo($lista)
+    /**
+     * Ids de los grupos dados más todos sus descendientes (cualquier profundidad).
+     */
+    private function idsConDescendientes($grupos)
     {
-        $grupos = '';
-        foreach ($lista as $item) {
-            if ($item->grupos->count() === 0) {
-                $grupos .= $item->idGrupo . '|';
-            } else {
-                $grupos .= $this->buscarRecursivo($item->grupos);
-            }
+        $ids = [];
+        foreach ($grupos as $grupo) {
+            $ids[] = $grupo->idGrupo;
+            $ids = array_merge($ids, $this->idsConDescendientes($grupo->grupos));
         }
-        return $grupos;
+        return array_values(array_unique($ids));
     }
 }

@@ -462,9 +462,7 @@ class ActividadesController extends Controller
 
             $this->clonarPreguntas($original, $clon);
 
-            $grupoRaizOriginal = Grupo::where('idActividad', $original->idActividad)
-                ->where('idPadre', 0)
-                ->first();
+            $grupoRaizOriginal = $original->grupo_raiz;
 
             if (!is_null($grupoRaizOriginal)) {
                 $this->clonarGrupo($grupoRaizOriginal, $clon);
@@ -563,7 +561,8 @@ class ActividadesController extends Controller
     {
 
         $nuevoGrupo = Grupo::create([
-            'nombre'    => $grupoOriginal->nombre,
+            // La raíz del clon lleva el nombre del clon (no el de la actividad original).
+            'nombre'    => $idPadre == 0 ? $actividad->nombreActividad : $grupoOriginal->nombre,
             'idPadre'   => $idPadre,
             'idActividad'   => $actividad->idActividad
         ]);

@@ -213,6 +213,7 @@
             // cargar puntos de encuentro
             Event.$on('Miembros:guardado', this.confirmarGuardado);
             Event.$on('Miembros:voluntario-duplicado', this.voluntarioDuplicado);
+            Event.$on('Miembros:error-guardar', this.errorGuardar);
             Event.$on('error', this.error);
         },
         methods: {
@@ -334,6 +335,9 @@
             },
             ocultarLoadingAlert: function () {
                 this.$refs.loading.justCloseSimplert();
+            },
+            errorGuardar: function (mensaje) {
+                this.mensajeError = mensaje;
             },
             voluntarioDuplicado: function (error) {
                 this.yaInscripto = true;

@@ -98,7 +98,29 @@ class Actividad extends Model
 
     public function getGrupoRaizAttribute()
     {
-        return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->first();
+        return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->orderBy('idGrupo')->first();
+    }
+
+    /**
+     * Grupo raíz de la actividad: el MÁS ANTIGUO con idPadre=0 (el que muestra la pestaña Grupos).
+     * Si no existe (actividades legacy) lo crea.
+     *
+     * Nunca resolver la raíz por nombre: al clonar, la raíz conserva el nombre de la actividad
+     * original, y al renombrar la actividad deja de coincidir → un firstOrCreate por nombre creaba
+     * una SEGUNDA raíz invisible en el árbol (reclamos #7/#11, ~51% de las actividades en 2026).
+     */
+    public function obtenerGrupoRaiz()
+    {
+        $raiz = $this->grupo_raiz;
+        if ($raiz) {
+            return $raiz;
+        }
+
+        return Grupo::create([
+            'nombre'      => $this->nombreActividad,
+            'idPadre'     => 0,
+            'idActividad' => $this->idActividad,
+        ]);
     }
 
     public function inscriptos()
@@ -110,9 +132,7 @@ class Actividad extends Model
 
     public function getMiembrosAttribute()
     {
-        $grupoRaiz = Grupo::where('idPadre', '=', 0)
-            ->where('idActividad','=', $this->idActividad)
-            ->first();
+        $grupoRaiz = $this->grupo_raiz;
         if (!is_null($grupoRaiz)) {
             $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
                 ->where('Grupo_Persona.idActividad', '=', $this->idActividad)

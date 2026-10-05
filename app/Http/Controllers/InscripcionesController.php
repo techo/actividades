@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actividad;
 use App\FichaMedica;
-use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use App\InscripcionRespuesta;
@@ -619,13 +618,15 @@ class InscripcionesController extends BaseController
 
     private function incluirEnGrupoRaiz(Actividad $actividad, int $idPersona)
     {
-        $grupoRaiz = Grupo::firstOrCreate(
-            [
-                'idActividad' => $actividad->idActividad,
-                'idPadre' => 0,
-                'nombre' => $actividad->nombreActividad
-            ]
-        );
+        $existente = GrupoRolPersona::where('idPersona', $idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->first();
+        if ($existente) {
+            return $existente;
+        }
+
+        // La raíz se resuelve por idPadre=0 (no por nombre): ver Actividad::obtenerGrupoRaiz().
+        $grupoRaiz = $actividad->obtenerGrupoRaiz();
         $arr = [
             'idPersona' => $idPersona,
             'idGrupo' => $grupoRaiz->idGrupo,
