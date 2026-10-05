@@ -71,6 +71,7 @@ return [
     'end' => 'End',
     'open_registrations' => 'Open Registrations',
     'closed_registrations' => 'Closed Registrations',
+    'registrations_not_open_yet' => 'Registrations not open yet',
     'open_evaluations' => 'Open Evaluations',
     'payment_date_expired' => 'Payment deadline passed',
     'registrations_start' => 'Registrations start',

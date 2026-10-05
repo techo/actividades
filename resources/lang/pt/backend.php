@@ -71,6 +71,7 @@ return [
     'end' => 'Termina',
     'open_registrations' => 'Inscrições Abertas',
     'closed_registrations' => 'Inscrições Encerradas',
+    'registrations_not_open_yet' => 'Inscrições ainda não abertas',
     'open_evaluations' => 'Avaliações Abertas',
     'payment_date_expired' => 'Prazo de pagamento vencido',
     'registrations_start' => 'Inscrições começam',
