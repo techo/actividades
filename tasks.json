@@ -764,6 +764,136 @@
       "branch": "pre-upgrade/api-tests",
       "status": "done",
       "completed_at": "2026-09-03"
+    },
+    {
+      "id": 47,
+      "group": "reclamos-prod",
+      "name": "grupos_integridad",
+      "title": "Integridad de grupos: borrado cross-actividad, raíz por nombre y alta silenciosa en /grupos",
+      "description": "Reclamos #7 #11 (+#5 #12). GruposActividadesController::delete L147 borra Grupo_Persona sin idActividad (L139 Grupo sin actividad); raíz resuelta por nombre con firstOrCreate en InscripcionesController::incluirEnGrupoRaiz y EvaluacionesController::index → 51% de actividades desde junio con ≥2 raíces; GruposController::incluirInscripto devuelve 500 ($grupo indefinida) si no hay fila. Ver progress/triage-reclamos-2026-10-05.md §E T1.",
+      "acceptance": [
+        "Quitar a una persona de un grupo en la actividad A no altera su membresía en otras actividades",
+        "Renombrar/clonar una actividad e inscribir no crea un segundo grupo raíz",
+        "incluirInscripto: inscripto sin fila → se crea; no inscripto → 422 con mensaje visible en Miembros.vue",
+        "Script de reparación con --dry-run para inscripciones vivas sin Grupo_Persona (aprobación aparte)",
+        "Tests Feature en GruposTest cubren los casos"
+      ],
+      "risk": "medium",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: delete() filtra por actividad y devuelve a la raíz (no borra); borra grupos con TODOS sus descendientes; raíz por idPadre=0 (Actividad::obtenerGrupoRaiz) en inscripción web, evaluaciones, alta manual y clonado; incluirInscripto crea la fila si falta, 422 si no inscripto, valida grupo∈actividad + authorize editar; asignarGrupo valida y usa la actividad de la ruta; Miembros.vue muestra el error. Tests: tests/Feature/GruposIntegridadTest.php. PENDIENTE (requiere aprobación): correr en prod `php artisan grupos:reparar-membresias` (dry-run) y luego `--commit`. Las raíces duplicadas existentes NO se fusionan (el comando solo las lista con -v)."
+    },
+    {
+      "id": 48,
+      "group": "reclamos-prod",
+      "name": "export_actividades_oficina",
+      "title": "Export de actividades en la vista por oficina (404) + headings desalineados",
+      "description": "Reclamo #3. FilterBar.vue:44 arma /admin/actividades/oficina/{id}/exportar (ruta inexistente). ActividadesExport no filtra oficina y headings() (9) != map() (12). Regresión de 5ace9f08.",
+      "acceptance": [
+        "Exportar desde /admin/actividades/oficina/{id} descarga solo esa oficina",
+        "Encabezados alineados en ActividadesExport y MisActividadesExport",
+        "Los demás /exportar de listados siguen funcionando",
+        "Test Feature de la ruta y de headings vs map"
+      ],
+      "risk": "low",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: ruta /admin/actividades/oficina/{id}/exportar (filtra oficina), FilterBar usa pathname + encodeURIComponent, headings alineados con map() en ActividadesExport y MisActividadesExport (+ columna País). Tests: tests/Feature/ExportarActividadesTest.php."
+    },
+    {
+      "id": 49,
+      "group": "reclamos-prod",
+      "name": "estado_actividad_label",
+      "title": "Etiqueta de estado de actividad congelada al paginar/filtrar listados",
+      "description": "Reclamo #8. estadoActividad.vue calcula en mounted(); vuetable-2 reutiliza componentes por índice. Pasar a computed, fechas NULL = sin restricción, distinguir 'aún no abren'.",
+      "acceptance": [
+        "Paginar/filtrar/ordenar muestra el estado real de cada fila",
+        "Fechas NULL no se muestran como cerradas",
+        "Test Vue del componente con rowData cambiante"
+      ],
+      "risk": "low",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: estadoActividad.vue con computed (sigue a rowData), fechas NULL = sin restricción, etiqueta 'Inscripciones aún no abiertas' (clave backend.registrations_not_open_yet en 4 locales). Test: tests/Vue/estado-actividad.spec.js. Requiere vue-i18n:generate + build en el deploy."
+    },
+    {
+      "id": 50,
+      "group": "reclamos-prod",
+      "name": "baja_cuenta_efectiva",
+      "title": "La baja de cuenta no corta el acceso: anonimizadas siguen logueando e inscribiéndose",
+      "description": "Reclamo #15. ajax/UsuarioController@delete anonimiza pero conserva google_id/facebook_id/apple_id y password; login social matchea por social id. Caso real: auto-inscripción 5 días después de borrar la cuenta.",
+      "acceptance": [
+        "Tras borrar la cuenta, login por password/social/token previo no da acceso",
+        "Nuevo login con el mismo Google crea cuenta nueva",
+        "Desvinculado anonimizado no puede inscribirse",
+        "Tests Feature web + API"
+      ],
+      "risk": "medium",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: Persona::cortarAcceso() (password y remember_token aleatorios, social ids null, revoca TODOS los tokens Passport) llamado en la baja de cuenta. Causa real: no era el login social (busca por mail, ya anonimizado) sino el 'recordarme' y tokens de otros dispositivos. Tests: tests/Feature/BajaCuentaCortaAccesoTest.php. PENDIENTE (requiere aprobación): `php artisan personas:cortar-acceso-anonimizadas` (dry-run) y luego `--commit` para las ~807 cuentas ya anonimizadas."
+    },
+    {
+      "id": 51,
+      "group": "reclamos-prod",
+      "name": "personas_costuras_pais",
+      "title": "Personas invisibles por país en buscador de integrantes + provincia obligatoria en API para países sin provincias",
+      "description": "Reclamos #16 #13. CoordinadoresSearch siempre filtra idPaisPermitido y usa concat NULL-inseguro; registros con idPais 1/241; CrearPersona y api/PersonasController@update exigen idProvincia/idLocalidad aunque el país no tenga provincias.",
+      "acceptance": [
+        "Buscador de integrantes encuentra por email exacto cross-país",
+        "Búsqueda NULL-safe (CONCAT_WS)",
+        "/api/register y editPersona aceptan país sin provincias sin idProvincia",
+        "Investigación documentada del origen de idPais 1/241"
+      ],
+      "risk": "low",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: /ajax/coordinadores busca por email exacto cross-país (como /ajax/personas); CONCAT_WS en Coordinador filter y getPersonas; encodeURIComponent en los componentes que llaman al buscador; provincia/localidad obligatorias en /api/register y /api/editPersona solo si el país tiene provincias (Pais::reglaUbicacion). Tests: BuscadorCoordinadoresTest + AuthApiTest. Origen de idPais 1/241 (prod, desde 2026-09): 162 con idPais=1 son TODAS registro_origen=app (la app manda 1 por defecto → fix en repo móvil); 177 con 241 'Latam' son TODAS web (registro precarga config('app.pais') = default sin URL de país). Sin fix backend todavía: requiere decisión."
+    },
+    {
+      "id": 52,
+      "group": "reclamos-prod",
+      "name": "metricas_cantidad_inscripciones",
+      "title": "Unificar métricas de cantidad de inscripciones/participaciones en el listado",
+      "description": "Reclamo #14. Tres métricas distintas (EnriquecedorFilas, filters/inscripciones/IdActividad, totales de actividad); IdActividad no excluye bajas ni actividades borradas. Bloqueada hasta saber qué número reporta la usuaria.",
+      "acceptance": [
+        "Métrica canónica definida (alineada a docs/reporting.md)",
+        "Filtro excluye inscripciones dadas de baja y actividades borradas",
+        "Tests del filtro"
+      ],
+      "risk": "low",
+      "status": "blocked",
+      "blockedBy": "Aclaración del reclamo #14",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md)."
+    },
+    {
+      "id": 53,
+      "group": "reclamos-prod",
+      "name": "evaluacion_sin_sesion",
+      "title": "Link de evaluación sin sesión: redirect post-login y mensajes de 403",
+      "description": "Reclamos #5 #12. Handler guarda after_login_url con el Referer y cookie de 10 min; /login renderiza el listado de actividades; 403 de evaluar sin explicación.",
+      "acceptance": [
+        "Abrir el link sin sesión desde webmail → login → aterriza en la evaluación",
+        "No presente ve mensaje claro",
+        "Test Feature del redirect post-login"
+      ],
+      "risk": "low",
+      "status": "done",
+      "branch": "fix/reclamos-prod-2026-10",
+      "notes": "Origen: triage de reclamos de prod 2026-10-05 (progress/triage-reclamos-2026-10-05.md).",
+      "completed_at": "2026-10-05",
+      "agent_notes": "Hecho: Handler::unauthenticated guarda la URL pedida en GET (antes el Referer → webmail) y cookie 60 min; 403 de evaluar con mensaje explicativo (AccesoExplicadoException + errors.evaluar.* en 5 locales; el resto de 403 siguen genéricos); callbackFromProvider sin URL ya no deja página en blanco. Tests: tests/Feature/EvaluacionAccesoTest.php. La causa exacta de 'me manda a la inscripción' sigue sin confirmar: esperar ejemplos de los reclamos #5/#12."
     }
   ]
 }

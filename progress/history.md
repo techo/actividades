@@ -240,3 +240,13 @@ Suite corrida en Docker (`laravel_app`) contra **MySQL** (`laravel_test`), PHP 7
 - Decisión de secuencia: se hizo **pre-upgrade** en fases de bajo riesgo (el audit lo ubicaba post-upgrade), como defensa en profundidad sin retirar checks. El scope es inerte para el usuario por defecto de tests (idPaisPermitido=0), de ahí el bajo riesgo de regresión.
 - `tests/Feature/BelongsToCountryScopeTest.php` (7). Suite 272/272 verde.
 - **Persona DIFERIDA a post-upgrade** (modelo de auth → recursión al resolver auth()->user(); requiere UserProvider custom con withoutGlobalScope). Aislamiento actual cubierto por checks + `SecurityFase2Test`. Documentado en `docs/security-audit-2026.md`.
+
+---
+
+## 2026-10-05 — Triage de reclamos de prod + tasks 47-51, 53 (rama `fix/reclamos-prod-2026-10`)
+
+- Triage de los 14 reclamos abiertos de `issue_reports` (prod): `progress/triage-reclamos-2026-10-05.md` (+ `.json`). Tareas 47-53 agregadas a `tasks.json` (grupo `reclamos-prod`); 52 queda `blocked` (falta aclaración del reclamo #14).
+- **47 grupos**: delete() ya no borra `Grupo_Persona` de otras actividades (reasigna a la raíz), borra descendientes completos; raíz por `idPadre=0` (`Actividad::obtenerGrupoRaiz`) en vez de por nombre; `incluirInscripto` crea la fila faltante / 422; `asignarGrupo` valida. Comando `grupos:reparar-membresias` (dry-run por defecto).
+- **48 export por oficina** (ruta nueva + headings alineados). **49** etiqueta de estado en listados como computed. **50** `Persona::cortarAcceso()` en la baja de cuenta + comando `personas:cortar-acceso-anonimizadas`. **51** `/ajax/coordinadores` por email exacto cross-país, CONCAT_WS, provincia condicional en API. **53** after_login con la URL pedida, 403 explicado en evaluaciones.
+- Tests nuevos: GruposIntegridadTest, ExportarActividadesTest, BajaCuentaCortaAccesoTest, BuscadorCoordinadoresTest, EvaluacionAccesoTest, AuthApiTest (+2), tests/Vue/estado-actividad.spec.js. Suite: todo verde salvo 2 fallas **preexistentes** (reproducen sin los cambios): `InscripcionesConPagoTest::plataforma_reenvia_a_pagina_fecha_limite_vencida` y Vue `inscripciones-inscribir-modal` "carga con personas al escribir".
+- Pendiente con aprobación: correr en prod los dos comandos con `--commit`; deploy requiere `vue-i18n:generate` + build. Sin commitear.
