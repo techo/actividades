@@ -108,6 +108,25 @@ class Persona extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
+    /**
+     * Corta TODO acceso de la cuenta (baja de cuenta por el propio usuario).
+     *
+     * La anonimización cambia el mail, pero eso solo impide logins NUEVOS: el `remember_token`
+     * (cookie "recordarme" de la web) y los tokens Passport de otros dispositivos seguían
+     * autenticando → una cuenta "eliminada" se auto-inscribió días después (reclamo #15).
+     * No guarda: el caller persiste el modelo.
+     */
+    public function cortarAcceso()
+    {
+        $this->password = \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(60));
+        $this->remember_token = \Illuminate\Support\Str::random(60);
+        $this->google_id = null;
+        $this->facebook_id = null;
+        $this->apple_id = null;
+
+        $this->tokens()->update(['revoked' => true]);
+    }
+
     public function puntosEncuentro()
     {
         return $this->hasMany(PuntoEncuentro::class, 'idPersona');

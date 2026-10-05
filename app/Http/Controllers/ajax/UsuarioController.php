@@ -494,6 +494,10 @@ class UsuarioController extends BaseController
         // Desvinculado para que quede fuera de los flujos de voluntario activo.
         $persona->estadoPersona = 'Desvinculado';
 
+        // Invalida password, "recordarme", logins sociales y TODOS los tokens de la app
+        // (antes solo se revocaba el token del request actual).
+        $persona->cortarAcceso();
+
         // grabar
         $persona->save();
 
