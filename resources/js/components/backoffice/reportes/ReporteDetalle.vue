@@ -93,7 +93,7 @@
                                 <input type="checkbox" v-model="visibleAlReportante" :disabled="!reporterEmail">
                                 Visible para quien reportó (avisar por mail)
                             </label>
-                            <button class="btn btn-sm btn-primary" :disabled="enviando || !nuevoMensaje.trim()" @click="responder">
+                            <button type="button" class="btn btn-sm btn-primary" :disabled="enviando || !nuevoMensaje.trim()" @click.prevent="responder">
                                 {{ textoBotonResponder }}
                             </button>
                         </div>
