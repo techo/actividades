@@ -173,12 +173,20 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        if ($request->hasHeader('referer')){
-           $afterLoginUrl = $request->header('referer');
-        } else {
-            $afterLoginUrl = $request->getUri();
+        // A dónde volver después del login:
+        //  - GET: la URL pedida. Antes se priorizaba el Referer, y quien abría el link de
+        //    evaluación desde un webmail (Gmail, Outlook) terminaba de vuelta en el webmail o en
+        //    el listado de actividades en vez de en la evaluación (reclamos #5/#12).
+        //  - Otros métodos (POST de un form): la página desde la que se envió, si es de este sitio.
+        $afterLoginUrl = $request->getUri();
+        if (!$request->isMethod('GET')) {
+            $referer = $request->header('referer');
+            $afterLoginUrl = ($referer && parse_url($referer, PHP_URL_HOST) === $request->getHost())
+                ? $referer
+                : url('/');
         }
 
-        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 10);
+        // 60 min (antes 10): da tiempo a recuperar la contraseña o verificar el mail.
+        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 60);
     }
 }

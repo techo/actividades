@@ -24,6 +24,11 @@ return [
         'message' => "The page you're looking for doesn't exist or has moved. Check the address or go back home.",
     ],
 
+    'evaluar' => [
+        'no_presente' => 'You\'re not marked as present in this activity, so you can\'t evaluate it. If you took part, ask the coordinator to mark you as present. If you have more than one account, make sure you signed in with the one you used to register.',
+        'no_abierta'  => 'The evaluation for this activity isn\'t open yet. Please try again later.',
+    ],
+
     'e403' => [
         'title'   => "You don't have access to this",
         'message' => "This section requires permissions your account doesn't have. If you think this is a mistake, reach out to your team's coordinator.",

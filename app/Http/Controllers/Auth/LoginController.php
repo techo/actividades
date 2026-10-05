@@ -259,6 +259,9 @@ class LoginController extends Controller
     		    if($url) return redirect($url);
 	        }
         }
+
+        // Sin URL de retorno no devolvía respuesta → página en blanco tras el login social.
+        return redirect('/');
     }
 
 }

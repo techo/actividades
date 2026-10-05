@@ -24,6 +24,11 @@ return [
         'message' => 'A página que você procura não existe ou foi movida. Confira o endereço ou volte ao início.',
     ],
 
+    'evaluar' => [
+        'no_presente' => 'Você não consta como presente nesta atividade, por isso não pode avaliá-la. Se você participou, peça a quem coordena que marque sua presença. Se você tem mais de uma conta, verifique se entrou com a que usou para se inscrever.',
+        'no_abierta'  => 'A avaliação desta atividade ainda não está aberta. Tente novamente mais tarde.',
+    ],
+
     'e403' => [
         'title'   => 'Você não tem acesso a isto',
         'message' => 'Esta seção exige permissões que a sua conta não tem. Se você acha que é um engano, fale com a pessoa que coordena a sua equipe.',

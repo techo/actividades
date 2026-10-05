@@ -25,6 +25,11 @@ return [
         'message' => 'La página que buscás no existe o se movió de lugar. Revisá la dirección o volvé al inicio.',
     ],
 
+    'evaluar' => [
+        'no_presente' => 'No figurás como presente en esta actividad, por eso no podés evaluarla. Si participaste, pedile a quien coordina que te marque como presente. Si tenés más de una cuenta, revisá haber entrado con la que usaste para inscribirte.',
+        'no_abierta'  => 'La evaluación de esta actividad todavía no está abierta. Probá de nuevo más adelante.',
+    ],
+
     'e403' => [
         'title'   => 'No tenés acceso a esto',
         'message' => 'Esta sección requiere permisos que tu cuenta no tiene. Si creés que es un error, escribile a la persona que coordina tu equipo.',
