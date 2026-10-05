@@ -27,9 +27,10 @@ use Symfony\Component\HttpFoundation\Session\Session as SessionSession;
 
 class ReportController extends Controller
 {
-    public function exportarActividades(Request $request)
+    public function exportarActividades(Request $request, $idOficina = null)
     {
-        $actividades = (new ActividadesExport($request->filter));
+        // Desde la vista por oficina (/admin/actividades/oficina/{id}) exporta solo esa oficina.
+        $actividades = (new ActividadesExport($request->filter, 'nombreActividad|asc', null, $idOficina));
         return Excel::download($actividades, 'actividades.xlsx');
     }
 

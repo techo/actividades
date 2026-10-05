@@ -108,8 +108,8 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             $actividad->estadoConstruccion,
             $actividad->oficina,
             $actividad->tipoActividad,
-            $actividad->nombreCategoria
-
+            $actividad->nombreCategoria,
+            $actividad->pais,
         ];
     }
 
@@ -118,20 +118,31 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         return [
             'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'E' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
     public function headings(): array
     {
+        // Mismo orden y cantidad que map() (antes había menos encabezados que columnas
+        // y quedaban corridos: debajo de "Estado" salía la fecha de inicio de inscripciones).
         return [
             'ID de la Actividad',
             'Nombre de la Actividad',
             'Fecha De Inicio',
             'Fecha de Finalización',
+            'Inicio de Inscripciones',
+            'Fin de Inscripciones',
+            'Inicio de Evaluaciones',
+            'Fin de Evaluaciones',
             'Estado',
             'Oficina',
             'Tipo de Actividad',
             'Categoría de la Actividad',
+            'País',
         ];
     }
 
