@@ -11,7 +11,8 @@ class Coordinador implements Filter
     	$palabras = explode(' ', $value);
 
     	foreach ($palabras as $palabra) {
-    		$builder->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like ?", ['%' . $palabra . '%']);
+    		// CONCAT_WS ignora NULLs (con concat, un dni o apellido NULL hacía que nunca matchee).
+    		$builder->whereRaw("CONCAT_WS(' ', nombres, apellidoPaterno, mail, dni) like ?", ['%' . $palabra . '%']);
 		}
 
         return $builder;

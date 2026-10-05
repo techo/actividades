@@ -419,6 +419,20 @@ class UsuarioController extends BaseController
 
     public function getCoordinadores(Request $request)
     {
+        // Escape hatch por email exacto (mismo criterio que getPersonas): una persona cuyo
+        // idPais no coincide con el del coordinador (p.ej. quedó registrada con "Latam") solo
+        // se encuentra escribiendo su mail completo. Por nombre se mantiene el aislamiento por
+        // país. Reclamo #16: no aparecía al agregarla a un equipo.
+        $termino = trim($request->coordinador ?? '');
+        if (filter_var($termino, FILTER_VALIDATE_EMAIL)) {
+            $personas = Persona::withoutGlobalScope(\App\Scopes\BelongsToCountryScope::class)
+                ->where('mail', $termino)
+                ->take(25)
+                ->get();
+
+            return CoordinadorResource::collection($personas);
+        }
+
         // Esto debería filtrar por rol
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
@@ -449,7 +463,8 @@ class UsuarioController extends BaseController
 
         foreach ($palabras as $palabra) {
           // Parámetro bindeado (?): no concatenar input en SQL.
-          $query->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like ?", ['%' . $palabra . '%']);
+          // CONCAT_WS ignora NULLs (con concat, un dni o apellido NULL hacía que nunca matchee).
+          $query->whereRaw("CONCAT_WS(' ', nombres, apellidoPaterno, mail, dni) like ?", ['%' . $palabra . '%']);
         }
 
         // Aislamiento por país: solo personas del país permitido del usuario autenticado.

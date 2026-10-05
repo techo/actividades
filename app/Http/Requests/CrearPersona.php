@@ -47,8 +47,8 @@ class CrearPersona extends FormRequest
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
-            'idProvincia' => 'required|integer',
-            'idLocalidad' => 'required|integer',
+            'idProvincia' => \App\Pais::reglaUbicacion($this->idPais),
+            'idLocalidad' => \App\Pais::reglaUbicacion($this->idPais),
             'idUnidadOrganizacional' => 'required|integer',
         ];
     }

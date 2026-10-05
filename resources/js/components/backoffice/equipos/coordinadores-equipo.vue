@@ -100,7 +100,7 @@
             onSearch: _.debounce( function (text, loading) {
                 if(text.length > 3) {
                     loading(true);
-                    axios.get('/ajax/coordinadores?coordinador=' + text)
+                    axios.get('/ajax/coordinadores?coordinador=' + encodeURIComponent(text))
                         .then((datos) => { 
                             this.personas = datos.data.data; 
                             loading(false);

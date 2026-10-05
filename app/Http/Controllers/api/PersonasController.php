@@ -214,8 +214,8 @@ class PersonasController extends Controller
             'recibirMails' => $fields['recibirMails'],
             'acepta_marketing' => $fields['acepta_marketing'],
             'idPais' => $fields['idPais'],
-            'idProvincia' => $fields['idProvincia'],
-            'idLocalidad' => $fields['idLocalidad'],
+            'idProvincia' => $fields['idProvincia'] ?? null,
+            'idLocalidad' => $fields['idLocalidad'] ?? null,
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
             'unsubscribe_token' => (string) \Illuminate\Support\Str::uuid(),
             // Alta desde la app móvil (ruta /api/register): la verificación de email
@@ -293,8 +293,8 @@ class PersonasController extends Controller
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
-            'idProvincia' => 'required|integer',
-            'idLocalidad' => 'required|integer',
+            'idProvincia' => \App\Pais::reglaUbicacion($request->idPais),
+            'idLocalidad' => \App\Pais::reglaUbicacion($request->idPais),
             'idUnidadOrganizacional' => 'required|integer',
         ]);
 
@@ -316,8 +316,8 @@ class PersonasController extends Controller
             'recibirMails' => $fields['recibirMails'],
             'acepta_marketing' => $fields['acepta_marketing'],
             'idPais' => $fields['idPais'],
-            'idProvincia' => $fields['idProvincia'],
-            'idLocalidad' => $fields['idLocalidad'],
+            'idProvincia' => $fields['idProvincia'] ?? null,
+            'idLocalidad' => $fields['idLocalidad'] ?? null,
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
         ]);
 
