@@ -236,6 +236,8 @@
                                         }}&nbsp;<br></small>
                                     </div>
                                     <div class="col-md-2">
+                                        <span v-bind:class="{ 'd-none': !validacion.dni.valido }"><i
+                                                class="fas fa-check text-success"></i></span>
                                         <span v-bind:class="{ 'd-none': !validacion.dni.invalido }"><i
                                                 class="fas fa-times text-danger"></i></span>
                                     </div>
@@ -768,6 +770,10 @@ export default {
                     var params = response.data.params
                     for (var i in params) {
                         prop = params[i]
+                        // El server puede devolver campos auxiliares sin estado propio
+                        // (ej. tipo_documento junto a dni): saltearlos en vez de romper
+                        // el loop antes de limpiar el campo real.
+                        if (!this.validacion[prop]) continue
                         this.validacion[prop].texto = ''
                         if (this.user[prop]) {
                             this.validacion[prop].valido = true
@@ -776,8 +782,9 @@ export default {
                     }
                 })
                 .catch(error => {
-                    var errors = error.response.data.errors
+                    var errors = (error.response && error.response.data.errors) || {}
                     for (var prop in errors) {
+                        if (!this.validacion[prop]) continue
                         this.validacion[prop].texto = errors[prop][0]
                         this.validacion[prop].valido = false
                         this.validacion[prop].invalido = true

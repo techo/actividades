@@ -740,6 +740,9 @@
             var params = response.data.params
             for(var i in params) {
               prop = params[i]
+              // Campos auxiliares sin estado propio (ej. tipo_documento junto a dni):
+              // saltearlos en vez de romper el loop antes de limpiar el campo real.
+              if(!this.validacion[prop]) continue
               this.validacion[prop].texto = ''
               if(this.user[prop]) {
                 this.validacion[prop].valido = true
@@ -751,6 +754,7 @@
             if(error.response && error.response.status === 422 && error.response.data.errors) {
               var errors = error.response.data.errors
               for(var p in errors) {
+                if(!this.validacion[p]) continue
                 this.validacion[p].texto = errors[p][0]
                 this.validacion[p].valido = false
                 this.validacion[p].invalido = true
