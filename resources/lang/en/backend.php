@@ -125,6 +125,10 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'applicable_roles' => 'Applicable Roles',
+    'preguntas_sugerir_roles' => 'Asking about the role? Set it up in "Applicable Roles" on the General tab: people choose it when they register and you confirm it from the registrations list.',
+    'preguntas_sugerir_estudios' => 'Asking about studies or school? Turn on "Education" on the General tab so the data is standardized across activities.',
+    'preguntas_sugerir_salud' => 'Asking about health or an emergency contact? Turn on the medical form on the General tab: that data is already part of it.',
+    'preguntas_ir_a_general' => 'Go to the General tab',
     'registration_type' => 'Registration Type',
 
     'visualization' => 'Homepage visualization',

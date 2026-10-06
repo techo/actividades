@@ -125,6 +125,10 @@ return [
     'yes' => 'Si',
     'no' => 'No',
     'applicable_roles' => 'Roles Aplicables',
+    'preguntas_sugerir_roles' => '¿Estás preguntando por el rol? Configuralo en "Roles Aplicables" de la pestaña General: las personas lo eligen al inscribirse y después lo confirmás desde el listado de inscripciones.',
+    'preguntas_sugerir_estudios' => '¿Estás preguntando por estudios o institución educativa? Activá "Educación" en la pestaña General: el dato queda estandarizado para todas las actividades.',
+    'preguntas_sugerir_salud' => '¿Estás preguntando por salud o contacto de emergencia? Activá "Requiere Ficha Médica" en la pestaña General: esos datos ya están en la ficha médica.',
+    'preguntas_ir_a_general' => 'Ir a la pestaña General',
     'registration_type' => 'Tipo de Inscripción',
 
     'visualization' => 'Visualizacion en Home',

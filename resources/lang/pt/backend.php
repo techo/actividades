@@ -125,6 +125,10 @@ return [
     'yes' => 'Sim',
     'no' => 'Não',
     'applicable_roles' => 'Cargos Aplicáveis',
+    'preguntas_sugerir_roles' => 'Está perguntando pela função? Configure em "Cargos Aplicáveis" na aba Geral: as pessoas escolhem ao se inscrever e depois você confirma na lista de inscrições.',
+    'preguntas_sugerir_estudios' => 'Está perguntando sobre estudos ou instituição de ensino? Ative "Grau de Estudo" na aba Geral: o dado fica padronizado para todas as atividades.',
+    'preguntas_sugerir_salud' => 'Está perguntando sobre saúde ou contato de emergência? Ative a ficha médica na aba Geral: esses dados já fazem parte dela.',
+    'preguntas_ir_a_general' => 'Ir para a aba Geral',
     'registration_type' => 'Tipo de Inscrição',
 
     'visualization' => 'Visualização na Home',
