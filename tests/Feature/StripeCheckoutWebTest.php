@@ -122,4 +122,12 @@ class StripeCheckoutWebTest extends TestCase
         $this->post('/stripe/1/checkout')
             ->assertRedirect(); // guard web → redirige al login
     }
+
+    /** @test */
+    public function el_checkout_ofrece_pix_solo_en_brl()
+    {
+        $this->assertSame(['card', 'pix'], \App\Http\Controllers\StripeController::metodosPagoCheckout('brl'));
+        $this->assertSame(['card'], \App\Http\Controllers\StripeController::metodosPagoCheckout('mxn'));
+        $this->assertSame(['card'], \App\Http\Controllers\StripeController::metodosPagoCheckout('usd'));
+    }
 }

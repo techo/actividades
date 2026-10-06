@@ -87,6 +87,73 @@ class StripeWebhookWebTest extends TestCase
         ]);
     }
 
+    /** Inscripción impaga lista para recibir un evento de Checkout. */
+    private function inscripcionImpaga($pais)
+    {
+        $persona   = factory('App\Persona')->create();
+        $actividad = app(ActividadFactory::class)->conPais($pais->id)->agregarPuntoConInscriptos(0)->create();
+
+        return factory('App\Inscripcion')->create([
+            'idActividad'      => $actividad->idActividad,
+            'idPuntoEncuentro' => $actividad->puntosEncuentro[0]->idPuntoEncuentro,
+            'idPersona'        => $persona->idPersona,
+            'pago'             => 0,
+        ]);
+    }
+
+    private function eventoCheckout($type, $inscripcion, $paymentStatus)
+    {
+        return [
+            'id'   => 'evt_' . $type,
+            'type' => $type,
+            'data' => ['object' => [
+                'id'             => 'cs_test_pix',
+                'metadata'       => ['inscripcion_id' => $inscripcion->idInscripcion],
+                'payment_status' => $paymentStatus,
+                'amount_total'   => 4500,
+                'currency'       => 'brl',
+                'payment_intent' => 'pi_test_pix',
+            ]],
+        ];
+    }
+
+    /** @test */
+    public function pix_checkout_completed_unpaid_no_marca_pago_y_async_succeeded_si()
+    {
+        Mail::fake();
+        $this->seed('PermisosSeeder');
+
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($pais);
+
+        // Al generar el QR: completed con unpaid → todavía no está pagada.
+        $this->postWebhook($pais->id, $this->eventoCheckout('checkout.session.completed', $inscripcion, 'unpaid'))
+            ->assertStatus(200);
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 0]);
+
+        // Cuando paga el PIX: async_payment_succeeded con paid → pagada.
+        $this->postWebhook($pais->id, $this->eventoCheckout('checkout.session.async_payment_succeeded', $inscripcion, 'paid'))
+            ->assertStatus(200);
+        $this->assertDatabaseHas('Inscripcion', [
+            'idInscripcion'            => $inscripcion->idInscripcion,
+            'pago'                     => 1,
+            'metodo_pago'              => 'stripe',
+            'moneda'                   => 'BRL',
+            'stripe_payment_intent_id' => 'pi_test_pix',
+        ]);
+    }
+
+    /** @test */
+    public function pix_async_payment_failed_no_marca_pago()
+    {
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($pais);
+
+        $this->postWebhook($pais->id, $this->eventoCheckout('checkout.session.async_payment_failed', $inscripcion, 'unpaid'))
+            ->assertStatus(200);
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 0]);
+    }
+
     /** @test */
     public function firma_invalida_devuelve_400()
     {
