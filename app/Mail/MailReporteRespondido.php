@@ -46,7 +46,11 @@ class MailReporteRespondido extends Mailable implements ShouldQueue
         // una identidad verificada en SES, no la de Gmail del transaccional.
         return $this
             ->subject(__($subjectKey) . ' #' . $this->report->id)
-            ->from(config('mailing.from_bulk'), __('email.remitente'))
+            // Firmado por Techita: cambia solo el NOMBRE del remitente (la dirección sigue
+            // siendo la identidad verificada en SES).
+            ->from(config('mailing.from_bulk'), $this->reply->esDeTechita()
+                ? __('email.reporte_remitente_techita')
+                : __('email.remitente'))
             ->view('emails.reporteRespondido');
     }
 }

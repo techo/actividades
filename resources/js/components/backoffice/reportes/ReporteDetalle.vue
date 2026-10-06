@@ -71,6 +71,7 @@
                              :class="{ 'rd-msg-interna': m.is_internal, 'rd-msg-evento': m.tipo === 'resuelto' }">
                             <div class="rd-msg-head">
                                 <strong>{{ m.author_name || 'Equipo' }}</strong>
+                                <span v-if="m.escrito_por" class="rd-msg-fecha">(escrito por {{ m.escrito_por }})</span>
                                 <span class="rd-msg-fecha">{{ m.created_at }}</span>
                                 <span v-if="m.is_internal" class="rd-badge rd-badge-interna">Nota interna</span>
                                 <span v-else-if="m.notificado" class="rd-badge rd-badge-mail">
@@ -92,6 +93,10 @@
                             <label class="rd-visible" :class="{ 'rd-visible-off': !reporterEmail }">
                                 <input type="checkbox" v-model="visibleAlReportante" :disabled="!reporterEmail">
                                 Visible para quien reportó (avisar por mail)
+                            </label>
+                            <label class="rd-visible">
+                                <input type="checkbox" v-model="comoTechita">
+                                Firmar como Techita
                             </label>
                             <button type="button" class="btn btn-sm btn-primary" :disabled="enviando || !nuevoMensaje.trim()" @click.prevent="responder">
                                 {{ textoBotonResponder }}
@@ -181,6 +186,7 @@ export default {
             reporterEmail: null,
             nuevoMensaje: '',
             visibleAlReportante: true,
+            comoTechita: true,
             enviando: false,
             areas: [
                 { value: 'inscripcion', label: 'Inscripción' },
@@ -216,6 +222,7 @@ export default {
             this.reporterEmail = null;
             this.nuevoMensaje = '';
             this.visibleAlReportante = true;
+            this.comoTechita = true;
             this.visible = true;
             this.cargarHilo();
         },
@@ -235,7 +242,7 @@ export default {
             if (!body || this.enviando) return;
             this.enviando = true;
             const visible = this.visibleAlReportante && !!this.reporterEmail;
-            axios.post('/admin/ajax/reportes/' + this.r.id + '/responder', { body, visible })
+            axios.post('/admin/ajax/reportes/' + this.r.id + '/responder', { body, visible, como_techita: this.comoTechita })
                 .then((resp) => {
                     this.hilo.push(resp.data.reply);
                     this.nuevoMensaje = '';

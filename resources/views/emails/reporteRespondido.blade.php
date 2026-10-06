@@ -31,7 +31,11 @@
     {{-- La respuesta del equipo (si escribió algo) --}}
     @if(!empty($reply->body))
         <p style="margin:0 0 4px; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8a9099;">
-            @lang('email.reporte_respuesta_label')
+            @if($reply->esDeTechita())
+                @lang('email.reporte_respuesta_techita')
+            @else
+                @lang('email.reporte_respuesta_label')
+            @endif
         </p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;">
             <tr>
@@ -53,5 +57,12 @@
     <p style="margin:0; font-size:15px; line-height:1.55; color:#2b2f36;">
         @lang('email.reporte_cierre')
     </p>
+
+    {{-- Firma --}}
+    @if($reply->esDeTechita())
+        <p style="margin:16px 0 0; font-size:15px; line-height:1.55; color:#2b2f36;">
+            — @lang('email.reporte_firma_techita')
+        </p>
+    @endif
 
 @endsection

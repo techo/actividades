@@ -141,5 +141,8 @@ return [
     'reporte_respuesta_label'    => 'Nossa resposta',
     'reporte_resuelto_estado'    => 'Marcamos como resolvido. 🎉',
     'reporte_cierre'             => 'Obrigado por reservar um tempo para nos avisar: os seus relatos nos ajudam a melhorar o TECHO para todas as pessoas. 💙',
+    'reporte_remitente_techita'  => 'Techita · TETO',
+    'reporte_respuesta_techita'  => 'Resposta da Techita',
+    'reporte_firma_techita'      => 'Techita, da equipe de Atividades da TETO',
 
 ];

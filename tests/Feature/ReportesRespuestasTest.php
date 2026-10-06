@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\IssueReport;
+use App\IssueReportReply;
+use App\Mail\MailReporteRespondido;
 use App\Jobs\EnviarMailTransaccionalSes;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
@@ -95,5 +97,65 @@ class ReportesRespuestasTest extends TestCase
             ->assertJson(['notificado' => false]);
 
         Queue::assertNotPushed(EnviarMailTransaccionalSes::class);
+    }
+
+    /** @test */
+    public function por_defecto_la_respuesta_se_firma_como_techita_y_guarda_quien_la_escribio()
+    {
+        Queue::fake();
+        $admin = $this->admin();
+        $reporte = $this->reporte();
+
+        $this->actingAs($admin)
+            ->postJson("/admin/ajax/reportes/{$reporte->id}/responder", ['body' => 'Hola, soy Techita'])
+            ->assertStatus(200)
+            ->assertJson(['reply' => ['author_name' => 'Techita', 'escrito_por' => $admin->nombreCompleto]]);
+
+        $reply = $reporte->respuestas()->first();
+        $this->assertEquals(IssueReportReply::AUTOR_TECHITA, $reply->author_name);
+        $this->assertEquals($admin->idPersona, $reply->idPersona);
+    }
+
+    /** @test */
+    public function se_puede_responder_con_el_nombre_propio()
+    {
+        Queue::fake();
+        $admin = $this->admin();
+        $reporte = $this->reporte();
+
+        $this->actingAs($admin)
+            ->postJson("/admin/ajax/reportes/{$reporte->id}/responder", ['body' => 'Hola', 'como_techita' => false])
+            ->assertStatus(200);
+
+        $this->assertEquals($admin->nombreCompleto, $reporte->respuestas()->first()->author_name);
+    }
+
+    /** @test */
+    public function el_aviso_de_resuelto_va_firmado_por_techita()
+    {
+        Queue::fake();
+        $reporte = $this->reporte();
+
+        $this->actingAs($this->admin())->postJson("/admin/ajax/reportes/{$reporte->id}", ['status' => 'resuelto']);
+
+        $this->assertEquals(IssueReportReply::AUTOR_TECHITA, $reporte->respuestas()->first()->author_name);
+    }
+
+    /** @test */
+    public function el_mail_de_techita_sale_con_su_nombre_y_firma()
+    {
+        $reporte = $this->reporte();
+        $reply = IssueReportReply::create([
+            'issue_report_id' => $reporte->id, 'author_name' => IssueReportReply::AUTOR_TECHITA,
+            'tipo' => IssueReportReply::TIPO_MENSAJE, 'body' => 'Ya está resuelto', 'is_internal' => false,
+        ]);
+
+        $mail = new MailReporteRespondido($reporte, $reply);
+        $html = $mail->render();
+        $mail->build();
+
+        $this->assertEquals(__('email.reporte_remitente_techita'), $mail->from[0]['name']);
+        $this->assertContains(__('email.reporte_firma_techita'), $html);
+        $this->assertContains(__('email.reporte_respuesta_techita'), $html);
     }
 }

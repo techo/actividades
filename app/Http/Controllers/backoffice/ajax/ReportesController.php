@@ -214,7 +214,7 @@ class ReportesController extends Controller
             $reply = IssueReportReply::create([
                 'issue_report_id' => $report->id,
                 'idPersona'       => optional(auth()->user())->idPersona,
-                'author_name'     => optional(auth()->user())->nombreCompleto,
+                'author_name'     => IssueReportReply::AUTOR_TECHITA,
                 'tipo'            => IssueReportReply::TIPO_RESUELTO,
                 'is_internal'     => false,
             ]);
@@ -238,6 +238,7 @@ class ReportesController extends Controller
                 'body'        => $r->body,
                 'is_internal' => (bool) $r->is_internal,
                 'author_name' => $r->author_name,
+                'escrito_por' => $r->esDeTechita() ? optional($r->autor)->nombreCompleto : null,
                 'notificado'  => ! empty($r->notified_at),
                 'created_at'  => optional($r->created_at)->format('Y-m-d H:i'),
             ];
@@ -251,24 +252,27 @@ class ReportesController extends Controller
 
     /**
      * Agrega una respuesta al hilo. Si `visible` (default true), se le avisa por mail a
-     * quien reportó; si no, queda como nota interna de triage.
+     * quien reportó; si no, queda como nota interna de triage. Si `como_techita` (default
+     * true), se firma como Techita; el admin que la escribió queda en `idPersona`.
      */
     public function responder(Request $request, $id)
     {
         $data = $request->validate([
             'body'    => 'required|string|max:5000',
             'visible' => 'nullable|boolean',
+            'como_techita' => 'nullable|boolean',
         ]);
 
         $report  = IssueReport::findOrFail($id);
         // Request::boolean() no existe en Laravel 5.7; default true si no viene el campo.
         $visible = filter_var($request->input('visible', true), FILTER_VALIDATE_BOOLEAN);
+        $comoTechita = filter_var($request->input('como_techita', true), FILTER_VALIDATE_BOOLEAN);
         $user    = auth()->user();
 
         $reply = IssueReportReply::create([
             'issue_report_id' => $report->id,
             'idPersona'       => optional($user)->idPersona,
-            'author_name'     => optional($user)->nombreCompleto,
+            'author_name'     => $comoTechita ? IssueReportReply::AUTOR_TECHITA : optional($user)->nombreCompleto,
             'tipo'            => IssueReportReply::TIPO_MENSAJE,
             'body'            => $data['body'],
             'is_internal'     => ! $visible,
@@ -288,6 +292,7 @@ class ReportesController extends Controller
                 'body'        => $reply->body,
                 'is_internal' => (bool) $reply->is_internal,
                 'author_name' => $reply->author_name,
+                'escrito_por' => $reply->esDeTechita() ? optional($user)->nombreCompleto : null,
                 'notificado'  => ! empty($reply->notified_at),
                 'created_at'  => optional($reply->created_at)->format('Y-m-d H:i'),
             ],

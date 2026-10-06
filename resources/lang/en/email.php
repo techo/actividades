@@ -147,5 +147,8 @@ return [
     'reporte_respuesta_label'    => 'Our reply',
     'reporte_resuelto_estado'    => "We've marked it as resolved. 🎉",
     'reporte_cierre'             => 'Thanks for taking the time to let us know — your reports help us make TECHO better for everyone. 💙',
+    'reporte_remitente_techita'  => 'Techita · TECHO',
+    'reporte_respuesta_techita'  => 'Reply from Techita',
+    'reporte_firma_techita'      => 'Techita, from the TECHO Activities team',
 
 ];

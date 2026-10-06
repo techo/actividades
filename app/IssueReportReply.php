@@ -17,6 +17,10 @@ class IssueReportReply extends Model
     const TIPO_MENSAJE  = 'mensaje';
     const TIPO_RESUELTO = 'resuelto';
 
+    // Voz con la que el equipo firma las respuestas a quien reportó. `author_name` muestra
+    // "Techita"; `idPersona` sigue siendo el admin que la escribió (trazabilidad interna).
+    const AUTOR_TECHITA = 'Techita';
+
     protected $fillable = [
         'issue_report_id', 'idPersona', 'author_name',
         'tipo', 'body', 'is_internal', 'notified_at',
@@ -32,6 +36,11 @@ class IssueReportReply extends Model
     public function reporte()
     {
         return $this->belongsTo(IssueReport::class, 'issue_report_id', 'id');
+    }
+
+    public function esDeTechita()
+    {
+        return $this->author_name === self::AUTOR_TECHITA;
     }
 
     public function autor()
