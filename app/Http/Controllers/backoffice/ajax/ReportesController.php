@@ -304,13 +304,16 @@ class ReportesController extends Controller
             return false;
         }
 
-        $reply->notified_at = now();
-        $reply->save();
-
-        EnviarMailTransaccionalSes::dispatch(
+        // Helper dispatch() (como EnviarMailBulkSes): el job no usa Dispatchable, así que
+        // EnviarMailTransaccionalSes::dispatch() no existía → 500 y el mail nunca salía.
+        // notified_at se sella DESPUÉS de encolar: si falla, la respuesta no figura avisada.
+        dispatch(new EnviarMailTransaccionalSes(
             new MailReporteRespondido($report, $reply),
             $report->reporter_email
-        );
+        ));
+
+        $reply->notified_at = now();
+        $reply->save();
 
         return true;
     }
