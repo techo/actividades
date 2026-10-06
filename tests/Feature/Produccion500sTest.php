@@ -114,4 +114,96 @@ class Produccion500sTest extends TestCase
             ->assertStatus(200)
             ->assertJsonFragment(['idEquipo' => $equipo->idEquipo]);
     }
+
+    /**
+     * 2026-10-06 — El detalle JSON de una actividad sin provincia válida (legacy,
+     * idProvincia=0) tiraba 500 en ActividadResource y el voluntario no podía
+     * inscribirse. Debe devolver 200 con ubicacion null.
+     *
+     * @test
+     */
+    public function detalle_de_actividad_sin_provincia_no_revienta()
+    {
+        $actividad = factory('App\Actividad')->create();
+        $actividad->idProvincia = 0;
+        $actividad->save();
+
+        $this->getJson('/ajax/actividades/' . $actividad->idActividad)
+            ->assertStatus(200)
+            ->assertJson(['data' => ['ubicacion' => null]]);
+    }
+
+    /**
+     * 2026-10-06 — La ruta DELETE de reuniones de equipo existía pero el método
+     * del controller no (BadMethodCallException → 500). Debe soft-borrar la
+     * reunión, y solo si pertenece al equipo de la URL.
+     *
+     * @test
+     */
+    public function borrar_reunion_de_equipo_funciona_y_se_acota_al_equipo()
+    {
+        $admin = $this->adminBackoffice();
+        $equipo = factory('App\Equipo')->create();
+        $otroEquipo = factory('App\Equipo')->create();
+        $reunion = \App\EquipoReunion::create([
+            'idEquipo'   => $equipo->idEquipo,
+            'nombre'     => 'Reunión',
+            'fecha'      => '2026-10-06 10:00:00',
+            'despliegue' => 'presencial',
+        ]);
+
+        $this->actingAs($admin)
+            ->deleteJson('/admin/ajax/equipos/' . $otroEquipo->idEquipo . '/reuniones/' . $reunion->idReunion)
+            ->assertStatus(404);
+        $this->assertDatabaseHas('equipo_reunion', ['idReunion' => $reunion->idReunion, 'deleted_at' => null]);
+
+        $this->actingAs($admin)
+            ->deleteJson('/admin/ajax/equipos/' . $equipo->idEquipo . '/reuniones/' . $reunion->idReunion)
+            ->assertStatus(200);
+        $this->assertSoftDeleted('equipo_reunion', ['idReunion' => $reunion->idReunion]);
+    }
+
+    /**
+     * 2026-10-06 — Los textos libres del informe de cierre eran VARCHAR(191):
+     * un comentario largo daba "Data too long" (500) y no se podía guardar.
+     *
+     * @test
+     */
+    public function informe_de_cierre_acepta_textos_largos()
+    {
+        $admin = $this->adminBackoffice();
+        $actividad = factory('App\Actividad')->create();
+        $actividad->tipo->idCategoria = 1;
+        $actividad->tipo->save();
+        $admin->idPaisPermitido = $actividad->idPais;
+        $admin->save();
+
+        $largo = str_repeat('Todas las viviendas se terminaron en tiempo y forma. ', 20);
+
+        $this->actingAs($admin)
+            ->postJson('/admin/ajax/actividades/' . $actividad->idActividad . '/informe_cierre', [
+                'programa'                => $largo,
+                'soluciones_entregadas'   => $largo,
+                'quienes_financiaron'     => $largo,
+                'comentarios_adicionales' => $largo,
+            ])
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('actividad_informe_cierre', [
+            'idActividad'             => $actividad->idActividad,
+            'comentarios_adicionales' => $largo,
+        ]);
+    }
+
+    private function adminBackoffice()
+    {
+        $permiso = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'ver_backoffice']);
+        $rol = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $rol->givePermissionTo($permiso);
+
+        $admin = factory('App\Persona')->create();
+        $admin->assignRole('admin');
+
+        return $admin;
+    }
 }
