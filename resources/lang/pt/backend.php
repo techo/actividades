@@ -522,6 +522,7 @@ return [
     'select_country_first' => 'Escolha um país para ver e editar o plano.',
     'settings' => 'Configurações',
     'reports_inbox' => 'Reportes',
+    'reports_pending_replies' => 'Relatos com resposta pendente',
     'my_reports' => 'Meus relatos',
     'my_reports_report' => 'Relato',
     'my_reports_empty' => 'Você ainda não enviou relatos. Use o botão "Reportar um problema".',

@@ -520,6 +520,7 @@ return [
     'select_country_first' => 'Elige un país para ver y editar el plan.',
     'settings' => 'Configuración',
     'reports_inbox' => 'Reportes',
+    'reports_pending_replies' => 'Reportes con respuesta pendiente',
     'my_reports' => 'Mis reportes',
     'my_reports_report' => 'Reporte',
     'my_reports_empty' => 'Todavía no enviaste reportes. Puedes hacerlo con el botón "Reportar un problema".',

@@ -238,8 +238,17 @@
             @endif
 
             @if (Auth::user()->can('ver_reportes'))
+            @php $reportesPendientes = \App\IssueReport::conRespuestaPendiente()->count(); @endphp
             <li class="{{ request()->is('admin/reportes*') ? 'active' : '' }}">
-                <a href="/admin/reportes"><i class="fa fa-bug"></i> <span>{{ __('backend.reports_inbox') }}</span></a>
+                <a href="/admin/reportes{{ $reportesPendientes ? '?pendientes=1' : '' }}">
+                    <i class="fa fa-bug"></i> <span>{{ __('backend.reports_inbox') }}</span>
+                    @if ($reportesPendientes)
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" style="background:#7c3aed !important;"
+                                  title="{{ __('backend.reports_pending_replies') }}">{{ $reportesPendientes }}</span>
+                        </span>
+                    @endif
+                </a>
             </li>
             @endif
 

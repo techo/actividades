@@ -521,6 +521,7 @@ return [
     'select_country_first' => 'Choose a country to view and edit the plan.',
     'settings' => 'Settings',
     'reports_inbox' => 'Reports',
+    'reports_pending_replies' => 'Reports awaiting your reply',
     'my_reports' => 'My reports',
     'my_reports_report' => 'Report',
     'my_reports_empty' => 'You haven\'t sent any reports yet. Use the "Report a problem" button.',

@@ -181,4 +181,43 @@ class ReportesAprobacionYMisReportesTest extends TestCase
         $fila = collect($this->actingAs($admin)->getJson('/admin/ajax/reportes')->json('data'))->firstWhere('id', $r->id);
         $this->assertTrue($fila['respuesta_pendiente']);
     }
+
+    /** @test */
+    public function la_bandeja_filtra_y_pone_primero_los_reportes_con_respuesta_pendiente()
+    {
+        $admin = $this->admin();
+        $c = $this->coordinador();
+        $viejoConRespuesta = $this->reporte($c, ['description' => 'Viejo con respuesta']);
+        $viejoConRespuesta->created_at = now()->subDays(10);
+        $viejoConRespuesta->save();
+        $nuevoSinRespuesta = $this->reporte($c, ['description' => 'Nuevo sin respuesta']);
+        $contestado = $this->reporte($c, ['description' => 'Ya contestado']);
+
+        IssueReportReply::create(['issue_report_id' => $viejoConRespuesta->id, 'tipo' => 'reportante', 'body' => 'Sigue pasando', 'is_internal' => false]);
+        // Contestado: respondió quien reportó y después Techita (la nota interna no cuenta).
+        IssueReportReply::create(['issue_report_id' => $contestado->id, 'tipo' => 'reportante', 'body' => '?', 'is_internal' => false]);
+        IssueReportReply::create(['issue_report_id' => $contestado->id, 'author_name' => 'Techita', 'tipo' => 'mensaje', 'body' => 'Listo', 'is_internal' => false]);
+        IssueReportReply::create(['issue_report_id' => $contestado->id, 'author_name' => 'Techita', 'tipo' => 'mensaje', 'body' => 'nota', 'is_internal' => true]);
+
+        $ids = collect($this->actingAs($admin)->getJson('/admin/ajax/reportes?sort=created_at|desc')->json('data'))->pluck('id')->all();
+        $this->assertEquals($viejoConRespuesta->id, $ids[0]); // primero aunque sea el más viejo
+
+        $soloPendientes = collect($this->actingAs($admin)->getJson('/admin/ajax/reportes?pendientes=1')->json('data'))->pluck('id')->all();
+        $this->assertEquals([$viejoConRespuesta->id], $soloPendientes);
+
+        $this->assertEquals(1, IssueReport::conRespuestaPendiente()->count());
+    }
+
+    /** @test */
+    public function el_menu_muestra_el_contador_y_linkea_a_la_bandeja_filtrada()
+    {
+        $admin = $this->admin();
+        $r = $this->reporte($this->coordinador());
+        IssueReportReply::create(['issue_report_id' => $r->id, 'tipo' => 'reportante', 'body' => 'Hola', 'is_internal' => false]);
+
+        $this->actingAs($admin)->get('/admin/reportes')
+            ->assertStatus(200)
+            ->assertSee('/admin/reportes?pendientes=1')
+            ->assertSee(e(__('backend.reports_pending_replies')));
+    }
 }

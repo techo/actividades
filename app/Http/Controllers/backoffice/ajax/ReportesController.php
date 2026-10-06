@@ -111,6 +111,12 @@ class ReportesController extends Controller
         if ($request->filled('type'))     { $query->where('type', $request->type); }
         if ($request->filled('severity')) { $query->where('severity', $request->severity); }
         if ($request->filled('platform')) { $query->where('platform', $request->platform); }
+        if (filter_var($request->input('pendientes'), FILTER_VALIDATE_BOOLEAN)) {
+            $query->conRespuestaPendiente();
+        }
+
+        // Los que tienen respuesta de quien reportó sin contestar van siempre primero.
+        $query->orderByRaw(IssueReport::SQL_RESPUESTA_PENDIENTE . ' DESC');
 
         $sortable = ['id', 'type', 'status', 'severity', 'area', 'platform', 'reporter_name', 'created_at'];
         if ($request->filled('sort')) {

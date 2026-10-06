@@ -122,6 +122,20 @@ class IssueReport extends Model
         return $ultimo !== null && $ultimo->esDelReportante();
     }
 
+    /**
+     * SQL de "respuesta pendiente": el último mensaje visible del hilo es de quien reportó.
+     * Misma regla que tieneRespuestaPendiente(), en SQL para filtrar/ordenar/contar.
+     */
+    const SQL_RESPUESTA_PENDIENTE = "EXISTS (SELECT 1 FROM issue_report_replies r
+        WHERE r.issue_report_id = issue_reports.id AND r.is_internal = 0 AND r.tipo = 'reportante'
+        AND r.id = (SELECT MAX(r2.id) FROM issue_report_replies r2
+                    WHERE r2.issue_report_id = issue_reports.id AND r2.is_internal = 0))";
+
+    public function scopeConRespuestaPendiente($query)
+    {
+        return $query->whereRaw(self::SQL_RESPUESTA_PENDIENTE);
+    }
+
     public function scopeAbiertos($query)
     {
         return $query->whereNotIn('status', [self::STATUS_RESUELTO, self::STATUS_DESCARTADO]);

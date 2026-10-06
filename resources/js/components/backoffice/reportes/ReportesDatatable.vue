@@ -31,6 +31,10 @@
                     <option value="ambas">Web y App</option>
                 </select>
             </div>
+            <label class="reportes-pendientes">
+                <input type="checkbox" v-model="filtros.pendientes" @change="aplicar">
+                <i class="fa fa-comment"></i> Con respuesta pendiente
+            </label>
             <button class="btn btn-primary" @click="aplicar"><i class="fa fa-search"></i> Buscar</button>
             <button class="btn btn-default" @click="limpiar">Limpiar</button>
         </div>
@@ -79,7 +83,7 @@ export default {
         return {
             dataFields: [],
             dataSortOrder: [],
-            filtros: { q: '', status: '', type: '', platform: '' },
+            filtros: this.filtrosVacios(),
             moreParams: {},
             css: {
                 table: {
@@ -105,17 +109,24 @@ export default {
         onChangePage(page) {
             this.$refs.vuetable.changePage(page);
         },
-        aplicar() {
-            this.moreParams = {
+        filtrosVacios() {
+            return { q: '', status: '', type: '', platform: '', pendientes: false };
+        },
+        parametros() {
+            return {
                 q: this.filtros.q || undefined,
                 status: this.filtros.status || undefined,
                 type: this.filtros.type || undefined,
                 platform: this.filtros.platform || undefined,
+                pendientes: this.filtros.pendientes ? 1 : undefined,
             };
+        },
+        aplicar() {
+            this.moreParams = this.parametros();
             Vue.nextTick(() => this.$refs.vuetable.refresh());
         },
         limpiar() {
-            this.filtros = { q: '', status: '', type: '', platform: '' };
+            this.filtros = this.filtrosVacios();
             this.aplicar();
         },
         refrescar() {
@@ -125,6 +136,11 @@ export default {
     created() {
         this.dataFields = JSON.parse(this.fields);
         this.dataSortOrder = JSON.parse(this.sortOrder);
+        // El contador del menú linkea con ?pendientes=1: arrancar ya filtrado.
+        if (/[?&]pendientes=1(&|$)/.test(window.location.search)) {
+            this.filtros.pendientes = true;
+            this.moreParams = this.parametros();
+        }
     },
     mounted() {
         Event.$on('reporte:refrescar', this.refrescar);
@@ -138,5 +154,6 @@ export default {
 <style scoped>
 .reportes-filtros { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 16px; }
 .reportes-filtros .form-group { margin-bottom: 0; }
+.reportes-pendientes { display: flex; align-items: center; gap: 6px; margin: 0 0 7px; font-weight: 600; color: #5b21b6; cursor: pointer; }
 .reportes-filtros .form-control { min-width: 200px; }
 </style>
