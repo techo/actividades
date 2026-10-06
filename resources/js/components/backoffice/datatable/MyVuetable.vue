@@ -63,6 +63,8 @@
   Vue.component('roles_asignados', tag_field);
   Vue.component('photoPerfil', photoPerfil);
   Vue.component('inscripciones_aplicadas', TipoInscripcionTagField);
+  import RolesAplicadosField from './RolesAplicadosField';
+  Vue.component('roles_aplicados', RolesAplicadosField);
   Vue.component('estado_persona', estado_persona);
   Vue.component('pago', Pago); 
   Vue.component('actualizar-inscripcion', ActualizarInscripcion);

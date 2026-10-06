@@ -183,17 +183,26 @@ class InscripcionesController extends BaseController
         return response()->json($msg, 200);
     }
 
-    public function asignarRol(CrearInscripcion $request)
+    public function asignarRol(CrearInscripcion $request, $id)
     {
-        $idActividad = $request->actividad;
-        foreach ($request->inscripciones as $idInscripcion)
+        $request->validate([
+            'rol'           => 'required|string|max:300',
+            'inscripciones' => 'required|array',
+        ]);
+
+        // Solo inscripciones de la actividad de la ruta (igual que desinscribir/asignarGrupo):
+        // antes se tomaba cualquier id del body.
+        $inscripciones = Inscripcion::where('idActividad', (int) $id)
+            ->whereIn('idInscripcion', $request->inscripciones)
+            ->get();
+
+        foreach ($inscripciones as $inscripcion)
         {
-            $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->rol = $request->rol;
             $inscripcion->save();
         }
         return response()
-            ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Rol " . $request->rol . " configurado a " . $inscripciones->count() . " voluntarios correctamente.", 200);
     }
 
     public function asignarGrupo(CrearInscripcion $request, $id)
