@@ -283,6 +283,12 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // Intake: cualquier usuario del backoffice puede enviar un reporte.
     Route::post('/ajax/reportes', 'backoffice\ajax\ReportesController@store');
     Route::post('/ajax/reportes/{id}/captura', 'backoffice\ajax\ReportesController@captura');
+    // "Mis reportes": quien reportó ve SUS reportes y la conversación, y responde ahí
+    // (el mail de respuesta sale de noreply y linkea acá). Abierto a cualquier usuario del
+    // backoffice; el controller solo muestra reportes propios.
+    Route::get('/mis-reportes', 'backoffice\MisReportesController@index');
+    Route::get('/mis-reportes/{id}', 'backoffice\MisReportesController@show');
+    Route::post('/mis-reportes/{id}/responder', 'backoffice\MisReportesController@responder');
     // Bandeja de triage: gateada por el permiso dedicado `ver_reportes` (revocable,
     // desacoplado del rol admin; ver migración add_permiso_ver_reportes).
     Route::middleware('permission:ver_reportes')->group(function () {
@@ -293,6 +299,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         // Hilo de respuestas: ver el hilo y responder (avisa por mail a quien reportó).
         Route::get('/ajax/reportes/{id}/respuestas', 'backoffice\ajax\ReportesController@respuestas');
         Route::post('/ajax/reportes/{id}/responder', 'backoffice\ajax\ReportesController@responder');
+        Route::post('/ajax/reportes/{id}/respuestas/{replyId}/publicar', 'backoffice\ajax\ReportesController@publicar');
         // Fase 3: crear un issue de GitHub a partir del reporte.
         Route::post('/ajax/reportes/{id}/github', 'backoffice\ajax\ReportesController@github');
     });

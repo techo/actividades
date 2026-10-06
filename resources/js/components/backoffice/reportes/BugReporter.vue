@@ -140,6 +140,7 @@
                 <i class="fa fa-check-circle"></i>
                 <p><strong>¡Gracias!</strong></p>
                 <p>Tu reporte fue enviado. El equipo lo va a revisar.</p>
+                <p>Vas a poder seguirlo y responder en <a href="/admin/mis-reportes">Mis reportes</a>.</p>
                 <button class="br-btn-link" @click="reset">Enviar otro</button>
             </div>
         </div>

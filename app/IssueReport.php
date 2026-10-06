@@ -95,6 +95,33 @@ class IssueReport extends Model
         return optional($this->pais)->locale ?: ($this->locale ?: config('app.locale'));
     }
 
+    /**
+     * Cambia el estado manteniendo `resolved_at` coherente (se sella al pasar a un estado
+     * terminal y se limpia al reabrir). No guarda: el caller persiste.
+     */
+    public function cambiarEstado($status)
+    {
+        $this->status = $status;
+        $terminales = [self::STATUS_RESUELTO, self::STATUS_DESCARTADO];
+        $this->resolved_at = in_array($status, $terminales, true)
+            ? ($this->resolved_at ?: now())
+            : null;
+    }
+
+    public function estaCerrado()
+    {
+        return in_array($this->status, [self::STATUS_RESUELTO, self::STATUS_DESCARTADO], true);
+    }
+
+    /**
+     * ¿El último mensaje visible del hilo es de quien reportó? (= hay que contestarle)
+     */
+    public function tieneRespuestaPendiente()
+    {
+        $ultimo = $this->respuestas->where('is_internal', false)->last();
+        return $ultimo !== null && $ultimo->esDelReportante();
+    }
+
     public function scopeAbiertos($query)
     {
         return $query->whereNotIn('status', [self::STATUS_RESUELTO, self::STATUS_DESCARTADO]);

@@ -53,6 +53,18 @@
         </p>
     @endif
 
+    {{-- Botón: el mail sale de noreply, así que para responder se usa "Mis reportes" --}}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;">
+        <tr>
+            <td align="center" bgcolor="#0092dd" style="border-radius:6px;">
+                <a href="{{ url('/admin/mis-reportes/' . $report->id) }}" target="_blank"
+                   style="display:inline-block; padding:12px 26px; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:6px; font-family: Montserrat, Arial, sans-serif;">
+                    @lang('email.reporte_ver_y_responder')
+                </a>
+            </td>
+        </tr>
+    </table>
+
     {{-- Cierre de agradecimiento --}}
     <p style="margin:0; font-size:15px; line-height:1.55; color:#2b2f36;">
         @lang('email.reporte_cierre')

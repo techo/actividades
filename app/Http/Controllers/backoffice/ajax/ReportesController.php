@@ -97,7 +97,7 @@ class ReportesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = IssueReport::query()->with('asignadoA');
+        $query = IssueReport::query()->with(['asignadoA', 'respuestas']);
 
         if ($request->filled('q')) {
             $q = $request->q;
@@ -160,6 +160,8 @@ class ReportesController extends Controller
                 'assigned_name'  => optional($r->asignadoA)->nombreCompleto,
                 'created_at'     => optional($r->created_at)->format('Y-m-d H:i'),
                 'resolved_at'    => optional($r->resolved_at)->format('Y-m-d H:i'),
+                // Quien reportó contestó desde "Mis reportes" y falta responderle.
+                'respuesta_pendiente' => $r->tieneRespuestaPendiente(),
             ];
         });
 
@@ -179,11 +181,7 @@ class ReportesController extends Controller
         if ($request->has('status')) {
             $request->validate(['status' => 'in:' . implode(',', IssueReport::STATUSES)]);
             $estadoPrevio  = $report->status;
-            $report->status = $request->status;
-            $terminales = [IssueReport::STATUS_RESUELTO, IssueReport::STATUS_DESCARTADO];
-            $report->resolved_at = in_array($request->status, $terminales, true)
-                ? ($report->resolved_at ?: now())
-                : null;
+            $report->cambiarEstado($request->status);
 
             $avisarResuelto = $request->status === IssueReport::STATUS_RESUELTO
                 && $estadoPrevio !== IssueReport::STATUS_RESUELTO
@@ -232,16 +230,7 @@ class ReportesController extends Controller
         $report = IssueReport::findOrFail($id);
 
         $hilo = $report->respuestas->map(function (IssueReportReply $r) {
-            return [
-                'id'          => $r->id,
-                'tipo'        => $r->tipo,
-                'body'        => $r->body,
-                'is_internal' => (bool) $r->is_internal,
-                'author_name' => $r->author_name,
-                'escrito_por' => $r->esDeTechita() ? optional($r->autor)->nombreCompleto : null,
-                'notificado'  => ! empty($r->notified_at),
-                'created_at'  => optional($r->created_at)->format('Y-m-d H:i'),
-            ];
+            return $this->presentarRespuesta($r);
         });
 
         return response()->json([
@@ -261,6 +250,7 @@ class ReportesController extends Controller
             'body'    => 'required|string|max:5000',
             'visible' => 'nullable|boolean',
             'como_techita' => 'nullable|boolean',
+            'estado_propuesto' => 'nullable|in:' . implode(',', IssueReport::STATUSES),
         ]);
 
         $report  = IssueReport::findOrFail($id);
@@ -276,6 +266,8 @@ class ReportesController extends Controller
             'tipo'            => IssueReportReply::TIPO_MENSAJE,
             'body'            => $data['body'],
             'is_internal'     => ! $visible,
+            // Solo una nota interna es "propuesta": una respuesta visible ya se publicó.
+            'estado_propuesto' => $visible ? null : ($data['estado_propuesto'] ?? null),
         ]);
 
         $notificado = false;
@@ -286,17 +278,60 @@ class ReportesController extends Controller
         return response()->json([
             'ok'         => true,
             'notificado' => $notificado,
-            'reply'      => [
-                'id'          => $reply->id,
-                'tipo'        => $reply->tipo,
-                'body'        => $reply->body,
-                'is_internal' => (bool) $reply->is_internal,
-                'author_name' => $reply->author_name,
-                'escrito_por' => $reply->esDeTechita() ? optional($user)->nombreCompleto : null,
-                'notificado'  => ! empty($reply->notified_at),
-                'created_at'  => optional($reply->created_at)->format('Y-m-d H:i'),
-            ],
+            'reply'      => $this->presentarRespuesta($reply->fresh('autor')),
         ]);
+    }
+
+    /**
+     * "Aprobar y enviar" una respuesta PROPUESTA (nota interna): la publica, aplica su
+     * estado propuesto y avisa a quien reportó con UN solo mail. Si el estado es
+     * "resuelto", el mail es el de "Resolvimos tu reporte" con el texto adentro (antes,
+     * responder + marcar resuelto mandaba dos mails).
+     */
+    public function publicar($id, $replyId)
+    {
+        $report = IssueReport::findOrFail($id);
+        $reply  = IssueReportReply::where('issue_report_id', $report->id)->findOrFail($replyId);
+
+        if (! $reply->is_internal) {
+            return response()->json(['error' => 'Esta respuesta ya está publicada.'], 422);
+        }
+
+        $reply->is_internal = false;
+        if ($reply->estado_propuesto === IssueReport::STATUS_RESUELTO) {
+            $reply->tipo = IssueReportReply::TIPO_RESUELTO;
+        }
+        $reply->save();
+
+        if ($reply->estado_propuesto) {
+            $report->cambiarEstado($reply->estado_propuesto);
+            $report->save();
+        }
+
+        $notificado = $this->notificar($report, $reply);
+
+        return response()->json([
+            'ok'         => true,
+            'notificado' => $notificado,
+            'status'     => $report->status,
+            'reply'      => $this->presentarRespuesta($reply->fresh('autor')),
+        ]);
+    }
+
+    private function presentarRespuesta(IssueReportReply $r)
+    {
+        return [
+            'id'               => $r->id,
+            'tipo'             => $r->tipo,
+            'body'             => $r->body,
+            'is_internal'      => (bool) $r->is_internal,
+            'estado_propuesto' => $r->estado_propuesto,
+            'author_name'      => $r->author_name,
+            'escrito_por'      => $r->esDeTechita() ? optional($r->autor)->nombreCompleto : null,
+            'del_reportante'   => $r->esDelReportante(),
+            'notificado'       => ! empty($r->notified_at),
+            'created_at'       => optional($r->created_at)->format('Y-m-d H:i'),
+        ];
     }
 
     /**

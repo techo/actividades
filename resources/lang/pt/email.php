@@ -144,5 +144,6 @@ return [
     'reporte_remitente_techita'  => 'Techita · TETO',
     'reporte_respuesta_techita'  => 'Resposta da Techita',
     'reporte_firma_techita'      => 'Techita, da equipe de Atividades da TETO',
+    'reporte_ver_y_responder'    => 'Ver e responder',
 
 ];

@@ -68,20 +68,29 @@
 
                     <div v-if="hilo.length" class="rd-hilo">
                         <div v-for="m in hilo" :key="m.id" class="rd-msg"
-                             :class="{ 'rd-msg-interna': m.is_internal, 'rd-msg-evento': m.tipo === 'resuelto' }">
+                             :class="{ 'rd-msg-interna': m.is_internal, 'rd-msg-evento': m.tipo === 'resuelto', 'rd-msg-reportante': m.del_reportante }">
                             <div class="rd-msg-head">
-                                <strong>{{ m.author_name || 'Equipo' }}</strong>
+                                <strong>{{ m.del_reportante ? 'Quien reportó' : (m.author_name || 'Equipo') }}</strong>
                                 <span v-if="m.escrito_por" class="rd-msg-fecha">(escrito por {{ m.escrito_por }})</span>
                                 <span class="rd-msg-fecha">{{ m.created_at }}</span>
-                                <span v-if="m.is_internal" class="rd-badge rd-badge-interna">Nota interna</span>
+                                <span v-if="m.is_internal" class="rd-badge rd-badge-interna">
+                                    {{ m.estado_propuesto ? 'Propuesta · al aprobar: ' + etiquetaEstado(m.estado_propuesto) : 'Nota interna' }}
+                                </span>
+                                <span v-else-if="m.del_reportante" class="rd-badge rd-badge-reportante">Respuesta recibida</span>
                                 <span v-else-if="m.notificado" class="rd-badge rd-badge-mail">
                                     <i class="fa fa-envelope"></i> Avisado por mail
                                 </span>
                             </div>
+                            <p v-if="m.body" class="rd-msg-body">{{ m.body }}</p>
                             <p v-if="m.tipo === 'resuelto'" class="rd-msg-body rd-msg-evento-txt">
-                                Se marcó como resuelto y se avisó a quien reportó.
+                                Se marcó como resuelto{{ m.notificado ? ' y se avisó a quien reportó' : '' }}.
                             </p>
-                            <p v-else class="rd-msg-body">{{ m.body }}</p>
+                            <div v-if="m.is_internal" class="rd-msg-acciones">
+                                <button type="button" class="btn btn-xs btn-success" :disabled="publicando === m.id" @click.prevent="publicar(m)">
+                                    <i class="fa fa-check"></i>
+                                    {{ publicando === m.id ? 'Enviando…' : (reporterEmail ? 'Aprobar y enviar' : 'Aprobar') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <p v-else class="rd-hilo-vacio">Todavía no hay respuestas.</p>
@@ -97,6 +106,13 @@
                             <label class="rd-visible">
                                 <input type="checkbox" v-model="comoTechita">
                                 Firmar como Techita
+                            </label>
+                            <label v-if="!visibleAlReportante" class="rd-visible">
+                                Estado al aprobar
+                                <select class="form-control input-sm" v-model="estadoPropuesto" style="width:auto;">
+                                    <option :value="null">Sin cambio</option>
+                                    <option v-for="(label, val) in estados" :key="val" :value="val">{{ label }}</option>
+                                </select>
                             </label>
                             <button type="button" class="btn btn-sm btn-primary" :disabled="enviando || !nuevoMensaje.trim()" @click.prevent="responder">
                                 {{ textoBotonResponder }}
@@ -187,6 +203,9 @@ export default {
             nuevoMensaje: '',
             visibleAlReportante: true,
             comoTechita: true,
+            estadoPropuesto: null,
+            publicando: null,
+            estados: { triage: 'Triage', en_progreso: 'En progreso', resuelto: 'Resuelto', descartado: 'Descartado' },
             enviando: false,
             areas: [
                 { value: 'inscripcion', label: 'Inscripción' },
@@ -223,6 +242,7 @@ export default {
             this.nuevoMensaje = '';
             this.visibleAlReportante = true;
             this.comoTechita = true;
+            this.estadoPropuesto = null;
             this.visible = true;
             this.cargarHilo();
         },
@@ -242,13 +262,41 @@ export default {
             if (!body || this.enviando) return;
             this.enviando = true;
             const visible = this.visibleAlReportante && !!this.reporterEmail;
-            axios.post('/admin/ajax/reportes/' + this.r.id + '/responder', { body, visible, como_techita: this.comoTechita })
+            const payload = { body, visible, como_techita: this.comoTechita };
+            if (!visible && this.estadoPropuesto) payload.estado_propuesto = this.estadoPropuesto;
+            axios.post('/admin/ajax/reportes/' + this.r.id + '/responder', payload)
                 .then((resp) => {
                     this.hilo.push(resp.data.reply);
                     this.nuevoMensaje = '';
+                    this.estadoPropuesto = null;
                 })
                 .catch(() => { alert('No se pudo enviar la respuesta.'); })
                 .then(() => { this.enviando = false; });
+        },
+        etiquetaEstado(val) {
+            return this.estados[val] || val;
+        },
+        // Aprueba una respuesta propuesta: la publica, aplica su estado y manda UN mail.
+        publicar(m) {
+            if (this.publicando) return;
+            const destino = this.reporterEmail ? ' y se le avisa por mail a quien reportó' : '';
+            const estado = m.estado_propuesto ? ' El reporte pasa a "' + this.etiquetaEstado(m.estado_propuesto) + '".' : '';
+            if (!confirm('Se publica esta respuesta' + destino + '.' + estado + ' ¿Continuar?')) return;
+            this.publicando = m.id;
+            axios.post('/admin/ajax/reportes/' + this.r.id + '/respuestas/' + m.id + '/publicar')
+                .then((resp) => {
+                    const i = this.hilo.findIndex(x => x.id === m.id);
+                    if (i >= 0) this.$set(this.hilo, i, resp.data.reply);
+                    if (resp.data.status) {
+                        this.estado = resp.data.status;
+                        this.r.status = resp.data.status;
+                    }
+                    Event.$emit('reporte:refrescar');
+                })
+                .catch((e) => {
+                    alert((e.response && e.response.data && e.response.data.error) || 'No se pudo publicar la respuesta.');
+                })
+                .then(() => { this.publicando = null; });
         },
         crearIssue() {
             if (this.creandoIssue) return;
@@ -328,6 +376,9 @@ export default {
 .rd-badge { font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; margin-left: auto; }
 .rd-badge-interna { background: #fde68a; color: #92400e; }
 .rd-badge-mail { background: #dbeafe; color: #1e40af; }
+.rd-badge-reportante { background: #ede9fe; color: #5b21b6; }
+.rd-msg-reportante { background: #f5f3ff; border-color: #ddd6fe; }
+.rd-msg-acciones { margin-top: 8px; text-align: right; }
 .rd-msg-body { margin: 0; font-size: 14px; line-height: 1.5; color: #2b2f36; white-space: pre-wrap; }
 .rd-msg-evento-txt { color: #166534; font-weight: 600; }
 .rd-hilo-vacio { color: #94a3b8; font-size: 13px; font-style: italic; margin-bottom: 14px; }

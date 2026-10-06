@@ -231,6 +231,12 @@
             </li>
             @endif
 
+            @if (\App\IssueReport::where('idPersona', Auth::user()->idPersona)->exists())
+            <li class="{{ request()->is('admin/mis-reportes*') ? 'active' : '' }}">
+                <a href="/admin/mis-reportes"><i class="fa fa-comments-o"></i> <span>{{ __('backend.my_reports') }}</span></a>
+            </li>
+            @endif
+
             @if (Auth::user()->can('ver_reportes'))
             <li class="{{ request()->is('admin/reportes*') ? 'active' : '' }}">
                 <a href="/admin/reportes"><i class="fa fa-bug"></i> <span>{{ __('backend.reports_inbox') }}</span></a>
