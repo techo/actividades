@@ -51,10 +51,19 @@ class BajaCuentaCortaAccesoTest extends TestCase
     {
         $this->crearClientePassport();
         $anonimizada = factory(Persona::class)->create([
-            'nombres' => 'Usuario eliminado', 'estadoPersona' => 'Desvinculado',
+            'nombres' => 'Usuario eliminado', 'estadoPersona' => 'Desvinculado', 'mail' => str_random(40),
             'remember_token' => 'recordarme-viejo', 'google_id' => 'g-1',
         ]);
         $anonimizada->createToken('celular');
+        // Baja anterior a la marca 'Desvinculado' (estadoPersona NULL): también cuenta.
+        $vieja = factory(Persona::class)->create([
+            'nombres' => 'Usuario eliminado', 'estadoPersona' => null, 'mail' => str_random(40),
+            'remember_token' => 'recordarme-viejo',
+        ]);
+        // Alguien que se llama así pero con mail real: no se toca.
+        $homonimo = factory(Persona::class)->create([
+            'nombres' => 'Usuario eliminado', 'mail' => 'real@example.org', 'remember_token' => 'intacto',
+        ]);
         $activa = factory(Persona::class)->create(['remember_token' => 'intacto']);
 
         $this->artisan('personas:cortar-acceso-anonimizadas')->assertExitCode(0);
@@ -64,6 +73,8 @@ class BajaCuentaCortaAccesoTest extends TestCase
         $this->assertNotEquals('recordarme-viejo', $anonimizada->fresh()->remember_token);
         $this->assertNull($anonimizada->fresh()->google_id);
         $this->assertEquals(0, $anonimizada->tokens()->where('revoked', false)->count());
+        $this->assertNotEquals('recordarme-viejo', $vieja->fresh()->remember_token);
+        $this->assertEquals('intacto', $homonimo->fresh()->remember_token);
         $this->assertEquals('intacto', $activa->fresh()->remember_token);
     }
 }

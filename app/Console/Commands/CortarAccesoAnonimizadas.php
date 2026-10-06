@@ -23,8 +23,11 @@ class CortarAccesoAnonimizadas extends Command
     {
         $commit = (bool) $this->option('commit');
 
+        // Se identifican por el mail anonimizado (Str::random, sin '@'), no por
+        // estadoPersona: las bajas anteriores a sep-2026 no se marcaban 'Desvinculado'
+        // (en prod: 98 con la marca vs. ~708 sin ella).
         $query = Persona::where('nombres', 'Usuario eliminado')
-            ->where('estadoPersona', 'Desvinculado');
+            ->where('mail', 'not like', '%@%');
 
         $total = (clone $query)->count();
         $this->info(($commit ? '' : '[DRY-RUN] ') . "Cuentas anonimizadas: {$total}.");
