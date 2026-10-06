@@ -670,7 +670,7 @@ return [
         'liderazgo_cuadrilla' => 'Liderazgo / Jefatura de Cuadrilla',
         'liderazgo_escuela' => 'Liderazgo / Jefatura de Escuela',
         'intendencia' => 'Intendencia',
-        'monitor' => 'Monitor/a',
+        'monitor' => 'Monitor/a / Capataz', // "Capataz" es como se le dice en Costa Rica (reclamo #10)
         'logistica' => 'Logística',
         'comunicacion' => 'Comunicación / Audiovisuales',
         'liderazgo_trabajo' => 'Liderazgo / Jefatura de Trabajo',
