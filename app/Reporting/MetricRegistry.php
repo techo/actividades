@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Schema;
  *
  * medida: 'count' | ['sum', col] | ['count_distinct', col]
  * periodo: 'anio' (cols anio/mes) | ['fecha', col] | ['anio_col', col] |
- *          'overlap' (fecha_inicio/fecha_fin) | 'ultimos_6m' (+col) | null
+ *          'overlap' (fecha_inicio/fecha_fin) | 'ultimos_6m' (+col) |
+ *          'snapshot' (foto a fin de período sobre fact_membresia) | null
  */
 class MetricRegistry
 {
@@ -53,11 +54,12 @@ class MetricRegistry
             // (tipo_indicador NULL): esos NO suman a los indicadores de movilización.
             'movilizados_total' => ['nombre' => 'Voluntarios/as movilizados/as en actividades (TOTAL)', 'vista' => $part, 'medida' => ['sum', 'es_presente'], 'where_raw' => "tipo_indicador IN ('territorio','colecta','construccion_de_viviendas','otras_actividades')", 'periodo' => 'anio', 'group_by' => ['tipo_indicador']],
 
-            // ── Equipo permanente (personas únicas vigentes sobre fact_membresia) ──
-            'equipo_permanente_total' => ['nombre' => 'Voluntarios/as en equipo permanente (TOTAL)', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['vigente' => 1], 'periodo' => null, 'group_by' => ['area', 'rol']],
-            'permanentes_areas' => ['nombre' => 'Voluntarios/as permanentes en áreas', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['vigente' => 1], 'where_raw' => 'idComunidad IS NULL', 'periodo' => null],
-            'permanentes_comunidades' => ['nombre' => 'Voluntarios/as permanentes en equipos de comunidades', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['vigente' => 1], 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => null],
-            'coordinaciones_comunidad' => ['nombre' => 'N° de voluntarias(os) en coordinaciones de comunidad', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['vigente' => 1, 'rol' => 'coordinacion'], 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => null],
+            // ── Equipo permanente (membresías sobre fact_membresia; coordinaciones = personas únicas) ──
+            // Período 'snapshot': foto a fin del mes/año pedido (sin anio = hoy, vigente=1).
+            'equipo_permanente_total' => ['nombre' => 'Voluntarios/as en equipo permanente (TOTAL)', 'vista' => $memb, 'medida' => 'count', 'periodo' => 'snapshot', 'group_by' => ['area', 'rol']],
+            'permanentes_areas' => ['nombre' => 'Voluntarios/as permanentes en áreas', 'vista' => $memb, 'medida' => 'count', 'where_raw' => 'idComunidad IS NULL', 'periodo' => 'snapshot'],
+            'permanentes_comunidades' => ['nombre' => 'Voluntarios/as permanentes en equipos de comunidades', 'vista' => $memb, 'medida' => 'count', 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => 'snapshot'],
+            'coordinaciones_comunidad' => ['nombre' => 'N° de voluntarias(os) en coordinaciones de comunidad', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['rol' => 'coordinacion'], 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => 'snapshot'],
 
             // ── Campañas y encuentros ──
             'campanas_captacion_nacional' => ['nombre' => 'Cantidad de campañas nacionales de captación de voluntariado ejecutadas', 'vista' => 'reporting_fact_campania', 'medida' => 'count', 'filtros' => ['tipo' => 'captacion', 'es_nacional' => 1], 'periodo' => 'overlap'],
@@ -135,9 +137,9 @@ class MetricRegistry
     }
 
     /**
-     * ¿La métrica se acota por anio/mes? false = indicador "stock" (ej. equipo
-     * permanente TOTAL): su "Real" es un snapshot al día de hoy y NO depende del
-     * período elegido, así que comparar contra un Plan por mes puede confundir.
+     * ¿La métrica se acota por anio/mes? false = indicador "stock" (ej. mesas
+     * activas): su "Real" es al día de hoy y NO depende del período elegido. Las
+     * de 'snapshot' (equipo permanente) sí: son la foto a fin del período.
      */
     public static function esPorPeriodo(string $key): bool
     {
@@ -147,7 +149,7 @@ class MetricRegistry
 
     /**
      * Tipo de manejo de período de la métrica: 'anio' | 'fecha' | 'overlap' |
-     * 'anio_col' | 'ultimos_6m' | null (stock). Sirve para saber si el Real se
+     * 'anio_col' | 'ultimos_6m' | 'snapshot' | null (stock). Sirve para saber si el Real se
      * puede desglosar por mes (solo 'anio' y 'fecha' se acumulan mes a mes).
      */
     public static function tipoPeriodo(string $key): ?string
@@ -411,10 +413,40 @@ class MetricRegistry
             return;
         }
 
+        // Foto del equipo permanente a fin del período (no acumulativa): cuenta
+        // las membresías que habían empezado y no habían terminado al corte. Una
+        // baja impacta desde su mes, un alta suma desde su mes. Sin anio, o si el
+        // corte es hoy o futuro, es el estado actual (vigente=1).
+        if ($periodo === 'snapshot') {
+            $corte = self::corteSnapshot($anio, $mes);
+            if ($corte === null) {
+                $q->where('vigente', 1);
+            } else {
+                $q->whereRaw('(fechaInicio IS NULL OR fechaInicio <= ?)', [$corte . ' 23:59:59'])
+                  ->whereRaw('(fecha_fin_efectiva IS NULL OR fecha_fin_efectiva > ?)', [$corte]);
+            }
+            return;
+        }
+
         // Últimos 6 meses desde hoy (mesas activas).
         if (is_array($periodo) && $periodo[0] === 'ultimos_6m') {
             $col = $periodo[1];
             $q->whereRaw('`' . $col . '` >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)');
         }
+    }
+
+    /**
+     * Fecha de corte (Y-m-d) de la foto 'snapshot': último día del mes, o del año
+     * si no hay mes. null = usar el estado actual (sin anio, o corte >= hoy).
+     */
+    private static function corteSnapshot($anio, $mes): ?string
+    {
+        if ($anio === null) {
+            return null;
+        }
+        $corte = $mes !== null
+            ? date('Y-m-t', strtotime(sprintf('%04d-%02d-01', $anio, $mes)))
+            : sprintf('%04d-12-31', $anio);
+        return $corte >= date('Y-m-d') ? null : $corte;
     }
 }

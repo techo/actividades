@@ -116,7 +116,9 @@ Los `key` son los 30 indicadores del backlog (`docs/reporting-backlog.md`):
 
 > Notas: el período se aplica según cada indicador (por `anio`/`mes` en los hechos;
 > por solapamiento de fechas en campañas; por la fecha propia en comunidades). El
-> equipo permanente es estado actual (vigente), no admite `anio`/`mes`. Algunos
+> equipo permanente es una **foto a fin de período** (no acumulativa): sin `anio` es
+> el estado actual; con `anio`/`mes` cuenta las membresías iniciadas y no
+> terminadas al último día de ese mes/año (si el corte es hoy o futuro, = hoy). Algunos
 > traen `nota` (ej. el split local/nacional de `encuentros` está vacío hasta
 > backfillear `alcance`).
 
@@ -213,12 +215,18 @@ Métricas: movilizados = `SUM(es_presente)`; personas únicas =
 |---|---|
 | `idIntegrante`, `person_key`, `idEquipo` | claves |
 | `idOficina`, `idPais`, `area_id` | del equipo |
-| `idComunidad`, `rol` | atributos de la membresía |
-| `fechaInicio`, `fechaFin` | vigencia |
-| `vigente` | 1 si `fechaFin` es NULL o futura |
+| `idComunidad`, `rol`, `estado` | atributos de la membresía (`estado` 1=Activo, 0=Inactivo) |
+| `fechaInicio`, `fechaFin` | vigencia cargada |
+| `fecha_fin_efectiva` | `fechaFin`, o `DATE(updated_at)` si es Inactiva sin `fechaFin` (legacy) |
+| `vigente` | 1 si `estado=1` y `fechaFin` NULL o futura |
 
-Equipo permanente = `SUM(vigente)`; personas únicas = `COUNT(DISTINCT person_key)`
-con `vigente=1`.
+Equipo permanente = `SUM(vigente)` (membresías, es lo que mide el indicador global); personas únicas = `COUNT(DISTINCT person_key)`
+con `vigente=1`. Foto a una fecha de corte C (meses pasados): `fechaInicio <= C` y
+(`fecha_fin_efectiva` NULL o `> C`).
+
+> ⚠ Hasta oct-2026 `vigente` no miraba `estado`: hay ~740 membresías Inactivas sin
+> `fechaFin` (cargadas 2024-2025, antes de que el modal exigiera fecha al
+> inactivar) que inflaban Argentina de ~640 a ~1.100 personas.
 
 ### `fact_evaluacion_actividad`
 **Grano**: 1 fila por evaluación de actividad.
@@ -333,7 +341,7 @@ Columnas: `snapshot_date`, `idPais`, `etapa`, `cantidad`. La llena el comando
 | **Personas únicas** | `COUNT(DISTINCT person_key)` movilizadas. |
 | **Movilizados KPI** | movilizados con `tipo_indicador` ∈ (`territorio`, `construccion_de_viviendas`). |
 | **Período** | por fecha de la actividad (`Actividad.fechaInicio`). |
-| **Equipo permanente** | membresía (`Integrantes`) con `fechaFin` NULL o futura. |
+| **Equipo permanente** | membresía (`Integrantes`) Activa (`estado=1`) con `fechaFin` NULL o futura. Por período: foto a fin de mes, no acumulativa. |
 | **Antigüedad (movilizado)** | desde la primera inscripción. |
 | **Antigüedad (permanente)** | desde la primera membresía (`Integrante.fechaInicio` mínima). |
 | **NPS** | promotor ≥ 9, detractor ≤ 6, pasivo 7-8. |
