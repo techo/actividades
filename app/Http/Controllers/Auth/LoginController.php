@@ -136,6 +136,12 @@ class LoginController extends Controller
     }
 
     public function callbackFromProvider(Request $request, $provider) {
+        // La persona canceló en la pantalla del proveedor: vuelve con ?error=access_denied
+        // y sin `code`. Antes se intentaba canjear igual el code → 400 de Google → "Whoops".
+        if ($request->filled('error')) {
+            return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
+        }
+
         $url = $request->session()->get('login_callback','');
         $personaData = new \stdClass();
         if($provider == 'google') {
@@ -143,6 +149,10 @@ class LoginController extends Controller
             // sesión por redirectToProvider (protección CSRF del callback de login).
             try {
                 $user = Socialite::driver($provider)->user();
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                // El proveedor rechazó el canje del code (falta, vencido o ya usado: p.ej.
+                // alguien abre la URL del callback a mano o recarga la página).
+                return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
             } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                 // El `state` OAuth no coincide (sesión perdida, botón atrás, reintento,
                 // login abierto en otra pestaña). No es un error del sistema: en vez de
@@ -169,6 +179,9 @@ class LoginController extends Controller
                $user = Socialite::driver($provider)->fields([
                        'first_name', 'last_name', 'email', 'gender'
                ])->user();
+           } catch (\GuzzleHttp\Exception\ClientException $e) {
+               // Ver nota en la rama de Google: canje del code rechazado.
+               return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
            } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                // Ver nota en la rama de Google: state OAuth inválido → reintentar login.
                return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');

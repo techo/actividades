@@ -257,4 +257,19 @@ class loginSocialTest extends TestCase
         $this->assertDatabaseMissing('Persona', ['google_id' => 'x']);
     }
 
+
+    /**
+     * Cancelar en la pantalla de Google/Facebook vuelve con ?error=access_denied y sin
+     * code: antes se intentaba canjear igual → 400 del proveedor → 500 ("Whoops").
+     *
+     * @test
+     */
+    public function cancelar_el_login_social_vuelve_al_inicio_sin_500()
+    {
+        foreach (['google', 'facebook'] as $provider) {
+            $this->get('/auth/' . $provider . '/callback?error=access_denied&state=x')
+                ->assertRedirect('/')
+                ->assertSessionHas('status');
+        }
+    }
 }
