@@ -19,7 +19,7 @@
     <div class="box">
         <div class="box-body  with-border">
             <comunidades-datatable
-                    api-url="/admin/ajax/comunidades"
+                    api-url="{{ $apiUrl }}"
                     fields="{{ $fields }}"
                     sort-order="{{ $sortOrder }}"
                     placeholder-text="{{ __('backend.search_by_name_or_area') }}"

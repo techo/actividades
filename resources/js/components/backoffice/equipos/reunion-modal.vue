@@ -266,7 +266,7 @@ export default {
                 .catch((error) => { this.errors = this.errors = error.response.data.errors; });
         },
         eliminar() {
-            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/reuniones/' + this.form.idIntegrante, this.form)
+            axios.delete('/admin/ajax/equipos/' + this.idEquipo + '/reuniones/' + this.form.idReunion)
                 .then((datos) => {
                     Event.$emit('reuniones:refrescar');
                     location.reload();

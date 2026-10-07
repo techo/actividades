@@ -27,6 +27,7 @@ import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
 import CeldaWhatsapp from './components/backoffice/datatable/columnas/CeldaWhatsapp'
 import CeldaNivel from './components/backoffice/datatable/columnas/CeldaNivel'
 import CeldaDocumento from './components/backoffice/datatable/columnas/CeldaDocumento'
+import CeldaConfianzaDatos from './components/backoffice/datatable/columnas/CeldaConfianzaDatos'
 import Actividad from './components/backoffice/actividades/actividad'
 import Puntos from './components/backoffice/actividades/puntos'
 import confirmarPresente from './components/backoffice/actividades/confirmar-presente'
@@ -220,6 +221,7 @@ Vue.component('celda-beca', CeldaBeca);
 Vue.component('celda-whatsapp', CeldaWhatsapp);
 Vue.component('celda-nivel', CeldaNivel);
 Vue.component('celda-documento', CeldaDocumento);
+Vue.component('celda-confianza-datos', CeldaConfianzaDatos);
 Vue.component('datepicker', Datepicker);
 Vue.component('v-select', vSelect2);
 Vue.component('simplert', Simplert);
@@ -262,6 +264,23 @@ Vue.component('oficinas-filter-bar', OficinasFilterBar);
 Vue.component('oficina-form', OficinasForm);
 Vue.component('invitacion-actividad-form', InvitacionActividadForm);
 Vue.component('comunicaciones-enviadas', ComunicacionesEnviadas);
+
+// Reportes de problemas / sugerencias: widget global de intake + bandeja de triage.
+// Las celdas se resuelven por nombre desde los fields (__component:reporte-*).
+import BugReporter from './components/backoffice/reportes/BugReporter';
+import ReportesDatatable from './components/backoffice/reportes/ReportesDatatable';
+import ReporteDetalle from './components/backoffice/reportes/ReporteDetalle';
+import ReporteTipo from './components/backoffice/reportes/ReporteTipo';
+import ReporteSeveridad from './components/backoffice/reportes/ReporteSeveridad';
+import ReporteEstado from './components/backoffice/reportes/ReporteEstado';
+import ReporteAcciones from './components/backoffice/reportes/ReporteAcciones';
+Vue.component('bug-reporter', BugReporter);
+Vue.component('reportes-datatable', ReportesDatatable);
+Vue.component('reporte-detalle', ReporteDetalle);
+Vue.component('reporte-tipo', ReporteTipo);
+Vue.component('reporte-severidad', ReporteSeveridad);
+Vue.component('reporte-estado', ReporteEstado);
+Vue.component('reporte-acciones', ReporteAcciones);
 
 
 

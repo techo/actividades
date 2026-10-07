@@ -26,8 +26,9 @@ return [
                 'title' => 'backend.office'
             ],
             [
+                // Columna de componente (lista de comunidades): no es una columna
+                // de la query, ordenar por "comunidades" tiraba 500 "Unknown column".
                 'name' => '__component:comunidades',
-                'sortField' => 'comunidades',
                 'title' => 'backend.community'
             ],
             [
@@ -129,8 +130,9 @@ return [
                 'title' => 'backend.office'
             ],
             [
+                // Columna de componente (lista de comunidades): no es una columna
+                // de la query, ordenar por "comunidades" tiraba 500 "Unknown column".
                 'name' => '__component:comunidades',
-                'sortField' => 'comunidades',
                 'title' => 'backend.community'
             ],
             [
@@ -348,6 +350,13 @@ return [
                     'key' => 'evaluacion_general',
                     'name' => 'evaluacion_general',
                     'title' => 'backend.general_evaluation',
+                    'titleClass' => 'text-center',
+                    'dataClass' => 'text-center'
+                ],
+                [
+                    'key' => 'confianza_datos',
+                    'name' => '__component:celda-confianza-datos',
+                    'title' => 'backend.data_confidence',
                     'titleClass' => 'text-center',
                     'dataClass' => 'text-center'
                 ],
@@ -733,8 +742,10 @@ return [
                 'visible' => false
             ],
             [
+                // Sin sortField: el nombre vive en Persona y esta query es
+                // `select * from Integrantes` (no la joinea) → ordenar por
+                // "nombre" tiraba "Unknown column 'nombre' in 'order clause'".
                 'name' => 'nombre',
-                'sortField' => 'nombre',
                 'title' => 'backend.name'
             ],
         ],
@@ -1249,6 +1260,25 @@ return [
                 'sortField' => 'nombre',
                 'direction' => 'asc'
             ],
+        ]
+    ],
+
+    // Bandeja de reportes de problemas / sugerencias (widget "Reportar un problema").
+    'reportes' => [
+        'fields' => [
+            ['name' => 'id', 'sortField' => 'id', 'visible' => false],
+            ['name' => 'created_at', 'sortField' => 'created_at', 'title' => 'Fecha'],
+            ['name' => '__component:reporte-tipo', 'title' => 'Tipo'],
+            ['name' => '__component:reporte-severidad', 'title' => 'Gravedad'],
+            ['name' => '__component:reporte-estado', 'title' => 'Estado'],
+            ['name' => 'area', 'sortField' => 'area', 'title' => 'Área'],
+            ['name' => 'platform_label', 'sortField' => 'platform', 'title' => 'Plataforma'],
+            ['name' => 'reporter_name', 'sortField' => 'reporter_name', 'title' => 'Reportó'],
+            ['name' => 'resumen', 'title' => 'Detalle'],
+            ['name' => '__component:reporte-acciones', 'title' => ''],
+        ],
+        'sortOrder' => [
+            ['field' => 'created_at', 'sortField' => 'created_at', 'direction' => 'desc'],
         ]
     ]
 ];

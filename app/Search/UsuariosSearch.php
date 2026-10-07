@@ -45,7 +45,11 @@ class UsuariosSearch
         // país por defecto). El permiso para VER/EDITAR el perfil se decide después con
         // Persona::gestionableCrossPais(); acá solo se relaja el hallazgo.
         if ($crossPais) {
-            return Persona::withoutGlobalScope(BelongsToCountryScope::class);
+            // Rescate por email exacto: además de ignorar el país, incluimos las cuentas
+            // dadas de baja (soft-delete). Así un admin que busca un mail que "no aparece"
+            // encuentra la cuenta borrada y puede entrar a su ficha para restaurarla. La
+            // búsqueda por nombre (no crossPais) sigue SIN mostrar borrados.
+            return Persona::withoutGlobalScope(BelongsToCountryScope::class)->withTrashed();
         }
 
         $query = (new Persona())->newQuery();

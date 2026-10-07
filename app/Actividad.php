@@ -98,7 +98,29 @@ class Actividad extends Model
 
     public function getGrupoRaizAttribute()
     {
-        return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->first();
+        return Grupo::where('idActividad', $this->idActividad)->where('idPadre', 0)->orderBy('idGrupo')->first();
+    }
+
+    /**
+     * Grupo raíz de la actividad: el MÁS ANTIGUO con idPadre=0 (el que muestra la pestaña Grupos).
+     * Si no existe (actividades legacy) lo crea.
+     *
+     * Nunca resolver la raíz por nombre: al clonar, la raíz conserva el nombre de la actividad
+     * original, y al renombrar la actividad deja de coincidir → un firstOrCreate por nombre creaba
+     * una SEGUNDA raíz invisible en el árbol (reclamos #7/#11, ~51% de las actividades en 2026).
+     */
+    public function obtenerGrupoRaiz()
+    {
+        $raiz = $this->grupo_raiz;
+        if ($raiz) {
+            return $raiz;
+        }
+
+        return Grupo::create([
+            'nombre'      => $this->nombreActividad,
+            'idPadre'     => 0,
+            'idActividad' => $this->idActividad,
+        ]);
     }
 
     public function inscriptos()
@@ -110,9 +132,7 @@ class Actividad extends Model
 
     public function getMiembrosAttribute()
     {
-        $grupoRaiz = Grupo::where('idPadre', '=', 0)
-            ->where('idActividad','=', $this->idActividad)
-            ->first();
+        $grupoRaiz = $this->grupo_raiz;
         if (!is_null($grupoRaiz)) {
             $personas = Persona::join('Grupo_Persona', 'Persona.idPersona', '=', 'Grupo_Persona.idPersona')
                 ->where('Grupo_Persona.idActividad', '=', $this->idActividad)
@@ -251,6 +271,44 @@ class Actividad extends Model
         ->get()
         ->toArray();
 
+    }
+
+    /**
+     * ¿El plazo de pago ya venció (respecto de HOY)?
+     *
+     * La fecha límite de pago es INCLUSIVA del día cargado: se puede pagar
+     * durante todo ese día y el plazo recién vence al pasar al día siguiente.
+     * Aunque `fechaLimitePago` es un dateTime, el backoffice la guarda con hora
+     * 00:00 (el input de hora del form no se persiste), así que la comparación
+     * es por DÍA, no por hora. Fuente única para tarjetas, show, EstadoInscripcion
+     * y el flujo de pago (Stripe/PayU), que antes comparaban cada uno distinto y
+     * bloqueaban el día límite adelantado (a las 00:00).
+     */
+    public function pagoFueraDeFecha(): bool
+    {
+        if (empty($this->fechaLimitePago)) {
+            return false;
+        }
+
+        return \Carbon\Carbon::now()->startOfDay()
+            ->greaterThan($this->fechaLimitePago->copy()->startOfDay());
+    }
+
+    /**
+     * ¿Un pago realizado en la fecha $fecha cae DENTRO del plazo?
+     *
+     * Mismo criterio inclusivo por día que pagoFueraDeFecha(): un pago hecho el
+     * propio día límite es válido. Se usa en el flujo PayU, donde se compara
+     * contra la fecha real de la transacción (no contra "ahora").
+     */
+    public function pagoDentroDeFecha(\Carbon\Carbon $fecha): bool
+    {
+        if (empty($this->fechaLimitePago)) {
+            return true;
+        }
+
+        return $fecha->copy()->startOfDay()
+            ->lessThanOrEqualTo($this->fechaLimitePago->copy()->startOfDay());
     }
 
     public function estadoInscripcion($idPersona = null)

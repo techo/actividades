@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actividad;
 use App\FichaMedica;
-use App\Grupo;
 use App\GrupoRolPersona;
 use App\Inscripcion;
 use App\InscripcionRespuesta;
@@ -12,6 +11,7 @@ use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionEsperarConfirmacion;
 use App\Mail\MailInscripcionFaltaPago;
 use App\PuntoEncuentro;
+use App\Services\CalidadDatos\CalidadDatosPersona;
 use App\Services\ImageUploadService;
 use App\Services\InscripcionFlow;
 use App\Services\Push\PushNotificationService;
@@ -58,22 +58,27 @@ class InscripcionesController extends BaseController
 
         $tipo = $actividad->tipo;
 
-        $currentDate = Carbon::now();
-        // fechaNacimiento puede venir nula o con formato inválido (datos viejos):
-        // Carbon::parse tiraría y dejaría el paso 'confirmar' en 500. Fail-safe a 0.
-        $edad = 0;
-        try {
-            $nacimiento = Auth::user()->fechaNacimiento;
-            if (!empty($nacimiento)) {
-                $edad = $currentDate->diffInYears(Carbon::parse($nacimiento));
-            }
-        } catch (\Exception $e) {
-            $edad = 0;
-        }
+        $edad = $this->edadPersona(Auth::user());
         $jornadas = json_decode($request->input('jornadas'), true);
+
+        // Microprompt de calidad de datos (opt-in por env): se muestra solo si
+        // está activado, la persona no verificó dentro de la vigencia y sus datos
+        // tienen algo para revisar. Ver App\Services\CalidadDatos\CalidadDatosPersona.
+        $mostrarVerificacionDatos = false;
+        $calidadDatos = null;
+        if (config('calidad_datos.microprompt')) {
+            $eval = (new CalidadDatosPersona())->evaluar(Auth::user());
+            if (!$eval['verificado'] && $eval['nivel'] !== 'ok') {
+                $mostrarVerificacionDatos = true;
+                $calidadDatos = $eval;
+            }
+        }
+
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
+            ->with('mostrarVerificacionDatos', $mostrarVerificacionDatos)
+            ->with('calidadDatos', $calidadDatos)
             ->with('punto_encuentro', $puntoEncuentro)
             ->with('roles_aplicados', $request->input('roles_aplicados'))
             ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas'))
@@ -84,6 +89,20 @@ class InscripcionesController extends BaseController
             ->with('tipo', $tipo)
             ->with('edad', $edad);
 
+    }
+
+    /**
+     * fechaNacimiento puede venir nula o con formato inválido (datos viejos):
+     * Carbon::parse tiraría y dejaría el paso 'confirmar' en 500. Fail-safe a 0.
+     */
+    private function edadPersona($persona)
+    {
+        try {
+            $nacimiento = $persona ? $persona->fechaNacimiento : null;
+            return empty($nacimiento) ? 0 : Carbon::now()->diffInYears(Carbon::parse($nacimiento));
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -113,11 +132,16 @@ class InscripcionesController extends BaseController
         
         $roles = json_decode($validated['roles_aplicados'] ?? '[]', true);
 
+        // Los tags sin id ({text}) son roles legacy de texto libre: se guarda el texto,
+        // no el objeto del tag-input, para que roles_aplicados quede siempre plano.
         $validated['roles_aplicados'] = collect($roles)
             ->map(function ($item) {
-                return is_array($item) && isset($item['id'])
-                    ? $item['id']
+                return is_array($item)
+                    ? ($item['id'] ?? $item['text'] ?? null)
                     : $item;
+            })
+            ->filter(function ($item) {
+                return $item !== null && $item !== '';
             })
             ->values()
             ->toArray();
@@ -270,11 +294,22 @@ class InscripcionesController extends BaseController
             ]);
         }
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
+        // Se re-renderiza la confirmación con lo que ya había elegido (viene en los
+        // hidden del form); sin estas variables la vista daba "Undefined variable".
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
+            ->with('mostrarVerificacionDatos', false)
+            ->with('calidadDatos', null)
             ->with('punto_encuentro', $punto_encuentro)
-            ->with('tipo', $actividad->tipo);
+            ->with('roles_aplicados', $request->input('roles_aplicados', '[]'))
+            ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas', '[]'))
+            ->with('aplica_rol', $request->input('aplica_rol'))
+            ->with('jornadas', $request->input('jornadas', '[]'))
+            ->with('jornadasSelected', json_decode($request->input('jornadas', '[]'), true))
+            ->with('respuestas', $request->input('respuestas', '[]'))
+            ->with('tipo', $actividad->tipo)
+            ->with('edad', $this->edadPersona(Auth::user()));
         }
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
@@ -453,9 +488,13 @@ class InscripcionesController extends BaseController
     public function confirmarDonacion($id)
     {
         $actividad = Actividad::find($id);
-        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
-            ->where('idActividad', $actividad->idActividad)
-            ->firstOrFail();
+        $inscripcion = $this->inscripcionParaPago($actividad);
+
+        // Logueado con una cuenta sin inscripción (típico: entró desde el mail de
+        // pago con otra cuenta). No es un error: volvemos al show con un aviso.
+        if (!$inscripcion) {
+            return $this->redirigirSinInscripcion($actividad);
+        }
 
         // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
         // no se reabre para volver a subir/editar el comprobante.
@@ -486,9 +525,11 @@ class InscripcionesController extends BaseController
         }
 
         $actividad = Actividad::find($id);
-        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
-            ->where('idActividad', $actividad->idActividad)
-            ->firstOrFail();
+        $inscripcion = $this->inscripcionParaPago($actividad);
+
+        if (!$inscripcion) {
+            return $this->redirigirSinInscripcion($actividad);
+        }
 
         // Pago ya resuelto: no permitir iniciar otro checkout.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
@@ -508,6 +549,27 @@ class InscripcionesController extends BaseController
             ->with('actividad', $actividad)
             ->with('payment', $payment);
 
+    }
+
+    /**
+     * Inscripción del usuario logueado a la actividad, o null si no tiene.
+     */
+    private function inscripcionParaPago(Actividad $actividad)
+    {
+        return Inscripcion::where('idPersona', auth()->user()->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->first();
+    }
+
+    /**
+     * El usuario logueado no tiene inscripción a la actividad (p.ej. llegó desde el
+     * mail de pago logueado con otra cuenta): en vez de un 404, lo mandamos al show
+     * de la actividad avisándole con qué cuenta está y qué hacer.
+     */
+    private function redirigirSinInscripcion(Actividad $actividad)
+    {
+        return redirect('/actividades/' . $actividad->idActividad)
+            ->with('aviso_pago', __('frontend.pago_sin_inscripcion', ['mail' => auth()->user()->mail]));
     }
 
     /**
@@ -575,13 +637,15 @@ class InscripcionesController extends BaseController
 
     private function incluirEnGrupoRaiz(Actividad $actividad, int $idPersona)
     {
-        $grupoRaiz = Grupo::firstOrCreate(
-            [
-                'idActividad' => $actividad->idActividad,
-                'idPadre' => 0,
-                'nombre' => $actividad->nombreActividad
-            ]
-        );
+        $existente = GrupoRolPersona::where('idPersona', $idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->first();
+        if ($existente) {
+            return $existente;
+        }
+
+        // La raíz se resuelve por idPadre=0 (no por nombre): ver Actividad::obtenerGrupoRaiz().
+        $grupoRaiz = $actividad->obtenerGrupoRaiz();
         $arr = [
             'idPersona' => $idPersona,
             'idGrupo' => $grupoRaiz->idGrupo,

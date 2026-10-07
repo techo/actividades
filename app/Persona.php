@@ -18,8 +18,9 @@ class Persona extends Authenticatable implements MustVerifyEmail
     protected $table = 'Persona';
     protected $primaryKey = 'idPersona';
     protected $hidden = ['password', 'remember_token', 'google_id', 'facebook_id', 'unsubscribe_token'];
-    protected $fillable = ['recibirMails', 'recibir_push', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'registro_origen', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app'];
-    protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app'];
+    protected $fillable = ['recibirMails', 'recibir_push', 'nombres', 'unsubscribe_token', 'mail', 'password', 'apellidoPaterno', 'fechaNacimiento', 'telefono', 'telefonoMovil', 'genero', 'dni', 'tipo_documento', 'acepta_marketing', 'idPais','idProvincia','idLocalidad', 'idUnidadOrganizacional', 'canal_contacto', 'registro_origen', 'estadoPersona', 'photo', 'instagram', 'primer_acceso_app', 'ultimo_acceso_app', 'datos_verificados_at', 'datos_verificados'];
+    protected $dates = ['deleted_at', 'primer_acceso_app', 'ultimo_acceso_app', 'datos_verificados_at'];
+    protected $casts = ['datos_verificados' => 'array'];
     protected $appends = array('estado_voluntario');
 
     protected static function boot()
@@ -75,6 +76,55 @@ class Persona extends Authenticatable implements MustVerifyEmail
     {
         \Log::info('Mail de registro encolado para ' . $this->mail);
         $this->notify((new \App\Notifications\RegistroUsuario)->locale(app()->getLocale()));
+    }
+
+    /**
+     * Recuperación de una cuenta dada de baja (soft-delete) al iniciar sesión.
+     *
+     * Si NO hay una cuenta ACTIVA con ese mail pero existe una borrada y la
+     * contraseña coincide, la restaura y la devuelve. La contraseña correcta es la
+     * prueba de propiedad del mail (mismo criterio que el login social, donde la
+     * prueba la da el proveedor). Sin coincidencia (o con cuenta activa presente),
+     * devuelve null y no toca nada. Evita que un borrado quede encerrado sin poder
+     * entrar, registrarse ni resetear. Ver [[personas-invisibles-pais-softdelete]].
+     */
+    public static function restaurarConCredencial($mail, $password)
+    {
+        if (empty($mail) || empty($password)) {
+            return null;
+        }
+
+        // Si ya hay una cuenta activa con ese mail, manda el login normal.
+        if (static::where('mail', $mail)->exists()) {
+            return null;
+        }
+
+        $borrada = static::onlyTrashed()->where('mail', $mail)->first();
+        if ($borrada && \Illuminate\Support\Facades\Hash::check($password, $borrada->password)) {
+            $borrada->restore();
+            return $borrada;
+        }
+
+        return null;
+    }
+
+    /**
+     * Corta TODO acceso de la cuenta (baja de cuenta por el propio usuario).
+     *
+     * La anonimización cambia el mail, pero eso solo impide logins NUEVOS: el `remember_token`
+     * (cookie "recordarme" de la web) y los tokens Passport de otros dispositivos seguían
+     * autenticando → una cuenta "eliminada" se auto-inscribió días después (reclamo #15).
+     * No guarda: el caller persiste el modelo.
+     */
+    public function cortarAcceso()
+    {
+        $this->password = \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(60));
+        $this->remember_token = \Illuminate\Support\Str::random(60);
+        $this->google_id = null;
+        $this->facebook_id = null;
+        $this->apple_id = null;
+
+        $this->tokens()->update(['revoked' => true]);
     }
 
     public function puntosEncuentro()

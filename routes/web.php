@@ -115,6 +115,9 @@ Route::prefix('ajax')->group(function () {
             Route::delete('', 'ajax\UsuarioController@delete'); //Anonimiza cuenta de usuario
             Route::get('inscripciones', 'ajax\UsuarioController@inscripciones');
             Route::delete('inscripciones/{id}', 'ajax\UsuarioController@desinscribir');
+            // Microprompt de calidad de datos: la persona confirma que sus datos
+            // están bien (setea datos_verificados_at). Ver CalidadDatosPersona.
+            Route::post('verificar-datos', 'ajax\UsuarioController@verificarDatos');
         });
     });
     
@@ -154,8 +157,11 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->middleware('throttle:6,1');
 
-Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider');
-Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider');
+// Solo proveedores soportados: cualquier otro {provider} (bots que escanean
+// /auth/.env, /auth/login, /auth/*, etc.) cae en 404 en vez de llegar a
+// Socialite::driver() y tirar 500 "Driver [x] not supported".
+Route::get('/auth/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', 'google|facebook');
+Route::get('/auth/{provider}/callback', 'Auth\LoginController@callbackFromProvider')->where('provider', 'google|facebook');
 
 Route::get('autenticado', function () {
     return (Auth::check()) ? 'si' : 'no';
@@ -230,17 +236,19 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // Movido dentro del grupo autenticado: antes quedaba fuera y era accesible sin sesión.
     Route::get('ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
+    // Novedades activas para la barra rotativa (la rotación y los descartes viven en el
+    // navegador, ver novedades.vue). Se cargan con `php artisan novedades`. El texto sale
+    // en el idioma de la sesión (ver Novedad::textoPara).
     Route::get('/novedades', function(){
-        $n = \App\Novedad::latest('created_at')->first();
-        return response()->json($n,200);
-    });
+        $locale = app()->getLocale();
+        $novedades = \App\Novedad::activas()->latest('created_at')->get()
+            ->filter(function ($n) use ($locale) { return $n->visiblePara($locale); })
+            ->map(function ($n) use ($locale) {
+                return ['id' => $n->id, 'texto' => $n->textoPara($locale), 'link' => $n->link];
+            })
+            ->values();
 
-    Route::get('/novedades/visto', function(){
-        $n = \App\Novedad::latest('created_at')->first();
-        if($n)
-            return response()->json([$n->id],200)->cookie('cookie-novedades', $n->id, 10080);
-        
-        return response()->json(['no hay novedades'],200);
+        return response()->json($novedades, 200);
     });
 
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
@@ -273,11 +281,37 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
         Route::delete('/{campana}/preguntas/{preguntaId}', 'backoffice\ajax\CampaignPreguntasController@destroy');
         Route::put('/{campana}/preguntas/{preguntaId}/mover', 'backoffice\ajax\CampaignPreguntasController@mover');
     });
+    // Reportes de problemas / sugerencias (widget "Reportar un problema").
+    // Intake: cualquier usuario del backoffice puede enviar un reporte.
+    Route::post('/ajax/reportes', 'backoffice\ajax\ReportesController@store');
+    Route::post('/ajax/reportes/{id}/captura', 'backoffice\ajax\ReportesController@captura');
+    // "Mis reportes": quien reportó ve SUS reportes y la conversación, y responde ahí
+    // (el mail de respuesta sale de noreply y linkea acá). Abierto a cualquier usuario del
+    // backoffice; el controller solo muestra reportes propios.
+    Route::get('/mis-reportes', 'backoffice\MisReportesController@index');
+    Route::get('/mis-reportes/{id}', 'backoffice\MisReportesController@show');
+    Route::post('/mis-reportes/{id}/responder', 'backoffice\MisReportesController@responder');
+    // Bandeja de triage: gateada por el permiso dedicado `ver_reportes` (revocable,
+    // desacoplado del rol admin; ver migración add_permiso_ver_reportes).
+    Route::middleware('permission:ver_reportes')->group(function () {
+        Route::get('/reportes', 'backoffice\ReportesController@index');
+        Route::get('/reportes/{id}/captura', 'backoffice\ReportesController@captura');
+        Route::get('/ajax/reportes', 'backoffice\ajax\ReportesController@index');
+        Route::post('/ajax/reportes/{id}', 'backoffice\ajax\ReportesController@update');
+        // Hilo de respuestas: ver el hilo y responder (avisa por mail a quien reportó).
+        Route::get('/ajax/reportes/{id}/respuestas', 'backoffice\ajax\ReportesController@respuestas');
+        Route::post('/ajax/reportes/{id}/responder', 'backoffice\ajax\ReportesController@responder');
+        Route::post('/ajax/reportes/{id}/respuestas/{replyId}/publicar', 'backoffice\ajax\ReportesController@publicar');
+        // Fase 3: crear un issue de GitHub a partir del reporte.
+        Route::post('/ajax/reportes/{id}/github', 'backoffice\ajax\ReportesController@github');
+    });
+
     Route::get('/usuarios/registrar', 'backoffice\UsuariosController@create')->middleware('role:admin');
     Route::post('/usuarios/registrar', 'backoffice\ajax\UsuariosController@store')->middleware('role:admin');
     Route::get('/usuarios/{id}', 'backoffice\UsuariosController@show')->middleware('permission:ver_usuarios');
     Route::post('/usuarios/{id}/editar', 'backoffice\ajax\UsuariosController@update')->middleware('role:admin');
     Route::delete('/usuarios/{id}', 'backoffice\UsuariosController@delete')->middleware('permission:borrar_usuarios');
+    Route::post('/usuarios/{id}/restaurar', 'backoffice\UsuariosController@restore')->middleware('permission:borrar_usuarios');
     Route::post('/usuarios/{persona}/fusionar', 'backoffice\ajax\UsuariosController@fusionar')->middleware('role:admin');
 
 
@@ -285,6 +319,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::prefix('/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ComunidadesController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\ComunidadesController@index');
         Route::get('/crear', 'backoffice\ComunidadesController@create');
         Route::get('/{idComunidad}', 'backoffice\ComunidadesController@show');
         Route::get('/{idComunidad}/integrantes', 'backoffice\ComunidadesController@showIntegrantes');
@@ -301,6 +336,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     });
     Route::prefix('ajax/comunidades')->middleware(['role:admin|coordinador'])->group(function() {
         Route::get('', 'backoffice\ajax\ComunidadesController@index');
+        Route::get('/oficina/{idOficina}', 'backoffice\ajax\ComunidadesController@index');
         Route::put('/{idComunidad}', 'backoffice\ajax\ComunidadesController@update')->middleware('role:admin');
         Route::delete('/{idComunidad}', 'backoffice\ajax\ComunidadesController@destroy')->middleware('role:admin');
         Route::post('/registrar', 'backoffice\ajax\ComunidadesController@store')->middleware('role:admin');
@@ -410,12 +446,14 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades', 'backoffice\ActividadesController@index')->middleware('role:admin');
+    Route::get('/actividades/oficina/{idOficina}', 'backoffice\ActividadesController@index')->middleware('role:admin');
     Route::get('/actividades/crear', 'backoffice\ActividadesController@create');
     Route::post('/actividades/crear', 'backoffice\ActividadesController@store');
     Route::post('/ajax/actividades/{actividad}', 'backoffice\ActividadesController@update')->middleware('can:editar,App\Actividad,actividad');
     Route::get('/actividades/usuario', 'backoffice\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/usuario/exportar', 'backoffice\ReportController@exportarMisActividades')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/actividades/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
+    Route::get('/actividades/oficina/{idOficina}/exportar', 'backoffice\ReportController@exportarActividades')->middleware('role:admin');
     Route::get('/suscriptos/exportar', 'backoffice\ReportController@exportarSuscriptos')->middleware('role:admin');
     
     Route::get('/actividades/{id}/exportar-evaluaciones-voluntarios', 'backoffice\ReportController@exportarEvaluacionesPersonas');
@@ -547,6 +585,7 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     
 
     Route::get('/ajax/actividades', 'backoffice\ajax\ActividadesController@index');
+    Route::get('/ajax/actividades/oficina/{idOficina}', 'backoffice\ajax\ActividadesController@index');
 
     Route::get('/ajax/actividades/usuario', 'backoffice\ajax\CoordinadorActividadesController@index')->middleware('can:indexMisActividades,App\Actividad');
     Route::get('/ajax/oficinas', 'backoffice\ajax\OficinasController@getOficinas');

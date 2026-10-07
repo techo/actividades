@@ -44,7 +44,8 @@ describe ('Modal de inscripción', () => {
 	it ('carga con personas al escribir', (done) => {
 		let select = wrapper.find(vSelect);
 
-		moxios.stubRequest('/ajax/coordinadores?coordinador=arturo', {
+		// El modal busca en /ajax/personas?q= (ver inscripciones-inscribir-modal.vue).
+		moxios.stubRequest(/\/ajax\/personas/, {
 	        status: 200,
 	        response: { data: [
 	        		{"idPersona":141032,"nombre":"Adrian Arturo Visbal Burgos  (visbal.adrian@ur.edu.co)"},

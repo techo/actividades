@@ -1,0 +1,143 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * Reporte de problema / sugerencia enviado desde el widget "Reportar un problema".
+ *
+ * Tabla nueva (snake_case, PK `id`). Ver migración
+ * `create_issue_reports_table` para el detalle del diseño "agent-ready".
+ *
+ * Las relaciones a Persona usan la PK legacy `idPersona` explícitamente. El snapshot
+ * (`reporter_name`, `reporter_email`, `reporter_role`) se conserva aparte porque un
+ * reporte es un hecho histórico y debe seguir siendo legible aunque la persona cambie
+ * o se borre.
+ */
+class IssueReport extends Model
+{
+    use SoftDeletes;
+
+    protected $table = 'issue_reports';
+
+    // Tipos
+    const TYPE_BUG        = 'bug';
+    const TYPE_SUGGESTION = 'suggestion';
+
+    // Estados (ciclo de triage)
+    const STATUS_NUEVO       = 'nuevo';
+    const STATUS_TRIAGE      = 'triage';
+    const STATUS_EN_PROGRESO = 'en_progreso';
+    const STATUS_RESUELTO    = 'resuelto';
+    const STATUS_DESCARTADO  = 'descartado';
+
+    const SEVERITIES = ['low', 'medium', 'high', 'critical'];
+
+    // Plataforma afectada (la declara quien reporta o la corrige el admin en triage)
+    const PLATFORMS       = ['web', 'app', 'ambas'];
+    const PLATFORM_LABELS = ['web' => 'Web', 'app' => 'App MiTECHO', 'ambas' => 'Web y App'];
+    const STATUSES   = [
+        self::STATUS_NUEVO,
+        self::STATUS_TRIAGE,
+        self::STATUS_EN_PROGRESO,
+        self::STATUS_RESUELTO,
+        self::STATUS_DESCARTADO,
+    ];
+
+    protected $fillable = [
+        'type', 'status', 'severity', 'area', 'platform', 'description',
+        'idPersona', 'reporter_name', 'reporter_email', 'reporter_role', 'idPais',
+        'url', 'route_name', 'os', 'browser', 'screen_resolution', 'viewport',
+        'locale', 'release', 'user_agent',
+        'console_errors', 'breadcrumbs', 'context',
+        'screenshot_path', 'sentry_event_id', 'github_issue_url',
+        'assigned_to', 'resolved_at',
+    ];
+
+    protected $casts = [
+        'idPersona'      => 'integer',
+        'idPais'         => 'integer',
+        'assigned_to'    => 'integer',
+        'console_errors' => 'array',
+        'breadcrumbs'    => 'array',
+        'context'        => 'array',
+        'resolved_at'    => 'datetime',
+    ];
+
+    public function reportadoPor()
+    {
+        return $this->belongsTo(Persona::class, 'idPersona', 'idPersona');
+    }
+
+    public function asignadoA()
+    {
+        return $this->belongsTo(Persona::class, 'assigned_to', 'idPersona');
+    }
+
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'idPais', 'id');
+    }
+
+    public function respuestas()
+    {
+        return $this->hasMany(IssueReportReply::class, 'issue_report_id', 'id')->orderBy('created_at');
+    }
+
+    /**
+     * Locale para notificarle a quien reportó: preferimos el del país (como el resto de los
+     * mailables), con el locale capturado en el reporte y el de la app como respaldo.
+     */
+    public function localeNotificacion()
+    {
+        return optional($this->pais)->locale ?: ($this->locale ?: config('app.locale'));
+    }
+
+    /**
+     * Cambia el estado manteniendo `resolved_at` coherente (se sella al pasar a un estado
+     * terminal y se limpia al reabrir). No guarda: el caller persiste.
+     */
+    public function cambiarEstado($status)
+    {
+        $this->status = $status;
+        $terminales = [self::STATUS_RESUELTO, self::STATUS_DESCARTADO];
+        $this->resolved_at = in_array($status, $terminales, true)
+            ? ($this->resolved_at ?: now())
+            : null;
+    }
+
+    public function estaCerrado()
+    {
+        return in_array($this->status, [self::STATUS_RESUELTO, self::STATUS_DESCARTADO], true);
+    }
+
+    /**
+     * ¿El último mensaje visible del hilo es de quien reportó? (= hay que contestarle)
+     */
+    public function tieneRespuestaPendiente()
+    {
+        $ultimo = $this->respuestas->where('is_internal', false)->last();
+        return $ultimo !== null && $ultimo->esDelReportante();
+    }
+
+    /**
+     * SQL de "respuesta pendiente": el último mensaje visible del hilo es de quien reportó.
+     * Misma regla que tieneRespuestaPendiente(), en SQL para filtrar/ordenar/contar.
+     */
+    const SQL_RESPUESTA_PENDIENTE = "EXISTS (SELECT 1 FROM issue_report_replies r
+        WHERE r.issue_report_id = issue_reports.id AND r.is_internal = 0 AND r.tipo = 'reportante'
+        AND r.id = (SELECT MAX(r2.id) FROM issue_report_replies r2
+                    WHERE r2.issue_report_id = issue_reports.id AND r2.is_internal = 0))";
+
+    public function scopeConRespuestaPendiente($query)
+    {
+        return $query->whereRaw(self::SQL_RESPUESTA_PENDIENTE);
+    }
+
+    public function scopeAbiertos($query)
+    {
+        return $query->whereNotIn('status', [self::STATUS_RESUELTO, self::STATUS_DESCARTADO]);
+    }
+}

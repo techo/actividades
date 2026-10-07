@@ -99,6 +99,9 @@ return [
 		'fechaNacimiento' => [
 			'edad_minima' => 'Debés tener al menos :edad años para registrarte.',
 		],
+		'email' => [
+			'cuenta_existente' => 'Este mail ya tiene una cuenta. Iniciá sesión o, si no recordás la contraseña, recuperá el acceso.',
+		],
 		'attribute-name' => [
 			'rule-name'  => 'custom-message',
 		],

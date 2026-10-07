@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
 class Handler extends ExceptionHandler
@@ -64,7 +66,105 @@ class Handler extends ExceptionHandler
         if($exception instanceof AuthenticationException){
             return $this->unauthenticated($request, $exception);
         }
+        if($exception instanceof TokenMismatchException){
+            return $this->tokenMismatch($request, $exception);
+        }
+        if($this->deberiaRenderizar500Branded($request, $exception)){
+            return $this->render500($request, $exception);
+        }
         return parent::render($request, $exception);
+    }
+
+    /**
+     * ¿Servimos nuestra pantalla 500 con marca en vez del "Whoops" crudo de Laravel?
+     * Solo para errores de servidor reales, en respuestas HTML (no JSON/API) y con
+     * debug apagado — en dev queremos seguir viendo el trace de Whoops.
+     */
+    protected function deberiaRenderizar500Branded($request, Exception $exception)
+    {
+        if (config('app.debug') || $request->expectsJson()) {
+            return false;
+        }
+        // Normalizamos primero como lo hace el render base: ModelNotFound → 404,
+        // AuthorizationException → 403. Sin esto, un "no encontrado" o "sin permiso"
+        // (que no son HttpException todavía) se mostraba como 500 y no se logueaba.
+        // Validation/Authentication/TokenMismatch no son HttpException ni lo serán:
+        // tienen su propio render, así que tampoco son un 500.
+        $exception = $this->prepareException($exception);
+        if ($exception instanceof \Illuminate\Validation\ValidationException
+            || $exception instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+            return false;
+        }
+
+        // Error de servidor: excepción no-HTTP (bug real) o un abort(500) explícito.
+        return !$this->isHttpException($exception)
+            || (int) $exception->getStatusCode() === 500;
+    }
+
+    /**
+     * Pantalla 500 con marca. Si hay una sesión válida y el usuario es admin o
+     * coordinador, le ofrecemos reportar el problema (abre el widget de reportes
+     * prefilleado con la URL del error). Todo el chequeo de sesión/roles va en
+     * try/catch: si el 500 vino de una caída de base, resolver el usuario también
+     * fallaría y no queremos que la propia pantalla de error explote.
+     */
+    protected function render500($request, Exception $exception)
+    {
+        $puedeReportar = false;
+        $reportUrl = null;
+
+        try {
+            $user = $request->user();
+            if ($user && method_exists($user, 'hasAnyRole') && $user->hasAnyRole('admin', 'coordinador')) {
+                $puedeReportar = true;
+                $reportUrl = url('/admin') . '?reportar=1&url=' . urlencode($request->fullUrl());
+            }
+        } catch (\Throwable $e) {
+            // Sin sesión utilizable → 500 sin botón de reporte.
+        }
+
+        return response()->view('errors.500', compact('puedeReportar', 'reportUrl'), 500);
+    }
+
+    /**
+     * Token CSRF vencido (419 "Página expirada"). No es una excepción de la app,
+     * por eso Laravel no lo loguea: acá lo registramos como warning para poder
+     * medir el impacto (cuántos, en qué rutas) y servimos una vista amigable que
+     * reintenta con token fresco en vez del "Whoops" genérico.
+     */
+    protected function tokenMismatch($request, TokenMismatchException $exception)
+    {
+        Log::warning('CSRF 419 TokenMismatch', [
+            'url'     => $request->fullUrl(),
+            'method'  => $request->method(),
+            'referer' => $request->header('referer'),
+            'user'    => optional($request->user())->idPersona,
+            'ip'      => $request->ip(),
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'error'   => 'Page Expired',
+                'message' => 'Tu sesión expiró. Recargá la página e intentá de nuevo.',
+            ], 419);
+        }
+
+        return response()->view('errors.419', [
+            'retryUrl' => $this->csrfRetryUrl($request),
+        ], 419);
+    }
+
+    /**
+     * URL a la que conviene volver tras un 419 para reintentar con token fresco.
+     * Para el flujo de inscripción, el inicio del flujo (GET) re-renderiza el token;
+     * si no, el referer; y como último recurso, el home.
+     */
+    protected function csrfRetryUrl($request)
+    {
+        if (preg_match('#/inscripciones/actividad/(\d+)#', $request->path(), $m)) {
+            return '/inscripciones/actividad/' . $m[1];
+        }
+        return $request->header('referer') ?: '/';
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)
@@ -73,12 +173,20 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        if ($request->hasHeader('referer')){
-           $afterLoginUrl = $request->header('referer');
-        } else {
-            $afterLoginUrl = $request->getUri();
+        // A dónde volver después del login:
+        //  - GET: la URL pedida. Antes se priorizaba el Referer, y quien abría el link de
+        //    evaluación desde un webmail (Gmail, Outlook) terminaba de vuelta en el webmail o en
+        //    el listado de actividades en vez de en la evaluación (reclamos #5/#12).
+        //  - Otros métodos (POST de un form): la página desde la que se envió, si es de este sitio.
+        $afterLoginUrl = $request->getUri();
+        if (!$request->isMethod('GET')) {
+            $referer = $request->header('referer');
+            $afterLoginUrl = ($referer && parse_url($referer, PHP_URL_HOST) === $request->getHost())
+                ? $referer
+                : url('/');
         }
 
-        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 10);
+        // 60 min (antes 10): da tiempo a recuperar la contraseña o verificar el mail.
+        return redirect('/login')->cookie('after_login_url', $afterLoginUrl, 60);
     }
 }

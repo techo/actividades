@@ -1,15 +1,13 @@
-@extends('main')
+@extends('errors.layout')
 
-@section('main_content')
-    <div class="">
-        <div class="row d-flex justify-content-center">
-            <h1 class="text-primary">Oops! Vuelve y busca otra ruta</h1>
-        </div>
-        <div class="row d-flex justify-content-center">
-            <img src="/img/404.png" alt="404">
-        </div>
-        <div class="row d-flex justify-content-center">
-            <button class="btn btn-primary btn-lg" onclick="window.history.go(-1); return false;"><i class="fas fa-arrow-circle-left"></i> ATRÁS</button>
-        </div>
-    </div>
+@section('title', __('errors.e403.title'))
+@section('code', __('errors.code', ['n' => 403]))
+
+@section('message')
+    @php
+        // Solo los 403 "explicados" muestran su motivo (ver AccesoExplicadoException).
+        $explicado = isset($exception) && $exception->getPrevious() instanceof \App\Exceptions\AccesoExplicadoException
+            ? $exception->getMessage() : null;
+    @endphp
+    {{ $explicado ?: __('errors.e403.message') }}
 @endsection

@@ -113,6 +113,20 @@ class InscripcionesCatalogo implements CatalogoListado
             array_splice($campos, $pos, 0, $switches);
         }
 
+        // Roles a los que aplicó (los que la persona eligió al inscribirse, de los roles_tags
+        // de la actividad): al lado de "Rol" (el confirmado), con un click para confirmarlo.
+        if (!empty($actividad->roles_tags)) {
+            $pos = count($campos);
+            foreach ($campos as $i => $c) {
+                if (($c['key'] ?? null) === 'rolesActividad') { $pos = $i + 1; break; }
+            }
+            array_splice($campos, $pos, 0, [[
+                'key' => 'rolesAplicados',
+                'name' => '__component:roles_aplicados',
+                'title' => 'backend.applied_roles',
+            ]]);
+        }
+
         if ($actividad->pago == 1) {
             // Comprobante de pago: solo tiene sentido si la actividad cobra.
             $campos[] = [
@@ -152,6 +166,12 @@ class InscripcionesCatalogo implements CatalogoListado
             $pos = array_search('asistencia', $defaults);
             $pos = $pos === false ? count($defaults) : $pos;
             array_splice($defaults, $pos, 0, $condicionales);
+        }
+
+        if (!empty($actividad->roles_tags)) {
+            $pos = array_search('rolesActividad', $defaults);
+            $pos = $pos === false ? count($defaults) : $pos + 1;
+            array_splice($defaults, $pos, 0, ['rolesAplicados']);
         }
 
         return $defaults;

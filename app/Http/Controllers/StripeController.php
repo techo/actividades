@@ -49,12 +49,14 @@ class StripeController extends Controller
             abort(400, 'El monto de pago no está configurado correctamente.');
         }
 
+        $moneda = strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->iso2 ?? null));
+
         try {
             $session = \Stripe\Checkout\Session::create([
-                'payment_method_types' => ['card'],
+                'payment_method_types' => self::metodosPagoCheckout($moneda),
                 'line_items' => [[
                     'price_data' => [
-                        'currency'     => strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->iso2 ?? null)),
+                        'currency'     => $moneda,
                         'unit_amount'  => $montoCentavos,
                         'product_data' => [
                             'name'        => $actividad->nombreActividad,
@@ -177,7 +179,15 @@ class StripeController extends Controller
 
         switch ($event->type) {
             case 'checkout.session.completed':
+            // PIX es asíncrono: al generar el QR llega completed con
+            // payment_status=unpaid (se ignora) y, cuando la persona paga,
+            // async_payment_succeeded con payment_status=paid.
+            case 'checkout.session.async_payment_succeeded':
                 $this->handleCheckoutCompleted($event->data->object);
+                break;
+
+            case 'checkout.session.async_payment_failed':
+                Log::warning('Stripe webhook: pago asíncrono fallido/expirado para session ' . $event->data->object->id);
                 break;
 
             case 'payment_intent.succeeded':
@@ -226,7 +236,9 @@ class StripeController extends Controller
         $actividad = $inscripcion->actividad;
 
         // Verificar fecha límite de pago
-        if ($actividad->fechaLimitePago && Carbon::now()->greaterThan($actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoFueraDeFecha). Antes:
+        // now() > fechaLimitePago (00:00) → rechazaba pagos del propio día límite.
+        if ($actividad->pagoFueraDeFecha()) {
             Log::warning('StripeWebhook PI succeeded: pago fuera de fecha para inscripcion ' . $inscripcionId);
             try {
                 Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));
@@ -318,7 +330,9 @@ class StripeController extends Controller
         $actividad = $inscripcion->actividad;
 
         // Verificar fecha límite de pago
-        if ($actividad->fechaLimitePago && Carbon::now()->greaterThan($actividad->fechaLimitePago)) {
+        // Fecha límite inclusiva del día (ver Actividad::pagoFueraDeFecha). Antes:
+        // now() > fechaLimitePago (00:00) → rechazaba pagos del propio día límite.
+        if ($actividad->pagoFueraDeFecha()) {
             Log::warning('Stripe webhook: pago fuera de fecha para inscripcion ' . $inscripcionId);
             try {
                 Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionPagoFueraDeFecha($inscripcion));
@@ -343,6 +357,17 @@ class StripeController extends Controller
         } catch (\Exception $e) {
             Log::error('Stripe: error enviando mail de confirmación para inscripcion ' . $inscripcionId . ': ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Métodos de pago que ofrece el Checkout según la moneda.
+     * PIX solo existe en BRL (y requiere la capability pix_payments activa en
+     * la cuenta). Se listan explícitos en vez de usar los del Dashboard para no
+     * habilitar sin querer métodos de confirmación lenta (ej. boleto, días).
+     */
+    public static function metodosPagoCheckout(string $moneda): array
+    {
+        return $moneda === 'brl' ? ['card', 'pix'] : ['card'];
     }
 
     /**

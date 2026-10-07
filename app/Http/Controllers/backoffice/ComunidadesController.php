@@ -14,12 +14,16 @@ class ComunidadesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $oficina = null)
     {
         $datatableConfig = config('datatables.comunidades');
         $fields = json_encode($datatableConfig['fields']);
         $sortOrder = json_encode($datatableConfig['sortOrder']);
-        return view('backoffice.comunidades.index', compact('fields', 'sortOrder'));
+        if ($oficina)
+            $apiUrl = "/admin/ajax/comunidades/oficina/".$oficina;
+        else
+            $apiUrl = "/admin/ajax/comunidades";
+        return view('backoffice.comunidades.index', compact('fields', 'sortOrder', 'apiUrl'));
     }
 
     public function getActividades(Request $request, $idComunidad)

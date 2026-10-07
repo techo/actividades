@@ -16,4 +16,8 @@ return [
     'failed' => 'Las credenciales introducidas son incorrectas.',
     'throttle' => 'Demasiados intentos de acceso. Inténtelo de nuevo en :seconds segundos.',
 
+    // Vuelta del login social (Google/Facebook), ver LoginController@callbackFromProvider.
+    'social_cancelado' => 'No se completó el ingreso. Puedes intentarlo de nuevo cuando quieras.',
+    'social_sesion_expirada' => 'Tu sesión de ingreso expiró. Por favor, inicia sesión nuevamente.',
+    'social_email_no_verificado' => 'El email de la cuenta de Google no está verificado.',
 ];

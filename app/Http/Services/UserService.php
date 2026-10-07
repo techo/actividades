@@ -106,7 +106,12 @@ class UserService
                 'telefono' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
                 'dni' => 'required',
                 // 'dni' => 'required|regex:/^[A-Za-z]{0,2}[0-9]{7,8}[A-Za-z]{0,2}$/',
-                'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona,deleted_at,NULL|email',
+                // Sin el filtro deleted_at,NULL: cuenta también las cuentas dadas de baja
+                // (soft-delete), igual que ya se corrigió en el registro normal (ver
+                // CrearPersona.php / ajax/UsuarioController::validar). Antes un admin podía
+                // crear una Persona activa para un mail que ya pertenecía a una cuenta
+                // borrada, duplicándola sin que hiciera falta ninguna concurrencia.
+                'email' => 'required|unique:Persona,mail,'.$request->id.',idPersona|email',
                 'password' => 'sometimes|required|min:8|confirmed',
                 'canal_contacto' => 'nullable',
                 'estadoPersona' => 'nullable',

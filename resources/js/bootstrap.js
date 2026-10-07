@@ -9,6 +9,39 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
+ * Buffer circular de errores JS recientes, para adjuntarlos a los reportes de problemas
+ * del widget "Reportar un problema" (ver components/backoffice/reportes/BugReporter.vue).
+ * Convierte un "no me deja" en un stacktrace. Se guarda a lo sumo `MAX` entradas.
+ */
+(function () {
+    var MAX = 15;
+    var buffer = (window.__issueErrors = window.__issueErrors || []);
+    function push(entry) {
+        entry.at = new Date().toISOString();
+        buffer.push(entry);
+        if (buffer.length > MAX) buffer.shift();
+    }
+    window.addEventListener('error', function (e) {
+        push({
+            type: 'error',
+            message: e.message,
+            source: e.filename,
+            line: e.lineno,
+            col: e.colno,
+            stack: e.error && e.error.stack ? String(e.error.stack).slice(0, 2000) : null,
+        });
+    });
+    window.addEventListener('unhandledrejection', function (e) {
+        var reason = e.reason;
+        push({
+            type: 'unhandledrejection',
+            message: reason && reason.message ? reason.message : String(reason),
+            stack: reason && reason.stack ? String(reason.stack).slice(0, 2000) : null,
+        });
+    });
+})();
+
+/**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
  * a simple convenience so we don't have to attach every token manually.

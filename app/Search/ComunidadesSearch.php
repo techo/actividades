@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ComunidadesSearch
 {
-    public static function apply($filters, $sort = 'created_at desc', $per_page = 25)
+    public static function apply($filters, $sort = 'created_at desc', $per_page = 25, $idOficina = null)
     {
-        $query = static::applyDecoratorsFromRequest($filters, ComunidadesSearch::newQuery());
+        $query = static::applyDecoratorsFromRequest($filters, ComunidadesSearch::newQuery($idOficina));
         return static::getResults($query, $sort, $per_page);
     }
     private static function applyDecoratorsFromRequest($filters, Builder $query)
@@ -37,8 +37,13 @@ class ComunidadesSearch
         return $query->paginate($per_page);
     }
 
-    private static function newQuery(){
-        $query = (new Comunidad())->newQuery();        
+    private static function newQuery($idOficina = null){
+        $query = (new Comunidad())->newQuery();
+
+        if ($idOficina) {
+            $query->where('Comunidad.idOficina', $idOficina);
+        }
+
         if(auth()->user()->hasRole("admin")){
             $query->where('idPais', '=', auth()->user()->idPaisPermitido);
         } else if(auth()->user()->hasRole("coordinador")){

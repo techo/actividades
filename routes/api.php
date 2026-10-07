@@ -31,7 +31,6 @@ Route::post(
 // (además del throttle:60,1 global del grupo api).
 Route::middleware('throttle:10,1')->group(function () {
     Route::post('login', 'api\PersonasController@login');
-    Route::post('socialLogin', 'api\PersonasController@socialLogin');
     Route::post('providerLogin', 'api\PersonasController@providerLogin');
     Route::post('register', 'api\PersonasController@register');
     Route::post('create', 'ajax\UsuarioController@apiCreate');

@@ -41,7 +41,9 @@
                 this.$events.fire('filter-reset');
             },
             exportar() {
-                location.href = location.href + '/exportar?filter=' + this.filterText
+                // pathname (no href): con query string o '#' en la URL el '/exportar' quedaba mal armado.
+                let base = location.pathname.replace(/\/+$/, '');
+                location.href = base + '/exportar?filter=' + encodeURIComponent(this.filterText)
             }
         }
     }

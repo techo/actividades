@@ -29,6 +29,7 @@
                 <ficha-comunidad-form :disabled="true" :comunidad="{{ $comunidad }}" :ficha='@json($ficha)' edicion="{{ $edicion }}"></ficha-comunidad-form>
 
                 <crud-footer style="position: fixed;bottom: 0px;width: 80%;margin-left: 0px;"
+                    cancelar-url="/admin/comunidades"
                     edicion="{{ $edicion }}"
                     can-editar="{{ 
                         Auth::user()->hasRole('admin')

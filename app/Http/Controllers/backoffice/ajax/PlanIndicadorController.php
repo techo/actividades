@@ -67,8 +67,11 @@ class PlanIndicadorController extends Controller
         $anios = array_values(array_unique(array_map(function ($c) { return $c['anio']; }, $columnas)));
 
         // Request base para el Real (mismo resolver que la API), acotado por país/oficina.
-        $mkReq = function ($a) use ($idPais, $idOficina) {
+        $mkReq = function ($a, $m = null) use ($idPais, $idOficina) {
             $params = ['anio' => $a];
+            if ($m !== null) {
+                $params['mes'] = $m;
+            }
             if ($idPais) {
                 $params['idPais'] = $idPais;
             }
@@ -87,20 +90,24 @@ class PlanIndicadorController extends Controller
             $tipo       = MetricRegistry::tipoPeriodo($key);
             $acumulable = in_array($tipo, ['anio', 'fecha'], true);
             $esStock    = ($tipo === null || $tipo === 'ultimos_6m');
+            $esFoto     = ($tipo === 'snapshot');
 
             // Real por año: serie mes×año (acumulable, se suma por período); snapshot
             // único (stock); o valor anual por año (no divisible: solo a nivel anual).
             $serie    = $acumulable ? (MetricRegistry::serieMensualPorAnios($key, $mkReq($anio), $anios) ?? []) : [];
             $snapshot = $esStock ? (MetricRegistry::resolver($key, $mkReq($anio))['value'] ?? null) : null;
             $anualNoDiv = [];
-            if (!$acumulable && !$esStock && $granularidad === 'anual') {
+            if (!$acumulable && !$esStock && !$esFoto && $granularidad === 'anual') {
                 foreach ($anios as $a) {
                     $anualNoDiv[$a] = MetricRegistry::resolver($key, $mkReq($a))['value'] ?? null;
                 }
             }
 
             $nota = $item['nota'];
-            if ($esStock) {
+            if ($esFoto) {
+                $aviso = 'Foto a fin de período (no acumulativo); en el período en curso, al día de hoy.';
+                $nota  = $nota ? ($nota . ' ' . $aviso) : $aviso;
+            } elseif ($esStock) {
                 $aviso = 'Valor actual (indicador de stock): no depende del período seleccionado.';
                 $nota  = $nota ? ($nota . ' ' . $aviso) : $aviso;
             } elseif (!$acumulable) {
@@ -119,6 +126,13 @@ class PlanIndicadorController extends Controller
                     foreach ($meses as $m) {
                         $real += $serie[$a][$m] ?? 0;
                     }
+                } elseif ($esFoto) {
+                    // Foto al último mes del período; períodos que no empezaron, sin Real.
+                    $meses = ($granularidad === 'anual') ? range(1, 12) : GranularidadPlan::meses($granularidad, $p);
+                    $empezo = (int) $a < $hoyAnio || ((int) $a === $hoyAnio && min($meses) <= $hoyMes);
+                    $real = $empezo
+                        ? (MetricRegistry::resolver($key, $mkReq($a, max($meses)))['value'] ?? null)
+                        : null;
                 } elseif ($esStock) {
                     $real = $snapshot;
                 } else { // no divisible: solo anual

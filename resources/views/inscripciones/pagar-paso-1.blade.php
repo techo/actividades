@@ -108,8 +108,11 @@
 
     {{-- En validación (amarillo): comprobante/beca enviado y aún sin resolver. Siempre en el
          DOM; lo muestra el server al cargar, o el JS al enviar sin recargar. Excluyente con el rojo. --}}
-    <div id="validacion-banner" class="d-flex align-items-start mb-4"
-         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px; {{ $enValidacion ? '' : 'display:none;' }}">
+    {{-- Visibilidad por clases Bootstrap (d-flex/d-none), NO por style inline:
+         .d-flex es `display:flex !important` y le ganaría a un `display:none` inline,
+         dejando el aviso siempre visible. --}}
+    <div id="validacion-banner" class="align-items-start mb-4 {{ $enValidacion ? 'd-flex' : 'd-none' }}"
+         style="border-radius:10px; background:#fff6e6; border:1px solid #ffe0a6; padding:16px 18px;">
         <i class="far fa-clock fa-lg mr-3 mt-1 flex-shrink-0" style="color:#b56b00;"></i>
         <div>
             <strong id="validacion-banner-title" style="color:#b56b00;"
@@ -358,6 +361,30 @@
             </button>
         </div>
     </div>
+
+    {{-- ── Card de finalización ──────────────────────────────────
+         Estado terminal que muestra el JS al presionar "Finalizar", SOLO en pagos
+         con comprobante/beca (manuales). Los pagos automáticos (tarjeta/Stripe) no
+         llegan acá: redirigen a Checkout y confirman por webhook. --}}
+    <div id="completion-card" class="card border-0 shadow-sm d-none">
+        <div class="card-body p-5 text-center">
+            <i class="far fa-check-circle mb-3" style="font-size:3rem; color:#28a745;"></i>
+            <h4 class="font-weight-bold mb-2" id="completion-title"
+                data-beca="{{ __('frontend.scholarship_finished_title') }}"
+                data-voucher="{{ __('frontend.voucher_finished_title') }}">
+                {{ __('frontend.voucher_finished_title') }}
+            </h4>
+            <p class="text-muted mb-4 mx-auto" id="completion-subtitle" style="max-width:520px;"
+               data-beca="{{ __('frontend.scholarship_finished_subtitle') }}"
+               data-voucher="{{ __('frontend.voucher_finished_subtitle') }}">
+                {{ __('frontend.voucher_finished_subtitle') }}
+            </p>
+            <a href="/actividades/{{ $actividad->idActividad }}" class="btn btn-primary">
+                {{ __('frontend.back_to_activity') }}
+            </a>
+        </div>
+    </div>
+
         {{-- ── Beca (solo si no hay link de pago; si hay link, aparece dentro del panel) --}}
         @if(!empty($actividad->beca) && !$tieneLink)
         <div class="text-center mt-3">
@@ -423,8 +450,9 @@
         if (btn) btn.disabled = false;
 
         // Si acaba de re-subir tras un rechazo, ocultamos el aviso rojo (excluyente con el amarillo).
+        // Se togglean clases Bootstrap: .d-flex/.alert son `!important` y un style.display inline no las vence.
         var rechazado = document.getElementById('rechazado-banner');
-        if (rechazado) rechazado.style.display = 'none';
+        if (rechazado) { rechazado.classList.remove('d-flex'); rechazado.classList.add('d-none'); }
 
         var banner = document.getElementById('validacion-banner');
         if (!banner) return;
@@ -438,14 +466,35 @@
         if (title)    title.textContent    = title.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
         if (subtitle) subtitle.textContent = subtitle.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
 
-        banner.style.display = '';
+        banner.classList.remove('d-none');
+        banner.classList.add('d-flex');
         banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
-    // "Finalizar": NO redirige al home. Confirma en la misma página mostrando el aviso
-    // "en validación" y llevando la vista hacia arriba. El usuario navega cuando quiera.
+    // "Finalizar": estado terminal en la misma página (NO redirige). Reemplaza la
+    // tarjeta de pago por la card de finalización con el mensaje "listo, esperá la
+    // verificación". Solo aplica a comprobante/beca (pagos manuales); los automáticos
+    // no llegan acá porque redirigen a Checkout. No persiste server-side: al recargar
+    // se vuelve a ver el estado "en validación", que sigue siendo correcto.
     window.finalizarInscripcion = function () {
-        if (typeof window.notifyPagoListo === 'function') window.notifyPagoListo();
+        var becaPanel = document.getElementById('pago-content-beca');
+        var esBeca    = becaPanel && becaPanel.style.display !== 'none';
+
+        var completion = document.getElementById('completion-card');
+        if (completion) {
+            var t = document.getElementById('completion-title');
+            var s = document.getElementById('completion-subtitle');
+            if (t) t.textContent = t.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
+            if (s) s.textContent = s.getAttribute(esBeca ? 'data-beca' : 'data-voucher');
+            completion.classList.remove('d-none');
+        }
+
+        // Ocultamos la tarjeta de pago y el aviso amarillo (la card terminal ya comunica el estado).
+        var paymentCard = document.getElementById('payment-card');
+        if (paymentCard) paymentCard.classList.add('d-none');
+        var banner = document.getElementById('validacion-banner');
+        if (banner) { banner.classList.remove('d-flex'); banner.classList.add('d-none'); }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 

@@ -250,8 +250,13 @@
             <div class="row justify-content-center align-items-center">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label style="text-transform: uppercase;">{{ documentoLabel }} *</label>
-                        <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        <label style="text-transform: uppercase;">{{ $t('frontend.documento_label') }} *</label>
+                        <div class="input-group">
+                            <select v-if="documentoTipos.length > 1" class="form-control" style="flex: 0 0 40%; max-width: 40%;" name="tipo_documento" id="tipo_documento" v-model="user.tipo_documento">
+                                <option v-for="t in documentoTipos" :key="t.key" :value="t.key">{{ t.label }}</option>
+                            </select>
+                            <input type="text" class="form-control" name="dni" id="dni" v-model="user.dni">
+                        </div>
                         <small v-if="validacion.dni.texto" class="form-text text-danger">{{validacion.dni.texto}}&nbsp;<br></small>
                     </div>
                 </div>
@@ -507,9 +512,13 @@
         'user.pais': function() {
             this.validar_data('pais')
             this.traer_provincias()
-            // El documento válido depende del país: al cambiarlo, revalidamos el dni.
+            // El tipo de documento depende del país: al cambiarlo, reajustamos el
+            // tipo por defecto y revalidamos el dni.
+            this.sincronizarTipoDocumento()
             this.validar_data('dni')
         },
+        // Cambiar el tipo de documento revalida el dni con la regla estricta.
+        'user.tipo_documento': function() { this.validar_data('dni') },
         'user.provincia': function() { 
             this.validar_data('provincia')  
         this.traer_localidades() },
@@ -568,6 +577,13 @@
           var self = this;
           var p = _.find(this.paises, function(x){ return x.id == self.user.pais; });
           return (p && p.documento_label) ? p.documento_label : this.$t('frontend.passport');
+        },
+        // Opciones del selector de tipo de documento del país elegido (key + label),
+        // provistas por /ajax/paises. La primera es el tipo por defecto del país.
+        documentoTipos: function() {
+          var self = this;
+          var p = _.find(this.paises, function(x){ return x.id == self.user.pais; });
+          return (p && p.documento_tipos) ? p.documento_tipos : [];
         }
       },
       methods: {
@@ -597,16 +613,54 @@
               this.paso_actual = 'personales'
               break
             case 'personales':
+              this.message.danger = false
+              this.message.text = ''
               axios.post('/ajax/usuario',this.user).then(response => {
                 this.paso_actual = 'gracias'
                 this.loginSocial = response.data.loginSocial
                 this.abreviacionPais = response.data.abreviacionPais
                 this.login_callback = response.data.login_callback
                 this.$parent.$refs.login.showValidUser(response.data.user);
-                window.location.href = '/';
-                if(response.data.login_callback) window.location.href = response.data.login_callback;
+                // Post-registro: si venía de algún lado (ej. una actividad), volver ahí
+                // (login_callback = referer/after_login_url guardado en sesión por
+                // LoginController). Si no venía de ningún lado, al index del país
+                // seleccionado (/{abreviacion}), no a la home multi-país.
+                if(response.data.login_callback) {
+                  window.location.href = response.data.login_callback;
+                } else if(response.data.abreviacionPais) {
+                  window.location.href = '/' + response.data.abreviacionPais;
+                } else {
+                  window.location.href = '/';
+                }
               }).catch((error) => {
-                this.validar_data()
+                // Antes el .catch solo llamaba a validar_data() y DESCARTABA la
+                // respuesta del backend. Si el alta fallaba por algo que no era un
+                // 422 de validación (un 500 en save() o en el envío del mail de
+                // bienvenida, que se manda sincrónico), el usuario no veía nada y el
+                // registro quedaba "colgado" sin completarse. Ahora se surfacea.
+                if(error.response && error.response.status === 422 && error.response.data.errors) {
+                  var errors = error.response.data.errors
+                  var camposPasoEmail = ['email','pass']
+                  var volverAEmail = false
+                  for(var p in errors) {
+                    // Null-safe: un error sobre un campo que no está en validacion
+                    // no debe tirar TypeError (dejaba el form mudo).
+                    if(this.validacion[p]) {
+                      this.validacion[p].texto = errors[p][0]
+                      this.validacion[p].valido = false
+                      this.validacion[p].invalido = true
+                    }
+                    if(camposPasoEmail.indexOf(p) !== -1) volverAEmail = true
+                  }
+                  // Si el campo que falló pertenece al paso anterior (email/clave),
+                  // volvemos a ese paso para que el mensaje sea visible; si no, ya se
+                  // muestra en "personales".
+                  if(volverAEmail) this.paso_actual = 'email'
+                } else {
+                  // 500 / error de red: mensaje general en vez de quedarnos mudos.
+                  this.message.danger = true
+                  this.message.text = this.$t('frontend.error')
+                }
               });
             break
           }
@@ -671,8 +725,12 @@
 	    }
             // El documento se valida según el país: mandamos el país junto al dni
             // para que el server aplique la regla correcta (DNI/CPF/RUT/pasaporte).
+            // Con tipo_documento elegido, la validación es estricta contra ese tipo.
             if(prop == "dni" && this.user.pais) {
               data.pais = this.user.pais
+              if(this.user.tipo_documento) {
+                data.tipo_documento = this.user.tipo_documento
+              }
             }
           } else {
             data = this.user
@@ -682,6 +740,9 @@
             var params = response.data.params
             for(var i in params) {
               prop = params[i]
+              // Campos auxiliares sin estado propio (ej. tipo_documento junto a dni):
+              // saltearlos en vez de romper el loop antes de limpiar el campo real.
+              if(!this.validacion[prop]) continue
               this.validacion[prop].texto = ''
               if(this.user[prop]) {
                 this.validacion[prop].valido = true
@@ -693,6 +754,7 @@
             if(error.response && error.response.status === 422 && error.response.data.errors) {
               var errors = error.response.data.errors
               for(var p in errors) {
+                if(!this.validacion[p]) continue
                 this.validacion[p].texto = errors[p][0]
                 this.validacion[p].valido = false
                 this.validacion[p].invalido = true
@@ -709,7 +771,23 @@
         traer_paises: function() {
           axios.get('/ajax/paises').then(response => {
             this.paises = response.data
+            // Con los países ya cargados, fijamos el tipo de documento por defecto
+            // del país preseleccionado (si lo hay).
+            this.sincronizarTipoDocumento()
           })
+        },
+        // Ajusta user.tipo_documento al tipo por defecto del país (el primero de
+        // la lista) cuando no hay uno elegido o el actual no aplica al país. Deja
+        // 0 clics extra en el caso común (el default correcto ya viene puesto),
+        // sin permitir un tipo que no corresponde al país.
+        sincronizarTipoDocumento: function() {
+          var tipos = this.documentoTipos
+          if(!tipos.length) return
+          var actual = this.user.tipo_documento
+          var sigueValido = _.some(tipos, function(t){ return t.key === actual })
+          if(!sigueValido) {
+            this.$set(this.user, 'tipo_documento', tipos[0].key)
+          }
         },
         traer_provincias: function() {
           if(this.user.pais) {

@@ -673,7 +673,9 @@ class InscripcionesConPagoTest extends TestCase
             }',
         ]);
 
-        $fecha_limite = Carbon::parse(Carbon::now()->format('Y-m-d'));
+        // La fecha límite es inclusiva (Actividad::pagoDentroDeFecha): pagar el mismo
+        // día límite es válido. "Vencida" = la fecha límite fue ayer y se paga hoy.
+        $fecha_limite = Carbon::yesterday();
 
         $actividad = app(ActividadFactory::class)
             ->conPais($pais_con_config_de_pago->id)
@@ -687,7 +689,7 @@ class InscripcionesConPagoTest extends TestCase
             'idPersona' => $jose->idPersona
         ]);
 
-        $fecha_transaccion = $fecha_limite->format('Y-m-d');
+        $fecha_transaccion = Carbon::today()->format('Y-m-d');
 
         $this->actingAs($jose)
             ->get('/pagos/' . $i->idInscripcion . '/response?lapResponseCode=APPROVED&processingDate=' . $fecha_transaccion)

@@ -160,6 +160,74 @@ class loginSocialTest extends TestCase
     }
 
     /**
+     * Regresión: `registrarPersona()` (núcleo compartido por el registro web y
+     * `/api/create`) validaba la unicidad del mail sobre el campo `email` del
+     * request, pero el mail que termina persistiéndose es el verificado por el
+     * proveedor social (aplicarSocialVerificado sobreescribe `$persona->mail`
+     * DESPUÉS de esa validación). Sin `email` en el request — el caso normal de
+     * un alta social, que ya probó dueño del mail vía el proveedor — la
+     * unicidad ni se chequeaba, y se creaba una segunda Persona activa con el
+     * mismo mail que una cuenta ya existente.
+     *
+     * @test
+     */
+    public function registro_social_no_duplica_una_cuenta_existente_sin_email_en_el_request() {
+        $existente = factory('App\Persona')->create([ 'mail' => 'ya.existe@techo.org' ]);
+        $pais = factory('App\Pais')->create();
+
+        // Sesión verificada por el callback OAuth (LoginController), como en un
+        // alta social real: el mail real es el del proveedor, nunca el del form.
+        $this->withSession(['registro_social' => [
+            'email'     => 'ya.existe@techo.org',
+            'provider'  => 'google',
+            'social_id' => 'google-id-nuevo',
+        ]]);
+
+        // Deliberadamente SIN 'email': así llega un alta social típica.
+        $this->postJson('/ajax/usuario', [
+            'nombre'     => 'Otra',
+            'apellido'   => 'Persona',
+            'telefono'   => '+541145678901',
+            'pais'       => $pais->id,
+            'privacidad' => 1,
+        ])->assertStatus(422)->assertJsonValidationErrors('email');
+
+        $this->assertEquals(1, \App\Persona::where('mail', 'ya.existe@techo.org')->count());
+        $this->assertDatabaseMissing('Persona', ['google_id' => 'google-id-nuevo']);
+    }
+
+    /**
+     * Mismo bug que el test anterior, pero con un `email` en el request que NO
+     * coincide con el mail verificado por el proveedor: antes la unicidad se
+     * chequeaba sobre el del request (disponible) y no sobre el que en
+     * realidad se guardaba.
+     *
+     * @test
+     */
+    public function registro_social_no_duplica_una_cuenta_existente_con_email_distinto_en_el_request() {
+        $existente = factory('App\Persona')->create([ 'mail' => 'ya.existe@techo.org' ]);
+        $pais = factory('App\Pais')->create();
+
+        $this->withSession(['registro_social' => [
+            'email'     => 'ya.existe@techo.org',
+            'provider'  => 'google',
+            'social_id' => 'google-id-nuevo',
+        ]]);
+
+        $this->postJson('/ajax/usuario', [
+            'email'      => 'un-email-distinto@techo.org',
+            'nombre'     => 'Otra',
+            'apellido'   => 'Persona',
+            'telefono'   => '+541145678901',
+            'pais'       => $pais->id,
+            'privacidad' => 1,
+        ])->assertStatus(422)->assertJsonValidationErrors('email');
+
+        $this->assertEquals(1, \App\Persona::where('mail', 'ya.existe@techo.org')->count());
+        $this->assertDatabaseMissing('Persona', ['mail' => 'un-email-distinto@techo.org']);
+    }
+
+    /**
      * Regresión C-1: el email del request se ignora; se usa el de la sesión verificada.
      * Aunque el body apunte a la víctima, solo se opera sobre el email verificado por OAuth.
      *
@@ -189,4 +257,24 @@ class loginSocialTest extends TestCase
         $this->assertDatabaseMissing('Persona', ['google_id' => 'x']);
     }
 
+
+    /**
+     * Cancelar en la pantalla de Google/Facebook vuelve con ?error=access_denied y sin
+     * code: antes se intentaba canjear igual → 400 del proveedor → 500 ("Whoops").
+     *
+     * @test
+     */
+    public function cancelar_el_login_social_vuelve_al_inicio_sin_500()
+    {
+        foreach (['google', 'facebook'] as $provider) {
+            $this->get('/auth/' . $provider . '/callback?error=access_denied&state=x')
+                ->assertRedirect('/')
+                ->assertSessionHas('status');
+        }
+
+        // El mensaje sale en el idioma de la sesión (Localization), no fijo en castellano.
+        $this->withSession(['locale' => 'pt'])
+            ->get('/auth/google/callback?error=access_denied')
+            ->assertSessionHas('status', 'O login não foi concluído. Você pode tentar novamente quando quiser.');
+    }
 }

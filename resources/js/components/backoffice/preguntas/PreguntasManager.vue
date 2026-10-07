@@ -23,6 +23,15 @@
                             <span v-if="errors.pregunta" class="help-block">{{ errors.pregunta[0] }}</span>
                         </div>
 
+                        <!-- Sugerencia de dato estándar (solo actividades) -->
+                        <div v-if="sugerenciaForm" class="callout callout-warning preguntas-sugerencia">
+                            <p>
+                                <i class="fa fa-lightbulb-o"></i>
+                                {{ $t('backend.preguntas_sugerir_' + sugerenciaForm) }}
+                                <a v-if="urlGeneral" :href="urlGeneral">{{ $t('backend.preguntas_ir_a_general') }}</a>
+                            </p>
+                        </div>
+
                         <!-- Descripción -->
                         <div :class="{ 'form-group': true, 'has-error': errors.descripcion }">
                             <label>{{ $t('backend.descripcion_ayuda') }}</label>
@@ -181,6 +190,10 @@
                                 <td>
                                     {{ pregunta.pregunta }}
                                     <small v-if="pregunta.descripcion" class="text-muted d-block">{{ pregunta.descripcion }}</small>
+                                    <small v-if="sugerenciaPara(pregunta.pregunta)" class="text-warning d-block">
+                                        <i class="fa fa-lightbulb-o"></i>
+                                        {{ $t('backend.preguntas_sugerir_' + sugerenciaPara(pregunta.pregunta)) }}
+                                    </small>
                                     <small v-if="condicionDe(pregunta)" class="text-info d-block">
                                         <i class="fa fa-filter"></i>
                                         {{ resumenCondicion(pregunta) }}
@@ -227,6 +240,16 @@ export default {
             type: String,
             default: 'preguntas-manager-modal',
         },
+        // Solo en actividades: sugiere usar los datos estándar de la pestaña General
+        // (roles, estudios, ficha médica) cuando la pregunta los duplica.
+        sugerirEstandar: {
+            type: Boolean,
+            default: false,
+        },
+        urlGeneral: {
+            type: String,
+            default: null,
+        },
     },
     data() {
         return {
@@ -242,6 +265,9 @@ export default {
     computed: {
         editando() {
             return !!this.form.id;
+        },
+        sugerenciaForm() {
+            return this.sugerenciaPara(this.form.pregunta);
         },
         // Candidatas a pregunta padre: desplegables ANTERIORES (orden menor), no la actual.
         // Una pregunta NUEVA todavía no tiene orden; se creará al final, así que
@@ -268,6 +294,17 @@ export default {
         this.cargarPreguntas();
     },
     methods: {
+        // ¿La pregunta pide un dato que la actividad ya tiene como estándar? Devuelve
+        // 'roles' | 'estudios' | 'salud' | null. Si se carga como pregunta adicional queda en
+        // texto libre, distinto en cada actividad, y no se puede asignar ni filtrar.
+        sugerenciaPara(texto) {
+            if (!this.sugerirEstandar || !texto) return null;
+            const t = ' ' + String(texto).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') + ' ';
+            if (/[^a-z](rol|roles|capataz|monitor|monitora|jefe de cuadrilla|jefa de cuadrilla|jc|cargo|funcao|papel)[^a-z]/.test(t)) return 'roles';
+            if (/universidad|universidade|facultad|faculdade|carrera|colegio|escuela|institucion educativa|instituicao de ensino|estudi|estuda/.test(t)) return 'estudios';
+            if (/medicament|alergi|enfermedad|doenca|salud|saude|condicion medica|discapacidad|deficiencia|tratamiento|conta(c)?to (de|para) emergencia|grupo sangu|tipo de sangre|obra social|seguro medico|plano de saude|cobertura medica/.test(t)) return 'salud';
+            return null;
+        },
         tipoLabel(tipo) {
             if (tipo === 'desplegable') return this.$t('backend.tipo_desplegable');
             if (tipo === 'archivo') return this.$t('backend.tipo_archivo');
@@ -447,4 +484,6 @@ export default {
 </script>
 
 <style scoped>
+.preguntas-sugerencia { margin-bottom: 12px; }
+.preguntas-sugerencia p { margin: 0; }
 </style>

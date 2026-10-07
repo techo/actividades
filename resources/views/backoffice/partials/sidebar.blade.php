@@ -46,6 +46,13 @@
                 <ul class="treeview-menu">
                     @if (Auth::user()->hasRole('admin'))
                         <li class="{{request()->is('admin/actividades') ? 'active' : ''}}"><a href="/admin/actividades">{{ __('backend.view_all') }}</a></li>
+                        @if(isset($todasOficinasPais))
+                            @foreach ($todasOficinasPais as $oficina)
+                                <li class="{{ request()->is('admin/actividades/oficina/' . $oficina->id) ? 'active' : '' }}">
+                                    <a href="{{ url('admin/actividades/oficina/' . $oficina->id) }}">{{ $oficina->nombre }}</a>
+                                </li>
+                            @endforeach
+                        @endif
                     @endif
                     @if(Auth::user()->hasPermissionTo('ver_mis_actividades'))
                         <li class="{{request()->is('admin/actividades/usuario') ? 'active' : ''}}"><a href="/admin/actividades/usuario">{{ __('backend.my_activities') }}</a></li>
@@ -93,6 +100,13 @@
                         <li class="{{request()->is('admin/comunidades/crear') ? 'active' : ''}}">
                             <a href="/admin/comunidades/crear"><i class="fa fa-plus"></i>{{ __('backend.create_comunidad') }}</a>
                         </li>
+                    @endif
+                    @if(isset($todasOficinasPais))
+                        @foreach ($todasOficinasPais as $oficina)
+                            <li class="{{ request()->is('admin/comunidades/oficina/' . $oficina->id) ? 'active' : '' }}">
+                                <a href="{{ url('admin/comunidades/oficina/' . $oficina->id) }}">{{ $oficina->nombre }}</a>
+                            </li>
+                        @endforeach
                     @endif
                     <li class="{{request()->is('admin/comunidades') ? 'active' : ''}}">
                         <a href="/admin/comunidades">{{ __('backend.view_list') }}</a>
@@ -214,6 +228,27 @@
                         <a href="/admin/configuracion/institucionEducativa">{{ __('frontend.institucion_educativa') }}</a>
                     </li>
                 </ul>
+            </li>
+            @endif
+
+            @if (\App\IssueReport::where('idPersona', Auth::user()->idPersona)->exists())
+            <li class="{{ request()->is('admin/mis-reportes*') ? 'active' : '' }}">
+                <a href="/admin/mis-reportes"><i class="fa fa-comments-o"></i> <span>{{ __('backend.my_reports') }}</span></a>
+            </li>
+            @endif
+
+            @if (Auth::user()->can('ver_reportes'))
+            @php $reportesPendientes = \App\IssueReport::conRespuestaPendiente()->count(); @endphp
+            <li class="{{ request()->is('admin/reportes*') ? 'active' : '' }}">
+                <a href="/admin/reportes{{ $reportesPendientes ? '?pendientes=1' : '' }}">
+                    <i class="fa fa-bug"></i> <span>{{ __('backend.reports_inbox') }}</span>
+                    @if ($reportesPendientes)
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right" style="background:#7c3aed !important;"
+                                  title="{{ __('backend.reports_pending_replies') }}">{{ $reportesPendientes }}</span>
+                        </span>
+                    @endif
+                </a>
             </li>
             @endif
 

@@ -405,6 +405,18 @@ return [
 	'also_you_can' => 'o también puedes ',
 	'ask_for_grant' => 'SOLICITAR UNA BECA',
 	'go_back' => 'VOLVER',
+	// Microprompt de verificación de datos (calidad de datos)
+	'vd_titulo' => 'Revisa tus datos',
+	'vd_texto' => 'Necesitamos que estos datos estén bien para tu seguro. Confirma que son correctos o corrígelos.',
+	'vd_campo_nombre' => 'Nombre y apellido',
+	'vd_campo_documento' => 'Documento',
+	'vd_campo_nacimiento' => 'Fecha de nacimiento',
+	'vd_sin_cargar' => 'sin cargar',
+	'vd_revisar_campo' => 'Conviene revisar este dato',
+	'vd_estan_bien' => 'Están correctos',
+	'vd_corregir' => 'Corregir mis datos',
+	'vd_gracias' => '¡Gracias! Confirmamos tus datos.',
+	'documento_label' => 'Documento',
 	'continue' => 'SIGUIENTE',
 	'cancel' => 'CANCELAR',
 	'unenroll' => 'DESINSCRIBIRME',
@@ -422,6 +434,11 @@ return [
 	'scholarship_pending_subtitle' => 'Está en proceso de validación y te avisaremos por correo. Si preferís, todavía podés realizar tu aporte con cualquiera de los métodos disponibles.',
 	'voucher_pending_title'        => 'Tu comprobante fue enviado',
 	'voucher_pending_subtitle'     => 'Está en proceso de validación. Te avisaremos por correo cuando confirmemos tu lugar.',
+	'voucher_finished_title'          => '¡Listo! Ya enviaste tu comprobante',
+	'voucher_finished_subtitle'       => 'Recibimos tu comprobante y lo estamos verificando. Te avisaremos por correo cuando confirmemos tu pago y tu lugar.',
+	'scholarship_finished_title'      => '¡Listo! Ya enviaste tu solicitud',
+	'scholarship_finished_subtitle'   => 'Recibimos tu solicitud de beca y la estamos revisando. Te avisaremos por correo con la respuesta.',
+	'back_to_activity'                => 'Volver a la actividad',
 	'voucher_rechazado_titulo'           => 'Tu comprobante fue rechazado',
 	'voucher_rechazado_subtitulo'        => 'El equipo revisó tu comprobante y no fue aceptado. Por favor, sube uno nuevo.',
 	'voucher_rechazado_motivo'           => 'Motivo',
@@ -589,6 +606,22 @@ return [
     'card_paid' => 'Con costo',
     'present' => 'Presente',
     'no_past_activities' => 'Todavía no participaste de ninguna actividad.',
+
+    // Claves que faltaban en es_CH (copiadas de es_AR). Revisar si algún
+    // regionalismo necesita ajuste para Chile / resto de LatAm.
+    'acuerdo_especifico' => 'terminos y condiciones de la actividad ',
+    'acuerdo_menores' => 'terminos y condiciones para menores',
+    'ciclo_voluntariado' => 'Ciclo de voluntariado',
+    'ciclo_voluntariado_description' => 'Ciclo de voluntariado',
+    'compromiso_firma' => ' y me comprometo a llevarla impreso y lleno el día de la actividad',
+    'continue_with_feedback' => ' Evaluacion especifica, ayudanos a ofrecer una mejor experiencia.',
+    'continue_with_group_feedback' => 'Evalua tu equipo',
+    'leave_blank' => 'Opcional',
+    'vacunacion_covid' => 'Vacuna Covid',
+    'ver_dorso' => 'Ver Dorso',
+    'ver_frente' => 'Ver Frente',
+    'yes_apply_rol' => 'Si, aplicar a rol',
+    'pago_sin_inscripcion' => 'No encontramos una inscripción a esta actividad con la cuenta :mail. Si te inscribiste con otra cuenta, cierra sesión e ingresa con esa para completar el pago.',
 
 ];
 

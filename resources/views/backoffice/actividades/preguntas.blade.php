@@ -15,7 +15,8 @@
                     <h3 class="pull-left">{{ __('backend.preguntas_inscripcion') }}</h3>
                 </div>
             </div>
-            <preguntas-manager base-url="/admin/ajax/actividades/{{ $actividad->idActividad }}/preguntas"></preguntas-manager>
+            <preguntas-manager base-url="/admin/ajax/actividades/{{ $actividad->idActividad }}/preguntas"
+                :sugerir-estandar="true" url-general="/admin/actividades/{{ $actividad->idActividad }}"></preguntas-manager>
         </div>
 
     </div>

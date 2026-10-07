@@ -58,6 +58,9 @@ desired effect
 
     <!-- Control Sidebar -->
 {{--    @include('backoffice.partials.control-sidebar')--}}
+
+    <!-- Widget "Reportar un problema" (disponible en todo el backoffice) -->
+    <bug-reporter></bug-reporter>
 </div>
 <!-- ./wrapper -->
 

@@ -86,11 +86,17 @@ class AdministrarUsuariosTest extends TestCase
         $this->assertDatabaseHas('Persona', [ 'nombres' => 'Modificado' ]);
     }
 
-    /** @test */
-    public function administrador_puede_eliminar_usuario_y_volver_a_crear_con_mismo_email()
+    /**
+     * Antes, `UserService::createValidator()` excluía las cuentas soft-deleted de
+     * su chequeo de unicidad (`...,deleted_at,NULL`) — un admin podía crear una
+     * Persona activa nueva para el mail de una cuenta borrada, duplicándola sin
+     * que hiciera falta ninguna concurrencia. El camino correcto para recuperar
+     * el acceso es restaurar la cuenta borrada, no crear una segunda.
+     *
+     * @test
+     */
+    public function administrador_no_puede_recrear_con_el_mail_de_una_cuenta_borrada()
     {
-        $this->withoutExceptionHandling();
-
         $this->seed('PermisosSeeder');
 
         $admin = factory('App\Persona')->create();
@@ -118,7 +124,18 @@ class AdministrarUsuariosTest extends TestCase
 
         $this->actingAs($admin)
             ->post('/admin/usuarios/registrar' , $datos)
-            ->assertStatus(200);
+            ->assertStatus(422)
+            ->assertSee('El email ya existe en el sistema');
+
+        // No se creó una segunda Persona: solo sigue existiendo la borrada.
+        $this->assertEquals(1, \App\Persona::withTrashed()->where('mail', $jose->mail)->count());
+
+        // El camino correcto: restaurar la cuenta existente.
+        $this->actingAs($admin)
+            ->post('/admin/usuarios/' . $jose->idPersona . '/restaurar')
+            ->assertStatus(302);
+
+        $this->assertDatabaseHas('Persona', [ 'idPersona' => $jose->idPersona, 'deleted_at' => null ]);
     }
 
     /** @test */

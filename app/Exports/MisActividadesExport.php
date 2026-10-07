@@ -23,10 +23,26 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         $this->sort = $sort;
     }
 
+    /**
+     * Columnas por las que se permite ordenar (los alias/campos del select de abajo).
+     * El datatable puede mandar una columna de display inexistente (p.ej. "comunidades")
+     * en `sort` → sin este filtro, orderBy tira 500 "Unknown column ... in 'order clause'".
+     */
+    const SORTABLE = [
+        'id', 'nombreActividad', 'fechaInicio', 'fechaFin', 'estadoConstruccion',
+        'oficina', 'tipoActividad', 'nombreCategoria', 'pais',
+        'fechaInicioInscripciones', 'fechaFinInscripciones',
+        'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
+    ];
+
     public function collection()
     {
         $sort = explode('|', $this->sort);
-        list($sortField, $sortOrder) = $sort;
+        $sortField = $sort[0] ?? null;
+        $sortOrder = strtolower($sort[1] ?? 'asc') === 'desc' ? 'desc' : 'asc';
+        if (!in_array($sortField, self::SORTABLE, true)) {
+            $sortField = 'nombreActividad';
+        }
 
         $result = DB::table('Actividad')
             ->leftJoin('atl_oficinas', 'Actividad.idOficina', '=', 'atl_oficinas.id')
@@ -92,8 +108,8 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
             $actividad->estadoConstruccion,
             $actividad->oficina,
             $actividad->tipoActividad,
-            $actividad->nombreCategoria
-
+            $actividad->nombreCategoria,
+            $actividad->pais,
         ];
     }
 
@@ -102,20 +118,31 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         return [
             'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'E' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
     public function headings(): array
     {
+        // Mismo orden y cantidad que map() (antes había menos encabezados que columnas
+        // y quedaban corridos: debajo de "Estado" salía la fecha de inicio de inscripciones).
         return [
             'ID de la Actividad',
             'Nombre de la Actividad',
             'Fecha De Inicio',
             'Fecha de Finalización',
+            'Inicio de Inscripciones',
+            'Fin de Inscripciones',
+            'Inicio de Evaluaciones',
+            'Fin de Evaluaciones',
             'Estado',
             'Oficina',
             'Tipo de Actividad',
             'Categoría de la Actividad',
+            'País',
         ];
     }
 

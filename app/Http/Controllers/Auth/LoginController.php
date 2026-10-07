@@ -53,6 +53,19 @@ class LoginController extends Controller
     {
         $credentials = $request->only($this->username(), 'password');
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
+
+        // Recuperación de cuenta dada de baja: Auth::attempt excluye a los borrados
+        // (scope de SoftDeletes), así que un borrado con la clave correcta fallaba el
+        // login y quedaba encerrado. Si la credencial coincide con una cuenta borrada,
+        // la restauramos (la clave correcta prueba la propiedad) y la logueamos.
+        if(!$authSuccess) {
+            $recuperada = Persona::restaurarConCredencial($credentials[$this->username()] ?? null, $credentials['password'] ?? null);
+            if($recuperada) {
+                Auth::login($recuperada, $request->has('remember'));
+                $authSuccess = true;
+            }
+        }
+
         $afterLoginUrl = '';
         if($authSuccess) {
             $request->session()->regenerate();
@@ -123,6 +136,12 @@ class LoginController extends Controller
     }
 
     public function callbackFromProvider(Request $request, $provider) {
+        // La persona canceló en la pantalla del proveedor: vuelve con ?error=access_denied
+        // y sin `code`. Antes se intentaba canjear igual el code → 400 de Google → "Whoops".
+        if ($request->filled('error')) {
+            return redirect('/')->with('status', __('auth.social_cancelado'));
+        }
+
         $url = $request->session()->get('login_callback','');
         $personaData = new \stdClass();
         if($provider == 'google') {
@@ -130,17 +149,21 @@ class LoginController extends Controller
             // sesión por redirectToProvider (protección CSRF del callback de login).
             try {
                 $user = Socialite::driver($provider)->user();
+            } catch (\GuzzleHttp\Exception\ClientException $e) {
+                // El proveedor rechazó el canje del code (falta, vencido o ya usado: p.ej.
+                // alguien abre la URL del callback a mano o recarga la página).
+                return redirect('/')->with('status', __('auth.social_cancelado'));
             } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                 // El `state` OAuth no coincide (sesión perdida, botón atrás, reintento,
                 // login abierto en otra pestaña). No es un error del sistema: en vez de
                 // tirar 500 ("Whoops"), mandamos a reintentar el login.
-                return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+                return redirect('/')->with('status', __('auth.social_sesion_expirada'));
             }
             // Google solo devuelve el email primario verificado; si explícitamente
             // viene sin verificar, no lo confiamos.
             $emailVerificado = $user->user['email_verified'] ?? $user->user['verified_email'] ?? true;
             if ($emailVerificado === false || $emailVerificado === 'false') {
-                return view('registro')->with('persona', null)->with('mensaje', "El email de la cuenta de Google no está verificado.");
+                return view('registro')->with('persona', null)->with('mensaje', __('auth.social_email_no_verificado'));
             }
             // Google (OpenID) devuelve given_name/family_name como OPCIONALES: cuentas sin
             // apellido (mononombre, cuentas de organización) los omiten. Coalescemos para no
@@ -156,9 +179,12 @@ class LoginController extends Controller
                $user = Socialite::driver($provider)->fields([
                        'first_name', 'last_name', 'email', 'gender'
                ])->user();
+           } catch (\GuzzleHttp\Exception\ClientException $e) {
+               // Ver nota en la rama de Google: canje del code rechazado.
+               return redirect('/')->with('status', __('auth.social_cancelado'));
            } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                // Ver nota en la rama de Google: state OAuth inválido → reintentar login.
-               return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+               return redirect('/')->with('status', __('auth.social_sesion_expirada'));
            }
             $personaData->nombre = $user->user['first_name'];
             $personaData->apellido = $user->user['last_name'];
@@ -173,7 +199,19 @@ class LoginController extends Controller
             }
         }
 //        $personaData->password = bcrypt(\Illuminate\Support\Str::random(30));
+        // Prioridad a una cuenta ACTIVA con ese mail. Si no hay activa pero existe una
+        // dada de baja (soft-delete), la restauramos: el login social prueba la propiedad
+        // del email (el proveedor OAuth ya lo verificó), así recuperamos la cuenta e
+        // historial en vez de crear un duplicado (antes, al excluir borrados, "no existía"
+        // y caía en un alta nueva).
         $persona = Persona::where('mail',$personaData->email)->first();
+        if(!$persona) {
+            $borrado = Persona::onlyTrashed()->where('mail', $personaData->email)->first();
+            if($borrado) {
+                $borrado->restore();
+                $persona = $borrado;
+            }
+        }
         if(!$persona) {
             if($personaData->email == null)
                 return view('registro')->with('persona', null)->with('mensaje', "La cuenta de facebook no tiene un email vinculado. Intente con otra red social o con usuario y contraseña");
@@ -234,6 +272,9 @@ class LoginController extends Controller
     		    if($url) return redirect($url);
 	        }
         }
+
+        // Sin URL de retorno no devolvía respuesta → página en blanco tras el login social.
+        return redirect('/');
     }
 
 }

@@ -38,7 +38,12 @@ class UsuarioController extends BaseController
           if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
         break;
         case 'create':
-          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona,deleted_at,NULL|email';
+          // unique SIN el filtro deleted_at,NULL: cuenta también las cuentas dadas de
+          // baja (soft-delete). Antes las excluía → registrar con el mail de un borrado
+          // NO daba error y creaba un DUPLICADO (no hay UNIQUE en la DB). Ahora se
+          // bloquea y el mensaje (email.unique, ver más abajo) guía a iniciar sesión /
+          // recuperar la cuenta, que es lo que la restaura.
+          if($request->has('email')) $rules['email'] = 'required|unique:Persona,mail,'.$request->id.',idPersona|email';
           if($request->has('pass') && !$request->google_id && !$request->facebook_id) $rules['pass'] = 'required|min:8';
           if($request->has('privacidad')) $rules['privacidad'] = 'accepted';
         break;
@@ -58,10 +63,16 @@ class UsuarioController extends BaseController
         // exigirlo en el alta requiere coordinar con la app. El país: $request->pais.
         if($request->has('dni')) {
             $presenciaDni = ($verbo === 'update') ? 'required' : 'nullable';
-            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais)];
+            // Con tipo_documento elegido, validación estricta contra ese tipo.
+            $rules['tipo_documento'] = 'nullable|string|max:30';
+            $rules['dni'] = [$presenciaDni, new DocumentoValido($request->pais, $request->tipo_documento)];
         }
         $mensajes = [
           'nacimiento.before_or_equal' => __('validation.custom.fechaNacimiento.edad_minima', ['edad' => \App\Http\Requests\CrearPersona::EDAD_MINIMA]),
+          // Aviso accionable en vez de un "ya registrado" seco: iniciar sesión restaura
+          // la cuenta si estaba dada de baja (login con clave correcta) o entra si está
+          // activa; y está la opción de recuperar contraseña.
+          'email.unique' => __('validation.custom.email.cuenta_existente'),
         ];
         $validatedData = $request->validate($rules, $mensajes);
         return ['success' => true, 'params' => array_keys($rules)];
@@ -142,12 +153,21 @@ class UsuarioController extends BaseController
    */
   private function registrarPersona(Request $request, $origen = 'web')
   {
+      $social = $this->socialVerificado($request);
+      if ($social) {
+          // El mail que termina persistiéndose es el verificado por el proveedor
+          // social (ver aplicarSocialVerificado), no necesariamente el que manda el
+          // cliente. Si se validaba unicidad sobre el del request, un alta social sin
+          // ese campo (o con uno distinto) se colaba sin chequear el mail real y
+          // podía duplicar una cuenta activa existente.
+          $request->merge(['email' => $social['email']]);
+      }
+
       $this->validar($request, 'create');
 
       $persona = new Persona();
       $this->cargar_cambios($request, $persona);
 
-      $social = $this->socialVerificado($request);
       $this->aplicarSocialVerificado($persona, $social);
 
       $persona->password = $social ? Hash::make(\Illuminate\Support\Str::random(30)) : Hash::make($request->pass);
@@ -235,7 +255,12 @@ class UsuarioController extends BaseController
       $persona->apellidoPaterno = $request->apellido;
       // Guardar el documento en forma canónica (sin puntos/espacios, mayúsculas)
       // para que matcheen Salesforce, dedup y reporting.
-      $persona->dni = (new DocumentoService())->normalizar($request->pais, $request->dni);
+      // Preservar el tipo guardado si el request no lo trae (ej. un cliente que
+      // todavía no manda el selector): evita nulear tipo_documento en un update
+      // que no lo incluye. Si viene, manda el elegido.
+      $tipoDoc = $request->has('tipo_documento') ? $request->tipo_documento : $persona->tipo_documento;
+      $persona->dni = (new DocumentoService())->normalizarComoTipo($tipoDoc, $request->dni, $request->pais);
+      $persona->tipo_documento = $tipoDoc;
       $persona->mail = $request->email;
       $persona->idLocalidad = $request->localidad;
       $persona->fechaNacimiento = $fechaNacimiento;
@@ -333,6 +358,32 @@ class UsuarioController extends BaseController
     return $usuario;
   }
 
+  /**
+   * La persona confirma que sus datos identitarios están bien (microprompt de
+   * calidad de datos en el paso 'confirmar' de la inscripción). Registra la
+   * fecha de verificación para no volver a pedírselo dentro de la vigencia
+   * (ver App\Services\CalidadDatos\CalidadDatosPersona). No modifica los datos:
+   * la corrección va por el perfil. Idempotente.
+   */
+  public function verificarDatos(Request $request)
+  {
+    $persona = Auth::user();
+    $hoy = now();
+
+    $persona->datos_verificados_at = $hoy;
+    // Detalle por campo: hoy confirmamos los cuatro campos identitarios juntos.
+    // La estructura permite, más adelante, confirmar campos por separado.
+    $persona->datos_verificados = [
+      'nombre'          => $hoy->toDateString(),
+      'apellido'        => $hoy->toDateString(),
+      'documento'       => $hoy->toDateString(),
+      'fechaNacimiento' => $hoy->toDateString(),
+    ];
+    $persona->save();
+
+    return response()->json(['success' => true]);
+  }
+
 
   public function inscripciones(Request $request, $items=10) {
 
@@ -368,6 +419,20 @@ class UsuarioController extends BaseController
 
     public function getCoordinadores(Request $request)
     {
+        // Escape hatch por email exacto (mismo criterio que getPersonas): una persona cuyo
+        // idPais no coincide con el del coordinador (p.ej. quedó registrada con "Latam") solo
+        // se encuentra escribiendo su mail completo. Por nombre se mantiene el aislamiento por
+        // país. Reclamo #16: no aparecía al agregarla a un equipo.
+        $termino = trim($request->coordinador ?? '');
+        if (filter_var($termino, FILTER_VALIDATE_EMAIL)) {
+            $personas = Persona::withoutGlobalScope(\App\Scopes\BelongsToCountryScope::class)
+                ->where('mail', $termino)
+                ->take(25)
+                ->get();
+
+            return CoordinadorResource::collection($personas);
+        }
+
         // Esto debería filtrar por rol
         $result = CoordinadoresSearch::apply($request);
         $coordinadores = CoordinadorResource::collection($result);
@@ -398,7 +463,8 @@ class UsuarioController extends BaseController
 
         foreach ($palabras as $palabra) {
           // Parámetro bindeado (?): no concatenar input en SQL.
-          $query->whereRaw("concat(' ', nombres, ' ', apellidoPaterno, ' ', mail, ' ', dni) like ?", ['%' . $palabra . '%']);
+          // CONCAT_WS ignora NULLs (con concat, un dni o apellido NULL hacía que nunca matchee).
+          $query->whereRaw("CONCAT_WS(' ', nombres, apellidoPaterno, mail, dni) like ?", ['%' . $palabra . '%']);
         }
 
         // Aislamiento por país: solo personas del país permitido del usuario autenticado.
@@ -442,6 +508,10 @@ class UsuarioController extends BaseController
         // conservar sus inscripciones e historial para reporting. Se marca
         // Desvinculado para que quede fuera de los flujos de voluntario activo.
         $persona->estadoPersona = 'Desvinculado';
+
+        // Invalida password, "recordarme", logins sociales y TODOS los tokens de la app
+        // (antes solo se revocaba el token del request actual).
+        $persona->cortarAcceso();
 
         // grabar
         $persona->save();

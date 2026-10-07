@@ -314,11 +314,26 @@
         },
         computed: {
             langs: function() {
-                if(this.available_locales) {
-                    let locales = this.available_locales.split(',');
-                    return locales.map(function(v){ return v.trim().split('|') });
-                }
-                else return []
+                if(!this.available_locales) return [];
+
+                const locales = this.available_locales
+                    .split(',')
+                    .map(v => v.trim().split('|')); // [codigo, label]
+
+                // Español tiene variantes por país (es_AR, es_CH), pero en el
+                // selector de IDIOMA debe verse UNA sola opción. Deduplicamos por
+                // idioma base (parte antes del "_") y, ante variantes del mismo
+                // idioma, conservamos la que coincide con el locale activo para
+                // que el <select> (v-model="_i18n.locale") siga seleccionado.
+                const activo = this._i18n ? this._i18n.locale : null;
+                const porBase = {};
+                locales.forEach(([codigo, label]) => {
+                    const base = codigo.split('_')[0];
+                    if (!porBase[base] || codigo === activo) {
+                        porBase[base] = [codigo, label];
+                    }
+                });
+                return Object.values(porBase);
             },
             postulacionesLink() {
                 return `/${this.pais_abreviacion}/postulaciones/`;

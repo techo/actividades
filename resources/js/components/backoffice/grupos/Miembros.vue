@@ -152,9 +152,14 @@
                 });
             },
             axiosError (error) {
-                if (error.response.status === 428) {
+                if (error.response && error.response.status === 428) {
                     Event.$emit('Miembros:voluntario-duplicado', error.response.data);
+                    return;
                 }
+                // Cualquier otro error se muestra (antes la ventana se cerraba sin aviso).
+                let mensaje = (error.response && error.response.data && error.response.data.message)
+                    || 'No se pudo agregar a la persona. Intentá de nuevo o avisanos con "Reportar un problema".';
+                Event.$emit('Miembros:error-guardar', mensaje);
             }
         },
         watch: {

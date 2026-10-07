@@ -72,7 +72,9 @@ class ActividadResource extends Resource
             // Mismo criterio que el listado web (ActividadesSearch: PuntoEncuentro.estado=1).
             'puntosEncuentro'           => PuntoEncuentroResource::collection($this->puntosEncuentro->where('estado', 1)->values()),
             'preguntas'     => $this->preguntas,
-            'ubicacion'     => $this->provincia->provincia,
+            // Hay actividades sin provincia válida (legacy con idProvincia=0); sin el
+            // optional() el detalle tiraba 500 y el voluntario no podía inscribirse.
+            'ubicacion'     => optional($this->provincia)->provincia,
             'idInscripcion'   => ($estadoInscripcion) ? $inscripcion->idInscripcion : null,
             'voucherURL'             => ($estadoInscripcion) ? $inscripcion->voucherUrl : null,
             'voucher_rechazado'      => ($estadoInscripcion) ? (bool) $inscripcion->voucher_rechazado : false,

@@ -19,14 +19,14 @@ class ActividadesController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $idOficina = null)
     {
         $per_page = 25;
         if($request->filled('per_page')) {
             $per_page = $request->per_page;
         }
 
-        $export = new ActividadesExport($request->filter, $request->sort);
+        $export = new ActividadesExport($request->filter, $request->sort, null, $idOficina);
         $collection = $export->collection();
         $result = $this->paginate($collection, $per_page);
         return $result;

@@ -42,9 +42,17 @@ class ActividadesPolicy
             ->where('presente', '=', true)
             ->first();
         $inicioEvaluaciones = ($actividad->fechaInicioEvaluaciones <= Carbon::now());
-        $finEvaluaciones = ($actividad->fechaFinEvaluaciones >= Carbon::now());
 
-        return ($inscripto && $inicioEvaluaciones);
+        if ($inscripto && $inicioEvaluaciones) {
+            return true;
+        }
+
+        // Llegan por el link del mail o de WhatsApp: en vez del 403 genérico, explicamos por qué
+        // no pueden evaluar (reclamos #5/#12: "a algunos les funciona y a otros no").
+        if (!$inscripto) {
+            throw new \App\Exceptions\AccesoExplicadoException(__('errors.evaluar.no_presente'));
+        }
+        throw new \App\Exceptions\AccesoExplicadoException(__('errors.evaluar.no_abierta'));
 
     }
     public function inscribir(Persona $user, $id)

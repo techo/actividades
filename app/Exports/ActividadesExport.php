@@ -16,13 +16,15 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
     protected $filter;
     protected $sort;
     protected $idComunidad;
+    protected $idOficina;
 
 
-    public function __construct($filter = null, $sort = 'nombreActividad|asc', $idComunidad = null)
+    public function __construct($filter = null, $sort = 'nombreActividad|asc', $idComunidad = null, $idOficina = null)
     {
         $this->filter = $filter;
         $this->sort = $sort;
         $this->idComunidad = $idComunidad;
+        $this->idOficina = $idOficina;
     }
 
     public function collection()
@@ -67,6 +69,10 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
                     ->where('actividad_comunidad.idComunidad', $this->idComunidad);
         }
 
+        if ($this->idOficina) {
+            $result->where('Actividad.idOficina', $this->idOficina);
+        }
+
         if ($this->filter) {
             $palabras = explode(' ',$this->filter);
             foreach ($palabras as $palabra)
@@ -82,6 +88,10 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
         return [
             'C' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'E' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'G' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
@@ -99,18 +109,24 @@ class ActividadesExport implements FromCollection, WithHeadings, WithColumnForma
             $actividad->estadoConstruccion,
             $actividad->oficina,
             $actividad->tipoActividad,
-            $actividad->nombreCategoria
-
+            $actividad->nombreCategoria,
+            $actividad->pais,
         ];
     }
 
     public function headings(): array
     {
+        // Mismo orden y cantidad que map() (antes había menos encabezados que columnas
+        // y quedaban corridos: debajo de "Estado" salía la fecha de inicio de inscripciones).
         return [
             'ID de la Actividad',
             'Nombre de la Actividad',
             'Fecha De Inicio',
             'Fecha de Finalización',
+            'Inicio de Inscripciones',
+            'Fin de Inscripciones',
+            'Inicio de Evaluaciones',
+            'Fin de Evaluaciones',
             'Estado',
             'Oficina',
             'Tipo de Actividad',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\Documento\DocumentoService;
 use Illuminate\Http\Resources\Json\Resource;
 
 class PerfilResource extends Resource
@@ -38,6 +39,12 @@ class PerfilResource extends Resource
             'nacimiento'    => $this->fechaNacimiento,
             'genero'          => $this->genero,
             'dni'           => $this->dni,
+            // Tipo de documento: el guardado, o —para personas legacy que nunca lo
+            // eligieron— el auto-detectado desde su documento actual (así el selector
+            // del perfil arranca en el tipo correcto y no marca error falso). Si no se
+            // puede detectar, va null y el front cae al default del país.
+            'tipo_documento' => $this->tipo_documento
+                ?: (new DocumentoService())->validar($this->idPais, $this->dni)['tipo'],
             'instagram'           => $this->instagram,
             'pais'          => $this->idPais,
             'provincia'     => $this->idProvincia,

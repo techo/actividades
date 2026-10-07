@@ -37,6 +37,7 @@ return [
     'secundario_by_country' => [
         'argentina' => 'Secundario',
         'bolivia' => 'Bachillerato',
+        'brasil' => 'Enseñanza Media',
         'chile' => 'Enseñanza Media',
         'colombia' => 'Educación Media',
         'costarica' => 'Educación Secundaria',

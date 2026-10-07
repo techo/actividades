@@ -61,6 +61,8 @@ class InscripcionesController extends BaseController
         // Métricas por voluntario para las columnas opcionales (participaciones,
         // nivel, evaluación general).
         $enriquecedor->inyectarMetricasVoluntario($result->getCollection(), 'idPersona');
+        // Confianza de los datos identitarios (columna opcional 'confianza_datos').
+        $enriquecedor->inyectarCalidadDatos($result->getCollection(), 'idPersona');
 
         //hack para solucionar problema con vuetable con checkboxes
         // https://github.com/ratiw/vuetable-2/issues/422
@@ -181,42 +183,57 @@ class InscripcionesController extends BaseController
         return response()->json($msg, 200);
     }
 
-    public function asignarRol(CrearInscripcion $request)
+    public function asignarRol(CrearInscripcion $request, $id)
     {
-        $idActividad = $request->actividad;
-        foreach ($request->inscripciones as $idInscripcion)
+        $request->validate([
+            'rol'           => 'required|string|max:300',
+            'inscripciones' => 'required|array',
+        ]);
+
+        // Solo inscripciones de la actividad de la ruta (igual que desinscribir/asignarGrupo):
+        // antes se tomaba cualquier id del body.
+        $inscripciones = Inscripcion::where('idActividad', (int) $id)
+            ->whereIn('idInscripcion', $request->inscripciones)
+            ->get();
+
+        foreach ($inscripciones as $inscripcion)
         {
-            $inscripcion = Inscripcion::findOrFail($idInscripcion);
             $inscripcion->rol = $request->rol;
             $inscripcion->save();
         }
         return response()
-            ->json("Rol " . $request->rol . " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Rol " . $request->rol . " configurado a " . $inscripciones->count() . " voluntarios correctamente.", 200);
     }
 
-    public function asignarGrupo(CrearInscripcion $request)
+    public function asignarGrupo(CrearInscripcion $request, $id)
     {
-        $datos = $request->all();
-        $idActividad = $request->actividad;
-        foreach ($request->inscripciones as $idInscripcion)
+        $request->validate([
+            'grupo.idGrupo'  => 'required|integer',
+            'inscripciones'  => 'required|array',
+        ], [
+            'grupo.idGrupo.required' => 'Elegí un grupo.',
+            'inscripciones.required' => 'Seleccioná al menos una inscripción.',
+        ]);
+
+        // La actividad sale de la ruta (no del body) y el grupo tiene que ser de esa actividad.
+        $idActividad = (int) $id;
+        $grupo = Grupo::where('idGrupo', $request->input('grupo.idGrupo'))
+            ->where('idActividad', $idActividad)
+            ->firstOrFail();
+
+        $inscripciones = Inscripcion::where('idActividad', $idActividad)
+            ->whereIn('idInscripcion', $request->inscripciones)
+            ->get();
+
+        foreach ($inscripciones as $inscripcion)
         {
-            $persona = Inscripcion::findOrFail($idInscripcion)->persona;
-            if($grupoRol = $persona->grupoAsignadoEnActividad($idActividad))
-            {
-                $grupoRol->idGrupo = $datos['grupo']['idGrupo'];
-                $grupoRol->save();
-            } else {
-                //Nuevo
-                $grupoRol = new GrupoRolPersona();
-                $grupoRol->idPersona = $persona->idPersona;
-                $grupoRol->idActividad = $idActividad;
-                $grupoRol->idGrupo = $datos['grupo']['idGrupo'];
-                $grupoRol->rol = "";
-                $grupoRol->save();
-            }
+            GrupoRolPersona::updateOrCreate(
+                ['idPersona' => $inscripcion->idPersona, 'idActividad' => $idActividad],
+                ['idGrupo' => $grupo->idGrupo]
+            );
         }
         return response()
-            ->json("Grupo " . $request->grupo['nombre']. " configurado a " . count($request->inscripciones) . " voluntarios correctamente.", 200);
+            ->json("Grupo " . $grupo->nombre . " configurado a " . $inscripciones->count() . " voluntarios correctamente.", 200);
     }
 
     public function asignarPunto($idActividad, CrearInscripcion $request)
@@ -514,19 +531,23 @@ class InscripcionesController extends BaseController
 
     private function incluirEnGrupo($request)
     {
-        if(!array_key_exists('idGrupo', $request)) {
-            $request['idGrupo'] = Grupo::where('idActividad', '=', (int)$request['idActividad'])
-                ->orderBy('idGrupo')
-                ->first()->idGrupo;
+        $actividad = Actividad::findOrFail((int)$request['idActividad']);
+
+        // Grupo pedido (desde /grupos) solo si es de esta actividad; si no, la raíz.
+        $idGrupo = null;
+        if (!empty($request['idGrupo'])) {
+            $idGrupo = Grupo::where('idGrupo', (int)$request['idGrupo'])
+                ->where('idActividad', $actividad->idActividad)
+                ->value('idGrupo');
+        }
+        if (!$idGrupo) {
+            $idGrupo = $actividad->obtenerGrupoRaiz()->idGrupo;
         }
 
-        $arr = [
-            'idPersona' => (int)$request['idPersona'],
-            'idGrupo' => (int)$request['idGrupo'],
-            'idActividad' => (int)$request['idActividad'],
-        ];
-
-        return GrupoRolPersona::create($arr);
+        return GrupoRolPersona::updateOrCreate(
+            ['idPersona' => (int)$request['idPersona'], 'idActividad' => $actividad->idActividad],
+            ['idGrupo' => $idGrupo]
+        );
     }
 
     private function inscribir($inscripcion)

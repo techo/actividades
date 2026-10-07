@@ -24,15 +24,18 @@ class PaisesController extends Controller
     }
 
     /**
-     * Agrega a cada país el label del campo documento según su país ("RUT" en
-     * Chile, "CPF" en Brasil...), para que el front lo muestre sin lógica
-     * duplicada. Fuente: DocumentoService (config/documentos.php + i18n).
+     * Agrega a cada país el label del campo documento ("RUT" en Chile, "CPF" en
+     * Brasil...) y las opciones del selector de tipo (key + label), para que el
+     * front los muestre sin lógica duplicada. Fuente: DocumentoService
+     * (config/documentos.php + i18n).
      */
     private function conDocumentoLabel($paises)
     {
         $doc = new DocumentoService();
         foreach ($paises as $pais) {
             $pais->documento_label = $doc->etiquetaCampoPorAbreviacion($pais->abreviacion);
+            // Orden de prioridad: el primero es el tipo por defecto del país.
+            $pais->documento_tipos = $doc->opcionesTiposPorAbreviacion($pais->abreviacion);
         }
         return $paises;
     }

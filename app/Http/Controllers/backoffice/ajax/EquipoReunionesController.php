@@ -74,4 +74,16 @@ class EquipoReunionesController extends Controller
         $equipoReunion->referentes()->sync($request->input('referentes', []));
         return response()->json($equipoReunion);
     }
+
+    /**
+     * La ruta DELETE existía pero el método no → borrar una reunión daba 500.
+     * Se acota al equipo de la URL para no borrar reuniones de otro equipo.
+     */
+    public function delete($idEquipo, $idReunion)
+    {
+        $equipoReunion = EquipoReunion::where('idEquipo', $idEquipo)->findOrFail($idReunion);
+        $equipoReunion->delete();
+
+        return response()->json('OK', 200);
+    }
 }

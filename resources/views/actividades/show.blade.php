@@ -24,6 +24,9 @@
 @endpush
 
 @section('main_content')
+    @if(session('aviso_pago'))
+        <div class="alert alert-warning" role="alert">{{ session('aviso_pago') }}</div>
+    @endif
     <div class="card" >
 		<div class="card-body">
 		<div class="row">

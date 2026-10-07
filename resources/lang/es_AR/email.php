@@ -137,4 +137,18 @@ return [
     'documento_rechazado_instruccion'  => 'Por favor ingresá y volvé a subir tu documento (frente y dorso) para continuar.',
     'documento_rechazado_link'         => 'Volver a subir el documento',
 
+    // Respuesta a un reporte (bandeja de triage → aviso a quien reportó)
+    'reporte_respondido_subject' => 'Novedades sobre tu reporte',
+    'reporte_resuelto_subject'   => 'Resolvimos tu reporte',
+    'reporte_respondido_intro'   => 'Recibimos el problema que nos reportaste y queríamos contarte cómo venimos:',
+    'reporte_resuelto_intro'     => '¡Buenas noticias! Revisamos lo que nos reportaste.',
+    'reporte_tu_reporte_label'   => 'Lo que nos reportaste',
+    'reporte_respuesta_label'    => 'Nuestra respuesta',
+    'reporte_resuelto_estado'    => 'Lo marcamos como resuelto. 🎉',
+    'reporte_cierre'             => 'Gracias por tomarte el tiempo de avisarnos: tus reportes nos ayudan a mejorar TECHO para todas las personas. 💙',
+    'reporte_remitente_techita'  => 'Techita · TECHO',
+    'reporte_respuesta_techita'  => 'Respuesta de Techita',
+    'reporte_firma_techita'      => 'Techita, del equipo de Actividades de TECHO',
+    'reporte_ver_y_responder'    => 'Ver y responder',
+
 ];

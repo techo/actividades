@@ -75,6 +75,30 @@ class AuthApiTest extends TestCase
     }
 
     /** @test */
+    public function register_en_pais_sin_provincias_no_exige_provincia_ni_localidad()
+    {
+        // Reclamo #13: voluntario residente en un país sin provincias cargadas (p.ej. Alemania).
+        Notification::fake();
+        $pais = factory('App\Pais')->create();
+
+        $this->postJson('/api/register', $this->payloadRegistro($pais->id, ['idProvincia' => null, 'idLocalidad' => null]))
+            ->assertStatus(201);
+
+        $this->assertDatabaseHas('Persona', ['mail' => 'nuevo@techo.org', 'idProvincia' => null, 'idLocalidad' => null]);
+    }
+
+    /** @test */
+    public function register_en_pais_con_provincias_sigue_exigiendolas()
+    {
+        $pais = factory('App\Pais')->create();
+        factory('App\Provincia')->create(['id_pais' => $pais->id]);
+
+        $this->postJson('/api/register', $this->payloadRegistro($pais->id, ['idProvincia' => null, 'idLocalidad' => null]))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['idProvincia', 'idLocalidad']);
+    }
+
+    /** @test */
     public function register_con_email_duplicado_falla_validacion()
     {
         $pais = factory('App\Pais')->create();

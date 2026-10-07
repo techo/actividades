@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\backoffice\ajax;
 
+use App\Actividad;
 use App\GrupoRolPersona;
+use App\Inscripcion;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\MiembroResource;
 use Illuminate\Http\Request;
@@ -61,25 +63,46 @@ class GruposController extends BaseController
             'idActividad'   => 'required|numeric',
         ]);
 
+        $actividad = Actividad::findOrFail($request->idActividad);
+        $this->authorize('editar', $actividad);
+
+        $grupoDestino = Grupo::where('idGrupo', $idGrupo)
+            ->where('idActividad', $actividad->idActividad)
+            ->firstOrFail();
+
         $membresia = GrupoRolPersona::where('idPersona', '=', $request->idPersona)
-            ->where('idActividad', '=', $request->idActividad)
+            ->where('idActividad', '=', $actividad->idActividad)
             ->first();
 
         if ($membresia) {
-            //si está en el grupo raíz
-            if($membresia->grupo->idPadre == 0) {
-                $membresia->idGrupo = $request->idGrupo;
+            // Si está en la raíz (o su grupo ya no existe), se mueve al destino.
+            if (!$membresia->grupo || $membresia->grupo->idPadre == 0) {
+                $membresia->idGrupo = $grupoDestino->idGrupo;
                 $membresia->save();
                 return json_encode($membresia);
             }
-            else {
-                $grupo = $membresia->grupo;
-                return response($grupo, 428);
-            }
+
+            return response($membresia->grupo, 428);
         }
 
-        //no estaba inscripto, error
-        return response($grupo, 500);
+        // Inscripto sin fila en Grupo_Persona (legacy o membresía perdida): se crea en el destino.
+        $inscripto = Inscripcion::where('idPersona', $request->idPersona)
+            ->where('idActividad', $actividad->idActividad)
+            ->exists();
+
+        if ($inscripto) {
+            $membresia = GrupoRolPersona::create([
+                'idPersona'   => (int) $request->idPersona,
+                'idActividad' => $actividad->idActividad,
+                'idGrupo'     => $grupoDestino->idGrupo,
+                'rol'         => '',
+            ]);
+            return json_encode($membresia);
+        }
+
+        return response()->json([
+            'message' => 'La persona no está inscripta en esta actividad. Inscribila primero desde la pestaña Inscripciones.',
+        ], 422);
     }
 
     private function queryPersonas(Request $request, $idGrupo, $array)

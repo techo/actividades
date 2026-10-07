@@ -57,6 +57,17 @@ class PersonasController extends Controller
         $authSuccess = Auth::attempt($credentials, $request->has('remember'));
         $afterLoginUrl = '';
 
+        // Recuperación de cuenta dada de baja: Auth::attempt excluye borrados, así que
+        // un borrado con la clave correcta no podía entrar ni recuperarse. Si la
+        // credencial coincide con una cuenta borrada, la restauramos y la logueamos.
+        if (!$authSuccess) {
+            $recuperada = Persona::restaurarConCredencial($credentials['mail'] ?? null, $credentials['password'] ?? null);
+            if ($recuperada) {
+                Auth::login($recuperada, $request->has('remember'));
+                $authSuccess = true;
+            }
+        }
+
         if ($authSuccess){
             $user = Persona::where('mail', $credentials['mail'])->first();
             $token = $user->createToken('Token Name')->accessToken;
@@ -112,6 +123,17 @@ class PersonasController extends Controller
         }
 
         $persona = Persona::where('mail', $data['email'])->first();
+
+        // Cuenta dada de baja (soft-delete): el login social prueba la propiedad del
+        // email (proveedor verificado) → la restauramos y seguimos, en vez de devolver
+        // 404 (que dejaba al usuario en un callejón: no podía entrar ni re-registrarse
+        // porque el mail seguía "ocupado" por la fila borrada).
+        if (!$persona) {
+            $persona = Persona::onlyTrashed()->where('mail', $data['email'])->first();
+            if ($persona) {
+                $persona->restore();
+            }
+        }
 
         if (!$persona) {
             return response(['success' => false, 'mensaje' => 'Usuario no encontrado'], 404);
@@ -180,7 +202,8 @@ class PersonasController extends Controller
         $fields = $request->validated();
 
         $persona = Persona::create([
-            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
+            'dni' => (new DocumentoService())->normalizarComoTipo($fields['tipo_documento'] ?? null, $fields['dni'], $fields['idPais']),
+            'tipo_documento' => $fields['tipo_documento'] ?? null,
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
@@ -191,8 +214,8 @@ class PersonasController extends Controller
             'recibirMails' => $fields['recibirMails'],
             'acepta_marketing' => $fields['acepta_marketing'],
             'idPais' => $fields['idPais'],
-            'idProvincia' => $fields['idProvincia'],
-            'idLocalidad' => $fields['idLocalidad'],
+            'idProvincia' => $fields['idProvincia'] ?? null,
+            'idLocalidad' => $fields['idLocalidad'] ?? null,
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
             'unsubscribe_token' => (string) \Illuminate\Support\Str::uuid(),
             // Alta desde la app móvil (ruta /api/register): la verificación de email
@@ -265,17 +288,23 @@ class PersonasController extends Controller
             'genero' => 'required',
             'instagram' => 'nullable',
             'telefonoMovil' => ['required', 'regex:/^(\d|[\ \+\(\)\-\.]|x)+$/ui'],
-            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais)],
+            'tipo_documento' => 'nullable|string|max:30',
+            'dni' => ['required', 'string', 'max:50', new DocumentoValido($request->idPais, $request->tipo_documento)],
             'recibirMails' => 'required|boolean',
             'acepta_marketing' => 'required|boolean',
             'idPais' => 'required|integer',
-            'idProvincia' => 'required|integer',
-            'idLocalidad' => 'required|integer',
+            'idProvincia' => \App\Pais::reglaUbicacion($request->idPais),
+            'idLocalidad' => \App\Pais::reglaUbicacion($request->idPais),
             'idUnidadOrganizacional' => 'required|integer',
         ]);
 
+        // Preservar el tipo guardado si la app no lo manda (aún no lo envía en
+        // update): evita nulear tipo_documento desde el móvil. Si viene, usa ese.
+        $tipoDoc = $request->has('tipo_documento') ? ($fields['tipo_documento'] ?? null) : $persona->tipo_documento;
+
         $persona->update([
-            'dni' => (new DocumentoService())->normalizar($fields['idPais'], $fields['dni']),
+            'dni' => (new DocumentoService())->normalizarComoTipo($tipoDoc, $fields['dni'], $fields['idPais']),
+            'tipo_documento' => $tipoDoc,
             'nombres' => $fields['nombres'],
             'apellidoPaterno' => $fields['apellidoPaterno'],
             'mail' => $fields['mail'],
@@ -287,8 +316,8 @@ class PersonasController extends Controller
             'recibirMails' => $fields['recibirMails'],
             'acepta_marketing' => $fields['acepta_marketing'],
             'idPais' => $fields['idPais'],
-            'idProvincia' => $fields['idProvincia'],
-            'idLocalidad' => $fields['idLocalidad'],
+            'idProvincia' => $fields['idProvincia'] ?? null,
+            'idLocalidad' => $fields['idLocalidad'] ?? null,
             'idUnidadOrganizacional' => $fields['idUnidadOrganizacional'],
         ]);
 

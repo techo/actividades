@@ -7,19 +7,19 @@
 
 ## Estado
 
-- **Última sesión cerrada:** 2026-09-07 — **Fase 0 del upgrade COMPLETA** (ver `history.md`). Commit `56f8af6b` en `develop`, deployado a sandbox, suite **300/300 verde**.
+- **Última sesión cerrada:** 2026-10-06 — **Task 29 (CI con gate de merge) CERRADA**: `develop` en verde y ruleset `gate-ci` activo (ver `history.md`).
 - **Sin tarea en progreso.** Listo para arrancar el próximo ítem.
 
 ## Dónde estamos en el upgrade (docs/upgrade-laravel.md)
 
+- ✅ **Task 29** — CI con gate de merge (ruleset `gate-ci` en develop+master; push directo sin checks verdes es rechazado → trabajar en rama).
 - ✅ **Fase 0** (tasks 9, 14–18, 45, 46) — baseline + cobertura API mobile + tests de contrato + limpieza pre-Fase 1 (helpers `Str::`, `webpatser` fuera). Plan corregido con `docs/upgrade-review.md`.
 - ⏳ **Fases 1–6** (tasks 19–25) — pendientes.
 
 ## Próximos pasos (en orden)
 
-1. **Task 29 — CI real con gate de merge** (`in_progress`). Bloqueante de Fase 1: sin CI verde, la regla "no se mergea sin tests verdes" de cada fase es manual y frágil. *(El dueño dijo que lo hace él.)*
-2. **Prep de Fase 1**: incorporar la §1.2 de `docs/upgrade-review.md` al `composer.json` target de Fase 1 (deps que hacen fallar `composer update`: `socialite ^5`, `sentry ^4`, `telescope`, `tinker`, `fast-excel`, `faker`→`fakerphp`, `filemanager ^2.x`). Correr `composer update --dry-run` ANTES de tocar código.
-3. **Fase 1** (task 19): Laravel 5.7 → 6.x + PHP 7.4. Bloqueante ya resuelto: verificación de email por campo `mail` (test `VerificacionEmailWebTest` ancla el flujo actual).
+1. **Prep de Fase 1**: incorporar la §1.2 de `docs/upgrade-review.md` al `composer.json` target de Fase 1 (deps que hacen fallar `composer update`: `socialite ^5`, `sentry ^4`, `telescope`, `tinker`, `fast-excel`, `faker`→`fakerphp`, `filemanager ^2.x`). Correr `composer update --dry-run` ANTES de tocar código.
+2. **Fase 1** (task 19): Laravel 5.7 → 6.x + PHP 7.4, en su propia rama (el gate no deja pushear directo a `develop` sin CI verde). Bloqueante ya resuelto: verificación de email por campo `mail` (test `VerificacionEmailWebTest` ancla el flujo actual).
 
 ## Deuda / notas para no perder
 
