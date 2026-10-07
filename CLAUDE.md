@@ -275,7 +275,7 @@ npm run test
 
 Los tests PHP corren **contra MySQL, no SQLite** (la suite está rota sobre SQLite por nombres de índice globales) y requieren base de datos activa. No hay mocks de BD. En local: contenedor `laravel_app` contra la BD `laravel_test` (ver `progress/current.md` para el comando exacto).
 
-CI: `.github/workflows/ci.yml` corre PHPUnit (MySQL 5.7 de servicio) y los tests de Vue en cada push/PR.
+CI: `.github/workflows/ci.yml` corre PHPUnit (MySQL 5.7 de servicio) y los tests de Vue en cada push/PR. Es **gate de merge**: el ruleset `gate-ci` exige ambos checks verdes (y la rama al día) para actualizar `develop`/`master`; un push directo de un commit sin CI verde es rechazado → trabajar en rama.
 
 Deuda conocida: los tests de push notifications (PushNotificationService, comandos cron) están pendientes. Ver `docs/push-notifications.md#deuda-técnica`.
 

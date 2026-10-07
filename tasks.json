@@ -511,13 +511,13 @@
       "group": "etapa1-estabilizacion",
       "name": "ci_github_actions",
       "title": "CI real en GitHub Actions con gate de merge",
-      "description": "Reemplaza el .travis.yml (Travis ya no corre builds). Workflow con dos jobs: PHPUnit (PHP 7.2 + MySQL 5.7 de servicio) y frontend (node 10). Primer run verde 2026-07-17 (run 29582487888), tras dos fixes que el propio CI atrapó: case-sensitivity en app/Mail/ActualizacionActividad.php y libpng-dev faltante. Falta solo: branch protection para exigir los checks en PRs (requiere admin del repo).",
+      "description": "Reemplaza el .travis.yml (Travis ya no corre builds). Workflow con dos jobs: PHPUnit (PHP 7.2 + MySQL 5.7 de servicio) y frontend (node 10). Primer run verde 2026-07-17 (run 29582487888), tras dos fixes que el propio CI atrapó: case-sensitivity en app/Mail/ActualizacionActividad.php y libpng-dev faltante. Gate activado 2026-10-06: ruleset `gate-ci` (id 24619078) sobre develop y master — exige los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` con rama al día (strict), bloquea force-push y borrado, sin bypass. No exige PR, pero un push directo de un commit sin checks verdes es rechazado → en la práctica se trabaja en rama y se mergea con CI verde. CI de develop verde en run 37554532586.",
       "acceptance": [
         "Workflow corre en push/PR y queda verde",
         "Branch protection exige el check para mergear a master/develop"
       ],
       "risk": "low",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": 30,
