@@ -139,7 +139,7 @@ class LoginController extends Controller
         // La persona canceló en la pantalla del proveedor: vuelve con ?error=access_denied
         // y sin `code`. Antes se intentaba canjear igual el code → 400 de Google → "Whoops".
         if ($request->filled('error')) {
-            return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
+            return redirect('/')->with('status', __('auth.social_cancelado'));
         }
 
         $url = $request->session()->get('login_callback','');
@@ -152,18 +152,18 @@ class LoginController extends Controller
             } catch (\GuzzleHttp\Exception\ClientException $e) {
                 // El proveedor rechazó el canje del code (falta, vencido o ya usado: p.ej.
                 // alguien abre la URL del callback a mano o recarga la página).
-                return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
+                return redirect('/')->with('status', __('auth.social_cancelado'));
             } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                 // El `state` OAuth no coincide (sesión perdida, botón atrás, reintento,
                 // login abierto en otra pestaña). No es un error del sistema: en vez de
                 // tirar 500 ("Whoops"), mandamos a reintentar el login.
-                return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+                return redirect('/')->with('status', __('auth.social_sesion_expirada'));
             }
             // Google solo devuelve el email primario verificado; si explícitamente
             // viene sin verificar, no lo confiamos.
             $emailVerificado = $user->user['email_verified'] ?? $user->user['verified_email'] ?? true;
             if ($emailVerificado === false || $emailVerificado === 'false') {
-                return view('registro')->with('persona', null)->with('mensaje', "El email de la cuenta de Google no está verificado.");
+                return view('registro')->with('persona', null)->with('mensaje', __('auth.social_email_no_verificado'));
             }
             // Google (OpenID) devuelve given_name/family_name como OPCIONALES: cuentas sin
             // apellido (mononombre, cuentas de organización) los omiten. Coalescemos para no
@@ -181,10 +181,10 @@ class LoginController extends Controller
                ])->user();
            } catch (\GuzzleHttp\Exception\ClientException $e) {
                // Ver nota en la rama de Google: canje del code rechazado.
-               return redirect('/')->with('status', 'No se completó el ingreso. Podés intentarlo de nuevo cuando quieras.');
+               return redirect('/')->with('status', __('auth.social_cancelado'));
            } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
                // Ver nota en la rama de Google: state OAuth inválido → reintentar login.
-               return redirect('/')->with('status', 'Tu sesión de ingreso expiró. Por favor, iniciá sesión nuevamente.');
+               return redirect('/')->with('status', __('auth.social_sesion_expirada'));
            }
             $personaData->nombre = $user->user['first_name'];
             $personaData->apellido = $user->user['last_name'];

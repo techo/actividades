@@ -271,5 +271,10 @@ class loginSocialTest extends TestCase
                 ->assertRedirect('/')
                 ->assertSessionHas('status');
         }
+
+        // El mensaje sale en el idioma de la sesión (Localization), no fijo en castellano.
+        $this->withSession(['locale' => 'pt'])
+            ->get('/auth/google/callback?error=access_denied')
+            ->assertSessionHas('status', 'O login não foi concluído. Você pode tentar novamente quando quiser.');
     }
 }
