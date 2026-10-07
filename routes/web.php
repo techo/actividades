@@ -237,10 +237,18 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     Route::get('ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
     // Novedades activas para la barra rotativa (la rotación y los descartes viven en el
-    // navegador, ver novedades.vue). Se cargan con `php artisan novedades`.
+    // navegador, ver novedades.vue). Se cargan con `php artisan novedades`. El texto sale
+    // en el idioma de la sesión (ver Novedad::textoPara).
     Route::get('/novedades', function(){
-        return response()->json(
-            \App\Novedad::activas()->latest('created_at')->get(['id', 'texto', 'link']), 200);
+        $locale = app()->getLocale();
+        $novedades = \App\Novedad::activas()->latest('created_at')->get()
+            ->filter(function ($n) use ($locale) { return $n->visiblePara($locale); })
+            ->map(function ($n) use ($locale) {
+                return ['id' => $n->id, 'texto' => $n->textoPara($locale), 'link' => $n->link];
+            })
+            ->values();
+
+        return response()->json($novedades, 200);
     });
 
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');

@@ -11,6 +11,8 @@ use Illuminate\Console\Command;
  *
  *   php artisan novedades                                  → lista
  *   php artisan novedades agregar "Arreglamos X 🙌" --link=https://...
+ *   php artisan novedades agregar "Arreglamos X" --es_AR="Arreglamos X, ¡probalo!" --pt="Corrigimos X" --en="We fixed X"
+ *   php artisan novedades agregar "Ahora podés pagar con PIX" --pt="Agora dá para pagar com PIX" --solo=pt
  *   php artisan novedades desactivar --id=12
  *   php artisan novedades activar --id=12
  */
@@ -18,7 +20,13 @@ class Novedades extends Command
 {
     protected $signature = 'novedades
         {accion=listar : listar | agregar | desactivar | activar}
-        {texto? : texto de la novedad (para agregar, máx. 255)}
+        {texto? : texto base de la novedad (fallback de cualquier idioma, máx. 255)}
+        {--es_AR= : texto para Argentina (voseo)}
+        {--es_CH= : texto para Chile y resto de LatAm}
+        {--es= : texto en español genérico}
+        {--pt= : texto en portugués}
+        {--en= : texto en inglés}
+        {--solo= : mostrar solo en estos locales, separados por coma (ej. pt o es_AR,es_CH)}
         {--link= : link opcional de "Más info"}
         {--id= : id de la novedad (para activar/desactivar)}';
 
@@ -41,14 +49,21 @@ class Novedades extends Command
         return 1;
     }
 
+    const LOCALES = ['es_AR', 'es_CH', 'es', 'pt', 'en'];
+
     private function listar()
     {
         $filas = Novedad::orderByDesc('activa')->orderByDesc('created_at')->get()
             ->map(function ($n) {
-                return [$n->id, $n->activa ? 'sí' : 'no', $n->created_at, $n->texto, $n->link];
+                return [
+                    $n->id, $n->activa ? 'sí' : 'no', $n->created_at, $n->texto,
+                    implode(',', array_keys($n->traducciones ?: [])),
+                    $n->locales ? implode(',', $n->locales) : 'todos',
+                    $n->link,
+                ];
             });
 
-        $this->table(['id', 'activa', 'creada', 'texto', 'link'], $filas);
+        $this->table(['id', 'activa', 'creada', 'texto base', 'traducciones', 'se muestra a', 'link'], $filas);
         return 0;
     }
 
@@ -61,12 +76,39 @@ class Novedades extends Command
             $this->error('El texto es obligatorio y no puede superar 255 caracteres.');
             return 1;
         }
+
+        $traducciones = [];
+        foreach (self::LOCALES as $locale) {
+            $traduccion = trim((string) $this->option($locale));
+            if ($traduccion === '') {
+                continue;
+            }
+            if (mb_strlen($traduccion) > 255) {
+                $this->error("El texto de --{$locale} no puede superar 255 caracteres.");
+                return 1;
+            }
+            $traducciones[$locale] = $traduccion;
+        }
+
+        $solo = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('solo')))));
+        foreach ($solo as $locale) {
+            if (!in_array($locale, self::LOCALES)) {
+                $this->error("Locale desconocido en --solo: {$locale}. Válidos: " . implode(', ', self::LOCALES));
+                return 1;
+            }
+        }
         if ($link && !filter_var($link, FILTER_VALIDATE_URL)) {
             $this->error('El link no es una URL válida.');
             return 1;
         }
 
-        $n = Novedad::create(['texto' => $texto, 'link' => $link, 'activa' => true]);
+        $n = Novedad::create([
+            'texto' => $texto,
+            'traducciones' => $traducciones ?: null,
+            'locales' => $solo ?: null,
+            'link' => $link,
+            'activa' => true,
+        ]);
         $this->info("Novedad #{$n->id} creada y activa.");
         return 0;
     }
