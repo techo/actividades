@@ -236,17 +236,11 @@ Route::prefix('/admin')->middleware(['verified', 'auth', 'can:accesoBackoffice']
     // Movido dentro del grupo autenticado: antes quedaba fuera y era accesible sin sesión.
     Route::get('ajax/search/usuarios', 'backoffice\ajax\UsuariosController@usuariosSearch'); //TODO: hack, mejorar
 
+    // Novedades activas para la barra rotativa (la rotación y los descartes viven en el
+    // navegador, ver novedades.vue). Se cargan con `php artisan novedades`.
     Route::get('/novedades', function(){
-        $n = \App\Novedad::latest('created_at')->first();
-        return response()->json($n,200);
-    });
-
-    Route::get('/novedades/visto', function(){
-        $n = \App\Novedad::latest('created_at')->first();
-        if($n)
-            return response()->json([$n->id],200)->cookie('cookie-novedades', $n->id, 10080);
-        
-        return response()->json(['no hay novedades'],200);
+        return response()->json(
+            \App\Novedad::activas()->latest('created_at')->get(['id', 'texto', 'link']), 200);
     });
 
     Route::get('/usuarios', 'backoffice\UsuariosController@index')->middleware('role:admin');
