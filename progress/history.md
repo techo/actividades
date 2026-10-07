@@ -2,6 +2,20 @@
 
 ---
 
+## 2026-10-06 — Task 29 cerrada: CI de develop en verde + gate de merge activo
+
+**Agente:** Claude (Opus 5.5) · **Branch:** `develop` · **Commit:** `afe50fb1`
+
+`develop` venía con CI en rojo desde el 18-09 (se pusheaba igual: no había gate).
+
+1. **PHPUnit**: la falla de `InscripcionesConPagoTest::plataforma_reenvia_a_pagina_fecha_limite_vencida` quedó resuelta con el merge de `fix/reclamos-prod-2026-10` (48 commits). Suite local 414 tests verde.
+2. **Vue**: `inscripciones-inscribir-modal.spec.js` stubeaba `/ajax/coordinadores` pero el modal busca en `/ajax/personas?q=` desde `5fd3a846`. Stub actualizado (`afe50fb1`); CI verde en run 37554532586.
+3. **Gate**: el dueño creó el ruleset `gate-ci` (id 24619078) sobre `develop` y `master`: required checks `PHPUnit (PHP 7.2 + MySQL 5.7)` + `Vue (mocha-webpack, node 10)` con rama al día (strict), bloquea force-push y borrado, sin bypass, sin exigir PR. Consecuencia: un push directo de un commit sin checks verdes es rechazado → trabajar en rama y mergear con CI verde.
+
+Task 29 → `done`. **Próximo:** prep de Fase 1 (§1.2 de `upgrade-review.md` + `composer update --dry-run`).
+
+---
+
 ## 2026-09-07 — Fase 0 del upgrade COMPLETA: limpieza pre-Fase 1, correcciones del plan y suite 300/300
 
 **Agente:** Claude (Opus 4.8) · **Branch:** `develop` · **Commit:** `56f8af6b` · **Deploy:** sandbox

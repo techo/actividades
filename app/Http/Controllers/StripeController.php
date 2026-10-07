@@ -7,6 +7,7 @@ use App\Inscripcion;
 use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailInscripcionPagoFueraDeFecha;
 use App\Pais;
+use App\Services\StripeReembolsos;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -197,6 +198,10 @@ class StripeController extends Controller
             case 'payment_intent.payment_failed':
                 $this->handlePaymentIntentFailed($event->data->object);
                 break;
+
+            case 'charge.refunded':
+                $this->handleChargeRefunded($event->data->object);
+                break;
         }
 
         return response('OK', 200);
@@ -230,6 +235,13 @@ class StripeController extends Controller
         // Idempotencia
         if ($inscripcion->pago == 1 && $inscripcion->metodo_pago === 'stripe_api') {
             Log::info('StripeWebhook PI succeeded: inscripcion ' . $inscripcionId . ' ya procesada.');
+            return;
+        }
+
+        // Un reintento del webhook puede llegar después de un reembolso: no
+        // marcar como pagado algo cuya plata ya se devolvió.
+        if (app(StripeReembolsos::class)->piReembolsado($intent->id)) {
+            Log::warning('StripeWebhook PI succeeded: PI ' . $intent->id . ' ya reembolsado; inscripcion ' . $inscripcionId . ' no se marca.');
             return;
         }
 
@@ -327,6 +339,12 @@ class StripeController extends Controller
             return;
         }
 
+        // Un reintento del webhook puede llegar después de un reembolso.
+        if (app(StripeReembolsos::class)->piReembolsado($session->payment_intent)) {
+            Log::warning('Stripe webhook: PI ' . $session->payment_intent . ' ya reembolsado; inscripcion ' . $inscripcionId . ' no se marca.');
+            return;
+        }
+
         $actividad = $inscripcion->actividad;
 
         // Verificar fecha límite de pago
@@ -356,6 +374,37 @@ class StripeController extends Controller
             Mail::to($inscripcion->persona->mail)->queue(new MailInscripcionConfirmada($inscripcion));
         } catch (\Exception $e) {
             Log::error('Stripe: error enviando mail de confirmación para inscripcion ' . $inscripcionId . ': ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * charge.refunded — reembolso hecho desde el Dashboard de Stripe.
+     * Si el cargo quedó reembolsado por completo, la inscripción pagada con ese
+     * PI vuelve a impaga. Los reembolsos parciales no cambian nada. Solo toca
+     * pagos registrados por Stripe (no pisa pagos manuales/comprobantes).
+     * Se conserva stripe_payment_intent_id para rastrear el reembolso.
+     */
+    protected function handleChargeRefunded($charge): void
+    {
+        $piId = $charge->payment_intent ?? null;
+
+        if (!$piId || empty($charge->refunded)) {
+            return;
+        }
+
+        $inscripciones = Inscripcion::where('stripe_payment_intent_id', $piId)
+            ->where('pago', 1)
+            ->whereIn('metodo_pago', ['stripe', 'stripe_api'])
+            ->get();
+
+        foreach ($inscripciones as $inscripcion) {
+            $inscripcion->pago        = 0;
+            $inscripcion->montoPago   = null;
+            $inscripcion->fechaPago   = null;
+            $inscripcion->metodo_pago = null;
+            $inscripcion->save();
+
+            Log::warning('Stripe webhook: reembolso de ' . $piId . ' → inscripcion ' . $inscripcion->idInscripcion . ' vuelve a impaga.');
         }
     }
 

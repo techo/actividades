@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\ActividadFactory;
 use App\Donation;
+use App\Services\StripeReembolsos;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -21,6 +22,22 @@ class StripeWebhookWebTest extends TestCase
     use RefreshDatabase;
 
     const WEBHOOK_SECRET = 'whsec_test_secret';
+
+    protected function setUp()
+    {
+        parent::setUp();
+        // Por defecto ningún PI está reembolsado: los tests no llaman a Stripe.
+        $this->simularReembolso(false);
+    }
+
+    private function simularReembolso(bool $reembolsado)
+    {
+        $this->app->instance(StripeReembolsos::class, new class($reembolsado) extends StripeReembolsos {
+            private $reembolsado;
+            public function __construct($reembolsado) { $this->reembolsado = $reembolsado; }
+            public function piReembolsado(?string $paymentIntentId): bool { return $this->reembolsado; }
+        });
+    }
 
     private function paisConStripe()
     {
@@ -309,5 +326,115 @@ class StripeWebhookWebTest extends TestCase
             'idInscripcion' => $inscripcion->idInscripcion,
             'pago'          => 0,
         ]);
+    }
+
+    // =========================================================================
+    // Reembolsos: un reintento del webhook no debe marcar pagado un PI ya
+    // reembolsado, y charge.refunded devuelve la inscripción a impaga.
+    // =========================================================================
+
+    /** @test */
+    public function checkout_completed_de_un_pi_reembolsado_no_marca_pago()
+    {
+        Mail::fake();
+        $this->simularReembolso(true);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($pais);
+
+        $this->postWebhook($pais->id, $this->eventoCheckout('checkout.session.completed', $inscripcion, 'paid'))
+            ->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 0]);
+        Mail::assertNothingQueued();
+    }
+
+    /** @test */
+    public function payment_intent_succeeded_de_un_pi_reembolsado_no_marca_pago()
+    {
+        Mail::fake();
+        $this->simularReembolso(true);
+        $pais = $this->paisConStripe();
+        list($inscripcion) = $this->inscripcionConPiPendiente($pais, 'pi_reemb_app');
+
+        $event = $this->piEvent('payment_intent.succeeded', 'pi_reemb_app', [
+            'metadata' => ['inscripcion_id' => $inscripcion->idInscripcion],
+        ]);
+
+        $this->postWebhook($pais->id, $event)->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 0]);
+    }
+
+    private function inscripcionPagada($pais, $piId, $metodo)
+    {
+        $inscripcion = $this->inscripcionImpaga($pais);
+        $inscripcion->update([
+            'pago'                     => 1,
+            'montoPago'                => 45,
+            'fechaPago'                => now(),
+            'metodo_pago'              => $metodo,
+            'stripe_payment_intent_id' => $piId,
+        ]);
+
+        return $inscripcion;
+    }
+
+    private function eventoReembolso($piId, $refunded)
+    {
+        return [
+            'id'   => 'evt_refund_' . $piId,
+            'type' => 'charge.refunded',
+            'data' => ['object' => [
+                'id'              => 'ch_' . $piId,
+                'object'          => 'charge',
+                'payment_intent'  => $piId,
+                'refunded'        => $refunded,
+                'amount'          => 4500,
+                'amount_refunded' => $refunded ? 4500 : 1000,
+            ]],
+        ];
+    }
+
+    /** @test */
+    public function charge_refunded_total_vuelve_la_inscripcion_a_impaga()
+    {
+        $pais        = $this->paisConStripe();
+        $web         = $this->inscripcionPagada($pais, 'pi_web_refund', 'stripe');
+        $app         = $this->inscripcionPagada($pais, 'pi_app_refund', 'stripe_api');
+
+        $this->postWebhook($pais->id, $this->eventoReembolso('pi_web_refund', true))->assertStatus(200);
+        $this->postWebhook($pais->id, $this->eventoReembolso('pi_app_refund', true))->assertStatus(200);
+
+        foreach ([[$web, 'pi_web_refund'], [$app, 'pi_app_refund']] as list($inscripcion, $pi)) {
+            $this->assertDatabaseHas('Inscripcion', [
+                'idInscripcion'            => $inscripcion->idInscripcion,
+                'pago'                     => 0,
+                'fechaPago'                => null,
+                'metodo_pago'              => null,
+                'stripe_payment_intent_id' => $pi,
+            ]);
+        }
+    }
+
+    /** @test */
+    public function charge_refunded_parcial_no_cambia_el_pago()
+    {
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionPagada($pais, 'pi_parcial', 'stripe');
+
+        $this->postWebhook($pais->id, $this->eventoReembolso('pi_parcial', false))->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 1]);
+    }
+
+    /** @test */
+    public function charge_refunded_no_toca_pagos_que_no_son_de_stripe()
+    {
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionPagada($pais, 'pi_manual', 'transferencia');
+
+        $this->postWebhook($pais->id, $this->eventoReembolso('pi_manual', true))->assertStatus(200);
+
+        $this->assertDatabaseHas('Inscripcion', ['idInscripcion' => $inscripcion->idInscripcion, 'pago' => 1]);
     }
 }

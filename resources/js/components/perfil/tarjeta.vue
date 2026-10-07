@@ -1,6 +1,10 @@
 <template>
+  <div>
+  <!-- El modal va FUERA del <article>: la tarjeta tiene transform (hover) y
+       overflow:hidden, que atrapan al position:fixed del modal y lo dejaban
+       recortado dentro de la tarjeta (y "titilando" al salir el hover). -->
+  <simplert ref="confirmar"></simplert>
   <article class="techo-card">
-    <simplert ref="confirmar"></simplert>
 
     <!-- Portada: foto propia si existe, luego imagen del tipo, y si no hay
          ninguna, portada generada con el color de la categoría + pictograma. -->
@@ -56,6 +60,7 @@
       </div>
     </div>
   </article>
+  </div>
 </template>
 
 <script>
@@ -84,12 +89,12 @@
                 let self = this;
                 self.$refs.confirmar.openSimplert({
                     title: this._i18n.t('frontend.unenroll_title'),
-                    message: this._i18n.t('frontend.message_1') + self.inscripcion.nombreActividad + this._i18n.t('frontend.message_2'),
+                    message: this._i18n.t('frontend.message_1') + ' ' + self.inscripcion.nombreActividad + '.' + this._i18n.t('frontend.message_2'),
                     useConfirmBtn: true,
                     isShown: true,
                     disableOverlayClick: true,
                     customClass: 'confirmar',
-                    customCloseBtnText: this._i18n.t('frontend.message_1'),
+                    customCloseBtnText: this._i18n.t('frontend.go_back'),
                     customCloseBtnClass: 'btn btn-default',
                     customConfirmBtnText: this._i18n.t('frontend.unenroll_button'),
                     customConfirmBtnClass: 'btn btn-danger mb-1',
