@@ -11,14 +11,15 @@
 
 Este plan fue auditado en [`docs/upgrade-review.md`](upgrade-review.md) (versiones verificadas contra Packagist). Veredicto: **REQUIERE AJUSTES**. Las correcciones ya reflejadas en este doc:
 
-**Estado de ejecución (act. 2026-09-07):**
+**Estado de ejecución (act. 2026-10-06):**
 - ✅ **Fase 0 COMPLETA** (tasks 9, 14–18, 45, 46 `done`; commit `56f8af6b` en `develop`, deployado a sandbox). Criterios de aceptación cumplidos:
   - Suite **300/300 verde** contra MySQL (incluye las 6 fallas pre-existentes reparadas: 3 de `BelongsToCountryScope`, 2 de `register`, 1 de `SocioExencion`, + `MailingTest` que quedó desactualizado por el refactor de mailing).
   - Tests de la API mobile en `tests/Feature/api/` (Auth, Actividades, Inscripciones, Stripe, Donaciones/webhooks, Perfil, Registro, Dispositivos, SocioExención).
   - Tests de contrato agregados por la revisión: `ContratoFechasApiTest` (formato de fecha JSON por defecto, ancla anti-ISO8601 de L7) y `VerificacionEmailWebTest` (flujo de verify por link firmado).
   - `init.sh` pasa.
 - ✅ **Limpieza pre-Fase 1 hecha y committeada** — helpers globales `str_*`/`studly_case` → `\Illuminate\Support\Str::` (20 Search objects, controllers, `UserService`, 4 vistas de email); `webpatser/laravel-uuid` eliminado (→ `Str::uuid()`) de código, `composer.json` **y** `composer.lock` (sincronizados). Verde en 5.7 y ya no revienta en L6 por esos helpers.
-- ⏳ **Fases 1–6 pendientes** (tasks 19–25). No arrancan hasta: (a) cerrar CI con gate de merge (task 29, `in_progress`), y (b) incorporar la §1.2 de la revisión al composer.json de Fase 1 (deps que hacen fallar `composer update`).
+- ✅ **CI con gate de merge (task 29) CERRADA** (2026-10-06). Ruleset `gate-ci` en GitHub sobre `develop` y `master`: exige los checks `PHPUnit (PHP 7.2 + MySQL 5.7)` y `Vue (mocha-webpack, node 10)` con la rama al día, bloquea force-push/borrado, sin bypass. No exige PR, pero un push directo de un commit sin checks verdes es rechazado: **cada fase se trabaja en su rama y se mergea a `develop` con CI verde**. Suite al cierre: 414 PHP + Vue verdes.
+- ⏳ **Fases 1–6 pendientes** (tasks 19–25). Único prerequisito restante: incorporar la §1.2 de la revisión al composer.json de Fase 1 (deps que hacen fallar `composer update`) y correr `composer update --dry-run`.
 
 **Tres afirmaciones del plan original eran FALSAS (corregidas abajo):**
 1. Los helpers `str_*`/`array_*` **no** están "deprecados" en L6 — fueron **eliminados**. Sin el reemplazo previo, Fase 1 explota con `Call to undefined function`. → Ya reemplazados (ver arriba).
