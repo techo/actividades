@@ -33,8 +33,9 @@ export default {
         },
         roles() {
             return this.parsear(this.rowData.roles_aplicados).map((item) => {
-                // Formato actual: slug ("monitor"). Legacy: { id, text }.
-                const slug = (item && typeof item === 'object') ? item.id : item;
+                // Formato actual: slug ("monitor"). Legacy: { id, text }, o { text } sin id
+                // (roles de texto libre): ahí el texto hace de slug.
+                const slug = (item && typeof item === 'object') ? (item.id || item.text) : item;
                 const texto = (item && typeof item === 'object') ? item.text : null;
                 return { slug: String(slug), label: this.etiqueta(slug, texto) };
             }).filter(r => r.slug && r.slug !== 'undefined');

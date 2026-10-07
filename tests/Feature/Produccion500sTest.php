@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\CoordinadorEquipo;
 use App\Persona;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 /**
@@ -193,6 +194,70 @@ class Produccion500sTest extends TestCase
             'idActividad'             => $actividad->idActividad,
             'comentarios_adicionales' => $largo,
         ]);
+    }
+
+    /**
+     * 2026-10-06 — Actividad legacy con roles de texto libre (tags {text} sin id):
+     * /confirmar daba "Array to string conversion" (500) y la persona no podía
+     * inscribirse. Debe mostrar el texto del rol, y al inscribirse guardarlo plano.
+     *
+     * @test
+     */
+    public function confirmar_con_roles_legacy_sin_id_no_revienta_y_guarda_el_texto()
+    {
+        Mail::fake();
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'ver_backoffice']);
+        $persona = factory('App\Persona')->create();
+        $actividad = factory('App\Actividad')->create();
+        $p = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+
+        $roles = json_encode([
+            ['text' => 'V.T. Logística y Abastecimiento', 'tiClasses' => ['ti-valid']],
+            ['id' => 'monitor', 'text' => 'Monitor/a'],
+        ]);
+
+        $this->actingAs($persona)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/confirmar', [
+                'punto_encuentro'         => $p->idPuntoEncuentro,
+                'roles_aplicados'         => $roles,
+                'inscripciones_aplicadas' => json_encode([['text' => 'Tipo libre']]),
+                'jornadas'                => '[]',
+            ])
+            ->assertStatus(200)
+            ->assertSeeText('V.T. Logística y Abastecimiento')
+            ->assertSeeText('Tipo libre');
+
+        $this->actingAs($persona)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', [
+                'punto_encuentro'  => $p->idPuntoEncuentro,
+                'aceptar_terminos' => 1,
+                'roles_aplicados'  => $roles,
+            ])
+            ->assertStatus(200);
+
+        $inscripcion = \App\Inscripcion::where('idPersona', $persona->idPersona)->firstOrFail();
+        $this->assertEquals(['V.T. Logística y Abastecimiento', 'monitor'], $inscripcion->roles_aplicados);
+    }
+
+    /**
+     * Sin aceptar términos, /gracias re-renderiza la confirmación: antes faltaban las
+     * variables de la vista (roles_aplicados, jornadas, edad…) → "Undefined variable".
+     *
+     * @test
+     */
+    public function gracias_sin_aceptar_terminos_vuelve_a_confirmar_sin_500()
+    {
+        \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'ver_backoffice']);
+        $persona = factory('App\Persona')->create();
+        $actividad = factory('App\Actividad')->create();
+        $p = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+
+        $this->actingAs($persona)
+            ->post('/inscripciones/actividad/' . $actividad->idActividad . '/gracias', [
+                'punto_encuentro' => $p->idPuntoEncuentro,
+                'roles_aplicados' => json_encode([['id' => 'monitor', 'text' => 'Monitor/a']]),
+            ])
+            ->assertStatus(200);
     }
 
     private function adminBackoffice()

@@ -42,9 +42,9 @@
             <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
-                <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados }}">
-                <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas }}">
-                <input type="hidden" name="jornadas" value="{{ $jornadas }}">
+                <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados ?? '[]' }}">
+                <input type="hidden" name="inscripciones_aplicadas" value="{{ $inscripciones_aplicadas ?? '[]' }}">
+                <input type="hidden" name="jornadas" value="{{ $jornadas ?? '[]' }}">
                 <input type="hidden" name="respuestas" value="{{ $respuestas ?? '[]' }}">
 
                 <div class="row">
@@ -65,8 +65,21 @@
                     </div>
                 </div>
                 @php
-                    $rolesAplicados = json_decode($roles_aplicados, true);
-                    $inscripcionesAplicadas = json_decode($inscripciones_aplicadas, true);
+                    $rolesAplicados = json_decode($roles_aplicados ?? '[]', true);
+                    $inscripcionesAplicadas = json_decode($inscripciones_aplicadas ?? '[]', true);
+
+                    // Un tag puede venir como {id, text} (submit manual), como id suelto
+                    // (auto-submit) o como {text} sin id: actividades legacy con roles de
+                    // texto libre. Sin traducción para el id se muestra el texto tal cual;
+                    // antes __() devolvía el array entero y la vista daba 500.
+                    $etiquetaTag = function ($tag, $grupo) {
+                        $id = is_array($tag) ? ($tag['id'] ?? $tag['text'] ?? '') : $tag;
+                        $traducido = ($id !== '' && $id !== null) ? __($grupo.'.'.$id) : null;
+                        if (is_string($traducido) && $traducido !== $grupo.'.'.$id) {
+                            return $traducido;
+                        }
+                        return is_array($tag) ? ($tag['text'] ?? (string) $id) : (string) $id;
+                    };
                 @endphp
 
                 @if ($inscripcionesAplicadas)
@@ -80,13 +93,8 @@
                     <div class="row">
                     
                     @foreach($inscripcionesAplicadas as $rol)
-                        @php
-                            // $rol may be a full array {id, text} (manual submit)
-                            // or a bare integer/string (auto-submit via checkSubmit())
-                            $rolId = is_array($rol) && isset($rol['id']) ? $rol['id'] : $rol;
-                        @endphp
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.tipo_voluntariado_options.'.$rolId) }}
+                            {{ $etiquetaTag($rol, 'backend.tipo_voluntariado_options') }}
                         </span>
                     @endforeach
                     </div>
@@ -131,11 +139,8 @@
                     <div class="row">
                     
                     @foreach($rolesAplicados as $rol)
-                        @php
-                            $rolId = is_array($rol) && isset($rol['id']) ? $rol['id'] : $rol;
-                        @endphp
                         <span class="ml-2 text-white rounded-pill p-2 techo-btn-azul">
-                            {{ __('backend.roles_actividad_options.'.$rolId) }}
+                            {{ $etiquetaTag($rol, 'backend.roles_actividad_options') }}
                         </span>
                     @endforeach
                     </div>

@@ -58,18 +58,7 @@ class InscripcionesController extends BaseController
 
         $tipo = $actividad->tipo;
 
-        $currentDate = Carbon::now();
-        // fechaNacimiento puede venir nula o con formato inválido (datos viejos):
-        // Carbon::parse tiraría y dejaría el paso 'confirmar' en 500. Fail-safe a 0.
-        $edad = 0;
-        try {
-            $nacimiento = Auth::user()->fechaNacimiento;
-            if (!empty($nacimiento)) {
-                $edad = $currentDate->diffInYears(Carbon::parse($nacimiento));
-            }
-        } catch (\Exception $e) {
-            $edad = 0;
-        }
+        $edad = $this->edadPersona(Auth::user());
         $jornadas = json_decode($request->input('jornadas'), true);
 
         // Microprompt de calidad de datos (opt-in por env): se muestra solo si
@@ -103,6 +92,20 @@ class InscripcionesController extends BaseController
     }
 
     /**
+     * fechaNacimiento puede venir nula o con formato inválido (datos viejos):
+     * Carbon::parse tiraría y dejaría el paso 'confirmar' en 500. Fail-safe a 0.
+     */
+    private function edadPersona($persona)
+    {
+        try {
+            $nacimiento = $persona ? $persona->fechaNacimiento : null;
+            return empty($nacimiento) ? 0 : Carbon::now()->diffInYears(Carbon::parse($nacimiento));
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    /**
      * @param Request $request
      * @param $id
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -129,11 +132,16 @@ class InscripcionesController extends BaseController
         
         $roles = json_decode($validated['roles_aplicados'] ?? '[]', true);
 
+        // Los tags sin id ({text}) son roles legacy de texto libre: se guarda el texto,
+        // no el objeto del tag-input, para que roles_aplicados quede siempre plano.
         $validated['roles_aplicados'] = collect($roles)
             ->map(function ($item) {
-                return is_array($item) && isset($item['id'])
-                    ? $item['id']
+                return is_array($item)
+                    ? ($item['id'] ?? $item['text'] ?? null)
                     : $item;
+            })
+            ->filter(function ($item) {
+                return $item !== null && $item !== '';
             })
             ->values()
             ->toArray();
@@ -286,11 +294,22 @@ class InscripcionesController extends BaseController
             ]);
         }
         $request->session()->flash('status', 'Debe aceptar los términos para continuar');
+        // Se re-renderiza la confirmación con lo que ya había elegido (viene en los
+        // hidden del form); sin estas variables la vista daba "Undefined variable".
         return view('inscripciones.confirmar')
             ->with('actividad', $actividad)
             ->with('flowSteps', InscripcionFlow::stepsWithState($actividad, 'confirmar', 'blade'))
+            ->with('mostrarVerificacionDatos', false)
+            ->with('calidadDatos', null)
             ->with('punto_encuentro', $punto_encuentro)
-            ->with('tipo', $actividad->tipo);
+            ->with('roles_aplicados', $request->input('roles_aplicados', '[]'))
+            ->with('inscripciones_aplicadas', $request->input('inscripciones_aplicadas', '[]'))
+            ->with('aplica_rol', $request->input('aplica_rol'))
+            ->with('jornadas', $request->input('jornadas', '[]'))
+            ->with('jornadasSelected', json_decode($request->input('jornadas', '[]'), true))
+            ->with('respuestas', $request->input('respuestas', '[]'))
+            ->with('tipo', $actividad->tipo)
+            ->with('edad', $this->edadPersona(Auth::user()));
         }
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json([
