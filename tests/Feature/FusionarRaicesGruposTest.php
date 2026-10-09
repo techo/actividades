@@ -102,4 +102,22 @@ class FusionarRaicesGruposTest extends TestCase
         $this->assertDatabaseHas('Grupo', ['idGrupo' => $raiz->idGrupo, 'nombre' => 'Construcción noviembre']);
         $this->assertDatabaseHas('Grupo', ['idGrupo' => $sub->idGrupo, 'nombre' => 'Cuadrilla 1']);
     }
+
+    /** @test */
+    public function renombrar_con_un_nombre_mas_largo_que_la_columna_del_grupo_no_rompe_el_guardado()
+    {
+        $a = $this->actividad('Corta');
+        $raiz = $this->raiz($a, 'Corta');
+        $largo = str_repeat('Construcción en el barrio ', 10); // ~260 caracteres
+
+        $a->nombreActividad = $largo;
+        $a->save();
+
+        $this->assertDatabaseHas('Grupo', ['idGrupo' => $raiz->idGrupo, 'nombre' => mb_substr($largo, 0, 191)]);
+
+        // Y el comando no lo vuelve a reportar como desactualizado (idempotente).
+        $this->artisan('grupos:fusionar-raices', ['--actividad' => $a->idActividad, '--commit' => true])
+            ->expectsOutput('Actividades a corregir: 0 (con raíces duplicadas: 0, raíz con nombre desactualizado: 0).')
+            ->assertExitCode(0);
+    }
 }

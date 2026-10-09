@@ -351,7 +351,8 @@ class Actividad extends Model
             if ($actividad->wasChanged('nombreActividad')) {
                 Grupo::where('idActividad', $actividad->idActividad)
                     ->where('idPadre', 0)
-                    ->update(['nombre' => $actividad->nombreActividad]);
+                    // Grupo.nombre es VARCHAR(191) y nombreActividad VARCHAR(300).
+                    ->update(['nombre' => mb_substr($actividad->nombreActividad, 0, 191)]);
             }
         });
     }

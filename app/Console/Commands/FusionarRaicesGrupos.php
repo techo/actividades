@@ -60,7 +60,9 @@ class FusionarRaicesGrupos extends Command
         foreach ($raices as $idActividad => $grupos) {
             $principal = $grupos->first();
             $secundarias = $grupos->slice(1);
-            $renombrar = $principal->nombre !== $principal->nombreActividad;
+            // Grupo.nombre es VARCHAR(191) y nombreActividad VARCHAR(300): se compara truncado.
+            $nombreRaiz = mb_substr($principal->nombreActividad, 0, 191);
+            $renombrar = $principal->nombre !== $nombreRaiz;
 
             if ($secundarias->isEmpty() && !$renombrar) {
                 continue;
@@ -92,14 +94,14 @@ class FusionarRaicesGrupos extends Command
             if ($this->getOutput()->isVerbose()) {
                 $this->line(sprintf(' - actividad %d: %d raíces secundarias, %d personas a mover, %d filas duplicadas, %d subgrupos%s',
                     $idActividad, count($idsSec), $aMover->count(), $duplicadas->count(), $subgrupos,
-                    $renombrar ? " · renombrar \"{$principal->nombre}\" → \"{$principal->nombreActividad}\"" : ''));
+                    $renombrar ? " · renombrar \"{$principal->nombre}\" → \"{$nombreRaiz}\"" : ''));
             }
 
             if (!$commit) {
                 continue;
             }
 
-            DB::transaction(function () use ($principal, $secundarias, $idsSec, $aMover, $duplicadas, $renombrar, $idActividad) {
+            DB::transaction(function () use ($principal, $secundarias, $idsSec, $aMover, $duplicadas, $renombrar, $nombreRaiz, $idActividad) {
                 if ($idsSec) {
                     if ($aMover->isNotEmpty()) {
                         DB::table('Grupo_Persona')->whereIn('id', $aMover->pluck('id')->all())
@@ -118,7 +120,7 @@ class FusionarRaicesGrupos extends Command
                     DB::table('Grupo')->whereIn('idGrupo', $idsSec)->where('idActividad', $idActividad)->delete();
                 }
                 if ($renombrar) {
-                    DB::table('Grupo')->where('idGrupo', $principal->idGrupo)->update(['nombre' => $principal->nombreActividad]);
+                    DB::table('Grupo')->where('idGrupo', $principal->idGrupo)->update(['nombre' => $nombreRaiz]);
                 }
             });
         }
