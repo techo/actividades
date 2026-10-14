@@ -27,7 +27,7 @@ class CrearPunto extends FormRequest
     public function rules()
     {
         return [
-            'punto' => 'required',
+            'punto' => 'required|string|max:255',
 			'horario' => 'required',
 			'idProvincia' => 'required',
 			'idLocalidad' => 'required',

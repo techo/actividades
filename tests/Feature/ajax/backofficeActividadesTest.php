@@ -294,6 +294,46 @@ class backofficeActividadesTest extends TestCase
             ->assertJsonFragment([ 'punto' => $punto->punto ]);
     }
 
+    /**
+     * 2026-10-06 — punto era VARCHAR(100): una dirección completa daba "Data too long"
+     * (500). Ahora entra hasta 255 y lo que excede devuelve 422 con mensaje.
+     *
+     * @test
+     */
+    public function crear_punto_encuentro_con_direccion_larga()
+    {
+        $this->seed('PermisosSeeder');
+
+        $pais = factory('App\Pais')->create();
+        $provincia = factory('App\Provincia')->create([ 'id_pais' => $pais->id ]);
+
+        $admin = factory('App\Persona')->create([ 'idPaisPermitido' => $pais->id ]);
+        $admin->assignRole('admin');
+
+        $actividad = app(ActividadFactory::class)
+            ->conPais($pais->id)
+            ->agregarPuntoConInscriptos(0)
+            ->create();
+
+        $direccion = 'Oxxo Nogales - (Colegio Del Aire Y Circuito Del Bosque, Carretera A Nogales Km. 2 7476, San Juan de Ocotán, 45019 Zapopan, Jal.)';
+        $punto = factory('App\PuntoEncuentro')->make([
+            'idPais' => $pais->id,
+            'idProvincia' => $provincia->id,
+            'punto' => $direccion,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
+            ->assertStatus(200)
+            ->assertJsonFragment([ 'punto' => $direccion ]);
+
+        $punto->punto = str_repeat('a', 256);
+        $this->actingAs($admin)
+            ->postJson('/admin/ajax/actividades/' . $actividad->idActividad . '/puntos', $punto->toArray())
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['punto']);
+    }
+
     /** @test */
     public function editar_punto_encuentro()
     {

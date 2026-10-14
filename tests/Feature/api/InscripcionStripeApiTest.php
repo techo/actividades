@@ -122,6 +122,167 @@ class InscripcionStripeApiTest extends TestCase
         $this->assertEquals(1, Donation::where('inscripcion_id', $inscripcion->idInscripcion)->count());
     }
 
+    /** PI PIX confirmado server-side, tal como lo devuelve Stripe (requires_action + QR). */
+    private function piPix(string $id, int $expiresAt): array
+    {
+        return [
+            'id'            => $id,
+            'object'        => 'payment_intent',
+            'client_secret' => $id . '_secret',
+            'status'        => 'requires_action',
+            'next_action'   => [
+                'type'                => 'pix_display_qr_code',
+                'pix_display_qr_code' => [
+                    'data'          => 'br.gov.bcb.pix-' . $id,
+                    'image_url_png' => 'https://qr.stripe.com/' . $id . '.png',
+                    'expires_at'    => $expiresAt,
+                ],
+            ],
+        ];
+    }
+
+    /** @test */
+    public function pix_confirma_server_side_y_devuelve_el_bloque_pix()
+    {
+        $persona = factory('App\Persona')->create(['nombres' => 'Ana', 'apellidoPaterno' => 'Souza', 'dni' => '12345678909']);
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais, ['moneda' => 'BRL']);
+
+        $expira = now()->addDay()->timestamp;
+        $fake   = $this->fakeStripeHttp([[$this->piPix('pi_pix_1', $expira), 200]]);
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent', ['paymentMethod' => 'pix'])
+            ->assertStatus(200)
+            ->assertJson([
+                'intent_id' => 'pi_pix_1',
+                'currency'  => 'brl',
+                'pix'       => [
+                    'copy_paste_code' => 'br.gov.bcb.pix-pi_pix_1',
+                    'qr_code_url'     => 'https://qr.stripe.com/pi_pix_1.png',
+                    'expires_at'      => \Carbon\Carbon::createFromTimestamp($expira)->toIso8601String(),
+                ],
+            ]);
+
+        $params = $fake->requests[0]['params'];
+        $this->assertEquals(['pix'], $params['payment_method_types']);
+        $this->assertTrue((bool) $params['confirm']);
+        $this->assertEquals('Ana Souza', $params['payment_method_data']['billing_details']['name']);
+        $this->assertEquals($inscripcion->idInscripcion, $params['metadata']['inscripcion_id']);
+        $this->assertArrayNotHasKey('automatic_payment_methods', $params);
+
+        $this->assertDatabaseHas('donations', [
+            'inscripcion_id'           => $inscripcion->idInscripcion,
+            'stripe_payment_intent_id' => 'pi_pix_1',
+            'payment_method_type'      => 'pix',
+            'status'                   => Donation::STATUS_PENDING,
+        ]);
+    }
+
+    /** @test */
+    public function pix_en_moneda_distinta_de_brl_devuelve_422()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais); // ars
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent', ['paymentMethod' => 'pix'])
+            ->assertStatus(422);
+
+        $this->assertDatabaseMissing('donations', ['inscripcion_id' => $inscripcion->idInscripcion]);
+    }
+
+    /** @test */
+    public function metodo_de_pago_invalido_devuelve_422()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais);
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent', ['paymentMethod' => 'boleto'])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('paymentMethod');
+    }
+
+    private function donationPendiente($persona, $inscripcion, string $piId, string $metodo)
+    {
+        return Donation::create([
+            'person_id'                => $persona->idPersona,
+            'inscripcion_id'           => $inscripcion->idInscripcion,
+            'stripe_payment_intent_id' => $piId,
+            'amount'                   => 10000,
+            'currency'                 => 'brl',
+            'mode'                     => 'one_time',
+            'payment_method_type'      => $metodo,
+            'status'                   => Donation::STATUS_PENDING,
+            'source'                   => 'inscripcion',
+            'idempotency_key'          => 'idem-' . $piId,
+        ]);
+    }
+
+    /** @test */
+    public function pix_vigente_se_reutiliza_sin_crear_otro()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais, ['moneda' => 'BRL']);
+        $this->donationPendiente($persona, $inscripcion, 'pi_pix_old', 'pix');
+
+        $this->fakeStripeHttp([[$this->piPix('pi_pix_old', now()->addHours(3)->timestamp), 200]]);
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent', ['paymentMethod' => 'pix'])
+            ->assertStatus(200)
+            ->assertJson(['intent_id' => 'pi_pix_old', 'pix' => ['copy_paste_code' => 'br.gov.bcb.pix-pi_pix_old']]);
+
+        $this->assertEquals(1, Donation::where('inscripcion_id', $inscripcion->idInscripcion)->count());
+    }
+
+    /** @test */
+    public function pix_vencido_genera_uno_nuevo()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais, ['moneda' => 'BRL']);
+        $this->donationPendiente($persona, $inscripcion, 'pi_pix_old', 'pix');
+
+        $this->fakeStripeHttp([
+            [$this->piPix('pi_pix_old', now()->subHour()->timestamp), 200], // retrieve: vencido
+            [$this->piPix('pi_pix_new', now()->addDay()->timestamp), 200],  // create
+        ]);
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent', ['paymentMethod' => 'pix'])
+            ->assertStatus(200)
+            ->assertJson(['intent_id' => 'pi_pix_new']);
+
+        $this->assertDatabaseHas('Inscripcion', [
+            'idInscripcion'            => $inscripcion->idInscripcion,
+            'stripe_payment_intent_id' => 'pi_pix_new',
+        ]);
+    }
+
+    /** @test */
+    public function un_pix_pendiente_no_se_devuelve_cuando_se_pide_tarjeta()
+    {
+        $persona = factory('App\Persona')->create();
+        Passport::actingAs($persona);
+        $pais        = $this->paisConStripe();
+        $inscripcion = $this->inscripcionImpaga($persona, $pais, ['moneda' => 'BRL']);
+        $this->donationPendiente($persona, $inscripcion, 'pi_pix_old', 'pix');
+
+        $this->fakeStripeHttp([
+            [['id' => 'pi_card_1', 'object' => 'payment_intent', 'client_secret' => 'pi_card_1_secret', 'status' => 'requires_payment_method'], 200],
+        ]);
+
+        $this->postJson('/api/inscripciones/' . $inscripcion->idInscripcion . '/stripe/payment-intent')
+            ->assertStatus(200)
+            ->assertJson(['intent_id' => 'pi_card_1'])
+            ->assertJsonMissing(['pix']);
+    }
+
     /** @test */
     public function error_de_stripe_al_crear_el_intent_devuelve_502()
     {
