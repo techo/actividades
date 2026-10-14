@@ -42,21 +42,23 @@ class Facetador
         }
 
         $filas = $query
-            ->selectRaw($expr . ' as valor')
+            ->selectRaw($expr . ' as facet_valor')
             ->selectRaw('COUNT(*) as total')
-            ->groupBy(DB::raw($expr))
+            // Por el alias, no por la expresión: con una subconsulta correlacionada
+            // (nombreGrupo) MySQL 5.7 + only_full_group_by rechaza el GROUP BY (expr).
+            ->groupBy('facet_valor')
             ->get();
 
         $buckets = [];
         $sinValor = 0;
         foreach ($filas as $fila) {
-            if ($fila->valor === null || $fila->valor === '') {
+            if ($fila->facet_valor === null || $fila->facet_valor === '') {
                 $sinValor += (int) $fila->total;
                 continue;
             }
             $buckets[] = [
-                'valor' => $fila->valor,
-                'label' => (string) $fila->valor,
+                'valor' => $fila->facet_valor,
+                'label' => (string) $fila->facet_valor,
                 'total' => (int) $fila->total,
             ];
         }
@@ -95,11 +97,11 @@ class Facetador
         }
 
         return $query
-            ->selectRaw($expr . ' as valor')
-            ->groupBy(DB::raw($expr))
-            ->orderBy(DB::raw($expr))
+            ->selectRaw($expr . ' as facet_valor')
+            ->groupBy('facet_valor')
+            ->orderBy('facet_valor')
             ->limit($limite)
-            ->pluck('valor')
+            ->pluck('facet_valor')
             ->filter(function ($v) {
                 return $v !== null && $v !== '';
             })
