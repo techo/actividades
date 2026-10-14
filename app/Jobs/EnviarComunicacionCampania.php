@@ -16,7 +16,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 /**
  * Envía por EMAIL una comunicación cuyo objetivo es una campaña. Dos audiencias:
@@ -95,6 +94,14 @@ class EnviarComunicacionCampania implements ShouldQueue
 
     public function handle(): void
     {
+        // Pausa de emergencia del envío masivo por email (igual que EnviarInvitacionActividad).
+        if (config('mailing.bulk_pausado')) {
+            Log::warning('EnviarComunicacionCampania: email PAUSADO por mailing.bulk_pausado', [
+                'idCampania' => $this->idCampania,
+            ]);
+            return;
+        }
+
         $campaign = Campaign::find($this->idCampania);
 
         if (!$campaign) {
@@ -131,10 +138,11 @@ class EnviarComunicacionCampania implements ShouldQueue
                 ->chunk(100, function ($personas) use ($campaign, $pais, $comunicacion, $ahora, &$enviados) {
                     $filas = [];
                     foreach ($personas as $persona) {
-                        Mail::to($persona->mail)->later(
-                            MailThrottle::siguienteSlot(),
-                            new InvitacionCampaniaMail($persona->nombres, $campaign, $pais ?: $persona->pais, $this->titulo, $this->mensaje, $persona, $comunicacion->id)
-                        );
+                        // BULK → SES (no Gmail), escalonado con el throttle.
+                        dispatch((new EnviarMailBulkSes(
+                            new InvitacionCampaniaMail($persona->nombres, $campaign, $pais ?: $persona->pais, $this->titulo, $this->mensaje, $persona, $comunicacion->id),
+                            $persona->mail
+                        ))->delay(MailThrottle::siguienteSlot()));
                         $filas[] = [
                             'comunicacion_id' => $comunicacion->id,
                             'idPersona'       => $persona->idPersona,
@@ -155,10 +163,10 @@ class EnviarComunicacionCampania implements ShouldQueue
                 ->chunk(100, function ($suscriptos) use ($campaign, $pais, $comunicacion, $ahora, &$enviados) {
                     $filas = [];
                     foreach ($suscriptos as $s) {
-                        Mail::to($s->mail)->later(
-                            MailThrottle::siguienteSlot(),
-                            new InvitacionCampaniaMail((string) $s->nombre, $campaign, $pais, $this->titulo, $this->mensaje, null, $comunicacion->id)
-                        );
+                        dispatch((new EnviarMailBulkSes(
+                            new InvitacionCampaniaMail((string) $s->nombre, $campaign, $pais, $this->titulo, $this->mensaje, null, $comunicacion->id),
+                            $s->mail
+                        ))->delay(MailThrottle::siguienteSlot()));
                         $filas[] = [
                             'comunicacion_id' => $comunicacion->id,
                             'idPersona'       => null,

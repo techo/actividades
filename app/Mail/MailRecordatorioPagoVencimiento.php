@@ -14,9 +14,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
  * tiempo de aportar). Reemplaza en utilidad al viejo aviso de "venció el plazo"
  * (que solo llegaba cuando ya no se podía hacer nada).
  *
- * Es transaccional (sale por el mailer por defecto / Gmail), no bulk: es de bajo
- * volumen y alta importancia (la persona pierde el cupo si no paga a tiempo), así
- * que NO debe quedar frenado por mailing.bulk_pausado.
+ * Es transaccional en importancia (la persona pierde el cupo si no paga a tiempo),
+ * así que NO debe quedar frenado por mailing.bulk_pausado; pero sale por SES
+ * (EnviarMailTransaccionalSes) porque en una actividad grande es un envío masivo.
+ * Por eso el from es la identidad verificada en SES (mailing.from_bulk).
  */
 class MailRecordatorioPagoVencimiento extends Mailable implements ShouldQueue
 {
@@ -39,7 +40,7 @@ class MailRecordatorioPagoVencimiento extends Mailable implements ShouldQueue
     {
         return $this
             ->subject(__('email.payment_reminder_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from(config('mail.from.address'), __('email.remitente'))
+            ->from(config('mailing.from_bulk'), __('email.remitente'))
             ->view('emails.recordatorioPagoVencimiento');
     }
 }
