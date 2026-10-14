@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 /**
  * Stripe PaymentIntent flow for activity enrollment payments (mobile app).
@@ -26,6 +27,9 @@ use Illuminate\Support\Str;
  *      → returns client_secret for the mobile SDK to confirm
  *
  *   2. Mobile SDK confirms the payment (stripe.confirmPayment)
+ *      — PIX (paymentMethod=pix, solo BRL): el PI se confirma server-side y la
+ *        respuesta ya trae el bloque `pix` (copia-e-cola + QR). La app solo lo
+ *        muestra; no llama al SDK. Mismo contrato que /api/donations.
  *
  *   3. Stripe fires payment_intent.succeeded webhook to /stripe/webhook/{paisId}
  *      → existing StripeController::webhook() now also handles PI events
@@ -33,6 +37,9 @@ use Illuminate\Support\Str;
  */
 class InscripcionStripeController extends Controller
 {
+    /** Métodos que acepta `paymentMethod`. 'card' incluye wallets (automatic_payment_methods). */
+    const METODOS_PAGO = ['card', 'pix'];
+
     // =========================================================================
     // POST /api/inscripciones/{id}/stripe/payment-intent
     // =========================================================================
@@ -45,12 +52,20 @@ class InscripcionStripeController extends Controller
      *
      * Request body (all optional — defaults come from the activity):
      *   idempotencyKey  string   client-supplied idempotency key
+     *   paymentMethod   string   'card' (default) | 'pix' (solo moneda brl)
      *
      * Response 200:
-     *   { client_secret, intent_id, amount, currency }
+     *   { client_secret, intent_id, amount, currency, publishable_key }
+     *   + pix: { copy_paste_code, qr_code_url, expires_at } cuando paymentMethod=pix
      */
     public function createPaymentIntent(Request $request, int $idInscripcion): JsonResponse
     {
+        $data = $request->validate([
+            'paymentMethod'  => ['nullable', 'string', Rule::in(self::METODOS_PAGO)],
+            'idempotencyKey' => ['nullable', 'string', 'max:255'],
+        ]);
+        $paymentMethod = $data['paymentMethod'] ?? 'card';
+
         // ── 1. Load and authorise ─────────────────────────────────────────────
         $inscripcion = Inscripcion::where('idInscripcion', $idInscripcion)
             ->where('idPersona', Auth::user()->idPersona)
@@ -97,26 +112,56 @@ class InscripcionStripeController extends Controller
         }
 
         $currency      = strtolower($actividad->moneda ?: $this->monedaPorPais($actividad->pais->iso2 ?? null));
-        $idempotencyKey = $request->input('idempotencyKey')
-            ?? 'inscripcion-' . $idInscripcion . '-' . Auth::user()->idPersona;
 
-        // ── 4. Idempotency — return existing pending PI if key was seen ────────
+        if ($paymentMethod === 'pix' && $currency !== 'brl') {
+            return response()->json([
+                'message' => 'PIX solo está disponible para pagos en reales (BRL).',
+            ], 422);
+        }
+
+        // PIX: cada QR vence (24 hs por defecto) y uno vencido no se puede
+        // reusar, así que la key por defecto no es fija; el reuso de un PIX
+        // vigente lo resuelve el paso 4.
+        $idempotencyKey = $data['idempotencyKey']
+            ?? ($paymentMethod === 'pix'
+                ? 'inscripcion-' . $idInscripcion . '-' . Auth::user()->idPersona . '-pix-' . Str::random(12)
+                : 'inscripcion-' . $idInscripcion . '-' . Auth::user()->idPersona);
+
+        // ── 4. Idempotency — return existing pending PI of the same method ────
         $existing = Donation::where('inscripcion_id', $idInscripcion)
             ->where('person_id', Auth::user()->idPersona)
             ->where('status', Donation::STATUS_PENDING)
+            ->where(function ($q) use ($paymentMethod) {
+                // Filas previas a PIX pueden no tener método: cuentan como card.
+                $q->where('payment_method_type', $paymentMethod);
+                if ($paymentMethod === 'card') {
+                    $q->orWhereNull('payment_method_type');
+                }
+            })
+            ->latest('id')
             ->first();
 
         if ($existing) {
             \Stripe\Stripe::setApiKey($config->stripe_secret);
             try {
                 $intent = \Stripe\PaymentIntent::retrieve($existing->stripe_payment_intent_id);
-                return response()->json([
-                    'client_secret'   => $intent->client_secret,
-                    'intent_id'       => $intent->id,
-                    'amount'          => $montoCentavos,
-                    'currency'        => $currency,
-                    'publishable_key' => $config->stripe_public ?? null,
-                ]);
+                $pix    = $paymentMethod === 'pix' ? $this->pixData($intent) : null;
+
+                // Un PIX sin QR vigente (vencido o ya no esperando pago) no
+                // sirve: se crea uno nuevo.
+                if ($paymentMethod !== 'pix' || $this->pixVigente($pix)) {
+                    $response = [
+                        'client_secret'   => $intent->client_secret,
+                        'intent_id'       => $intent->id,
+                        'amount'          => $montoCentavos,
+                        'currency'        => $currency,
+                        'publishable_key' => $config->stripe_public ?? null,
+                    ];
+                    if ($pix) {
+                        $response['pix'] = $pix;
+                    }
+                    return response()->json($response);
+                }
             } catch (\Exception $e) {
                 // PI not found or expired — fall through to create a new one
             }
@@ -125,18 +170,47 @@ class InscripcionStripeController extends Controller
         // ── 5. Create Stripe PaymentIntent with country key ───────────────────
         \Stripe\Stripe::setApiKey($config->stripe_secret);
 
-        try {
-            $intent = \Stripe\PaymentIntent::create([
+        $metadata = [
+            'inscripcion_id' => $idInscripcion,
+            'person_id'      => Auth::user()->idPersona,
+            'actividad_id'   => $actividad->idActividad,
+            'pais_id'        => $actividad->pais->id,
+        ];
+
+        if ($paymentMethod === 'pix') {
+            // PIX: se confirma server-side para que Stripe genere el QR /
+            // copia-e-cola en next_action.pix_display_qr_code (igual que en
+            // StripePaymentService::createPaymentIntent para donaciones).
+            // La confirmación server-side exige billing_details.name y no admite
+            // automatic_payment_methods. El pago llega por el mismo webhook
+            // payment_intent.succeeded (busca por metadata.inscripcion_id).
+            $persona = $inscripcion->persona;
+            $params  = [
+                'amount'               => $montoCentavos,
+                'currency'             => $currency,
+                'payment_method_types' => ['pix'],
+                'payment_method_data'  => [
+                    'type'            => 'pix',
+                    'billing_details' => array_filter([
+                        'name'   => trim(($persona->nombres ?? '') . ' ' . ($persona->apellidoPaterno ?? '')) ?: 'Voluntário TETO',
+                        'email'  => $persona->mail ?: null,
+                        'tax_id' => $persona->dni ?: null,
+                    ]),
+                ],
+                'confirm'              => true,
+                'metadata'             => $metadata,
+            ];
+        } else {
+            $params = [
                 'amount'                    => $montoCentavos,
                 'currency'                  => $currency,
                 'automatic_payment_methods' => ['enabled' => true],
-                'metadata'                  => [
-                    'inscripcion_id' => $idInscripcion,
-                    'person_id'      => Auth::user()->idPersona,
-                    'actividad_id'   => $actividad->idActividad,
-                    'pais_id'        => $actividad->pais->id,
-                ],
-            ], ['idempotency_key' => $idempotencyKey]);
+                'metadata'                  => $metadata,
+            ];
+        }
+
+        try {
+            $intent = \Stripe\PaymentIntent::create($params, ['idempotency_key' => $idempotencyKey]);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             Log::error('InscripcionStripe: error creando PI para inscripcion ' . $idInscripcion . ': ' . $e->getMessage());
             return response()->json([
@@ -153,7 +227,7 @@ class InscripcionStripeController extends Controller
             'amount'                   => $montoCentavos,
             'currency'                 => $currency,
             'mode'                     => 'one_time',
-            'payment_method_type'      => 'card',
+            'payment_method_type'      => $paymentMethod,
             'status'                   => Donation::STATUS_PENDING,
             'source'                   => 'inscripcion',
             'country_code'             => $actividad->pais->id ?? null,
@@ -168,13 +242,44 @@ class InscripcionStripeController extends Controller
         $inscripcion->stripe_payment_intent_id = $intent->id;
         $inscripcion->save();
 
-        return response()->json([
+        $response = [
             'client_secret'   => $intent->client_secret,
             'intent_id'       => $intent->id,
             'amount'          => $montoCentavos,
             'currency'        => $currency,
             'publishable_key' => $config->stripe_public ?? null,
-        ]);
+        ];
+
+        if ($paymentMethod === 'pix') {
+            $response['pix'] = $this->pixData($intent);
+        }
+
+        return response()->json($response);
+    }
+
+    /**
+     * Bloque `pix` de la respuesta (mismo formato que /api/donations):
+     * { copy_paste_code, qr_code_url, expires_at (ISO 8601) }.
+     */
+    private function pixData($intent): array
+    {
+        $pix = $intent->next_action->pix_display_qr_code ?? null;
+
+        return [
+            'copy_paste_code' => $pix->data          ?? null,
+            'qr_code_url'     => $pix->image_url_png ?? null,
+            'expires_at'      => isset($pix->expires_at)
+                ? Carbon::createFromTimestamp($pix->expires_at)->toIso8601String()
+                : null,
+        ];
+    }
+
+    /** Un PIX se puede reusar si tiene código y no venció. */
+    private function pixVigente(?array $pix): bool
+    {
+        return !empty($pix['copy_paste_code'])
+            && !empty($pix['expires_at'])
+            && Carbon::parse($pix['expires_at'])->isFuture();
     }
 
     /**
