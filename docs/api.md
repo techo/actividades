@@ -899,7 +899,10 @@ Authorization: Bearer <token>
 ```
 1. POST /api/inscripciones/{idInscripcion}/stripe/payment-intent
    body: {} (monto y moneda vienen de la actividad)
+         { paymentMethod: "pix" } para PIX (solo BRL)
    ← { client_secret, intent_id, amount, currency, publishable_key }
+     + pix: { copy_paste_code, qr_code_url, expires_at } si paymentMethod=pix
+       → mostrar el QR y saltear el paso 2 (no se usa el SDK)
 
 2. SDK Stripe — confirmar el pago (inicializar con publishable_key)
    stripe.confirmPayment(client_secret, { type: 'Card', ... })
@@ -1293,6 +1296,7 @@ Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la cl
 | Campo | Tipo | Requerido | Descripción |
 |---|---|---|---|
 | `idempotencyKey` | string | | Se genera automáticamente si se omite |
+| `paymentMethod` | string | | `card` (default, incluye wallets) \| `pix` (solo actividades en BRL; otra moneda → `422`) |
 
 **Response `200`**
 ```json
@@ -1304,6 +1308,24 @@ Crea un PaymentIntent para pagar una inscripción desde la app mobile. Usa la cl
   "publishable_key": "pk_live_..."
 }
 ```
+
+**Response `200` — PIX** (mismo formato que en donaciones)
+```json
+{
+  "client_secret": "pi_xxx_secret_yyy",
+  "intent_id": "pi_xxx",
+  "amount": 5000,
+  "currency": "brl",
+  "publishable_key": "pk_live_...",
+  "pix": {
+    "copy_paste_code": "00020101021226...br.gov.bcb.pix...",
+    "qr_code_url": "https://qr.stripe.com/....png",
+    "expires_at": "2026-07-08T18:53:43-03:00"
+  }
+}
+```
+
+> Con PIX el PaymentIntent ya se confirma en el servidor: la app **no** llama al SDK, solo muestra el QR / copia-e-cola y espera el webhook `payment_intent.succeeded` (la inscripción queda `pago = 1`). Si se vuelve a llamar con un PIX pendiente y vigente se devuelve el mismo; si venció (24 hs) se genera uno nuevo.
 
 **Flujo**
 1. App llama este endpoint → recibe `client_secret`
