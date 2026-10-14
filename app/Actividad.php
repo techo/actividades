@@ -342,5 +342,18 @@ class Actividad extends Model
             }
             Auditoria::crear($actividad);
         });
+
+        // El grupo raíz representa a la actividad (es lo que muestra la columna "Grupo" del
+        // listado para quien no está en un subgrupo): si se renombra la actividad, se renombra
+        // la raíz. Sin esto, una actividad clonada o renombrada seguía mostrando el nombre
+        // viejo (reporte #22: un clon mostraba el nombre de la actividad de marzo).
+        static::updated(function ($actividad) {
+            if ($actividad->wasChanged('nombreActividad')) {
+                Grupo::where('idActividad', $actividad->idActividad)
+                    ->where('idPadre', 0)
+                    // Grupo.nombre es VARCHAR(191) y nombreActividad VARCHAR(300).
+                    ->update(['nombre' => mb_substr($actividad->nombreActividad, 0, 191)]);
+            }
+        });
     }
 }
