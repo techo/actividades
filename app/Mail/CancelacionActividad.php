@@ -45,7 +45,7 @@ class CancelacionActividad extends Mailable
     {
         return $this
             ->subject(__('email.activity_cancel_title') . ' ' . $this->actividad->nombreActividad)
-            ->from(config('mail.from.address'), __('email.remitente'))
+            ->from(config('mailing.from_bulk'), __('email.remitente'))
             ->view('emails.cancelacionActividad', [
                 'persona'  => $this->persona,
                 'actividad' => $this->actividad,
