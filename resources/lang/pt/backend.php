@@ -73,6 +73,7 @@ return [
     'public' => 'Público',
     'start' => 'Começa',
     'end' => 'Termina',
+    'activity_edit_conflict' => 'Alguém modificou esta atividade enquanto você a editava. Recarregue a página para ver as alterações antes de salvar.',
     'open_registrations' => 'Inscrições Abertas',
     'closed_registrations' => 'Inscrições Encerradas',
     'registrations_not_open_yet' => 'Inscrições ainda não abertas',

@@ -73,6 +73,7 @@ return [
     'public' => 'Public',
     'start' => 'Start',
     'end' => 'End',
+    'activity_edit_conflict' => 'Someone changed this activity while you were editing it. Reload the page to see their changes before saving.',
     'open_registrations' => 'Open Registrations',
     'closed_registrations' => 'Closed Registrations',
     'registrations_not_open_yet' => 'Registrations not open yet',
