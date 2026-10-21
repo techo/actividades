@@ -38,7 +38,17 @@ class MailerSes
         $mailable->send(self::mailer());
     }
 
-    private static function mailer(): Mailer
+    /**
+     * True si hay credenciales SES. En local/test no las hay (MAIL_DRIVER=log), y los
+     * Mailables que eligen SES por sí mismos (ej. MailInscripcionConfirmada) caen al
+     * mailer por defecto en vez de intentar un SMTP real.
+     */
+    public static function configurado(): bool
+    {
+        return !empty(env('MAIL_SES_USERNAME')) && !empty(env('MAIL_SES_PASSWORD'));
+    }
+
+    public static function mailer(): Mailer
     {
         $transport = new Swift_SmtpTransport(
             env('MAIL_SES_HOST', 'email-smtp.us-west-2.amazonaws.com'),
