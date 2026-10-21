@@ -43,8 +43,8 @@ personas únicas (`COUNT(DISTINCT person_key)`).
 | # | Métrica | Cálculo | Estado |
 |---|---|---|---|
 | B1 | Equipo permanente (TOTAL) | vigentes (todas) — membresías y DISTINCT `person_key` | ✅ |
-| B2 | Permanentes en equipos de comunidad | vigentes con `idComunidad` **no nulo** | ✅ |
-| B3 | Permanentes en áreas | vigentes con `idComunidad` **nulo** (agrupable por `area`) | ✅ |
+| B2 | Permanentes en equipos de comunidad | vigentes con `despliegue='Comunidad'` (antes `idComunidad` no nulo; cambiado oct-2026) | ✅ |
+| B3 | Permanentes en áreas | vigentes con `despliegue='Oficina'` (antes `idComunidad` nulo; cambiado oct-2026) | ✅ |
 | B4 | Voluntarios en coordinaciones de comunidad | `COUNT(DISTINCT person_key)` vigentes con `rol='coordinacion'` e `idComunidad` no nulo | ✅ |
 
 > Notas: B1 en personas únicas puede ser < B2+B3 si alguien está en un equipo de
