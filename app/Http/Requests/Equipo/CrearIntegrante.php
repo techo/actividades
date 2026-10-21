@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Equipo;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CrearIntegrante extends FormRequest
@@ -14,6 +15,21 @@ class CrearIntegrante extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    /**
+     * Integrante castea fechaInicio/fechaFin como $dates: Eloquent solo acepta Y-m-d o
+     * Y-m-d H:i:s, y cualquier otro formato que la regla `date` deja pasar (ej. 10/20/2026,
+     * de navegadores sin date picker nativo) explotaba en fill() con 500. Se normaliza a Y-m-d.
+     */
+    protected function prepareForValidation()
+    {
+        foreach (['fechaInicio', 'fechaFin'] as $campo) {
+            $valor = $this->input($campo);
+            if (is_string($valor) && $valor !== '' && strtotime($valor) !== false) {
+                $this->merge([$campo => Carbon::parse($valor)->format('Y-m-d')]);
+            }
+        }
     }
 
     /**

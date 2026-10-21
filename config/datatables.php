@@ -215,13 +215,17 @@ return [
                 'name' => '__component:photoPerfil',
                 'title' => '',
             ],
+            // Nombre y apellido linkean al perfil (/admin/usuarios/{id}): reemplaza el
+            // "Ver perfil" del viejo detalle inline. `atributo` = qué dato muestra la celda.
             [
-                'name' => 'nombres',
+                'name' => '__component:celda-persona-link',
+                'atributo' => 'nombres',
                 'sortField' => 'nombres',
                 'title' => 'backend.name'
             ],
             [
-                'name' => 'apellidoPaterno',
+                'name' => '__component:celda-persona-link',
+                'atributo' => 'apellidoPaterno',
                 'sortField' => 'apellidoPaterno',
                 'title' => 'backend.last_name'
             ],
@@ -414,7 +418,7 @@ return [
                 ],
             ],
         ],
-        'defaults' => ['nombreGrupo', 'rolesActividad', 'oficina', 'estado_persona', 'asistencia'],
+        'defaults' => ['whatsapp', 'nombreGrupo', 'rolesActividad', 'oficina', 'estado_persona', 'asistencia'],
         'sortOrder' => [
             [
                 'field' => 'fechaInscripcion',

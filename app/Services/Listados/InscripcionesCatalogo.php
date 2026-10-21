@@ -73,6 +73,15 @@ class InscripcionesCatalogo implements CatalogoListado
         return array_merge(config('datatables.inscripciones.fijas'), $defaults);
     }
 
+    /**
+     * Todos los campos base del catálogo (sin los dinámicos). Los usa OrdenListado para
+     * mapear un sortField guardado al `name` de su columna.
+     */
+    public function camposOrdenables(): array
+    {
+        return collect(config('datatables.inscripciones.catalogo'))->flatten(1)->all();
+    }
+
     private function datosGenerales(Actividad $actividad): array
     {
         $campos = config('datatables.inscripciones.catalogo.datos_generales');

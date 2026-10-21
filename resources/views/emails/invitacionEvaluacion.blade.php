@@ -38,7 +38,7 @@
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">
         <tr>
             <td align="center" bgcolor="#0092dd" style="border-radius:6px;">
-                <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}" target="_blank"
+                <a href="{{ url('/evaluar/'. $actividad->idActividad) }}" target="_blank"
                    style="display:inline-block; padding:12px 26px; font-size:15px; font-weight:700; color:#ffffff; text-decoration:none; border-radius:6px; font-family: Montserrat, Arial, sans-serif;">
                     @lang('email.evaluation_2')
                 </a>
@@ -49,7 +49,7 @@
     {{-- Fallback en texto --}}
     <p style="margin:0 0 22px; font-size:12px; line-height:1.5; color:#8a9099;">
         @lang('email.evaluation_3')<br>
-        <a href="{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}" style="color:#8a9099;">{{ url('/actividades/'. $actividad->idActividad .'/evaluaciones') }}</a>
+        <a href="{{ url('/evaluar/'. $actividad->idActividad) }}" style="color:#8a9099;">{{ url('/evaluar/'. $actividad->idActividad) }}</a>
     </p>
 
     <div style="border-top:1px solid #e6e8ec; height:1px; line-height:1px; margin:22px 0;">&nbsp;</div>

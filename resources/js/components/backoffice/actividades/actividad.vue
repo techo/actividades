@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="conflicto" class="alert alert-warning" role="alert">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ conflicto }}
+        </div>
         <!-- informacion general -->
         <div class="box">
             <div class="row text-center">
@@ -916,6 +919,10 @@
                     fechaLimitePago: null,
                 },
                 errors: {},
+                // Snapshot de la actividad tal como se cargó/guardó: el back lo usa para
+                // detectar que otro la modificó en el medio (409) y no pisarle los cambios.
+                original: null,
+                conflicto: null,
                 paises: [],
                 provincias: [],
                 localidades: [],
@@ -945,6 +952,7 @@
             if(this.id) {
                 axios.get('/admin/ajax/actividades/' + this.id)
                     .then((datos) => {
+                        this.original = JSON.parse(JSON.stringify(datos.data));
                         this.actividad = datos.data;
                         this.normalizarMetodosPago();
                         if (this.actividad.ficha_medica_campos)
@@ -1337,10 +1345,12 @@
                 
 
                 if(this.id) {
-                    axios.post('/admin/ajax/actividades/' + this.id, this.actividad)
+                    axios.post('/admin/ajax/actividades/' + this.id, Object.assign({}, this.actividad, { _original: this.original }))
                         .then((datos) => { 
                             this.guardarImagenTarjeta();
                             this.guardarImagenDestacada();
+                            this.original = JSON.parse(JSON.stringify(datos.data));
+                            this.conflicto = null;
                             this.actividad = datos.data;
                             this.normalizarMetodosPago();
                             Event.$emit('success');
@@ -1349,7 +1359,12 @@
 
                         })
                         .catch((error) => { 
-                            this.errors = error.response.data.errors;
+                            if (error.response && error.response.status === 409) {
+                                this.conflicto = error.response.data.message;
+                                window.scrollTo(0, 0);
+                            } else {
+                                this.errors = error.response.data.errors;
+                            }
                             Event.$emit('error');
                         });
                 }

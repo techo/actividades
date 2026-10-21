@@ -52,7 +52,14 @@ class InscripcionesController extends BaseController
         $filtros = (new \App\Services\Listados\ListadoQuery())
             ->filtrosDesdeRequest($request, 'inscripciones', $id);
 
-        $result = InscripcionesSearch::query($filtros)->paginate(10);
+        $query = InscripcionesSearch::query($filtros);
+        if (empty($request->sort)) {
+            // Sin orden explícito: el default del listado, estable entre páginas.
+            $query->orderBy('Inscripcion.fechaInscripcion', 'desc')->orderBy('Inscripcion.idInscripcion', 'desc');
+        } else {
+            \App\Services\Listados\OrdenListado::guardar(auth()->id(), 'inscripciones', $id, $request->sort);
+        }
+        $result = $query->paginate(10);
 
         // Inyecta respuestas a preguntas (pregunta_{id}) y valores de columnas
         // de seguimiento (custom_{id}) solo sobre la página actual.
@@ -84,6 +91,11 @@ class InscripcionesController extends BaseController
         if($request->has('confirma')){
 
             if($request->confirma == true) {
+                // Re-chequeo de socio al confirmar: si se hizo socio después de
+                // inscribirse (o Salesforce falló al crearla), que reciba el mail
+                // de CONFIRMADO y no el de "falta pago".
+                app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripcion);
+
                 // Un socio exento (exento_pago) no debe pagar: se lo trata como
                 // "sin pago" → mail/push de CONFIRMADO, no de falta de pago.
                 if($inscripcion->actividad->confirmacion == 1 && ($inscripcion->actividad->pago == 0 || $inscripcion->exento_pago)) {
@@ -496,12 +508,13 @@ class InscripcionesController extends BaseController
             if ($inscripto->trashed()) {
                 $inscripto->restore();
                 $grupo = $this->incluirEnGrupo($request->all());
+                app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripto);
 
                 if($request->notificar) {
                     if($inscripto->actividad->confirmacion == 1) 
                         $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripto), $inscripto->persona);
 
-                    if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1)
+                    if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1 && !$inscripto->exento_pago)
                         $this->intentaEnviar(new MailInscripcionFaltaPago($inscripto), $inscripto->persona);
                 }
 
@@ -514,12 +527,14 @@ class InscripcionesController extends BaseController
         $grupo = $this->incluirEnGrupo($request->all());
 
         if ($inscripto &&  $grupo) {
+            // Alta manual: misma exención por socio que la inscripción del voluntario.
+            app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripto);
 
             if($request->notificar) {
                 if($inscripto->actividad->confirmacion == 1)
                     $this->intentaEnviar(new MailInscripcionEsperarConfirmacion($inscripto), $inscripto->persona);
 
-                if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1)
+                if($inscripto->actividad->confirmacion == 0 && $inscripto->actividad->pago == 1 && !$inscripto->exento_pago)
                     $this->intentaEnviar(new MailInscripcionFaltaPago($inscripto), $inscripto->persona);
             }
 

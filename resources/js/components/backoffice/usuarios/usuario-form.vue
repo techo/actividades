@@ -319,6 +319,11 @@
 
             if(this.propUsuario){
                 this.usuario = JSON.parse(this.propUsuario);
+                // El date-picker hace new Date('YYYY-MM-DD') = medianoche UTC → en LatAm
+                // mostraba el día anterior. Lo pasamos a Date local (y al guardar, de vuelta a string).
+                if (this.usuario.nacimiento) {
+                    this.usuario.nacimiento = moment(this.usuario.nacimiento, 'YYYY-MM-DD').toDate();
+                }
 
                 for (var i in Object.keys(this.dataGeneros)) 
                 {
@@ -439,7 +444,9 @@
                         self.validationErrors = [];
                         self.$refs.loading.justCloseSimplert();
                     },
-                    this.usuario, // request data
+                    Object.assign({}, this.usuario, {
+                        nacimiento: this.usuario.nacimiento ? moment(this.usuario.nacimiento).format('YYYY-MM-DD') : this.usuario.nacimiento
+                    }), // request data
                     function (error, self) { //handler de error
                         self.ocultarLoadingAlert();
                         // Error

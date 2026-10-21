@@ -25,7 +25,7 @@ return [
               ['id' => 'jornada' , 'campo' =>  'Jornada', 'condiciones' => true],
               ['id' => 'rol' , 'campo' =>  'Rol', 'condiciones' => true],
               ['id' => 'grupo' , 'campo' =>  'Grupo', 'condiciones' => true],
-              ['id' => 'cantidadActividades' , 'campo' =>  'Cantidad Actividades', 'condiciones' => true],
+              ['id' => 'cantidadActividades' , 'campo' =>  'Participaciones (presente)', 'condiciones' => true],
               ['id' => 'tipoActividad' , 'campo' =>  'Tipo de Actividad Anterior', 'condiciones' => true],
               //   ['id' => 'promedioEvaluacion' , 'campo' =>  'Promedio Evaluación (No disponible)']
           ],

@@ -32,7 +32,7 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         'id', 'nombreActividad', 'fechaInicio', 'fechaFin', 'estadoConstruccion',
         'oficina', 'tipoActividad', 'nombreCategoria', 'pais',
         'fechaInicioInscripciones', 'fechaFinInscripciones',
-        'fechaInicioEvaluaciones', 'fechaFinEvaluaciones',
+        'fechaInicioEvaluaciones', 'fechaFinEvaluaciones', 'fechaCreacion',
     ];
 
     public function collection()
@@ -42,6 +42,9 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
         $sortOrder = strtolower($sort[1] ?? 'asc') === 'desc' ? 'desc' : 'asc';
         if (!in_array($sortField, self::SORTABLE, true)) {
             $sortField = 'nombreActividad';
+        }
+        if ($sortField === 'fechaCreacion') {
+            $sortField = 'Actividad.fechaCreacion'; // calificada: evita ambigüedad con los joins
         }
 
         $result = DB::table('Actividad')
@@ -65,13 +68,16 @@ class MisActividadesExport implements FromCollection, WithHeadings, WithColumnFo
                     'fechaFinInscripciones',
                     'fechaInicioEvaluaciones',
                     'fechaFinEvaluaciones',
+                    'Actividad.fechaCreacion',
                 ]
             )
             ->groupBy(
                     'id'
             )
             ->whereNull('Actividad.deleted_at')
-            ->orderBy($sortField, $sortOrder);
+            ->orderBy($sortField, $sortOrder)
+            // Desempate: con nombres repetidos (clones) el orden cambiaba entre cargas.
+            ->orderBy('Actividad.idActividad', 'desc');
 
         $result->where(function ($result) {
             $result->orWhere('idPersonaCreacion', Auth::user()->idPersona);

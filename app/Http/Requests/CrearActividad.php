@@ -18,6 +18,17 @@ class CrearActividad extends FormRequest
     }
 
     /**
+     * El input numérico vacío llega "" → null (ConvertEmptyStringsToNull) y la columna
+     * es NOT NULL: guardar daba 500. Vacío = sin límite, que en todo el sistema es 0.
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->input('limiteInscripciones') === null) {
+            $this->merge(['limiteInscripciones' => 0]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -50,7 +61,7 @@ class CrearActividad extends FormRequest
             'idProvincia' => 'required',
             'idLocalidad' => 'required',
 
-            'limiteInscripciones' => 'nullable',
+            'limiteInscripciones' => 'required|integer|min:0',
             'inscripcionInterna' => 'nullable',
             'mensajeInscripcion' => 'required',
             

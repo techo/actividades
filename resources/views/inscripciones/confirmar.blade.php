@@ -39,7 +39,8 @@
             @endif
         </div>
 
-            <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST">
+            <form action="/inscripciones/actividad/{{$actividad->idActividad}}/gracias" method="POST"
+                  onsubmit="var b = this.querySelector('[type=submit]'); if (b) { b.disabled = true; }">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="punto_encuentro" value="{{ $punto_encuentro->idPuntoEncuentro }}">
                 <input type="hidden" name="roles_aplicados" value="{{ $roles_aplicados ?? '[]' }}">
