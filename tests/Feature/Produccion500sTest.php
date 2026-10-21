@@ -260,6 +260,29 @@ class Produccion500sTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * Prod 2026-10: el listado de accesos (coordinadores) de una actividad daba 500
+     * cuando un coordinador tenía la cuenta dada de baja (persona soft-deleted).
+     *
+     * @test
+     */
+    public function accesos_de_actividad_no_revienta_con_coordinador_dado_de_baja()
+    {
+        $this->withoutExceptionHandling();
+        $admin = $this->adminBackoffice();
+        $actividad = factory('App\Actividad')->create();
+        $coordinador = factory('App\Coordinador')->create(['idActividad' => $actividad->idActividad]);
+        Persona::find($coordinador->idPersona)->delete();
+
+        $data = $this->actingAs($admin)
+            ->getJson('/admin/ajax/actividades/' . $actividad->idActividad . '/accesos')
+            ->assertStatus(200)
+            ->json();
+
+        $this->assertCount(1, $data);
+        $this->assertContains('cuenta eliminada', $data[0]['nombre']);
+    }
+
     private function adminBackoffice()
     {
         $permiso = \Spatie\Permission\Models\Permission::firstOrCreate(['name' => 'ver_backoffice']);
