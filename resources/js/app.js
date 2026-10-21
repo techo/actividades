@@ -25,6 +25,7 @@ import CeldaConvertido from './components/backoffice/datatable/columnas/CeldaCon
 import CeldaVoucher from './components/backoffice/datatable/columnas/CeldaVoucher'
 import CeldaBeca from './components/backoffice/datatable/columnas/CeldaBeca'
 import CeldaWhatsapp from './components/backoffice/datatable/columnas/CeldaWhatsapp'
+import CeldaPersonaLink from './components/backoffice/datatable/columnas/CeldaPersonaLink'
 import CeldaNivel from './components/backoffice/datatable/columnas/CeldaNivel'
 import CeldaDocumento from './components/backoffice/datatable/columnas/CeldaDocumento'
 import CeldaConfianzaDatos from './components/backoffice/datatable/columnas/CeldaConfianzaDatos'
@@ -219,6 +220,7 @@ Vue.component('celda-convertido', CeldaConvertido);
 Vue.component('celda-voucher', CeldaVoucher);
 Vue.component('celda-beca', CeldaBeca);
 Vue.component('celda-whatsapp', CeldaWhatsapp);
+Vue.component('celda-persona-link', CeldaPersonaLink);
 Vue.component('celda-nivel', CeldaNivel);
 Vue.component('celda-documento', CeldaDocumento);
 Vue.component('celda-confianza-datos', CeldaConfianzaDatos);

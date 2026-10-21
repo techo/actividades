@@ -258,8 +258,14 @@ class ActividadesController extends Controller
 
         // Primer render: fijas + columnas por defecto. La configuración real del
         // usuario la carga el selector de columnas vía GET ajax/listados/.../config.
-        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
-        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+        $campos = (new InscripcionesCatalogo)->defaultFields($actividad->idActividad);
+        $fields = json_encode($campos);
+        // El orden que el usuario eligió la última vez (o el default del listado).
+        $sortOrder = json_encode(\App\Services\Listados\OrdenListado::sortOrderInicial(
+            auth()->id(), 'inscripciones', $actividad->idActividad,
+            config('datatables.inscripciones.sortOrder'),
+            array_merge($campos, (new InscripcionesCatalogo)->camposOrdenables())
+        ));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
         $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));
@@ -277,8 +283,14 @@ class ActividadesController extends Controller
 
     public function confirmarInscripcion(Actividad $actividad, Inscripcion $inscripcion, $idPersona)
     {
-        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
-        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+        $campos = (new InscripcionesCatalogo)->defaultFields($actividad->idActividad);
+        $fields = json_encode($campos);
+        // El orden que el usuario eligió la última vez (o el default del listado).
+        $sortOrder = json_encode(\App\Services\Listados\OrdenListado::sortOrderInicial(
+            auth()->id(), 'inscripciones', $actividad->idActividad,
+            config('datatables.inscripciones.sortOrder'),
+            array_merge($campos, (new InscripcionesCatalogo)->camposOrdenables())
+        ));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
         $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));

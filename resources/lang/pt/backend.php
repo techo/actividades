@@ -881,7 +881,7 @@ return [
 
     // Columnas: whatsapp, nivel, evaluación, ID/documento
     'whatsapp' => 'WhatsApp',
-    'participations' => 'Participações',
+    'participations' => 'Participações (presente)',
     'volunteer_level' => 'Nível',
     'level_rookie' => 'Rookie',
     'level_champion' => 'Champion',

@@ -52,7 +52,14 @@ class InscripcionesController extends BaseController
         $filtros = (new \App\Services\Listados\ListadoQuery())
             ->filtrosDesdeRequest($request, 'inscripciones', $id);
 
-        $result = InscripcionesSearch::query($filtros)->paginate(10);
+        $query = InscripcionesSearch::query($filtros);
+        if (empty($request->sort)) {
+            // Sin orden explícito: el default del listado, estable entre páginas.
+            $query->orderBy('Inscripcion.fechaInscripcion', 'desc')->orderBy('Inscripcion.idInscripcion', 'desc');
+        } else {
+            \App\Services\Listados\OrdenListado::guardar(auth()->id(), 'inscripciones', $id, $request->sort);
+        }
+        $result = $query->paginate(10);
 
         // Inyecta respuestas a preguntas (pregunta_{id}) y valores de columnas
         // de seguimiento (custom_{id}) solo sobre la página actual.
