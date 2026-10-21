@@ -9,6 +9,7 @@ use App\Jobs\EnviarMailTransaccionalSes;
 use App\Mail\ActualizacionActividad;
 use App\Mail\CancelacionActividad;
 use App\Mail\InvitacionEvaluacion;
+use App\Mail\MailInscripcionConfirmada;
 use App\Mail\MailRecordatorioPagoVencimiento;
 use App\Mail\MailRegistroUsuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -200,5 +201,28 @@ class MailingTest extends TestCase
                 && $job->to === $maria->mail;
         });
 
+    }
+
+    /** @test */
+    public function confirmacion_de_inscripcion_usa_identidad_ses_y_cae_al_mailer_default_sin_credenciales()
+    {
+        $persona = factory('App\Persona')->create(['recibirMails' => true]);
+        $actividad = factory('App\Actividad')->create();
+        $punto = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+        $inscripcion = $punto->inscripciones()->save(factory('App\Inscripcion')->make([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $persona->idPersona,
+        ]));
+
+        $mailable = new MailInscripcionConfirmada($inscripcion->fresh());
+        $mailable->to($persona->mail);
+
+        // En test no hay MAIL_SES_* → no intenta SMTP real, usa el mailer recibido.
+        $this->assertFalse(\App\Services\MailerSes::configurado());
+        $mailer = \Mockery::mock(\Illuminate\Contracts\Mail\Mailer::class);
+        $mailer->shouldReceive('send')->once();
+        $mailable->send($mailer);
+
+        $this->assertEquals(config('mailing.from_bulk'), $mailable->from[0]['address']);
     }
 }
