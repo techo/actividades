@@ -3,15 +3,25 @@
 namespace App\Mail;
 
 use App\Mail\Concerns\HasMailLocale;
+use App\Services\MailerSes;
+use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
+/**
+ * Sale por SES, no por el mailer default (Gmail), aunque se encole con Mail::queue():
+ * el admin confirma/marca pagos de a muchos y Gmail corta la ráfaga (prod 2026-10-19:
+ * 141 confirmaciones fallaron en un minuto). Se resuelve acá, en send(), para cubrir
+ * todos los puntos de envío (backoffice, Stripe, PayU, pagos) sin tocar cada uno.
+ * Por eso el from es la identidad verificada en SES (mailing.from_bulk).
+ */
 class MailInscripcionConfirmada extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels, HasMailLocale;
+    use Queueable, SerializesModels;
+    use HasMailLocale { send as protected sendConLocale; }
 
     public $mailLocale;
     public $inscripcion;
@@ -29,6 +39,11 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
         $this->mailLocale = optional($inscripcion->persona->pais)->locale ?? config('app.locale');
     }
 
+    public function send(MailerContract $mailer)
+    {
+        return $this->sendConLocale(MailerSes::configurado() ? MailerSes::mailer() : $mailer);
+    }
+
     public function build()
     {
         $url = config('app.url')
@@ -43,7 +58,7 @@ class MailInscripcionConfirmada extends Mailable implements ShouldQueue
 
         return $this
             ->subject(__('email.inscription_confirmed_title') . ' ' . $this->inscripcion->actividad->nombreActividad)
-            ->from(config('mail.from.address'), __('email.remitente'))
+            ->from(config('mailing.from_bulk'), __('email.remitente'))
             ->view('emails.inscripcionConfirmada')
             ->with([
                 'inscripcion' => $this->inscripcion,

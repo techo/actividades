@@ -215,7 +215,7 @@ Métricas: movilizados = `SUM(es_presente)`; personas únicas =
 |---|---|
 | `idIntegrante`, `person_key`, `idEquipo` | claves |
 | `idOficina`, `idPais`, `area_id` | del equipo |
-| `idComunidad`, `rol`, `estado` | atributos de la membresía (`estado` 1=Activo, 0=Inactivo) |
+| `idComunidad`, `despliegue`, `rol`, `estado` | atributos de la membresía (`despliegue` Oficina/Comunidad/Otras separa áreas vs comunidades; `estado` 1=Activo, 0=Inactivo) |
 | `fechaInicio`, `fechaFin` | vigencia cargada |
 | `fecha_fin_efectiva` | `fechaFin`, o `DATE(updated_at)` si es Inactiva sin `fechaFin` (legacy) |
 | `vigente` | 1 si `estado=1` y `fechaFin` NULL o futura |

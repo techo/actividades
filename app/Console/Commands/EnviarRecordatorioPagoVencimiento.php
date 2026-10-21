@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Actividad;
+use App\Jobs\EnviarMailTransaccionalSes;
 use App\Mail\MailRecordatorioPagoVencimiento;
 use App\Services\EstadoInscripcion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Mail;
 
 /**
  * Recordatorio PROACTIVO de pago: avisa ~2 días ANTES de que venza la fecha
@@ -15,7 +15,9 @@ use Mail;
  * llegue a aportar y no pierda el cupo. Más útil que el viejo aviso de "venció
  * el plazo" (que llegaba cuando ya no se podía hacer nada).
  *
- * Transaccional (mailer por defecto / Gmail): bajo volumen, alta importancia,
+ * Sale por SES (EnviarMailTransaccionalSes), no por Gmail: aunque es transaccional
+ * en importancia, una actividad grande son cientos de mails en un minuto y Gmail
+ * corta la ráfaga (prod 2026-10-12: 81 de 199 fallaron). Al ser transaccional
  * NO se frena con mailing.bulk_pausado.
  */
 class EnviarRecordatorioPagoVencimiento extends Command
@@ -40,8 +42,8 @@ class EnviarRecordatorioPagoVencimiento extends Command
             return;
         }
 
-        // Escalonado suave: aunque es bajo volumen, repartimos el envío para no
-        // disparar una ráfaga contra el relay transaccional.
+        // Escalonado: una actividad grande son cientos de mails; repartimos el envío para no
+        // disparar una ráfaga contra SES.
         $porSegundo = max(1, intdiv((int) config('mailing.batch_por_minuto', 120), 60));
         $enviados = 0;
         $i = 0;
@@ -70,7 +72,7 @@ class EnviarRecordatorioPagoVencimiento extends Command
                 }
 
                 $delay = now()->addSeconds(5 + intdiv($i, $porSegundo));
-                Mail::to($persona->mail)->later($delay, new MailRecordatorioPagoVencimiento($inscripcion));
+                dispatch((new EnviarMailTransaccionalSes(new MailRecordatorioPagoVencimiento($inscripcion), $persona->mail))->delay($delay));
                 $enviados++;
                 $i++;
             }

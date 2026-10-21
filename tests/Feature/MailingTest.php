@@ -5,9 +5,12 @@ namespace Tests\Feature;
 use App\ActividadFactory;
 use App\Jobs\EnviarMailBulkSes;
 use App\Jobs\EnviarMailsCancelacionActividad;
+use App\Jobs\EnviarMailTransaccionalSes;
 use App\Mail\ActualizacionActividad;
 use App\Mail\CancelacionActividad;
 use App\Mail\InvitacionEvaluacion;
+use App\Mail\MailInscripcionConfirmada;
+use App\Mail\MailRecordatorioPagoVencimiento;
 use App\Mail\MailRegistroUsuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -26,7 +29,7 @@ class MailingTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        Mail::fake();
+        Queue::fake();
 
 		$persona = factory('App\Persona')->create();
     	$permission = Permission::create(['name' => 'ver_backoffice']);
@@ -55,14 +58,66 @@ class MailingTest extends TestCase
 
         $this->assertSoftDeleted('Actividad', [ 'nombreActividad' => $actividad->nombreActividad]);
 
-        // enviarNotificaciones() pasa la actividad como array (toArray) a propósito,
-        // para sobrevivir a la serialización del job cuando el modelo ya fue borrado.
-        // El envío async lo da el job EnviarMailsCancelacionActividad (ShouldQueue); el
-        // mailable CancelacionActividad NO es ShouldQueue (se manda con ->send() para no
-        // re-serializar el modelo ya borrado), así que acá se afirma como enviado (no
-        // encolado). Con QUEUE=sync el job corre y el mail se despacha en el request.
-        Mail::assertSent(CancelacionActividad::class, function ($mail) use ($actividad) {
-            return $mail->actividad['nombreActividad'] === $actividad->nombreActividad;
+        // La cancelación le escribe a todos los inscriptos → sale por SES dentro del
+        // job (MailerSes, transporte SMTP crudo que no pasa por Mail::fake), así que
+        // se aserta el job encolado y que el mailable use la identidad de SES.
+        Queue::assertPushed(EnviarMailsCancelacionActividad::class, function ($job) use ($actividad, $persona_que_quiere_recibir_mail) {
+            return $job->actividad->nombreActividad === $actividad->nombreActividad
+                && $job->persona->mail === $persona_que_quiere_recibir_mail->mail;
+        });
+
+        $job = Queue::pushed(EnviarMailsCancelacionActividad::class)->first();
+        $mail = (new CancelacionActividad($job->persona, $job->actividad, $job->pais))->build();
+        $this->assertEquals(config('mailing.from_bulk'), $mail->from[0]['address']);
+    }
+
+    /** @test */
+    public function recordatorio_de_pago_sale_por_ses()
+    {
+        Queue::fake();
+
+        $persona = factory('App\Persona')->create(['recibirMails' => true]);
+        $actividad = factory('App\Actividad')->create([
+            'pago' => 1,
+            'confirmacion' => 0,
+            'fechaLimitePago' => now()->addDays(2)->startOfDay(),
+        ]);
+        $punto = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+        $punto->inscripciones()->save(factory('App\Inscripcion')->make([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $persona->idPersona,
+            'pago' => 0,
+            'exento_pago' => 0,
+        ]));
+
+        $this->artisan('pago:recordatorio-vencimiento')->assertExitCode(0);
+
+        // Antes salía por Gmail (mailer default) y en una actividad grande Gmail
+        // cortaba la ráfaga (prod 2026-10-12).
+        Queue::assertPushed(EnviarMailTransaccionalSes::class, function ($job) use ($persona) {
+            return $job->to === $persona->mail
+                && $job->mailable instanceof MailRecordatorioPagoVencimiento
+                && $job->mailable->build()->from[0]['address'] === config('mailing.from_bulk');
+        });
+    }
+
+    /** @test */
+    public function comunicacion_de_campania_sale_por_ses_y_respeta_la_pausa()
+    {
+        Queue::fake();
+
+        $campaign = \App\Campaign::forceCreate(['nombre' => 'Colecta test']);
+        \App\Suscribe::forceCreate(['campaign_id' => $campaign->id, 'nombre' => 'Lead', 'mail' => 'lead@example.com']);
+
+        // Pausado: no envía nada (antes salía por Gmail sin chequear la pausa).
+        config(['mailing.bulk_pausado' => true]);
+        (new \App\Jobs\EnviarComunicacionCampania($campaign->id, [], 'suscriptos', null, 'Hola', '<p>Hola</p>'))->handle();
+        Queue::assertNotPushed(EnviarMailBulkSes::class);
+
+        config(['mailing.bulk_pausado' => false]);
+        (new \App\Jobs\EnviarComunicacionCampania($campaign->id, [], 'suscriptos', null, 'Hola', '<p>Hola</p>'))->handle();
+        Queue::assertPushed(EnviarMailBulkSes::class, function ($job) {
+            return $job->to === 'lead@example.com';
         });
     }
 
@@ -146,5 +201,28 @@ class MailingTest extends TestCase
                 && $job->to === $maria->mail;
         });
 
+    }
+
+    /** @test */
+    public function confirmacion_de_inscripcion_usa_identidad_ses_y_cae_al_mailer_default_sin_credenciales()
+    {
+        $persona = factory('App\Persona')->create(['recibirMails' => true]);
+        $actividad = factory('App\Actividad')->create();
+        $punto = $actividad->puntosEncuentro()->save(factory('App\PuntoEncuentro')->make());
+        $inscripcion = $punto->inscripciones()->save(factory('App\Inscripcion')->make([
+            'idActividad' => $actividad->idActividad,
+            'idPersona' => $persona->idPersona,
+        ]));
+
+        $mailable = new MailInscripcionConfirmada($inscripcion->fresh());
+        $mailable->to($persona->mail);
+
+        // En test no hay MAIL_SES_* → no intenta SMTP real, usa el mailer recibido.
+        $this->assertFalse(\App\Services\MailerSes::configurado());
+        $mailer = \Mockery::mock(\Illuminate\Contracts\Mail\Mailer::class);
+        $mailer->shouldReceive('send')->once();
+        $mailable->send($mailer);
+
+        $this->assertEquals(config('mailing.from_bulk'), $mailable->from[0]['address']);
     }
 }

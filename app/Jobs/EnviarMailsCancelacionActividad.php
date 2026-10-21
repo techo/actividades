@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Mail\CancelacionActividad;
-use Mail;
+use App\Services\MailerSes;
 
 class EnviarMailsCancelacionActividad implements ShouldQueue
 {
@@ -37,7 +37,9 @@ class EnviarMailsCancelacionActividad implements ShouldQueue
     public function handle()
     {
         if($this->persona->recibirMails && $this->persona->tieneMailValido()){
-            Mail::to($this->persona->mail)->send(new CancelacionActividad($this->persona, $this->actividad, $this->pais));
+            // Por SES: la cancelación le escribe a todos los inscriptos (envío masivo),
+            // Gmail corta esas ráfagas. Transaccional → no respeta bulk_pausado.
+            MailerSes::enviar(new CancelacionActividad($this->persona, $this->actividad, $this->pais), $this->persona->mail);
         }
         //sleep(3);
     }
