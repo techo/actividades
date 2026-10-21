@@ -56,10 +56,12 @@ class MetricRegistry
 
             // ── Equipo permanente (membresías sobre fact_membresia; coordinaciones = personas únicas) ──
             // Período 'snapshot': foto a fin del mes/año pedido (sin anio = hoy, vigente=1).
+            // Áreas vs comunidades por el Despliegue del integrante (Oficina | Comunidad),
+            // no por idComunidad: es lo que carga y cuenta el equipo.
             'equipo_permanente_total' => ['nombre' => 'Voluntarios/as en equipo permanente (TOTAL)', 'vista' => $memb, 'medida' => 'count', 'periodo' => 'snapshot', 'group_by' => ['area', 'rol']],
-            'permanentes_areas' => ['nombre' => 'Voluntarios/as permanentes en áreas', 'vista' => $memb, 'medida' => 'count', 'where_raw' => 'idComunidad IS NULL', 'periodo' => 'snapshot'],
-            'permanentes_comunidades' => ['nombre' => 'Voluntarios/as permanentes en equipos de comunidades', 'vista' => $memb, 'medida' => 'count', 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => 'snapshot'],
-            'coordinaciones_comunidad' => ['nombre' => 'N° de voluntarias(os) en coordinaciones de comunidad', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['rol' => 'coordinacion'], 'where_raw' => 'idComunidad IS NOT NULL', 'periodo' => 'snapshot'],
+            'permanentes_areas' => ['nombre' => 'Voluntarios/as permanentes en áreas', 'vista' => $memb, 'medida' => 'count', 'filtros' => ['despliegue' => 'Oficina'], 'periodo' => 'snapshot'],
+            'permanentes_comunidades' => ['nombre' => 'Voluntarios/as permanentes en equipos de comunidades', 'vista' => $memb, 'medida' => 'count', 'filtros' => ['despliegue' => 'Comunidad'], 'periodo' => 'snapshot'],
+            'coordinaciones_comunidad' => ['nombre' => 'N° de voluntarias(os) en coordinaciones de comunidad', 'vista' => $memb, 'medida' => ['count_distinct', 'person_key'], 'filtros' => ['rol' => 'coordinacion', 'despliegue' => 'Comunidad'], 'periodo' => 'snapshot'],
 
             // ── Campañas y encuentros ──
             'campanas_captacion_nacional' => ['nombre' => 'Cantidad de campañas nacionales de captación de voluntariado ejecutadas', 'vista' => 'reporting_fact_campania', 'medida' => 'count', 'filtros' => ['tipo' => 'captacion', 'es_nacional' => 1], 'periodo' => 'overlap'],

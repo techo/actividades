@@ -529,6 +529,37 @@ class ListadosColumnasConfigurablesTest extends TestCase
         $this->assertFalse($buckets->has('M'), 'M no debería aparecer con el filtro género = F');
     }
 
+    /**
+     * Prod 2026-10-13: agrupar por "Grupo" daba 1055 (only_full_group_by) porque se
+     * agrupaba por la subconsulta correlacionada en vez de por su alias.
+     *
+     * @test
+     */
+    public function los_facets_agrupan_por_nombre_de_grupo()
+    {
+        $this->withoutExceptionHandling();
+        $this->seed('PermisosSeeder');
+
+        $admin = $this->admin();
+        $actividad = $this->actividadConInscripto($admin);
+        $inscripcion = Inscripcion::where('idActividad', $actividad->idActividad)->firstOrFail();
+        $grupo = factory(\App\Grupo::class)->create([
+            'idActividad' => $actividad->idActividad, 'idPadre' => 0, 'nombre' => 'Cuadrilla 1',
+        ]);
+        \App\GrupoRolPersona::create([
+            'idActividad' => $actividad->idActividad, 'idPersona' => $inscripcion->idPersona,
+            'idGrupo' => $grupo->idGrupo, 'rol' => '',
+        ]);
+
+        $data = $this->actingAs($admin)
+            ->getJson('/admin/ajax/listados/inscripciones/' . $actividad->idActividad . '/facets?group_by=nombreGrupo')
+            ->assertStatus(200)
+            ->json();
+
+        $buckets = collect($data['buckets'])->keyBy('valor');
+        $this->assertEquals(1, $buckets['Cuadrilla 1']['total']);
+    }
+
     // ── Fase 4: vistas guardadas ───────────────────────────────────────────
 
     /** @test */

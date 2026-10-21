@@ -19,6 +19,7 @@ use App\Http\Requests\CrearCoordinador;
 use App\Http\Resources\ActividadResource;
 use App\Inscripcion;
 use App\Rules\FechaFinActividad;
+use App\Scopes\BelongsToCountryScope;
 use App\UnidadOrganizacional;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -216,10 +217,20 @@ class ActividadesController extends Controller
     public function coordinadores(Actividad $id)
     {    
 
-        $coordinadores = $id->coordinadores;
-        // dd($coordinadores[0]->persona);
+        // withTrashed + sin scope de país: un coordinador cuya cuenta se dio de baja
+        // (o que quedó en otro país) devolvía persona null y rompía el listado con 500.
+        // Se lo sigue mostrando, marcado, para poder quitarlo de la actividad.
+        $coordinadores = $id->coordinadores()->with(['persona' => function ($q) {
+            $q->withoutGlobalScope(BelongsToCountryScope::class)->withTrashed();
+        }])->get();
         foreach ($coordinadores as $coordinador) {
-            $coordinador->nombre = $coordinador->persona->nombres . ' ' . $coordinador->persona->apellidoPaterno. ' (' . $coordinador->persona->mail . ')';
+            $persona = $coordinador->persona;
+            if (!$persona) {
+                $coordinador->nombre = '(persona inexistente #' . $coordinador->idPersona . ')';
+                continue;
+            }
+            $coordinador->nombre = $persona->nombres . ' ' . $persona->apellidoPaterno . ' (' . $persona->mail . ')'
+                . ($persona->trashed() ? ' — cuenta eliminada' : '');
         }
         return $coordinadores;
     }
