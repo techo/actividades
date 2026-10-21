@@ -62,4 +62,27 @@ class EvaluacionAccesoTest extends TestCase
             ->get('/admin/actividades/' . $actividad->idActividad . '/grupos')
             ->assertSee(e(__('errors.e403.message')));
     }
+
+    /** @test */
+    public function el_link_del_mail_evaluar_vuelve_a_la_evaluacion_tras_el_login()
+    {
+        // /evaluar/{id} existe para que la app (que captura /actividades/*) no se lo lleve.
+        $actividad = app(ActividadFactory::class)->conEstado('pasada')->create();
+        $url = url('/evaluar/' . $actividad->idActividad);
+
+        $response = $this->get($url)->assertRedirect('/login');
+
+        $cookie = collect($response->headers->getCookies())->first(function ($c) {
+            return $c->getName() === 'after_login_url';
+        });
+        $this->assertEquals($url, decrypt($cookie->getValue(), false));
+    }
+
+    /** @test */
+    public function el_mail_de_invitacion_apunta_a_evaluar_y_no_a_actividades()
+    {
+        $html = file_get_contents(resource_path('views/emails/invitacionEvaluacion.blade.php'));
+        $this->assertContains("url('/evaluar/'", $html);
+        $this->assertNotContains("/evaluaciones')", $html);
+    }
 }

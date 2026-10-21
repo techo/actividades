@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Dispositivo;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class DispositivoController extends Controller
@@ -33,16 +34,25 @@ class DispositivoController extends Controller
 
         $persona = auth('api')->user();
 
-        $dispositivo = Dispositivo::updateOrCreate(
-            [
-                'player_id' => $request->player_id,
-            ],
-            [
-                'idPersona'  => $persona->idPersona,
-                'plataforma' => $request->input('plataforma'),
-                'activo'     => true,
-            ]
-        );
+        $datos = [
+            'idPersona'  => $persona->idPersona,
+            'plataforma' => $request->input('plataforma'),
+            'activo'     => true,
+        ];
+
+        // La app llama a este endpoint al loguear y cuando OneSignal entrega el id:
+        // dos requests casi simultáneas con el mismo player_id pasan las dos el SELECT
+        // de updateOrCreate y la segunda choca con el unique (1062). Ganó la otra:
+        // actualizamos su fila.
+        try {
+            $dispositivo = Dispositivo::updateOrCreate(['player_id' => $request->player_id], $datos);
+        } catch (QueryException $e) {
+            if (($e->errorInfo[1] ?? null) != 1062) {
+                throw $e;
+            }
+            $dispositivo = Dispositivo::where('player_id', $request->player_id)->firstOrFail();
+            $dispositivo->fill($datos)->save();
+        }
 
         return response()->json([
             'success'     => true,

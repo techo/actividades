@@ -170,6 +170,11 @@ Route::get('autenticado', function () {
 
 // Evaluaciones
 Route::get('/actividades/{id}/evaluaciones', 'EvaluacionesController@index')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
+// Link de los mails de evaluación. Fuera de /actividades/* a propósito: la app MiTECHO captura
+// ese path (universal/app links) y abría el detalle de la actividad en vez de la evaluación.
+// Misma pantalla, sin redirect (un redirect a /actividades/* lo volvería a capturar Android).
+// Cuando la app tenga pantalla de evaluación, sumar /evaluar/* al AASA y al intent-filter.
+Route::get('/evaluar/{id}', 'EvaluacionesController@index')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
 Route::post('/actividades/{id}/evaluaciones', 'EvaluacionesController@evaluarActividad')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
 Route::post('/actividades/{id}/persona/{idPersona}/evaluar', 'EvaluacionesController@evaluarPersona')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
 Route::post('/actividades/{id}/evaluaciones/impacto', 'EvaluacionesController@evaluarImpacto')->middleware('auth', 'can:evaluar,App\Actividad,id', 'login-modal-flag');
