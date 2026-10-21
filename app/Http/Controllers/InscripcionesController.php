@@ -499,7 +499,7 @@ class InscripcionesController extends BaseController
         // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
         // no se reabre para volver a subir/editar el comprobante.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
-            return redirect('/actividades/' . $actividad->idActividad);
+            return $this->redirigirPagoResuelto($actividad, $inscripcion);
         }
 
         try {
@@ -533,7 +533,7 @@ class InscripcionesController extends BaseController
 
         // Pago ya resuelto: no permitir iniciar otro checkout.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
-            return redirect('/actividades/' . $actividad->idActividad);
+            return $this->redirigirPagoResuelto($actividad, $inscripcion);
         }
 
         try {
@@ -556,9 +556,32 @@ class InscripcionesController extends BaseController
      */
     private function inscripcionParaPago(Actividad $actividad)
     {
-        return Inscripcion::where('idPersona', auth()->user()->idPersona)
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
             ->where('idActividad', $actividad->idActividad)
             ->first();
+
+        // Antes de pedirle que pague, re-chequeamos si hoy es socio: puede haberse
+        // hecho socio después de inscribirse, o Salesforce pudo fallar al crearla.
+        if ($inscripcion) {
+            app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripcion);
+        }
+
+        return $inscripcion;
+    }
+
+    /**
+     * Pago ya resuelto: vuelve al show. Si es por socio, se lo decimos (si no, la
+     * persona no entiende por qué el link de pago "no anda").
+     */
+    private function redirigirPagoResuelto(Actividad $actividad, Inscripcion $inscripcion)
+    {
+        $redirect = redirect('/actividades/' . $actividad->idActividad);
+
+        if ($inscripcion->exento_pago && !$inscripcion->pago) {
+            $redirect->with('aviso_pago', __('frontend.socio_exento_texto'));
+        }
+
+        return $redirect;
     }
 
     /**

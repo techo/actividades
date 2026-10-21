@@ -6,6 +6,7 @@ use App\Actividad;
 use App\Jobs\EnviarMailTransaccionalSes;
 use App\Mail\MailRecordatorioPagoVencimiento;
 use App\Services\EstadoInscripcion;
+use App\Services\Salesforce\SocioExencionService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -63,6 +64,12 @@ class EnviarRecordatorioPagoVencimiento extends Command
             foreach ($inscripciones as $inscripcion) {
                 // Fuente de verdad: solo a quien realmente está "confirmar pagando".
                 if (EstadoInscripcion::resolve($actividad, $inscripcion) !== EstadoInscripcion::CONFIRM_BY_PAYING) {
+                    continue;
+                }
+
+                // Si hoy es socio (se hizo después de inscribirse o Salesforce falló
+                // al crearla), queda exento y no se le pide pagar.
+                if (app(SocioExencionService::class)->reevaluar($inscripcion)) {
                     continue;
                 }
 
