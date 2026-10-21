@@ -64,4 +64,43 @@ class SocioExencionService
 
         return true;
     }
+
+    /**
+     * Re-evalúa la exención de una inscripción YA EXISTENTE y persiste si cambia.
+     *
+     * Por qué: la exención se materializa al crear la inscripción, pero quien se
+     * hace socio después, o se inscribió mientras Salesforce fallaba (fail-closed),
+     * quedaba con el pago pendiente para siempre. Se llama en cada punto donde le
+     * pediríamos pagar (pantalla de pago, checkout, confirmación del coordinador,
+     * recordatorio) y desde el comando socios:reevaluar-exenciones.
+     *
+     * No toca inscripciones ya pagadas (pago == 1): eso es una devolución, no una
+     * exención, y se decide caso a caso.
+     *
+     * @return bool true si la inscripción quedó (o ya estaba) exenta.
+     */
+    public function reevaluar(Inscripcion $inscripcion): bool
+    {
+        if ($inscripcion->exento_pago) {
+            return true;
+        }
+
+        if ((int) $inscripcion->pago === 1 || $inscripcion->trashed()) {
+            return false;
+        }
+
+        $actividad = $inscripcion->actividad;
+        $persona   = $inscripcion->persona;
+        if (!$actividad || !$persona) {
+            return false;
+        }
+
+        if (!$this->aplicarSiCorresponde($inscripcion, $actividad, $persona)) {
+            return false;
+        }
+
+        $inscripcion->save();
+
+        return true;
+    }
 }

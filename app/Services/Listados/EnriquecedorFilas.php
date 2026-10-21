@@ -71,12 +71,17 @@ class EnriquecedorFilas
             return $filas;
         }
 
+        // Actividades distintas (no filas: una persona con inscripciones duplicadas en la
+        // misma actividad contaba doble) y sin actividades borradas. Misma definición que
+        // el filtro "cantidadActividades" (Search/filters/inscripciones/CantidadActividades).
         $participaciones = DB::table('Inscripcion')
-            ->select('idPersona', DB::raw('COUNT(*) as total'))
-            ->where('presente', 1)
-            ->whereNull('deleted_at')
-            ->whereIn('idPersona', $idsPersona)
-            ->groupBy('idPersona')
+            ->join('Actividad', 'Actividad.idActividad', '=', 'Inscripcion.idActividad')
+            ->select('Inscripcion.idPersona', DB::raw('COUNT(DISTINCT Inscripcion.idActividad) as total'))
+            ->where('Inscripcion.presente', 1)
+            ->whereNull('Inscripcion.deleted_at')
+            ->whereNull('Actividad.deleted_at')
+            ->whereIn('Inscripcion.idPersona', $idsPersona)
+            ->groupBy('Inscripcion.idPersona')
             ->pluck('total', 'idPersona');
 
         $evaluaciones = DB::table('EvaluacionPersona')

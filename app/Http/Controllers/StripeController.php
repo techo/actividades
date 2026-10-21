@@ -35,6 +35,13 @@ class StripeController extends Controller
             ]);
         }
 
+        // Un socio nunca debe ser cobrado: re-chequeo en vivo (puede haberse hecho
+        // socio después de inscribirse, o Salesforce pudo fallar al crearla).
+        if (app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripcion)) {
+            return redirect('/actividades/' . $inscripcion->idActividad)
+                ->with('aviso_pago', __('frontend.socio_exento_texto'));
+        }
+
         $config = json_decode($inscripcion->actividad->pais->config_pago);
 
         if (empty($config->stripe_secret)) {

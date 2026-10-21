@@ -18,6 +18,7 @@ class ListadoPreferencia extends Model
         'context_id',
         'columnas',
         'ocultas',
+        'orden',
     ];
 
     protected $casts = [

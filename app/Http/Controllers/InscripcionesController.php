@@ -18,6 +18,7 @@ use App\Services\Push\PushNotificationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -106,11 +107,33 @@ class InscripcionesController extends BaseController
     }
 
     /**
+     * Alta de inscripción (web /gracias y app POST /api/inscripciones/actividad/{id}).
+     *
+     * Serializada por persona+actividad con un lock con nombre de MySQL: crear() busca
+     * la inscripción y, si no existe, la crea; sin lock, dos o tres POST simultáneos
+     * (doble click en el botón, reintentos de la app) pasaban todos el chequeo y creaban
+     * una fila cada uno. Inscripcion no tiene índice único (soft deletes). GET_LOCK es por
+     * conexión, así que sirve entre workers de PHP-FPM sin depender del driver de caché.
+     *
      * @param Request $request
      * @param $id
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function create(Request $request, $id)
+    {
+        $lock = 'inscripcion:' . (int) $id . ':' . (int) optional(Auth::user())->idPersona;
+        // Si en 10s no se obtiene (la otra request sigue), se sigue igual: para entonces
+        // la inscripción ya suele estar guardada y crear() la encuentra.
+        DB::select('SELECT GET_LOCK(?, 10) AS l', [$lock]);
+
+        try {
+            return $this->crear($request, $id);
+        } finally {
+            DB::select('SELECT RELEASE_LOCK(?) AS l', [$lock]);
+        }
+    }
+
+    private function crear(Request $request, $id)
     {
         $validated = $request->validate([
             'roles_aplicados' => 'nullable|json',
@@ -233,7 +256,12 @@ class InscripcionesController extends BaseController
                     $paymentClass = 'App\\Payments\\' . $config->payment_class;
                     $payment = new $paymentClass($inscripcion);
                 } catch (\Exception $e) {
-                    return response('La configuración de pagos de '. $actividad->pais->nombre .' no está establecida', 500);
+                    $mensaje = 'La configuración de pagos de '. $actividad->pais->nombre .' no está establecida';
+                    if ($request->expectsJson() || $request->is('api/*')) {
+                        // La app espera JSON: con texto plano fallaba sin mostrar nada.
+                        return response()->json(['success' => false, 'message' => $mensaje], 500);
+                    }
+                    return response($mensaje, 500);
                 }
                 // El monto se deriva server-side de la actividad, nunca del request
                 // (evita iniciar un pago por un importe manipulado por el cliente).
@@ -499,7 +527,7 @@ class InscripcionesController extends BaseController
         // Pago ya resuelto (confirmado o exento): el flujo de pago queda cerrado,
         // no se reabre para volver a subir/editar el comprobante.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
-            return redirect('/actividades/' . $actividad->idActividad);
+            return $this->redirigirPagoResuelto($actividad, $inscripcion);
         }
 
         try {
@@ -533,7 +561,7 @@ class InscripcionesController extends BaseController
 
         // Pago ya resuelto: no permitir iniciar otro checkout.
         if ($inscripcion->pago || $inscripcion->exento_pago) {
-            return redirect('/actividades/' . $actividad->idActividad);
+            return $this->redirigirPagoResuelto($actividad, $inscripcion);
         }
 
         try {
@@ -556,9 +584,32 @@ class InscripcionesController extends BaseController
      */
     private function inscripcionParaPago(Actividad $actividad)
     {
-        return Inscripcion::where('idPersona', auth()->user()->idPersona)
+        $inscripcion = Inscripcion::where('idPersona', auth()->user()->idPersona)
             ->where('idActividad', $actividad->idActividad)
             ->first();
+
+        // Antes de pedirle que pague, re-chequeamos si hoy es socio: puede haberse
+        // hecho socio después de inscribirse, o Salesforce pudo fallar al crearla.
+        if ($inscripcion) {
+            app(\App\Services\Salesforce\SocioExencionService::class)->reevaluar($inscripcion);
+        }
+
+        return $inscripcion;
+    }
+
+    /**
+     * Pago ya resuelto: vuelve al show. Si es por socio, se lo decimos (si no, la
+     * persona no entiende por qué el link de pago "no anda").
+     */
+    private function redirigirPagoResuelto(Actividad $actividad, Inscripcion $inscripcion)
+    {
+        $redirect = redirect('/actividades/' . $actividad->idActividad);
+
+        if ($inscripcion->exento_pago && !$inscripcion->pago) {
+            $redirect->with('aviso_pago', __('frontend.socio_exento_texto'));
+        }
+
+        return $redirect;
     }
 
     /**

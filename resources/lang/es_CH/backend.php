@@ -73,6 +73,7 @@ return [
     'public' => 'Pública',
     'start' => 'Empieza',
     'end' => 'Termina',
+    'activity_edit_conflict' => 'Alguien modificó esta actividad mientras la editabas. Recarga la página para ver los cambios antes de guardar.',
     'open_registrations' => 'Inscripciones Abiertas',
     'closed_registrations' => 'Inscripciones Cerradas',
     'registrations_not_open_yet' => 'Inscripciones aún no abiertas',
@@ -881,7 +882,7 @@ return [
 
     // Columnas: whatsapp, nivel, evaluación, ID/documento
     'whatsapp' => 'WhatsApp',
-    'participations' => 'Participaciones',
+    'participations' => 'Participaciones (presente)',
     'volunteer_level' => 'Nivel',
     'level_rookie' => 'Rookie',
     'level_champion' => 'Champion',

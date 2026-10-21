@@ -154,6 +154,18 @@ class ActividadesController extends Controller
     {
         $validado = $validado = $request->validated();
 
+        // Bloqueo optimista (reclamo #19: el modo pasó "solo" de mixto a automático): el form
+        // reenvía la actividad entera, así que una pestaña abierta desde antes pisaba lo que
+        // otro había cambiado. Si este guardado revertiría un campo que cambió desde que se
+        // cargó el form, 409 y que recargue.
+        $conflictos = $this->camposEnConflicto($actividad, $validado, $request->input('_original'));
+        if ($conflictos) {
+            return response()->json([
+                'message' => __('backend.activity_edit_conflict'),
+                'conflictos' => $conflictos,
+            ], 409);
+        }
+
         $validado['lugar'] = (!$validado['lugar'])?"":$validado['lugar'];
 
         if (!empty($validado['linkEvaluacion'])) {
@@ -173,9 +185,58 @@ class ActividadesController extends Controller
             $this->enviarPushCambio($actividad);
         }
 
+        // Recargada: el front toma esta respuesta como nuevo snapshot (_original), y tiene
+        // que tener la misma serialización que el GET (fechas normalizadas por la DB).
+        $actividad = $actividad->fresh();
         $actividad->tipo;
 
         return response()->json($actividad);
+    }
+
+    /**
+     * Campos que otro guardado cambió desde que se cargó el form ($original, snapshot que
+     * manda el front) y que este request volvería a pisar con un valor distinto. Sin
+     * snapshot (clientes viejos) no se chequea. Solo atributos propios de Actividad: los
+     * cambios que no pasan por este form (imagen, coordinadores) no generan conflicto.
+     */
+    private function camposEnConflicto(Actividad $actividad, array $validado, $original): array
+    {
+        if (!is_array($original)) {
+            return [];
+        }
+
+        $normalizar = function ($v) {
+            if (is_array($v) || is_object($v)) {
+                return json_encode($v);
+            }
+            if (is_bool($v)) {
+                return $v ? '1' : '0';
+            }
+            $v = trim((string) $v);
+            // Fechas: "2026-10-23T07:00" (input) y "2026-10-23 07:00:00" (DB) son lo mismo.
+            if (preg_match('/^\d{4}-\d{2}-\d{2}/', $v) && strtotime($v) !== false) {
+                return date('Y-m-d H:i:s', strtotime($v));
+            }
+            return $v;
+        };
+
+        // Misma serialización que recibió el front al cargar (fechas Y-m-d H:i:s, casts).
+        $serializada = $actividad->attributesToArray();
+
+        $conflictos = [];
+        foreach ($validado as $campo => $nuevo) {
+            if (!array_key_exists($campo, $original) || !array_key_exists($campo, $actividad->getAttributes())) {
+                continue;
+            }
+            $actual = $normalizar($serializada[$campo] ?? null);
+            $cambioOtro = $normalizar($original[$campo]) !== $actual;
+            $loPisa = $normalizar($nuevo) !== $actual;
+            if ($cambioOtro && $loPisa) {
+                $conflictos[] = $campo;
+            }
+        }
+
+        return $conflictos;
     }
 
     /**
@@ -258,8 +319,14 @@ class ActividadesController extends Controller
 
         // Primer render: fijas + columnas por defecto. La configuración real del
         // usuario la carga el selector de columnas vía GET ajax/listados/.../config.
-        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
-        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+        $campos = (new InscripcionesCatalogo)->defaultFields($actividad->idActividad);
+        $fields = json_encode($campos);
+        // El orden que el usuario eligió la última vez (o el default del listado).
+        $sortOrder = json_encode(\App\Services\Listados\OrdenListado::sortOrderInicial(
+            auth()->id(), 'inscripciones', $actividad->idActividad,
+            config('datatables.inscripciones.sortOrder'),
+            array_merge($campos, (new InscripcionesCatalogo)->camposOrdenables())
+        ));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
         $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));
@@ -277,8 +344,14 @@ class ActividadesController extends Controller
 
     public function confirmarInscripcion(Actividad $actividad, Inscripcion $inscripcion, $idPersona)
     {
-        $fields = json_encode((new InscripcionesCatalogo)->defaultFields($actividad->idActividad));
-        $sortOrder = json_encode(config('datatables.inscripciones.sortOrder'));
+        $campos = (new InscripcionesCatalogo)->defaultFields($actividad->idActividad);
+        $fields = json_encode($campos);
+        // El orden que el usuario eligió la última vez (o el default del listado).
+        $sortOrder = json_encode(\App\Services\Listados\OrdenListado::sortOrderInicial(
+            auth()->id(), 'inscripciones', $actividad->idActividad,
+            config('datatables.inscripciones.sortOrder'),
+            array_merge($campos, (new InscripcionesCatalogo)->camposOrdenables())
+        ));
 
         $camposInscripciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.campos'));
         $condiciones = json_encode(config('dropdownOptions.actividad.filtroInscripciones.condiciones'));

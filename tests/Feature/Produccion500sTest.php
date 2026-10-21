@@ -294,4 +294,35 @@ class Produccion500sTest extends TestCase
 
         return $admin;
     }
+
+    /** @test */
+    public function limite_de_inscripciones_vacio_se_guarda_como_sin_limite()
+    {
+        $request = \App\Http\Requests\CrearActividad::create('/x', 'POST', ['limiteInscripciones' => null]);
+        $metodo = new \ReflectionMethod($request, 'prepareForValidation');
+        $metodo->setAccessible(true);
+        $metodo->invoke($request);
+
+        $this->assertSame(0, $request->input('limiteInscripciones'));
+    }
+
+    /** @test */
+    public function fechas_de_integrante_en_otro_formato_se_normalizan()
+    {
+        $request = \App\Http\Requests\Equipo\CrearIntegrante::create('/x', 'POST', [
+            'fechaInicio' => '10/20/2026',
+            'fechaFin' => '2026-10-21 10:00',
+        ]);
+        $metodo = new \ReflectionMethod($request, 'prepareForValidation');
+        $metodo->setAccessible(true);
+        $metodo->invoke($request);
+
+        $this->assertSame('2026-10-20', $request->input('fechaInicio'));
+        $this->assertSame('2026-10-21', $request->input('fechaFin'));
+
+        // Y el modelo lo acepta (antes: "The separation symbol could not be found").
+        $integrante = new \App\Integrante();
+        $integrante->fill(['fechaInicio' => $request->input('fechaInicio')]);
+        $this->assertEquals('2026-10-20', $integrante->fechaInicio->format('Y-m-d'));
+    }
 }

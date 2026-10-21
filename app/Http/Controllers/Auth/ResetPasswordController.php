@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Traits\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class ResetPasswordController extends Controller
 {
@@ -28,6 +29,21 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
+
+    /**
+     * Si llegó acá desde un link protegido (ej. el de evaluación: login → "olvidé mi
+     * contraseña"), volver a ese link y no a la home. La cookie la pone Handler::unauthenticated.
+     */
+    public function redirectTo()
+    {
+        $url = request()->cookie('after_login_url');
+        if ($url && parse_url($url, PHP_URL_HOST) === request()->getHost()) {
+            Cookie::queue(Cookie::forget('after_login_url'));
+            return $url;
+        }
+
+        return '/';
+    }
 
     /**
      * Create a new controller instance.
