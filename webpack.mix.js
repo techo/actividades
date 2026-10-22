@@ -16,9 +16,12 @@ mix.js('resources/js/atlas.js', 'public/js')
 	.sass('resources/sass/app.scss', 'public/css')
 	.copy('node_modules/tinymce/skins', 'public/js/skins');
 
-if (mix.inProduction()) {
-    mix.version();
-}
-else {
+// Versionado SIEMPRE (no solo en production): deploy.sh compila con `npm run dev`, y sin
+// hash en la URL los navegadores seguían usando el app.js viejo cacheado después de un
+// deploy (oct-2026: "no aparecen los nombres de los inscriptos"). mix() en los blades
+// agrega ?id=<hash> desde mix-manifest.json, que cambia solo cuando cambia el archivo.
+mix.version();
+
+if (!mix.inProduction()) {
 	mix.copy('resources/js/app.js', 'public/bundle.js');
 }

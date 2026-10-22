@@ -31,12 +31,17 @@ class FichaMedicaController extends Controller
       if (!$persona) {
           abort(401, 'Sesión no válida.');
       }
-      $countFichas = FichaMedica::where('idPersona', $persona->idPersona)->count();
-
-      if($countFichas>0)
-        $fichaMedica = FichaMedica::where('idPersona', $persona->idPersona)->first();
-      else
-        $fichaMedica = FichaMedica::create(['idPersona' => $persona->idPersona]);
+      // Una ficha por persona (UNIQUE idPersona). Antes se contaba y después se creaba:
+      // dos envíos simultáneos dejaban fichas duplicadas y la persona aparecía repetida en
+      // los listados de inscripciones. Si otra request la creó en el medio, usamos esa.
+      try {
+        $fichaMedica = FichaMedica::firstOrCreate(['idPersona' => $persona->idPersona]);
+      } catch (\Illuminate\Database\QueryException $e) {
+        if (($e->errorInfo[1] ?? null) != 1062) {
+          throw $e;
+        }
+        $fichaMedica = FichaMedica::where('idPersona', $persona->idPersona)->firstOrFail();
+      }
 
       $fichaMedica->contacto_nombre = $request->contacto_nombre;
       $fichaMedica->contacto_telefono = $request->contacto_telefono;

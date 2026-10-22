@@ -87,7 +87,13 @@ class InscripcionesSearch
             ->leftJoin('atl_provincias as personaProvincia', 'Persona.idProvincia', '=', 'personaProvincia.id')
             ->leftJoin('atl_localidades as personaLocalidad', 'Persona.idLocalidad', '=', 'personaLocalidad.id')
             ->leftJoin('atl_oficinas as oficinaPersona', 'personaProvincia.idOficina', '=', 'oficinaPersona.id')
-            ->leftJoin('ficha_medicas as ficha', 'Persona.idPersona', '=', 'ficha.idPersona')
+            // Una sola ficha por persona aunque haya duplicadas (si no, la fila de la
+            // persona se repetía por cada ficha). La tabla ya tiene UNIQUE(idPersona); esto
+            // es defensa por si vuelve a haber datos viejos.
+            ->leftJoin('ficha_medicas as ficha', function ($join) {
+                $join->on('Persona.idPersona', '=', 'ficha.idPersona')
+                    ->whereRaw('ficha.idFichaMedica = (SELECT MAX(f2.idFichaMedica) FROM ficha_medicas f2 WHERE f2.idPersona = Persona.idPersona)');
+            })
     ->select(
         [
             'Inscripcion.idPersona',
